@@ -24,6 +24,9 @@ Code Style
 Der Code Style orientiert sich an gängigen Vorgaben im Android-Bereich und Voreinstellungen von Android Studio. Wer am Projekt mitwirkt, sollte die Projekteinstellungen für Code Style übernehmen.
 Automatische Import-Optimierungen sollten nur für Dateien durchgeführt werden, die auch anderweitig angepasst wurden. Eine automatische Code-Formatierung sollte i.d.R. nur für Zeilen bzw. Blöcke erfolgen, die auch anderweitig angepasst wurden. Eine entsprechende Option kann im `Reformat File Dialog` als Voreinstellung für alle Reformat-Vorgänge gesetzt werden. Diese Maßnahmen sollen die Prüfung von Pull Requests übersichtlicher halten.
 
+![Alt-Text](Unbenannt.png "Title")
+
+
 Sprache
 =========================
 
