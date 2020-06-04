@@ -1,0 +1,126 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    style="@style/App.Widget.CardContainer"
+    android:padding="@dimen/card_container_padding"
+    tools:context=".ui.station.StationFragment">
+
+    <LinearLayout
+        android:id="@+id/rowFeatures"
+
+        app:layout_constraintDimensionRatio="2"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+
+        style="@style/App.Widget.CardContainer.Row">
+
+        <include
+            layout="@layout/stationcard_common"
+            android:id="@+id/local_departures"
+            android:contentDescription="@string/sr_station_local_transport"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="@integer/double_cell_weight" />
+
+        <include
+            layout="@layout/stationcard_common"
+            android:id="@+id/features"
+            android:contentDescription="@string/sr_station_features" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/rowOverflow"
+
+        app:layout_constraintTop_toBottomOf="@id/rowFeatures"
+        app:layout_constraintDimensionRatio="2"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+
+        android:layout_marginTop="@dimen/card_divider"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+
+        style="@style/App.Widget.CardContainer.Row">
+
+        <include
+            layout="@layout/stationcard_common"
+            android:id="@+id/card_shops"
+            android:contentDescription="@string/sr_shopping" />
+
+        <include
+            layout="@layout/stationcard_common"
+            android:id="@+id/card_map"
+            android:contentDescription="@string/sr_map"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="@integer/double_cell_weight" />
+
+    </LinearLayout>
+
+    <View
+        android:id="@+id/lowerDivider"
+        app:layout_constraintTop_toBottomOf="@+id/rowOverflow"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/card_divider" />
+
+    <LinearLayout
+        android:id="@+id/rowStatic"
+
+        app:layout_constraintTop_toBottomOf="@+id/lowerDivider"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintDimensionRatio="2"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+
+        style="@style/App.Widget.CardContainer.Row">
+
+        <include
+            layout="@layout/stationcard_common"
+            android:id="@+id/card_elevators"
+            android:contentDescription="@string/sr_elevators" />
+
+        <include
+            layout="@layout/stationcard_common"
+            android:id="@+id/settings"
+            android:contentDescription="@string/sr_settings" />
+
+        <include
+            layout="@layout/stationcard_common"
+            android:id="@+id/feedback"
+            android:contentDescription="@string/sr_feedback" />
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/rowChatbot"
+
+        app:layout_constraintDimensionRatio="2"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/rowStatic"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:layout_marginTop="@dimen/card_divider"
+
+        style="@style/App.Widget.CardContainer.Row">
+
+        <include
+            layout="@layout/card_chatbot_teaser"
+            android:id="@+id/chatbotTeaser"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="@integer/double_cell_weight" />
+
+    </LinearLayout>
+
+</androidx.constraintlayout.widget.ConstraintLayout>
+                

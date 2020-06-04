@@ -1,0 +1,127 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<de.deutschebahn.bahnhoflive.view.DecoratedCard xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+
+        android:background="#fff"
+        android:orientation="vertical">
+
+        <androidx.cardview.widget.CardView
+            android:id="@+id/overview"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:padding="@dimen/default_space"
+            app:cardCornerRadius="0dp"
+            tools:showIn="@layout/card_expandable_station_info">
+
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:paddingStart="@dimen/default_space"
+                android:paddingEnd="@dimen/default_space_triple"
+                android:paddingTop="@dimen/default_space"
+                android:paddingBottom="@dimen/default_space">
+
+                <ImageView
+                    android:id="@+id/icon"
+
+                    android:src="@drawable/app_news_coupon"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+
+                    android:padding="@dimen/default_space_double"
+
+                    app:layout_constraintTop_toTopOf="parent"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintStart_toStartOf="parent" />
+
+                <TextView
+                    android:id="@+id/title"
+
+                    tools:text="@tools:sample/lorem"
+
+                    android:textSize="@dimen/textsize_h3"
+                    android:ellipsize="end"
+                    android:textStyle="bold"
+                    android:maxLines="1"
+
+                    app:layout_constraintVertical_chainStyle="packed"
+
+                    app:layout_constraintTop_toTopOf="parent"
+                    app:layout_constraintStart_toEndOf="@+id/icon"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintBottom_toTopOf="@+id/subtitle"
+
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content" />
+
+                <TextView
+                    android:id="@+id/subtitle"
+
+                    tools:text="@tools:sample/lorem"
+
+                    android:textSize="@dimen/textsize_h3"
+                    android:ellipsize="end"
+                    android:maxLines="1"
+                    android:importantForAccessibility="no"
+
+                    app:layout_constraintTop_toBottomOf="@+id/title"
+                    app:layout_constraintStart_toEndOf="@+id/icon"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintBottom_toBottomOf="parent"
+
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content" />
+
+            </androidx.constraintlayout.widget.ConstraintLayout>
+        </androidx.cardview.widget.CardView>
+
+        <LinearLayout
+            android:paddingStart="@dimen/default_space_triple"
+            android:paddingEnd="@dimen/default_space_triple"
+            android:paddingTop="@dimen/default_space"
+            android:paddingBottom="@dimen/default_space"
+            android:id="@+id/details"
+            android:showDividers="middle"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+            <TextView
+                android:id="@+id/contentText"
+                tools:text="@tools:sample/lorem"
+
+                android:textSize="@dimen/textsize_h3"
+                android:lineSpacingMultiplier="1.2"
+
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content" />
+
+            <ImageView
+                android:id="@+id/image"
+                android:padding="@dimen/default_space"
+                tools:src="@tools:sample/avatars"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content" />
+
+            <TextView
+                android:id="@+id/btnExternalLink"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@drawable/shape_round_button_grey"
+                android:gravity="center"
+                android:minHeight="64dp"
+                android:textColor="@color/white"
+                android:textStyle="bold"
+                android:text="@string/button_news_external_link" />
+
+        </LinearLayout>
+    </LinearLayout>
+</de.deutschebahn.bahnhoflive.view.DecoratedCard>

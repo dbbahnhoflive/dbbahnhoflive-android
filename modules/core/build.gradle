@@ -1,0 +1,70 @@
+apply plugin: 'com.android.library'
+apply plugin: 'kotlin-android'
+apply plugin: 'kotlin-android-extensions'
+apply plugin: 'kotlin-kapt'
+
+group 'de.deutschebahn.bahnhoflive'
+
+android {
+    compileSdkVersion 28
+    defaultConfig {
+        minSdkVersion 19
+        targetSdkVersion 28
+        multiDexEnabled true
+
+        buildConfigField "String", "BUSINESS_HUB_API_KEY", "\"TOL1jxXeqIW72s7vKPCcUuPNqFJTvPQx\""
+
+    }
+    buildTypes {
+        release {
+            minifyEnabled false
+            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+        }
+        debug {
+            minifyEnabled false
+        }
+    }
+
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_1_8
+        targetCompatibility JavaVersion.VERSION_1_8
+    }
+
+    kotlinOptions {
+        jvmTarget = JavaVersion.VERSION_1_8.toString()
+    }
+
+}
+
+dependencies {
+    api "androidx.legacy:legacy-support-v4:1.0.0"
+    api "androidx.appcompat:appcompat:1.1.0"
+    implementation "com.google.android.material:material:1.1.0-beta02"
+    implementation "androidx.vectordrawable:vectordrawable-animated:1.1.0"
+    implementation "androidx.viewpager2:viewpager2:1.0.0"
+    implementation 'androidx.media:media:1.1.0'
+    implementation "androidx.cardview:cardview:1.0.0"
+    implementation 'androidx.constraintlayout:constraintlayout:1.1.3'
+    implementation 'androidx.navigation:navigation-fragment-ktx:2.2.2'
+    api 'androidx.multidex:multidex:2.0.1'
+    api 'com.android.volley:volley:1.1.1'
+    api 'com.google.android.gms:play-services-maps:17.0.0'
+    implementation 'com.google.firebase:firebase-messaging:20.1.6'
+    api 'com.google.code.gson:gson:2.8.6'
+    implementation 'com.google.android:flexbox:1.1.0'
+    implementation 'com.jakewharton:disklrucache:2.0.2'
+    implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"
+
+    implementation "androidx.lifecycle:lifecycle-livedata-ktx:2.2.0"
+
+    final lifecycleLibraryVersion = '2.2.0'
+    implementation "androidx.lifecycle:lifecycle-extensions:$lifecycleLibraryVersion"
+    implementation "androidx.lifecycle:lifecycle-common-java8:$lifecycleLibraryVersion"
+    implementation "androidx.lifecycle:lifecycle-reactivestreams:$lifecycleLibraryVersion"
+
+    api 'io.reactivex.rxjava2:rxjava:2.2.10'
+    api 'io.reactivex.rxjava2:rxandroid:2.1.1'
+    api 'io.reactivex.rxjava2:rxkotlin:2.3.0'
+
+}
+

@@ -1,0 +1,119 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+
+    <include layout="@layout/titlebar_static" />
+
+    <LinearLayout
+        android:layout_marginLeft="16dp"
+        android:layout_marginTop="16dp"
+        android:layout_marginRight="16dp"
+        android:layout_marginBottom="24dp"
+        android:id="@+id/wagenstand_header_container"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
+        <include layout="@layout/row_wagon_order_overview" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_marginLeft="16dp"
+        android:layout_marginRight="16dp"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
+
+        <ImageView
+            android:id="@+id/wagenstand_refresh"
+            android:layout_width="16dp"
+            android:layout_height="16dp"
+            android:layout_marginRight="8dp"
+            android:layout_gravity="center_vertical"
+            android:src="@drawable/reload_btn"
+            android:contentDescription="@string/sr_refresh" />
+
+        <TextView
+            android:id="@+id/wagenstand_refreshText"
+            android:layout_width="0dp"
+            android:lineSpacingMultiplier="1.2"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_vertical"
+            android:layout_marginRight="@dimen/default_space"
+            android:layout_weight="1"
+            android:textSize="@dimen/textsize_h4"
+            tools:text="@string/wagenstand_possibly_outdated" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_marginLeft="16dp"
+        android:layout_marginRight="16dp"
+        android:id="@+id/reminder_checkbox_container"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        android:orientation="horizontal"
+        android:visibility="gone"
+        tools:visibility="visible">
+
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@drawable/app_sprechblase"
+            android:importantForAccessibility="no" />
+
+        <Switch
+            android:id="@+id/wagenstand_pushActivatedCheckBox"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:enabled="false"
+            android:textSize="@dimen/textsize_h4"
+            android:layout_weight="1"
+            android:text="@string/activate_wagenstand_reminder"
+            android:paddingBottom="@dimen/default_space_half"
+            android:paddingLeft="@dimen/default_space"
+            android:paddingTop="@dimen/default_space_half" />
+
+
+    </LinearLayout>
+
+    <View
+        android:layout_marginTop="24dp"
+        android:layout_width="match_parent"
+        android:layout_height="2dp"
+        android:background="@drawable/legacy_gradient_shape" />
+
+    <FrameLayout
+        android:layout_width="match_parent"
+        android:layout_height="75dp">
+
+        <de.deutschebahn.bahnhoflive.ui.WagenstandSectionIndicator
+            android:layout_gravity="center"
+            android:id="@+id/wagenstand_section_indicator"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" />
+    </FrameLayout>
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="2dp"
+        android:layout_below="@id/wagenstand_section_indicator"
+        android:background="@drawable/legacy_gradient_shape" />
+
+    <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
+        android:id="@+id/wagenstand_swiperefresh"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        app:layout_behavior="@string/appbar_scrolling_view_behavior">
+
+        <ListView
+            android:id="@+id/waggon_list"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:overScrollMode="never"
+            tools:listitem="@layout/item_wagenstand_section"/>
+    </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
+</LinearLayout>

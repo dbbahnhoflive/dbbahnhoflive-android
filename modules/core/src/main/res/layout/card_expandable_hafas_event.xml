@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<de.deutschebahn.bahnhoflive.view.DecoratedCard xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+
+        android:background="#fdfdfe"
+        android:orientation="vertical">
+
+        <androidx.cardview.widget.CardView
+            android:id="@+id/overview"
+            app:cardElevation="6dp"
+            app:cardCornerRadius="0dp"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <include layout="@layout/item_timetable_overview"
+                android:layout_height="match_parent"
+                android:layout_width="match_parent"
+                android:layout_margin="@dimen/default_space"/>
+        </androidx.cardview.widget.CardView>
+
+        <ViewSwitcher
+            android:id="@+id/details"
+
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <include layout="@layout/include_progress" />
+
+            <androidx.recyclerview.widget.RecyclerView
+                android:importantForAccessibility="yes"
+                android:id="@+id/stops_recycler"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:paddingBottom="@dimen/default_space"
+                android:paddingTop="@dimen/default_space"
+                app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+                tools:listitem="@layout/item_route_stop" />
+        </ViewSwitcher>
+
+
+    </LinearLayout>
+</de.deutschebahn.bahnhoflive.view.DecoratedCard>

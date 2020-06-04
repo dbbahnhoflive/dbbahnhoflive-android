@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <bool name="isTablet">true</bool>
+    
+<!-- text dimensions are about +2.5 from default values -->
+    <dimen name="textsize_24">15.5dp</dimen>
+    <dimen name="textsize_32">19dp</dimen> <!-- plus extra 0.5dp -->
+    <dimen name="textsize_28">17dp</dimen>
+
+    <dimen name="content_phonetextHeight">42.5dp</dimen>
+    <dimen name="service_textsize">16dp</dimen>
+
+    <dimen name="wagenstand_14sp_textSize">16.5sp</dimen>
+    <dimen name="wagenstand_12sp_textSize">14.5sp</dimen>
+    <dimen name="wagenstand_17sp_textSize">19.5sp</dimen>
+    <dimen name="wagenstand_24sp_textSize">26.5sp</dimen>
+    <dimen name="wagenstand_10sp_textSize">12.5sp</dimen>
+    <dimen name="wagenstand_some_textSize">22.5dp</dimen>
+
+
+    <!--https://stackoverflow.com/questions/6859331/how-can-i-use-layout-width-using-resource-file#9631441 -->
+    <dimen name="wagenstand_tablet_padding">67dp</dimen>
+    <dimen name="wagenstand_tablet_distanceRight">87dp</dimen>
+    <dimen name="wagenstand_margin_left">87dp</dimen>
+    <dimen name="wagenstand_margin_right">87dp</dimen>
+
+    <integer name="visibleOnTablet">0</integer>
+
+
+</resources>

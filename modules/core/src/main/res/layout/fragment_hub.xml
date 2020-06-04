@@ -1,0 +1,156 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.coordinatorlayout.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@drawable/blurred_hintergrund"
+    android:fitsSystemWindows="true"
+    tools:context="de.deutschebahn.bahnhoflive.ui.hub.HubFragment">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:gravity="center"
+        android:orientation="vertical">
+
+
+        <ImageView
+            android:id="@+id/pin_icon"
+            android:layout_width="92dp"
+            android:layout_height="120dp"
+            android:src="@drawable/pin_mit_bahnhof"
+            android:transitionName="@string/transition_pin"
+            app:layout_constraintBottom_toTopOf="@+id/app_title"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/guideline" />
+
+        <TextView
+            android:id="@+id/app_title"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="@dimen/default_space"
+            android:text="@string/rich_app_title"
+            android:textColor="@color/white"
+            android:textSize="25dp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintRight_toRightOf="parent" />
+
+        <FrameLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:clipChildren="false">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_margin="@dimen/default_space"
+                android:background="@drawable/shape_tab_track"
+                android:clipChildren="false"
+                android:clipToPadding="false"
+                android:orientation="horizontal">
+
+                <ImageView
+                    android:contentDescription="@string/sr_hub_search"
+                    android:id="@+id/tabSearch"
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1"
+                    android:background="@drawable/shape_tab_background"
+                    android:elevation="4dp"
+                    android:padding="@dimen/default_space"
+                    android:src="@drawable/tab_lupe" />
+
+                <ImageView
+                    android:contentDescription="@string/sr_hub_favorites"
+                    android:id="@+id/tabFavorites"
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1"
+                    android:background="@drawable/shape_tab_background"
+                    android:elevation="4dp"
+                    android:padding="@dimen/default_space"
+                    android:src="@drawable/tab_favorite" />
+
+                <ImageView
+                    android:contentDescription="@string/sr_hub_nearby"
+                    android:id="@+id/tabNearby"
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1"
+                    android:background="@drawable/shape_tab_background"
+                    android:elevation="4dp"
+                    android:padding="@dimen/default_space"
+                    android:src="@drawable/tab_position" />
+            </LinearLayout>
+        </FrameLayout>
+
+        <androidx.viewpager.widget.ViewPager
+            android:id="@+id/pager"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="1"
+            android:clipToPadding="false"
+            android:padding="@dimen/default_space" />
+
+        <HorizontalScrollView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:fillViewport="true">
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:gravity="center"
+                android:orientation="horizontal">
+
+
+                <TextView
+                    android:id="@+id/legal_notice"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:background="?android:selectableItemBackground"
+                    android:drawableLeft="@drawable/app_links_pfeil"
+                    android:padding="@dimen/default_space"
+                    android:text="@string/legal_notice"
+                    android:textSize="@dimen/textsize_h3" />
+
+
+                <TextView
+                    android:id="@+id/privacy_policy"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:background="?android:selectableItemBackground"
+                    android:drawableLeft="@drawable/app_links_pfeil"
+                    android:padding="@dimen/default_space"
+                    android:text="@string/privacy_policy"
+                    android:textSize="@dimen/textsize_h3" />
+
+            </LinearLayout>
+        </HorizontalScrollView>
+
+    </LinearLayout>
+
+    <com.google.android.material.floatingactionbutton.FloatingActionButton
+        android:contentDescription="@string/sr_map"
+        android:id="@+id/btn_map"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="32dp"
+        android:layout_marginRight="16dp"
+        android:src="@drawable/app_karte"
+        app:layout_anchor="@+id/pager"
+        app:layout_anchorGravity="bottom|right" />
+
+    <de.deutschebahn.bahnhoflive.tutorial.TutorialView
+        android:id="@+id/hub_tutorial_view"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="bottom"
+        android:elevation="10dp"
+        android:visibility="gone" />
+</androidx.coordinatorlayout.widget.CoordinatorLayout>

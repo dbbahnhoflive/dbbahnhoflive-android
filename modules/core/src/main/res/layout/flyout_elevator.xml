@@ -1,0 +1,92 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:layout_marginLeft="@dimen/tiny_space"
+    android:layout_marginRight="@dimen/tiny_space"
+    android:orientation="vertical">
+
+    <include layout="@layout/header_flyout" />
+
+    <androidx.core.widget.NestedScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:fillViewport="true">
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:background="@color/white"
+            android:padding="@dimen/default_space_half">
+
+
+
+            <TextView
+                android:id="@+id/status_text_1"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_margin="@dimen/default_space_half"
+                android:drawablePadding="@dimen/small_space"
+                android:ellipsize="end"
+                android:lines="1"
+                app:layout_constraintVertical_chainStyle="packed"
+                app:layout_constraintVertical_bias="0"
+                app:layout_constraintLeft_toLeftOf="parent"
+                app:layout_constraintRight_toRightOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintBottom_toTopOf="@+id/status_text_2"
+                tools:drawableLeft="@drawable/app_check"
+                tools:text="Diese Information ist unglaublich lang und weilig."
+                tools:textColor="@color/green" />
+
+            <TextView
+                android:id="@+id/status_text_2"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_margin="@dimen/default_space_half"
+                android:drawablePadding="@dimen/small_space"
+                android:ellipsize="end"
+                android:lines="1"
+                app:layout_constraintLeft_toLeftOf="parent"
+                app:layout_constraintRight_toRightOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/status_text_1"
+                app:layout_constraintBottom_toTopOf="@+id/status_text_3"
+                tools:drawableLeft="@drawable/app_unbekannt"
+                tools:text="Noch 08:24 Std. geöffnet."
+                tools:textColor="@color/anthracite" />
+
+            <TextView
+                android:id="@+id/status_text_3"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_margin="@dimen/default_space_half"
+                android:layout_marginBottom="8dp"
+                android:layout_marginTop="8dp"
+                android:drawablePadding="@dimen/small_space"
+                android:ellipsize="end"
+                android:lines="1"
+                app:layout_constraintBottom_toTopOf="@+id/bookmarked_switch"
+                app:layout_constraintLeft_toLeftOf="parent"
+                app:layout_constraintRight_toRightOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/status_text_2"
+                tools:drawableLeft="@drawable/app_kreuz"
+                tools:text="Noch 08:24 Std. geöffnet."
+                tools:textColor="@color/red" />
+
+            <Switch
+                android:id="@+id/bookmarked_switch"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_margin="@dimen/default_space_half"
+                android:ellipsize="end"
+                app:layout_constraintTop_toBottomOf="@+id/status_text_3"
+                app:layout_constraintBottom_toBottomOf="parent"
+                android:text="@string/facility_bookmarked"/>
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+    </androidx.core.widget.NestedScrollView>
+</LinearLayout>
+

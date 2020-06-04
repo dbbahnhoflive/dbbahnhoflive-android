@@ -1,0 +1,237 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.coordinatorlayout.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:clipChildren="false"
+    tools:context="de.deutschebahn.bahnhoflive.ui.station.StationFragment"
+    android:background="@color/backgroundH1">
+
+    <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
+        android:id="@+id/refresher"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        app:layout_behavior="com.google.android.material.appbar.AppBarLayout$ScrollingViewBehavior">
+
+        <androidx.core.widget.NestedScrollView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:gravity="center"
+                android:paddingBottom="@dimen/overscroll_height"
+                android:background="@color/backgroundH1"
+                style="@style/App.Widget.CardContainer"
+                android:showDividers="none"
+                android:animateLayoutChanges="true">
+
+                <androidx.constraintlayout.widget.ConstraintLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content">
+
+                    <Space
+                        android:id="@+id/bottomSpace"
+                        app:layout_constraintTop_toTopOf="parent"
+                        app:layout_constraintDimensionRatio="1000:48"
+                        android:layout_width="match_parent"
+                        android:layout_height="0dp" />
+                </androidx.constraintlayout.widget.ConstraintLayout>
+
+                <androidx.viewpager2.widget.ViewPager2
+                    android:visibility="gone"
+                    tools:visibility="visible"
+                    style="@style/App.Widget.CardContainer"
+                    android:id="@+id/newsPager"
+                    android:layout_width="match_parent"
+                    android:layout_height="144sp"
+                    tools:listitem="@layout/item_news" />
+
+                <com.google.android.material.tabs.TabLayout
+                    android:visibility="gone"
+                    tools:visibility="visible"
+                    app:tabIndicatorHeight="0dp"
+                    app:tabIndicatorFullWidth="false"
+                    app:tabMinWidth="0dp"
+
+                    app:tabPaddingStart="0dp"
+                    app:tabPaddingEnd="0dp"
+                    app:tabIndicator="@null"
+                    app:tabGravity="center"
+                    android:id="@+id/newsPagerIndicator"
+                    android:paddingBottom="@dimen/default_space"
+                    android:layout_width="match_parent"
+                    android:layout_height="24dp" />
+
+                <androidx.cardview.widget.CardView
+                    android:layout_marginStart="@dimen/default_space"
+                    android:layout_marginEnd="@dimen/default_space"
+                    android:id="@+id/db_departures"
+                    android:contentDescription="@string/sr_station_departures"
+                    app:layout_constraintLeft_toLeftOf="parent"
+                    app:layout_constraintRight_toRightOf="parent"
+                    app:layout_constraintTop_toTopOf="parent"
+                    app:layout_constraintBottom_toTopOf="@+id/rowFeatures"
+                    style="@style/App.Widget.Card"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    tools:showIn="@layout/fragment_station">
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:orientation="vertical"
+                        android:showDividers="none">
+
+                        <TextView
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:padding="@dimen/default_space"
+                            android:layout_marginStart="@dimen/default_space"
+                            android:layout_marginEnd="@dimen/default_space"
+                            android:textStyle="bold"
+                            android:text="@string/main_tabTitleDepartures" />
+
+                        <View
+                            android:background="@color/red"
+                            android:layout_width="match_parent"
+                            android:layout_height="2dp" />
+
+                        <include
+                            layout="@layout/list_departures"
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent" />
+
+                    </LinearLayout>
+                </androidx.cardview.widget.CardView>
+
+                <ViewFlipper
+                    android:id="@+id/liveCardsProgressFlipper"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    style="@style/App.Widget.CardContainer">
+
+                    <include layout="@layout/dynamic_card_layout" />
+
+                    <ProgressBar
+                        android:id="@+id/card_progress"
+                        android:padding="@dimen/card_container_padding"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:indeterminate="true" />
+                </ViewFlipper>
+
+                <FrameLayout
+                    android:id="@+id/ecoTeaser"
+                    android:visibility="gone"
+                    tools:visibility="visible"
+                    style="@style/App.Widget.CardContainer"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content">
+
+                    <include layout="@layout/card_eco_teaser" />
+                </FrameLayout>
+            </LinearLayout>
+        </androidx.core.widget.NestedScrollView>
+    </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
+
+    <com.google.android.material.appbar.AppBarLayout
+        android:id="@+id/appBar"
+        android:clipChildren="false"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <FrameLayout
+            android:clipChildren="false"
+            android:id="@+id/titlebar_container"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:animateLayoutChanges="true"
+            app:layout_scrollFlags="scroll|exitUntilCollapsed">
+
+            <include
+                android:visibility="invisible"
+                android:id="@+id/collapsed_titlebar"
+                layout="@layout/titlebar_static"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_gravity="bottom" />
+
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:id="@+id/expanded_titlebar"
+                android:background="@color/backgroundH1"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_gravity="bottom">
+
+                <ImageView
+                    android:id="@+id/station_image"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:scaleType="centerCrop"
+                    android:src="@drawable/station_header_default"
+                    app:layout_constraintTop_toTopOf="parent"
+                    app:layout_constraintLeft_toLeftOf="parent"
+                    app:layout_constraintRight_toRightOf="parent" />
+
+                <ImageView
+                    android:layout_width="0dp"
+                    android:layout_height="0dp"
+                    android:src="@drawable/shape_station_image_contrast_overlay"
+                    app:layout_constraintBottom_toBottomOf="@+id/station_image"
+                    app:layout_constraintLeft_toLeftOf="@+id/station_image"
+                    app:layout_constraintRight_toRightOf="@+id/station_image"
+                    app:layout_constraintTop_toTopOf="@+id/station_image" />
+
+                <androidx.cardview.widget.CardView
+                    android:id="@+id/searchCard"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    app:layout_constraintWidth_percent=".872"
+                    app:cardCornerRadius="@dimen/round_button_half_size_large"
+                    android:minHeight="@dimen/round_button_size_large"
+                    app:layout_constraintTop_toBottomOf="@+id/station_image"
+                    app:layout_constraintBottom_toBottomOf="@+id/station_image"
+                    app:layout_constraintStart_toEndOf="parent"
+                    app:layout_constraintEnd_toStartOf="parent">
+
+                    <TextView
+                        android:text="Suchen Sie etwas am Bahnhof?"
+                        android:drawableEnd="@drawable/app_lupe"
+                        android:enabled="false"
+                        android:padding="@dimen/default_space"
+                        android:layout_gravity="center"
+                        android:gravity="center_vertical"
+                        android:textColor="@color/outline_grey"
+                        android:layout_margin="@dimen/default_space"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content" />
+                </androidx.cardview.widget.CardView>
+
+
+                <Space
+                    android:id="@+id/interSpace"
+                    app:layout_constraintBaseline_creator="1"
+                    app:layout_constraintBottom_toTopOf="@+id/searchCard"
+                    app:layout_constraintDimensionRatio="10000:425"
+                    android:layout_width="match_parent"
+                    android:layout_height="0dp" />
+
+                <TextView
+                    android:id="@+id/large_title"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="-4dp"
+                    style="@style/App.TextAppearance.StationTitle"
+                    app:layout_constraintBottom_toTopOf="@+id/interSpace"
+                    tools:text="Bahnhofname" />
+
+            </androidx.constraintlayout.widget.ConstraintLayout>
+
+        </FrameLayout>
+
+    </com.google.android.material.appbar.AppBarLayout>
+</androidx.coordinatorlayout.widget.CoordinatorLayout>

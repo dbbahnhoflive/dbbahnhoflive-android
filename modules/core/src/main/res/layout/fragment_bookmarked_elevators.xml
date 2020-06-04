@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.coordinatorlayout.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <com.google.android.material.appbar.AppBarLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/white">
+
+        <View
+            app:layout_scrollFlags="scroll"
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:background="@color/filter_header_divider" />
+
+        <LinearLayout
+            app:layout_scrollFlags="scroll"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+
+            <TextView
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:gravity="center_vertical|right"
+                android:text="@string/facility_edit"
+                android:textSize="@dimen/textsize_h2" />
+
+            <androidx.cardview.widget.CardView
+                android:id="@+id/clear"
+                android:contentDescription="@string/sr_clear_elevators"
+                android:layout_width="@dimen/round_button_size"
+                android:layout_height="@dimen/round_button_size"
+                android:layout_margin="@dimen/default_space"
+                app:cardCornerRadius="@dimen/round_button_half_size"
+                app:cardElevation="6dp">
+
+                <ImageView
+                    android:importantForAccessibility="no"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:src="@drawable/app_loeschen" />
+            </androidx.cardview.widget.CardView>
+        </LinearLayout>
+
+        <View
+            app:layout_scrollFlags="scroll"
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:background="@color/filter_header_divider" />
+    </com.google.android.material.appbar.AppBarLayout>
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/recycler"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="#eff1f3"
+        app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+        app:layout_behavior="@string/appbar_scrolling_view_behavior"
+        tools:listitem="@layout/card_expandable_facility_status" />
+
+</androidx.coordinatorlayout.widget.CoordinatorLayout>

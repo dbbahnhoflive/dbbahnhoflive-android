@@ -1,0 +1,118 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:paddingLeft="@dimen/wagenstand_margin_left"
+    android:paddingRight="@dimen/wagenstand_margin_right">
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1px"
+        android:background="#cccccc"
+        android:visibility="@integer/visibleOnTablet"/>
+
+    <LinearLayout
+        android:orientation="horizontal"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+        <FrameLayout
+            android:minHeight="180dp"
+
+            android:layout_width="80dp"
+            android:layout_height="match_parent">
+            <LinearLayout
+                android:id="@+id/waggon_class_color_view"
+                android:orientation="vertical"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent">
+                <View android:layout_width="match_parent"
+                    android:layout_height="0dp"
+                    android:layout_weight="1"/>
+                <View
+                    android:id="@+id/second_waggon_part"
+                    android:layout_width="match_parent"
+                    android:layout_height="0dp"
+                    android:layout_weight="1"/>
+
+            </LinearLayout>
+            <LinearLayout
+                android:orientation="vertical"
+                android:gravity="center_horizontal"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                >
+                <FrameLayout
+                    android:layout_width="50dp"
+                    android:layout_height="50dp"
+                    android:background="@drawable/wagenstand_train_numer_icon"
+                    android:layout_gravity="center_horizontal"
+                    android:layout_marginTop="10dp">
+
+                    <TextView
+                        android:id="@+id/waggon_number_label"
+                        android:textSize="@dimen/wagenstand_17sp_textSize"
+                        tools:text="29"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="5dp"
+                        android:layout_gravity="center_horizontal"/>
+
+                </FrameLayout>
+
+                <TextView
+                    android:id="@+id/waggon_class_label"
+                    android:textSize="@dimen/wagenstand_24sp_textSize"
+                    android:layout_width="wrap_content"
+                    android:layout_height="0dp"
+                    android:layout_weight="1"
+                    android:textColor="#ffffff"
+                    android:text="2"
+                    android:layout_marginRight="10dp"
+                    android:gravity="bottom|right"
+                    android:layout_gravity="right|bottom"/>
+
+            </LinearLayout>
+
+        </FrameLayout>
+
+        <LinearLayout
+            android:id="@+id/waggon_info_container"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:orientation="vertical"
+            android:paddingBottom="@dimen/wagenstand_space"
+            android:paddingLeft="@dimen/wagenstand_space"
+            android:paddingTop="@dimen/wagenstand_space">
+
+            <TextView
+                android:id="@+id/waggon_additional_information_label"
+                android:textStyle="bold"
+                android:textSize="@dimen/textsize_h3"
+                tools:text="Additional information"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content" />
+
+            <LinearLayout
+                android:id="@+id/waggon_symbol_container"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:divider="@drawable/shape_divider"
+                android:orientation="vertical"
+                android:showDividers="middle">
+
+            </LinearLayout>
+
+        </LinearLayout>
+
+        <View
+            android:id="@+id/right_border"
+            android:layout_width="1px"
+            android:layout_height="match_parent"
+            android:background="#cccccc"
+            android:visibility="@integer/visibleOnTablet" />
+    </LinearLayout>
+
+
+</LinearLayout>

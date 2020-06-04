@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:layout_marginLeft="@dimen/flyout_gap"
+    android:layout_marginRight="@dimen/flyout_gap"
+    android:background="@color/white"
+    android:orientation="vertical">
+
+    <LinearLayout xmlns:tools="http://schemas.android.com/tools"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        tools:showIn="@layout/flyout_track">
+
+        <include layout="@layout/include_track_flyout_header" />
+
+        <ViewFlipper
+            android:id="@+id/view_flipper"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="1">
+
+            <include
+                android:id="@+id/departureOverview"
+                layout="@layout/item_track_timetable_overview" />
+
+            <include layout="@layout/include_progress_and_error_and_empty" />
+        </ViewFlipper>
+
+
+    </LinearLayout>
+</FrameLayout>
+

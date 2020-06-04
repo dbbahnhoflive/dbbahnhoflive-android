@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="24dp"
+    android:height="24dp"
+    android:viewportWidth="24"
+    android:viewportHeight="24">
+
+    <path
+        android:name="SVGID_1_"
+        android:fillColor="#F01414"
+        android:pathData="M12,4 C16.4183,4,20,7.58172,20,12 C20,16.4183,16.4183,20,12,20
+C7.58172,20,4,16.4183,4,12 C4,7.58172,7.58172,4,12,4 Z" />
+    <path
+        android:fillColor="#FFFFFF"
+        android:pathData="M15.253,9.596 L14.404,8.747 L12,11.151 L9.595,8.747 L8.747,9.596 L11.151,12
+L8.748,14.402 L9.596,15.251 L12,12.849 L14.403,15.252 L15.252,14.404 L12.848,12
+Z" />
+</vector>

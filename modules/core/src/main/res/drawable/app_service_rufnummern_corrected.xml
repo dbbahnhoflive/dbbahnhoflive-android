@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<inset xmlns:android="http://schemas.android.com/apk/res/android"
+    android:drawable="@drawable/app_service_rufnummern"
+    android:insetLeft="@dimen/designer_correction"
+    android:insetTop="@dimen/designer_correction"
+    android:insetRight="@dimen/designer_correction"
+    android:insetBottom="@dimen/designer_correction" />

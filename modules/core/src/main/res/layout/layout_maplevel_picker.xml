@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="utf-8"?>
+<de.deutschebahn.bahnhoflive.view.DecoratedCard xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    app:cardCornerRadius="20dp">
+
+    <LinearLayout
+        android:id="@+id/mapLevelPicker_container"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
+
+        <ImageButton
+            android:id="@+id/mapLevelPicker_up"
+            android:layout_width="@dimen/circle_button_size"
+            android:layout_height="@dimen/circle_button_size"
+            android:padding="10dp"
+            android:scaleType="center"
+            android:src="@drawable/btn_up"
+            android:contentDescription="@string/sr_level_up" />
+
+        <FrameLayout
+            android:id="@+id/indicatorContainer"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical">
+            <ImageView
+                android:layout_gravity="bottom|center_horizontal"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:scaleType="center"
+                android:src="@drawable/ebenenswitch_inaktiv_small" />
+
+                <ImageView
+                    android:layout_gravity="bottom|center_horizontal"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:scaleType="center"
+                    android:src="@drawable/ebenenswitch_inaktiv_small" />
+
+                <ImageView
+                    android:layout_gravity="bottom|center_horizontal"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:scaleType="center"
+                    android:src="@drawable/ebenenswitch_inaktiv_small" />
+
+                <ImageView
+                    android:layout_gravity="bottom|center_horizontal"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:scaleType="center"
+                    android:src="@drawable/ebenenswitch_inaktiv_small" />
+            </LinearLayout>
+        </FrameLayout>
+
+        <ImageButton
+            android:id="@+id/mapLevelPicker_down"
+            android:layout_width="@dimen/circle_button_size"
+            android:layout_height="@dimen/circle_button_size"
+            android:scaleType="center"
+            android:src="@drawable/btn_down"
+            android:contentDescription="@string/sr_level_down" />
+    </LinearLayout>
+</de.deutschebahn.bahnhoflive.view.DecoratedCard>

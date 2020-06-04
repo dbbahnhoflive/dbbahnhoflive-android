@@ -1,0 +1,119 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+
+    tools:showIn="@layout/bottom_sheet_overlay_track_flyout">
+
+    <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+        xmlns:tools="http://schemas.android.com/tools"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:padding="@dimen/default_space">
+
+        <com.google.android.material.floatingactionbutton.FloatingActionButton
+            android:id="@+id/wagon_order_indicator"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_margin="@dimen/default_space"
+
+            android:src="@drawable/app_wagenreihung_grau"
+            app:backgroundTint="@color/white"
+            app:fabSize="mini"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintVertical_bias="0"
+            android:contentDescription="@string/sr_link_wagenreihung"/>
+
+        <androidx.constraintlayout.widget.Guideline
+            android:id="@+id/guideline"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            app:layout_constraintGuide_begin="@dimen/train_overview_tabulator" />
+
+        <TextView
+            android:id="@+id/time"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textStyle="bold"
+            app:layout_constraintBottom_toTopOf="@+id/transportationName"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            tools:text="13:26" />
+
+        <TextView
+            android:id="@+id/delay"
+            android:layout_width="0dp"
+            android:layout_marginTop="@dimen/small_space"
+            android:layout_height="wrap_content"
+            android:textColor="@color/red"
+            android:textStyle="normal"
+            android:textSize="@dimen/textsize_h3"
+            android:gravity="start"
+            app:layout_constraintLeft_toLeftOf="@+id/time"
+            app:layout_constraintRight_toLeftOf="@+id/guideline"
+            app:layout_constraintTop_toBottomOf="@+id/time"
+
+            tools:text="13:37" />
+
+        <TextView
+            android:id="@+id/direction"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:ellipsize="end"
+            android:maxLines="1"
+            app:layout_constraintBaseline_toBaselineOf="@+id/time"
+            app:layout_constraintHorizontal_bias="0.0"
+            app:layout_constraintLeft_toLeftOf="@+id/guideline"
+            app:layout_constraintRight_toLeftOf="@id/wagon_order_indicator"
+            tools:text="Stadt mit besonders langem Namen Hbf" />
+
+        <TextView
+            android:id="@+id/transportationName"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:textColor="@color/textcolor_light"
+            android:layout_marginTop="@dimen/default_space_half"
+            android:textSize="@dimen/textsize_h3"
+
+            app:layout_constraintBaseline_toBaselineOf="@+id/delay"
+            app:layout_constraintHorizontal_bias="0"
+            app:layout_constraintHorizontal_chainStyle="packed"
+            app:layout_constraintLeft_toLeftOf="@+id/direction"
+            tools:text="ICE 1630" />
+
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+<!--
+    <ImageView
+        android:id="@+id/issue_indicator"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_constraintBottom_toBottomOf="@+id/detail_under_direction"
+        app:layout_constraintLeft_toRightOf="@+id/detail_under_direction"
+        app:layout_constraintHorizontal_chainStyle="packed"
+        app:layout_constraintLeft_toLeftOf="@+id/direction"
+        app:layout_constraintTop_toTopOf="@+id/detail_under_direction"
+        tools:src="@drawable/app_warndreieck"
+        tools:visibility="visible" />
+-->
+
+    <TextView
+        android:id="@+id/issue_text"
+        android:padding="@dimen/default_space"
+        android:textColor="@color/red"
+        android:textSize="@dimen/textsize_h3"
+        android:layout_width="match_parent"
+        android:layout_weight="1"
+        android:layout_height="wrap_content"
+        tools:text="@tools:sample/lorem" />
+
+</LinearLayout>

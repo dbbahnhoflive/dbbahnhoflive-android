@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <style name="App.Theme.Core" parent="Theme.AppCompat.Light.NoActionBar">
+
+        <item name="colorAccent">@color/red</item>
+
+        <item name="android:colorBackground">@color/background</item>
+
+        <item name="android:textColor">@color/text_color</item>
+        <item name="android:textColorSecondary">@color/text_color_secondary</item>
+
+        <!--<item name="android:colorForegroundInverse">@color/white</item>-->
+
+        <item name="android:listDivider">@drawable/shape_divider_tiny</item>
+
+        <item name="android:divider">@drawable/shape_divider</item>
+        <item name="android:showDividers">none</item>
+
+
+        <item name="android:textAppearance">@style/App.TextAppearance</item>
+        <item name="android:textSize">@dimen/textsize_default</item>
+
+        <item name="colorUncheckedFavorite">@color/inactive_gray</item>
+
+        <item name="android:imageButtonStyle">@style/Widget.App.ImageButton</item>
+        <item name="imageButtonStyle">@style/Widget.App.ImageButton</item>
+
+        <item name="controlBackground">@color/anthracite</item>
+
+        <item name="elevation">6dp</item>
+
+    </style>
+
+    <style name="App.Theme.Base" parent="App.Theme.Core" />
+
+    <style name="App.Theme" parent="App.Theme.Base"/>
+
+    <style name="App.Theme.Inverse">
+        <item name="android:colorForeground">@color/white</item>
+        <item name="android:textColor">@color/white</item>
+        <item name="android:textColorPrimary">@color/white</item>
+        <item name="android:textColorSecondary">@color/white</item>
+        <item name="android:colorBackground">@color/anthracite</item>
+        <item name="colorUncheckedFavorite">?android:attr/textColor</item>
+    </style>
+
+</resources>

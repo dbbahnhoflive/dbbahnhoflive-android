@@ -1,0 +1,5 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <integer name="single_cell_weight">1</integer>
+    <integer name="double_cell_weight">2</integer>
+</resources>

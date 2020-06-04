@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="#ffffff"
+    android:clipChildren="false">
+
+        <HorizontalScrollView
+            android:id="@+id/horizontal_scrollview"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:overScrollMode="never"
+
+            android:clipChildren="false"
+            android:scrollbars="none">
+
+            <LinearLayout
+                android:id="@+id/section_label_container"
+                android:orientation="vertical"
+                android:paddingLeft="@dimen/wagenstand_sectionlabel_padding"
+                android:paddingRight="@dimen/wagenstand_sectionlabel_padding"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:clipChildren="false">
+
+                <LinearLayout
+                    android:id="@+id/train_section_container"
+                    android:orientation="horizontal"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_marginTop="3dp"
+                    android:clipChildren="false">
+                </LinearLayout>
+
+                <LinearLayout
+                    android:id="@+id/train_symbol_container"
+                    android:orientation="horizontal"
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent">
+                </LinearLayout>
+
+            </LinearLayout>
+
+        </HorizontalScrollView>
+
+
+</LinearLayout>

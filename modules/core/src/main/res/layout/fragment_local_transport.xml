@@ -1,0 +1,84 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.coordinatorlayout.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
+                                                 xmlns:app="http://schemas.android.com/apk/res-auto"
+                                                 xmlns:tools="http://schemas.android.com/tools"
+                                                 android:layout_width="match_parent"
+                                                 android:layout_height="match_parent"
+                                                 tools:context=".ui.station.localtransport.LocalTransportFragment">
+
+    <ViewFlipper
+        android:id="@+id/view_flipper"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:measureAllChildren="false"
+        app:layout_behavior="com.google.android.material.appbar.AppBarLayout$ScrollingViewBehavior">
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/recycler"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+            android:paddingBottom="@dimen/overscroll_height"
+            android:clipToPadding="false"
+            tools:listitem="@layout/item_local_transport_station"/>
+
+        <include layout="@layout/include_progress" />
+
+        <FrameLayout
+            android:minHeight="240dp"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <TextView
+                android:id="@+id/error_message"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:drawableTop="@drawable/app_error"
+                android:gravity="center"
+                android:padding="@dimen/default_space"
+                android:text="@string/error_data_unavailable"
+                android:textColor="@color/red" />
+        </FrameLayout>
+    </ViewFlipper>
+
+    <com.google.android.material.appbar.AppBarLayout
+        android:id="@+id/appBar"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:elevation="0dp">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="#d6dbdf"
+            android:orientation="horizontal"
+            android:gravity="center_vertical"
+            android:padding="@dimen/default_space">
+
+            <TextView
+                android:id="@+id/pageTitle"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:padding="@dimen/default_space"
+                android:autoSizeMinTextSize="13sp"
+                android:autoSizeTextType="uniform"
+                app:autoSizeTextType="uniform"
+                app:autoSizeMinTextSize="13sp"
+                android:maxLines="1"
+                android:text="@string/template_local_transport_connections"
+                android:contentDescription="@string/sr_template_local_transport_connections" />
+
+            <ImageView
+                android:id="@+id/close_button"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:padding="@dimen/default_space"
+                android:contentDescription="@string/sr_close"
+                android:src="@drawable/app_schliessen" />
+        </LinearLayout>
+    </com.google.android.material.appbar.AppBarLayout>
+
+</androidx.coordinatorlayout.widget.CoordinatorLayout>

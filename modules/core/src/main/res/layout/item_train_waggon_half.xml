@@ -1,0 +1,126 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    android:paddingLeft="@dimen/wagenstand_tablet_padding">
+
+    <LinearLayout
+        android:orientation="horizontal"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <FrameLayout
+            android:id="@+id/waggon_class_color_view"
+            android:layout_width="80dp"
+            android:layout_height="match_parent"
+            android:layout_marginLeft="20dp">
+
+            <LinearLayout
+                android:orientation="vertical"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent">
+
+                <Space
+                    android:layout_width="match_parent"
+                    android:layout_height="0dp"
+                    android:layout_weight="1" />
+
+                <View
+                    android:id="@+id/second_waggon_part"
+                    android:layout_width="match_parent"
+                    tools:background="#088"
+                    android:layout_weight="1"
+                    android:layout_height="0dp" />
+
+            </LinearLayout>
+
+            <FrameLayout
+                android:layout_width="50dp"
+                android:layout_height="50dp"
+                android:layout_gravity="center_horizontal"
+                android:layout_marginTop="10dp"
+                android:background="@drawable/wagenstand_train_numer_icon">
+
+                <TextView
+                    android:id="@+id/waggon_number_label"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_horizontal"
+                    android:layout_marginTop="5dp"
+                    android:textSize="@dimen/wagenstand_12sp_textSize"
+                    tools:text="29"
+                    android:contentDescription=""
+                    android:importantForAccessibility="no" />
+
+            </FrameLayout>
+
+            <TextView
+                android:id="@+id/waggon_class_label"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="bottom|right"
+                android:layout_marginRight="10dp"
+                android:textColor="#ffffff"
+                android:textSize="@dimen/wagenstand_24sp_textSize"
+                android:contentDescription=""
+                android:importantForAccessibility="no" />
+
+        </FrameLayout>
+
+
+        <LinearLayout
+            android:id="@id/waggon_info_container"
+            android:layout_width="0dp"
+            android:layout_weight="1"
+            android:layout_height="wrap_content"
+            android:minHeight="140dp"
+            android:layout_marginTop="10dp"
+            android:orientation="vertical"
+            android:paddingLeft="20dp">
+
+            <TextView
+                android:id="@+id/waggon_additional_information_label"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:textSize="@dimen/textsize_h3"
+                android:textStyle="bold"
+                tools:text="Additional information" />
+
+            <LinearLayout
+                android:id="@+id/waggon_symbol_container"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical">
+
+            </LinearLayout>
+
+        </LinearLayout>
+
+        <View
+            android:layout_width="1px"
+            android:layout_height="match_parent"
+            tools:visibility="visible"
+            android:background="#cccccc"
+            android:visibility="@integer/visibleOnTablet" />
+
+        <View
+            android:id="@+id/waggon_distanceRight"
+            android:layout_width="@dimen/wagenstand_tablet_distanceRight"
+            android:layout_height="match_parent" />
+
+    </LinearLayout>
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1px"
+        android:layout_alignParentBottom="true"
+        android:layout_alignRight="@id/waggon_info_container"
+        android:layout_marginLeft="20dp"
+        android:background="#cccccc"
+        tools:visibility="visible"
+        android:visibility="@integer/visibleOnTablet" />
+
+
+</LinearLayout>

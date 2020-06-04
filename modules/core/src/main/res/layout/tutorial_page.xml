@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.core.widget.NestedScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <LinearLayout
+        android:padding="@dimen/small_space"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
+
+        <LinearLayout
+            android:id="@+id/contentContainer"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:showDividers="middle"
+            android:padding="@dimen/default_space">
+
+            <TextView
+                android:id="@+id/title"
+                style="@style/App.TextAppearance.AppTitle"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                tools:text="Bahnhof live" />
+
+            <TextView
+                android:layout_marginTop="@dimen/small_space"
+                android:id="@+id/text"
+                style="@style/App.TextAppearance.H3"
+                android:lineSpacingMultiplier="1.2"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/title"
+                tools:text="@tools:sample/lorem" />
+        </LinearLayout>
+
+        <androidx.cardview.widget.CardView
+            android:id="@+id/button"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/round_button_size_large"
+            android:layout_margin="@dimen/default_space"
+            android:visibility="gone"
+            app:cardBackgroundColor="@color/red"
+            app:cardCornerRadius="@dimen/round_button_half_size_large"
+            tools:visibility="visible">
+
+            <TextView
+                android:id="@+id/button_label"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:gravity="center"
+                android:minHeight="64dp"
+                android:textColor="@color/white"
+                tools:text="Viel Spaß" />
+        </androidx.cardview.widget.CardView>
+
+        <ImageView
+            android:id="@+id/done_indicator"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:src="@drawable/app_check_large"
+            android:visibility="gone"
+            tools:visibility="visible"
+            android:contentDescription="@string/sr_done" />
+
+    </LinearLayout>
+</androidx.core.widget.NestedScrollView>

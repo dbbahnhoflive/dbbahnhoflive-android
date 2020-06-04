@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content">
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_vertical"
+        tools:text="Description"
+        android:id="@+id/symbol_description"/>
+
+    <de.deutschebahn.bahnhoflive.ui.BahnPictoView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:paddingLeft="1dp"
+        android:textSize="@dimen/wagenstand_some_textSize"
+        android:id="@+id/symbol_label"
+        android:importantForAccessibility="no"/>
+
+</LinearLayout>

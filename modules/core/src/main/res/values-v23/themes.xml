@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <style name="App.Theme" parent="App.Theme.Base">
+        <!--<item name="android:statusBarColor">#fff</item>-->
+        <!--<item name="android:windowTranslucentStatus">true</item>-->
+        <item name="android:trackTint">@color/anthracite</item>
+    </style>
+</resources>

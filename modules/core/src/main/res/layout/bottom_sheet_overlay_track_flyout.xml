@@ -1,0 +1,114 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<merge xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    tools:showIn="@layout/fake_map2">
+
+    <View
+        android:visibility="gone"
+        tools:visibility="visible"
+        android:id="@+id/touchInterceptor"
+        android:background="@color/translucent_black"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent" />
+
+    <FrameLayout
+        android:minHeight="@dimen/flyout_height"
+        android:visibility="gone"
+        tools:visibility="visible"
+        android:clickable="false"
+        android:id="@+id/trackFlyoutOverlay"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_horizontal"
+        tools:layout_gravity="center_horizontal|bottom"
+        android:layout_marginLeft="@dimen/flyout_margin"
+        android:layout_marginRight="@dimen/flyout_margin"
+        app:behavior_hideable="false"
+        app:behavior_peekHeight="@dimen/flyout_height"
+        app:layout_anchorGravity="bottom"
+        app:layout_behavior="@string/bottom_sheet_behavior">
+
+        <!-- This nesting is basically for adding up flyout margins and gaps -->
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="@dimen/tiny_space"
+            android:layout_marginRight="@dimen/tiny_space"
+
+            android:background="@color/white"
+            android:animateLayoutChanges="true"
+            android:showDividers="middle"
+            android:divider="@drawable/shape_flyout_track_divider"
+            android:orientation="vertical">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:id="@+id/collapsedFlyout"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                tools:showIn="@layout/flyout_track">
+
+                <include layout="@layout/include_track_flyout_header" />
+
+                <ViewFlipper
+                    android:id="@+id/view_flipper"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content">
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:divider="@drawable/shape_flyout_track_divider"
+                        android:orientation="vertical"
+                        android:showDividers="middle">
+
+                        <include
+                            android:id="@+id/departureOverview"
+                            layout="@layout/item_track_timetable_overview" />
+
+                        <include
+                            android:id="@+id/secondSummary"
+                            layout="@layout/item_track_timetable_overview" />
+
+                        <include
+                            android:id="@+id/thirdSummary"
+                            layout="@layout/item_track_timetable_overview" />
+                    </LinearLayout>
+
+                    <include layout="@layout/include_progress_and_error_and_empty" />
+                </ViewFlipper>
+
+
+            </LinearLayout>
+
+            <FrameLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+
+                <androidx.cardview.widget.CardView
+                    android:id="@+id/departuresButton"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_margin="@dimen/default_space"
+                    app:cardBackgroundColor="@color/button_grey"
+                    app:cardCornerRadius="32dp">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center"
+                        android:gravity="center"
+                        android:minHeight="64dp"
+                        android:text="@string/btn_departures"
+                        android:textColor="@color/white"
+                        android:textStyle="bold" />
+
+                </androidx.cardview.widget.CardView>
+
+            </FrameLayout>
+        </LinearLayout>
+</FrameLayout>
+</merge>

@@ -1,0 +1,100 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<de.deutschebahn.bahnhoflive.view.DecoratedCard xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+
+        android:background="@color/card_background"
+        android:orientation="vertical">
+
+        <include layout="@layout/common_detail_overview" />
+
+        <LinearLayout
+            android:id="@+id/details"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+            <FrameLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:padding="@dimen/default_space">
+
+                <TextView
+                    android:id="@+id/description"
+                    android:textSize="@dimen/textsize_h3"
+                    android:lineSpacingMultiplier="1.2"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="@dimen/indent"
+                    tools:text="@tools:sample/lorem" />
+            </FrameLayout>
+
+            <androidx.cardview.widget.CardView
+                android:id="@+id/buttons_container"
+                app:cardCornerRadius="0dp"
+                app:cardElevation="6dp"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+
+                <androidx.constraintlayout.widget.ConstraintLayout
+                    android:layout_margin="@dimen/default_space"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content">
+
+                    <com.google.android.material.floatingactionbutton.FloatingActionButton
+                        android:contentDescription="@string/sr_link_external"
+                        android:id="@+id/button_left"
+                        android:layout_width="@dimen/round_button_size_large"
+                        android:layout_height="@dimen/round_button_size_large"
+                        android:layout_margin="@dimen/default_space"
+                        android:scaleType="center"
+                        android:src="@drawable/app_extern_link"
+                        app:backgroundTint="@color/white"
+                        app:layout_constraintBottom_toBottomOf="parent"
+                        app:layout_constraintHorizontal_chainStyle="packed"
+                        app:layout_constraintLeft_toLeftOf="parent"
+                        app:layout_constraintRight_toLeftOf="@+id/button_middle"
+                        app:layout_constraintTop_toTopOf="parent" />
+
+                    <com.google.android.material.floatingactionbutton.FloatingActionButton
+                        android:contentDescription="@string/sr_link_details"
+                        android:id="@+id/button_middle"
+                        android:layout_width="@dimen/round_button_size_large"
+                        android:layout_height="@dimen/round_button_size_large"
+                        android:layout_margin="@dimen/default_space"
+                        android:scaleType="center"
+                        android:src="@drawable/app_details"
+                        app:backgroundTint="@color/white"
+
+                        app:layout_constraintBottom_toBottomOf="parent"
+                        app:layout_constraintLeft_toRightOf="@+id/button_left"
+                        app:layout_constraintRight_toLeftOf="@+id/button_right"
+                        app:layout_constraintTop_toTopOf="parent" />
+
+                    <com.google.android.material.floatingactionbutton.FloatingActionButton
+                        android:contentDescription="@string/sr_link_price"
+                        android:id="@+id/button_right"
+                        android:layout_width="@dimen/round_button_size_large"
+                        android:layout_height="@dimen/round_button_size_large"
+                        android:layout_margin="@dimen/default_space"
+                        android:scaleType="center"
+                        android:src="@drawable/app_preis"
+                        app:backgroundTint="@color/white"
+
+                        app:layout_constraintBottom_toBottomOf="parent"
+                        app:layout_constraintLeft_toRightOf="@+id/button_middle"
+                        app:layout_constraintRight_toRightOf="parent"
+                        app:layout_constraintTop_toTopOf="parent" />
+
+                </androidx.constraintlayout.widget.ConstraintLayout>
+            </androidx.cardview.widget.CardView>
+        </LinearLayout>
+    </LinearLayout>
+</de.deutschebahn.bahnhoflive.view.DecoratedCard>

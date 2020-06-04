@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="@color/filter_header_divider"
+    android:orientation="vertical">
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="1dp"
+        android:layout_marginBottom="1dp"
+        android:background="@color/white"
+        android:animateLayoutChanges="true"
+        android:clipToPadding="false"
+        android:padding="@dimen/default_space">
+
+        <ImageView
+            android:id="@+id/background"
+            android:layout_width="0dp"
+            android:layout_height="@dimen/round_button_size"
+            android:layout_marginRight="40dp"
+            android:src="@drawable/shape_toggle_track"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintRight_toLeftOf="@+id/filter"
+            app:layout_constraintTop_toTopOf="parent"
+            android:importantForAccessibility="no"/>
+
+        <TextView
+            android:id="@+id/departure"
+            android:layout_width="0dp"
+            android:layout_height="@dimen/round_button_size"
+            android:background="@drawable/shape_toggle_thumb"
+            android:elevation="@dimen/default_elevation"
+            android:gravity="center"
+            android:text="@string/main_tabTitleDepartures"
+            android:textColor="@color/anthracite"
+            android:textStyle="bold"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintLeft_toLeftOf="@+id/background"
+            app:layout_constraintRight_toLeftOf="@+id/arrival"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <TextView
+            android:id="@+id/arrival"
+            android:layout_width="0dp"
+            android:layout_height="@dimen/round_button_size"
+            android:gravity="center"
+            android:padding="@dimen/default_space"
+            android:text="@string/main_tabTitleArrivals"
+            android:textColor="@color/white"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintLeft_toRightOf="@+id/departure"
+            app:layout_constraintRight_toRightOf="@+id/background"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <include layout="@layout/button_filter" />
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+</FrameLayout>

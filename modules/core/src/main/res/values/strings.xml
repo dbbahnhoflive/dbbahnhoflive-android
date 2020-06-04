@@ -1,0 +1,232 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <string name="app_name">Bahnhof live CE</string>
+
+    <string name="app_id">BahnhofLive</string>
+
+    <string name="home_suggestionsMessageNoResult">Bitte überprüfen Sie Ihre Eingabe</string>
+
+    <string name="dlg_yes">Ja</string>
+    <string name="dlg_no">Nein</string>
+    <string name="dlg_cancel">Abbrechen</string>
+
+    <!--<string name="dialog_stationNotAvailableTitle">Entschuldigung!</string>-->
+
+    <!--<string name="dep_arr_emptyTitle">Entschuldigung!</string>-->
+    <string name="dep_arr_filter_Tracks">Gleis</string>
+    <string name="dep_arr_filter_Type">Zugtyp</string>
+
+    <string name="menu_feedback">Feedback</string>
+
+    <string name="settings_tracking_not_active_msg">Das Tracking ist derzeit nicht aktiviert. Möchten Sie die Datenerfassung erlauben?</string>
+    <string name="settings_tracking_active_msg">Das Tracking ist derzeit aktiviert. Möchten Sie die Datenerfassung weiterhin erlauben?</string>
+    <string name="settings_tracking_dlg_title">"E-Tracker Analytics"</string>
+
+    <string name="venue_open">Geöffnet</string>
+    <string name="venue_closed">Geschlossen</string>
+    <string name="venue_notAvailable">Keine Angabe</string>
+    <string name="venue_openHours">Öffnungszeiten</string>
+    <string name="venue_payment">Zahlungsmöglichkeiten</string>
+
+    <!-- Wagenstand -->
+    <string name="wagenstand_last_updated">Wagenreihungsplan Stand: &lt;b>%1$s&lt;/b> Uhr</string>
+    <string name="wagenstand_no_result_copy">Für den ausgewählten Zug liegt derzeit noch keine aktuelle Wagenreihung vor. Bitte versuchen Sie es später erneut.</string>
+    <string name="wagenstand_no_result_headline">Hinweis</string>
+
+
+    <!-- Anlageverfuegbarkeit -->
+    <string name="facilityStatus_active">In Betrieb</string>
+    <string name="facilityStatus_inactive">Außer Betrieb</string>
+    <string name="facilityStatus_unknown">Keine Angabe</string>
+
+    <string name="facilityStatus_overview_title">Übersicht</string>
+    <string name="facilityStatus_saved_title">Merkliste</string>
+    <string name="facility_edit">Liste leeren</string>
+    <string name="facility_deleteall_alert_title">Liste leeren</string>
+    <string name="facility_deleteall_alert_text">Möchten Sie alle Einträge aus der Liste entfernen?</string>
+    <string name="facility_deleteall_alert_yes">Ja</string>
+    <string name="facility_deleteall_alert_no">Nein</string>
+
+    <string name="alert_notificationOkayLink">Okay</string>
+
+    <!-- Buttons strings -->
+
+    <!-- Error strings -->
+
+    <!-- Transition type strings -->
+
+    <!-- Feedback -->
+    <string name="feedback_teaser">Zufrieden mit der App? Teilen Sie Ihre Erfahrungen im Play Store.</string>
+    <string name="feedback_title">Kontakt</string>
+    <string name="feedback_text">Schreiben Sie uns, sollten Ihnen Unstimmigkeiten in der App auffallen.</string>
+    <string name="feedback_button">Kontakt aufnehmen</string>
+    <string name="feedback_subject">Feedback DB Bahnhof live App</string>
+    <string name="feedback_send_to">marketing-bahnhoefe@deutschebahn.com</string>
+
+    <string name="rating_title">Zufrieden mit der App?</string>
+    <string name="rating_text">Unterstützen Sie uns mit einer positiven Bewertung im Play Store.</string>
+    <string name="rating_button">App bewerten</string>
+
+    <!-- Tutorial -->
+
+    <!-- Wagenreihung Reminder -->
+    <string name="activate_wagenstand_reminder">Erinnerung vor Einfahrt des Zuges senden.</string>
+    <string name="alert_wagenstand_reminder_not_possible_msg">Die Erinnerungsfunktion steht nur bis 10 Minuten vor Einfahrt des Zuges zur Verfügung.</string>
+
+    <!-- Wagenreihung Ausstattungsarten -->
+    <string name="wagon_feature_bicycle_spaces">Stellplätze für Fahrräder</string>
+    <string name="wagon_feature_wheelchair_spaces">Plätze für Rollstuhlfahrer</string>
+    <string name="wagon_feature_disabled_toilet">Toilette für mobilitätseingeschränkte Personen</string>
+    <string name="wagon_feature_airconditioning">Klimaanlage</string>
+    <string name="status_defective">defekt</string>
+    <string name="status_open">offen</string>
+    <string name="status_closed">geschlossen</string>
+    <string name="status_available">verfügbar</string>
+    <string name="status_unavailable">nicht verfügbar</string>
+    <string name="status_reserved">reserviert</string>
+    <string name="status_noservice">nicht bedient</string>
+    <string name="template_feature_with_status">%1$s %2$s</string>
+    <string name="template_feature_without_anything">%1$s</string>
+    <string name="template_feature_with_status_and_additional_info">%1$s %2$s %3$s</string>
+    <string name="template_feature_with_additional_info">%1$s %2$s</string>
+    <string name="defective_airconditioning"><b>Achtung:</b> In diesem Wagen ist die Klimaanlage nicht funktionsfähig. Bitte weichen Sie auf einen anderen Wagen aus.</string>
+
+    <!-- RELAUNCH -->
+
+    <string name="list_title_local_transport_stations">Stationen &amp; Haltestellen</string>
+
+    <string name="rich_app_title"><b>Bahnhof</b> live</string>
+    <string name="legal_notice">Impressum</string>
+    <string name="privacy_policy">Datenschutz</string>
+    <string name="hint_search">Haltestellen finden. Bahnhöfe entdecken.</string>
+    <string name="settings">Einstellungen</string>
+    <string name="template_distance_in_km">%1$d km</string>
+    <string name="template_distance_in_m">%1$d m</string>
+    <string name="hint_find_stations">@string/hint_search</string>
+    <string name="search_history">Suchverlauf</string>
+    <string name="search_results">Vorschläge</string>
+    <string name="home_suggestionsTitleNoResult">Leider keinen Bahnhof gefunden.</string>
+
+    <string name="template_platform">Gl. %1$s</string>
+
+    <string name="tab_db">Bahnhof</string>
+    <string name="tab_local_transport">ÖPNV</string>
+    <string name="btn_wagon_order">Zur Wagenreihung</string>
+
+    <string name="main_tabTitleDepartures">Abfahrt</string>
+    <string name="main_tabTitleArrivals">Ankunft</string>
+    <string name="stationinfo_infos_and_services">Info &amp; Services vor Ort</string>
+    <string name="stationinfo_service_phone_numbers">Rufnummern &amp; Services</string>
+    <string name="stationinfo_parkings">Parkplätze</string>
+    <string name="title_stationinfo_categories">Bahnhofsinformationen</string>
+    <string name="title_shopping_categories"><![CDATA[Shoppen & Schlemmen]]></string>
+
+    <string name="generic_empty_message">Es sind keine Daten vorhanden.</string>
+    <string name="filter_allow_all">Alle anzeigen</string>
+    <string name="title_filter">Filter Einstellungen</string>
+    <string name="parking_occupancy_closed">Geschlossen</string>
+    <string name="parking_occupancy_24_7">24 Std. 7 Tage geöffnet</string>
+    <string name="parking_occupancy_very_low">0 – 10 freie Stellplätze</string>
+    <string name="parking_occupancy_low">10 – 30 freie Stellplätze</string>
+    <string name="parking_occupancy_medium">30 – 50 freie Stellplätze</string>
+    <string name="parking_occupancy_high">>50 freie Stellplätze</string>
+    <string name="parking_details_title_info">Übersicht</string>
+    <string name="parking_details_title_price">Tarif</string>
+    <string name="parking_details_button_reservation">Reservierung</string>
+    <string name="parking_details_button_subscribe">Monatskarte beantragen</string>
+    <string name="facility_bookmarked">Aufzug der Merkliste hinzugefügt</string>
+    <string name="title_timetable_filter">Verkehrsmittel</string>
+    <string name="apply">Übernehmen</string>
+    <string name="title_station_features">Bahnhofsausstattung</string>
+    <string name="feature_taxi">Taxistand</string>
+    <string name="feature_rental">Mietwagen</string>
+    <string name="feature_bicycle">Fahrradstellplatz</string>
+    <string name="feature_toilet">WC</string>
+    <string name="feature_wifi">WLAN</string>
+    <string name="feature_db_info">DB Info</string>
+    <string name="feature_db_reisezentrum">DB Reisezentrum</string>
+    <string name="feature_db_lounge">DB Lounge</string>
+    <string name="feature_lockers">Schließfächer</string>
+    <string name="feature_traveler_supplies">Reisebedarf</string>
+    <string name="feature_lost_and_found">Fundservice</string>
+    <string name="feature_parkings">Parkplätze</string>
+    <string name="feature_elevators">Aufzüge</string>
+    <string name="feature_accessibility">Stufenfreier Zugang</string>
+    <string name="not_available">nicht vorhanden</string>
+    <string name="available">vorhanden</string>
+    <string name="transition_home_logo">homeLogo</string>
+    <string name="transition_background">background</string>
+    <string name="transition_pin">pin</string>
+    <string name="title_elevators_and_escalators">Aufzüge</string>
+    <string name="rimap_category_food">Lebensmittel</string>
+    <string name="rimap_category_catering">Gastronomie</string>
+    <string name="rimap_category_bakery">Bäckereien</string>
+    <string name="rimap_category_shopping">Shops</string>
+    <string name="rimap_category_press">Presse und Buch</string>
+    <string name="rimap_category_health">Gesundheit und Pflege</string>
+    <string name="rimap_category_service">Dienstleistungen</string>
+    <string name="setting_station_favorite">Als Favorit hinzugefügt</string>
+    <string name="setting_show_hints"><![CDATA[Tipps & Hinweise anzeigen]]></string>
+    <string name="settings_title_hints"><![CDATA[Tipps & Hinweise]]></string>
+    <string name="template_level_overground">%1$d. Obergeschoss</string>
+    <string name="template_level_underground">%1$d. Untergeschoss</string>
+    <string name="level_base">Erdgeschoss</string>
+    <string name="template_remaining_open_hours">Noch %1$d:%2$02d Std. geöffnet.</string>
+    <string name="error_data_unavailable">Daten derzeit nicht verfügbar</string>
+    <string name="empty_departures">Keine Abfahrt in den nächsten zwei Stunden</string>
+    <string name="template_empty_departures">Keine%1$s %4$s%2$s bis %5$s Uhr%6$s%3$s.</string>
+    <string name="timetable_trailer_tomorrow">\u0020am morgigen Tag</string>
+    <string name="timetable_trailer_departure">Abfahrt</string>
+    <string name="timetable_trailer_arrival">Ankunft</string>
+    <string name="timetable_trailer_optional_additional">\u0020weitere</string>
+    <string name="template_timetable_trailer_optional_train_type">\u0020des Verkehrsmittels %1$s</string>
+    <string name="template_timetable_trailer_optional_platform">\u0020an Gleis %1$s</string>
+
+    <string name="tutorial_title_overview"><b>Bahnhof</b> live</string>
+    <string name="tutorial_text_overview">Egal ob zu Hause oder auf Reisen. Entdecken Sie <b>5.400 Bahnhöfe</b> und <b>alle Haltestellen</b> des öffentlichen Personennahverkehrs.</string>
+    <string name="tutorial_title_search"><b>Bahnhöfe</b> und <b>Haltestellen</b></string>
+    <string name="tutorial_text_search"><b>Finden</b> Sie Ihren Bahnhof oder Ihre Haltestelle und speichern Sie diese als Favoriten.</string>
+    <string name="tutorial_title_nearby"><b>Abfahrt</b> in der Nähe</string>
+    <string name="tutorial_text_nearby"><b>Profi-Tipp:</b> Wählen Sie <b>einen Eintrag</b> aus der Liste und <b>halten Sie diesen gedrückt</b>. Sie bekommen eine Schnellansicht der Abfahrtstafel angezeigt. Dies funktioniert auch bei Ihren <b>Favoriten</b> und der <b>Suche</b>.</string>
+    <string name="tutorial_title_location_permission">Schon <b>gewusst?</b></string>
+    <string name="tutorial_text_location_permission">Für Funktionen wie Haltestellen in Ihrer Nähe benötigt die App Zugriff auf Ihren Standort.</string>
+    <string name="tutorial_title_poi_search">Den Bahnhof <b>erkunden</b></string>
+    <string name="tutorial_text_poi_search">Die <b>bahnhofsbezogene Suche</b> ist der einfachste Weg, um gezielt Angebote, Services und Informationen vorab oder vor Ort zu erhalten.</string>
+    <string name="tutorial_title_finish"><b>Bahnhof</b> live</string>
+    <string name="tutorial_text_finish">Haltestellen finden. Bahnhöfe entdecken.\n</string>
+    <string name="tutorial_button_finish">Viel Spaß</string>
+    <string name="tutorial_button_location_permission">Jetzt erlauben</string>
+    <string name="home_suggestionsMessageError">Bitte versuchen Sie es später erneut</string>
+    <string name="remaining_open_hours_infinite">Heute durchgehend geöffnet</string>
+    <string name="card_button_label_local_transport">ÖPNV</string>
+    <string name="card_button_label_features">Ausstattung</string>
+    <string name="card_button_label_map_detailed">Bahnhofskarte</string>
+    <string name="card_button_label_map">Umgebungskarte</string>
+    <string name="card_button_label_shopping">Shoppen &amp; Schlemmen</string>
+    <string name="card_button_label_elevators">Aufzüge</string>
+    <string name="card_button_label_settings">Einstellungen</string>
+    <string name="card_button_label_feedback">Feedback</string>
+    <string name="empty_favorites_hint"><b>Hinweis:</b> Bestimmen Sie Ihre favorisierten Stationen einfach mithilfe des Stern-Icons in der Suche oder Umgebungsanzeige.</string>
+    <string name="notice_location_service_deactivated"><b>Hinweis:</b> Haltestellen in Ihrer Umgebung werden Ihnen nur angezeigt, wenn Sie den Ortungsdienst aktivieren.</string>
+    <string name="btn_departures">Abfahrtstafel</string>
+    <string name="osm_copyright">© OpenStreetMap-Mitwirkende</string>
+    <string name="wagenstand_possibly_outdated">Dargestellte Wagenreihung gemäß Fahrplan. Bitte achten Sie auf <b>aktuelle Informationen am Gleis.</b></string>
+    <string name="title_tutorial">Einführung in DB Bahnhof live</string>
+    <string name="title_hub">DB Bahnhof live Bahnhofssuche</string>
+    <string name="timetable_load_more">Später</string>
+    <string name="train_cancelled" />
+    <string name="template_local_transport_connections">&lt;b>ÖPNV Anschlüsse&lt;/b> Umkr. %1$dm</string>
+    <string name="title_content_search_genuine">Suchergebnis</string>
+    <string name="title_content_search_history">Suchverlauf</string>
+    <string name="title_content_search_suggestions">Suchvorschläge</string>
+    <string name="newsHeadline">Aktuelle Informationen</string>
+    <string name="newsHeadlineDecoration">+++</string>
+    <string name="teaser_eco_station">Das ist grün.</string>
+    <string name="title_news_details">Aktuelle Informationen</string>
+    <string name="button_news_external_link">Mehr Informationen</string>
+    <string name="coupon_category_label">Rabatt Coupons</string>
+    <string name="button_news_external_link_survey">Zur Umfrage</string>
+    <string name="button_website">Webseite</string>
+
+</resources>

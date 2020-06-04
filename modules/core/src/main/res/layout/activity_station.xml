@@ -1,0 +1,137 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    tools:context="de.deutschebahn.bahnhoflive.ui.station.StationActivity"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical">
+
+        <FrameLayout
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="1">
+
+            <ViewFlipper
+                android:id="@+id/view_flipper"
+
+                android:layout_width="match_parent"
+                android:layout_height="match_parent">
+
+                <fragment
+                    android:id="@+id/content_overview"
+                    class="de.deutschebahn.bahnhoflive.ui.station.HistoryFragment"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    tools:layout="@layout/fragment_station" />
+
+                <fragment
+                    android:id="@+id/content_timetables"
+                    class="de.deutschebahn.bahnhoflive.ui.station.HistoryFragment"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent" />
+
+                <fragment
+                    android:id="@+id/content_info"
+                    class="de.deutschebahn.bahnhoflive.ui.station.HistoryFragment"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent" />
+
+                <fragment
+                    android:id="@+id/content_shopping"
+                    class="de.deutschebahn.bahnhoflive.ui.station.HistoryFragment"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent" />
+            </ViewFlipper>
+
+            <com.google.android.material.floatingactionbutton.FloatingActionButton
+                android:id="@+id/btn_map"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="bottom|right"
+                android:layout_margin="@dimen/default_space_double"
+                android:src="@drawable/app_karte"
+                android:visibility="gone"
+                tools:visibility="visible"
+                android:contentDescription="@string/sr_map" />
+
+            <de.deutschebahn.bahnhoflive.tutorial.TutorialView
+                android:id="@+id/tab_tutorial_view"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_gravity="bottom"
+                android:visibility="gone"
+                android:elevation="10dp" />
+
+        </FrameLayout>
+
+        <View
+            android:background="#e1e6eb"
+            android:layout_width="match_parent"
+            android:layout_height="1dp" />
+
+        <LinearLayout
+            android:id="@+id/navigation_bar"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@color/white"
+            android:gravity="center"
+            android:padding="1dp"
+            android:orientation="horizontal">
+
+            <com.google.android.material.internal.CheckableImageButton
+                android:contentDescription="@string/sr_tab_search"
+                android:id="@+id/search"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:padding="@dimen/small_space"
+                android:src="@drawable/checkable_search" />
+
+            <com.google.android.material.internal.CheckableImageButton
+                android:contentDescription="@string/sr_tab_overview"
+                android:id="@+id/tab_overview"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:padding="@dimen/small_space"
+                android:src="@drawable/checkable_station" />
+
+            <com.google.android.material.internal.CheckableImageButton
+                android:contentDescription="@string/sr_tab_timetables"
+                android:id="@+id/tab_timetables"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:padding="@dimen/small_space"
+                android:src="@drawable/checkable_departure_arrival" />
+
+            <com.google.android.material.internal.CheckableImageButton
+                android:contentDescription="@string/sr_tab_info"
+                android:id="@+id/tab_info"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:padding="@dimen/small_space"
+                android:src="@drawable/checkable_info" />
+
+            <com.google.android.material.internal.CheckableImageButton
+                android:contentDescription="@string/sr_tab_shopping"
+                android:id="@+id/tab_shopping"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:padding="@dimen/small_space"
+                android:src="@drawable/checkable_shop" />
+        </LinearLayout>
+
+    </LinearLayout>
+
+    <FrameLayout
+        android:id="@+id/overlayFrame"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent" />
+</FrameLayout>

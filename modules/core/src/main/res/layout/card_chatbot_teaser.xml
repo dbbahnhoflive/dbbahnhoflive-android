@@ -1,0 +1,81 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="0dp"
+    android:layout_height="match_parent"
+    android:layout_weight="@integer/single_cell_weight"
+    style="@style/App.Widget.CardContainer"
+    android:padding="@dimen/card_margin">
+
+    <androidx.cardview.widget.CardView
+        style="@style/App.Widget.Card"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+
+        <LinearLayout
+            android:orientation="horizontal"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+            <Space
+                android:layout_weight="0.2"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content" />
+
+            <LinearLayout
+                android:paddingTop="8dp"
+                android:paddingBottom="8dp"
+                android:orientation="vertical"
+                android:layout_width="0dp"
+                android:layout_weight="1"
+                android:layout_height="match_parent">
+
+                <TextView
+                    android:textStyle="bold"
+                    app:layout_constraintEnd_toStartOf="@+id/chatbotImage"
+                    app:layout_constraintTop_toTopOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintHorizontal_bias="0"
+                    android:id="@+id/chatbotHeadline"
+                    android:text="Sie haben Fragen?"
+                    android:gravity="center_vertical"
+                    android:layout_weight="1"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content" />
+
+                <TextView
+                    android:gravity="start"
+                    android:id="@+id/chatbotSubheadline"
+                    app:layout_constraintTop_toBottomOf="@+id/chatbotHeadline"
+                    android:layout_marginTop="18dp"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintHorizontal_bias="0"
+                    android:layout_weight="2"
+                    android:text="Wir helfen Ihnen gerne weiter."
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    app:layout_constraintEnd_toStartOf="@id/chatbotImage" />
+
+            </LinearLayout>
+
+            <ImageView
+                android:id="@+id/chatbotImage"
+                android:paddingTop="17dp"
+                android:adjustViewBounds="true"
+                android:src="@drawable/chatbot"
+                android:layout_gravity="bottom"
+                android:scaleType="fitEnd"
+                android:layout_width="0dp"
+                android:layout_weight="1"
+                android:layout_height="match_parent" />
+
+            <Space
+                android:layout_weight="0.2"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content" />
+
+        </LinearLayout>
+    </androidx.cardview.widget.CardView>
+</FrameLayout>

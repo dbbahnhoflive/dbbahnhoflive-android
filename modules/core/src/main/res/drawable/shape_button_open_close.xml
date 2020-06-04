@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<inset xmlns:android="http://schemas.android.com/apk/res/android"
+    android:inset="8dp"
+    android:insetBottom="@dimen/default_space"
+    android:insetLeft="@dimen/default_space"
+    android:insetRight="@dimen/default_space"
+    android:insetTop="@dimen/default_space">
+
+    <selector>
+        <item
+            android:drawable="@drawable/btn_down"
+            android:state_checked="true" />
+        <item android:drawable="@drawable/btn_up" />
+    </selector>
+
+</inset>

@@ -1,0 +1,34 @@
+package de.deutschebahn.bahnhoflive.ui
+
+import android.content.Context
+import android.view.View
+import android.widget.TextView
+import androidx.annotation.ColorRes
+import de.deutschebahn.bahnhoflive.R
+
+open class TimetableItemOverviewViewHolder<T>(view: View) : ViewHolder<T>(view) {
+    protected val context: Context = view.context
+
+    protected val timeView: TextView? = itemView.findViewById(R.id.time)
+    protected val delayView: TextView? = itemView.findViewById(R.id.delay)
+    protected val directionView: TextView? = itemView.findViewById(R.id.direction)
+
+    protected val platformView: TextView? = itemView.findViewById(R.id.platform)
+    protected val transportationNameView: TextView? = itemView.findViewById(R.id.transportationName)
+
+    protected fun bindDelay(delayInMinutes: Long, actualTime: CharSequence) {
+        delayView?.apply {
+            text = actualTime
+            contentDescription = context.getString(R.string.sr_template_estimated, actualTime)
+            setTextColor(if (delayInMinutes in 0..4)
+                getColor(R.color.green)
+            else
+                getColor(R.color.red))
+        }
+    }
+
+    private fun getColor(@ColorRes colorResource: Int): Int {
+        return itemView.context.resources.getColor(colorResource)
+    }
+
+}

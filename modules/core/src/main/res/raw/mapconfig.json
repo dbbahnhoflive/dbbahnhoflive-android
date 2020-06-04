@@ -1,0 +1,407 @@
+[
+  {
+    "menucat": "Tickets & Reiseauskunft",
+    "menusubcat": "DB Information",
+    "zoom": 18,
+    "icon": "db_information",
+    "showLabelAtZoom": 19
+  },
+  {
+    "menucat": "Tickets & Reiseauskunft",
+    "menusubcat": "DB Reisezentrum",
+    "zoom": 18,
+    "icon": "reisezentrum",
+    "showLabelAtZoom": 19
+  },
+  {
+    "menucat": "Tickets & Reiseauskunft",
+    "menusubcat": "Fahrkarten",
+    "zoom": 19,
+    "icon": "fahrkarten"
+  },
+  {
+    "menucat": "Tickets & Reiseauskunft",
+    "menusubcat": "Touristeninformation",
+    "zoom": 18,
+    "icon": "tourist"
+  },
+
+
+  {
+    "menucat": "Bahngleise & Fernverkehr",
+    "menusubcat": "Bahngleise",
+    "zoom": 17,
+    "icon": "gleis_"
+  },
+  {
+    "menucat": "Bahngleise & Fernverkehr",
+    "menusubcat": "Flughafen",
+    "zoom": 16,
+    "icon": "flughafen"
+  },
+  {
+    "menucat": "Bahngleise & Fernverkehr",
+    "menusubcat": "Fernbus",
+    "zoom": 16,
+    "icon": "fernbus"
+  },
+  {
+    "menucat": "Bahngleise & Fernverkehr",
+    "menusubcat": "Fähre",
+    "zoom": 16,
+    "icon": "faehre"
+  },
+  {
+    "menucat": "Bahngleise & Fernverkehr",
+    "menusubcat": "Abschnittswürfel",
+    "zoom": 18,
+    "icon": "bahnsteigabschnitt_"
+  },
+
+
+  {
+    "menucat": "Öffentlicher Nahverkehr",
+    "menusubcat": "S-Bahn",
+    "zoom": 16,
+    "icon": "s"
+  },
+  {
+    "menucat": "Öffentlicher Nahverkehr",
+    "menusubcat": "U-Bahn",
+    "zoom": 16,
+    "icon": "u"
+  },
+  {
+    "menucat": "Öffentlicher Nahverkehr",
+    "menusubcat": "Bus",
+    "zoom": 16,
+    "icon": "bus"
+  },
+  {
+    "menucat": "Öffentlicher Nahverkehr",
+    "menusubcat": "Tram",
+    "zoom": 16,
+    "icon": "tram"
+  },
+  {
+    "menucat": "Öffentlicher Nahverkehr",
+    "menusubcat": "SEV",
+    "zoom": 16,
+    "icon": "sev"
+  },
+
+
+  {
+    "menucat": "Individualverkehr",
+    "menusubcat": "Taxi",
+    "zoom": 19,
+    "icon": "taxi"
+  },
+  {
+    "menucat": "Individualverkehr",
+    "menusubcat": "Flinkster",
+    "zoom": 19,
+    "icon": "flinkster"
+  },
+  {
+    "menucat": "Individualverkehr",
+    "menusubcat": "Carsharing",
+    "zoom": 19,
+    "icon": "carsharing"
+  },
+  {
+    "menucat": "Individualverkehr",
+    "menusubcat": "Mietwagen",
+    "zoom": 18,
+    "icon": "mietwagen"
+  },
+  {
+    "menucat": "Individualverkehr",
+    "menusubcat": "Parkplatz",
+    "zoom": 16,
+    "icon": "parkplatz"
+  },
+  {
+    "menucat": "Individualverkehr",
+    "menusubcat": "Parkhaus",
+    "zoom": 16,
+    "icon": "parkhaus"
+  },
+  {
+    "menucat": "Individualverkehr",
+    "menusubcat": "Call a Bike",
+    "zoom": 19,
+    "icon": "callabike"
+  },
+  {
+    "menucat": "Individualverkehr",
+    "menusubcat": "Fahrradverleih",
+    "zoom": 19,
+    "icon": "fahrradverleih"
+  },
+  {
+    "menucat": "Individualverkehr",
+    "menusubcat": "Fahrradparkplatz",
+    "zoom": 19,
+    "icon": "fahrradparkplatz"
+  },
+  {
+    "menucat": "Individualverkehr",
+    "menusubcat": "Radstation",
+    "zoom": 19,
+    "icon": "radstation"
+  },
+
+
+  {
+    "menucat": "Bahnhofseinrichtungen",
+    "menusubcat": "WC",
+    "zoom": 17,
+    "icon": "wc"
+  },
+  {
+    "menucat": "Bahnhofseinrichtungen",
+    "menusubcat": "WC Rollstuhlbenutzer",
+    "zoom": 17,
+    "icon": "wc_rollstuhlbenutzer"
+  },
+  {
+    "menucat": "Bahnhofseinrichtungen",
+    "menusubcat": "Wartebereich",
+    "zoom": 18,
+    "icon": "wartebereich"
+  },
+  {
+    "menucat": "Bahnhofseinrichtungen",
+    "menusubcat": "Schließfach",
+    "zoom": 18,
+    "icon": "schliessfach"
+  },
+  {
+    "menucat": "Bahnhofseinrichtungen",
+    "menusubcat": "Gepäckaufbewahrung",
+    "zoom": 18,
+    "icon": "gepaeck"
+  },
+  {
+    "menucat": "Bahnhofseinrichtungen",
+    "menusubcat": "WLAN",
+    "zoom": 20,
+    "icon": "wlan"
+  },
+  {
+    "menucat": "Bahnhofseinrichtungen",
+    "menusubcat": "Briefkasten",
+    "zoom": 19,
+    "icon": "briefkasten"
+  },
+  {
+    "menucat": "Bahnhofseinrichtungen",
+    "menusubcat": "EC-Geldautomat",
+    "zoom": 17,
+    "icon": "ec_atm"
+  },
+  {
+    "menucat": "Bahnhofseinrichtungen",
+    "menusubcat": "Bahnhofsmission",
+    "zoom": 18,
+    "icon": "bahnhofsmission"
+  },
+  {
+    "menucat": "Bahnhofseinrichtungen",
+    "menusubcat": "Bundespolizei",
+    "zoom": 17,
+    "icon": "bundespolizei"
+  },
+  {
+    "menucat": "Bahnhofseinrichtungen",
+    "menusubcat": "Fundbüro",
+    "zoom": 18,
+    "icon": "fundstelle"
+  },
+  {
+    "menucat": "Bahnhofseinrichtungen",
+    "menusubcat": "DB Lounge",
+    "zoom": 19,
+    "icon": "db_lounge"
+  },
+
+
+  {
+    "menucat": "Gastronomie & Lebensmittel",
+    "menusubcat": "Lebensmittel",
+    "zoom": 19,
+    "icon": "lebensmittel",
+    "showLabelAtZoom": 20
+  },
+  {
+    "menucat": "Gastronomie & Lebensmittel",
+    "menusubcat": "Restaurant",
+    "zoom": 19,
+    "icon": "restaurant",
+    "showLabelAtZoom": 20
+  },
+  {
+    "menucat": "Gastronomie & Lebensmittel",
+    "menusubcat": "Café",
+    "zoom": 19,
+    "icon": "kaffee",
+    "showLabelAtZoom": 20
+  },
+  {
+    "menucat": "Gastronomie & Lebensmittel",
+    "menusubcat": "Fast Food",
+    "zoom": 19,
+    "icon": "fastfood",
+    "showLabelAtZoom": 20
+  },
+  {
+    "menucat": "Gastronomie & Lebensmittel",
+    "menusubcat": "Bäckerei",
+    "zoom": 19,
+    "icon": "backwaren",
+    "showLabelAtZoom": 20
+  },
+  {
+    "menucat": "Gastronomie & Lebensmittel",
+    "menusubcat": "Supermarkt",
+    "zoom": 19,
+    "icon": "supermarkt",
+    "showLabelAtZoom": 20
+  },
+  {
+    "menucat": "Gastronomie & Lebensmittel",
+    "menusubcat": "Gaststätte",
+    "zoom": 19,
+    "icon": "bar",
+    "showLabelAtZoom": 20
+  },
+
+
+  {
+    "menucat": "Einkaufen",
+    "menusubcat": "Gesundheit",
+    "zoom": 19,
+    "icon": "gesundheit",
+    "showLabelAtZoom": 20
+  },
+  {
+    "menucat": "Einkaufen",
+    "menusubcat": "Blumen",
+    "zoom": 19,
+    "icon": "blumen",
+    "showLabelAtZoom": 20
+  },
+  {
+    "menucat": "Einkaufen",
+    "menusubcat": "Presse",
+    "zoom": 19,
+    "icon": "presse",
+    "showLabelAtZoom": 20
+  },
+  {
+    "menucat": "Einkaufen",
+    "menusubcat": "Mode",
+    "zoom": 19,
+    "icon": "mode",
+    "showLabelAtZoom": 20
+  },
+  {
+    "menucat": "Einkaufen",
+    "menusubcat": "Apotheke",
+    "zoom": 19,
+    "icon": "apotheke",
+    "showLabelAtZoom": 20
+  },
+  {
+    "menucat": "Einkaufen",
+    "menusubcat": "Service-Store",
+    "zoom": 19,
+    "icon": "servicestore",
+    "showLabelAtZoom": 20
+  },
+  {
+    "menucat": "Einkaufen",
+    "menusubcat": "Einkaufen",
+    "zoom": 19,
+    "icon": "shopping",
+    "showLabelAtZoom": 20
+  },
+
+  {
+    "menucat": "Dienstleistungen",
+    "menusubcat": "Dienstleistungen",
+    "zoom": 19,
+    "icon": "dienstleistungen",
+    "showLabelAtZoom": 20
+  },
+  {
+    "menucat": "Dienstleistungen",
+    "menusubcat": "Hotel",
+    "zoom": 19,
+    "icon": "hotel",
+    "showLabelAtZoom": 20
+  },
+  {
+    "menucat": "Dienstleistungen",
+    "menusubcat": "Reisebüro",
+    "zoom": 19,
+    "icon": "reisebuero",
+    "showLabelAtZoom": 20
+  },
+  {
+    "menucat": "Dienstleistungen",
+    "menusubcat": "Post",
+    "zoom": 19,
+    "icon": "post",
+    "showLabelAtZoom": 20
+  },
+  {
+    "menucat": "Dienstleistungen",
+    "menusubcat": "Geldinstitut",
+    "zoom": 19,
+    "icon": "geldinstitut",
+    "showLabelAtZoom": 20
+  },
+  {
+    "menucat": "Dienstleistungen",
+    "menusubcat": "Unterhaltung",
+    "zoom": 19,
+    "icon": "unterhaltung",
+    "showLabelAtZoom": 20
+  },
+
+
+  {
+    "menucat": "Wegeleitung",
+    "menusubcat": "Treppen",
+    "zoom": 17,
+    "icon": "treppe"
+  },
+  {
+    "menucat": "Wegeleitung",
+    "menusubcat": "Fahrtreppen",
+    "zoom": 17,
+    "icon": "fahrtreppe"
+  },
+  {
+    "menucat": "Wegeleitung",
+    "menusubcat": "Aufzüge",
+    "zoom": 17,
+    "icon": "aufzug"
+  },
+  {
+    "menucat": "Wegeleitung",
+    "menusubcat": "Rampen",
+    "zoom": 19,
+    "icon": "rampe"
+  },
+  {
+    "menucat": "Wegeleitung",
+    "menusubcat": "Ein-/Ausgänge",
+    "zoom": 17,
+    "icon": "ausgang",
+    "showLabelAtZoom": 20
+  }
+
+]

@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="120dp"
+    android:background="#f5f5f5"
+    android:paddingLeft="@dimen/wagenstand_tablet_padding"
+    >
+
+    <ImageView
+        android:id="@+id/train_head_icon"
+        android:layout_width="80dp"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="@dimen/wagenstand_leading_space"
+        android:background="@drawable/wagenstand_train_both"/>
+
+    <RelativeLayout
+        android:id="@+id/head_label_container"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="@dimen/wagenstand_space"
+        android:layout_marginBottom="@dimen/wagenstand_space"
+        android:layout_toRightOf="@id/train_head_icon"
+        android:layout_alignParentBottom="true">
+        <TextView
+            android:id="@+id/head_train_type_label"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textStyle="normal"
+            android:textSize="@dimen/wagenstand_14sp_textSize"/>
+        <TextView
+            android:id="@+id/head_different_destination_label"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_toRightOf="@+id/head_train_type_label"
+            android:textStyle="bold"
+            android:textSize="@dimen/wagenstand_14sp_textSize"/>
+    </RelativeLayout>
+
+
+</RelativeLayout>

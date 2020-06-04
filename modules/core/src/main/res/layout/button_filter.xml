@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+
+<androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/filter"
+    android:layout_width="@dimen/round_button_size"
+    android:layout_height="@dimen/round_button_size"
+    android:scaleType="center"
+    app:cardCornerRadius="@dimen/round_button_half_size"
+    android:contentDescription="@string/sr_filter"
+
+    app:layout_constraintBottom_toBottomOf="parent"
+    app:layout_constraintRight_toRightOf="parent"
+    app:layout_constraintTop_toTopOf="parent"
+    tools:showIn="@layout/header_timetable_local">
+
+    <ImageView
+        android:importantForAccessibility="no"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+
+        android:layout_gravity="center"
+        android:src="@drawable/checkable_filter" />
+
+</androidx.cardview.widget.CardView>

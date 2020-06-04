@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_margin="@dimen/default_space_double"
+    android:layout_width="match_parent"
+    android:layout_height="@dimen/tutorial_height"
+    android:clickable="true">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@color/white"
+        android:orientation="vertical">
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <View
+                android:id="@+id/tuorial_icon"
+                android:layout_width="30dp"
+                android:layout_height="30dp"
+                android:layout_centerVertical="true"
+                android:layout_marginLeft="@dimen/tutorial_outer_padding"
+                android:background="@drawable/app_tipp_hinweise" />
+
+            <TextView
+                android:id="@+id/headline_label"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_toRightOf="@+id/tuorial_icon"
+                android:padding="@dimen/tutorial_outer_padding"
+                android:text="Headline"
+                android:textStyle="bold" />
+
+            <Button
+                android:id="@+id/close_button"
+                android:layout_width="20dp"
+                android:layout_height="20dp"
+                android:layout_alignParentRight="true"
+                android:layout_centerVertical="true"
+                android:layout_marginRight="@dimen/tutorial_outer_padding"
+                android:background="@drawable/app_schliessen"
+                android:contentDescription="@string/sr_close"/>
+
+        </RelativeLayout>
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/tutorial_line_height"
+            android:background="@color/red" />
+
+        <TextView
+            android:id="@+id/description_label"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:padding="@dimen/tutorial_outer_padding"
+            android:textSize="@dimen/textsize_24"
+            android:text="Lorem ipsum description text .... text ... text .. text . text"/>
+
+    </LinearLayout>
+
+</androidx.cardview.widget.CardView>

@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <attr name="text" format="reference|string" />
+    <declare-styleable name="MBElements">
+       <!--  <attr name="icon" format="reference" /> -->
+        <attr name="text"/>
+        <attr name="weight" format="string" />
+        <attr name="size" format="string" />
+<!--         <attr name="caret" format="boolean" /> -->
+    </declare-styleable>
+
+    <declare-styleable name="CardButton">
+        <attr name="text"/>
+        <attr name="drawable" format="reference"/>
+    </declare-styleable>
+
+    <declare-styleable name="StatusPreviewButton">
+        <attr name="badgeDrawable" format="reference"/>
+        <attr name="badgeText" format="reference|string"/>
+        <attr name="showProgress" format="reference|boolean"/>
+    </declare-styleable>
+
+    <declare-styleable name="DecoratedCard">
+        <attr name="cardCornerRadius" format="dimension"/>
+    </declare-styleable>
+
+    <attr name="colorUncheckedFavorite" format="color"/>
+</resources>

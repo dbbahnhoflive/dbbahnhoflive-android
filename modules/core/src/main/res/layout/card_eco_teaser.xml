@@ -1,0 +1,94 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    style="@style/App.Widget.Card"
+    android:layout_marginStart="@dimen/card_container_padding"
+    android:layout_marginEnd="@dimen/card_container_padding"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <LinearLayout
+        android:background="@color/eco_green"
+        android:orientation="vertical"
+        android:padding="8dp"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <TextView
+            android:layout_marginTop="6dp"
+            android:layout_marginStart="16dp"
+            android:layout_marginEnd="16dp"
+            android:layout_marginBottom="14dp"
+            android:lastBaselineToBottomHeight="0dp"
+            app:lastBaselineToBottomHeight="0dp"
+            style="@style/App.TextAppearance.EcoTeaser"
+            android:textStyle="bold"
+            android:textColor="@color/white"
+            android:textSize="30sp"
+            android:text="@string/teaser_eco_station"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" />
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:background="@color/white"
+            android:clipToPadding="false"
+            android:paddingHorizontal="16dp"
+            android:paddingTop="22dp"
+            android:paddingBottom="14dp"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <TextView
+                android:id="@+id/teaserText1"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                style="@style/App.TextAppearance.EcoTeaser"
+                android:textSize="17sp"
+                android:text="Grüner Halt. Fürs Klima."
+                android:layout_width="0dp"
+                android:layout_height="wrap_content" />
+
+            <TextView
+                android:id="@+id/teaserText2"
+                app:layout_constraintTop_toBottomOf="@+id/teaserText1"
+                app:layout_constraintStart_toStartOf="@+id/teaserText1"
+                android:layout_marginTop="8dp"
+                style="@style/App.TextAppearance.EcoTeaser"
+                android:textSize="17sp"
+                android:textStyle="bold"
+                android:text="Ökostrom am Bahnhof."
+                android:layout_width="0dp"
+                android:layout_height="wrap_content" />
+
+            <ImageButton
+                android:id="@+id/ecoTeaserButton"
+                android:layout_width="@dimen/round_button_size"
+                android:layout_height="@dimen/round_button_size"
+                android:scaleType="center"
+                android:elevation="@dimen/default_elevation"
+                app:elevation="@dimen/default_elevation"
+                android:background="@drawable/shape_circle_button"
+                android:src="@drawable/app_extern_link"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintEnd_toEndOf="parent" />
+
+            <TextView
+                android:contentDescription="Mehr Informationen zu Ökostrom am Bahnhof"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintBottom_toBottomOf="parent"
+                android:textSize="30sp"
+                android:textColor="@color/eco_green"
+                style="@style/App.TextAppearance.EcoTeaser"
+                android:textStyle="bold"
+                android:layout_marginTop="20dp"
+                android:text="Nr. 147"
+                android:lastBaselineToBottomHeight="0dp"
+                app:lastBaselineToBottomHeight="0dp"
+                app:layout_constraintTop_toBottomOf="@+id/teaserText2"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content" />
+        </androidx.constraintlayout.widget.ConstraintLayout>
+    </LinearLayout>
+</androidx.cardview.widget.CardView>
+            

@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<merge>
+    <include layout="@layout/include_progress_and_error" />
+    <include layout="@layout/include_empty" />
+</merge>

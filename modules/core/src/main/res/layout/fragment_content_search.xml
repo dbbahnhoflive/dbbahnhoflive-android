@@ -1,0 +1,122 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.coordinatorlayout.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:id="@+id/content"
+    android:clickable="false"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:orientation="vertical"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@color/backgroundH1">
+
+        <TextView
+            android:id="@+id/stationTitle"
+            android:padding="@dimen/default_space_double"
+            style="@style/App.TextAppearance.StationTitle"
+            android:textColor="#000"
+            app:layout_constraintTop_toTopOf="parent"
+            tools:text="@tools:sample/cities"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" />
+
+        <androidx.coordinatorlayout.widget.CoordinatorLayout
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:id="@+id/scrollContainer"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintTop_toTopOf="@+id/anchorSearchCenter">
+
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/recycler"
+                android:paddingTop="@dimen/default_space"
+                android:paddingStart="30dp"
+                android:paddingEnd="30dp"
+                android:paddingBottom="64dp"
+                android:clipToPadding="false"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                app:layout_behavior="com.google.android.material.appbar.AppBarLayout$ScrollingViewBehavior"
+                app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+                tools:listitem="@layout/item_content_search" />
+
+            <com.google.android.material.appbar.AppBarLayout
+                android:id="@+id/listHeader"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@null">
+
+                <LinearLayout
+                    android:paddingTop="46dp"
+                    android:paddingStart="30dp"
+                    android:paddingEnd="30dp"
+                    android:gravity="center_vertical"
+                    android:orientation="horizontal"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    app:layout_scrollFlags="scroll" >
+
+                    <TextView
+                        android:textSize="@dimen/textsize_h3"
+                        android:id="@+id/contentTitle"
+                        android:textAppearance="@style/App.TextAppearance.H3"
+                        tools:text="@string/title_content_search_genuine"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"/>
+
+                    <Space
+                        android:layout_weight="1"
+                        android:layout_width="wrap_content"
+                        android:layout_height="match_parent" />
+
+                    <ImageButton
+                        android:id="@+id/clear_history"
+                        android:visibility="gone"
+                        tools:visibility="visible"
+                        android:src="@drawable/app_loeschen"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:contentDescription="@string/sr_clear_history" />
+                </LinearLayout>
+            </com.google.android.material.appbar.AppBarLayout>
+        </androidx.coordinatorlayout.widget.CoordinatorLayout>
+
+        <androidx.cardview.widget.CardView
+            android:id="@+id/searchCard"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_margin="24dp"
+            android:minHeight="@dimen/round_button_size_large"
+            app:cardCornerRadius="@dimen/round_button_half_size_large"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/stationTitle"
+            app:layout_constraintWidth_percent=".872">
+
+            <androidx.appcompat.widget.SearchView
+                android:id="@+id/inputQuery"
+                app:searchHintIcon="@null"
+                app:searchIcon="@null"
+                app:queryBackground="@null"
+                app:closeIcon="@drawable/app_schliessen"
+                app:queryHint="Suchen Sie etwas am Bahnhof?"
+                app:iconifiedByDefault="false"
+                android:layout_gravity="center"
+
+                android:layout_width="match_parent"
+                android:layout_height="match_parent" />
+
+        </androidx.cardview.widget.CardView>
+
+        <ImageView
+            android:id="@+id/anchorSearchCenter"
+            app:layout_constraintTop_toTopOf="@+id/searchCard"
+            app:layout_constraintBottom_toBottomOf="@+id/searchCard"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</androidx.coordinatorlayout.widget.CoordinatorLayout>

@@ -1,0 +1,111 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources xmlns:tools="http://schemas.android.com/tools">
+    <bool name="isTablet">false</bool>
+    <!-- font sizes -->
+    <dimen name="textsize_24">13dp</dimen>
+    <dimen name="textsize_32">16.5dp</dimen>
+    <dimen name="textsize_28">14.5dp</dimen>
+
+    <dimen name="content_phonetextHeight">40dp</dimen>
+    <dimen name="service_textsize">13.4dp</dimen>
+
+
+    <!-- other dimens -->
+    <!--https://stackoverflow.com/questions/6859331/how-can-i-use-layout-width-using-resource-file#9631441 -->
+
+    <dimen name="home_suggestionsbox_leftBeforeIndicator">11dp</dimen>
+    <dimen name="home_suggestionsbox_indicatorSideLen">16dp</dimen>
+
+    <dimen name="home_actionbuttonheight">50dp</dimen>
+
+
+    <!--<dimen name="station_main_mapHeight">114dp</dimen>-->
+
+    <dimen name="service_paddingH">50dp</dimen>
+    <dimen name="service_description_topMargin">25dp</dimen>
+    <dimen name="service_table_contentPaddingTop">15dp</dimen>
+    <dimen name="service_table_paddingTop">17dp</dimen>
+
+    <dimen name="wagenstand_14sp_textSize">14sp</dimen>
+    <dimen name="wagenstand_12sp_textSize">12sp</dimen>
+    <dimen name="wagenstand_17sp_textSize">17sp</dimen>
+    <dimen name="wagenstand_24sp_textSize">24sp</dimen>
+    <dimen name="wagenstand_10sp_textSize">10sp</dimen>
+    <dimen name="wagenstand_some_textSize">20dp</dimen>
+    <dimen name="wagenstand_14dp_textSize">14dp</dimen>
+
+
+    <dimen name="content_phontext_marginBottom">20dp</dimen>
+    <dimen name="content_phoneButtonWidth_Tablet">306dp</dimen>
+
+    <dimen name="standardPaddingH">22dp</dimen>
+    <dimen name="standardPaddingV">20dp</dimen>
+
+    <dimen name="wagenstand_sectionlabel_padding">30dp</dimen>
+    <dimen name="wagenstand_tablet_padding">0dp</dimen>
+    <dimen name="wagenstand_tablet_distanceRight">0dp</dimen>
+    <dimen name="wagenstand_margin_left">20dp</dimen>
+    <dimen name="wagenstand_margin_right">0dp</dimen>
+
+    <integer name="visibleOnTablet">2</integer>
+
+    <dimen name="tutorial_outer_padding">10dp</dimen>
+    <dimen name="tutorial_line_height">3dp</dimen>
+
+    <dimen name="tutorial_height">140dp</dimen>
+
+    <dimen name="default_space_double">16dp</dimen>
+    <dimen name="default_space_triple">24dp</dimen>
+    <dimen name="default_space">8dp</dimen>
+    <dimen name="default_space_half">4dp</dimen>
+    <dimen name="small_space">4dp</dimen>
+    <dimen name="tiny_space">2dp</dimen>
+    <!-- Default screen margins, per the Android Design guidelines. -->
+
+    <dimen name="status_bar_height">0dp</dimen>
+
+    <dimen name="textsize_h0">25sp</dimen>
+    <dimen name="textsize_h1">22sp</dimen>
+    <dimen name="textsize_h2">17sp</dimen>
+    <dimen name="textsize_h3">14sp</dimen>
+    <dimen name="textsize_h4">12sp</dimen>
+
+    <dimen name="textsize_default">@dimen/textsize_h2</dimen>
+    <dimen name="card_badge_size">32dp</dimen>
+    <dimen name="default_elevation">4dp</dimen>
+
+    <dimen name="icon_size">40dp</dimen>
+    <dimen name="circle_button_size">40dp</dimen>
+    <dimen name="indent">110dp</dimen>
+
+    <dimen name="round_button_size">40dp</dimen>
+    <dimen name="round_button_half_size">20dp</dimen>
+
+    <dimen name="round_button_size_large">60dp</dimen>
+    <dimen name="round_button_half_size_large">30dp</dimen>
+
+    <dimen name="design_fab_size_normal" tools:override="true">@dimen/round_button_size_large</dimen>
+    <dimen name="train_overview_tabulator">64dp</dimen>
+    <dimen name="overscroll_height">96dp</dimen>
+    <dimen name="overscroll_height_small">42dp</dimen>
+
+    <dimen name="flyout_height">200dp</dimen>
+    <dimen name="flyout_margin">@dimen/default_space_double</dimen>
+    <dimen name="flyout_gap">@dimen/tiny_space</dimen>
+
+    <dimen name="level_picker_ordinary_offset">6.5dp</dimen>
+    <dimen name="level_picker_ground_offset">8.5dp</dimen>
+    <dimen name="wagenstand_space">10dp</dimen>
+    <dimen name="wagenstand_leading_space">20dp</dimen>
+
+    <dimen name="designer_correction">-8dp</dimen>
+    <dimen name="card_corner_radius">0dp</dimen>
+
+    <!-- card spaces should add up to default space (default space = padding + margin = margin + divider + margin) -->
+    <dimen name="card_container_padding">7dp</dimen>
+    <dimen name="card_margin">1dp</dimen>
+    <dimen name="card_divider">6dp</dimen>
+
+    <dimen name="card_elevation">4dp</dimen>
+    <dimen name="chatbot_service_image_height">104dp</dimen>
+</resources>

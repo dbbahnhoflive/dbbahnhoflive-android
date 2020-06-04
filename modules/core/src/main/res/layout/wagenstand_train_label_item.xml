@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+
+    <TextView
+        android:id="@+id/train_type_label"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:textSize="@dimen/textsize_h3"
+        tools:text="Type" />
+
+    <TextView
+        android:id="@+id/train_destination_label"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:textSize="@dimen/textsize_h3"
+        android:textStyle="bold"
+        tools:text="Destination" />
+
+    <TextView
+        android:id="@+id/train_via_label"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:textSize="@dimen/textsize_h3"
+        android:textStyle="bold"
+        android:visibility="gone"
+        tools:text="Via"
+        tools:visibility="visible" />
+
+</LinearLayout>

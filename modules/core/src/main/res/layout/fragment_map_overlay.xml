@@ -1,0 +1,118 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:showIn="@layout/fake_map">
+
+    <TextView
+        android:id="@+id/osmCopyright"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textSize="@dimen/textsize_h4"
+        android:layout_gravity="bottom|end"
+        android:padding="@dimen/tiny_space"
+        android:text="@string/osm_copyright" />
+
+    <androidx.coordinatorlayout.widget.CoordinatorLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+            xmlns:app="http://schemas.android.com/apk/res-auto"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:animateLayoutChanges="true"
+            android:clipChildren="false">
+
+            <ImageButton
+                android:contentDescription="@string/sr_close"
+                android:id="@+id/btn_close"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="38dp"
+                android:layout_marginRight="10dp"
+                android:background="@drawable/shape_circle_button"
+                android:elevation="@dimen/default_elevation"
+                android:src="@drawable/app_schliessen"
+                app:layout_constraintBottom_toTopOf="@+id/btn_filter"
+                app:layout_constraintRight_toRightOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintVertical_bias="0"
+                app:layout_constraintVertical_chainStyle="packed" />
+
+
+            <ImageButton
+                android:id="@+id/btn_filter"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="30dp"
+                android:layout_marginRight="10dp"
+                android:background="@drawable/shape_circle_button"
+                android:elevation="@dimen/default_elevation"
+                android:src="@drawable/checkable_filter"
+                app:layout_constraintBottom_toTopOf="@+id/btn_locate"
+                app:layout_constraintRight_toRightOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/btn_close"
+                android:contentDescription="@string/sr_filter" />
+
+            <ImageButton
+                android:id="@+id/btn_locate"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="30dp"
+                android:layout_marginRight="10dp"
+                android:background="@drawable/shape_circle_button"
+                android:elevation="@dimen/default_elevation"
+                android:src="@drawable/app_get_position"
+                app:layout_constraintBottom_toTopOf="@+id/level_picker"
+                app:layout_constraintRight_toRightOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/btn_filter"
+                android:contentDescription="@string/sr_locate" />
+
+            <de.deutschebahn.bahnhoflive.ui.map.MapLevelPicker
+                android:id="@+id/level_picker"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="26dp"
+                android:layout_marginRight="6dp"
+                android:visibility="gone"
+                app:layout_constraintBottom_toTopOf="@+id/flyouts"
+                app:layout_constraintRight_toRightOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/btn_locate"
+                tools:visibility="visible" />
+
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/flyouts"
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/flyout_height"
+                android:layout_marginTop="@dimen/default_elevation"
+                android:clipChildren="false"
+                android:clipToPadding="false"
+                android:orientation="horizontal"
+                android:visibility="gone"
+                android:paddingLeft="@dimen/default_space_double"
+                android:paddingRight="@dimen/default_space_double"
+                android:importantForAccessibility="no"
+                app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintLeft_toLeftOf="parent"
+                app:layout_constraintRight_toRightOf="parent"
+                tools:listitem="@layout/flyout_generic"
+                tools:visibility="visible" />
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+        <include layout="@layout/bottom_sheet_overlay_track_flyout" />
+    </androidx.coordinatorlayout.widget.CoordinatorLayout>
+
+    <de.deutschebahn.bahnhoflive.tutorial.TutorialView
+        android:id="@+id/map_tutorial_view"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:elevation="10dp"
+        android:visibility="gone"
+        android:layout_gravity="bottom" />
+
+</FrameLayout>

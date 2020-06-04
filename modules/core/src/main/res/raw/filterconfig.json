@@ -1,0 +1,390 @@
+[
+  {
+    "appcat": "Öffentlicher Nahverkehr",
+    "presets": ["local timetable"],
+    "items": [
+      {
+        "title": "S-Bahn",
+        "menucat": "Öffentlicher Nahverkehr",
+        "menusubcat": "S-Bahn"
+      },
+      {
+        "title": "U-Bahn",
+        "menucat": "Öffentlicher Nahverkehr",
+        "menusubcat": "U-Bahn"
+      },
+      {
+        "title": "Bus",
+        "menucat": "Öffentlicher Nahverkehr",
+        "menusubcat": "Bus"
+      },
+      {
+        "title": "Tram",
+        "menucat": "Öffentlicher Nahverkehr",
+        "menusubcat": "Tram"
+      },
+      {
+        "title": "Schienenersatzverkehr",
+        "menucat": "Öffentlicher Nahverkehr",
+        "menusubcat": "SEV"
+      }
+    ]
+  },
+  {
+    "appcat": "Bahngleise und Fernverkehr",
+    "items": [
+      {
+        "title": "Gleisnummer",
+        "presets": ["timetable", "db timetable"],
+        "menucat": "Bahngleise & Fernverkehr",
+        "menusubcat": "Bahngleise"
+      },
+      {
+        "title": "Gleisabschnitt",
+        "presets": ["timetable", "db timetable"],
+        "menucat": "Bahngleise & Fernverkehr",
+        "menusubcat": "Abschnittswürfel"
+      },
+      {
+        "title": "Flughafen",
+        "menucat": "Bahngleise & Fernverkehr",
+        "menusubcat": "Flughafen"
+      },
+      {
+        "title": "Fernbus",
+        "menucat": "Bahngleise & Fernverkehr",
+        "menusubcat": "Fernbus"
+      },
+      {
+        "title": "Fähre",
+        "menucat": "Bahngleise & Fernverkehr",
+        "menusubcat": "Fähre"
+      }
+    ]
+  },
+  {
+    "appcat": "Wegeleitung",
+    "presets": ["stationinfos"],
+    "items": [
+      {
+        "title": "Treppen",
+        "menucat": "Wegeleitung",
+        "menusubcat": "Treppen"
+      },
+      {
+        "title": "Fahrtreppen",
+        "menucat": "Wegeleitung",
+        "menusubcat": "Fahrtreppen"
+      },
+      {
+        "title": "Aufzug",
+        "presets": ["elevators"],
+        "menucat": "Wegeleitung",
+        "menusubcat": "Aufzüge"
+      },
+      {
+        "title": "Rampe",
+        "presets": ["elevators"],
+        "menucat": "Wegeleitung",
+        "menusubcat": "Rampen"
+      },
+      {
+        "title": "Ein -/ Ausgang",
+        "presets": ["elevators"],
+        "menucat": "Wegeleitung",
+        "menusubcat": "Ein-/Ausgänge"
+      }
+    ]
+  },
+  {
+    "appcat": "Bahnhofseinrichtungen",
+    "presets": ["stationinfos"],
+    "items": [
+      {
+        "title": "WC",
+        "menucat": "Bahnhofseinrichtungen",
+        "menusubcat": "WC",
+        "presets": ["toilet"]
+      },
+      {
+        "title": "WC Rollstuhlnutzer",
+        "menucat": "Bahnhofseinrichtungen",
+        "menusubcat": "WC Rollstuhlbenutzer",
+        "presets": ["toilet"]
+      },
+      {
+        "title": "Wartebereich",
+        "menucat": "Bahnhofseinrichtungen",
+        "menusubcat": "Wartebereich"
+      },
+      {
+        "title": "Schließfach",
+        "menucat": "Bahnhofseinrichtungen",
+        "menusubcat": "Schließfach",
+        "presets": ["locker"]
+      },
+      {
+        "title": "Gepäckaufbewahrung",
+        "menucat": "Bahnhofseinrichtungen",
+        "menusubcat": "Gepäckaufbewahrung",
+        "presets": ["locker"]
+      },
+      {
+        "title": "Wlan",
+        "menucat": "Bahnhofseinrichtungen",
+        "menusubcat": "WLAN",
+        "presets": ["wifi"]
+      },
+      {
+        "title": "Briefkasten",
+        "menucat": "Bahnhofseinrichtungen",
+        "menusubcat": "Briefkasten"
+      },
+      {
+        "title": "EC-Geldautomat",
+        "menucat": "Bahnhofseinrichtungen",
+        "menusubcat": "EC-Geldautomat"
+      },
+      {
+        "title": "Bahnhofsmission",
+        "menucat": "Bahnhofseinrichtungen",
+        "menusubcat": "Bahnhofsmission",
+        "presets": ["info_on_site"]
+      },
+      {
+        "title": "Bundespolizei",
+        "menucat": "Bahnhofseinrichtungen",
+        "menusubcat": "Bundespolizei"
+      },
+      {
+        "title": "Fundbüro",
+        "menucat": "Bahnhofseinrichtungen",
+        "menusubcat": "Fundbüro",
+        "presets": ["lostfound"]
+      },
+      {
+        "title": "DB Lounge",
+        "menucat": "Bahnhofseinrichtungen",
+        "menusubcat": "DB Lounge",
+        "presets": ["db_lounge"]
+      }
+    ]
+  },
+  {
+    "appcat": "Tickets & Reiseauskunft",
+    "presets": ["shop_services"],
+    "items": [
+      {
+        "title": "DB Information",
+        "menucat": "Tickets & Reiseauskunft",
+        "menusubcat": "DB Information",
+        "presets": ["info_on_site", "db_info"]
+      },
+      {
+        "title": "DB Reisezentrum",
+        "menucat": "Tickets & Reiseauskunft",
+        "menusubcat": "DB Reisezentrum",
+        "presets": ["tripcenter"]
+      },
+      {
+        "title": "Fahrkarten",
+        "menucat": "Tickets & Reiseauskunft",
+        "menusubcat": "Fahrkarten"
+      },
+      {
+        "title": "Touristen-Information",
+        "menucat": "Tickets & Reiseauskunft",
+        "menusubcat": "Touristeninformation"
+      }
+    ]
+  },
+  {
+    "appcat": "Individualverkehr",
+    "presets": ["stationinfos"],
+    "items": [
+      {
+        "title": "Taxi",
+        "menucat": "Individualverkehr",
+        "menusubcat": "Taxi",
+        "presets": ["taxi"]
+      },
+      {
+        "title": "Flinkster",
+        "menucat": "Individualverkehr",
+        "menusubcat": "Flinkster"
+      },
+      {
+        "title": "Carsharing",
+        "menucat": "Individualverkehr",
+        "menusubcat": "Carsharing"
+      },
+      {
+        "title": "Mietwagen",
+        "menucat": "Individualverkehr",
+        "menusubcat": "Mietwagen",
+        "presets": ["car_rental"]
+      },
+      {
+        "title": "Parkplatz",
+        "presets": ["parking"],
+        "menucat": "Individualverkehr",
+        "menusubcat": "Parkplatz"
+      },
+      {
+        "title": "Parkhaus",
+        "presets": ["parking"],
+        "menucat": "Individualverkehr",
+        "menusubcat": "Parkhaus"
+      },
+      {
+        "title": "Call a Bike",
+        "menucat": "Individualverkehr",
+        "menusubcat": "Call a Bike"
+      },
+      {
+        "title": "Fahrradverleih",
+        "menucat": "Individualverkehr",
+        "menusubcat": "Fahrradverleih"
+      },
+      {
+        "title": "Fahrradparkplatz",
+        "menucat": "Individualverkehr",
+        "menusubcat": "Fahrradparkplatz",
+        "presets": ["bike_parking"]
+      },
+      {
+        "title": "Radstation",
+        "menucat": "Individualverkehr",
+        "menusubcat": "Radstation"
+      }
+    ]
+  },
+  {
+    "appcat": "Gastronomie & Lebensmittel",
+    "presets": ["shopping"],
+    "items": [
+      {
+        "title": "Lebensmittel (allgemein)",
+        "menucat": "Gastronomie & Lebensmittel",
+        "menusubcat": "Lebensmittel",
+        "presets": ["shop_groceries"]
+      },
+      {
+        "title": "Restaurant",
+        "menucat": "Gastronomie & Lebensmittel",
+        "menusubcat": "Restaurant",
+        "presets": ["shop_gastro"]
+      },
+      {
+        "title": "Café",
+        "menucat": "Gastronomie & Lebensmittel",
+        "menusubcat": "Café",
+        "presets": ["shop_gastro"]
+      },
+      {
+        "title": "Fast Food",
+        "menucat": "Gastronomie & Lebensmittel",
+        "menusubcat": "Fast Food",
+        "presets": ["shop_gastro"]
+      },
+      {
+        "title": "Bäckerei",
+        "menucat": "Gastronomie & Lebensmittel",
+        "menusubcat": "Bäckerei",
+        "presets": ["shop_bakery"]
+      },
+      {
+        "title": "Supermarkt",
+        "menucat": "Gastronomie & Lebensmittel",
+        "menusubcat": "Supermarkt",
+        "presets": ["shop_groceries"]
+      },
+      {
+        "title": "Gaststätte",
+        "menucat": "Gastronomie & Lebensmittel",
+        "menusubcat": "Gaststätte",
+        "presets": ["shop_gastro"]
+      }
+    ]
+  },
+  {
+    "appcat": "Einkaufen",
+    "presets": ["shopping", "shop_shop"],
+    "items": [
+      {
+        "title": "Einkaufen (allgemein)",
+        "menucat": "Einkaufen",
+        "menusubcat": "Einkaufen"
+      },
+      {
+        "title": "Service-Store",
+        "menucat": "Einkaufen",
+        "menusubcat": "Service-Store"
+      },
+      {
+        "title": "Gesundheit",
+        "menucat": "Einkaufen",
+        "menusubcat": "Gesundheit",
+        "presets": ["shop_health"]
+      },
+      {
+        "title": "Blumen",
+        "menucat": "Einkaufen",
+        "menusubcat": "Blumen"
+      },
+      {
+        "title": "Presse",
+        "menucat": "Einkaufen",
+        "menusubcat": "Presse",
+        "presets": ["shop_press"]
+      },
+      {
+        "title": "Mode",
+        "menucat": "Einkaufen",
+        "menusubcat": "Mode"
+      },
+      {
+        "title": "Apotheke",
+        "menucat": "Einkaufen",
+        "menusubcat": "Apotheke",
+        "presets": ["shop_health"]
+      }
+    ]
+  },
+  {
+    "appcat": "Dienstleistungen",
+    "presets": ["shopping", "shop_services"],
+    "items": [
+      {
+        "title": "Dienstleistungen (allgemein)",
+        "menucat": "Dienstleistungen",
+        "menusubcat": "Dienstleistungen"
+      },
+      {
+        "title": "Hotel",
+        "menucat": "Dienstleistungen",
+        "menusubcat": "Hotel"
+      },
+      {
+        "title": "Reisebüro",
+        "menucat": "Dienstleistungen",
+        "menusubcat": "Reisebüro"
+      },
+      {
+        "title": "Post",
+        "menucat": "Dienstleistungen",
+        "menusubcat": "Post"
+      },
+      {
+        "title": "Geldinstitut",
+        "menucat": "Dienstleistungen",
+        "menusubcat": "Geldinstitut"
+      },
+      {
+        "title": "Unterhaltung",
+        "menucat": "Dienstleistungen",
+        "menusubcat": "Unterhaltung"
+      }
+    ]
+  }
+]

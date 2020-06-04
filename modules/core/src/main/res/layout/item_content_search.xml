@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:orientation="horizontal"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:paddingTop="10dp"
+    android:paddingBottom="10dp"
+    android:gravity="center_vertical"
+    tools:context=".ui.station.search.ContentSearchFragment"
+    android:background="?attr/selectableItemBackground"
+    tools:showIn="@layout/fragment_content_search">
+
+    <ImageView
+        tools:src="@drawable/app_abfahrt_ankunft"
+        android:id="@+id/icon"
+        android:layout_marginEnd="10dp"
+        android:layout_width="24dp"
+        android:layout_height="24dp" />
+
+    <TextView
+        android:id="@+id/text"
+        tools:text="@tools:sample/lorem"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_weight="1" />
+</LinearLayout>

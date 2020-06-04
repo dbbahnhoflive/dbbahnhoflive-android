@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:padding="@dimen/default_space"
+    android:gravity="center_vertical"
+    android:minHeight="?android:attr/listPreferredItemHeight"
+    android:orientation="vertical">
+
+    <TextView
+        android:id="@+id/text"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        android:padding="@dimen/default_space"
+        android:text="@string/generic_empty_message" />
+
+    <androidx.cardview.widget.CardView
+        android:id="@+id/buttonLoadMore"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/round_button_size_large"
+        android:layout_margin="@dimen/default_space"
+        app:cardBackgroundColor="#646973"
+        app:cardCornerRadius="@dimen/round_button_half_size_large">
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_gravity="center"
+            android:gravity="center"
+            android:text="@string/timetable_load_more"
+            android:textColor="@color/white" />
+
+    </androidx.cardview.widget.CardView>
+
+</LinearLayout>

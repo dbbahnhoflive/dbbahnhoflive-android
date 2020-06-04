@@ -1,0 +1,88 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+                                             xmlns:app="http://schemas.android.com/apk/res-auto"
+                                             xmlns:tools="http://schemas.android.com/tools"
+                                             android:minHeight="70dp"
+                                             android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    tools:context=".ui.station.localtransport.LocalTransportViewHolder">
+
+    <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/guidelineInset"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_constraintGuide_begin="@dimen/default_space_double"
+        android:orientation="vertical" />
+    <TextView
+        android:id="@+id/station_name"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="@dimen/default_space_double"
+        android:layout_marginTop="@dimen/default_space"
+        android:layout_marginBottom="@dimen/default_space"
+        android:textStyle="bold"
+        app:layout_constraintBottom_toTopOf="@+id/transport_infos"
+        app:layout_constraintLeft_toLeftOf="@+id/guidelineInset"
+        app:layout_constraintRight_toLeftOf="@+id/button"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_chainStyle="packed"
+        tools:text="S+U Hauptbahnhof"/>
+
+    <!-- left margin is default_space_double minus the padding integrated into the icon drawables -->
+    <com.google.android.flexbox.FlexboxLayout
+        android:id="@+id/transport_infos"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="12dp"
+        android:layout_marginBottom="@dimen/default_space"
+        android:gravity="center_vertical"
+        app:flexDirection="row"
+        app:flexWrap="wrap"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintLeft_toLeftOf="@+id/guidelineInset"
+        app:layout_constraintRight_toLeftOf="@+id/button"
+        app:layout_constraintTop_toBottomOf="@+id/station_name">
+
+        <include layout="@layout/item_local_transport_info" />
+
+        <include layout="@layout/item_local_transport_info" />
+
+        <include layout="@layout/item_local_transport_info" />
+
+        <include layout="@layout/item_local_transport_info" />
+
+        <include layout="@layout/item_local_transport_info" />
+    </com.google.android.flexbox.FlexboxLayout>
+
+    <androidx.cardview.widget.CardView
+        android:id="@+id/button"
+        android:layout_width="@dimen/round_button_size"
+        android:layout_height="@dimen/round_button_size"
+        android:layout_marginTop="@dimen/default_space"
+        android:layout_marginBottom="@dimen/default_space"
+        android:layout_marginStart="@dimen/default_space"
+        android:layout_marginEnd="@dimen/default_space_double"
+        android:contentDescription="@string/sr_details"
+        app:cardCornerRadius="@dimen/round_button_half_size"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        tools:visibility="visible">
+
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:importantForAccessibility="no"
+            android:src="@drawable/app_link"/>
+    </androidx.cardview.widget.CardView>
+
+    <View
+        android:layout_width="0dp"
+        android:layout_height="1dp"
+        app:layout_constraintLeft_toLeftOf="@id/guidelineInset"
+        android:background="#E3E7EC"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintRight_toRightOf="parent"/>
+</androidx.constraintlayout.widget.ConstraintLayout>

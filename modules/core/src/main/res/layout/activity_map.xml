@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <fragment
+        android:id="@+id/map_fragment"
+        class="com.google.android.gms.maps.MapFragment"
+
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        tools:layout="@layout/fake_map" />
+
+    <fragment
+        android:id="@+id/map_overlay_fragment"
+        class="de.deutschebahn.bahnhoflive.ui.map.MapOverlayFragment"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        tools:layout="@layout/fragment_map_overlay" />
+
+    <FrameLayout
+        android:id="@+id/filter_fragment_container"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        tools:layout="@layout/fragment_filter">
+
+    </FrameLayout>
+</FrameLayout>

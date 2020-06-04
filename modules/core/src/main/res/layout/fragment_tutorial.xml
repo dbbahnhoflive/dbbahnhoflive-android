@@ -1,0 +1,83 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/anthracite">
+
+    <ImageView
+        android:id="@+id/pin_icon"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:src="@drawable/pin_mit_bahnhof"
+        android:transitionName="@string/transition_pin"
+        app:layout_constraintBottom_toBottomOf="@+id/header_background"
+        app:layout_constraintLeft_toLeftOf="@+id/header_background"
+        app:layout_constraintRight_toRightOf="@id/header_background"
+        app:layout_constraintTop_toTopOf="@+id/header_background"
+        android:importantForAccessibility="no" />
+
+    <ImageView
+        android:id="@+id/header_background"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:scaleType="centerCrop"
+        android:src="@drawable/tutorial_screen_01"
+        android:transitionName="@string/transition_background"
+        app:layout_constraintBottom_toBottomOf="@+id/image_frame"
+        app:layout_constraintLeft_toLeftOf="@id/image_frame"
+        app:layout_constraintRight_toRightOf="@id/image_frame"
+        app:layout_constraintTop_toTopOf="@+id/image_frame"
+        android:importantForAccessibility="no"/>
+
+    <FrameLayout
+        android:id="@+id/image_frame"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        app:layout_constraintDimensionRatio="1.0"
+        app:layout_constraintTop_toTopOf="parent">
+        <!-- Hack to keep empty FrameLayout from collapsing. -->
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="match_parent" />
+
+        <FrameLayout
+            android:id="@+id/image_frame2"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+        </FrameLayout>
+    </FrameLayout>
+
+    <androidx.viewpager.widget.ViewPager
+        android:id="@+id/pager"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:background="@color/white"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/image_frame" />
+
+    <com.google.android.material.tabs.TabLayout
+        android:id="@+id/page_indicator"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:tabBackground="@drawable/shape_page_indicator_tutorial"
+        app:tabGravity="center"
+        app:tabIndicatorHeight="0dp" />
+
+    <ImageButton
+        android:id="@+id/btn_close"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_margin="@dimen/default_space"
+        android:background="@drawable/shape_circle_button"
+        android:elevation="@dimen/default_elevation"
+        android:src="@drawable/app_schliessen"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        android:contentDescription="@string/sr_close_tutorial" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>

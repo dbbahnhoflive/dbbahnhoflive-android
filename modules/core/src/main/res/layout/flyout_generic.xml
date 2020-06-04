@@ -1,0 +1,117 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:layout_marginLeft="@dimen/tiny_space"
+    android:layout_marginRight="@dimen/tiny_space"
+    android:orientation="vertical">
+
+    <include layout="@layout/header_flyout" />
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:background="@color/white"
+        android:paddingTop="@dimen/default_space_half"
+        android:paddingStart="@dimen/default_space_half"
+        android:paddingEnd="@dimen/default_space_half">
+
+        <TextView
+            android:id="@+id/status_text_1"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_margin="@dimen/default_space_half"
+            android:drawablePadding="@dimen/small_space"
+            android:ellipsize="end"
+            android:gravity="center_vertical"
+            android:lines="1"
+            android:textSize="@dimen/textsize_h3"
+            app:layout_constraintBottom_toTopOf="@+id/status_text_2"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintVertical_bias="0"
+            app:layout_constraintVertical_chainStyle="packed"
+            tools:drawableLeft="@drawable/app_check"
+            tools:text="Diese Information ist unglaublich lang und weilig."
+            tools:textColor="@color/green" />
+
+        <TextView
+            android:id="@+id/status_text_2"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_margin="@dimen/default_space_half"
+            android:drawablePadding="@dimen/small_space"
+            android:ellipsize="end"
+            android:gravity="center_vertical"
+            android:lines="1"
+            android:textSize="@dimen/textsize_h3"
+            app:layout_constraintBottom_toTopOf="@+id/status_text_3"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/status_text_1"
+            tools:drawableLeft="@drawable/app_unbekannt"
+            tools:text="Noch 08:24 Std. geöffnet."
+            tools:textColor="@color/anthracite" />
+
+        <TextView
+            android:id="@+id/status_text_3"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_margin="@dimen/default_space_half"
+            android:layout_marginBottom="8dp"
+            android:layout_marginTop="8dp"
+            android:drawablePadding="@dimen/small_space"
+            android:ellipsize="end"
+            android:gravity="center_vertical"
+            android:lines="1"
+            android:textSize="@dimen/textsize_h3"
+            app:layout_constraintBottom_toTopOf="@+id/descriptionContainer"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/status_text_2"
+            tools:drawableLeft="@drawable/app_kreuz"
+            tools:text="Noch 08:24 Std. geöffnet."
+            tools:textColor="@color/red" />
+
+        <androidx.core.widget.NestedScrollView
+            android:id="@+id/descriptionContainer"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintRight_toLeftOf="@+id/external_link"
+            app:layout_constraintTop_toBottomOf="@+id/status_text_3"
+            android:paddingBottom="@dimen/default_space_half"
+            android:clipToPadding="false"
+            android:orientation="vertical"
+            android:layout_width="0dp"
+            android:layout_height="0dp">
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:lineSpacingMultiplier="1.2"
+                android:id="@+id/description"
+                android:layout_margin="@dimen/default_space_half"
+                tools:text="Die Beschreibung dieses Orts ist so lang, dass das Ende ausgepunktet werden muss, damit der Text nicht abgeschnitten wird." />
+        </androidx.core.widget.NestedScrollView>
+
+        <ImageButton
+            android:contentDescription="@string/sr_link_external"
+            android:id="@+id/external_link"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="@dimen/default_space_half"
+            android:layout_marginBottom="@dimen/default_space"
+            android:background="@drawable/shape_circle_button"
+            android:elevation="@dimen/default_elevation"
+            android:src="@drawable/app_extern_link"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintRight_toRightOf="parent" />
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+</LinearLayout>
+

@@ -1,0 +1,95 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="sr_tab_search">Zurück zur Stationssuche</string>
+    <string name="sr_tab_overview">Bahnhofsübersicht</string>
+    <string name="sr_tab_timetables">Abfahrten und Ankünfte</string>
+    <string name="sr_tab_shopping">Shoppen und schlemmen</string>
+    <string name="sr_filter">Filter</string>
+    <string name="sr_indicator_bookmarked">Auf der Merkliste</string>
+    <string name="sr_tab_info">Bahnhofsinformationen</string>
+    <string name="sr_link_external">Zur Webseite</string>
+    <string name="sr_link_details">Weitere Details</string>
+    <string name="sr_link_price">Preisinformationen</string>
+    <string name="sr_link_external_web_site">Zur externen Web-Seite</string>
+    <string name="sr_link_email">Email verfassen</string>
+    <string name="sr_link_call">Anrufen</string>
+    <string name="sr_container_stops">Zwischenhalte</string>
+    <string name="sr_indicator_issue">Bitte Hinweise beachten!</string>
+    <string name="sr_stop_type_db"></string>
+    <string name="sr_stop_type_local">Haltestelle</string>
+    <string name="sr_close">Schließen</string>
+    <string name="sr_hub_search">Suche</string>
+    <string name="sr_hub_favorites">Favoriten</string>
+    <string name="sr_hub_nearby">In der Nähe</string>
+    <string name="sr_map">@string/sr_map_no_accessibility</string>
+    <string name="sr_locate">Position ermitteln</string>
+    <string name="sr_db">Deutsche Bahn</string>
+    <string name="sr_app_full">Bahnhof live. Haltestellen finden. Bahnhöfe entdecken.</string>
+    <string name="sr_clear_history">Suchverlauf löschen</string>
+    <string name="sr_refresh">Neu laden</string>
+    <string name="sr_expand">Ausfahren</string>
+    <string name="sr_collapse">Einfahren</string>
+    <string name="sr_screenshot">Beispieldarstellung der App</string>
+    <string name="sr_wagenreihung">Wagenreihungsinformationen</string>
+    <string name="sr_link_wagenreihung">Zur Wagenreihung</string>
+    <string name="sr_level_up">Zu höherer Ebene</string>
+    <string name="sr_level_down">Zu tieferer Ebene</string>
+    <string name="sr_template_level">Ebene %1$d</string>
+    <string name="sr_details">Zu weiteren Details</string>
+    <string name="sr_done">Erledigt</string>
+    <string name="sr_template_estimated">erwartet %1$s</string>
+    <string name="sr_template_platform">Gleis %1$s</string>
+    <string name="sr_template_waggon">Wagen %1$s %2$s %3$s</string>
+    <string name="sr_class_1">erste Klasse</string>
+    <string name="sr_class_2">zweite Klasse</string>
+    <string name="sr_template_class_other">Klasse %1$s</string>
+    <string name="sr_template_single_section">Gleisabschnitt %1$s</string>
+    <string name="sr_template_multi_section">Gleisabschnitte %1$s bis %2$s</string>
+    <string name="sr_search_box">Bahnhofssuche und Suchverlauf</string>
+    <string name="sr_edit_search">Bearbeitungsfeld Bahnhof suchen</string>
+    <string name="sr_check_favorite">Zu Favoriten hinzufügen</string>
+    <string name="sr_shopping">Shoppen und schlemmen</string>
+    <string name="sr_station_features">Bahnhofsausstattung</string>
+    <string name="sr_elevators">Aufzüge</string>
+    <string name="sr_feedback">Feedback zur App</string>
+    <string name="sr_settings">Einstellungen</string>
+    <string name="sr_template_details">%1$s weitere Details</string>
+    <string name="sr_tutorial_button_finish">Einführung beenden</string>
+    <string name="sr_tutorial_button_location_permission">Standortzugriff jetzt erlauben</string>
+    <string name="sr_close_tutorial">Einführung überspringen</string>
+    <string name="sr_clear_elevators">Liste leeren</string>
+    <string name="sr_tab_highlighted"> ausgewählt</string>
+    <string name="sr_tab_not_highlighted"> nicht ausgewählt</string>
+    <string name="sr_map_no_accessibility">Umgebungskarte. Dieser Inhalt ist nicht für das Vorlesen optimiert.</string>
+    <string name="sr_template_local_departure_prefix">%1$s nach %2$s %3$s</string>
+    <string name="sr_template_local_departure_stops">über %1$s</string>
+    <string name="sr_template_local_departure_overview">%1$s nach %2$s um %3$s %4$s</string>
+    <string name="sr_station_departures">Abfahrtstafel Bahnhof</string>
+    <string name="sr_station_local_transport">ÖPNV</string>
+    <string name="sr_tab_timetable_station">Abfahrten des Fernverkehrs, Regionalverkehrs und gegebenenfalls S-Bahnen</string>
+    <string name="sr_tab_timetable_local">Abfahrten des Nahverkehrs</string>
+    <string name="sr_template_db_timetable_item">%1$s %2$s %3$s um %4$s von %5$s %6$s %7$s</string>
+    <string name="sr_timetable_type_departure">nach</string>
+    <string name="sr_timetable_type_arrival">von</string>
+    <string name="sr_template_phone_button">%1$s anrufen</string>
+    <string name="sr_template_local_transport_connections">Anschluss im Nahverkehr im Umkreis von %1$dm</string>
+    <string name="sr_chatbot">Zum Chatbot</string>
+    <string name="sr_news_title">Aktuelle Informationen</string>
+
+    <plurals name="sr_bus">
+        <item quantity="one">Bus</item>
+        <item quantity="other">Busse</item>
+    </plurals>
+    <plurals name="sr_tram">
+        <item quantity="one">Tram</item>
+        <item quantity="other">Trams</item>
+    </plurals>
+    <plurals name="sr_s">
+        <item quantity="one">S-Bahn</item>
+        <item quantity="other">S-Bahnen</item>
+    </plurals>
+    <plurals name="sr_subway">
+        <item quantity="one">U-Bahn</item>
+        <item quantity="other">U-Bahnen</item>
+    </plurals>
+</resources>

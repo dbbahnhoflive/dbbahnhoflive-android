@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:orientation="vertical"
+    android:layout_width="wrap_content"
+    android:layout_height="match_parent">
+
+    <FrameLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="3dp">
+
+        <RelativeLayout
+            android:id="@+id/waggon_view_container"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content">
+            <ImageView
+                android:id="@+id/waggon_view"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:padding="3dp"
+                tools:src="@drawable/wagenstand_train_head_with_space"
+                android:importantForAccessibility="no"
+                />
+            <ImageView
+                android:id="@+id/second_waggon_part_image"
+                android:layout_width="15dp"
+                android:layout_height="wrap_content"
+                android:layout_alignParentRight="true"
+                android:importantForAccessibility="no"
+                />
+        </RelativeLayout>
+
+        <TextView
+            android:id="@+id/waggon_number_label"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:textSize="@dimen/wagenstand_10sp_textSize"
+            android:textColor="#ffffff"/>
+
+    </FrameLayout>
+
+    <View
+        android:id="@+id/underline"
+        android:background="@color/dark_background"
+        android:layout_width="match_parent"
+        android:layout_height="2dp" />
+
+</LinearLayout>
