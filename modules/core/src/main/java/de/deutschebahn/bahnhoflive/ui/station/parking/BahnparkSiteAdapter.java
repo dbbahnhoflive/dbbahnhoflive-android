@@ -13,16 +13,15 @@ import java.util.List;
 
 import de.deutschebahn.bahnhoflive.R;
 import de.deutschebahn.bahnhoflive.backend.bahnpark.model.BahnparkSite;
-import de.deutschebahn.bahnhoflive.backend.bahnpark.model.ParkingStatus;
-import de.deutschebahn.bahnhoflive.ui.map.content.MapIntent;
+import de.deutschebahn.bahnhoflive.backend.db.parkinginformation.model.ParkingFacility;
 import de.deutschebahn.bahnhoflive.ui.station.CommonDetailsCardViewHolder;
 import de.deutschebahn.bahnhoflive.ui.station.info.ThreeButtonsViewHolder;
 import de.deutschebahn.bahnhoflive.view.SingleSelectionManager;
 
-class BahnparkSiteAdapter extends RecyclerView.Adapter<BahnparkSiteAdapter.BahnparkSiteViewHolder> {
+class BahnparkSiteAdapter extends RecyclerView.Adapter<BahnparkSiteAdapter.ParkingFacilityViewHolder> {
 
     private final FragmentManager fragmentManager;
-    private List<BahnparkSite> bahnparkSites;
+    private List<ParkingFacility> parkingFacilities;
     private final SingleSelectionManager selectionManager;
 
     BahnparkSiteAdapter(FragmentManager fragmentManager) {
@@ -32,36 +31,36 @@ class BahnparkSiteAdapter extends RecyclerView.Adapter<BahnparkSiteAdapter.Bahnp
     }
 
     @Override
-    public BahnparkSiteViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        return new BahnparkSiteViewHolder(parent, selectionManager);
+    public ParkingFacilityViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+        return new ParkingFacilityViewHolder(parent, selectionManager);
     }
 
     @Override
-    public void onBindViewHolder(BahnparkSiteViewHolder holder, int position) {
-        holder.bind(bahnparkSites.get(position));
+    public void onBindViewHolder(ParkingFacilityViewHolder holder, int position) {
+        holder.bind(parkingFacilities.get(position));
     }
 
     @Override
     public int getItemCount() {
-        return bahnparkSites == null ? 0 : bahnparkSites.size();
+        return parkingFacilities == null ? 0 : parkingFacilities.size();
     }
 
-    public void setData(List<BahnparkSite> bahnparkSites) {
-        this.bahnparkSites = bahnparkSites;
+    public void setData(List<ParkingFacility> bahnparkSites) {
+        this.parkingFacilities = bahnparkSites;
 
         notifyDataSetChanged();
     }
 
     @Nullable
-    public BahnparkSite getSelectedItem() {
-        return selectionManager.getSelectedItem(bahnparkSites);
+    public ParkingFacility getSelectedItem() {
+        return selectionManager.getSelectedItem(parkingFacilities);
     }
 
-    public class BahnparkSiteViewHolder extends CommonDetailsCardViewHolder<BahnparkSite> implements View.OnClickListener {
+    public class ParkingFacilityViewHolder extends CommonDetailsCardViewHolder<ParkingFacility> implements View.OnClickListener {
 
         private final TextView descriptionView;
 
-        public BahnparkSiteViewHolder(ViewGroup parent, SingleSelectionManager selectionManager) {
+        public ParkingFacilityViewHolder(ViewGroup parent, SingleSelectionManager selectionManager) {
             super(parent, R.layout.card_expandable_parking_occupancy, selectionManager);
 
             descriptionView = findTextView(R.id.description);
@@ -70,17 +69,18 @@ class BahnparkSiteAdapter extends RecyclerView.Adapter<BahnparkSiteAdapter.Bahnp
         }
 
         @Override
-        protected void onBind(BahnparkSite item) {
+        protected void onBind(ParkingFacility item) {
             super.onBind(item);
 
-            titleView.setText(item.getParkraumDisplayName());
+            titleView.setText(item.getResolvedName());
 
-            iconView.setImageResource(item.getMapIcon());
+//TODO:
+            //            iconView.setImageResource(item.getMapIcon());
 
-            final ParkingStatus parkingStatus = ParkingStatus.get(item);
-            setStatus(parkingStatus.status, parkingStatus.label);
+//            final ParkingStatus parkingStatus = ParkingStatus.get(item);
+//            setStatus(parkingStatus.status, parkingStatus.label);
 
-            descriptionView.setText(DescriptionRenderer.BRIEF.render(item));
+//            descriptionView.setText(DescriptionRenderer.BRIEF.render(item));
         }
 
 
@@ -88,6 +88,7 @@ class BahnparkSiteAdapter extends RecyclerView.Adapter<BahnparkSiteAdapter.Bahnp
         @Override
         public void onClick(View v) {
             final Context context = v.getContext();
+/*TODO
 
             final BahnparkSite item = getItem();
             int id = v.getId();
@@ -100,6 +101,7 @@ class BahnparkSiteAdapter extends RecyclerView.Adapter<BahnparkSiteAdapter.Bahnp
             } else if (id == R.id.button_right) {
                 showDetails(item, BahnparkSiteDetailsFragment.Action.PRICE);
             }
+*/
         }
 
         private void showDetails(BahnparkSite item, BahnparkSiteDetailsFragment.Action info) {

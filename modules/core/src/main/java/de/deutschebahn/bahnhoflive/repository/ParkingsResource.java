@@ -3,12 +3,12 @@ package de.deutschebahn.bahnhoflive.repository;
 import android.os.Handler;
 import android.os.Looper;
 
-import java.util.ArrayList;
 import java.util.List;
 
-import de.deutschebahn.bahnhoflive.backend.bahnpark.model.BahnparkSite;
+import de.deutschebahn.bahnhoflive.BaseApplication;
+import de.deutschebahn.bahnhoflive.backend.db.parkinginformation.model.ParkingFacility;
 
-public class ParkingsResource extends RemoteResource<List<BahnparkSite>> {
+public class ParkingsResource extends RemoteResource<List<ParkingFacility>> {
 
     private String stationId;
 
@@ -16,12 +16,7 @@ public class ParkingsResource extends RemoteResource<List<BahnparkSite>> {
 
     @Override
     protected void onStartLoading(boolean force) {
-        handler.postDelayed(() -> {
-            try {
-                new Listener().onSuccess(new ArrayList<>());
-            } catch (Exception ignored) {
-            }
-        }, 100);
+        BaseApplication.get().getRepositories().getParkingRepository().queryFacilities(stationId, new Listener());
     }
 
     @Override

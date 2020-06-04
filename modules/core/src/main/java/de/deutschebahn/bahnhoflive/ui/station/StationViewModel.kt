@@ -90,7 +90,8 @@ class StationViewModel : HafasTimetableViewModel() {
                                 return Content.Source.BAHNPARK
                             }
 
-                            override fun getPois(stationFeature: StationFeature) = stationFeature.bahnparkSites
+                            override fun getPois(stationFeature: StationFeature) =
+                                TODO() // stationFeature.bahnparkSites
                         }),
                 StationFeatureTemplate(StationFeatureDefinition.BICYCLE_PARKING,
                         MapLink()),
