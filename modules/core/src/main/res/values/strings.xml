@@ -228,5 +228,7 @@
     <string name="coupon_category_label">Rabatt Coupons</string>
     <string name="button_news_external_link_survey">Zur Umfrage</string>
     <string name="button_website">Webseite</string>
+    <string name="chatbot_subheadline">Ich helfe Ihnen gerne weiter.</string>
+    <string name="chatbot_headline">Sie haben Fragen?</string>
 
 </resources>

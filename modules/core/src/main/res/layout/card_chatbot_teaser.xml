@@ -39,7 +39,7 @@
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintHorizontal_bias="0"
                     android:id="@+id/chatbotHeadline"
-                    android:text="Sie haben Fragen?"
+                    android:text="@string/chatbot_headline"
                     android:gravity="center_vertical"
                     android:layout_weight="1"
                     android:layout_width="match_parent"
@@ -53,7 +53,7 @@
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintHorizontal_bias="0"
                     android:layout_weight="2"
-                    android:text="Wir helfen Ihnen gerne weiter."
+                    android:text="@string/chatbot_subheadline"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     app:layout_constraintEnd_toStartOf="@id/chatbotImage" />
