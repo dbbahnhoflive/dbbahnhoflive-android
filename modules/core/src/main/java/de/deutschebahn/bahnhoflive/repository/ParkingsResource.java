@@ -6,7 +6,7 @@ import android.os.Looper;
 import java.util.List;
 
 import de.deutschebahn.bahnhoflive.BaseApplication;
-import de.deutschebahn.bahnhoflive.backend.db.parkinginformation.model.ParkingFacility;
+import de.deutschebahn.bahnhoflive.model.parking.ParkingFacility;
 
 public class ParkingsResource extends RemoteResource<List<ParkingFacility>> {
 

@@ -1,8 +1,8 @@
 package de.deutschebahn.bahnhoflive.ui.station.features
 
 import de.deutschebahn.bahnhoflive.backend.db.fasta2.model.FacilityStatus
-import de.deutschebahn.bahnhoflive.backend.db.parkinginformation.model.ParkingFacility
 import de.deutschebahn.bahnhoflive.backend.db.publictrainstation.model.DetailedStopPlace
+import de.deutschebahn.bahnhoflive.model.parking.ParkingFacility
 import de.deutschebahn.bahnhoflive.ui.station.StaticInfoCollection
 import de.deutschebahn.bahnhoflive.ui.station.shop.CategorizedShops
 import de.deutschebahn.bahnhoflive.ui.station.shop.Shop

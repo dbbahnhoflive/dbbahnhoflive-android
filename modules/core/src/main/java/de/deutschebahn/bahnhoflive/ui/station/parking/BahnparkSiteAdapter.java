@@ -13,7 +13,7 @@ import java.util.List;
 
 import de.deutschebahn.bahnhoflive.R;
 import de.deutschebahn.bahnhoflive.backend.bahnpark.model.BahnparkSite;
-import de.deutschebahn.bahnhoflive.backend.db.parkinginformation.model.ParkingFacility;
+import de.deutschebahn.bahnhoflive.model.parking.ParkingFacility;
 import de.deutschebahn.bahnhoflive.ui.station.CommonDetailsCardViewHolder;
 import de.deutschebahn.bahnhoflive.ui.station.info.ThreeButtonsViewHolder;
 import de.deutschebahn.bahnhoflive.view.SingleSelectionManager;
