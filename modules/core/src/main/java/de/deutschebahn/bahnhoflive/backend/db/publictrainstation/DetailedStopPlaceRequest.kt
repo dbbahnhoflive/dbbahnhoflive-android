@@ -29,25 +29,30 @@ class DetailedStopPlaceRequest(
 
     override fun getCountKey() = "PTS/stop-places"
 
-    override fun parseNetworkResponse(response: NetworkResponse?): Response<DetailedStopPlace> = try {
-        val parser = GsonResponseParser(DetailedStopPlace::class.java)
-        val detailedStopPlace = parser.parseResponse(response)
+    override fun parseNetworkResponse(response: NetworkResponse?): Response<DetailedStopPlace> {
+        super.parseNetworkResponse(response)
 
-        detailedStopPlace.fallbackStadaId = stadaId
+        return try {
+            val parser = GsonResponseParser(DetailedStopPlace::class.java)
+            val detailedStopPlace = parser.parseResponse(response)
 
-        if (currentPosition != null) {
-            detailedStopPlace.calculateDistance(
-                DistanceCalulator(
-                    currentPosition.latitude,
-                    currentPosition.longitude
+            detailedStopPlace.fallbackStadaId = stadaId
+
+            if (currentPosition != null) {
+                detailedStopPlace.calculateDistance(
+                    DistanceCalulator(
+                        currentPosition.latitude,
+                        currentPosition.longitude
+                    )
                 )
-            )
-        }
-        val forcedCacheEntryFactory = ForcedCacheEntryFactory(ForcedCacheEntryFactory.DAY_IN_MILLISECONDS)
+            }
+            val forcedCacheEntryFactory =
+                ForcedCacheEntryFactory(ForcedCacheEntryFactory.DAY_IN_MILLISECONDS)
 
-        Response.success(detailedStopPlace, forcedCacheEntryFactory.createCacheEntry(response))
-    } catch (e: Exception) {
-        Response.error(e.asVolleyError())
+            Response.success(detailedStopPlace, forcedCacheEntryFactory.createCacheEntry(response))
+        } catch (e: Exception) {
+            Response.error(e.asVolleyError())
+        }
     }
 }
 

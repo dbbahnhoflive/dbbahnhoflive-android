@@ -36,6 +36,8 @@ class ClosestTravelCenterRequest(
     override fun getCountKey() = "PTS/travelcenter"
 
     override fun parseNetworkResponse(response: NetworkResponse?): Response<TravelCenter?> = try {
+        super.parseNetworkResponse(response)
+
         val parser = GsonTypeResponseParser(TravelCenterListTypeToken())
         val travelCenters = parser.parseResponse(response)
 
@@ -50,7 +52,8 @@ class ClosestTravelCenterRequest(
             it.distanceInKm
         }.firstOrNull()
 
-        val forcedCacheEntryFactory = ForcedCacheEntryFactory(ForcedCacheEntryFactory.DAY_IN_MILLISECONDS)
+        val forcedCacheEntryFactory =
+            ForcedCacheEntryFactory(ForcedCacheEntryFactory.DAY_IN_MILLISECONDS)
         Response.success(closestTravelCenter, forcedCacheEntryFactory.createCacheEntry(response))
     } catch (e: Exception) {
         Response.error(e.asVolleyError())

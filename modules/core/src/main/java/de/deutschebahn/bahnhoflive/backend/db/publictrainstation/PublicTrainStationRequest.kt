@@ -1,6 +1,5 @@
 package de.deutschebahn.bahnhoflive.backend.db.publictrainstation
 
-import de.deutschebahn.bahnhoflive.backend.RestErrorListener
 import de.deutschebahn.bahnhoflive.backend.VolleyRestListener
 import de.deutschebahn.bahnhoflive.backend.db.DbAuthorizationTool
 import de.deutschebahn.bahnhoflive.backend.db.DbRequest
@@ -14,7 +13,6 @@ abstract class PublicTrainStationRequest<T>(
         method,
         BASE_URL + urlSuffix,
     dbAuthorizationTool,
-        RestErrorListener(listener),
         listener
 ) {
     companion object {

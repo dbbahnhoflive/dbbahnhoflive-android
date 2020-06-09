@@ -11,6 +11,7 @@ import de.deutschebahn.bahnhoflive.backend.db.DbAuthorizationTool
 import de.deutschebahn.bahnhoflive.backend.db.publictrainstation.model.StopPlace
 import de.deutschebahn.bahnhoflive.backend.db.publictrainstation.model.StopPlacesPage
 import java.net.URLEncoder
+import kotlin.math.roundToInt
 
 class StopPlacesRequest(
     listener: VolleyRestListener<List<StopPlace>>,
@@ -50,36 +51,41 @@ class StopPlacesRequest(
 
     override fun getCountKey() = "PTS/stop-places"
 
-    override fun parseNetworkResponse(response: NetworkResponse?): Response<List<StopPlace>> = try {
-        val stationQueryResponseParser = GsonResponseParser(StopPlacesPage::class.java)
-        val stopPlacesPage = stationQueryResponseParser.parseResponse(response)
-        val stopPlaces = stopPlacesPage.stopPlaces ?: emptyList()
-        val filteredStopPlaces = stopPlaces.asSequence()
-            .filterNotNull()
-            .filter { it.isDbStation }
-            .run {
-                location?.let { location ->
-                    val distanceCalulator =
+    override fun parseNetworkResponse(response: NetworkResponse?): Response<List<StopPlace>> {
+        super.parseNetworkResponse(response)
+
+        return try {
+            val stationQueryResponseParser = GsonResponseParser(StopPlacesPage::class.java)
+            val stopPlacesPage = stationQueryResponseParser.parseResponse(response)
+            val stopPlaces = stopPlacesPage.stopPlaces ?: emptyList()
+            val filteredStopPlaces = stopPlaces.asSequence()
+                .filterNotNull()
+                .filter { it.isDbStation }
+                .run {
+                    location?.let { location ->
+                        val distanceCalulator =
                             DistanceCalulator(
                                 location.latitude,
                                 location.longitude
                             )
-                    onEach { stopPlace ->
-                        stopPlace.calculateDistance(distanceCalulator)
-                    }.sortedBy { it.distanceInKm }
-                } ?: this
-            }
-            .take(limit)
-            .toList()
+                        onEach { stopPlace ->
+                            stopPlace.calculateDistance(distanceCalulator)
+                        }.sortedBy { it.distanceInKm }
+                    } ?: this
+                }
+                .take(limit)
+                .toList()
 
-        val forcedCacheEntryFactory = ForcedCacheEntryFactory(ForcedCacheEntryFactory.DAY_IN_MILLISECONDS)
+            val forcedCacheEntryFactory =
+                ForcedCacheEntryFactory(ForcedCacheEntryFactory.DAY_IN_MILLISECONDS)
 
-        Response.success(filteredStopPlaces, forcedCacheEntryFactory.createCacheEntry(response))
-    } catch (e: Exception) {
-        Response.error(VolleyError(e))
+            Response.success(filteredStopPlaces, forcedCacheEntryFactory.createCacheEntry(response))
+        } catch (e: Exception) {
+            Response.error(VolleyError(e))
+        }
     }
 
     companion object {
-        fun Double.obfuscate() = Math.round(this * 1000) / 1000.0
+        fun Double.obfuscate() = (this * 1000).roundToInt() / 1000.0
     }
 }
