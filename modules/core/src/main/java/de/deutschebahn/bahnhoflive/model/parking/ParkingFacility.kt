@@ -8,5 +8,20 @@ data class ParkingFacility(
     val icon: Int = R.drawable.app_parkplatz,
     val capacities: Map<String, Capacity> = emptyMap(),
     val parkingCapacityTotal: Int,
-    val hasPrognosis: Boolean
+    val parkingCapacityHandicapped: Int,
+    val parkingCapacityFamily: Int,
+    val parkingCapacityWoman: Int,
+    val hasPrognosis: Boolean,
+    val isOutOfService: Boolean,
+    val mainAccess: String?,
+    val nightAccess: String?,
+    val openingHours: String?,
+    val is24h: Boolean,
+    val freeParking: String?,
+    val maxParkingTime: String?,
+    val tariffNotes: String?,
+    val discount: String?,
+    val specialTariff: String?,
+    val paymentOptions: String?,
+    val prices: List<Price>
 )
