@@ -7,6 +7,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import de.deutschebahn.bahnhoflive.backend.bahnpark.model.BahnparkSite;
+import de.deutschebahn.bahnhoflive.model.parking.ParkingFacility;
 
 abstract class DescriptionRenderer {
 
@@ -79,4 +80,8 @@ abstract class DescriptionRenderer {
     }
 
     protected abstract void addDetails(BahnparkSite bahnparkSite, List<String> descriptionParts);
+
+    public CharSequence render(ParkingFacility parkingFacility) {
+        return "TODO: Beschreibung"; //TODO
+    }
 }

@@ -230,5 +230,6 @@
     <string name="button_website">Webseite</string>
     <string name="chatbot_subheadline">Ich helfe Ihnen gerne weiter.</string>
     <string name="chatbot_headline">Sie haben Fragen?</string>
+    <string name="empty" />
 
 </resources>

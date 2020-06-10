@@ -13,6 +13,7 @@ import java.util.List;
 
 import de.deutschebahn.bahnhoflive.R;
 import de.deutschebahn.bahnhoflive.backend.bahnpark.model.BahnparkSite;
+import de.deutschebahn.bahnhoflive.backend.bahnpark.model.ParkingStatus;
 import de.deutschebahn.bahnhoflive.model.parking.ParkingFacility;
 import de.deutschebahn.bahnhoflive.ui.station.CommonDetailsCardViewHolder;
 import de.deutschebahn.bahnhoflive.ui.station.info.ThreeButtonsViewHolder;
@@ -72,15 +73,14 @@ class BahnparkSiteAdapter extends RecyclerView.Adapter<BahnparkSiteAdapter.Parki
         protected void onBind(ParkingFacility item) {
             super.onBind(item);
 
-            titleView.setText(item.getResolvedName());
+            titleView.setText(item.getName());
 
-//TODO:
-            //            iconView.setImageResource(item.getMapIcon());
+            iconView.setImageResource(item.getIcon());
 
-//            final ParkingStatus parkingStatus = ParkingStatus.get(item);
-//            setStatus(parkingStatus.status, parkingStatus.label);
+            final ParkingStatus parkingStatus = ParkingStatus.get(item);
+            setStatus(parkingStatus.status, parkingStatus.label);
 
-//            descriptionView.setText(DescriptionRenderer.BRIEF.render(item));
+            descriptionView.setText(DescriptionRenderer.BRIEF.render(item));
         }
 
 
