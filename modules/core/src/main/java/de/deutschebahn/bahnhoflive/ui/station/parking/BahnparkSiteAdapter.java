@@ -75,7 +75,7 @@ class BahnparkSiteAdapter extends RecyclerView.Adapter<BahnparkSiteAdapter.Parki
 
             titleView.setText(item.getName());
 
-            iconView.setImageResource(item.getIcon());
+            iconView.setImageResource(item.getRoofed() ? R.drawable.app_parkhaus : R.drawable.app_parkplatz);
 
             final ParkingStatus parkingStatus = ParkingStatus.get(item);
             setStatus(parkingStatus.status, parkingStatus.label);

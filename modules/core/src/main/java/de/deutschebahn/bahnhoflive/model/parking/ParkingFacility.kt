@@ -5,6 +5,7 @@ import de.deutschebahn.bahnhoflive.R
 data class ParkingFacility(
     val id: String,
     val name: String = "Parkplatz",
+    val roofed: Boolean,
     val icon: Int = R.drawable.app_parkplatz,
     val capacities: Map<String, Capacity> = emptyMap(),
     val parkingCapacityTotal: Int,
@@ -13,6 +14,7 @@ data class ParkingFacility(
     val parkingCapacityWoman: Int,
     val hasPrognosis: Boolean,
     val isOutOfService: Boolean,
+    val access: String?,
     val mainAccess: String?,
     val nightAccess: String?,
     val openingHours: String?,
@@ -23,5 +25,9 @@ data class ParkingFacility(
     val discount: String?,
     val specialTariff: String?,
     val paymentOptions: String?,
-    val prices: List<Price>
+    val prices: List<Price>,
+    val distanceToStation: String?,
+    val operator: String?,
+    val featureTags: Set<FeatureTag>
+
 )
