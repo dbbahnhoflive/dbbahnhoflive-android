@@ -1,19 +1,22 @@
 package de.deutschebahn.bahnhoflive.model.parking
 
+import android.os.Parcelable
+import de.deutschebahn.bahnhoflive.R
 import de.deutschebahn.bahnhoflive.util.nonBlankOrNull
+import kotlinx.android.parcel.Parcelize
 import java.util.*
 
+@Parcelize
 class Duration(
-    val raw: String,
-    exceptionHandler: (Exception) -> Unit = {}
-) {
-    enum class TimeUnit {
-        MIN,
-        HOUR,
-        DAY,
-        WEEK,
-        MONTH,
-        YEAR;
+    val raw: String
+) : Parcelable {
+    enum class TimeUnit(val quantityString: Int) {
+        MIN(R.plurals.time_minute),
+        HOUR(R.plurals.time_hour),
+        DAY(R.plurals.time_day),
+        WEEK(R.plurals.time_week),
+        MONTH(R.plurals.time_month),
+        YEAR(R.plurals.time_year);
 
         val key = name.toLowerCase(Locale.ROOT)
     }
@@ -70,7 +73,7 @@ class Duration(
 
             }
         } catch (e: Exception) {
-            exceptionHandler(e)
+
         }
 
         this.amount = amount

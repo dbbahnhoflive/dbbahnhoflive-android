@@ -44,9 +44,9 @@ abstract class FacilityStatusViewHolder(parent: ViewGroup, selectionManager: Sin
                 "\n" +
                 when (status) {
                     Status.POSITIVE -> "Anlage in Betrieb."
-                    Status.NEUTRAL -> ""
                     Status.NEGATIVE -> "Anlage außer Betrieb."
                     Status.UNKNOWN -> "Anlagenstatus unbekannt."
+                    else -> ""
                 }
     }
 

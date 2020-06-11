@@ -4,11 +4,11 @@ import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
 
-import de.deutschebahn.bahnhoflive.backend.bahnpark.model.BahnparkSite;
+import de.deutschebahn.bahnhoflive.model.parking.ParkingFacility;
 
 public class ExternalLinks {
-    public static void openMonatskartekMail(Context context, BahnparkSite bahnparkSite) {
-        String subject = String.format("Antrag Monatskarte - %s", bahnparkSite.getParkraumDisplayName());
+    public static void openMonatskartekMail(Context context, ParkingFacility parkingFacility) {
+        String subject = String.format("Antrag Monatskarte - %s", parkingFacility.getName());
         String recipient = "dauerparker@contipark.de";
         String text = "Sehr geehrte Damen und Herren,\n\nbitte senden Sie mir die benötigten\n" +
                 "Unterlagen zur Beantragung einer Monatskarte für von Ihnen verwalteten\n" +

@@ -2,7 +2,6 @@ package de.deutschebahn.bahnhoflive.ui.station.parking;
 
 import android.content.Context;
 import android.os.Bundle;
-import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -15,7 +14,7 @@ import androidx.annotation.StringRes;
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment;
 
 import de.deutschebahn.bahnhoflive.R;
-import de.deutschebahn.bahnhoflive.backend.bahnpark.model.BahnparkSite;
+import de.deutschebahn.bahnhoflive.model.parking.ParkingFacility;
 
 public class BahnparkSiteDetailsFragment extends BottomSheetDialogFragment {
 
@@ -24,21 +23,21 @@ public class BahnparkSiteDetailsFragment extends BottomSheetDialogFragment {
         INFO(
                 R.string.parking_details_title_info,
                 R.string.parking_details_button_reservation,
-                DescriptionRenderer.DETAILED,
+                context -> new DescriptionRenderer.Companion.DetailedDescriptionRenderer(context),
                 new ButtonClickListener() {
                     @Override
-                    public void onButtonClick(Context context, BahnparkSite bahnparkSite) {
+                    public void onButtonClick(Context context, ParkingFacility parkingFacility) {
                         ExternalLinks.openReservation(context);
                     }
                 }),
         PRICE(
                 R.string.parking_details_title_price,
                 R.string.parking_details_button_subscribe,
-                DescriptionRenderer.PRICE,
+                context -> new DescriptionRenderer.Companion.PriceDescriptionRenderer(context),
                 new ButtonClickListener() {
                     @Override
-                    public void onButtonClick(Context context, BahnparkSite bahnparkSite) {
-                        ExternalLinks.openMonatskartekMail(context, bahnparkSite);
+                    public void onButtonClick(Context context, ParkingFacility parkingFacility) {
+                        ExternalLinks.openMonatskartekMail(context, parkingFacility);
                     }
                 });
 
@@ -47,23 +46,27 @@ public class BahnparkSiteDetailsFragment extends BottomSheetDialogFragment {
 
         @StringRes
         final int buttonLabel;
-        final DescriptionRenderer descriptionRenderer;
+        final DescriptionRendererFactory descriptionRendererFactory;
         final ButtonClickListener buttonClickListener;
 
-        Action(int title, int buttonLabel, DescriptionRenderer descriptionRenderer, ButtonClickListener buttonClickListener) {
+        Action(int title, int buttonLabel, DescriptionRendererFactory descriptionRendererFactory, ButtonClickListener buttonClickListener) {
             this.title = title;
             this.buttonLabel = buttonLabel;
-            this.descriptionRenderer = descriptionRenderer;
+            this.descriptionRendererFactory = descriptionRendererFactory;
             this.buttonClickListener = buttonClickListener;
+        }
+
+        interface DescriptionRendererFactory {
+            DescriptionRenderer create(Context context);
         }
     }
 
-    public static final String ARG_BAHNPARK_SITE = "bahnparkSite";
+    public static final String ARG_PARKING_FACILITY = "parkingFacility";
     private static final String ARG_ACTION = "action";
 
     private Action action;
 
-    private BahnparkSite bahnparkSite;
+    private ParkingFacility parkingFacility;
 
     @Override
     public void setArguments(@Nullable Bundle args) {
@@ -74,7 +77,7 @@ public class BahnparkSiteDetailsFragment extends BottomSheetDialogFragment {
             return;
         }
 
-        bahnparkSite = args.getParcelable(ARG_BAHNPARK_SITE);
+        parkingFacility = args.getParcelable(ARG_PARKING_FACILITY);
         action = Action.values()[args.getInt(ARG_ACTION)];
     }
 
@@ -95,7 +98,7 @@ public class BahnparkSiteDetailsFragment extends BottomSheetDialogFragment {
 
         final View footerView = view.findViewById(R.id.footer);
 
-        if (TextUtils.isEmpty(bahnparkSite.getParkraumReservierung())) {
+        if (true /*FIXME determine reservation availability */) {
             footerView.setVisibility(View.GONE);
         } else {
             footerView.setVisibility(View.VISIBLE);
@@ -104,7 +107,7 @@ public class BahnparkSiteDetailsFragment extends BottomSheetDialogFragment {
             buttonView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    action.buttonClickListener.onButtonClick(v.getContext(), bahnparkSite);
+                    action.buttonClickListener.onButtonClick(v.getContext(), parkingFacility);
                 }
             });
 
@@ -113,16 +116,16 @@ public class BahnparkSiteDetailsFragment extends BottomSheetDialogFragment {
         }
 
         final TextView contentTextView = view.findViewById(R.id.content_text);
-        contentTextView.setText(action.descriptionRenderer.render(bahnparkSite));
+        contentTextView.setText(action.descriptionRendererFactory.create(getContext()).render(parkingFacility));
 
         return view;
     }
 
-    public static BahnparkSiteDetailsFragment create(Action action, BahnparkSite bahnparkSite) {
+    public static BahnparkSiteDetailsFragment create(Action action, ParkingFacility parkingFacility) {
         final BahnparkSiteDetailsFragment bahnparkSiteDetailsFragment = new BahnparkSiteDetailsFragment();
 
         final Bundle args = new Bundle();
-        args.putParcelable(ARG_BAHNPARK_SITE, bahnparkSite);
+        args.putParcelable(ARG_PARKING_FACILITY, parkingFacility);
         args.putInt(ARG_ACTION, action.ordinal());
 
         bahnparkSiteDetailsFragment.setArguments(args);

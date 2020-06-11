@@ -87,7 +87,7 @@ class StationViewModel : HafasTimetableViewModel() {
                 StationFeatureTemplate(StationFeatureDefinition.PARKING,
                         object : MapLink() {
                             override fun getMapSource(): Content.Source {
-                                return Content.Source.BAHNPARK
+                                return Content.Source.PARKING
                             }
 
                             override fun getPois(stationFeature: StationFeature) =

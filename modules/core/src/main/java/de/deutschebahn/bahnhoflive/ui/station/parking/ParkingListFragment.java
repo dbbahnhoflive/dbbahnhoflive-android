@@ -18,7 +18,7 @@ import de.deutschebahn.bahnhoflive.ui.map.MapPresetProvider;
 import de.deutschebahn.bahnhoflive.ui.station.HistoryFragment;
 import de.deutschebahn.bahnhoflive.ui.station.StationViewModel;
 
-public class ParkingListFragment extends RecyclerFragment<BahnparkSiteAdapter>
+public class ParkingListFragment extends RecyclerFragment<ParkingLotAdapter>
         implements MapPresetProvider {
 
     public static final String TAG = ParkingListFragment.class.getSimpleName();
@@ -35,7 +35,7 @@ public class ParkingListFragment extends RecyclerFragment<BahnparkSiteAdapter>
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        setAdapter(new BahnparkSiteAdapter(getChildFragmentManager()));
+        setAdapter(new ParkingLotAdapter(getContext(), getChildFragmentManager()));
 
         stationViewModel = ViewModelProviders.of(getActivity()).get(StationViewModel.class);
         stationViewModel.getParkingsResource().getData().observe(this, this::setData);
@@ -85,7 +85,7 @@ public class ParkingListFragment extends RecyclerFragment<BahnparkSiteAdapter>
 
     @Override
     public boolean prepareMapIntent(Intent intent) {
-        final BahnparkSiteAdapter adapter = getAdapter();
+        final ParkingLotAdapter adapter = getAdapter();
         final ParkingFacility parkingFacility = adapter.getSelectedItem();
 //TODO:
 //        InitialPoiManager.putInitialPoi(intent, Content.Source.BAHNPARK, parkingFacility);

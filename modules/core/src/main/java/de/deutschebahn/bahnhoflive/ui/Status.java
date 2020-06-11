@@ -12,6 +12,7 @@ public enum Status {
     NEUTRAL(R.color.gray, R.drawable.app_achtung),
     UNKNOWN(R.color.gray, R.drawable.app_unbekannt),
     NEGATIVE(R.color.red, R.drawable.app_kreuz),
+    NONE(R.color.gray, 0)
     ;
 
     @ColorRes

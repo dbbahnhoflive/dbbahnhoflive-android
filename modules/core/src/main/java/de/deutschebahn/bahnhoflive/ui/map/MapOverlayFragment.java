@@ -324,7 +324,7 @@ public class MapOverlayFragment extends Fragment implements OnMapReadyCallback, 
                 categoryMarkerBinders.add(markerBinder);
             }
 
-            content.setMarkerBinders(Content.Source.BAHNPARK, allMarkerBinders, categorizedMarkerBinders);
+            content.setMarkerBinders(Content.Source.PARKING, allMarkerBinders, categorizedMarkerBinders);
 
             applyInitialMarkerBinder();
         }

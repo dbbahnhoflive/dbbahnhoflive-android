@@ -231,5 +231,12 @@
     <string name="chatbot_subheadline">Ich helfe Ihnen gerne weiter.</string>
     <string name="chatbot_headline">Sie haben Fragen?</string>
     <string name="empty" />
+    <string name="parking_feature_charging_station">Ladestation</string>
+    <string name="parking_feature_lighted">Beleuchtung</string>
+    <string name="parking_feature_family_places">Eltern-Kind Parkplätze</string>
+    <string name="parking_feature_lift">Aufzug</string>
+    <string name="parking_feature_toilets">WC</string>
+    <string name="parking_feature_women_places">Frauenparkplätze</string>
+    <string name="parking_feature_disabled_places">Behindertengerechte Parkplätze</string>
 
 </resources>

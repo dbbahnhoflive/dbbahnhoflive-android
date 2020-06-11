@@ -1,13 +1,14 @@
 package de.deutschebahn.bahnhoflive.model.parking
 
-import de.deutschebahn.bahnhoflive.R
+import android.os.Parcelable
+import kotlinx.android.parcel.Parcelize
 
+@Parcelize
 data class ParkingFacility(
     val id: String,
-    val name: String = "Parkplatz",
+    val name: String,
     val roofed: Boolean,
-    val icon: Int = R.drawable.app_parkplatz,
-    val capacities: Map<String, Capacity> = emptyMap(),
+    val capacities: Map<String, Capacity>,
     val parkingCapacityTotal: Int,
     val parkingCapacityHandicapped: Int,
     val parkingCapacityFamily: Int,
@@ -29,5 +30,4 @@ data class ParkingFacility(
     val distanceToStation: String?,
     val operator: String?,
     val featureTags: Set<FeatureTag>
-
-)
+) : Parcelable

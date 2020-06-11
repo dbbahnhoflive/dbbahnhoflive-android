@@ -78,7 +78,7 @@ public class BahnparkSiteMarkerContent extends MarkerContent {
         }
 
         final ParkingStatus parkingStatus = ParkingStatus.get(bahnparkSite);
-        return new FlyoutStatus(context.getText(parkingStatus.label), parkingStatus.status);
+        return new FlyoutStatus(context.getText(parkingStatus.getLabel()), parkingStatus.getStatus());
     }
 
     @Override

@@ -12,20 +12,21 @@ import androidx.recyclerview.widget.RecyclerView;
 import java.util.List;
 
 import de.deutschebahn.bahnhoflive.R;
-import de.deutschebahn.bahnhoflive.backend.bahnpark.model.BahnparkSite;
 import de.deutschebahn.bahnhoflive.backend.bahnpark.model.ParkingStatus;
 import de.deutschebahn.bahnhoflive.model.parking.ParkingFacility;
 import de.deutschebahn.bahnhoflive.ui.station.CommonDetailsCardViewHolder;
 import de.deutschebahn.bahnhoflive.ui.station.info.ThreeButtonsViewHolder;
 import de.deutschebahn.bahnhoflive.view.SingleSelectionManager;
 
-class BahnparkSiteAdapter extends RecyclerView.Adapter<BahnparkSiteAdapter.ParkingFacilityViewHolder> {
+class ParkingLotAdapter extends RecyclerView.Adapter<ParkingLotAdapter.ParkingFacilityViewHolder> {
 
     private final FragmentManager fragmentManager;
+    private final DescriptionRenderer.Companion.BriefDescriptionRenderer briefDescriptionRenderer;
     private List<ParkingFacility> parkingFacilities;
     private final SingleSelectionManager selectionManager;
 
-    BahnparkSiteAdapter(FragmentManager fragmentManager) {
+    ParkingLotAdapter(Context context, FragmentManager fragmentManager) {
+        briefDescriptionRenderer = new DescriptionRenderer.Companion.BriefDescriptionRenderer(context);
         this.fragmentManager = fragmentManager;
         selectionManager = new SingleSelectionManager(this);
         SingleSelectionManager.type = "d1_parking";
@@ -78,9 +79,9 @@ class BahnparkSiteAdapter extends RecyclerView.Adapter<BahnparkSiteAdapter.Parki
             iconView.setImageResource(item.getRoofed() ? R.drawable.app_parkhaus : R.drawable.app_parkplatz);
 
             final ParkingStatus parkingStatus = ParkingStatus.get(item);
-            setStatus(parkingStatus.status, parkingStatus.label);
+            setStatus(parkingStatus.getStatus(), parkingStatus.getLabel());
 
-            descriptionView.setText(DescriptionRenderer.BRIEF.render(item));
+            descriptionView.setText(briefDescriptionRenderer.render(item));
         }
 
 
@@ -88,23 +89,21 @@ class BahnparkSiteAdapter extends RecyclerView.Adapter<BahnparkSiteAdapter.Parki
         @Override
         public void onClick(View v) {
             final Context context = v.getContext();
-/*TODO
 
-            final BahnparkSite item = getItem();
+            final ParkingFacility item = getItem();
             int id = v.getId();
             if (id == R.id.button_left) {
-                context.startActivity(new MapIntent(
-                        item.getParkraumGeoLatitude(), item.getParkraumGeoLongitude(),
-                        item.getParkraumDisplayName()));
+//                context.startActivity(new MapIntent(
+//                        item.getParkraumGeoLatitude(), item.getParkraumGeoLongitude(),
+//                        item.getParkraumDisplayName()));
             } else if (id == R.id.button_middle) {
                 showDetails(item, BahnparkSiteDetailsFragment.Action.INFO);
             } else if (id == R.id.button_right) {
                 showDetails(item, BahnparkSiteDetailsFragment.Action.PRICE);
             }
-*/
         }
 
-        private void showDetails(BahnparkSite item, BahnparkSiteDetailsFragment.Action info) {
+        private void showDetails(ParkingFacility item, BahnparkSiteDetailsFragment.Action info) {
             final BahnparkSiteDetailsFragment bahnparkSiteDetailsFragment = BahnparkSiteDetailsFragment.create(info, item);
             bahnparkSiteDetailsFragment.show(fragmentManager, "details");
         }
