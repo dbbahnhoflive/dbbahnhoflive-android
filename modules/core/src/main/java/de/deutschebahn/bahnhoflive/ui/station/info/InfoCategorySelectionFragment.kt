@@ -11,7 +11,7 @@ import de.deutschebahn.bahnhoflive.analytics.TrackingManager
 import de.deutschebahn.bahnhoflive.backend.db.fasta2.model.FacilityStatus
 import de.deutschebahn.bahnhoflive.backend.db.publictrainstation.model.DetailedStopPlace
 import de.deutschebahn.bahnhoflive.backend.local.model.ServiceContent
-import de.deutschebahn.bahnhoflive.repository.ParkingsResource
+import de.deutschebahn.bahnhoflive.repository.parking.ParkingsResource
 import de.deutschebahn.bahnhoflive.ui.ServiceContentFragment
 import de.deutschebahn.bahnhoflive.ui.station.*
 import de.deutschebahn.bahnhoflive.ui.station.elevators.ElevatorStatusListsFragment

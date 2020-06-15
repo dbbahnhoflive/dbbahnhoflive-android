@@ -1,4 +1,4 @@
-package de.deutschebahn.bahnhoflive.repository;
+package de.deutschebahn.bahnhoflive.repository.parking;
 
 import android.os.Handler;
 import android.os.Looper;
@@ -7,6 +7,8 @@ import java.util.List;
 
 import de.deutschebahn.bahnhoflive.BaseApplication;
 import de.deutschebahn.bahnhoflive.model.parking.ParkingFacility;
+import de.deutschebahn.bahnhoflive.repository.RemoteResource;
+import de.deutschebahn.bahnhoflive.repository.Station;
 
 public class ParkingsResource extends RemoteResource<List<ParkingFacility>> {
 

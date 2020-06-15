@@ -34,8 +34,11 @@ enum class ParkingStatus(
         }
 
         @JvmStatic
-        operator fun get(parkingFacility: ParkingFacility?) = when {
+        operator fun get(
+            parkingFacility: ParkingFacility?
+        ) = when {
             parkingFacility?.isOutOfService == true -> CLOSED
+            parkingFacility?.liveCapacity != null -> parkingFacility.liveCapacity.parkingStatus
             else -> UNKNOWN
         }
     }

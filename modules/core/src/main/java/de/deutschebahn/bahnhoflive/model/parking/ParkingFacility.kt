@@ -29,5 +29,6 @@ data class ParkingFacility(
     val prices: List<Price>,
     val distanceToStation: String?,
     val operator: String?,
-    val featureTags: Set<FeatureTag>
+    val featureTags: Set<FeatureTag>,
+    val liveCapacity: LiveCapacity? = null
 ) : Parcelable

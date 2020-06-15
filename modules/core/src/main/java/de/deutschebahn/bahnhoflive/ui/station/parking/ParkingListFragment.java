@@ -35,10 +35,11 @@ public class ParkingListFragment extends RecyclerFragment<ParkingLotAdapter>
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
+        stationViewModel = ViewModelProviders.of(getActivity()).get(StationViewModel.class);
+
         setAdapter(new ParkingLotAdapter(getContext(), getChildFragmentManager()));
 
-        stationViewModel = ViewModelProviders.of(getActivity()).get(StationViewModel.class);
-        stationViewModel.getParkingsResource().getData().observe(this, this::setData);
+        stationViewModel.getParkingFacilitiesWithLiveCapacity().observe(this, this::setData);
         stationViewModel.getSelectedServiceContentType().observe(this, s -> {
             if (s != null) {
                 HistoryFragment.parentOf(this).pop();
