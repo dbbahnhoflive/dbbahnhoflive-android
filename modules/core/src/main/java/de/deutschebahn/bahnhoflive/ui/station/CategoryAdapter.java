@@ -20,7 +20,7 @@ public class CategoryAdapter extends RecyclerView.Adapter<ViewHolder<Category>> 
     private final GridLayoutManager.SpanSizeLookup spanSizeLookup = new GridLayoutManager.SpanSizeLookup() {
         @Override
         public int getSpanSize(int position) {
-            if (position == getItemCount() - 1 && position % 2 == 0) {
+            if (specialCardFactories != null && position == getItemCount() - 1 && position % 2 == 0) {
                 return 2;
             }
             return 1;
