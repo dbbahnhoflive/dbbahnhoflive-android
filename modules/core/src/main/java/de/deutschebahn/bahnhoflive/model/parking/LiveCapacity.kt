@@ -1,7 +1,6 @@
 package de.deutschebahn.bahnhoflive.model.parking
 
 import android.os.Parcelable
-import de.deutschebahn.bahnhoflive.backend.bahnpark.model.ParkingStatus
 import kotlinx.android.parcel.Parcelize
 
 @Parcelize

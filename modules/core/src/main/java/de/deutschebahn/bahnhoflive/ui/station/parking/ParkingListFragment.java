@@ -39,7 +39,7 @@ public class ParkingListFragment extends RecyclerFragment<ParkingLotAdapter>
 
         setAdapter(new ParkingLotAdapter(getContext(), getChildFragmentManager()));
 
-        stationViewModel.getParkingFacilitiesWithLiveCapacity().observe(this, this::setData);
+        stationViewModel.getParking().getParkingFacilitiesWithLiveCapacity().observe(this, this::setData);
         stationViewModel.getSelectedServiceContentType().observe(this, s -> {
             if (s != null) {
                 HistoryFragment.parentOf(this).pop();

@@ -27,12 +27,9 @@ import de.deutschebahn.bahnhoflive.backend.rimap.RimapConfig
 import de.deutschebahn.bahnhoflive.backend.rimap.model.RimapStationInfo
 import de.deutschebahn.bahnhoflive.backend.ris.model.RISTimetable
 import de.deutschebahn.bahnhoflive.backend.ris.model.TrainInfo
-import de.deutschebahn.bahnhoflive.model.parking.LiveCapacity
-import de.deutschebahn.bahnhoflive.model.parking.ParkingFacility
 import de.deutschebahn.bahnhoflive.persistence.RecentContentQueriesStore
 import de.deutschebahn.bahnhoflive.repository.*
-import de.deutschebahn.bahnhoflive.repository.parking.LiveCapacityResource
-import de.deutschebahn.bahnhoflive.repository.parking.ParkingsResource
+import de.deutschebahn.bahnhoflive.repository.parking.ViewModelParking
 import de.deutschebahn.bahnhoflive.stream.rx.Optional
 import de.deutschebahn.bahnhoflive.ui.map.Content
 import de.deutschebahn.bahnhoflive.ui.map.MapActivity
@@ -58,26 +55,6 @@ import java.text.Collator
 import java.util.*
 import java.util.concurrent.Executors
 import kotlin.Comparator
-import kotlin.collections.List
-import kotlin.collections.Map
-import kotlin.collections.all
-import kotlin.collections.any
-import kotlin.collections.asSequence
-import kotlin.collections.emptyList
-import kotlin.collections.filter
-import kotlin.collections.find
-import kotlin.collections.firstOrNull
-import kotlin.collections.getOrPut
-import kotlin.collections.isNullOrEmpty
-import kotlin.collections.listOf
-import kotlin.collections.listOfNotNull
-import kotlin.collections.map
-import kotlin.collections.mapOf
-import kotlin.collections.mutableMapOf
-import kotlin.collections.plusAssign
-import kotlin.collections.set
-import kotlin.collections.toMap
-import kotlin.collections.toMutableList
 
 class StationViewModel : HafasTimetableViewModel() {
 
@@ -251,38 +228,7 @@ class StationViewModel : HafasTimetableViewModel() {
 
     val shopsResource = ShopsResource()
 
-    val parkingsResource =
-        ParkingsResource()
-
-    val parkingCapacityResources =
-        mutableMapOf<String, LiveCapacityResource>()
-
-    val parkingFacilitiesWithLiveCapacity = MediatorLiveData<List<ParkingFacility>>().apply {
-        val liveCapacities = mutableMapOf<String, LiveCapacity>()
-
-
-        addSource(parkingsResource.data, Observer { parkingFacilities ->
-            value = parkingFacilities.map { parkingFacility ->
-                liveCapacities[parkingFacility.id]?.let { parkingFacility.copy(liveCapacity = it) }
-                    ?: parkingFacility.also {
-                        if (parkingFacility.hasPrognosis) {
-                            parkingCapacityResources.getOrPut(parkingFacility.id) {
-                                LiveCapacityResource(it).also { liveCapacityResource ->
-                                    addSource(liveCapacityResource.data, Observer { liveCapacity ->
-                                        liveCapacities[parkingFacility.id] = liveCapacity
-
-                                        value = value?.map { parkingFacility ->
-                                            parkingFacility.takeUnless { it.id == liveCapacity.facilityId }
-                                                ?: parkingFacility.copy(liveCapacity = liveCapacity)
-                                        }
-                                    })
-                                }
-                            }
-                        }
-                    }
-            }
-        })
-    }
+    val parking = ViewModelParking()
 
     val elevatorsResource = ElevatorsResource()
 
@@ -316,7 +262,7 @@ class StationViewModel : HafasTimetableViewModel() {
             stationResource.initialize(station)
             elevatorsResource.initialize(station)
             shopsResource.initialize(station)
-            parkingsResource.initialize(station)
+            parking.parkingsResource.initialize(station)
             dbTimetableResource.initialize(station)
 
             stationResource.data.observeForever(evaIdsDataObserver)
@@ -402,12 +348,12 @@ class StationViewModel : HafasTimetableViewModel() {
 
             for (stationFeatureTemplate in stationFeatureTemplates) {
                 val stationFeature = StationFeature(
-                        stationFeatureTemplate,
-                        detailedStopPlace,
-                        staticInfoLiveData.value,
-                        shopsResource.data.value,
-                        parkingsResource.data.value,
-                        elevatorsResource.data.value
+                    stationFeatureTemplate,
+                    detailedStopPlace,
+                    staticInfoLiveData.value,
+                    shopsResource.data.value,
+                    parking.parkingsResource.data.value,
+                    elevatorsResource.data.value
                 )
                 if (stationFeature.isVisible) {
                     if (stationFeature.isFeatured) {
@@ -422,12 +368,12 @@ class StationViewModel : HafasTimetableViewModel() {
 
             value = stationFeatureTemplates.map { stationFeatureTemplate ->
                 StationFeature(
-                        stationFeatureTemplate,
-                        detailedStopPlace,
-                        staticInfoLiveData.value,
-                        shopsResource.data.value,
-                        parkingsResource.data.value,
-                        elevatorsResource.data.value
+                    stationFeatureTemplate,
+                    detailedStopPlace,
+                    staticInfoLiveData.value,
+                    shopsResource.data.value,
+                    parking.parkingsResource.data.value,
+                    elevatorsResource.data.value
                 )
             }
         }
@@ -435,7 +381,7 @@ class StationViewModel : HafasTimetableViewModel() {
         addSource(staticInfoLiveData, observer)
         addSource(elevatorsResource.data, observer)
         addSource(shopsResource.data, observer)
-        addSource(parkingsResource.data, observer)
+        addSource(parking.parkingsResource.data, observer)
         addSource(detailedStopPlaceResource.data, observer)
 
     }
@@ -448,7 +394,7 @@ class StationViewModel : HafasTimetableViewModel() {
         val hafasStations = hafasStationResource.data
         val detailedStopPlace = detailedStopPlaceResource.data
         val elevators = elevatorsResource.data
-        val parkings = parkingsResource.data
+        val parkings = parking.parkingsResource.data
 
         val update = fun(_: Any?) {
             value = queryAndParts.value?.let { queryAndParts ->

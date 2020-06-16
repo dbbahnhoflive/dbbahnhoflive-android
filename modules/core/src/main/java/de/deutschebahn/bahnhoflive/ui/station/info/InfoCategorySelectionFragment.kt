@@ -171,7 +171,7 @@ class InfoCategorySelectionFragment : CategorySelectionFragment(R.string.title_s
         elevatorsDataResource = stationViewModel.elevatorsResource.data
         infoAndServices = stationViewModel.infoAndServices
         serviceNumbers = stationViewModel.serviceNumbers
-        parkingsResource = stationViewModel.parkingsResource
+        parkingsResource = stationViewModel.parking.parkingsResource
         staticInfoLiveData = stationViewModel.staticInfoLiveData
 
         staticInfoLiveData.observe(this, Observer {

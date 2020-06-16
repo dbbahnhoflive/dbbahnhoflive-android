@@ -7,8 +7,8 @@ import android.widget.TextView
 import androidx.fragment.app.FragmentManager
 import androidx.recyclerview.widget.RecyclerView
 import de.deutschebahn.bahnhoflive.R
-import de.deutschebahn.bahnhoflive.backend.bahnpark.model.ParkingStatus.Companion.get
 import de.deutschebahn.bahnhoflive.model.parking.ParkingFacility
+import de.deutschebahn.bahnhoflive.model.parking.ParkingStatus.Companion.get
 import de.deutschebahn.bahnhoflive.ui.station.CommonDetailsCardViewHolder
 import de.deutschebahn.bahnhoflive.ui.station.info.ThreeButtonsViewHolder
 import de.deutschebahn.bahnhoflive.ui.station.parking.DescriptionRenderer.Companion.BriefDescriptionRenderer

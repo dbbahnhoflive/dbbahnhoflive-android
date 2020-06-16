@@ -1,8 +1,7 @@
-package de.deutschebahn.bahnhoflive.backend.bahnpark.model
+package de.deutschebahn.bahnhoflive.model.parking
 
 import androidx.annotation.StringRes
 import de.deutschebahn.bahnhoflive.R
-import de.deutschebahn.bahnhoflive.model.parking.ParkingFacility
 import de.deutschebahn.bahnhoflive.ui.Status
 
 enum class ParkingStatus(
@@ -20,18 +19,6 @@ enum class ParkingStatus(
     companion object {
         private val VALUES =
             values()
-
-        @JvmStatic
-        operator fun get(bahnparkSite: BahnparkSite): ParkingStatus {
-            if (bahnparkSite.isParkraumIsAusserBetrieb) {
-                return CLOSED
-            }
-            val occupancy = bahnparkSite.occupancy ?: return ALWAYS_OPEN
-            return VALUES[Math.min(
-                occupancy.category,
-                VALUES.size - 2
-            )]
-        }
 
         @JvmStatic
         operator fun get(

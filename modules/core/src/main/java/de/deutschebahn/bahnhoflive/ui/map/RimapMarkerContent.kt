@@ -21,10 +21,10 @@ private val mapIcon: Int, @field:DrawableRes
     private val level: Int
         get() = RimapPOI.codeToLevel(rimapPOI.levelcode)
 
-    override fun createMarkerOptions(): MarkerOptions {
+    override fun createMarkerOptions(): MarkerOptions? {
         return super.createMarkerOptions()
-                .position(LatLng(rimapPOI.displayY, rimapPOI.displayX))
-                .visible(false)
+            ?.position(LatLng(rimapPOI.displayY, rimapPOI.displayX))
+            ?.visible(false)
     }
 
     override fun acceptsZoom(zoom: Float): Boolean {

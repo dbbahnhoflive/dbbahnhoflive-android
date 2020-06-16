@@ -23,9 +23,9 @@ import java.util.List;
 import java.util.Set;
 
 import de.deutschebahn.bahnhoflive.R;
-import de.deutschebahn.bahnhoflive.backend.bahnpark.model.BahnparkSite;
 import de.deutschebahn.bahnhoflive.backend.db.fasta2.model.FacilityStatus;
 import de.deutschebahn.bahnhoflive.backend.rimap.model.RimapPOI;
+import de.deutschebahn.bahnhoflive.model.parking.ParkingFacility;
 import de.deutschebahn.bahnhoflive.util.JSONHelper;
 
 public class RimapFilter {
@@ -216,28 +216,8 @@ public class RimapFilter {
         return true;
     }
 
-    public Item findFilterItem(BahnparkSite bahnparkSite) {
-        final String parkraumParkart = bahnparkSite.getParkraumParkart();
-
-        if (parkraumParkart == null) {
-            return null;
-        }
-
-        final String menusubcat;
-        switch (parkraumParkart.toLowerCase()) {
-            case BahnparkSite.PARKRAUM_PARKPLATZ:
-            case BahnparkSite.PARKRAUM_PARKDECK:
-                menusubcat = "Parkplatz";
-                break;
-            case BahnparkSite.PARKRAUM_PARKHAUS:
-            case BahnparkSite.PARKRAUM_TIEFGARAGE:
-                menusubcat = "Parkhaus";
-                break;
-            default:
-                return null;
-        }
-
-        return findFilterItem("Individualverkehr", menusubcat);
+    public Item findFilterItem(ParkingFacility bahnparkSite) {
+        return findFilterItem("Individualverkehr", bahnparkSite.getRoofed() ? "Parkhaus" : "Parkplatz");
     }
 
     public Item findFilterItem(RimapPOI rimapPOI) {

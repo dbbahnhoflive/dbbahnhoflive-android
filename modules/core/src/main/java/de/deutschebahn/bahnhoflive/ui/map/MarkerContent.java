@@ -4,6 +4,7 @@ import android.content.Context;
 import android.os.Parcelable;
 
 import androidx.annotation.DrawableRes;
+import androidx.annotation.Nullable;
 
 import com.google.android.gms.maps.model.BitmapDescriptor;
 import com.google.android.gms.maps.model.LatLngBounds;
@@ -26,26 +27,27 @@ public abstract class MarkerContent {
 		 */
 		public static ViewType[] VALUES = values();
 
-	}
-
-	private final BitmapDescriptorFactory bitmapDescriptorFactory;
-
-	public LatLngBounds getBounds() {
-		return null;
     }
 
-	public abstract String getTitle();
+    private final BitmapDescriptorFactory bitmapDescriptorFactory;
 
-	public FlyoutViewHolder.Status getStatus1(Context context) {
-		return null;
-	}
+    public LatLngBounds getBounds() {
+        return null;
+    }
 
-	public CommonFlyoutViewHolder.Status getStatus2(Context context) {
-		return null;
-	}
+    public abstract String getTitle();
 
-	public CharSequence getDescription(Context context) {
-		return null;
+    @Nullable
+    public FlyoutViewHolder.Status getStatus1(Context context) {
+        return null;
+    }
+
+    public CommonFlyoutViewHolder.Status getStatus2(Context context) {
+        return null;
+    }
+
+    public CharSequence getDescription(Context context) {
+        return null;
 	}
 
 	public abstract int getMapIcon();
@@ -82,27 +84,29 @@ public abstract class MarkerContent {
 	}
 
     public interface BitmapDescriptorFactory {
-		BitmapDescriptor createBitmapDescriptor(boolean highlighted);
-	}
-	protected MarkerContent(BitmapDescriptorFactory bitmapDescriptorFactory) {
-		this.bitmapDescriptorFactory = bitmapDescriptorFactory;
-	}
+        BitmapDescriptor createBitmapDescriptor(boolean highlighted);
+    }
 
-	protected MarkerContent(@DrawableRes int mapIcon) {
-		this(new ResourceBitmapDescriptorFactory(mapIcon));
-	}
+    protected MarkerContent(BitmapDescriptorFactory bitmapDescriptorFactory) {
+        this.bitmapDescriptorFactory = bitmapDescriptorFactory;
+    }
 
+    protected MarkerContent(@DrawableRes int mapIcon) {
+        this(new ResourceBitmapDescriptorFactory(mapIcon));
+    }
+
+    @Nullable
     public MarkerOptions createMarkerOptions() {
         return new MarkerOptions()
-				.anchor(0.5f, 1f)
-				.icon(getBitmapDescriptorFactory().createBitmapDescriptor(false));
-	}
+                .anchor(0.5f, 1f)
+                .icon(getBitmapDescriptorFactory().createBitmapDescriptor(false));
+    }
 
-	public boolean acceptsZoom(float zoom) {
-		return true;
-	}
+    public boolean acceptsZoom(float zoom) {
+        return true;
+    }
 
-	public boolean acceptsLevel(int level) {
+    public boolean acceptsLevel(int level) {
 		return true;
 	}
 
@@ -115,26 +119,26 @@ public abstract class MarkerContent {
 		@DrawableRes
 		private final int iconResId;
 
-		public ResourceBitmapDescriptorFactory(@DrawableRes int iconResId) {
-			this.iconResId = iconResId;
-		}
+        public ResourceBitmapDescriptorFactory(@DrawableRes int iconResId) {
+            this.iconResId = iconResId;
+        }
 
-		@Override
-		public BitmapDescriptor createBitmapDescriptor(boolean highlighted) {
-			return VectorBitmapDescriptorFactory.createBitmapDescriptor(iconResId, highlighted ? 2f : 1f);
-		}
-	}
+        @Override
+        public BitmapDescriptor createBitmapDescriptor(boolean highlighted) {
+            return VectorBitmapDescriptorFactory.createBitmapDescriptor(iconResId, highlighted ? 2f : 1f);
+        }
+    }
 
-	public boolean wraps(Parcelable item) {
-		return false;
-	}
+    public boolean wraps(@Nullable Parcelable item) {
+        return false;
+    }
 
-	public int suggestLevel(int level) {
-		return level;
-	}
+    public int suggestLevel(int level) {
+        return level;
+    }
 
-	public void onFlyoutClick(Context context) {
-	}
+    public void onFlyoutClick(Context context) {
+    }
 
 	public void bindTo(ViewHolder<MarkerBinder> flyoutViewHolder) {
 	}

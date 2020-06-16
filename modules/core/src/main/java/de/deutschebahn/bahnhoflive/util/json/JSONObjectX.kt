@@ -16,5 +16,14 @@ fun JSONObject.int(name: String, exceptionHandler: (JSONException) -> Unit = {})
         null
     }
 
+fun JSONObject.double(name: String, exceptionHandler: (JSONException) -> Unit = {}) =
+    try {
+        getDouble(name)
+    } catch (e: JSONException) {
+        exceptionHandler(e)
+        null
+    }
+
+
 fun JSONObject.string(name: String, fallback: () -> String?) =
     string(name) ?: fallback()

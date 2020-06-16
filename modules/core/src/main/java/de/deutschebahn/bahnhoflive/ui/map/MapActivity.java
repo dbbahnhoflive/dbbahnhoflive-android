@@ -27,7 +27,6 @@ import de.deutschebahn.bahnhoflive.ui.FragmentArgs;
 import de.deutschebahn.bahnhoflive.ui.map.content.rimap.RimapFilter;
 import de.deutschebahn.bahnhoflive.ui.station.ElevatorIssuesLoaderFragment;
 import de.deutschebahn.bahnhoflive.ui.station.LoaderFragment;
-import de.deutschebahn.bahnhoflive.ui.station.ParkingOccupancyLoaderFragment;
 import de.deutschebahn.bahnhoflive.view.BackHandlingFragment;
 
 public class MapActivity extends AppCompatActivity implements
@@ -45,7 +44,6 @@ public class MapActivity extends AppCompatActivity implements
     @NonNull
     private TrackingManager trackingManager;
 
-    private ParkingOccupancyLoaderFragment parkingOccupancyLoaderFragment;
     private MapViewModel mapViewModel;
 
     @Override
@@ -56,27 +54,16 @@ public class MapActivity extends AppCompatActivity implements
         if (intent.hasExtra(ARG_STATION)) {
             station = intent.getParcelableExtra(ARG_STATION);
         }
-        final Bundle loaderStates;
-        if (intent.hasExtra(ARG_LOADER_STATES)) {
-            loaderStates = intent.getBundleExtra(ARG_LOADER_STATES);
-        } else {
-            loaderStates = null;
-        }
 
         mapViewModel = ViewModelProviders.of(this).get(MapViewModel.class);
         mapViewModel.setStation(station);
 
         trackingManager = station == null ? new TrackingManager() : new StationTrackingManager(station);
 
-        parkingOccupancyLoaderFragment = ParkingOccupancyLoaderFragment.of(this);
         final ElevatorIssuesLoaderFragment elevatorIssuesLoaderFragment = ElevatorIssuesLoaderFragment.of(this);
 
         if (station != null) {
-            parkingOccupancyLoaderFragment.setStation(station);
             elevatorIssuesLoaderFragment.setStation(station);
-        }
-        if (loaderStates != null) {
-            parkingOccupancyLoaderFragment.useInstanceStateIfBetter(loaderStates);
         }
 
         setContentView(R.layout.activity_map);
