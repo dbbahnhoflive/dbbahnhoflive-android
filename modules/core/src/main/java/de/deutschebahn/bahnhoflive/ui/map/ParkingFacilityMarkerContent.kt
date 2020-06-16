@@ -59,7 +59,7 @@ class ParkingFacilityMarkerContent(private val parkingFacility: ParkingFacility)
 
 
     override fun wraps(item: Parcelable?): Boolean {
-        return parkingFacility == item
+        return item is ParkingFacility && item.id == parkingFacility.id
     }
 
     override fun getPreSelectionRating(): Int {

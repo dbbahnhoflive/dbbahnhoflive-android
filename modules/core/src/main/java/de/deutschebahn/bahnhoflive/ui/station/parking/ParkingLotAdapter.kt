@@ -17,7 +17,8 @@ import de.deutschebahn.bahnhoflive.view.SingleSelectionManager
 
 internal class ParkingLotAdapter(
     context: Context?,
-    fragmentManager: FragmentManager
+    fragmentManager: FragmentManager,
+    val leftButtonClickListener: ButtonClickListener? = null
 ) : RecyclerView.Adapter<ParkingFacilityViewHolder>() {
     private val fragmentManager: FragmentManager
     private val briefDescriptionRenderer: BriefDescriptionRenderer
@@ -82,9 +83,9 @@ internal class ParkingLotAdapter(
             val item = item
             val id = v.id
             if (id == R.id.button_left) {
-//                context.startActivity(new MapIntent(
-//                        item.getParkraumGeoLatitude(), item.getParkraumGeoLongitude(),
-//                        item.getParkraumDisplayName()));
+                item?.let {
+                    leftButtonClickListener?.onButtonClick(context, it)
+                }
             } else if (id == R.id.button_middle) {
                 showDetails(item, BahnparkSiteDetailsFragment.Action.INFO)
             } else if (id == R.id.button_right) {

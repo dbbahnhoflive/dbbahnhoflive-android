@@ -14,7 +14,11 @@ import de.deutschebahn.bahnhoflive.model.parking.ParkingFacility;
 import de.deutschebahn.bahnhoflive.tutorial.TutorialManager;
 import de.deutschebahn.bahnhoflive.tutorial.TutorialView;
 import de.deutschebahn.bahnhoflive.ui.RecyclerFragment;
+import de.deutschebahn.bahnhoflive.ui.map.Content;
+import de.deutschebahn.bahnhoflive.ui.map.InitialPoiManager;
+import de.deutschebahn.bahnhoflive.ui.map.MapActivity;
 import de.deutschebahn.bahnhoflive.ui.map.MapPresetProvider;
+import de.deutschebahn.bahnhoflive.ui.map.content.rimap.RimapFilter;
 import de.deutschebahn.bahnhoflive.ui.station.HistoryFragment;
 import de.deutschebahn.bahnhoflive.ui.station.StationViewModel;
 
@@ -37,7 +41,13 @@ public class ParkingListFragment extends RecyclerFragment<ParkingLotAdapter>
 
         stationViewModel = ViewModelProviders.of(getActivity()).get(StationViewModel.class);
 
-        setAdapter(new ParkingLotAdapter(getContext(), getChildFragmentManager()));
+        setAdapter(new ParkingLotAdapter(getContext(), getChildFragmentManager(), (context, parkingFacility) ->
+        {
+            final Intent intent = MapActivity.createIntent(context, stationViewModel.getStationResource().getData().getValue());
+            prepareMapIntent(intent, parkingFacility);
+            startActivity(intent);
+        }
+        ));
 
         stationViewModel.getParking().getParkingFacilitiesWithLiveCapacity().observe(this, this::setData);
         stationViewModel.getSelectedServiceContentType().observe(this, s -> {
@@ -86,15 +96,24 @@ public class ParkingListFragment extends RecyclerFragment<ParkingLotAdapter>
 
     @Override
     public boolean prepareMapIntent(Intent intent) {
-        final ParkingLotAdapter adapter = getAdapter();
-        final ParkingFacility parkingFacility = adapter.getSelectedItem();
-//TODO:
-//        InitialPoiManager.putInitialPoi(intent, Content.Source.BAHNPARK, parkingFacility);
-//        RimapFilter.putPreset(intent, RimapFilter.PRESET_PARKING);
-//
-//        return true;
 
-        return false;
+        ParkingFacility parkingFacility = null;
+
+        final ParkingLotAdapter adapter = getAdapter();
+        if (adapter != null) {
+            parkingFacility = adapter.getSelectedItem();
+        }
+
+        prepareMapIntent(intent, parkingFacility);
+
+        return true;
+    }
+
+    private void prepareMapIntent(Intent intent, ParkingFacility parkingFacility) {
+        if (parkingFacility != null) {
+            InitialPoiManager.putInitialPoi(intent, Content.Source.PARKING, parkingFacility);
+        }
+        RimapFilter.putPreset(intent, RimapFilter.PRESET_PARKING);
     }
 
 }
