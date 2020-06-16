@@ -238,5 +238,6 @@
     <string name="parking_feature_toilets">WC</string>
     <string name="parking_feature_women_places">Frauenparkplätze</string>
     <string name="parking_feature_disabled_places">Behindertengerechte Parkplätze</string>
+    <string name="notice_parking_lacks_location">Für diese Einrichtung liegen keine Ortsdaten vor.</string>
 
 </resources>

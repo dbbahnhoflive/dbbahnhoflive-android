@@ -2,9 +2,12 @@ package de.deutschebahn.bahnhoflive.ui.station.parking;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.widget.Toast;
 
 import androidx.annotation.Nullable;
 import androidx.lifecycle.ViewModelProviders;
+
+import com.google.android.gms.maps.model.LatLng;
 
 import java.util.List;
 
@@ -16,8 +19,8 @@ import de.deutschebahn.bahnhoflive.tutorial.TutorialView;
 import de.deutschebahn.bahnhoflive.ui.RecyclerFragment;
 import de.deutschebahn.bahnhoflive.ui.map.Content;
 import de.deutschebahn.bahnhoflive.ui.map.InitialPoiManager;
-import de.deutschebahn.bahnhoflive.ui.map.MapActivity;
 import de.deutschebahn.bahnhoflive.ui.map.MapPresetProvider;
+import de.deutschebahn.bahnhoflive.ui.map.content.MapIntent;
 import de.deutschebahn.bahnhoflive.ui.map.content.rimap.RimapFilter;
 import de.deutschebahn.bahnhoflive.ui.station.HistoryFragment;
 import de.deutschebahn.bahnhoflive.ui.station.StationViewModel;
@@ -43,9 +46,17 @@ public class ParkingListFragment extends RecyclerFragment<ParkingLotAdapter>
 
         setAdapter(new ParkingLotAdapter(getContext(), getChildFragmentManager(), (context, parkingFacility) ->
         {
-            final Intent intent = MapActivity.createIntent(context, stationViewModel.getStationResource().getData().getValue());
-            prepareMapIntent(intent, parkingFacility);
-            startActivity(intent);
+            final LatLng location = parkingFacility.getLocation();
+            if (location == null) {
+                Toast.makeText(context, R.string.notice_parking_lacks_location, Toast.LENGTH_SHORT).show();
+            } else {
+                context.startActivity(
+                        new MapIntent(
+                                location,
+                                parkingFacility.getName()
+                        )
+                );
+            }
         }
         ));
 
