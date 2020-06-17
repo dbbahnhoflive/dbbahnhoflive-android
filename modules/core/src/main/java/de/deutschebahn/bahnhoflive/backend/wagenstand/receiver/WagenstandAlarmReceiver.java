@@ -163,10 +163,10 @@ public class WagenstandAlarmReceiver extends BroadcastReceiver implements RestLi
         NotificationCompat.Builder builder = new NotificationCompat.Builder(mContext)
                 .setSmallIcon(R.drawable.pushicon)
                 .setContentTitle(mContext.getResources().getString(R.string.app_name))
-                .setContentText("Wagenreihungsplan "+ mTrainLabel)
+                .setContentText("Wagenreihungsplan " + mTrainLabel)
                 .setAutoCancel(true)
                 .setVisibility(NotificationCompat.VISIBILITY_PUBLIC)
-                .setLargeIcon(BitmapFactory.decodeResource(mContext.getResources(), R.drawable.appicon));
+                .setLargeIcon(BitmapFactory.decodeResource(mContext.getResources(), R.drawable.app_icon));
 
         builder.setStyle(new NotificationCompat.BigTextStyle()
                 .bigText(String.format(
