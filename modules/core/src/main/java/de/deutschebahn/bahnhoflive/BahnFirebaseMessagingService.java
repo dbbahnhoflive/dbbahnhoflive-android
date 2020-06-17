@@ -122,7 +122,7 @@ public class BahnFirebaseMessagingService extends FirebaseMessagingService {
                 .setContentText(shortNotificationText)
                 .setAutoCancel(true)
                 .setVisibility(NotificationCompat.VISIBILITY_PUBLIC)
-                .setLargeIcon(BitmapFactory.decodeResource(getResources(), R.drawable.appicon))
+                .setLargeIcon(BitmapFactory.decodeResource(getResources(), R.drawable.app_icon))
                 .setStyle(new NotificationCompat.BigTextStyle().bigText(notificationText));
 
         StationActivity.createIntent(this, stationNumber, stationName);
