@@ -13,6 +13,7 @@ import de.deutschebahn.bahnhoflive.backend.rimap.model.RimapStationInfo
 import de.deutschebahn.bahnhoflive.backend.rimap.model.StationFeatureCollection
 import de.deutschebahn.bahnhoflive.backend.ris.model.TrainInfo
 import de.deutschebahn.bahnhoflive.repository.*
+import de.deutschebahn.bahnhoflive.repository.parking.ViewModelParking
 import de.deutschebahn.bahnhoflive.stream.livedata.OneShotLiveData
 import de.deutschebahn.bahnhoflive.stream.livedata.switchMap
 import de.deutschebahn.bahnhoflive.stream.rx.ResourceState
@@ -45,7 +46,10 @@ class MapViewModel : StadaStationCacheViewModel() {
 
     private val rimapStationFeatureCollectionResource = RimapStationFeatureCollectionResource()
 
-    val stationResource = StationResource(detailedStopPlaceResource, rimapStationFeatureCollectionResource)
+    val parking = ViewModelParking()
+
+    val stationResource =
+        StationResource(detailedStopPlaceResource, rimapStationFeatureCollectionResource)
 
     val isMapLayedOut = MutableLiveData<Boolean>()
 
@@ -58,6 +62,8 @@ class MapViewModel : StadaStationCacheViewModel() {
 
             stationResource.data.observeForever(evaIdsDataObserver)
             stationResource.error.observeForever(evaIdsErrorObserver)
+
+            parking.parkingsResource.initialize(station)
         }
     }
 

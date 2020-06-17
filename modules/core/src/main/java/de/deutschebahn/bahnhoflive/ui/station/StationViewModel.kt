@@ -29,6 +29,7 @@ import de.deutschebahn.bahnhoflive.backend.ris.model.RISTimetable
 import de.deutschebahn.bahnhoflive.backend.ris.model.TrainInfo
 import de.deutschebahn.bahnhoflive.persistence.RecentContentQueriesStore
 import de.deutschebahn.bahnhoflive.repository.*
+import de.deutschebahn.bahnhoflive.repository.parking.ViewModelParking
 import de.deutschebahn.bahnhoflive.stream.rx.Optional
 import de.deutschebahn.bahnhoflive.ui.map.Content
 import de.deutschebahn.bahnhoflive.ui.map.MapActivity
@@ -87,10 +88,11 @@ class StationViewModel : HafasTimetableViewModel() {
                 StationFeatureTemplate(StationFeatureDefinition.PARKING,
                         object : MapLink() {
                             override fun getMapSource(): Content.Source {
-                                return Content.Source.BAHNPARK
+                                return Content.Source.PARKING
                             }
 
-                            override fun getPois(stationFeature: StationFeature) = stationFeature.bahnparkSites
+                            override fun getPois(stationFeature: StationFeature) =
+                                TODO() // stationFeature.bahnparkSites
                         }),
                 StationFeatureTemplate(StationFeatureDefinition.BICYCLE_PARKING,
                         MapLink()),
@@ -226,7 +228,7 @@ class StationViewModel : HafasTimetableViewModel() {
 
     val shopsResource = ShopsResource()
 
-    val parkingsResource = ParkingsResource()
+    val parking = ViewModelParking()
 
     val elevatorsResource = ElevatorsResource()
 
@@ -234,7 +236,8 @@ class StationViewModel : HafasTimetableViewModel() {
 
     private val rimapStationFeatureCollectionResource = RimapStationFeatureCollectionResource()
 
-    val stationResource = StationResource(detailedStopPlaceResource, rimapStationFeatureCollectionResource)
+    val stationResource =
+        StationResource(detailedStopPlaceResource, rimapStationFeatureCollectionResource)
 
     val rimapStationInfoLiveData =
         Transformations.map(rimapStationFeatureCollectionResource.data) { input ->
@@ -259,7 +262,7 @@ class StationViewModel : HafasTimetableViewModel() {
             stationResource.initialize(station)
             elevatorsResource.initialize(station)
             shopsResource.initialize(station)
-            parkingsResource.initialize(station)
+            parking.parkingsResource.initialize(station)
             dbTimetableResource.initialize(station)
 
             stationResource.data.observeForever(evaIdsDataObserver)
@@ -345,12 +348,12 @@ class StationViewModel : HafasTimetableViewModel() {
 
             for (stationFeatureTemplate in stationFeatureTemplates) {
                 val stationFeature = StationFeature(
-                        stationFeatureTemplate,
-                        detailedStopPlace,
-                        staticInfoLiveData.value,
-                        shopsResource.data.value,
-                        parkingsResource.data.value,
-                        elevatorsResource.data.value
+                    stationFeatureTemplate,
+                    detailedStopPlace,
+                    staticInfoLiveData.value,
+                    shopsResource.data.value,
+                    parking.parkingsResource.data.value,
+                    elevatorsResource.data.value
                 )
                 if (stationFeature.isVisible) {
                     if (stationFeature.isFeatured) {
@@ -365,12 +368,12 @@ class StationViewModel : HafasTimetableViewModel() {
 
             value = stationFeatureTemplates.map { stationFeatureTemplate ->
                 StationFeature(
-                        stationFeatureTemplate,
-                        detailedStopPlace,
-                        staticInfoLiveData.value,
-                        shopsResource.data.value,
-                        parkingsResource.data.value,
-                        elevatorsResource.data.value
+                    stationFeatureTemplate,
+                    detailedStopPlace,
+                    staticInfoLiveData.value,
+                    shopsResource.data.value,
+                    parking.parkingsResource.data.value,
+                    elevatorsResource.data.value
                 )
             }
         }
@@ -378,7 +381,7 @@ class StationViewModel : HafasTimetableViewModel() {
         addSource(staticInfoLiveData, observer)
         addSource(elevatorsResource.data, observer)
         addSource(shopsResource.data, observer)
-        addSource(parkingsResource.data, observer)
+        addSource(parking.parkingsResource.data, observer)
         addSource(detailedStopPlaceResource.data, observer)
 
     }
@@ -391,7 +394,7 @@ class StationViewModel : HafasTimetableViewModel() {
         val hafasStations = hafasStationResource.data
         val detailedStopPlace = detailedStopPlaceResource.data
         val elevators = elevatorsResource.data
-        val parkings = parkingsResource.data
+        val parkings = parking.parkingsResource.data
 
         val update = fun(_: Any?) {
             value = queryAndParts.value?.let { queryAndParts ->

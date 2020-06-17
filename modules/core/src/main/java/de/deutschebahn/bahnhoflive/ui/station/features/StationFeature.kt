@@ -1,19 +1,19 @@
 package de.deutschebahn.bahnhoflive.ui.station.features
 
-import de.deutschebahn.bahnhoflive.backend.bahnpark.model.BahnparkSite
 import de.deutschebahn.bahnhoflive.backend.db.fasta2.model.FacilityStatus
 import de.deutschebahn.bahnhoflive.backend.db.publictrainstation.model.DetailedStopPlace
+import de.deutschebahn.bahnhoflive.model.parking.ParkingFacility
 import de.deutschebahn.bahnhoflive.ui.station.StaticInfoCollection
 import de.deutschebahn.bahnhoflive.ui.station.shop.CategorizedShops
 import de.deutschebahn.bahnhoflive.ui.station.shop.Shop
 
 class StationFeature(
-        val stationFeatureTemplate: StationFeatureTemplate,
-        val detailedStopPlace: DetailedStopPlace,
-        val staticInfoCollection: StaticInfoCollection?,
-        categorizedShops: CategorizedShops?,
-        val bahnparkSites: List<BahnparkSite>?,
-        val facilityStatuses: List<FacilityStatus>?
+    val stationFeatureTemplate: StationFeatureTemplate,
+    val detailedStopPlace: DetailedStopPlace,
+    val staticInfoCollection: StaticInfoCollection?,
+    categorizedShops: CategorizedShops?,
+    val bahnparkSites: List<ParkingFacility>?,
+    val facilityStatuses: List<FacilityStatus>?
 ) {
     val venues: List<Shop>?
 

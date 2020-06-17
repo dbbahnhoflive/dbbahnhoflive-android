@@ -10,9 +10,6 @@ import de.deutschebahn.bahnhoflive.backend.asVolleyError
 import de.deutschebahn.bahnhoflive.backend.db.DbAuthorizationTool
 import de.deutschebahn.bahnhoflive.backend.db.publictrainstation.model.TravelCenter
 
-/**
- * @param id EVA, Stada or any other id
- */
 class ClosestTravelCenterRequest(
     dbAuthorizationTool: DbAuthorizationTool,
     listener: VolleyRestListener<TravelCenter?>,

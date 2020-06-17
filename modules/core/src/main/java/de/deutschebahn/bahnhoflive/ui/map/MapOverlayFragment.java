@@ -21,7 +21,6 @@ import androidx.fragment.app.FragmentActivity;
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProviders;
-import androidx.recyclerview.widget.LinearSnapHelper;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.android.volley.VolleyError;
@@ -42,7 +41,6 @@ import de.deutschebahn.bahnhoflive.R;
 import de.deutschebahn.bahnhoflive.analytics.TrackingManager;
 import de.deutschebahn.bahnhoflive.backend.BaseRestListener;
 import de.deutschebahn.bahnhoflive.backend.RestHelper;
-import de.deutschebahn.bahnhoflive.backend.bahnpark.model.BahnparkSite;
 import de.deutschebahn.bahnhoflive.backend.db.fasta2.model.FacilityStatus;
 import de.deutschebahn.bahnhoflive.backend.db.publictrainstation.model.StopPlace;
 import de.deutschebahn.bahnhoflive.backend.hafas.LocalTransportFilter;
@@ -53,6 +51,7 @@ import de.deutschebahn.bahnhoflive.backend.rimap.RimapConfig;
 import de.deutschebahn.bahnhoflive.backend.rimap.model.RimapPOI;
 import de.deutschebahn.bahnhoflive.backend.rimap.model.RimapStationInfo;
 import de.deutschebahn.bahnhoflive.location.GPSLocationManager;
+import de.deutschebahn.bahnhoflive.model.parking.ParkingFacility;
 import de.deutschebahn.bahnhoflive.repository.DbTimetableResource;
 import de.deutschebahn.bahnhoflive.repository.InternalStation;
 import de.deutschebahn.bahnhoflive.repository.LoadingStatus;
@@ -67,11 +66,10 @@ import de.deutschebahn.bahnhoflive.ui.map.content.MapType;
 import de.deutschebahn.bahnhoflive.ui.map.content.rimap.Filter;
 import de.deutschebahn.bahnhoflive.ui.map.content.rimap.RimapFilter;
 import de.deutschebahn.bahnhoflive.ui.station.ElevatorIssuesLoaderFragment;
-import de.deutschebahn.bahnhoflive.ui.station.ParkingOccupancyLoaderFragment;
 import de.deutschebahn.bahnhoflive.util.ArrayListFactory;
 import de.deutschebahn.bahnhoflive.util.MapContentPreserver;
 
-public class MapOverlayFragment extends Fragment implements OnMapReadyCallback, View.OnClickListener, ParkingOccupancyLoaderFragment.Listener, ElevatorIssuesLoaderFragment.Listener, GoogleMap.OnMapClickListener, MapInterface.MapTypeListener {
+public class MapOverlayFragment extends Fragment implements OnMapReadyCallback, View.OnClickListener, ElevatorIssuesLoaderFragment.Listener, GoogleMap.OnMapClickListener, MapInterface.MapTypeListener {
 
     private static final String TAG = MapOverlayFragment.class.getSimpleName();
     public static final float DEFAULT_ZOOM = MapConstants.minimumZoomForIndoorMarkers;
@@ -133,7 +131,6 @@ public class MapOverlayFragment extends Fragment implements OnMapReadyCallback, 
 
     private FlyoutsAdapter flyoutsAdapter;
     private FlyoutLinearSnapHelper linearSnapHelper;
-    private ParkingOccupancyLoaderFragment parkingOccupancyLoaderFragment;
 
     private Content content = new Content();
 
@@ -253,6 +250,10 @@ public class MapOverlayFragment extends Fragment implements OnMapReadyCallback, 
             }
         });
 
+        mapViewModel.getParking().getParkingFacilitiesWithLiveCapacity().observe(this, parkingFacilities -> {
+            onParkingFacilitiesUpdated(parkingFacilities, false);
+        });
+
         content.setVisibilityChangeListener(new Content.VisibilityChangeListener() {
             @Override
             public void onVisibilityChanged(Content content) {
@@ -300,21 +301,24 @@ public class MapOverlayFragment extends Fragment implements OnMapReadyCallback, 
         applyInitialMarkerBinder();
     }
 
-    @Override
-    public void onBahnparkSitesWithOccupancyUpdated(List<BahnparkSite> bahnparkSites, boolean errors) {
-        if (bahnparkSites != null) {
-            final HashMap<Filter, List<MarkerBinder>> categorizedMarkerBinders = new HashMap<>(bahnparkSites.size());
+    public void onParkingFacilitiesUpdated(List<ParkingFacility> parkingFacilities, boolean errors) {
+        if (parkingFacilities != null) {
+            final HashMap<Filter, List<MarkerBinder>> categorizedMarkerBinders = new HashMap<>(parkingFacilities.size());
             final MapContentPreserver<Filter, List<MarkerBinder>> categoryListMapContentPreserver = new MapContentPreserver<>(categorizedMarkerBinders, new ArrayListFactory<>());
             final List<MarkerBinder> allMarkerBinders = new ArrayList<>();
 
-            for (BahnparkSite bahnparkSite : bahnparkSites) {
-                final RimapFilter.Item filterItem = rimapFilter.findFilterItem(bahnparkSite);
+            for (ParkingFacility parkingFacility : parkingFacilities) {
+                if (parkingFacility.getLocation() == null) {
+                    continue;
+                }
+
+                final RimapFilter.Item filterItem = rimapFilter.findFilterItem(parkingFacility);
 
                 if (filterItem == null) {
                     continue;
                 }
 
-                final BahnparkSiteMarkerContent markerContent = new BahnparkSiteMarkerContent(bahnparkSite);
+                final ParkingFacilityMarkerContent markerContent = new ParkingFacilityMarkerContent(parkingFacility);
 
                 final List<MarkerBinder> categoryMarkerBinders = categoryListMapContentPreserver.get(filterItem);
 
@@ -324,7 +328,7 @@ public class MapOverlayFragment extends Fragment implements OnMapReadyCallback, 
                 categoryMarkerBinders.add(markerBinder);
             }
 
-            content.setMarkerBinders(Content.Source.BAHNPARK, allMarkerBinders, categorizedMarkerBinders);
+            content.setMarkerBinders(Content.Source.PARKING, allMarkerBinders, categorizedMarkerBinders);
 
             applyInitialMarkerBinder();
         }
@@ -391,7 +395,7 @@ public class MapOverlayFragment extends Fragment implements OnMapReadyCallback, 
     }
 
     /**
-     * Forces call to {@link LinearSnapHelper#snapToTargetExistingView()}.
+     * Forces call to LinearSnapHelper.snapToTargetExistingView().
      */
     private void snapFlyouts() {
         flyoutsRecycler.post(new Runnable() { // otherwise wouldn't have any effect
@@ -554,11 +558,6 @@ public class MapOverlayFragment extends Fragment implements OnMapReadyCallback, 
 
         content.onMapReady(googleMap);
 
-        if (parkingOccupancyLoaderFragment.isDataAvailable()) {
-            onBahnparkSitesWithOccupancyUpdated(
-                    parkingOccupancyLoaderFragment.getData().getBahnparkSites(),
-                    !parkingOccupancyLoaderFragment.isBasicDataValid());
-        }
         if (location == null) {
             onLocate();
         }
@@ -803,9 +802,6 @@ public class MapOverlayFragment extends Fragment implements OnMapReadyCallback, 
                 View.VISIBLE : View.GONE
         );
 
-        parkingOccupancyLoaderFragment.addDataListener(this);
-        parkingOccupancyLoaderFragment.refresh();
-
         elevatorIssuesLoaderFragment.addDataListener(this);
 
         if (stationResource == null) {
@@ -817,7 +813,6 @@ public class MapOverlayFragment extends Fragment implements OnMapReadyCallback, 
     public void onAttach(Activity activity) {
         super.onAttach(activity);
 
-        parkingOccupancyLoaderFragment = ParkingOccupancyLoaderFragment.of(activity);
         elevatorIssuesLoaderFragment = ElevatorIssuesLoaderFragment.of(activity);
     }
 

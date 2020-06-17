@@ -5,6 +5,7 @@ import androidx.annotation.NonNull;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.model.LatLngBounds;
 import com.google.android.gms.maps.model.Marker;
+import com.google.android.gms.maps.model.MarkerOptions;
 
 import de.deutschebahn.bahnhoflive.ui.map.content.rimap.Filter;
 
@@ -90,9 +91,12 @@ public class MarkerBinder {
     }
 
     public void bind(GoogleMap googleMap) {
-        marker = googleMap.addMarker(markerContent.createMarkerOptions());
-        marker.setTag(this);
-        updateVisibility();
+        final MarkerOptions markerOptions = markerContent.createMarkerOptions();
+        if (markerOptions != null) {
+            marker = googleMap.addMarker(markerOptions);
+            marker.setTag(this);
+            updateVisibility();
+        }
     }
 
     public void unbind() {
