@@ -4,7 +4,7 @@
 
     <drawable name="missing">@drawable/app_notavailable</drawable>
 
-    <drawable name="appicon">@drawable/missing</drawable>
+    <drawable name="app_icon">@drawable/missing</drawable>
     <drawable name="app_bahnhofinfo">@drawable/missing</drawable>
     <drawable name="h1_kartenbild">@drawable/missing</drawable>
     <drawable name="app_dialog">@drawable/missing</drawable>
