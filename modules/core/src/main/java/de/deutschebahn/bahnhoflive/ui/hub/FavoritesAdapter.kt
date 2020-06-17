@@ -33,8 +33,22 @@ class FavoritesAdapter(val owner: LifecycleOwner, private val trackingManager: T
         }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder<out Any> = when (viewType) {
-        0 -> DbDeparturesViewHolder(parent, singleSelectionManager, owner, trackingManager, TrackingManager.UiElement.ABFAHRT_FAVORITEN_BHF)
-        else -> DeparturesViewHolder(parent, owner, singleSelectionManager, trackingManager, TrackingManager.UiElement.ABFAHRT_FAVORITEN_OPNV)
+        0 -> DbDeparturesViewHolder(
+            parent,
+            singleSelectionManager,
+            owner,
+            trackingManager,
+            null,
+            TrackingManager.UiElement.ABFAHRT_FAVORITEN_BHF
+        )
+        else -> DeparturesViewHolder(
+            parent,
+            owner,
+            singleSelectionManager,
+            trackingManager,
+            null,
+            TrackingManager.UiElement.ABFAHRT_FAVORITEN_OPNV
+        )
     }
 
     override fun getItemCount() = favorites?.size ?: 0

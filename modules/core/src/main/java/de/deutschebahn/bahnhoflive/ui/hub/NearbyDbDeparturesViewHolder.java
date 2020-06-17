@@ -13,7 +13,7 @@ class NearbyDbDeparturesViewHolder extends DbDeparturesViewHolder {
     private final DistanceViewHolder distanceViewHolder;
 
     public NearbyDbDeparturesViewHolder(ViewGroup parent, SingleSelectionManager singleSelectionManager, LifecycleOwner owner, TrackingManager trackingManager) {
-        super(parent, R.layout.card_nearby_departures, singleSelectionManager, owner, trackingManager, TrackingManager.UiElement.ABFAHRT_NAEHE_BHF);
+        super(parent, R.layout.card_nearby_departures, singleSelectionManager, owner, trackingManager, null, TrackingManager.UiElement.ABFAHRT_NAEHE_BHF);
         distanceViewHolder = new DistanceViewHolder(itemView);
     }
 

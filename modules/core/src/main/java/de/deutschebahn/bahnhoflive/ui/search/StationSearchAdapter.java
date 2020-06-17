@@ -30,6 +30,7 @@ class StationSearchAdapter extends RecyclerView.Adapter<ViewHolder> {
 
     private final RecentSearchesStore recentSearchesStore;
     private final HubViewModel hubViewModel;
+    private final SearchItemPickedListener searchItemPickedListener;
 
     private List<StopPlace> dbStations;
     private List<HafasStation> hafasStations;
@@ -40,12 +41,13 @@ class StationSearchAdapter extends RecyclerView.Adapter<ViewHolder> {
     private final LifecycleOwner owner;
     private final TrackingManager trackingManager;
 
-    StationSearchAdapter(FragmentActivity context, RecentSearchesStore recentSearchesStore, LifecycleOwner owner, TrackingManager trackingManager) {
+    StationSearchAdapter(FragmentActivity context, RecentSearchesStore recentSearchesStore, SearchItemPickedListener searchItemPickedListener, LifecycleOwner owner, TrackingManager trackingManager) {
         hubViewModel = ViewModelProviders.of(context).get(HubViewModel.class);
 
         this.favoriteDbStationsStore = FavoriteStationsStore.getFavoriteDbStationsStore(context);
         this.favoriteHafasStationsStore = FavoriteStationsStore.getFavoriteHafasStationsStore(context);
         this.recentSearchesStore = recentSearchesStore;
+        this.searchItemPickedListener = searchItemPickedListener;
         this.owner = owner;
         this.trackingManager = trackingManager;
         singleSelectionManager.addListener(new SingleSelectionManager.Listener() {
@@ -66,9 +68,9 @@ class StationSearchAdapter extends RecyclerView.Adapter<ViewHolder> {
     public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         switch (viewType) {
             case 0:
-                return new DbDeparturesViewHolder(parent, singleSelectionManager, owner, trackingManager, TrackingManager.UiElement.ABFAHRT_SUCHE_BHF);
+                return new DbDeparturesViewHolder(parent, singleSelectionManager, owner, trackingManager, searchItemPickedListener, TrackingManager.UiElement.ABFAHRT_SUCHE_BHF);
             default:
-                return new DeparturesViewHolder(parent, owner, singleSelectionManager, trackingManager, TrackingManager.UiElement.ABFAHRT_SUCHE_OPNV);
+                return new DeparturesViewHolder(parent, owner, singleSelectionManager, trackingManager, searchItemPickedListener, TrackingManager.UiElement.ABFAHRT_SUCHE_OPNV);
         }
     }
 

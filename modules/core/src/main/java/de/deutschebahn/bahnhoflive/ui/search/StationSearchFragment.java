@@ -15,6 +15,7 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentManager;
 import androidx.recyclerview.widget.DividerItemDecoration;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -26,6 +27,7 @@ import java.util.List;
 
 import de.deutschebahn.bahnhoflive.BaseApplication;
 import de.deutschebahn.bahnhoflive.R;
+import de.deutschebahn.bahnhoflive.analytics.IssueTracker;
 import de.deutschebahn.bahnhoflive.analytics.TrackingManager;
 import de.deutschebahn.bahnhoflive.backend.BaseRestListener;
 import de.deutschebahn.bahnhoflive.backend.SingleRequestRestListener;
@@ -44,6 +46,7 @@ public class StationSearchFragment extends Fragment {
 
     public static final int AUTO_SEARCH_DELAY = 750;
     public static final String ORIGIN_SEARCH = "search";
+    public static final String TAG = StationSearchFragment.class.getSimpleName();
     private StationSearchAdapter adapter;
     private EditText inputView;
     private Cancellable runningStationLookupRequest;
@@ -73,17 +76,20 @@ public class StationSearchFragment extends Fragment {
     private RecentSearchesStore recentSearchesStore;
     private View coordinatorLayout;
 
+    private final QueryRecorder queryRecorder = new QueryRecorder();
+
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
         delayedAutoSearchHandler = new Handler();
 
-        locationFragment = LocationFragment.get(getFragmentManager());
+        final FragmentManager fragmentManager = getParentFragmentManager();
+        locationFragment = LocationFragment.get(fragmentManager);
         locationFragment.addLocationListener(locationListener);
 
         recentSearchesStore = new RecentSearchesStore(getActivity());
-        adapter = new StationSearchAdapter(getActivity(), recentSearchesStore, this, new TrackingManager());
+        adapter = new StationSearchAdapter(getActivity(), recentSearchesStore, queryRecorder::clear, this, new TrackingManager());
     }
 
     @Override
@@ -221,6 +227,9 @@ public class StationSearchFragment extends Fragment {
                                     super.onSuccess(stations);
 
                                     adapter.setDBStations(stations);
+                                    if (stations == null /* just to be sure */ || stations.isEmpty()) {
+                                        queryRecorder.put(query);
+                                    }
 
                                     requestHafasStationsIfSlotsLeft(stations);
                                 }
@@ -230,6 +239,9 @@ public class StationSearchFragment extends Fragment {
                                     super.onFail(reason);
 
                                     adapter.setDBError();
+                                    final IssueTracker issueTracker = getIssueTracker();
+                                    issueTracker.log("Failed station query: " + query);
+                                    issueTracker.dispatchThrowable(new StationSearchException(reason.getMessage(), reason));
 
                                     requestHafasStationsIfSlotsLeft(Collections.emptyList());
                                 }
@@ -325,5 +337,26 @@ public class StationSearchFragment extends Fragment {
 
         super.onDestroy();
     }
+
+    @Override
+    public void onPause() {
+        super.onPause();
+
+        final String concatenatedQueries = queryRecorder.getConcatenatedQueries();
+        if (!concatenatedQueries.isEmpty()) {
+            final IssueTracker issueTracker = getIssueTracker();
+            getIssueTracker().log("Unsuccessful queries: " + queryRecorder.getConcatenatedQueries());
+            issueTracker.dispatchThrowable(new StationSearchException(
+                    "User left search after unsuccessful queries",
+                    null
+            ));
+            queryRecorder.clear();
+        }
+    }
+
+    protected IssueTracker getIssueTracker() {
+        return BaseApplication.get().getIssueTracker();
+    }
+
 
 }

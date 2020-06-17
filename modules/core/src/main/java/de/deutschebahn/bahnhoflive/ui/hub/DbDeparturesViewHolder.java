@@ -4,11 +4,13 @@ import android.content.Context;
 import android.view.View;
 import android.view.ViewGroup;
 
+import androidx.annotation.Nullable;
 import androidx.lifecycle.LifecycleOwner;
 
 import de.deutschebahn.bahnhoflive.R;
 import de.deutschebahn.bahnhoflive.analytics.TrackingManager;
 import de.deutschebahn.bahnhoflive.ui.search.DBStationSearchResult;
+import de.deutschebahn.bahnhoflive.ui.search.SearchItemPickedListener;
 import de.deutschebahn.bahnhoflive.ui.search.StationSearchViewHolder;
 import de.deutschebahn.bahnhoflive.ui.timetable.localtransport.ReducedDbDeparturesViewHolder;
 import de.deutschebahn.bahnhoflive.view.LongClickSelectableItemViewHolder;
@@ -24,13 +26,23 @@ public class DbDeparturesViewHolder extends LongClickSelectableItemViewHolder<DB
     private final TrackingManager trackingManager;
     private final String itemTag;
 
-    public DbDeparturesViewHolder(ViewGroup parent, SingleSelectionManager singleSelectionManager, LifecycleOwner owner, TrackingManager trackingManager, String itemTag) {
-        this(parent, R.layout.card_departures, singleSelectionManager, owner, trackingManager, itemTag);
+    @Nullable
+    private final SearchItemPickedListener searchItemPickedListener;
+
+    public DbDeparturesViewHolder(ViewGroup parent, SingleSelectionManager singleSelectionManager, LifecycleOwner owner, TrackingManager trackingManager, SearchItemPickedListener searchItemPickedListener, String itemTag) {
+        this(parent, R.layout.card_departures, singleSelectionManager, owner, trackingManager, searchItemPickedListener, itemTag);
     }
 
-    DbDeparturesViewHolder(ViewGroup parent, int layout, SingleSelectionManager singleSelectionManager, LifecycleOwner owner, TrackingManager trackingManager, String itemTag) {
+    DbDeparturesViewHolder(ViewGroup parent,
+                           int layout,
+                           SingleSelectionManager singleSelectionManager,
+                           LifecycleOwner owner,
+                           TrackingManager trackingManager,
+                           @Nullable SearchItemPickedListener searchItemPickedListener,
+                           String itemTag) {
         super(parent, layout, singleSelectionManager);
         this.trackingManager = trackingManager;
+        this.searchItemPickedListener = searchItemPickedListener;
         stationSearchViewHolder = new StationSearchViewHolder(itemView);
         itemView.setOnClickListener(this);
         itemView.findViewById(R.id.details).setOnClickListener(this);
@@ -51,6 +63,9 @@ public class DbDeparturesViewHolder extends LongClickSelectableItemViewHolder<DB
     @Override
     public void onClick(View v) {
         trackingManager.track(TrackingManager.TYPE_ACTION, TrackingManager.Screen.H0, TrackingManager.Action.TAP, itemTag);
+        if (searchItemPickedListener != null) {
+            searchItemPickedListener.onSearchItemPicked();
+        }
 
         final Context context = v.getContext();
         getItem().onClick(context, v != itemView);

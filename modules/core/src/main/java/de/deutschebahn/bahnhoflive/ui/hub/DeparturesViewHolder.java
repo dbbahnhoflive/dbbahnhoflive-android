@@ -3,6 +3,7 @@ package de.deutschebahn.bahnhoflive.ui.hub;
 import android.view.View;
 import android.view.ViewGroup;
 
+import androidx.annotation.Nullable;
 import androidx.lifecycle.LifecycleOwner;
 
 import com.android.volley.VolleyError;
@@ -12,6 +13,7 @@ import de.deutschebahn.bahnhoflive.analytics.TrackingManager;
 import de.deutschebahn.bahnhoflive.backend.hafas.HafasDepartures;
 import de.deutschebahn.bahnhoflive.repository.Resource;
 import de.deutschebahn.bahnhoflive.ui.search.HafasStationSearchResult;
+import de.deutschebahn.bahnhoflive.ui.search.SearchItemPickedListener;
 import de.deutschebahn.bahnhoflive.ui.search.StationSearchViewHolder;
 import de.deutschebahn.bahnhoflive.ui.timetable.localtransport.ReducedHafasDeparturesViewHolder;
 import de.deutschebahn.bahnhoflive.view.LongClickSelectableItemViewHolder;
@@ -25,14 +27,23 @@ public class DeparturesViewHolder extends LongClickSelectableItemViewHolder<Hafa
     private final StationSearchViewHolder stationSearchViewHolder;
     private final TrackingManager trackingManager;
     private final String itemTag;
+    @Nullable
+    private final SearchItemPickedListener searchItemPickedListener;
 
-    public DeparturesViewHolder(ViewGroup parent, LifecycleOwner owner, SingleSelectionManager singleSelectionManager, TrackingManager trackingManager, String itemTag) {
-        this(parent, R.layout.card_departures, owner, singleSelectionManager, trackingManager, itemTag);
+    public DeparturesViewHolder(ViewGroup parent, LifecycleOwner owner, SingleSelectionManager singleSelectionManager, TrackingManager trackingManager, SearchItemPickedListener searchItemPickedListener, String itemTag) {
+        this(parent, R.layout.card_departures, owner, singleSelectionManager, trackingManager, searchItemPickedListener, itemTag);
     }
 
-    public DeparturesViewHolder(ViewGroup parent, int layout, LifecycleOwner owner, SingleSelectionManager singleSelectionManager, TrackingManager trackingManager, String itemTag) {
+    public DeparturesViewHolder(ViewGroup parent,
+                                int layout,
+                                LifecycleOwner owner,
+                                SingleSelectionManager singleSelectionManager,
+                                TrackingManager trackingManager,
+                                @Nullable SearchItemPickedListener searchItemPickedListener,
+                                String itemTag) {
         super(parent, layout, singleSelectionManager);
         this.trackingManager = trackingManager;
+        this.searchItemPickedListener = searchItemPickedListener;
 
         stationSearchViewHolder = new StationSearchViewHolder(itemView);
 
@@ -56,6 +67,9 @@ public class DeparturesViewHolder extends LongClickSelectableItemViewHolder<Hafa
     @Override
     public void onClick(View v) {
         trackingManager.track(TrackingManager.TYPE_ACTION, TrackingManager.Screen.H0, TrackingManager.Action.TAP, itemTag);
+        if (searchItemPickedListener != null) {
+            searchItemPickedListener.onSearchItemPicked();
+        }
 
         getItem().onClick(v.getContext(), v != itemView);
     }

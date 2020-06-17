@@ -7,7 +7,7 @@ class DetailedVolleyError(
     val request: Request<*>,
     cause: Throwable?
 ) : VolleyError(
-    (cause as? VolleyError)?.let {
-        "Status code ${it.networkResponse.statusCode}: ${request.url}"
+    (cause as? VolleyError)?.let { volleyError ->
+        "Status code ${volleyError.networkResponse?.statusCode}: ${request.url}"
     } ?: "Failed: ${request.url}",
     cause)

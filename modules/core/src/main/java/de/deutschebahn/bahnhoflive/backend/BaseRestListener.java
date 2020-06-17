@@ -35,8 +35,6 @@ public abstract class BaseRestListener<T> implements VolleyRestListener<T> {
                 issueTracker.log("Response of failed request:\n" + new String(data));
             }
         }
-
-        issueTracker.dispatchThrowable(reason);
     }
 
     public void onDone() {
