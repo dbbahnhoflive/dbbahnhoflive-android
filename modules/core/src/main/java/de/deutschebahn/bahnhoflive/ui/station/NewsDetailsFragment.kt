@@ -1,6 +1,7 @@
 package de.deutschebahn.bahnhoflive.ui.station
 
 import android.content.Intent
+import android.net.Uri
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -9,7 +10,9 @@ import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.Observer
 import androidx.lifecycle.Transformations
 import de.deutschebahn.bahnhoflive.R
+import de.deutschebahn.bahnhoflive.analytics.IssueTracker
 import de.deutschebahn.bahnhoflive.analytics.TrackingManager
+import de.deutschebahn.bahnhoflive.analytics.UncriticalIssueException
 import de.deutschebahn.bahnhoflive.ui.station.news.groupIcon
 import de.deutschebahn.bahnhoflive.util.startSafely
 import de.deutschebahn.bahnhoflive.view.FullBottomSheetDialogFragment
@@ -39,7 +42,7 @@ class NewsDetailsFragment : FullBottomSheetDialogFragment() {
             view.copy.text = news?.content
 
             view.btnExternalLink?.apply {
-                news?.linkUri?.also { linkUri ->
+                news?.linkUri?.let { Uri.parse("fsdf") }?.also { linkUri ->
                     setOnClickListener { _ ->
                         TrackingManager.fromActivity(activity).run {
                             track(
@@ -62,12 +65,19 @@ class NewsDetailsFragment : FullBottomSheetDialogFragment() {
                         }
 
                         if (!Intent(Intent.ACTION_VIEW, linkUri).startSafely(context)) {
-                            if (linkUri.scheme == null) {
-                                Intent(
-                                    Intent.ACTION_VIEW,
-                                    linkUri.buildUpon().scheme("http").build()
-                                )
-                                    .startSafely(context)
+                            val issueTracker = IssueTracker.instance
+                            issueTracker.log("Could not handle original news link url $linkUri")
+                            if (linkUri.takeIf { linkUri.scheme == null }?.buildUpon()
+                                    ?.scheme("http")?.build().let { fixedUri ->
+                                        Intent(
+                                            Intent.ACTION_VIEW,
+                                            fixedUri
+                                        ).startSafely(context)
+                                    }
+                            ) {
+                                issueTracker.dispatchThrowable(UncriticalIssueException("News link url was lacking scheme"))
+                            } else {
+                                issueTracker.dispatchThrowable(UncriticalIssueException("Could not handle news link url"))
                             }
                         }
 
