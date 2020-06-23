@@ -11,6 +11,7 @@ import androidx.lifecycle.Transformations
 import de.deutschebahn.bahnhoflive.R
 import de.deutschebahn.bahnhoflive.analytics.TrackingManager
 import de.deutschebahn.bahnhoflive.ui.station.news.groupIcon
+import de.deutschebahn.bahnhoflive.util.startSafely
 import de.deutschebahn.bahnhoflive.view.FullBottomSheetDialogFragment
 import kotlinx.android.synthetic.main.fragment_news_details.view.*
 
@@ -38,15 +39,15 @@ class NewsDetailsFragment : FullBottomSheetDialogFragment() {
             view.copy.text = news?.content
 
             view.btnExternalLink?.apply {
-                news?.linkUri?.also {
+                news?.linkUri?.also { linkUri ->
                     setOnClickListener { _ ->
                         TrackingManager.fromActivity(activity).run {
                             track(
-                            TrackingManager.TYPE_ACTION,
-                            TrackingManager.Screen.H1,
-                            TrackingManager.Action.TAP,
-                            TrackingManager.Entity.NEWS_BOX,
-                            TrackingManager.Entity.LINK
+                                TrackingManager.TYPE_ACTION,
+                                TrackingManager.Screen.H1,
+                                TrackingManager.Action.TAP,
+                                TrackingManager.Entity.NEWS_BOX,
+                                TrackingManager.Entity.LINK
                             )
                             news.group.id.let { groupId ->
                                 track(
@@ -59,7 +60,17 @@ class NewsDetailsFragment : FullBottomSheetDialogFragment() {
                                 )
                             }
                         }
-                        startActivity(Intent(Intent.ACTION_VIEW, it))
+
+                        if (!Intent(Intent.ACTION_VIEW, linkUri).startSafely(context)) {
+                            if (linkUri.scheme == null) {
+                                Intent(
+                                    Intent.ACTION_VIEW,
+                                    linkUri.buildUpon().scheme("http").build()
+                                )
+                                    .startSafely(context)
+                            }
+                        }
+
                     }
                     setText(news.groupIcon()?.linkButtonText ?: R.string.button_news_external_link)
                     visibility = View.VISIBLE
