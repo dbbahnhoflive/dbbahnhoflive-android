@@ -71,12 +71,13 @@ class TrainInfoViewHolder internal constructor(
     private val trainEvent: TrainEvent
         get() = timetableAdapter.trainEvent
 
-    override fun onBind(item: TrainInfo) {
+    override fun onBind(item: TrainInfo?) {
         super.onBind(item)
 
         trainInfoOverviewViewHolder.bind(item)
 
-        val trainMovementInfo = timetableAdapter.trainEvent.movementRetriever.getTrainMovementInfo(item)
+        val trainMovementInfo =
+            timetableAdapter.trainEvent.movementRetriever.getTrainMovementInfo(item)
 
         issuesBinder.bindIssues(item, trainMovementInfo)
 
@@ -86,23 +87,37 @@ class TrainInfoViewHolder internal constructor(
 
         updateWagonOrderViews(item)
 
-        item.addChangeListener(this)
+        item?.addChangeListener(this)
     }
 
-    private fun renderContentDescription(trainInfo: TrainInfo, trainMovementInfo: TrainMovementInfo) = with(itemView.resources) {
+    override fun onUnbind(item: TrainInfo) {
+        item.removeChangeListener(this)
+        super.onUnbind(item)
+    }
+
+    private fun renderContentDescription(
+        trainInfo: TrainInfo?,
+        trainMovementInfo: TrainMovementInfo
+    ) = with(itemView.resources) {
         val trainEvent = trainEvent
         getString(R.string.sr_template_db_timetable_item,
-                TimetableViewHelper.composeName(trainInfo, trainMovementInfo),
-                getText(trainEvent.contentDescriptionPhrase),
-                trainMovementInfo.getDestinationStop(trainEvent.isDeparture),
-                trainMovementInfo.formattedTime,
-                getString(R.string.sr_template_platform, trainMovementInfo.displayPlatform),
-                trainMovementInfo.delayInMinutes().takeIf { it > 0 }?.let { getString(R.string.sr_template_estimated, trainMovementInfo.formattedActualTime) }
-                        ?: "",
-                TrainMessages(trainInfo, trainMovementInfo).takeIf { it.hasMessages() }?.messages
-                        ?.joinToString(prefix = getText(R.string.sr_indicator_issue)) {
-                            it.message
-                        } ?: ""
+            TimetableViewHelper.composeName(trainInfo, trainMovementInfo),
+            getText(trainEvent.contentDescriptionPhrase),
+            trainMovementInfo.getDestinationStop(trainEvent.isDeparture),
+            trainMovementInfo.formattedTime,
+            getString(R.string.sr_template_platform, trainMovementInfo.displayPlatform),
+            trainMovementInfo.delayInMinutes().takeIf { it > 0 }?.let {
+                getString(
+                    R.string.sr_template_estimated,
+                    trainMovementInfo.formattedActualTime
+                )
+            }
+                ?: "",
+            trainInfo?.let { TrainMessages(trainInfo, trainMovementInfo) }
+                ?.takeIf { it.hasMessages() }?.messages
+                ?.joinToString(prefix = getText(R.string.sr_indicator_issue)) {
+                    it.message
+                } ?: ""
         )
     }
 

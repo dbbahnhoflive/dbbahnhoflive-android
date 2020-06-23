@@ -6,6 +6,7 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import androidx.annotation.IdRes;
+import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -42,7 +43,7 @@ public class ViewHolder<T> extends RecyclerView.ViewHolder {
     /**
      * Gives implementing classes a chance to unsubscribe from item observers.
      */
-    protected void onUnbind(T item) {
+    protected void onUnbind(@NonNull T item) {
 
     }
 
