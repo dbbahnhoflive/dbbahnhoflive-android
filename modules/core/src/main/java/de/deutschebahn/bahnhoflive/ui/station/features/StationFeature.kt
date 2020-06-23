@@ -12,7 +12,7 @@ class StationFeature(
     val detailedStopPlace: DetailedStopPlace,
     val staticInfoCollection: StaticInfoCollection?,
     categorizedShops: CategorizedShops?,
-    val bahnparkSites: List<ParkingFacility>?,
+    val parkingFacilities: List<ParkingFacility>?,
     val facilityStatuses: List<FacilityStatus>?
 ) {
     val venues: List<Shop>?
