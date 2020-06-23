@@ -139,6 +139,7 @@ class DbTimetableAdapter extends RecyclerView.Adapter<ViewHolder<?>> implements 
         applyFilters();
     }
 
+    @Nullable
     public Track getCurrentTrack() {
         final TrainMovementInfo selectedItem = getSelectedItem();
         if (selectedItem != null) {
@@ -150,6 +151,11 @@ class DbTimetableAdapter extends RecyclerView.Adapter<ViewHolder<?>> implements 
 
         if (track != null) {
             return new Track(track);
+        }
+
+        final Timetable timetable = this.timetable;
+        if (timetable == null) {
+            return null;
         }
 
         final LinkedList<String> tracks = RISTimetable.getTracks(timetable.getTrainInfos());
