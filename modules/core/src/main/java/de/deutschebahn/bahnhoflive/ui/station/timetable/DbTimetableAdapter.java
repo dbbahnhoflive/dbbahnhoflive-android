@@ -263,7 +263,7 @@ class DbTimetableAdapter extends RecyclerView.Adapter<ViewHolder<?>> implements 
         }
 
         @Override
-        protected void onBind(TrainInfo item) {
+        protected void onBind(@Nullable TrainInfo item) {
             switch (trainEvent) {
                 case DEPARTURE:
                     twoAlternateButtonsViewHolder.checkLeftButton();
