@@ -12,6 +12,8 @@ class News {
 
     lateinit var title: String
 
+    var subtitle: String? = null
+
     lateinit var content: String
 
     var version = -1

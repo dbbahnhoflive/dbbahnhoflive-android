@@ -49,11 +49,26 @@
                 android:layout_height="wrap_content" />
 
             <TextView
-                android:id="@+id/copy"
+                android:id="@+id/subtitle"
                 tools:text="@tools:sample/lorem"
                 android:lineSpacingMultiplier="1.2"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content" />
+
+            <TextView
+                android:id="@+id/copy"
+                tools:text="@tools:sample/lorem/random"
+                android:lineSpacingMultiplier="1.2"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content" />
+
+            <ImageView
+                android:id="@+id/image"
+                tools:src="@tools:sample/backgrounds/scenic"
+                android:adjustViewBounds="true"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:contentDescription="@string/news_detail_image" />
 
             <TextView
                 android:id="@+id/btnExternalLink"

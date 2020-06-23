@@ -1,6 +1,7 @@
 package de.deutschebahn.bahnhoflive.ui.station
 
 import android.content.Intent
+import android.graphics.BitmapFactory
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -15,6 +16,7 @@ import de.deutschebahn.bahnhoflive.analytics.UncriticalIssueException
 import de.deutschebahn.bahnhoflive.ui.station.news.groupIcon
 import de.deutschebahn.bahnhoflive.util.startSafely
 import de.deutschebahn.bahnhoflive.view.FullBottomSheetDialogFragment
+import kotlinx.android.synthetic.main.fragment_news_details.*
 import kotlinx.android.synthetic.main.fragment_news_details.view.*
 
 class NewsDetailsFragment : FullBottomSheetDialogFragment() {
@@ -38,7 +40,28 @@ class NewsDetailsFragment : FullBottomSheetDialogFragment() {
         newsEntry.observe(viewLifecycleOwner, Observer { news ->
             view.headline.text = news?.title
 
+            with(view.subtitle) {
+                val subtitle = news?.subtitle
+                text = subtitle
+                visibility = if (subtitle == null) View.GONE else View.VISIBLE
+            }
+
             view.copy.text = news?.content
+
+            image.visibility = if (news?.decodedImage?.let { imageByteArray ->
+                    try {
+                        image.setImageBitmap(
+                            BitmapFactory.decodeByteArray(
+                                imageByteArray,
+                                0,
+                                imageByteArray.size
+                            )
+                        )
+                        true
+                    } catch (e: Exception) {
+                        false
+                    }
+                } == true) View.VISIBLE else View.GONE
 
             view.btnExternalLink?.apply {
                 news?.linkUri?.also { linkUri ->
