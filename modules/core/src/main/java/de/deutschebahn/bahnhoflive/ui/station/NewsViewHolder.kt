@@ -39,7 +39,7 @@ class NewsViewHolder(parent: ViewGroup, itemClickListener: ItemClickListener<New
 
         newsHeadline?.text = item?.title
 
-        newsCopy?.text = item?.content
+        newsCopy?.text = item?.subtitle ?: item?.content
 
         iconView?.setImageResource(item?.groupIcon()?.icon ?: 0)
     }
