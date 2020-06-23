@@ -1,7 +1,6 @@
 package de.deutschebahn.bahnhoflive.ui.station
 
 import android.content.Intent
-import android.net.Uri
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -42,7 +41,7 @@ class NewsDetailsFragment : FullBottomSheetDialogFragment() {
             view.copy.text = news?.content
 
             view.btnExternalLink?.apply {
-                news?.linkUri?.let { Uri.parse("fsdf") }?.also { linkUri ->
+                news?.linkUri?.also { linkUri ->
                     setOnClickListener { _ ->
                         TrackingManager.fromActivity(activity).run {
                             track(
