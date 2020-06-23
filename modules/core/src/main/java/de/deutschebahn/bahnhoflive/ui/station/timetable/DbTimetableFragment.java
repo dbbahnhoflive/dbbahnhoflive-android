@@ -13,6 +13,7 @@ import android.widget.ViewAnimator;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentActivity;
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.Observer;
@@ -224,18 +225,21 @@ public class DbTimetableFragment extends Fragment
     }
 
     private void showNoResultDialog() {
-        new AlertDialog.Builder(getActivity())
-                .setTitle(getActivity().getString(R.string.wagenstand_no_result_headline))
-                .setMessage(getActivity().getString(R.string.wagenstand_no_result_copy))
-                .setPositiveButton("Okay", new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-                        dialog.dismiss();
-                    }
-                })
-                .setCancelable(true)
-                .create()
-        .show();
+        final FragmentActivity activity = getActivity();
+        if (activity != null) {
+            new AlertDialog.Builder(activity)
+                    .setTitle(activity.getString(R.string.wagenstand_no_result_headline))
+                    .setMessage(activity.getString(R.string.wagenstand_no_result_copy))
+                    .setPositiveButton("Okay", new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+                            dialog.dismiss();
+                        }
+                    })
+                    .setCancelable(true)
+                    .create()
+                    .show();
+        }
     }
 
     @Override

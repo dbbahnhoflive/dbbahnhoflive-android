@@ -3,6 +3,7 @@ package de.deutschebahn.bahnhoflive.ui.timetable.localtransport;
 import android.view.View;
 import android.view.ViewGroup;
 
+import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.lifecycle.LifecycleOwner;
 import androidx.lifecycle.Observer;
@@ -91,7 +92,7 @@ public class ReducedDbDeparturesViewHolder extends ViewHolder<DbTimetableResourc
     }
 
     @Override
-    protected void onUnbind(DbTimetableResource item) {
+    protected void onUnbind(@NonNull DbTimetableResource item) {
         super.onUnbind(item);
         item.getData().removeObserver(dataObserver);
         item.getLoadingStatus().removeObserver(loadingStatusObserver);
