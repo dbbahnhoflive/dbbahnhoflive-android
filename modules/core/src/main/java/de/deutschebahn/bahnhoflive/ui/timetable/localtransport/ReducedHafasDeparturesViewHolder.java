@@ -3,6 +3,7 @@ package de.deutschebahn.bahnhoflive.ui.timetable.localtransport;
 import android.view.View;
 import android.view.ViewGroup;
 
+import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.lifecycle.LifecycleOwner;
 import androidx.lifecycle.Observer;
@@ -85,7 +86,7 @@ public class ReducedHafasDeparturesViewHolder extends ViewHolder<Resource<HafasD
     }
 
     @Override
-    protected void onUnbind(Resource<HafasDepartures, VolleyError> item) {
+    protected void onUnbind(@NonNull Resource<HafasDepartures, VolleyError> item) {
         if (item != null) {
             item.getData().removeObserver(dataObserver);
             item.getError().removeObserver(errorObserver);

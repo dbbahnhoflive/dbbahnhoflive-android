@@ -73,7 +73,8 @@ public class MarkerBinder {
     public void setLevel(int level) {
         this.level = level;
 
-        if (markerContent.acceptsLevel(level) != marker.isVisible()) {
+        final Marker marker = this.marker;
+        if (marker != null && markerContent.acceptsLevel(level) != marker.isVisible()) {
             updateVisibility();
         }
     }

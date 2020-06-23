@@ -157,7 +157,7 @@ class FlyoutOverlayViewHolder extends ViewHolder<MarkerBinder> {
     }
 
     @Override
-    protected void onUnbind(MarkerBinder item) {
+    protected void onUnbind(@NonNull MarkerBinder item) {
         super.onUnbind(item);
 
         if (isTrackContent(item)) {
