@@ -12,7 +12,7 @@ android {
         targetSdkVersion 28
         multiDexEnabled true
 
-        buildConfigField "String", "BUSINESS_HUB_API_KEY", "\"TOL1jxXeqIW72s7vKPCcUuPNqFJTvPQx\""
+        buildConfigField "String", "BUSINESS_HUB_API_KEY", "\"TOL1jxXeqIW72s7vKPCcUuPNqFJTvPQx\"" // open source community API key
 
     }
     buildTypes {
