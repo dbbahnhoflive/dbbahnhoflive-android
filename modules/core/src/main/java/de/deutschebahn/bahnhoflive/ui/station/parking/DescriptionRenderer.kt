@@ -24,7 +24,7 @@ internal abstract class DescriptionRenderer(protected val context: Context) {
 
     protected open fun compileRawText(parkingFacility: ParkingFacility): String {
         val descriptionParts = addDetails(parkingFacility)
-        return TextUtils.join("<br/>", descriptionParts)
+        return TextUtils.join("<br/><br/>", descriptionParts)
     }
 
     protected abstract fun addDetails(
