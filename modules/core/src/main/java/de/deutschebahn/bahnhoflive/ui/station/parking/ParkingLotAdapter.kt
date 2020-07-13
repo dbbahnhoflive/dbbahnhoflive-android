@@ -16,14 +16,15 @@ import de.deutschebahn.bahnhoflive.ui.station.parking.ParkingLotAdapter.ParkingF
 import de.deutschebahn.bahnhoflive.view.SingleSelectionManager
 
 internal class ParkingLotAdapter(
-    context: Context?,
-    fragmentManager: FragmentManager,
+    context: Context,
+    private val fragmentManager: FragmentManager,
     val leftButtonClickListener: ButtonClickListener
 ) : RecyclerView.Adapter<ParkingFacilityViewHolder>() {
-    private val fragmentManager: FragmentManager
-    private val briefDescriptionRenderer: BriefDescriptionRenderer
+    private val briefDescriptionRenderer: BriefDescriptionRenderer = BriefDescriptionRenderer(
+        context
+    )
     private var parkingFacilities: List<ParkingFacility>? = null
-    private val selectionManager: SingleSelectionManager
+    private val selectionManager: SingleSelectionManager = SingleSelectionManager(this)
     override fun onCreateViewHolder(
         parent: ViewGroup,
         viewType: Int
@@ -58,9 +59,9 @@ internal class ParkingLotAdapter(
         R.layout.card_expandable_parking_occupancy,
         selectionManager
     ), View.OnClickListener {
-        private val descriptionView: TextView
+        private val descriptionView: TextView = findTextView(R.id.description)
 
-        protected override fun onBind(item: ParkingFacility?) {
+        override fun onBind(item: ParkingFacility?) {
             super.onBind(item)
 
             item?.run {
@@ -81,15 +82,18 @@ internal class ParkingLotAdapter(
         override fun onClick(v: View) {
             val context = v.context
             val item = item
-            val id = v.id
-            if (id == R.id.button_left) {
-                item?.let {
-                    leftButtonClickListener.onButtonClick(context, it)
+            when (v.id) {
+                R.id.button_left -> {
+                    item?.let {
+                        leftButtonClickListener.onButtonClick(context, it)
+                    }
                 }
-            } else if (id == R.id.button_middle) {
-                showDetails(item, BahnparkSiteDetailsFragment.Action.INFO)
-            } else if (id == R.id.button_right) {
-                showDetails(item, BahnparkSiteDetailsFragment.Action.PRICE)
+                R.id.button_middle -> {
+                    showDetails(item, BahnparkSiteDetailsFragment.Action.INFO)
+                }
+                R.id.button_right -> {
+                    showDetails(item, BahnparkSiteDetailsFragment.Action.PRICE)
+                }
             }
         }
 
@@ -103,15 +107,11 @@ internal class ParkingLotAdapter(
         }
 
         init {
-            descriptionView = findTextView(R.id.description)
             ThreeButtonsViewHolder(itemView, R.id.buttons_container, this)
         }
     }
 
     init {
-        briefDescriptionRenderer = BriefDescriptionRenderer(context!!)
-        this.fragmentManager = fragmentManager
-        selectionManager = SingleSelectionManager(this)
         SingleSelectionManager.type = "d1_parking"
     }
 }
