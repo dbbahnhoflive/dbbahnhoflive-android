@@ -13,7 +13,7 @@ internal abstract class DescriptionRenderer(protected val context: Context) {
         value: String?
     ) = apply {
         value.takeUnless { it.isNullOrBlank() }?.let { value ->
-            add("<b>$label: </b>${TextUtils.htmlEncode(value.trim())}")
+            add("<b>$label:</b><br/>${TextUtils.htmlEncode(value.trim())}")
         }
     }
 
