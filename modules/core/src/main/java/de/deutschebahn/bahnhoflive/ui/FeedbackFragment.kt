@@ -12,7 +12,7 @@ import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.ViewModelProviders
-import de.deutschebahn.bahnhoflive.BuildConfig
+import de.deutschebahn.bahnhoflive.BaseApplication
 import de.deutschebahn.bahnhoflive.R
 import de.deutschebahn.bahnhoflive.analytics.TrackingManager
 import de.deutschebahn.bahnhoflive.repository.Station
@@ -32,7 +32,8 @@ class FeedbackFragment : Fragment() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        val stationViewModel = ViewModelProviders.of(activity!!).get(StationViewModel::class.java)
+        val stationViewModel =
+            ViewModelProviders.of(requireActivity()).get(StationViewModel::class.java)
         station = stationViewModel.stationResource.data
         station.observe(this, DummyObserver())
     }
@@ -64,14 +65,19 @@ class FeedbackFragment : Fragment() {
         //        TrackingManager.trackActions(trackingManager, new String[]{TrackingManager.TRACK_KEY_FEEDBACK, "contact"});
         val subject = context.getString(R.string.feedback_subject)
         val recipient = context.getString(R.string.feedback_send_to)
-        val text = "\n\n\n\n" +
-                "Um meine folgenden Anmerkungen leichter nachvollziehen zu können, sende ich Ihnen anbei meine Geräteinformationen:\n\n" +
-                (station.value?.let { "Bahnhof: ${it.title} (${it.id})\n" } ?: "")  +
-                "Gerät: ${FeedbackFragment.deviceName} (${android.os.Build.VERSION.SDK_INT})\n" +
-                "App-Version: ${BuildConfig.VERSION_NAME} (${BuildConfig.VERSION_CODE})"
 
-        val emailIntent = Intent(Intent.ACTION_SENDTO,
-                Uri.fromParts("mailto", recipient, null))
+        val text = BaseApplication.get().run {
+            "\n\n\n\n" +
+                    "Um meine folgenden Anmerkungen leichter nachvollziehen zu können, sende ich Ihnen anbei meine Geräteinformationen:\n\n" +
+                    (station.value?.let { "Bahnhof: ${it.title} (${it.id})\n" } ?: "") +
+                    "Gerät: ${FeedbackFragment.deviceName} (${android.os.Build.VERSION.SDK_INT})\n" +
+                    "App-Version: $versionName ($versionCode)"
+        }
+
+        val emailIntent = Intent(
+            Intent.ACTION_SENDTO,
+            Uri.fromParts("mailto", recipient, null)
+        )
         emailIntent.putExtra(Intent.EXTRA_SUBJECT, subject)
         emailIntent.putExtra(Intent.EXTRA_TEXT, text)
         startActivity(Intent.createChooser(emailIntent, "E-Mail senden..."))
