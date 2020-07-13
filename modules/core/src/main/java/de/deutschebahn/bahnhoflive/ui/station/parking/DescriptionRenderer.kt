@@ -10,10 +10,11 @@ import java.util.*
 internal abstract class DescriptionRenderer(protected val context: Context) {
     protected fun MutableList<String>.addDescriptionDetail(
         label: String,
-        value: String?
+        value: String?,
+        formatter: (String) -> String = { it }
     ) = apply {
         value.takeUnless { it.isNullOrBlank() }?.let { value ->
-            add("<b>$label:</b><br/>${TextUtils.htmlEncode(value.trim())}")
+            add("<b>$label:</b><br/>${formatter(TextUtils.htmlEncode(value.trim()))}")
         }
     }
 
@@ -34,14 +35,27 @@ internal abstract class DescriptionRenderer(protected val context: Context) {
 
     companion object {
 
+        private val openingHoursFormatter = Regex("(\\S);\\s*(\\S)").let { regex ->
+            { openingHours: String ->
+                regex.replace(openingHours) { matchResult ->
+                    "${matchResult.groupValues[1]};<br/>${matchResult.groupValues[2]}"
+                }
+            }
+        }
+
         class BriefDescriptionRenderer(context: Context) : DescriptionRenderer(context) {
+
             override fun addDetails(
                 parkingFacility: ParkingFacility,
                 descriptionParts: MutableList<String>
             ) = descriptionParts.apply {
                 addDescriptionDetail("Name", parkingFacility.name)
                 addDescriptionDetail("Anschrift", parkingFacility.access)
-                addDescriptionDetail("Öffnungszeiten", parkingFacility.openingHours)
+                addDescriptionDetail(
+                    "Öffnungszeiten",
+                    parkingFacility.openingHours,
+                    openingHoursFormatter
+                )
                 addDescriptionDetail("Frei parken", parkingFacility.freeParking)
                 addDescriptionDetail("Maximale Parkdauer", parkingFacility.maxParkingTime)
                 addDescriptionDetail("Nächster Bahnhofseingang", parkingFacility.distanceToStation)
@@ -56,7 +70,11 @@ internal abstract class DescriptionRenderer(protected val context: Context) {
                 addDescriptionDetail("Zufahrt", parkingFacility.access)
                 addDescriptionDetail("Zufahrt (Details)", parkingFacility.mainAccess)
                 addDescriptionDetail("Zufahrt (Nachts)", parkingFacility.nightAccess)
-                addDescriptionDetail("Öffnungszeiten", parkingFacility.openingHours)
+                addDescriptionDetail(
+                    "Öffnungszeiten",
+                    parkingFacility.openingHours,
+                    openingHoursFormatter
+                )
                 addDescriptionDetail("Maximale Parkdauer", parkingFacility.maxParkingTime)
                 addDescriptionDetail("Nächster Bahnhofseingang", parkingFacility.distanceToStation)
                 addDescriptionDetail(
