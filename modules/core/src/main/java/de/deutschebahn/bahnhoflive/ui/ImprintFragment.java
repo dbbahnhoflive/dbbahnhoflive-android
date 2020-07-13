@@ -29,7 +29,7 @@ import java.io.InputStreamReader;
 import java.nio.charset.StandardCharsets;
 import java.util.List;
 
-import de.deutschebahn.bahnhoflive.BuildConfig;
+import de.deutschebahn.bahnhoflive.BaseApplication;
 import de.deutschebahn.bahnhoflive.R;
 import de.deutschebahn.bahnhoflive.analytics.TrackingManager;
 
@@ -178,7 +178,8 @@ public class ImprintFragment extends Fragment {
         InputStream in;
         try {
             in = getResources().getAssets().open(url);
-            String imprint = getString(in).replaceAll("\\{APP_VERSION\\}", BuildConfig.VERSION_NAME);
+            final String versionName = BaseApplication.get().getVersionName();
+            String imprint = getString(in).replaceAll("\\{APP_VERSION\\}", versionName);
 
             webview.loadDataWithBaseURL("nil://nil.nil", imprint
                     , "text/html", "UTF-8", null);

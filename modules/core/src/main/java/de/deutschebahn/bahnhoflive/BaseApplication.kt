@@ -25,7 +25,10 @@ import de.deutschebahn.bahnhoflive.util.volley.TLSSocketFactory
 import java.io.File
 import javax.net.ssl.SSLSocketFactory
 
-abstract class BaseApplication : MultiDexApplication() {
+abstract class BaseApplication(
+    val versionName: String,
+    val versionCode: Int
+) : MultiDexApplication() {
 
     lateinit var issueTracker: IssueTracker
 
