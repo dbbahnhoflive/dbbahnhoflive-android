@@ -36,6 +36,7 @@ import de.deutschebahn.bahnhoflive.analytics.TrackingManager;
 public class ImprintFragment extends Fragment {
 
     public static final String TAG = ImprintFragment.class.getSimpleName();
+    public static final String PREF_KEY_TRACKING_ENABLED = "tracking_enabled";
     private String title;
     private String url;
 
@@ -110,7 +111,7 @@ public class ImprintFragment extends Fragment {
 
                         final SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(getActivity());
                         final SharedPreferences.Editor editor = preferences.edit();
-                        boolean trackingEnabled = preferences.getBoolean("tracking_enabled", true);
+                        boolean trackingEnabled = preferences.getBoolean(PREF_KEY_TRACKING_ENABLED, true);
 
                         int alertMessage = R.string.settings_tracking_active_msg;
                         if (!trackingEnabled) {
@@ -124,7 +125,7 @@ public class ImprintFragment extends Fragment {
                                 .setPositiveButton(R.string.dlg_yes, new DialogInterface.OnClickListener() {
                                     @Override
                                     public void onClick(DialogInterface dialog, int which) {
-                                        editor.putBoolean("tracking_enabled", true);
+                                        editor.putBoolean(PREF_KEY_TRACKING_ENABLED, true);
                                         editor.commit();
                                         dialog.dismiss();
 
@@ -137,7 +138,7 @@ public class ImprintFragment extends Fragment {
                                     public void onClick(DialogInterface dialog, int which) {
                                         trackingManager.track(TrackingManager.TYPE_ACTION, TrackingManager.Action.TRACKING_DEACTIVATE);
 
-                                        editor.putBoolean("tracking_enabled", false);
+                                        editor.putBoolean(PREF_KEY_TRACKING_ENABLED, false);
                                         editor.commit();
 
                                         trackingManager.setOptOut(true);
