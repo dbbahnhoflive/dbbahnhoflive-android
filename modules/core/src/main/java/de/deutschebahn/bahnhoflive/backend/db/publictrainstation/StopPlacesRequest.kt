@@ -20,7 +20,8 @@ class StopPlacesRequest(
     private val location: Location? = null,
     force: Boolean = false,
     private val limit: Int = 25,
-    radius: Int = 2000
+    radius: Int = 2000,
+    private val mixedResults: Boolean
 ) : PublicTrainStationRequest<List<StopPlace>>(
     Method.GET,
     "stop-places?" + sequenceOf(
@@ -60,7 +61,10 @@ class StopPlacesRequest(
             val stopPlaces = stopPlacesPage.stopPlaces ?: emptyList()
             val filteredStopPlaces = stopPlaces.asSequence()
                 .filterNotNull()
-                .filter { it.isDbStation }
+                .filter(
+                    if (mixedResults) { stopPlace -> stopPlace.isLocalTransportStation || stopPlace.isDbStation }
+                    else { stopPlace -> stopPlace.isDbStation }
+                )
                 .run {
                     location?.let { location ->
                         val distanceCalulator =
@@ -70,10 +74,11 @@ class StopPlacesRequest(
                             )
                         onEach { stopPlace ->
                             stopPlace.calculateDistance(distanceCalulator)
-                        }.sortedBy { it.distanceInKm }
+                        }
+//                            .sortedBy { it.distanceInKm }
                     } ?: this
                 }
-                .take(limit)
+//                .take(limit)
                 .toList()
 
             val forcedCacheEntryFactory =

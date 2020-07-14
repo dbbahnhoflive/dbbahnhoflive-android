@@ -1,9 +1,13 @@
 package de.deutschebahn.bahnhoflive.ui.search;
 
+import android.view.LayoutInflater;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.CompoundButton;
 import android.widget.ImageView;
 import android.widget.TextView;
+
+import androidx.annotation.LayoutRes;
 
 import de.deutschebahn.bahnhoflive.R;
 import de.deutschebahn.bahnhoflive.ui.ViewHolder;
@@ -19,6 +23,9 @@ public class StationSearchViewHolder extends ViewHolder<SearchResult>
     private final CompoundButtonChecker favoriteView;
     private final ImageView iconView;
 
+    public StationSearchViewHolder(ViewGroup container, @LayoutRes int layout) {
+        this(LayoutInflater.from(container.getContext()).inflate(layout, container, false));
+    }
 
     public StationSearchViewHolder(View view) {
         super(view);

@@ -283,7 +283,7 @@ public class StationSearchFragment extends Fragment {
                                         runningStationLookupRequest = null;
                                     }
                                 }
-                            }, query, null, false, 25, 10000);
+                            }, query, null, false, 25, 10000, true);
         } else {
             listHeadlineView.setText(R.string.search_history);
             clearHistoryView.setVisibility(View.VISIBLE);
