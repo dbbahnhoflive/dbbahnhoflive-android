@@ -31,6 +31,8 @@ open class StopPlace {
 
     val isDbStation get() = stadaId != null && evaId != null
 
+    val isLocalTransportStation get() = stadaId == null && evaId != null
+
     val asInternalStation
         get() = stadaId?.let { stadaId ->
             evaId?.let { evaId ->

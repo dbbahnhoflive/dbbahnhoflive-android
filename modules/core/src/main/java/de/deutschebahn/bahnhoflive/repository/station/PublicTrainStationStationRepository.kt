@@ -21,7 +21,8 @@ class PublicTrainStationStationRepository(
         location: Location?,
         force: Boolean,
         limit: Int,
-        radius: Int
+        radius: Int,
+        mixedResults: Boolean
     ) = restHelper
         .add(
             StopPlacesRequest(
@@ -31,7 +32,8 @@ class PublicTrainStationStationRepository(
                 location,
                 force,
                 limit,
-                radius
+                radius,
+                mixedResults
             )
         )
         .cancellable()

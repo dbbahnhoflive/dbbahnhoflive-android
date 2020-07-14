@@ -14,7 +14,8 @@ open class StationRepository {
         location: Location? = null,
         force: Boolean = false,
         limit: Int = 25,
-        radius: Int = 2000
+        radius: Int = 2000,
+        mixedResults: Boolean
     ): Cancellable? {
         listener.fail()
         return null

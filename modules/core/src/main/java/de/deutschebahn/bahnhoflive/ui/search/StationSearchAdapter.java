@@ -1,5 +1,6 @@
 package de.deutschebahn.bahnhoflive.ui.search;
 
+import android.content.Context;
 import android.view.ViewGroup;
 
 import androidx.fragment.app.FragmentActivity;
@@ -9,6 +10,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import java.util.List;
 
+import de.deutschebahn.bahnhoflive.R;
 import de.deutschebahn.bahnhoflive.analytics.TrackingManager;
 import de.deutschebahn.bahnhoflive.backend.db.publictrainstation.model.StopPlace;
 import de.deutschebahn.bahnhoflive.backend.hafas.model.HafasStation;
@@ -69,8 +71,10 @@ class StationSearchAdapter extends RecyclerView.Adapter<ViewHolder> {
         switch (viewType) {
             case 0:
                 return new DbDeparturesViewHolder(parent, singleSelectionManager, owner, trackingManager, searchItemPickedListener, TrackingManager.UiElement.ABFAHRT_SUCHE_BHF);
-            default:
+            case 1:
                 return new DeparturesViewHolder(parent, owner, singleSelectionManager, trackingManager, searchItemPickedListener, TrackingManager.UiElement.ABFAHRT_SUCHE_OPNV);
+            default:
+                return new StationSearchViewHolder(parent, R.layout.card_station_suggestion);
         }
     }
 
@@ -112,7 +116,42 @@ class StationSearchAdapter extends RecyclerView.Adapter<ViewHolder> {
 
         if (dbStations != null) {
             for (StopPlace dbStation : dbStations) {
-                searchResults.add(new StopPlaceSearchResult(dbStation, recentSearchesStore, favoriteDbStationsStore));
+                final SearchResult searchResult;
+                if (dbStation.isDbStation()) {
+                    searchResult = new StopPlaceSearchResult(dbStation, recentSearchesStore, favoriteDbStationsStore);
+                } else {
+                    searchResult = new SearchResult() {
+
+                        @Override
+                        public CharSequence getTitle() {
+                            return dbStation.getName();
+                        }
+
+                        @Override
+                        public boolean isFavorite() {
+                            return false;
+                        }
+
+                        @Override
+                        public void setFavorite(boolean favorite) {
+                        }
+
+                        @Override
+                        public void onClick(Context context, boolean details) {
+                        }
+
+                        @Override
+                        public int getIcon() {
+                            return R.drawable.app_check;
+                        }
+
+                        @Override
+                        public boolean isLocal() {
+                            return true;
+                        }
+                    };
+                }
+                searchResults.add(searchResult);
             }
         }
 

@@ -52,7 +52,9 @@ class TimeTableProvider {
                                 Observer { volleyError ->
                                     if (volleyError != null) {
                                         requestHafasStations(location, null, origin, resultListener)
-                                        resultListener.onDbTimeTableResourceAvailable(DbTimetableResource(internalStation))
+                                        resultListener.onDbTimeTableResourceAvailable(
+                                            DbTimetableResource(internalStation)
+                                        )
                                     }
                                 })
                         resourceClient!!.observe(stationResource)
@@ -62,7 +64,7 @@ class TimeTableProvider {
                 override fun onFail(reason: VolleyError) {
                     requestHafasStations(location, null, origin, resultListener)
                 }
-        }, location = location)
+            }, location = location, mixedResults = false)
 
     private fun requestHafasStations(
         location: Location,

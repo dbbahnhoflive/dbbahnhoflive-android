@@ -663,7 +663,7 @@ public class MapOverlayFragment extends Fragment implements OnMapReadyCallback, 
                                             });
                                         }
                                     }
-                                }, null, location, false, 25, 5000);
+                                }, null, location, false, 25, 5000, false);
                             }
                         }
                     }
