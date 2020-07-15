@@ -65,6 +65,9 @@ public class HafasStation implements Parcelable {
     @SerializedName("products")
     public int productCategories; // Bitmask symbolizing a product
 
+    public HafasStation() {
+    }
+
     protected HafasStation(Parcel in) {
         id = in.readString();
         extId = in.readString();
