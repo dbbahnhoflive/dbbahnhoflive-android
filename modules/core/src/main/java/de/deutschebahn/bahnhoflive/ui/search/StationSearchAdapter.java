@@ -1,6 +1,5 @@
 package de.deutschebahn.bahnhoflive.ui.search;
 
-import android.content.Context;
 import android.view.ViewGroup;
 
 import androidx.fragment.app.FragmentActivity;
@@ -13,6 +12,7 @@ import java.util.List;
 import de.deutschebahn.bahnhoflive.BaseApplication;
 import de.deutschebahn.bahnhoflive.R;
 import de.deutschebahn.bahnhoflive.analytics.TrackingManager;
+import de.deutschebahn.bahnhoflive.backend.db.publictrainstation.model.Location;
 import de.deutschebahn.bahnhoflive.backend.db.publictrainstation.model.StopPlace;
 import de.deutschebahn.bahnhoflive.backend.hafas.model.HafasStation;
 import de.deutschebahn.bahnhoflive.persistence.FavoriteStationsStore;
@@ -121,36 +121,16 @@ class StationSearchAdapter extends RecyclerView.Adapter<ViewHolder> {
                 if (dbStation.isDbStation()) {
                     searchResult = new StopPlaceSearchResult(dbStation, recentSearchesStore, favoriteDbStationsStore);
                 } else {
-                    searchResult = new SearchResult() {
+                    final HafasStation hafasStation = new HafasStation();
+                    hafasStation.extId = dbStation.getEvaId();
+                    final Location location = dbStation.getLocation();
+                    if (location != null) {
+                        hafasStation.latitude = location.getLatitude();
+                        hafasStation.longitude = location.getLongitude();
+                    }
+                    hafasStation.name = dbStation.getName();
 
-                        @Override
-                        public CharSequence getTitle() {
-                            return dbStation.getName();
-                        }
-
-                        @Override
-                        public boolean isFavorite() {
-                            return false;
-                        }
-
-                        @Override
-                        public void setFavorite(boolean favorite) {
-                        }
-
-                        @Override
-                        public void onClick(Context context, boolean details) {
-                        }
-
-                        @Override
-                        public int getIcon() {
-                            return R.drawable.app_check;
-                        }
-
-                        @Override
-                        public boolean isLocal() {
-                            return true;
-                        }
-                    };
+                    searchResult = new HafasStationSearchResult(hafasStation, recentSearchesStore, favoriteHafasStationsStore);
                 }
                 searchResults.add(searchResult);
             }
