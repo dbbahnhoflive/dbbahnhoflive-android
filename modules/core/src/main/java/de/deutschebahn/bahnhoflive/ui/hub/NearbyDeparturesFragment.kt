@@ -14,8 +14,6 @@ import de.deutschebahn.bahnhoflive.backend.hafas.model.HafasStation
 import de.deutschebahn.bahnhoflive.backend.ris.model.RISTimetable
 import de.deutschebahn.bahnhoflive.location.BaseLocationListener
 import de.deutschebahn.bahnhoflive.permission.Permission
-import de.deutschebahn.bahnhoflive.persistence.FavoriteStationsStore
-import de.deutschebahn.bahnhoflive.persistence.RecentSearchesStore
 import de.deutschebahn.bahnhoflive.repository.DbTimetableResource
 import de.deutschebahn.bahnhoflive.ui.LoadingContentDecorationViewHolder
 import de.deutschebahn.bahnhoflive.ui.TimeTableProvider
@@ -55,7 +53,14 @@ class NearbyDeparturesFragment : androidx.fragment.app.Fragment(), Permission.Li
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        nearbyDeparturesAdapter = NearbyDeparturesAdapter(this, RecentSearchesStore(context), FavoriteStationsStore.getFavoriteHafasStationsStore(context), FavoriteStationsStore.getFavoriteDbStationsStore(context), trackingManager)
+        val applicationServices = BaseApplication.get().applicationServices
+        nearbyDeparturesAdapter = NearbyDeparturesAdapter(
+            this,
+            applicationServices.recentSearchesStore,
+            applicationServices.favoriteHafasStationsStore,
+            applicationServices.favoriteDbStationStore,
+            trackingManager
+        )
 
         locationFragment = LocationFragment.get(fragmentManager!!)
 

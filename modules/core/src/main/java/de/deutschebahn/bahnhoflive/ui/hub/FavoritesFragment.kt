@@ -4,10 +4,10 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import de.deutschebahn.bahnhoflive.BaseApplication
 import de.deutschebahn.bahnhoflive.R
 import de.deutschebahn.bahnhoflive.analytics.TrackingManager
 import de.deutschebahn.bahnhoflive.persistence.FavoriteStationsStore
-import de.deutschebahn.bahnhoflive.persistence.RecentSearchesStore
 import de.deutschebahn.bahnhoflive.ui.DbStationWrapper
 import de.deutschebahn.bahnhoflive.ui.search.DBStationSearchResult
 import de.deutschebahn.bahnhoflive.ui.search.HafasStationSearchResult
@@ -49,16 +49,24 @@ class FavoritesFragment : androidx.fragment.app.Fragment() {
     }
 
     fun refreshFavorites() {
-        context?.let { context ->
-            val favoriteHafasStationsStore = FavoriteStationsStore.getFavoriteHafasStationsStore(context)
-            val favoriteDbStationsStore = FavoriteStationsStore.getFavoriteDbStationsStore(context)
-            val recentSearchesStore = RecentSearchesStore(context)
+        BaseApplication.get().applicationServices.let { applicationServices ->
+            val favoriteHafasStationsStore = applicationServices.favoriteHafasStationsStore
+            val favoriteDbStationsStore = applicationServices.favoriteDbStationStore
+            val recentSearchesStore = applicationServices.recentSearchesStore
 
             favoritesAdapter?.apply {
                 favorites = FavoriteStationsStore.getFavoriteStations(activity).map {
                     when (it) {
-                        is HafasStationWrapper -> HafasStationSearchResult(it.wrappedStation, recentSearchesStore, favoriteHafasStationsStore)
-                        is DbStationWrapper -> DBStationSearchResult(it.wrappedStation, recentSearchesStore, favoriteDbStationsStore)
+                        is HafasStationWrapper -> HafasStationSearchResult(
+                            it.wrappedStation,
+                            recentSearchesStore,
+                            favoriteHafasStationsStore
+                        )
+                        is DbStationWrapper -> DBStationSearchResult(
+                            it.wrappedStation,
+                            recentSearchesStore,
+                            favoriteDbStationsStore
+                        )
                         else -> it
                     }
                 }.also {

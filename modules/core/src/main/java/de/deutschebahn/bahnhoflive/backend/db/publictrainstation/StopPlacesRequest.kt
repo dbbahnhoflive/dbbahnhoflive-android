@@ -78,7 +78,7 @@ class StopPlacesRequest(
 //                            .sortedBy { it.distanceInKm }
                     } ?: this
                 }
-//                .take(limit)
+                .take(limit)
                 .toList()
 
             val forcedCacheEntryFactory =

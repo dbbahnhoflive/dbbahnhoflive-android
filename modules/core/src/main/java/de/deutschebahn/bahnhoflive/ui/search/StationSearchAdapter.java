@@ -10,6 +10,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import java.util.List;
 
+import de.deutschebahn.bahnhoflive.BaseApplication;
 import de.deutschebahn.bahnhoflive.R;
 import de.deutschebahn.bahnhoflive.analytics.TrackingManager;
 import de.deutschebahn.bahnhoflive.backend.db.publictrainstation.model.StopPlace;
@@ -46,8 +47,8 @@ class StationSearchAdapter extends RecyclerView.Adapter<ViewHolder> {
     StationSearchAdapter(FragmentActivity context, RecentSearchesStore recentSearchesStore, SearchItemPickedListener searchItemPickedListener, LifecycleOwner owner, TrackingManager trackingManager) {
         hubViewModel = ViewModelProviders.of(context).get(HubViewModel.class);
 
-        this.favoriteDbStationsStore = FavoriteStationsStore.getFavoriteDbStationsStore(context);
-        this.favoriteHafasStationsStore = FavoriteStationsStore.getFavoriteHafasStationsStore(context);
+        this.favoriteDbStationsStore = BaseApplication.get().getApplicationServices().getFavoriteDbStationStore();
+        this.favoriteHafasStationsStore = BaseApplication.get().getApplicationServices().getFavoriteHafasStationsStore();
         this.recentSearchesStore = recentSearchesStore;
         this.searchItemPickedListener = searchItemPickedListener;
         this.owner = owner;

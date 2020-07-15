@@ -13,6 +13,7 @@ import de.deutschebahn.bahnhoflive.analytics.TrackingDelegate
 import de.deutschebahn.bahnhoflive.analytics.TrackingHttpStack
 import de.deutschebahn.bahnhoflive.backend.*
 import de.deutschebahn.bahnhoflive.backend.db.DbAuthorizationTool
+import de.deutschebahn.bahnhoflive.repository.ApplicationServices
 import de.deutschebahn.bahnhoflive.repository.RepositoryHolder
 import de.deutschebahn.bahnhoflive.repository.elevator.Fasta2ElevatorStatusRepository
 import de.deutschebahn.bahnhoflive.repository.poisearch.PoiSearchConfigurationProvider
@@ -46,11 +47,16 @@ abstract class BaseApplication(
 
     lateinit var trackingDelegate: TrackingDelegate
 
+    lateinit var applicationServices: ApplicationServices
+        private set
+
     override fun onCreate() {
         super.onCreate()
         INSTANCE = this
 
         FontUtil.init(this)
+
+        applicationServices = ApplicationServices(this)
 
         issueTracker = onInitializeIssueTracker()
 
