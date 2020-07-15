@@ -13,6 +13,7 @@ import java.util.Comparator;
 import java.util.List;
 import java.util.Map;
 
+import de.deutschebahn.bahnhoflive.BaseApplication;
 import de.deutschebahn.bahnhoflive.backend.hafas.model.HafasStation;
 import de.deutschebahn.bahnhoflive.backend.local.model.EvaIds;
 import de.deutschebahn.bahnhoflive.repository.InternalStation;
@@ -40,6 +41,26 @@ public class FavoriteStationsStore<T> {
         dataPreferences.edit().clear().commit();
     }
 
+    public void adopt(final List<StationWrapper<T>> stationWrappers) {
+        if (stationWrappers == null || stationWrappers.isEmpty()) {
+            return;
+        }
+
+        final Gson gson = this.gson;
+        final SharedPreferences.Editor dataEditor = dataPreferences.edit();
+        final SharedPreferences.Editor timestampEditor = timestampPreferences.edit();
+
+        for (StationWrapper<T> stationWrapper : stationWrappers) {
+            dataEditor
+                    .putString(itemAdapter.getId(stationWrapper.getWrappedStation()), gson.toJson(stationWrapper.getWrappedStation()));
+            timestampEditor
+                    .putLong(itemAdapter.getId(stationWrapper.getWrappedStation()), stationWrapper.getFavoriteTimestamp());
+        }
+
+        dataEditor.commit();
+        timestampEditor.commit();
+    }
+
     public interface ItemAdapter<T> {
         String getId(T item);
 
@@ -56,19 +77,7 @@ public class FavoriteStationsStore<T> {
 
     private final ItemAdapter<T> itemAdapter;
 
-    public static FavoriteStationsStore<InternalStation> getFavoriteDbStationsStore(final Context context) {
-
-        final FavoriteStationsStore<InternalStation> internalFavoriteStationsStore = new FavoriteStationsStore<>(context, "dbstations", new InternalStationItemAdapter());
-
-        return internalFavoriteStationsStore;
-    }
-
-
-    public static FavoriteStationsStore<HafasStation> getFavoriteHafasStationsStore(Context context) {
-        return new FavoriteStationsStore<>(context, "hafasstations", new HafasStationItemAdapter());
-    }
-
-    protected FavoriteStationsStore(Context context, final String preferenceName, ItemAdapter<T> itemAdapter) {
+    public FavoriteStationsStore(Context context, final String preferenceName, ItemAdapter<T> itemAdapter) {
         dataPreferences = context.getSharedPreferences("favorite_" + preferenceName + ".pref", Context.MODE_PRIVATE);
         timestampPreferences = context.getSharedPreferences("favorite_" + preferenceName + "_timestamps.pref", Context.MODE_PRIVATE);
         this.itemAdapter = itemAdapter;
@@ -96,6 +105,7 @@ public class FavoriteStationsStore<T> {
                 .remove(id)
                 .commit();
     }
+
 
     public boolean isFavorite(T station) {
         return isFavorite(itemAdapter.getId(station));
@@ -131,10 +141,10 @@ public class FavoriteStationsStore<T> {
     public static List<StationWrapper> getFavoriteStations(Context context) {
         final ArrayList<StationWrapper> stationWrappers = new ArrayList<>();
 
-        final FavoriteStationsStore<InternalStation> favoriteDbStationsStore = getFavoriteDbStationsStore(context);
+        final FavoriteStationsStore<InternalStation> favoriteDbStationsStore = BaseApplication.get().getApplicationServices().getFavoriteDbStationStore();
         stationWrappers.addAll(favoriteDbStationsStore.getAll());
 
-        final FavoriteStationsStore<HafasStation> favoriteHaFavoriteStationsStore = getFavoriteHafasStationsStore(context);
+        final FavoriteStationsStore<HafasStation> favoriteHaFavoriteStationsStore = BaseApplication.get().getApplicationServices().getFavoriteHafasStationsStore();
         stationWrappers.addAll(favoriteHaFavoriteStationsStore.getAll());
 
         Collections.sort(stationWrappers, TIMESTAMP_COMPARATOR);

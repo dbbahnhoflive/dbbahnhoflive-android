@@ -1,11 +1,14 @@
 package de.deutschebahn.bahnhoflive.persistence;
 
 import android.content.Context;
+import android.content.SharedPreferences;
 
 import java.util.ArrayList;
 import java.util.List;
 
+import de.deutschebahn.bahnhoflive.BaseApplication;
 import de.deutschebahn.bahnhoflive.backend.hafas.model.HafasStation;
+import de.deutschebahn.bahnhoflive.repository.ApplicationServices;
 import de.deutschebahn.bahnhoflive.repository.InternalStation;
 import de.deutschebahn.bahnhoflive.repository.Station;
 import de.deutschebahn.bahnhoflive.ui.StationWrapper;
@@ -22,11 +25,31 @@ public class RecentSearchesStore {
     private final FavoriteStationsStore<HafasStation> recentHafasStationsStore;
 
     public RecentSearchesStore(Context context) {
-        favoriteStationsStore = FavoriteStationsStore.getFavoriteDbStationsStore(context);
+
+        final ApplicationServices applicationServices = BaseApplication.get().getApplicationServices();
+
+        favoriteStationsStore = applicationServices.getFavoriteDbStationStore();
         recentDbStationsStore = new FavoriteStationsStore<>(context, "recent_dbstations", new InternalStationItemAdapter());
 
-        favoriteHafasStationsStore = FavoriteStationsStore.getFavoriteHafasStationsStore(context);
+        favoriteHafasStationsStore = applicationServices.getFavoriteHafasStationsStore();
+
+        final SharedPreferences favoriteStationStoreVersions = applicationServices.getFavoriteStationStoreVersions();
+
+        final List<StationWrapper<HafasStation>> legacyRecentHafasStations;
+        if (favoriteStationStoreVersions.getInt("hafasRecents", 0) < 1) {
+            final FavoriteStationsStore<HafasStation> legacyRecentHafasStationsStore = new FavoriteStationsStore<>(context, "recent_hafasstations", new LegacyHafasStationItemAdapter());
+            legacyRecentHafasStations = legacyRecentHafasStationsStore.getAll();
+            legacyRecentHafasStationsStore.clear();
+
+            favoriteStationStoreVersions.edit()
+                    .putInt("hafasRecents", 1)
+                    .commit();
+        } else {
+            legacyRecentHafasStations = null;
+        }
+
         recentHafasStationsStore = new FavoriteStationsStore<>(context, "recent_hafasstations", new HafasStationItemAdapter());
+        recentHafasStationsStore.adopt(legacyRecentHafasStations);
     }
 
     public List<SearchResult> loadRecentStations() {

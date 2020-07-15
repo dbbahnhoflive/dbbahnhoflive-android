@@ -32,6 +32,10 @@ public class HafasStation implements Parcelable {
         "products": 32
     }*/
 
+    /**
+     * @deprecated Use {@link #extId} instead.
+     */
+    @Deprecated
     public String id;
     public String extId;
     public String name;
@@ -140,16 +144,13 @@ public class HafasStation implements Parcelable {
 
         HafasStation that = (HafasStation) o;
 
-        if (!id.equals(that.id)) return false;
         return extId.equals(that.extId);
 
     }
 
     @Override
     public int hashCode() {
-        int result = id.hashCode();
-        result = 31 * result + extId.hashCode();
-        return result;
+        return extId.hashCode();
     }
 
 }
