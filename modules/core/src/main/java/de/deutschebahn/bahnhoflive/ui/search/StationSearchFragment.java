@@ -22,7 +22,6 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.android.volley.Request;
 import com.android.volley.VolleyError;
 
-import java.util.Collections;
 import java.util.List;
 
 import de.deutschebahn.bahnhoflive.BaseApplication;
@@ -231,7 +230,7 @@ public class StationSearchFragment extends Fragment {
                                         queryRecorder.put(query);
                                     }
 
-                                    requestHafasStationsIfSlotsLeft(stations);
+                                    showOrHideNoResultsView();
                                 }
 
                                 @Override
@@ -239,11 +238,12 @@ public class StationSearchFragment extends Fragment {
                                     super.onFail(reason);
 
                                     adapter.setDBError();
+
+                                    showOrHideNoResultsView();
+
                                     final IssueTracker issueTracker = getIssueTracker();
                                     issueTracker.log("Failed station query: " + query);
                                     issueTracker.dispatchThrowable(new StationSearchException(reason.getMessage(), reason));
-
-                                    requestHafasStationsIfSlotsLeft(Collections.emptyList());
                                 }
 
                                 private void requestHafasStationsIfSlotsLeft(@NonNull List<StopPlace> stations) {
@@ -259,7 +259,6 @@ public class StationSearchFragment extends Fragment {
                                                         if (isVisible()) {
                                                             adapter.setHafasStations(payload);
 
-                                                            showOrHideNoResultsView();
                                                         }
                                                     }
 
