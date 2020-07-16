@@ -19,13 +19,13 @@ class StopPlacesRequest(
     query: String? = null,
     private val location: Location? = null,
     force: Boolean = false,
-    private val limit: Int = 25,
+    private val limit: Int = 100,
     radius: Int = 2000,
     private val mixedResults: Boolean
 ) : PublicTrainStationRequest<List<StopPlace>>(
     Method.GET,
     "stop-places?" + sequenceOf(
-        "size" to (50 + limit * 8).toString()
+        "size" to (limit).toString()
     ).let { sequence ->
         query?.trim()?.takeUnless { it.isEmpty() }?.let { "name" to URLEncoder.encode(it, "UTF-8") }
             ?.let { sequence.plus(it) }
@@ -78,7 +78,7 @@ class StopPlacesRequest(
 //                            .sortedBy { it.distanceInKm }
                     } ?: this
                 }
-                .take(limit)
+//                .take(limit)
                 .toList()
 
             val forcedCacheEntryFactory =
