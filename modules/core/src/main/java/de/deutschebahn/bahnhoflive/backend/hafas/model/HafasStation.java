@@ -12,11 +12,13 @@ import com.google.gson.annotations.SerializedName;
 import java.util.ArrayList;
 
 import de.deutschebahn.bahnhoflive.BaseApplication;
+import de.deutschebahn.bahnhoflive.backend.local.model.EvaIds;
 
 /**
  * Warning! Might be persisted by {@link de.deutschebahn.bahnhoflive.persistence.FavoriteStationsStore}
  */
 public class HafasStation implements Parcelable {
+    private final boolean forceLocalTransport;
 
     // NOTE there is a difference between StopLocation and CoordLocation
 
@@ -63,9 +65,10 @@ public class HafasStation implements Parcelable {
      * Ergo: 2^0 = Hochgeschwindigkeitszüge, 2^1=Intercity- und Eurocityzüge, 2^5=Busse usw.
      */
     @SerializedName("products")
-    public int productCategories; // Bitmask symbolizing a product
+    protected int productCategories; // Bitmask symbolizing a product
 
     public HafasStation() {
+        this(false);
     }
 
     protected HafasStation(Parcel in) {
@@ -78,6 +81,23 @@ public class HafasStation implements Parcelable {
         dist = in.readInt();
         productCategories = in.readInt();
         products = in.readArrayList(BaseApplication.get().getClassLoader());
+        forceLocalTransport = in.readInt() == 1;
+        evaIds = in.readParcelable(getClass().getClassLoader());
+    }
+
+    public HafasStation(boolean forceLocalTransport) {
+        this.forceLocalTransport = forceLocalTransport;
+    }
+
+    public EvaIds evaIds = null;
+
+    public EvaIds getEvaIds() {
+        if (evaIds == null) {
+            final ArrayList<String> evaIdList = new ArrayList<String>();
+            evaIdList.add(extId);
+            evaIds = new EvaIds(evaIdList);
+        }
+        return evaIds;
     }
 
     @Override
@@ -96,6 +116,8 @@ public class HafasStation implements Parcelable {
         dest.writeInt(dist);
         dest.writeInt(productCategories);
         dest.writeList(products);
+        dest.writeInt(forceLocalTransport ? 1 : 0);
+        dest.writeParcelable(evaIds, flags);
     }
 
     public static final Creator<HafasStation> CREATOR = new Creator<HafasStation>() {
@@ -111,11 +133,11 @@ public class HafasStation implements Parcelable {
     };
 
     public boolean hasLocalTransport(int bitmask) {
-        return (productCategories & bitmask) > 0;
+        return forceLocalTransport || (productCategories & bitmask) > 0;
     }
 
     public boolean isPureLocalTransport() {
-        return hasLocalTransport(ProductCategory.BITMASK_LOCAL_TRANSPORT) && (productCategories & ProductCategory.BITMASK_DB) == 0;
+        return forceLocalTransport || hasLocalTransport(ProductCategory.BITMASK_LOCAL_TRANSPORT) && (productCategories & ProductCategory.BITMASK_DB) == 0;
     }
 
     /**
@@ -156,4 +178,14 @@ public class HafasStation implements Parcelable {
         return extId.hashCode();
     }
 
+    public boolean hasStationLocalTransport() {
+        if (products == null || products.isEmpty()) {
+            return false;
+        }
+        return hasLocalTransport(ProductCategory.BITMASK_LOCAL_TRANSPORT) || ProductCategory.S.isIn(productCategories);
+    }
+
+    public int getMaskedProductCategories(int mask) {
+        return mask & productCategories;
+    }
 }

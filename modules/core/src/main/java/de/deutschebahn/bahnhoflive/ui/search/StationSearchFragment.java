@@ -28,10 +28,8 @@ import de.deutschebahn.bahnhoflive.BaseApplication;
 import de.deutschebahn.bahnhoflive.R;
 import de.deutschebahn.bahnhoflive.analytics.IssueTracker;
 import de.deutschebahn.bahnhoflive.analytics.TrackingManager;
-import de.deutschebahn.bahnhoflive.backend.BaseRestListener;
 import de.deutschebahn.bahnhoflive.backend.SingleRequestRestListener;
 import de.deutschebahn.bahnhoflive.backend.db.publictrainstation.model.StopPlace;
-import de.deutschebahn.bahnhoflive.backend.hafas.model.HafasStation;
 import de.deutschebahn.bahnhoflive.location.BaseLocationListener;
 import de.deutschebahn.bahnhoflive.persistence.RecentSearchesStore;
 import de.deutschebahn.bahnhoflive.ui.hub.LocationFragment;
@@ -244,36 +242,6 @@ public class StationSearchFragment extends Fragment {
                                     final IssueTracker issueTracker = getIssueTracker();
                                     issueTracker.log("Failed station query: " + query);
                                     issueTracker.dispatchThrowable(new StationSearchException(reason.getMessage(), reason));
-                                }
-
-                                private void requestHafasStationsIfSlotsLeft(@NonNull List<StopPlace> stations) {
-                                    final int remainingSlots = 100 - stations.size();
-                                    if (remainingSlots > 0) {
-                                        baseApplication.getRepositories().getLocalTransportRepository()
-                                                .queryStations(query,
-                                                        location, new PureLocalTransportFilter(remainingSlots),
-                                                new BaseRestListener<List<HafasStation>>() {
-                                                    @Override
-                                                    public void onSuccess(@NonNull List<HafasStation> payload) {
-                                                        runningStationLookupRequest = null;
-                                                        if (isVisible()) {
-                                                            adapter.setHafasStations(payload);
-
-                                                        }
-                                                    }
-
-                                                    @Override
-                                                    public void onFail(VolleyError reason) {
-                                                        runningStationLookupRequest = null;
-                                                        super.onFail(reason);
-                                                        if (isVisible()) {
-                                                            adapter.setHafasError();
-
-                                                            showOrHideNoResultsView();
-                                                        }
-                                                    }
-                                                }, ORIGIN_SEARCH);
-                                    }
                                 }
 
                                 @Override

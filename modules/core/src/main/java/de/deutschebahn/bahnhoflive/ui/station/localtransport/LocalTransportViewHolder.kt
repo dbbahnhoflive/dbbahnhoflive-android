@@ -35,7 +35,8 @@ internal class LocalTransportViewHolder(parent: ViewGroup, itemClickListener: It
 
     private fun fillProductInfos(station: HafasStation) {
         transportInfos.removeAllViews()
-        val categories = ProductCategory.categoriesFromMask(station.productCategories and ProductCategory.BITMASK_LOCAL_TRANSPORT + ProductCategory.S.bitMask())
+        val categories =
+            ProductCategory.categoriesFromMask(station.getMaskedProductCategories(ProductCategory.BITMASK_LOCAL_TRANSPORT + ProductCategory.S.bitMask()))
         val inflater = LayoutInflater.from(transportInfos.context)
         if (!categories.isEmpty()) {
             for (category in categories) {

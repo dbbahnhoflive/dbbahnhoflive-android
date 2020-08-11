@@ -8,15 +8,19 @@ public class StopExtId {
     private final Long id;
 
     public StopExtId(HafasEvent hafasEvent) {
-        id = parse(hafasEvent.stopExtId);
+        this(hafasEvent.stopExtId);
     }
 
     public StopExtId(HafasStation hafasStation) {
-        id = parse(hafasStation.extId);
+        this(hafasStation.extId);
     }
 
     public StopExtId(HafasStop hafasStop) {
-        id = parse(hafasStop.extId);
+        this(hafasStop.extId);
+    }
+
+    public StopExtId(String plainId) {
+        id = parse(plainId);
     }
 
     private Long parse(String extIdString) {

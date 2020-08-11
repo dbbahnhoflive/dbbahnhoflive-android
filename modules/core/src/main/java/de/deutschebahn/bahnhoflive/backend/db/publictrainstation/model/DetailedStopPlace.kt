@@ -1,7 +1,5 @@
 package de.deutschebahn.bahnhoflive.backend.db.publictrainstation.model
 
-import com.google.gson.annotations.SerializedName
-import de.deutschebahn.bahnhoflive.backend.local.model.EvaIds
 import java.util.*
 
 class DetailedStopPlace : StopPlace() {
@@ -44,16 +42,6 @@ class DetailedStopPlace : StopPlace() {
                     it.startsWith("yes") || it.startsWith("ja")
                 }
             } ?: false
-
-
-
-    @SerializedName("_embedded")
-    var embeddings: StopPlaceEmbeddings? = null
-
-    override val evaIds
-        get() = EvaIds(listOfNotNull(evaId, *(embeddings?.neighbours?.mapNotNull {
-            it?.takeUnless { it.belongsToStation?.equals(stadaId) == false }?.evaId
-        } ?: listOf()).toTypedArray()))
 
     val hasMobilityService: Boolean
         get() = details?.mobilityService?.let { mobilityServiceString ->

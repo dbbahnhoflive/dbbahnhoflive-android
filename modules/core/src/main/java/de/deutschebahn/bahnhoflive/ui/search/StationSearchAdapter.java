@@ -122,8 +122,9 @@ class StationSearchAdapter extends RecyclerView.Adapter<ViewHolder> {
                 if (dbStation.isDbStation()) {
                     searchResult = new StopPlaceSearchResult(dbStation, recentSearchesStore, favoriteDbStationsStore);
                 } else {
-                    final HafasStation hafasStation = new HafasStation();
+                    final HafasStation hafasStation = new HafasStation(true);
                     hafasStation.extId = dbStation.getEvaId();
+                    hafasStation.evaIds = dbStation.getEvaIds();
                     final Location location = dbStation.getLocation();
                     if (location != null) {
                         hafasStation.latitude = location.getLatitude();

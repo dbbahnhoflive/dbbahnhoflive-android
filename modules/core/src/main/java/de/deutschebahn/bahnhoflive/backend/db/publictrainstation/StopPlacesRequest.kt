@@ -79,7 +79,23 @@ class StopPlacesRequest(
                     } ?: this
                 }
 //                .take(limit)
-                .toList()
+                .fold(
+                    Pair(
+                        ArrayList<StopPlace>(stopPlaces.size),
+                        HashSet<String>(stopPlaces.size)
+                    )
+                ) { acc, stopPlace ->
+
+                    if (stopPlace.isDbStation) {
+                        acc.first += stopPlace
+                    } else if (stopPlace.evaIds.ids.none {
+                            acc.second.contains(it)
+                        }) {
+                        acc.first += stopPlace
+                        acc.second += stopPlace.evaIds.ids
+                    }
+                    acc
+                }.first
 
             val forcedCacheEntryFactory =
                 ForcedCacheEntryFactory(ForcedCacheEntryFactory.DAY_IN_MILLISECONDS)

@@ -11,7 +11,6 @@ import de.deutschebahn.bahnhoflive.repository.InternalStation
 import de.deutschebahn.bahnhoflive.ui.ViewHolder
 import de.deutschebahn.bahnhoflive.ui.search.DBStationSearchResult
 import de.deutschebahn.bahnhoflive.ui.search.HafasStationSearchResult
-import de.deutschebahn.bahnhoflive.ui.station.localtransport.LocalTransportsAdapter
 import de.deutschebahn.bahnhoflive.view.SingleSelectionManager
 import java.util.*
 
@@ -113,7 +112,7 @@ internal class NearbyDeparturesAdapter(
     }
 
     companion object {
-        val TAG = LocalTransportsAdapter::class.java.simpleName
+        val TAG = NearbyDeparturesAdapter::class.java.simpleName
     }
 }
 
