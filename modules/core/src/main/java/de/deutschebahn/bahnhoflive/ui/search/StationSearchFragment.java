@@ -10,6 +10,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.inputmethod.EditorInfo;
 import android.widget.EditText;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -77,6 +78,7 @@ public class StationSearchFragment extends Fragment {
     private View coordinatorLayout;
 
     private final QueryRecorder queryRecorder = new QueryRecorder();
+    private ProgressBar progressIndicator;
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
@@ -144,6 +146,8 @@ public class StationSearchFragment extends Fragment {
                 onClearHistory();
             }
         });
+
+        progressIndicator = view.findViewById(R.id.progressIndicator);
 
         noResultsView = view.findViewById(R.id.no_results);
         noResultsView.setVisibility(View.GONE);
@@ -217,16 +221,20 @@ public class StationSearchFragment extends Fragment {
             final Location location = this.location;
 
             hideNoResultsView();
+            final ProgressBar progressIndicator = this.progressIndicator;
+            if (progressIndicator != null) {
+                progressIndicator.setVisibility(View.VISIBLE);
+            }
 
             final BaseApplication baseApplication = BaseApplication.get();
 
             runningStationLookupRequest = baseApplication.getRepositories().getStationRepository().queryStations(
-                            new SingleRequestRestListener<List<StopPlace>>() {
-                                @Override
-                                public void onSuccess(@NonNull List<StopPlace> stations) {
-                                    super.onSuccess(stations);
+                    new SingleRequestRestListener<List<StopPlace>>() {
+                        @Override
+                        public void onSuccess(@NonNull List<StopPlace> stations) {
+                            super.onSuccess(stations);
 
-                                    adapter.setDBStations(stations);
+                            adapter.setDBStations(stations);
                                     if (stations == null /* just to be sure */ || stations.isEmpty()) {
                                         queryRecorder.put(query);
                                     }
@@ -255,6 +263,8 @@ public class StationSearchFragment extends Fragment {
                                                 new BaseRestListener<List<HafasStation>>() {
                                                     @Override
                                                     public void onSuccess(@NonNull List<HafasStation> payload) {
+                                                        super.onSuccess(payload);
+
                                                         runningStationLookupRequest = null;
                                                         if (isVisible()) {
                                                             adapter.setHafasStations(payload);
@@ -265,6 +275,8 @@ public class StationSearchFragment extends Fragment {
 
                                                     @Override
                                                     public void onFail(VolleyError reason) {
+                                                        super.onFail(reason);
+
                                                         runningStationLookupRequest = null;
                                                         super.onFail(reason);
                                                         if (isVisible()) {
@@ -272,6 +284,17 @@ public class StationSearchFragment extends Fragment {
 
                                                             showOrHideNoResultsView();
                                                         }
+                                                    }
+
+                                                    @Override
+                                                    public void onDone() {
+                                                        super.onDone();
+
+                                                        final ProgressBar progressIndicator = StationSearchFragment.this.progressIndicator;
+                                                        if (progressIndicator != null) {
+                                                            progressIndicator.setVisibility(View.GONE);
+                                                        }
+
                                                     }
                                                 }, ORIGIN_SEARCH);
                                     }

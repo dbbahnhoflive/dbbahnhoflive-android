@@ -73,6 +73,18 @@
                 tools:visibility="visible"
                 android:contentDescription="@string/sr_clear_history" />
 
+            <ProgressBar
+                android:id="@+id/progressIndicator"
+                android:visibility="gone"
+                tools:visibility="visible"
+                android:indeterminate="true"
+                android:layout_width="0dp"
+                android:layout_height="0dp"
+                app:layout_constraintStart_toStartOf="@+id/clear_history"
+                app:layout_constraintEnd_toEndOf="@+id/clear_history"
+                app:layout_constraintTop_toTopOf="@+id/clear_history"
+                app:layout_constraintBottom_toBottomOf="@+id/clear_history" />
+
             <TextView
                 android:id="@+id/list_headline"
                 android:layout_width="0dp"
