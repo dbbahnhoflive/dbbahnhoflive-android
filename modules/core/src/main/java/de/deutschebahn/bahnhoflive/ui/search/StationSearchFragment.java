@@ -135,6 +135,7 @@ public class StationSearchFragment extends Fragment {
                 primeAutoSearch();
             }
         });
+        inputView.requestFocus();
 
         listHeadlineView = view.findViewById(R.id.list_headline);
         clearHistoryView = view.findViewById(R.id.clear_history);

@@ -75,7 +75,7 @@
         <activity
             android:name=".ui.search.StationSearchActivity"
             android:noHistory="true"
-            android:windowSoftInputMode="adjustPan"
+            android:windowSoftInputMode="adjustPan|stateVisible"
             android:parentActivityName=".ui.hub.HubActivity"
             android:screenOrientation="portrait">
             <meta-data
