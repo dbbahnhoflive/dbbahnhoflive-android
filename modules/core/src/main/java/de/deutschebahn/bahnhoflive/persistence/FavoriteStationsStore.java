@@ -35,9 +35,19 @@ public class FavoriteStationsStore<T> {
     };
     public static final String TAG = FavoriteStationsStore.class.getSimpleName();
 
+    private List<Listener<T>> listeners = new ArrayList<>();
+
     public void clear() {
         timestampPreferences.edit().clear().commit();
         dataPreferences.edit().clear().commit();
+
+        notifyListeners();
+    }
+
+    public void notifyListeners() {
+        for (Listener<T> listener : listeners) {
+            listener.onFavoritesChanged(this);
+        }
     }
 
     public interface ItemAdapter<T> {
@@ -82,6 +92,8 @@ public class FavoriteStationsStore<T> {
         timestampPreferences.edit()
                 .putLong(itemAdapter.getId(station), System.currentTimeMillis())
                 .commit();
+
+        notifyListeners();
     }
 
     public void remove(T station) {
@@ -95,6 +107,8 @@ public class FavoriteStationsStore<T> {
         timestampPreferences.edit()
                 .remove(id)
                 .commit();
+
+        notifyListeners();
     }
 
     public boolean isFavorite(T station) {
@@ -142,4 +156,15 @@ public class FavoriteStationsStore<T> {
         return stationWrappers;
     }
 
+    public interface Listener<T> {
+        void onFavoritesChanged(FavoriteStationsStore<T> favoriteStationsStore);
+    }
+
+    public void addListener(Listener<T> listener) {
+        listeners.add(listener);
+    }
+
+    public void removeListener(Listener<T> listener) {
+        listeners.remove(listener);
+    }
 }
