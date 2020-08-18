@@ -318,13 +318,12 @@ public class StationSearchFragment extends Fragment {
             if (adapter.hasErrors()) {
                 listHeadlineView.setText(R.string.error_data_unavailable);
                 clearHistoryView.setVisibility(View.INVISIBLE);
-                noResultsView.setText(R.string.home_suggestionsMessageError);
+                noResultsView.setVisibility(View.GONE);
             } else {
                 listHeadlineView.setText(R.string.home_suggestionsTitleNoResult);
                 clearHistoryView.setVisibility(View.INVISIBLE);
-                noResultsView.setText(R.string.home_suggestionsMessageNoResult);
+                noResultsView.setVisibility(View.VISIBLE);
             }
-            noResultsView.setVisibility(View.VISIBLE);
         } else {
             hideNoResultsView();
         }
