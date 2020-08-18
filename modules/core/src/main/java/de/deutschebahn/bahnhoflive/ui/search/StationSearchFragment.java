@@ -11,6 +11,7 @@ import android.view.ViewGroup;
 import android.view.inputmethod.EditorInfo;
 import android.widget.EditText;
 import android.widget.TextView;
+import android.widget.ViewFlipper;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -77,6 +78,7 @@ public class StationSearchFragment extends Fragment {
     private View coordinatorLayout;
 
     private final QueryRecorder queryRecorder = new QueryRecorder();
+    private ViewFlipper viewFlipper;
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
@@ -157,6 +159,8 @@ public class StationSearchFragment extends Fragment {
             }
         });
 
+        viewFlipper = view.findViewById(R.id.viewFlipper);
+
         return view;
     }
 
@@ -182,6 +186,7 @@ public class StationSearchFragment extends Fragment {
         inputView = null;
         listHeadlineView = null;
         noResultsView = null;
+        viewFlipper = null;
 
         super.onDestroyView();
     }
@@ -213,6 +218,8 @@ public class StationSearchFragment extends Fragment {
             runningStationLookupRequest.cancel();
         }
 
+        viewFlipper.setDisplayedChild(0);
+
         if (query.length() > 1) {
             final Location location = this.location;
 
@@ -221,7 +228,7 @@ public class StationSearchFragment extends Fragment {
             final BaseApplication baseApplication = BaseApplication.get();
 
             runningStationLookupRequest = baseApplication.getRepositories().getStationRepository().queryStations(
-                            new SingleRequestRestListener<List<StopPlace>>() {
+                    new SingleRequestRestListener<List<StopPlace>>() {
                                 @Override
                                 public void onSuccess(@NonNull List<StopPlace> stations) {
                                     super.onSuccess(stations);
@@ -293,6 +300,12 @@ public class StationSearchFragment extends Fragment {
     }
 
     public void showOrHideNoResultsView() {
+        if (adapter.hasErrors()) {
+            viewFlipper.setDisplayedChild(1);
+        } else {
+            viewFlipper.setDisplayedChild(0);
+        }
+
         if (adapter.getItemCount() == 0) {
             if (adapter.hasErrors()) {
                 listHeadlineView.setText(R.string.error_data_unavailable);

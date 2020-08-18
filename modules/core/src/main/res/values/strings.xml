@@ -239,5 +239,6 @@
     <string name="parking_feature_women_places">Frauenparkplätze</string>
     <string name="parking_feature_disabled_places">Behindertengerechte Parkplätze</string>
     <string name="notice_parking_lacks_location">Für diese Einrichtung liegen keine Ortsdaten vor.</string>
+    <string name="error_detail_message_station_search"><![CDATA[<b>Hinweis:</b> Daten konnten nicht geladen werden. Bitte versuchen Sie es später erneut.]]></string>
 
 </resources>

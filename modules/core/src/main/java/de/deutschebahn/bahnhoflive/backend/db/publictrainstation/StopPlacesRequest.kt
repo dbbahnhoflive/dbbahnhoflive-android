@@ -79,6 +79,8 @@ class StopPlacesRequest(
             val forcedCacheEntryFactory =
                 ForcedCacheEntryFactory(ForcedCacheEntryFactory.DAY_IN_MILLISECONDS)
 
+            throw java.lang.Exception("HAHA!")
+
             Response.success(filteredStopPlaces, forcedCacheEntryFactory.createCacheEntry(response))
         } catch (e: Exception) {
             Response.error(VolleyError(e))
