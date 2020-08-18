@@ -4,6 +4,7 @@ import android.location.Location;
 import android.os.Bundle;
 import android.os.Handler;
 import android.text.Editable;
+import android.text.Html;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -109,6 +110,13 @@ public class StationSearchFragment extends Fragment {
 
         final TextView appTitleView = view.findViewById(R.id.app_title);
         appTitleView.setText(getText(R.string.rich_app_title));
+
+        final TextView errorMessageView = view.findViewById(R.id.errorMessageDetail);
+        errorMessageView.setText(Html.fromHtml(getString(R.string.error_detail_message_station_search)));
+
+        view.findViewById(R.id.buttonRetry).setOnClickListener(v -> {
+            performSearch();
+        });
 
         recyclerView = view.findViewById(R.id.recycler);
         recyclerView.setAdapter(adapter);

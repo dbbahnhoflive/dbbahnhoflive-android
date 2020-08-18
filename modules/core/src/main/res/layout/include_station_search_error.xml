@@ -3,10 +3,8 @@
 
 <ScrollView xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    tools:showIn="@layout/fragment_station_search">
+    android:layout_height="match_parent">
 
     <LinearLayout
         android:orientation="vertical"
@@ -45,7 +43,7 @@
                 android:gravity="center"
                 android:minHeight="64dp"
                 android:textColor="@color/white"
-                tools:text="Erneut versuchen" />
+                android:text="@string/btn_retry" />
         </androidx.cardview.widget.CardView>
 
     </LinearLayout>

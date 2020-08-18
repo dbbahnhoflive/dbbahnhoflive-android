@@ -101,7 +101,7 @@ class StationSearchAdapter extends RecyclerView.Adapter<ViewHolder> {
 
     public void setDBStations(final List<StopPlace> stations) {
         this.dbStations = stations;
-
+        dbError = false;
         updateItems();
     }
 
