@@ -15,7 +15,9 @@ open class StationRepository {
         force: Boolean = false,
         limit: Int = 25,
         radius: Int = 2000,
-        mixedResults: Boolean
+        mixedResults: Boolean,
+        collapseNeighbours: Boolean,
+        pullUpFirstDbStation: Boolean
     ): Cancellable? {
         listener.fail()
         return null

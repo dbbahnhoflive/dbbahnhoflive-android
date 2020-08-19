@@ -24,64 +24,72 @@ class TimeTableProvider {
 
     fun stationLookupRequest(owner: LifecycleOwner, location: Location, stationResourceProvider: StationResourceProvider, origin: String, resultListener: StationLookupResultListener) =
         BaseApplication
-                    .get()
-            .repositories.stationRepository.queryStations(object :
-            VolleyRestListener<List<StopPlace>> {
+            .get()
+            .repositories.stationRepository.queryStations(
+                object :
+                    VolleyRestListener<List<StopPlace>> {
 
-                private var resourceClient: LifecycleResourceClient<Station, VolleyError>? = null
+                    private var resourceClient: LifecycleResourceClient<Station, VolleyError>? =
+                        null
 
-                override fun onSuccess(payload: List<StopPlace>) {
-                    payload.firstOrNull { it.isDbStation }?.asInternalStation?.let { internalStation ->
-                        val stationResource =
-                            stationResourceProvider.getStationResource(internalStation.id)
+                    override fun onSuccess(payload: List<StopPlace>) {
+                        payload.firstOrNull { it.isDbStation }?.asInternalStation?.let { internalStation ->
+                            val stationResource =
+                                stationResourceProvider.getStationResource(internalStation.id)
 
-                        stationResource.refresh()
+                            stationResource.refresh()
 
-                        resourceClient?.releaseResource()
+                            resourceClient?.releaseResource()
 
-                        resourceClient = LifecycleResourceClient<Station, VolleyError>(owner,
-                            Observer { station ->
-                                val evaIds = station!!.evaIds
-                                requestHafasStations(
-                                    location,
-                                    evaIds.ids,
-                                    origin,
-                                    resultListener,
-                                    payload
-                                )
-
-                                resultListener.onDbTimeTableResourceAvailable(
-                                    DbTimetableResource(
-                                        internalStation
-                                    )
-                                )
-                            }, null,
-                            Observer { volleyError ->
-                                if (volleyError != null) {
+                            resourceClient = LifecycleResourceClient<Station, VolleyError>(owner,
+                                Observer { station ->
+                                    val evaIds = station!!.evaIds
                                     requestHafasStations(
                                         location,
-                                        null,
+                                        evaIds.ids,
                                         origin,
                                         resultListener,
                                         payload
                                     )
 
                                     resultListener.onDbTimeTableResourceAvailable(
-                                        DbTimetableResource(internalStation)
+                                        DbTimetableResource(
+                                            internalStation
+                                        )
                                     )
-                                }
-                            }).apply {
-                            observe(stationResource)
-                        }
+                                }, null,
+                                Observer { volleyError ->
+                                    if (volleyError != null) {
+                                        requestHafasStations(
+                                            location,
+                                            null,
+                                            origin,
+                                            resultListener,
+                                            payload
+                                        )
 
-                    } ?: requestHafasStations(location, null, origin, resultListener, payload)
+                                        resultListener.onDbTimeTableResourceAvailable(
+                                            DbTimetableResource(internalStation)
+                                        )
+                                    }
+                                }).apply {
+                                observe(stationResource)
+                            }
 
-                }
+                        } ?: requestHafasStations(location, null, origin, resultListener, payload)
 
-                override fun onFail(reason: VolleyError) {
-                    resultListener.onFail(reason)
-                }
-            }, location = location, mixedResults = true, limit = 100)
+                    }
+
+                    override fun onFail(reason: VolleyError) {
+                        resultListener.onFail(reason)
+                    }
+                },
+                location = location,
+                limit = 100,
+                mixedResults = true,
+                collapseNeighbours = true,
+                pullUpFirstDbStation = true
+            )
 
     private fun requestHafasStations(
         location: Location,
