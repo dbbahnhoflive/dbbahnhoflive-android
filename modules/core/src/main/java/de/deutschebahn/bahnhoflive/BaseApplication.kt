@@ -20,7 +20,6 @@ import de.deutschebahn.bahnhoflive.repository.poisearch.PoiSearchConfigurationPr
 import de.deutschebahn.bahnhoflive.repository.station.PublicTrainStationStationRepository
 import de.deutschebahn.bahnhoflive.repository.travelcenter.PublicTrainStationTravelCenterRepository
 import de.deutschebahn.bahnhoflive.tutorial.TutorialManager
-import de.deutschebahn.bahnhoflive.ui.TimeTableProvider
 import de.deutschebahn.bahnhoflive.util.font.FontUtil
 import de.deutschebahn.bahnhoflive.util.volley.TLSSocketFactory
 import java.io.File
@@ -34,9 +33,6 @@ abstract class BaseApplication(
     lateinit var issueTracker: IssueTracker
 
     lateinit var restHelper: RestHelper
-        private set
-
-    lateinit var timeTableProvider: TimeTableProvider
         private set
 
     lateinit var poiSearchConfigurationProvider: PoiSearchConfigurationProvider
@@ -64,7 +60,6 @@ abstract class BaseApplication(
 
         val requestQueue = createRequestQueue()
         restHelper = RestHelper(requestQueue)
-        timeTableProvider = TimeTableProvider()
         poiSearchConfigurationProvider = PoiSearchConfigurationProvider(this)
         TutorialManager.getInstance(this).seedTutorials()
 

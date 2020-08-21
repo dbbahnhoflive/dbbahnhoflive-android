@@ -12,7 +12,7 @@ import java.util.List;
 import de.deutschebahn.bahnhoflive.BaseApplication;
 import de.deutschebahn.bahnhoflive.R;
 import de.deutschebahn.bahnhoflive.analytics.TrackingManager;
-import de.deutschebahn.bahnhoflive.backend.db.publictrainstation.model.Location;
+import de.deutschebahn.bahnhoflive.backend.StopPlaceXKt;
 import de.deutschebahn.bahnhoflive.backend.db.publictrainstation.model.StopPlace;
 import de.deutschebahn.bahnhoflive.backend.hafas.model.HafasStation;
 import de.deutschebahn.bahnhoflive.persistence.FavoriteStationsStore;
@@ -122,16 +122,7 @@ class StationSearchAdapter extends RecyclerView.Adapter<ViewHolder> {
                 if (dbStation.isDbStation()) {
                     searchResult = new StopPlaceSearchResult(dbStation, recentSearchesStore, favoriteDbStationsStore);
                 } else {
-                    final HafasStation hafasStation = new HafasStation(true);
-                    hafasStation.extId = dbStation.getEvaId();
-                    hafasStation.evaIds = dbStation.getEvaIds();
-                    final Location location = dbStation.getLocation();
-                    if (location != null) {
-                        hafasStation.latitude = location.getLatitude();
-                        hafasStation.longitude = location.getLongitude();
-                    }
-                    hafasStation.name = dbStation.getName();
-
+                    final HafasStation hafasStation = StopPlaceXKt.toHafasStation(dbStation);
                     searchResult = new HafasStationSearchResult(hafasStation, recentSearchesStore, favoriteHafasStationsStore);
                 }
                 searchResults.add(searchResult);

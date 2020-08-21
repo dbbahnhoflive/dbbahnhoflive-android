@@ -6,17 +6,16 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.lifecycle.ViewModelProviders
+import androidx.lifecycle.switchMap
 import com.android.volley.Request
 import de.deutschebahn.bahnhoflive.BaseApplication
 import de.deutschebahn.bahnhoflive.R
 import de.deutschebahn.bahnhoflive.analytics.TrackingManager
-import de.deutschebahn.bahnhoflive.backend.hafas.model.HafasStation
 import de.deutschebahn.bahnhoflive.backend.ris.model.RISTimetable
 import de.deutschebahn.bahnhoflive.location.BaseLocationListener
 import de.deutschebahn.bahnhoflive.permission.Permission
-import de.deutschebahn.bahnhoflive.repository.DbTimetableResource
+import de.deutschebahn.bahnhoflive.repository.LoadingStatus
 import de.deutschebahn.bahnhoflive.ui.LoadingContentDecorationViewHolder
-import de.deutschebahn.bahnhoflive.ui.TimeTableProvider
 import de.deutschebahn.bahnhoflive.util.Cancellable
 import kotlinx.android.synthetic.main.fragment_nearby_departures.*
 import java.util.*
@@ -36,17 +35,12 @@ class NearbyDeparturesFragment : androidx.fragment.app.Fragment(), Permission.Li
 
     private var askForPermission = false
 
-    private var latestLocation: Location? = null
     private var nearbyDeparturesContainerHolder: LoadingContentDecorationViewHolder? = null
     private var refreshLayout: androidx.swiperefreshlayout.widget.SwipeRefreshLayout? = null
 
     private var stationLookupRequest: Cancellable? = null
     private var timetableRequests = ArrayList<Request<RISTimetable>>()
     private var nearbyDeparturesAdapter: NearbyDeparturesAdapter? = null
-
-    private val timeTableProvider = BaseApplication
-            .get()
-            .timeTableProvider
 
     private lateinit var hubViewModel: HubViewModel
 
@@ -62,11 +56,14 @@ class NearbyDeparturesFragment : androidx.fragment.app.Fragment(), Permission.Li
             trackingManager
         )
 
-        locationFragment = LocationFragment.get(fragmentManager!!)
+        locationFragment = LocationFragment.get(parentFragmentManager)
+
+        hubViewModel = ViewModelProviders.of(requireActivity()).get(HubViewModel::class.java)
 
         if (savedInstanceState != null) {
             askForPermission = savedInstanceState.getBoolean(STATE_ASK_FOR_PERMISSION, false)
-            latestLocation = savedInstanceState.getParcelable<Location>(STATE_LATEST_LOCATION)
+            hubViewModel.locationLiveData.value =
+                savedInstanceState.getParcelable<Location>(STATE_LATEST_LOCATION)
         } else {
             val arguments = arguments
             if (arguments != null) {
@@ -74,7 +71,6 @@ class NearbyDeparturesFragment : androidx.fragment.app.Fragment(), Permission.Li
             }
         }
 
-        hubViewModel = ViewModelProviders.of(activity!!).get(HubViewModel::class.java)
     }
 
     override fun setUserVisibleHint(isVisibleToUser: Boolean) {
@@ -98,13 +94,43 @@ class NearbyDeparturesFragment : androidx.fragment.app.Fragment(), Permission.Li
 
         nearbyDeparturesContainerHolder = LoadingContentDecorationViewHolder(view_flipper)
         recycler.apply {
-            addItemDecoration(androidx.recyclerview.widget.DividerItemDecoration(view.context, androidx.recyclerview.widget.DividerItemDecoration.VERTICAL))
+            addItemDecoration(
+                androidx.recyclerview.widget.DividerItemDecoration(
+                    view.context,
+                    androidx.recyclerview.widget.DividerItemDecoration.VERTICAL
+                )
+            )
             adapter = nearbyDeparturesAdapter
         }
         locationPermissionCard.setOnClickListener { locationPermission.request(activity) }
         refreshLayout = refresher.apply {
             setOnRefreshListener(this@NearbyDeparturesFragment)
         }
+
+        hubViewModel.nearbyStopPlacesWithTimetableResourcesLiveData.observe(
+            viewLifecycleOwner,
+            androidx.lifecycle.Observer {
+                nearbyDeparturesContainerHolder?.run {
+                    if (it?.first?.isNotEmpty() == true) {
+                        showContent()
+                    } else {
+                        showEmpty()
+                    }
+                }
+                nearbyDeparturesAdapter?.setData(it.first, it.second)
+            })
+
+        hubViewModel.nearbyStopPlacesResourceLiveData.switchMap { it.error }
+            .observe(viewLifecycleOwner, androidx.lifecycle.Observer {
+                if (it != null) {
+                    nearbyDeparturesContainerHolder?.showError()
+                }
+            })
+
+        hubViewModel.nearbyStopPlacesResourceLiveData.switchMap { it.loadingStatus }
+            .observe(viewLifecycleOwner, androidx.lifecycle.Observer {
+                if (it == LoadingStatus.BUSY) nearbyDeparturesContainerHolder?.showProgress()
+            })
     }
 
     override fun onDestroyView() {
@@ -168,8 +194,6 @@ class NearbyDeparturesFragment : androidx.fragment.app.Fragment(), Permission.Li
     }
 
     override fun onRefresh() {
-        latestLocation = null
-
         updateLocation(true)
     }
 
@@ -215,70 +239,14 @@ class NearbyDeparturesFragment : androidx.fragment.app.Fragment(), Permission.Li
 
 
     private fun onLocationUpdated(location: Location?) {
-        location?.let {
-            if (latestLocation != null && it.distanceTo(latestLocation) < 500) {
-                return
-            }
-
-            latestLocation = it
-            requestNearbyStations(it)
-        }
-
+        hubViewModel.locationLiveData.value = location
     }
 
     override fun onSaveInstanceState(outState: Bundle) {
         super.onSaveInstanceState(outState)
 
         outState.putBoolean(STATE_ASK_FOR_PERMISSION, askForPermission)
-        outState.putParcelable(STATE_LATEST_LOCATION, latestLocation)
-    }
-
-    private fun requestNearbyStations(location: Location) {
-        stationLookupRequest?.cancel()
-
-        nearbyDeparturesContainerHolder?.run {
-            nearbyDeparturesAdapter?.takeIf { it.itemCount < 1 }?.run {
-                showProgress()
-            }
-        }
-
-        stationLookupRequest = timeTableProvider.stationLookupRequest(this, location, hubViewModel, HubFragment.ORIGIN_HUB, object : TimeTableProvider.StationLookupResultListener {
-            override fun onDbTimeTableResourceAvailable(timeTableResoure: DbTimetableResource) {
-                stationLookupRequest = null
-
-                nearbyDeparturesAdapter?.setDbTimetables(Arrays.asList(timeTableResoure))
-
-                timeTableResoure.data.observe(this@NearbyDeparturesFragment, androidx.lifecycle.Observer {
-                    nearbyDeparturesAdapter?.notifyContentUpdated()
-
-                })
-            }
-
-            override fun onHafasStationsAvailable(hafasStations: List<HafasStation>) {
-                stationLookupRequest = null
-
-                nearbyDeparturesContainerHolder?.showContent()
-
-                nearbyDeparturesAdapter?.setHafasStations(hafasStations)
-
-                if (!hafasStations.isEmpty()) {
-                    hubViewModel.buildhafasData(hafasStations)
-                    refreshLayout?.isRefreshing = false
-                }
-            }
-
-            override fun onFail(error: Exception) {
-                stationLookupRequest = null
-
-                refreshLayout?.isRefreshing = false
-
-                nearbyDeparturesContainerHolder?.apply {
-                    nearbyDeparturesAdapter?.takeIf { it.itemCount == 0 }?.run {
-                        showError()
-                    }
-                }            }
-        } )
-
+        outState.putParcelable(STATE_LATEST_LOCATION, hubViewModel.locationLiveData.value)
     }
 
 }
