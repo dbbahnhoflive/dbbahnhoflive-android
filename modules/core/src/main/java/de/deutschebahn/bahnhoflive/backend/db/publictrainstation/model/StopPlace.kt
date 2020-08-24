@@ -39,15 +39,14 @@ open class StopPlace {
 
     val asInternalStation
         get() = stadaId?.let { stadaId ->
-            evaId?.let { evaId ->
-                InternalStation(stadaId, name, location?.toLatLng(), evaId)
-            }
+            InternalStation(stadaId, name, location?.toLatLng(), evaIds)
         }
 
-    val evaIds
-        get() = EvaIds(listOfNotNull(evaId, *(embeddings?.neighbours?.mapNotNull { neighbour ->
+    val evaIds by lazy {
+        EvaIds(listOfNotNull(evaId, *(embeddings?.neighbours?.mapNotNull { neighbour ->
             neighbour?.takeUnless { isDbStation && it.belongsToStation?.equals(stadaId) == false }?.evaId
         } ?: listOf()).toTypedArray()))
+    }
 
     var distanceInKm: Float = -1f
 

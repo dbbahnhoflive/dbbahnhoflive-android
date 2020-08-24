@@ -65,7 +65,7 @@ internal class NearbyDeparturesAdapter(
 
     override fun getItemViewType(position: Int) = items?.get(position)?.type ?: 0
 
-    override fun getItemCount() = Math.min(items?.size ?: 0, 20)
+    override fun getItemCount() = items?.size ?: 0
 
     fun notifyContentUpdated() {
         notifyItemRangeChanged(0, itemCount)
@@ -75,24 +75,24 @@ internal class NearbyDeparturesAdapter(
         singleSelectionManager.clearSelection()
     }
 
-    fun setData(stopPlaces: List<StopPlace>, dbTimeTables: List<DbTimetableResource>) {
+    fun setData(stopPlaces: List<StopPlace>, dbTimetables: List<DbTimetableResource>) {
         clearSelection()
 
-        items = stopPlaces.mapNotNull {
+        items = stopPlaces.mapNotNull { stopPlace ->
             when {
-                it.isDbStation -> {
+                stopPlace.isDbStation -> {
                     NearbyDbStationItem(
                         StopPlaceSearchResult(
-                            it,
+                            stopPlace,
                             recentSearchesStore,
                             favoriteStationsStore
                         )
                     )
                 }
-                it.isLocalTransportStation -> {
+                stopPlace.isLocalTransportStation -> {
                     NearbyHafasStationItem(
                         HafasStationSearchResult(
-                            it.toHafasStation(),
+                            stopPlace.toHafasStation(),
                             recentSearchesStore,
                             favoriteHafasStationsStore
                         )

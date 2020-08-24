@@ -41,7 +41,7 @@ public class InternalStation implements Parcelable, Station {
         this(station.getId(), station.getTitle(), station.getLocation(), station.getEvaIds());
     }
 
-    private InternalStation(@NonNull String id, String title, LatLng location, @NonNull EvaIds evaIds) {
+    public InternalStation(@NonNull String id, String title, LatLng location, @NonNull EvaIds evaIds) {
         this.id = id;
         this.title = title;
         if (location != null && (location.latitude != 0 || location.longitude != 0)) {

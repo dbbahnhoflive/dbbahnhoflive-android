@@ -12,7 +12,7 @@ import de.deutschebahn.bahnhoflive.backend.db.publictrainstation.model.DetailedS
 import de.deutschebahn.bahnhoflive.backend.db.publictrainstation.model.StopPlace;
 import de.deutschebahn.bahnhoflive.backend.local.model.EvaIds;
 import de.deutschebahn.bahnhoflive.repository.timetable.Timetable;
-import de.deutschebahn.bahnhoflive.repository.timetable.TimetableRepository;
+import de.deutschebahn.bahnhoflive.repository.timetable.TimetableCollector;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.disposables.Disposable;
 
@@ -24,7 +24,7 @@ public class DbTimetableResource extends RemoteResource<Timetable> {
     private String stationId;
     private String stationName;
 
-    private final TimetableRepository timetableCollector = BaseApplication.get().getRepositories().getTimetableRepository();
+    private final TimetableCollector timetableCollector = BaseApplication.get().getRepositories().getTimetableRpository().createTimetableCollector();
 
     private final Disposable disposable = timetableCollector
             .getMergedTrainInfosObservable()
