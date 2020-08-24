@@ -41,6 +41,7 @@ import de.deutschebahn.bahnhoflive.R;
 import de.deutschebahn.bahnhoflive.analytics.TrackingManager;
 import de.deutschebahn.bahnhoflive.backend.BaseRestListener;
 import de.deutschebahn.bahnhoflive.backend.RestHelper;
+import de.deutschebahn.bahnhoflive.backend.StopPlaceXKt;
 import de.deutschebahn.bahnhoflive.backend.db.fasta2.model.FacilityStatus;
 import de.deutschebahn.bahnhoflive.backend.db.publictrainstation.model.StopPlace;
 import de.deutschebahn.bahnhoflive.backend.hafas.LocalTransportFilter;
@@ -496,6 +497,8 @@ public class MapOverlayFragment extends Fragment implements OnMapReadyCallback, 
         if (highlightedMarkerBinder != null) {
             snapToFlyout(highlightedMarkerBinder);
         }
+
+        mapViewModel.getNearbyStopPlacesLiveData().observe(getViewLifecycleOwner(), this::updateNearbyStations);
     }
 
     public TrackingManager getTrackingManager() {
@@ -632,38 +635,7 @@ public class MapOverlayFragment extends Fragment implements OnMapReadyCallback, 
                             lastLocation = location;
                             mapInterface.setLocation(new LatLng(location.getLatitude(), location.getLongitude()), DEFAULT_ZOOM);
 
-                            if (stationResource == null || stationResource.getData().getValue() == null) {
-                                baseApplication.getRepositories().getStationRepository().queryStations(new BaseRestListener<List<StopPlace>>() {
-                                    @Override
-                                    public void onSuccess(@NonNull final List<StopPlace> payload) {
-                                        final ArrayList<String> mergedEvaIds = new ArrayList<>();
-
-                                        final CountDownLatch countDownLatch = new CountDownLatch(payload.size());
-
-                                        for (StopPlace stopPlace : payload) {
-                                            final StationResource stationResource = mapViewModel.getStationResource(stopPlace.getStadaId());
-                                            final LiveData<Station> stationResourceData = stationResource.getData();
-                                            stationResourceData.observe(MapOverlayFragment.this, new Observer<Station>() {
-                                                @Override
-                                                public void onChanged(@Nullable Station station) {
-                                                    if (station != null && station.getEvaIds() != null && station.getEvaIds().getIds() != null) {
-                                                        mergedEvaIds.addAll(station.getEvaIds().getIds());
-                                                    }
-
-                                                    stationResourceData.removeObserver(this);
-
-                                                    countDownLatch.countDown();
-                                                    if (countDownLatch.getCount() <= 0) {
-                                                        requestNearbyHafasStations(location, mergedEvaIds);
-
-                                                        updateNearbyStations(payload);
-                                                    }
-                                                }
-                                            });
-                                        }
-                                    }
-                                }, null, location, false, 25, 5000, false, false, false);
-                            }
+                            mapViewModel.getLocationLiveData().postValue(location);
                         }
                     }
                 });
@@ -707,22 +679,31 @@ public class MapOverlayFragment extends Fragment implements OnMapReadyCallback, 
         final MapContentPreserver<Filter, List<MarkerBinder>> contentPreserver = new MapContentPreserver<>(categorizedMarkerBinders, new ArrayListFactory<>());
 
         final List<StadaStationRequestArguments> stationRequestArgumentsList = new ArrayList<>();
+        final List<HafasTimetable> localTransportTimetables = new ArrayList<>(stations.size());
 
         for (final StopPlace stopPlace : stations) {
-            final RimapFilter.Item filterItem = rimapFilter.getStationFilterItem();
+            final String stadaId = stopPlace.getStadaId();
+            if (stadaId == null) {
+                localTransportTimetables.add(new HafasTimetable(StopPlaceXKt.toHafasStation(stopPlace)));
+            } else {
 
-            if (filterItem == null) {
-                continue;
+                final RimapFilter.Item filterItem = rimapFilter.getStationFilterItem();
+
+                if (filterItem == null) {
+                    continue;
+                }
+
+                final List<MarkerBinder> categoryMarkerBinders = contentPreserver.get(filterItem);
+
+                if (categoryMarkerBinders.size() > 2 && stopPlace.getDistanceInKm() > 2 || categoryMarkerBinders.size() > 10) {
+                    break;
+                }
+
+                stationRequestArgumentsList.add(new StadaStationRequestArguments(mapViewModel.getStationResource(stadaId), filterItem, categoryMarkerBinders, stopPlace));
             }
-
-            final List<MarkerBinder> categoryMarkerBinders = contentPreserver.get(filterItem);
-
-            if (categoryMarkerBinders.size() > 2 && stopPlace.getDistanceInKm() > 2 || categoryMarkerBinders.size() > 10) {
-                break;
-            }
-
-            stationRequestArgumentsList.add(new StadaStationRequestArguments(mapViewModel.getStationResource(stopPlace.getStadaId()), filterItem, categoryMarkerBinders, stopPlace));
         }
+
+        updateHafasStations(localTransportTimetables);
 
         final CountDownLatch countDownLatch = new CountDownLatch(stationRequestArgumentsList.size());
 

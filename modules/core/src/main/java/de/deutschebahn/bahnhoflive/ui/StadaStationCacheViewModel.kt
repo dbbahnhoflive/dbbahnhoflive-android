@@ -1,34 +1,42 @@
-package de.deutschebahn.bahnhoflive.ui;
+package de.deutschebahn.bahnhoflive.ui
 
-import androidx.annotation.NonNull;
-import androidx.lifecycle.ViewModel;
+import android.location.Location
+import androidx.lifecycle.*
+import de.deutschebahn.bahnhoflive.repository.StationResource
+import de.deutschebahn.bahnhoflive.repository.StationResourceProvider
+import de.deutschebahn.bahnhoflive.repository.stationsearch.NearbyStopPlacesResource
+import java.util.*
 
-import java.util.HashMap;
-import java.util.Map;
+open class StadaStationCacheViewModel : ViewModel(), StationResourceProvider {
+    private val cache: MutableMap<String, StationResource> = HashMap()
+    val locationLiveData = MutableLiveData<Location>()
+    val smoothedLocationLiveData = MediatorLiveData<Location>().apply {
+        addSource(locationLiveData) { location ->
+            if (location == null) {
+                return@addSource
+            }
 
-import de.deutschebahn.bahnhoflive.repository.StationResource;
-import de.deutschebahn.bahnhoflive.repository.StationResourceProvider;
+            val currentValue = value
 
-public class StadaStationCacheViewModel extends ViewModel implements StationResourceProvider {
-    private final Map<String, StationResource> cache = new HashMap<>();
-
-    @Override
-    public StationResource getStationResource(String id) {
-        return getStationResource(id, new StationResource(id));
+            if (currentValue == null || currentValue.distanceTo(location) > 500) {
+                value = location
+            }
+        }
+    }
+    val nearbyStopPlacesResourceLiveData =
+        NearbyStopPlacesResource(true).let { nearbyStopPlacesResource ->
+            smoothedLocationLiveData.map {
+                nearbyStopPlacesResource.apply {
+                    location = it
+                }
+            }
+        }
+    val nearbyStopPlacesLiveData = nearbyStopPlacesResourceLiveData.switchMap {
+        it?.data
     }
 
-    @NonNull
-    private StationResource getStationResource(String id, StationResource newResource) {
-        StationResource stationResource = cache.get(id);
-
-        if (stationResource == null) {
-            stationResource = newResource;
-            cache.put(id, stationResource);
-        } else {
-            stationResource.refresh();
-        }
-
-        return stationResource;
+    override fun getStationResource(id: String): StationResource {
+        return cache.getOrPut(id) { StationResource(id) }
     }
 
 }
