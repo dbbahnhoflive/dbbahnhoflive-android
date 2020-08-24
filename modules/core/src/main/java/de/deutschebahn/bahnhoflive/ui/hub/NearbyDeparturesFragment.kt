@@ -107,17 +107,17 @@ class NearbyDeparturesFragment : androidx.fragment.app.Fragment(), Permission.Li
             setOnRefreshListener(this@NearbyDeparturesFragment)
         }
 
-        hubViewModel.nearbyStopPlacesWithTimetableResourcesLiveData.observe(
+        hubViewModel.nearbyStopPlacesLiveData.observe(
             viewLifecycleOwner,
             androidx.lifecycle.Observer {
                 nearbyDeparturesContainerHolder?.run {
-                    if (it?.first?.isNotEmpty() == true) {
+                    if (it?.isNotEmpty() == true) {
                         showContent()
                     } else {
                         showEmpty()
                     }
                 }
-                nearbyDeparturesAdapter?.setData(it.first, it.second)
+                nearbyDeparturesAdapter?.setData(it)
             })
 
         hubViewModel.nearbyStopPlacesResourceLiveData.switchMap { it.error }

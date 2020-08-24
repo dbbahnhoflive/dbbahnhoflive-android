@@ -8,14 +8,11 @@ import de.deutschebahn.bahnhoflive.backend.hafas.model.HafasStation
 import de.deutschebahn.bahnhoflive.backend.toHafasStation
 import de.deutschebahn.bahnhoflive.persistence.FavoriteStationsStore
 import de.deutschebahn.bahnhoflive.persistence.RecentSearchesStore
-import de.deutschebahn.bahnhoflive.repository.DbTimetableResource
 import de.deutschebahn.bahnhoflive.repository.InternalStation
 import de.deutschebahn.bahnhoflive.ui.ViewHolder
-import de.deutschebahn.bahnhoflive.ui.search.DBStationSearchResult
 import de.deutschebahn.bahnhoflive.ui.search.HafasStationSearchResult
 import de.deutschebahn.bahnhoflive.ui.search.StopPlaceSearchResult
 import de.deutschebahn.bahnhoflive.view.SingleSelectionManager
-import java.util.*
 
 internal class NearbyDeparturesAdapter(
         private val owner: LifecycleOwner,
@@ -41,13 +38,6 @@ internal class NearbyDeparturesAdapter(
     private var items: List<NearbyStationItem>? = null
 
 
-    private val hafasTimetables = ArrayList<HafasStationSearchResult>()
-
-    private var dbTimetables: MutableList<DBStationSearchResult>? = null
-
-    private val dbStationCount: Int
-        get() = Math.min(1, if (dbTimetables == null) 0 else dbTimetables!!.size)
-
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder<*> =
         when (viewType) {
             1 -> NearbyDeparturesViewHolder(parent, owner, singleSelectionManager, trackingManager)
@@ -67,15 +57,11 @@ internal class NearbyDeparturesAdapter(
 
     override fun getItemCount() = items?.size ?: 0
 
-    fun notifyContentUpdated() {
-        notifyItemRangeChanged(0, itemCount)
-    }
-
     fun clearSelection() {
         singleSelectionManager.clearSelection()
     }
 
-    fun setData(stopPlaces: List<StopPlace>, dbTimetables: List<DbTimetableResource>) {
+    fun setData(stopPlaces: List<StopPlace>) {
         clearSelection()
 
         items = stopPlaces.mapNotNull { stopPlace ->
