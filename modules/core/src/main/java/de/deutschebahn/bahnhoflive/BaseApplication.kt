@@ -17,7 +17,6 @@ import de.deutschebahn.bahnhoflive.repository.RepositoryHolder
 import de.deutschebahn.bahnhoflive.repository.elevator.Fasta2ElevatorStatusRepository
 import de.deutschebahn.bahnhoflive.repository.poisearch.PoiSearchConfigurationProvider
 import de.deutschebahn.bahnhoflive.repository.station.PublicTrainStationStationRepository
-import de.deutschebahn.bahnhoflive.repository.travelcenter.PublicTrainStationTravelCenterRepository
 import de.deutschebahn.bahnhoflive.tutorial.TutorialManager
 import de.deutschebahn.bahnhoflive.ui.TimeTableProvider
 import de.deutschebahn.bahnhoflive.util.font.FontUtil
@@ -72,10 +71,6 @@ abstract class BaseApplication(
 
         return RepositoryHolder(
             stationRepository = PublicTrainStationStationRepository(
-                restHelper,
-                dbAuthorizationTool
-            ),
-            travelCenterRepository = PublicTrainStationTravelCenterRepository(
                 restHelper,
                 dbAuthorizationTool
             ),

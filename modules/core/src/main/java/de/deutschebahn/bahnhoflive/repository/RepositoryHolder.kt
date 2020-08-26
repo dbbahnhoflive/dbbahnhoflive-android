@@ -10,13 +10,11 @@ import de.deutschebahn.bahnhoflive.repository.news.NewsRepository
 import de.deutschebahn.bahnhoflive.repository.parking.ParkingRepository
 import de.deutschebahn.bahnhoflive.repository.station.StationRepository
 import de.deutschebahn.bahnhoflive.repository.timetable.TimetableRepository
-import de.deutschebahn.bahnhoflive.repository.travelcenter.TravelCenterRepository
 import de.deutschebahn.bahnhoflive.repository.wagonorder.WagonOrderRepository
 
 data class RepositoryHolder(
     val stationRepository: StationRepository = StationRepository(),
     val localTransportRepository: LocalTransportRepository = LocalTransportRepository(),
-    val travelCenterRepository: TravelCenterRepository = TravelCenterRepository(),
     val newsRepository: NewsRepository = NewsRepository(),
     val elevatorStatusRepository: ElevatorStatusRepository = ElevatorStatusRepository(),
     val wagonOrderRepository: WagonOrderRepository = WagonOrderRepository(),

@@ -16,7 +16,6 @@ import de.deutschebahn.bahnhoflive.analytics.TrackingManager
 import de.deutschebahn.bahnhoflive.backend.VolleyRestListener
 import de.deutschebahn.bahnhoflive.backend.db.newsapi.GroupId
 import de.deutschebahn.bahnhoflive.backend.db.newsapi.model.News
-import de.deutschebahn.bahnhoflive.backend.db.publictrainstation.model.TravelCenter
 import de.deutschebahn.bahnhoflive.backend.einkaufsbahnhof.model.StationList
 import de.deutschebahn.bahnhoflive.backend.hafas.model.ProductCategory
 import de.deutschebahn.bahnhoflive.backend.local.model.ChatbotStation
@@ -310,24 +309,16 @@ class StationViewModel : HafasTimetableViewModel() {
         stationNavigation?.showLocalTransport()
     }
 
-    val travelCenterLiveData = Transformations.switchMap(stationResource.data) {
-        it?.location?.let { position ->
-            MutableLiveData<TravelCenter>().apply {
-                application.repositories.travelCenterRepository.queryTravelCenter(
-                    position,
-                    object : VolleyRestListener<TravelCenter?> {
-                    override fun onSuccess(payload: TravelCenter?) {
-                        value = payload
-                    }
-
-                    override fun onFail(reason: VolleyError?) {
-                    }
-                    })
-            }
-        }
+    val travelCenterLiveData = Transformations.map(detailedStopPlaceResource.data) {
+        it.travelCenter
     }
 
-    val infoAndServices = InfoAndServices(detailedStopPlaceResource, staticInfoLiveData, travelCenterLiveData, shopsResource)
+    val infoAndServices = InfoAndServices(
+        detailedStopPlaceResource,
+        staticInfoLiveData,
+        travelCenterLiveData,
+        shopsResource
+    )
     val serviceNumbers = ServiceNumbers(detailedStopPlaceResource, staticInfoLiveData)
 
     private val application: BaseApplication
