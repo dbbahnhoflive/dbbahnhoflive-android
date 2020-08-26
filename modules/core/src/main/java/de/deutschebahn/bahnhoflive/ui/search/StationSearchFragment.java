@@ -4,6 +4,7 @@ import android.location.Location;
 import android.os.Bundle;
 import android.os.Handler;
 import android.text.Editable;
+import android.text.Html;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -12,6 +13,7 @@ import android.view.inputmethod.EditorInfo;
 import android.widget.EditText;
 import android.widget.ProgressBar;
 import android.widget.TextView;
+import android.widget.ViewFlipper;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -76,6 +78,7 @@ public class StationSearchFragment extends Fragment {
 
     private final QueryRecorder queryRecorder = new QueryRecorder();
     private ProgressBar progressIndicator;
+    private ViewFlipper viewFlipper;
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
@@ -106,6 +109,13 @@ public class StationSearchFragment extends Fragment {
 
         final TextView appTitleView = view.findViewById(R.id.app_title);
         appTitleView.setText(getText(R.string.rich_app_title));
+
+        final TextView errorMessageView = view.findViewById(R.id.errorMessageDetail);
+        errorMessageView.setText(Html.fromHtml(getString(R.string.error_detail_message_station_search)));
+
+        view.findViewById(R.id.buttonRetry).setOnClickListener(v -> {
+            performSearch();
+        });
 
         recyclerView = view.findViewById(R.id.recycler);
         recyclerView.setAdapter(adapter);
@@ -158,6 +168,8 @@ public class StationSearchFragment extends Fragment {
             }
         });
 
+        viewFlipper = view.findViewById(R.id.viewFlipper);
+
         return view;
     }
 
@@ -183,6 +195,7 @@ public class StationSearchFragment extends Fragment {
         inputView = null;
         listHeadlineView = null;
         noResultsView = null;
+        viewFlipper = null;
 
         super.onDestroyView();
     }
@@ -213,6 +226,8 @@ public class StationSearchFragment extends Fragment {
         if (runningStationLookupRequest != null) {
             runningStationLookupRequest.cancel();
         }
+
+        viewFlipper.setDisplayedChild(0);
 
         if (query.length() > 1) {
             final Location location = this.location;
@@ -270,17 +285,22 @@ public class StationSearchFragment extends Fragment {
     }
 
     public void showOrHideNoResultsView() {
+        if (adapter.hasErrors()) {
+            viewFlipper.setDisplayedChild(1);
+        } else {
+            viewFlipper.setDisplayedChild(0);
+        }
+
         if (adapter.getItemCount() == 0) {
             if (adapter.hasErrors()) {
                 listHeadlineView.setText(R.string.error_data_unavailable);
                 clearHistoryView.setVisibility(View.INVISIBLE);
-                noResultsView.setText(R.string.home_suggestionsMessageError);
+                noResultsView.setVisibility(View.GONE);
             } else {
                 listHeadlineView.setText(R.string.home_suggestionsTitleNoResult);
                 clearHistoryView.setVisibility(View.INVISIBLE);
-                noResultsView.setText(R.string.home_suggestionsMessageNoResult);
+                noResultsView.setVisibility(View.VISIBLE);
             }
-            noResultsView.setVisibility(View.VISIBLE);
         } else {
             hideNoResultsView();
         }
