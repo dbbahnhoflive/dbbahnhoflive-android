@@ -19,12 +19,15 @@ class StopPlacesRequest(
     query: String? = null,
     private val location: Location? = null,
     force: Boolean = false,
-    private val limit: Int = 25,
-    radius: Int = 2000
+    private val limit: Int = 100,
+    radius: Int = 2000,
+    private val mixedResults: Boolean,
+    private val collapseNeighbours: Boolean,
+    private val pullUpFirstDbStation: Boolean
 ) : PublicTrainStationRequest<List<StopPlace>>(
     Method.GET,
     "stop-places?" + sequenceOf(
-        "size" to (50 + limit * 8).toString()
+        "size" to (limit).toString()
     ).let { sequence ->
         query?.trim()?.takeUnless { it.isEmpty() }?.let { "name" to URLEncoder.encode(it, "UTF-8") }
             ?.let { sequence.plus(it) }
@@ -58,9 +61,12 @@ class StopPlacesRequest(
             val stationQueryResponseParser = GsonResponseParser(StopPlacesPage::class.java)
             val stopPlacesPage = stationQueryResponseParser.parseResponse(response)
             val stopPlaces = stopPlacesPage.stopPlaces ?: emptyList()
-            val filteredStopPlaces = stopPlaces.asSequence()
+            val filteredStopPlaceSequence = stopPlaces.asSequence()
                 .filterNotNull()
-                .filter { it.isDbStation }
+                .filter(
+                    if (mixedResults) { stopPlace -> stopPlace.isLocalTransportStation || stopPlace.isDbStation }
+                    else { stopPlace -> stopPlace.isDbStation }
+                )
                 .run {
                     location?.let { location ->
                         val distanceCalulator =
@@ -70,11 +76,46 @@ class StopPlacesRequest(
                             )
                         onEach { stopPlace ->
                             stopPlace.calculateDistance(distanceCalulator)
-                        }.sortedBy { it.distanceInKm }
+                        }
+//                            .sortedBy { it.distanceInKm }
                     } ?: this
                 }
-                .take(limit)
-                .toList()
+//                .take(limit)
+
+            val filteredStopPlaces =
+                if (collapseNeighbours) {
+                    if (pullUpFirstDbStation) {
+                        filteredStopPlaceSequence
+                            .sortedBy { it.distanceInKm }
+                            .let { sortedSequence ->
+                                sortedSequence.firstOrNull { it.isDbStation }
+                                    ?.let { firstDbStation ->
+                                        sequenceOf(firstDbStation).plus(sortedSequence.filterNot { it == firstDbStation })
+                                    } ?: sortedSequence
+                            }
+                    } else {
+                        filteredStopPlaceSequence
+                    }
+                        .fold(
+                            Pair(
+                                ArrayList<StopPlace>(stopPlaces.size),
+                                HashSet<String>(stopPlaces.size)
+                            )
+                        ) { acc, stopPlace ->
+
+                            if (stopPlace.isDbStation) {
+                                acc.first += stopPlace
+                            } else if (stopPlace.evaIds.ids.none {
+                                    acc.second.contains(it)
+                                }) {
+                                acc.first += stopPlace
+                                acc.second += stopPlace.evaIds.ids
+                            }
+                            acc
+                        }.first
+                } else {
+                    filteredStopPlaceSequence.toCollection(ArrayList(stopPlaces.size))
+                }
 
             val forcedCacheEntryFactory =
                 ForcedCacheEntryFactory(ForcedCacheEntryFactory.DAY_IN_MILLISECONDS)

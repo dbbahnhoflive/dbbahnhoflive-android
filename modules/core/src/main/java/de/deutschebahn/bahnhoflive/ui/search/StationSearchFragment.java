@@ -22,17 +22,14 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.android.volley.Request;
 import com.android.volley.VolleyError;
 
-import java.util.Collections;
 import java.util.List;
 
 import de.deutschebahn.bahnhoflive.BaseApplication;
 import de.deutschebahn.bahnhoflive.R;
 import de.deutschebahn.bahnhoflive.analytics.IssueTracker;
 import de.deutschebahn.bahnhoflive.analytics.TrackingManager;
-import de.deutschebahn.bahnhoflive.backend.BaseRestListener;
 import de.deutschebahn.bahnhoflive.backend.SingleRequestRestListener;
 import de.deutschebahn.bahnhoflive.backend.db.publictrainstation.model.StopPlace;
-import de.deutschebahn.bahnhoflive.backend.hafas.model.HafasStation;
 import de.deutschebahn.bahnhoflive.location.BaseLocationListener;
 import de.deutschebahn.bahnhoflive.persistence.RecentSearchesStore;
 import de.deutschebahn.bahnhoflive.ui.hub.LocationFragment;
@@ -231,7 +228,7 @@ public class StationSearchFragment extends Fragment {
                                         queryRecorder.put(query);
                                     }
 
-                                    requestHafasStationsIfSlotsLeft(stations);
+                                    showOrHideNoResultsView();
                                 }
 
                                 @Override
@@ -239,42 +236,12 @@ public class StationSearchFragment extends Fragment {
                                     super.onFail(reason);
 
                                     adapter.setDBError();
+
+                                    showOrHideNoResultsView();
+
                                     final IssueTracker issueTracker = getIssueTracker();
                                     issueTracker.log("Failed station query: " + query);
                                     issueTracker.dispatchThrowable(new StationSearchException(reason.getMessage(), reason));
-
-                                    requestHafasStationsIfSlotsLeft(Collections.emptyList());
-                                }
-
-                                private void requestHafasStationsIfSlotsLeft(@NonNull List<StopPlace> stations) {
-                                    final int remainingSlots = 100 - stations.size();
-                                    if (remainingSlots > 0) {
-                                        baseApplication.getRepositories().getLocalTransportRepository()
-                                                .queryStations(query,
-                                                        location, new PureLocalTransportFilter(remainingSlots),
-                                                new BaseRestListener<List<HafasStation>>() {
-                                                    @Override
-                                                    public void onSuccess(@NonNull List<HafasStation> payload) {
-                                                        runningStationLookupRequest = null;
-                                                        if (isVisible()) {
-                                                            adapter.setHafasStations(payload);
-
-                                                            showOrHideNoResultsView();
-                                                        }
-                                                    }
-
-                                                    @Override
-                                                    public void onFail(VolleyError reason) {
-                                                        runningStationLookupRequest = null;
-                                                        super.onFail(reason);
-                                                        if (isVisible()) {
-                                                            adapter.setHafasError();
-
-                                                            showOrHideNoResultsView();
-                                                        }
-                                                    }
-                                                }, ORIGIN_SEARCH);
-                                    }
                                 }
 
                                 @Override
@@ -283,7 +250,7 @@ public class StationSearchFragment extends Fragment {
                                         runningStationLookupRequest = null;
                                     }
                                 }
-                            }, query, null, false, 25, 10000);
+                            }, query, null, false, 25, 10000, true, true, false);
         } else {
             listHeadlineView.setText(R.string.search_history);
             clearHistoryView.setVisibility(View.VISIBLE);

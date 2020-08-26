@@ -1,6 +1,7 @@
 package de.deutschebahn.bahnhoflive.backend.db.publictrainstation.model
 
 import com.google.android.gms.maps.model.LatLng
+import com.google.gson.annotations.SerializedName
 import de.deutschebahn.bahnhoflive.backend.db.publictrainstation.DistanceCalulator
 import de.deutschebahn.bahnhoflive.backend.local.model.EvaIds
 import de.deutschebahn.bahnhoflive.repository.InternalStation
@@ -14,6 +15,9 @@ open class StopPlace {
     var alternativeNames: List<String>? = null
 
     var identifiers: List<Identifier?>? = null
+
+    @SerializedName("_embedded")
+    var embeddings: StopPlaceEmbeddings? = null
 
     var location: Location? = null
 
@@ -31,14 +35,18 @@ open class StopPlace {
 
     val isDbStation get() = stadaId != null && evaId != null
 
+    val isLocalTransportStation get() = stadaId == null && evaId != null
+
     val asInternalStation
         get() = stadaId?.let { stadaId ->
-            evaId?.let { evaId ->
-                InternalStation(stadaId, name, location?.toLatLng(), evaId)
-            }
+            InternalStation(stadaId, name, location?.toLatLng(), evaIds)
         }
 
-    open val evaIds get() = EvaIds(listOfNotNull(evaId))
+    val evaIds by lazy {
+        EvaIds(listOfNotNull(evaId, *(embeddings?.neighbours?.mapNotNull { neighbour ->
+            neighbour?.takeUnless { isDbStation && it.belongsToStation?.equals(stadaId) == false }?.evaId
+        } ?: listOf()).toTypedArray()))
+    }
 
     var distanceInKm: Float = -1f
 

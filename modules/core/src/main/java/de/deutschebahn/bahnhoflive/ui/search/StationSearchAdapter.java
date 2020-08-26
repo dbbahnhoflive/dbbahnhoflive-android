@@ -9,7 +9,10 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import java.util.List;
 
+import de.deutschebahn.bahnhoflive.BaseApplication;
+import de.deutschebahn.bahnhoflive.R;
 import de.deutschebahn.bahnhoflive.analytics.TrackingManager;
+import de.deutschebahn.bahnhoflive.backend.StopPlaceXKt;
 import de.deutschebahn.bahnhoflive.backend.db.publictrainstation.model.StopPlace;
 import de.deutschebahn.bahnhoflive.backend.hafas.model.HafasStation;
 import de.deutschebahn.bahnhoflive.persistence.FavoriteStationsStore;
@@ -44,8 +47,8 @@ class StationSearchAdapter extends RecyclerView.Adapter<ViewHolder> {
     StationSearchAdapter(FragmentActivity context, RecentSearchesStore recentSearchesStore, SearchItemPickedListener searchItemPickedListener, LifecycleOwner owner, TrackingManager trackingManager) {
         hubViewModel = ViewModelProviders.of(context).get(HubViewModel.class);
 
-        this.favoriteDbStationsStore = FavoriteStationsStore.getFavoriteDbStationsStore(context);
-        this.favoriteHafasStationsStore = FavoriteStationsStore.getFavoriteHafasStationsStore(context);
+        this.favoriteDbStationsStore = BaseApplication.get().getApplicationServices().getFavoriteDbStationStore();
+        this.favoriteHafasStationsStore = BaseApplication.get().getApplicationServices().getFavoriteHafasStationsStore();
         this.recentSearchesStore = recentSearchesStore;
         this.searchItemPickedListener = searchItemPickedListener;
         this.owner = owner;
@@ -69,8 +72,10 @@ class StationSearchAdapter extends RecyclerView.Adapter<ViewHolder> {
         switch (viewType) {
             case 0:
                 return new DbDeparturesViewHolder(parent, singleSelectionManager, owner, trackingManager, searchItemPickedListener, TrackingManager.UiElement.ABFAHRT_SUCHE_BHF);
-            default:
+            case 1:
                 return new DeparturesViewHolder(parent, owner, singleSelectionManager, trackingManager, searchItemPickedListener, TrackingManager.UiElement.ABFAHRT_SUCHE_OPNV);
+            default:
+                return new StationSearchViewHolder(parent, R.layout.card_station_suggestion);
         }
     }
 
@@ -100,6 +105,7 @@ class StationSearchAdapter extends RecyclerView.Adapter<ViewHolder> {
     }
 
     public void setDBStations(final List<StopPlace> stations) {
+        dbError = false;
         this.dbStations = stations;
 
         updateItems();
@@ -112,7 +118,14 @@ class StationSearchAdapter extends RecyclerView.Adapter<ViewHolder> {
 
         if (dbStations != null) {
             for (StopPlace dbStation : dbStations) {
-                searchResults.add(new StopPlaceSearchResult(dbStation, recentSearchesStore, favoriteDbStationsStore));
+                final SearchResult searchResult;
+                if (dbStation.isDbStation()) {
+                    searchResult = new StopPlaceSearchResult(dbStation, recentSearchesStore, favoriteDbStationsStore);
+                } else {
+                    final HafasStation hafasStation = StopPlaceXKt.toHafasStation(dbStation);
+                    searchResult = new HafasStationSearchResult(hafasStation, recentSearchesStore, favoriteHafasStationsStore);
+                }
+                searchResults.add(searchResult);
             }
         }
 

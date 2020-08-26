@@ -5,7 +5,6 @@ import android.widget.TextView
 import de.deutschebahn.bahnhoflive.BaseApplication
 import de.deutschebahn.bahnhoflive.R
 import de.deutschebahn.bahnhoflive.backend.hafas.model.HafasStation
-import de.deutschebahn.bahnhoflive.backend.hafas.model.ProductCategory
 import de.deutschebahn.bahnhoflive.backend.local.model.EvaIds
 import de.deutschebahn.bahnhoflive.ui.ViewHolder
 import de.deutschebahn.bahnhoflive.view.ItemClickListener
@@ -77,7 +76,7 @@ internal class LocalTransportsAdapter(
 
 
     private fun hasLocalTransport(station: HafasStation): Boolean {
-        return !station.products.isNullOrEmpty() && (station.hasLocalTransport(ProductCategory.BITMASK_LOCAL_TRANSPORT) || ProductCategory.S.isIn(station.productCategories))
+        return station.hasStationLocalTransport();
     }
 
 
