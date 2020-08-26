@@ -44,6 +44,7 @@
             android:layout_height="wrap_content"
             android:layout_gravity="center"
             android:background="@color/white"
+            android:focusedByDefault="true"
             android:drawableRight="@drawable/app_lupe"
             android:ellipsize="end"
             android:hint="@string/hint_find_stations"
