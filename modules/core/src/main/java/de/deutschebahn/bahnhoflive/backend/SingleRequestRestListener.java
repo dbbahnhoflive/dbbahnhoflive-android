@@ -14,6 +14,7 @@ public class SingleRequestRestListener<T> extends BaseRestListener<T> {
     @Override
     public void onSuccess(T payload) {
         notifyRequestFinished();
+        super.onSuccess(payload);
     }
 
     protected final void notifyRequestFinished() {
@@ -29,5 +30,6 @@ public class SingleRequestRestListener<T> extends BaseRestListener<T> {
     @Override
     public void onFail(VolleyError reason) {
         notifyRequestFinished();
+        super.onFail(reason);
     }
 }

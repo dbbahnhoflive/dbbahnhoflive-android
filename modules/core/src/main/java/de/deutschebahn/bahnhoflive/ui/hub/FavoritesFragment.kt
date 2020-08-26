@@ -10,7 +10,6 @@ import de.deutschebahn.bahnhoflive.R
 import de.deutschebahn.bahnhoflive.analytics.TrackingManager
 import de.deutschebahn.bahnhoflive.backend.hafas.model.HafasStation
 import de.deutschebahn.bahnhoflive.persistence.FavoriteStationsStore
-import de.deutschebahn.bahnhoflive.persistence.RecentSearchesStore
 import de.deutschebahn.bahnhoflive.repository.InternalStation
 import de.deutschebahn.bahnhoflive.ui.DbStationWrapper
 import de.deutschebahn.bahnhoflive.ui.search.DBStationSearchResult
@@ -34,8 +33,9 @@ class FavoritesFragment : androidx.fragment.app.Fragment() {
     override fun onAttach(context: Context) {
         super.onAttach(context)
 
-        favoriteHafasStationsStore = FavoriteStationsStore.getFavoriteHafasStationsStore(context)
-        favoriteDbStationsStore = FavoriteStationsStore.getFavoriteDbStationsStore(context)
+        favoriteHafasStationsStore =
+            BaseApplication.get().applicationServices.favoriteHafasStationsStore
+        favoriteDbStationsStore = BaseApplication.get().applicationServices.favoriteDbStationStore
     }
 
     override fun onDetach() {

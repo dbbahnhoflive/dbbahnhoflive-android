@@ -22,7 +22,6 @@ import androidx.fragment.app.FragmentManager;
 import androidx.recyclerview.widget.DividerItemDecoration;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.android.volley.Request;
 import com.android.volley.VolleyError;
 
 import java.util.List;
@@ -248,35 +247,36 @@ public class StationSearchFragment extends Fragment {
                             super.onSuccess(stations);
 
                             adapter.setDBStations(stations);
-                                    if (stations == null /* just to be sure */ || stations.isEmpty()) {
-                                        queryRecorder.put(query);
-                                    }
+                            if (stations == null /* just to be sure */ || stations.isEmpty()) {
+                                queryRecorder.put(query);
+                            }
 
-                                    showOrHideNoResultsView();
-                                }
+                            showOrHideNoResultsView();
+                        }
 
-                                @Override
-                                public void onFail(VolleyError reason) {
-                                    super.onFail(reason);
+                        @Override
+                        public void onFail(VolleyError reason) {
+                            super.onFail(reason);
 
-                                    adapter.setDBError();
+                            adapter.setDBError();
 
-                                    showOrHideNoResultsView();
+                            showOrHideNoResultsView();
 
-                                    final IssueTracker issueTracker = getIssueTracker();
-                                    issueTracker.log("Failed station query: " + query);
-                                    issueTracker.dispatchThrowable(new StationSearchException(reason.getMessage(), reason));
-                                }
+                            final IssueTracker issueTracker = getIssueTracker();
+                            issueTracker.log("Failed station query: " + query);
+                            issueTracker.dispatchThrowable(new StationSearchException(reason.getMessage(), reason));
+                        }
 
-                                @Override
-                                protected void onRequestFinished(Request<List<StopPlace>> request) {
-                                    if (request == runningStationLookupRequest) {
-                                        runningStationLookupRequest = null;
-                                    }
+                        @Override
+                        public void onDone() {
+                            runningStationLookupRequest = null;
 
-                                    showOrHideNoResultsView();
-                                }
-                            }, query, null, false, 25, 10000, true, true, false);
+                            if (progressIndicator != null) {
+                                progressIndicator.setVisibility(View.GONE);
+                            }
+                            showOrHideNoResultsView();
+                        }
+                    }, query, null, false, 25, 10000, true, true, false);
         } else {
             listHeadlineView.setText(R.string.search_history);
             clearHistoryView.setVisibility(View.VISIBLE);
