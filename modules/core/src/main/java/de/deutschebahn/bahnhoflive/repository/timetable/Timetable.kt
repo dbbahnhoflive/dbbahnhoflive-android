@@ -30,9 +30,9 @@ class Timetable(private val trainInfos: List<TrainInfo>, val endTime: Long, val 
                     }
 
     protected constructor(`in`: Parcel) : this(
-            `in`.createTypedArrayList(TrainInfo.CREATOR),
-            `in`.readLong(),
-            `in`.readInt()
+        `in`.createTypedArrayList(TrainInfo.CREATOR) ?: mutableListOf(),
+        `in`.readLong(),
+        `in`.readInt()
     )
 
     override fun describeContents(): Int {
