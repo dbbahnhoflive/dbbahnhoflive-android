@@ -38,28 +38,50 @@ class StationFeatureDefinition(
                         return detailedStopPlace.hasSteplessAccess
                     }
                 })
-        val TOILET = StationFeatureDefinition(R.string.feature_toilet, R.drawable.bahnhofsausstattung_wc, ServiceContent.Type.WC, VenueFeature.WC,
-                object : BasicAvailability() {
-                    override fun isAvailable(detailedStopPlace: DetailedStopPlace, stationFeature: StationFeature): Boolean {
-                        return detailedStopPlace.hasPublicFacilities
-                    }
-                })
-        val WIFI = StationFeatureDefinition(R.string.feature_wifi, R.drawable.rimap_wlan, ServiceContent.Type.WIFI, VenueFeature.WIFI,
-                object : CategoryAvailability(4) {
-                    override fun isAvailable(detailedStopPlace: DetailedStopPlace, stationFeature: StationFeature): Boolean {
-                        return detailedStopPlace.hasWifi
-                    }
-                })
-        val ELEVATORS = StationFeatureDefinition(R.string.feature_elevators, R.drawable.bahnhofsausstattung_aufzug, ServiceContent.Type.ELEVATION_AIDS, VenueFeature.ELEVATION_AIDS,
-                object : Availability {
-                    override fun isAvailable(detailedStopPlace: DetailedStopPlace, stationFeature: StationFeature): Boolean {
-                        return isVisible(detailedStopPlace, stationFeature)
-                    }
+        val TOILET = StationFeatureDefinition(R.string.feature_toilet,
+            R.drawable.bahnhofsausstattung_wc,
+            ServiceContent.Type.WC,
+            VenueFeature.WC,
+            object : BasicAvailability() {
+                override fun isAvailable(
+                    detailedStopPlace: DetailedStopPlace,
+                    stationFeature: StationFeature
+                ): Boolean {
+                    return detailedStopPlace.hasPublicFacilities
+                }
+            })
+        val WIFI = StationFeatureDefinition(R.string.feature_wifi,
+            R.drawable.rimap_wlan_grau,
+            ServiceContent.Type.WIFI,
+            VenueFeature.WIFI,
+            object : CategoryAvailability(4) {
+                override fun isAvailable(
+                    detailedStopPlace: DetailedStopPlace,
+                    stationFeature: StationFeature
+                ): Boolean {
+                    return detailedStopPlace.hasWifi
+                }
+            })
+        val ELEVATORS = StationFeatureDefinition(
+            R.string.feature_elevators,
+            R.drawable.bahnhofsausstattung_aufzug,
+            ServiceContent.Type.ELEVATION_AIDS,
+            VenueFeature.ELEVATION_AIDS,
+            object : Availability {
+                override fun isAvailable(
+                    detailedStopPlace: DetailedStopPlace,
+                    stationFeature: StationFeature
+                ): Boolean {
+                    return isVisible(detailedStopPlace, stationFeature)
+                }
 
-                    override fun isVisible(detailedStopPlace: DetailedStopPlace, stationFeature: StationFeature): Boolean {
-                        return Collections.hasContent(stationFeature.facilityStatuses)
-                    }
-                })
+                override fun isVisible(
+                    detailedStopPlace: DetailedStopPlace,
+                    stationFeature: StationFeature
+                ): Boolean {
+                    return Collections.hasContent(stationFeature.facilityStatuses)
+                }
+            })
         val LOCKERS = StationFeatureDefinition(R.string.feature_lockers, R.drawable.bahnhofsausstattung_schlie_faecher, ServiceContent.Type.LOCKERS, VenueFeature.LOCKERS,
                 object : BasicAvailability() {
                     override fun isAvailable(detailedStopPlace: DetailedStopPlace, stationFeature: StationFeature): Boolean {

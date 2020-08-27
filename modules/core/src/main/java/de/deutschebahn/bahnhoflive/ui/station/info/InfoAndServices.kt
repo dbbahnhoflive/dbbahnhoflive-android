@@ -2,11 +2,7 @@ package de.deutschebahn.bahnhoflive.ui.station.info
 
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.Transformations
-import com.google.android.gms.maps.model.LatLng
-import de.deutschebahn.bahnhoflive.backend.db.publictrainstation.model.Availability
-import de.deutschebahn.bahnhoflive.backend.db.publictrainstation.model.AvailabilityEntry
-import de.deutschebahn.bahnhoflive.backend.db.publictrainstation.model.DetailedStopPlace
-import de.deutschebahn.bahnhoflive.backend.db.publictrainstation.model.TravelCenter
+import de.deutschebahn.bahnhoflive.backend.db.publictrainstation.model.*
 import de.deutschebahn.bahnhoflive.backend.local.model.ServiceContent
 import de.deutschebahn.bahnhoflive.repository.DetailedStopPlaceResource
 import de.deutschebahn.bahnhoflive.repository.ShopsResource
@@ -16,10 +12,10 @@ import de.deutschebahn.bahnhoflive.ui.station.shop.Shop
 import de.deutschebahn.bahnhoflive.util.then
 
 class InfoAndServices(
-        detailedStopPlaceResource: DetailedStopPlaceResource,
-        val staticInfoCollectionSource: LiveData<StaticInfoCollection>,
-        val travelCenter: LiveData<TravelCenter>,
-        shopsResource: ShopsResource
+    detailedStopPlaceResource: DetailedStopPlaceResource,
+    val staticInfoCollectionSource: LiveData<StaticInfoCollection>,
+    val travelCenter: LiveData<EmbeddedTravelCenter?>,
+    shopsResource: ShopsResource
 ) : MergedLiveData<List<ServiceContent>?>(null) {
     val detailedStopPlaceLiveData = detailedStopPlaceResource.data
     val travelCenterOpenHours = Transformations.map(shopsResource.data) {
@@ -41,7 +37,12 @@ class InfoAndServices(
         }
     }
 
-    fun update(detailedStopPlace: DetailedStopPlace, staticInfoCollection: StaticInfoCollection, travelCenterOpenHours: String?, travelCenter: TravelCenter?) {
+    fun update(
+        detailedStopPlace: DetailedStopPlace,
+        staticInfoCollection: StaticInfoCollection,
+        travelCenterOpenHours: String?,
+        travelCenter: EmbeddedTravelCenter?
+    ) {
         value = listOfNotNull(
             composeServiceContent(
                 detailedStopPlace,
@@ -55,21 +56,33 @@ class InfoAndServices(
                 ServiceContent.Type.MOBILE_SERVICE,
                 renderSchedule(detailedStopPlace.details?.localServiceStaff)
             ),
-                composeServiceContent(detailedStopPlace, staticInfoCollection, ServiceContent.Type.BAHNHOFSMISSION),
-                staticInfoCollection.typedStationInfos[ServiceContent.Type.Local.TRAVEL_CENTER]?.let { staticInfo ->
-                    (PublicTrainStationService.predicates[ServiceContent.Type.Local.TRAVEL_CENTER]?.invoke(detailedStopPlace) == true).then {
-                        ServiceContent(staticInfo, travelCenter?.openingTimes?.rendered
-                                ?: travelCenterOpenHours)
-                    } ?: travelCenter?.let { travelCenter ->
-                        ServiceContent(
-                            staticInfo,
-                            travelCenter.openingTimes?.rendered,
-                            travelCenter.composedAddress,
-                            LatLng(travelCenter.lat, travelCenter.lon)
-                        )
-                    }
-                },
-                composeServiceContent(detailedStopPlace, staticInfoCollection, ServiceContent.Type.Local.DB_LOUNGE)
+            composeServiceContent(
+                detailedStopPlace,
+                staticInfoCollection,
+                ServiceContent.Type.BAHNHOFSMISSION
+            ),
+            staticInfoCollection.typedStationInfos[ServiceContent.Type.Local.TRAVEL_CENTER]?.let { staticInfo ->
+                (PublicTrainStationService.predicates[ServiceContent.Type.Local.TRAVEL_CENTER]?.invoke(
+                    detailedStopPlace
+                ) == true).then {
+                    ServiceContent(
+                        staticInfo, renderSchedule(travelCenter?.openingHours)
+                            ?: travelCenterOpenHours
+                    )
+                } ?: travelCenter?.let { travelCenter ->
+                    ServiceContent(
+                        staticInfo,
+                        renderSchedule(travelCenter.openingHours),
+                        travelCenter.composedAddress,
+                        travelCenter.location?.toLatLng()
+                    )
+                }
+            },
+            composeServiceContent(
+                detailedStopPlace,
+                staticInfoCollection,
+                ServiceContent.Type.Local.DB_LOUNGE
+            )
         )
     }
 
@@ -81,32 +94,47 @@ class InfoAndServices(
 
     companion object {
         val dayLabels = mapOf(
-                "monday" to "Montag",
-                "tuesday" to "Dienstag",
-                "wednesday" to "Mittwoch",
-                "thursday" to "Donnerstag",
-                "friday" to "Freitag",
-                "saturday" to "Samstag",
-                "sunday" to "Sonntag",
-                "holiday" to "Feiertag"
+            "monday" to "Montag",
+            "tuesday" to "Dienstag",
+            "wednesday" to "Mittwoch",
+            "thursday" to "Donnerstag",
+            "friday" to "Freitag",
+            "saturday" to "Samstag",
+            "sunday" to "Sonntag",
+            "holiday" to "Feiertag"
         )
     }
 
     private fun renderSchedule(schedule: Availability?): String? {
-        if (schedule != null) {
-            val stringBuilder = StringBuilder()
+        if (schedule == null) {
+            return null
+        }
 
-            schedule.availability?.asSequence()?.filterNotNull()
-                ?.forEach { availabilityEntry: AvailabilityEntry ->
-                stringBuilder.append(String.format("<br/>%s: %s-%s", dayLabels[availabilityEntry.day]
-                        ?: availabilityEntry.day,
-                        availabilityEntry.openTime, availabilityEntry.closeTime))
+        return renderSchedule(schedule.availability)
+    }
+
+    private val hourMinuteSecondPattern = Regex("(\\d{1,2}:\\d{1,2}):\\d{1,2}")
+
+    private fun String.stripSeconds() =
+        hourMinuteSecondPattern.matchEntire(this)?.let { matchResult ->
+            matchResult.groupValues[1]
+        } ?: this
+
+    private fun renderSchedule(availability: List<AvailabilityEntry?>?): String? {
+        val stringBuilder = StringBuilder()
+
+        availability?.asSequence()?.filterNotNull()
+            ?.forEach { availabilityEntry: AvailabilityEntry ->
+                stringBuilder.append(
+                    "<br/>${
+                        dayLabels[availabilityEntry.day]
+                            ?: availabilityEntry.day
+                    }: ${availabilityEntry.openTime?.stripSeconds()}-${availabilityEntry.closeTime?.stripSeconds()}"
+                )
             }
 
-            if (stringBuilder.isNotEmpty()) {
-                return "<b>Öffnungszeiten</b>$stringBuilder"
-            }
-
+        if (stringBuilder.isNotEmpty()) {
+            return "<b>Öffnungszeiten</b>$stringBuilder"
         }
 
         return null

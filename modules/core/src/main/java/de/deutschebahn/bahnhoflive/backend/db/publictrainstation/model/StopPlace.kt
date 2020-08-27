@@ -27,9 +27,9 @@ open class StopPlace {
 
     private fun getIdentifier(type: String) = identifiers?.firstOrNull { it?.type == type }?.value
 
-    fun calculateDistance(distanceCalulator: DistanceCalulator) {
+    fun calculateDistance(distanceCalculator: DistanceCalulator) {
         location?.run {
-            distanceInKm = distanceCalulator.calculateDistance(latitude, longitude)
+            distanceInKm = distanceCalculator.calculateDistance(latitude, longitude)
         }
     }
 

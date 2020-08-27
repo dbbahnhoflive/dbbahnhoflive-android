@@ -77,7 +77,8 @@ class Waggon(
 
 class LegacyFeature(val symbol: String = "p") : Parcelable { // defaults to restaurant
     constructor(parcel: Parcel) : this(
-            parcel.readString())
+        parcel.readString() ?: "p"
+    )
 
     override fun writeToParcel(parcel: Parcel, flags: Int) {
         parcel.writeString(symbol)

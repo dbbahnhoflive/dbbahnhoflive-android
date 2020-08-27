@@ -7,6 +7,7 @@ import de.deutschebahn.bahnhoflive.util.ArrayListFactory
 import de.deutschebahn.bahnhoflive.util.MapContentPreserver
 import de.deutschebahn.bahnhoflive.util.NumberAwareCollator
 import java.util.*
+import kotlin.math.abs
 
 class Content : OnMapReadyCallback, ZoomChangeMonitor.Listener {
 
@@ -73,6 +74,17 @@ class Content : OnMapReadyCallback, ZoomChangeMonitor.Listener {
             }
         }
     }
+
+    public fun findNearbyLevelWithContent(referenceLevel: Int): Int? = allMarkerBinders.asSequence()
+        .filter { it.isFilterChecked }
+        .fold(mutableSetOf<Int>()) { acc, markerBinder ->
+            acc.apply {
+                add(markerBinder.markerContent.suggestLevel(referenceLevel))
+            }
+        }.minByOrNull {
+            abs(it - referenceLevel)
+        }
+
 
     private fun removeMarkerBinders(source: Source) {
         val sourceMarkerBinders = sourcedMarkerBinders.remove(source)

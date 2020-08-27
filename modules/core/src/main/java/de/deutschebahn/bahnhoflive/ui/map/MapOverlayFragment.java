@@ -575,6 +575,10 @@ public class MapOverlayFragment extends Fragment implements OnMapReadyCallback, 
 
     private void setIndoorLevel(MarkerBinder markerBinder) {
         final int level = markerBinder.getMarkerContent().suggestLevel(this.level);
+        updateLevel(level);
+    }
+
+    private void updateLevel(int level) {
         if (level != this.level) {
             mapLevelPicker.setValue(level);
             setIndoorLevel(level);
@@ -800,6 +804,11 @@ public class MapOverlayFragment extends Fragment implements OnMapReadyCallback, 
     public void onFilterChanged() {
         content.updateVisibilities();
         updateFilterButton();
+
+        final Integer levelWithContent = content.findNearbyLevelWithContent(level);
+        if (levelWithContent != null) {
+            updateLevel(levelWithContent);
+        }
     }
 
 
