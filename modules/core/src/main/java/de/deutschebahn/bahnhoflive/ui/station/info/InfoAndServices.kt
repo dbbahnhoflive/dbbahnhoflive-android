@@ -113,17 +113,23 @@ class InfoAndServices(
         return renderSchedule(schedule.availability)
     }
 
+    private val hourMinuteSecondPattern = Regex("(\\d{1,2}:\\d{1,2}):\\d{1,2}")
+
+    private fun String.stripSeconds() =
+        hourMinuteSecondPattern.matchEntire(this)?.let { matchResult ->
+            matchResult.groupValues[1]
+        } ?: this
+
     private fun renderSchedule(availability: List<AvailabilityEntry?>?): String? {
         val stringBuilder = StringBuilder()
 
         availability?.asSequence()?.filterNotNull()
             ?.forEach { availabilityEntry: AvailabilityEntry ->
                 stringBuilder.append(
-                    String.format(
-                        "<br/>%s: %s-%s", dayLabels[availabilityEntry.day]
-                            ?: availabilityEntry.day,
-                        availabilityEntry.openTime, availabilityEntry.closeTime
-                    )
+                    "<br/>${
+                        dayLabels[availabilityEntry.day]
+                            ?: availabilityEntry.day
+                    }: ${availabilityEntry.openTime?.stripSeconds()}-${availabilityEntry.closeTime?.stripSeconds()}"
                 )
             }
 

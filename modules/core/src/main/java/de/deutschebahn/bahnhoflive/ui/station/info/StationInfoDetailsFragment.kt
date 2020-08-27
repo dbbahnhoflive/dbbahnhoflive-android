@@ -134,7 +134,14 @@ class StationInfoDetailsFragment : RecyclerFragment<StationInfoDetailsFragment.S
                 }
 
                 ServiceContent.Type.Local.LOST_AND_FOUND -> {
-                    run { FundserviceContentElement.render(descriptionLayout, item, itemView.context, null) }
+                    run {
+                        FundserviceContentElement.render(
+                            descriptionLayout,
+                            item,
+                            itemView.context,
+                            null
+                        )
+                    }
                     run {
                         val descriptionText = item.descriptionText
                         val matcher = Patterns.PHONE.matcher(descriptionText)
@@ -151,11 +158,7 @@ class StationInfoDetailsFragment : RecyclerFragment<StationInfoDetailsFragment.S
 
                         val additionalText = item.additionalText
                         if (!TextUtils.isEmpty(additionalText)) {
-                            if (ServiceContent.Type.Local.TRAVEL_CENTER == item.type.toLowerCase()) {
-                                addHtmlPart("<b>Öffnungszeiten</b><br/>$additionalText")
-                            } else {
-                                addHtmlPart(additionalText)
-                            }
+                            addHtmlPart(additionalText)
                         }
                     }
                 }
@@ -221,11 +224,7 @@ class StationInfoDetailsFragment : RecyclerFragment<StationInfoDetailsFragment.S
             item.additionalText
                     ?.takeIf { it.isNotBlank() }
                     ?.also {
-                        if (ServiceContent.Type.Local.TRAVEL_CENTER == item.type.toLowerCase()) {
-                            addHtmlPart("<b>Öffnungszeiten</b><br/>$it")
-                        } else {
-                            addHtmlPart(it)
-                        }
+                        addHtmlPart(it)
                     }
         }
 
