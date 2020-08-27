@@ -88,24 +88,43 @@ class StationFeatureDefinition(
                         return detailedStopPlace.hasLockerSystem
                     }
                 })
-        val DB_INFO = StationFeatureDefinition(R.string.feature_db_info, R.drawable.bahnhofsausstattung_db_info, ServiceContent.Type.DB_INFORMATION, VenueFeature.DB_INFORMATION,
-                object : CategoryAvailability(4) {
-                    override fun isAvailable(detailedStopPlace: DetailedStopPlace, stationFeature: StationFeature): Boolean {
-                        return detailedStopPlace.hasDbInformation
-                    }
-                })
-        val TRAVEL_CENTER = StationFeatureDefinition(R.string.feature_db_reisezentrum, R.drawable.bahnhofsausstattung_db_reisezentrum, ServiceContent.Type.REISEZENTRUM, VenueFeature.TRAVEL_CENTER,
-                object : BasicAvailability() {
-                    override fun isAvailable(detailedStopPlace: DetailedStopPlace, stationFeature: StationFeature): Boolean {
-                        return detailedStopPlace.hasTravelCenter
-                    }
-                })
-        val DB_LOUNGE = StationFeatureDefinition(R.string.feature_db_lounge, R.drawable.bahnhofsausstattung_db_lounge, ServiceContent.Type.Local.DB_LOUNGE, VenueFeature.DB_LOUNGE,
-                object : CategoryAvailability(4) {
-                    override fun isAvailable(detailedStopPlace: DetailedStopPlace, stationFeature: StationFeature): Boolean {
-                        return detailedStopPlace.hasDbLounge
-                    }
-                })
+        val DB_INFO = StationFeatureDefinition(R.string.feature_db_info,
+            R.drawable.bahnhofsausstattung_db_info,
+            ServiceContent.Type.DB_INFORMATION,
+            VenueFeature.DB_INFORMATION,
+            object : CategoryAvailability(4) {
+                override fun isAvailable(
+                    detailedStopPlace: DetailedStopPlace,
+                    stationFeature: StationFeature
+                ): Boolean {
+                    return detailedStopPlace.hasDbInformation
+                }
+            })
+        val TRAVEL_CENTER = StationFeatureDefinition(R.string.feature_db_reisezentrum,
+            R.drawable.bahnhofsausstattung_db_reisezentrum,
+            ServiceContent.Type.Local.TRAVEL_CENTER,
+            VenueFeature.TRAVEL_CENTER,
+            object : BasicAvailability() {
+                override fun isAvailable(
+                    detailedStopPlace: DetailedStopPlace,
+                    stationFeature: StationFeature
+                ): Boolean {
+                    return detailedStopPlace.hasTravelCenter
+                }
+            })
+        val DB_LOUNGE = StationFeatureDefinition(
+            R.string.feature_db_lounge,
+            R.drawable.bahnhofsausstattung_db_lounge,
+            ServiceContent.Type.Local.DB_LOUNGE,
+            VenueFeature.DB_LOUNGE,
+            object : CategoryAvailability(4) {
+                override fun isAvailable(
+                    detailedStopPlace: DetailedStopPlace,
+                    stationFeature: StationFeature
+                ): Boolean {
+                    return detailedStopPlace.hasDbLounge
+                }
+            })
         val TRAVELER_SUPPLIES = StationFeatureDefinition(R.string.feature_traveler_supplies, R.drawable.bahnhofsausstattung_reisebedarf, ServiceContent.Type.TRAVELERS_SUPPLIES, null,
                 object : BasicAvailability() {
                     override fun isAvailable(detailedStopPlace: DetailedStopPlace, stationFeature: StationFeature): Boolean {

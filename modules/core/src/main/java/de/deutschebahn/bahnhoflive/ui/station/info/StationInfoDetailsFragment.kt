@@ -20,7 +20,11 @@ import de.deutschebahn.bahnhoflive.analytics.TrackingManager
 import de.deutschebahn.bahnhoflive.backend.local.model.ServiceContent
 import de.deutschebahn.bahnhoflive.ui.FragmentArgs
 import de.deutschebahn.bahnhoflive.ui.RecyclerFragment
+import de.deutschebahn.bahnhoflive.ui.map.Content
+import de.deutschebahn.bahnhoflive.ui.map.InitialPoiManager
+import de.deutschebahn.bahnhoflive.ui.map.MapPresetProvider
 import de.deutschebahn.bahnhoflive.ui.map.content.MapIntent
+import de.deutschebahn.bahnhoflive.ui.map.content.rimap.RimapFilter
 import de.deutschebahn.bahnhoflive.ui.station.CommonDetailsCardViewHolder
 import de.deutschebahn.bahnhoflive.ui.station.HistoryFragment
 import de.deutschebahn.bahnhoflive.ui.station.ServiceContents
@@ -33,7 +37,9 @@ import kotlinx.android.synthetic.main.include_description_link_part.view.*
 import java.util.*
 import java.util.regex.Pattern
 
-class StationInfoDetailsFragment : RecyclerFragment<StationInfoDetailsFragment.StationInfoAdapter>(R.layout.fragment_recycler_linear) {
+class StationInfoDetailsFragment :
+    RecyclerFragment<StationInfoDetailsFragment.StationInfoAdapter>(R.layout.fragment_recycler_linear),
+    MapPresetProvider {
 
     val stationViewModel: StationViewModel by activityViewModels()
 
@@ -44,44 +50,65 @@ class StationInfoDetailsFragment : RecyclerFragment<StationInfoDetailsFragment.S
 
         serviceContents = arguments?.getParcelableArrayList(ARG_SERVICE_CONTENTS) ?: emptyList()
         setTitle(arguments?.getCharSequence(FragmentArgs.TITLE))
+
+        stationViewModel.stationFeatures.observe(this) {
+            // do nothing, just keep contents updated
+        }
+
         adapter = StationInfoAdapter(serviceContents, TrackingManager.fromActivity(activity))
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        stationViewModel.selectedServiceContentType.observe(viewLifecycleOwner, androidx.lifecycle.Observer { serviceContentType ->
-            if (serviceContentType != null) {
-                val serviceContentIndex = serviceContents.indexOfFirst { serviceContent ->
-                    serviceContent.type == serviceContentType
-                }
-                if (serviceContentIndex < 0) {
-                    HistoryFragment.parentOf(this).pop()
-                } else {
-                    stationViewModel.selectedServiceContentType.value = null
+        stationViewModel.selectedServiceContentType.observe(
+            viewLifecycleOwner,
+            androidx.lifecycle.Observer { serviceContentType ->
+                if (serviceContentType != null) {
+                    val serviceContentIndex = serviceContents.indexOfFirst { serviceContent ->
+                        serviceContent.type == serviceContentType
+                    }
+                    if (serviceContentIndex < 0) {
+                        HistoryFragment.parentOf(this).pop()
+                    } else {
+                        stationViewModel.selectedServiceContentType.value = null
 
-                    adapter?.singleSelectionManager?.selection = serviceContentIndex
+                        adapter?.singleSelectionManager?.selection = serviceContentIndex
+                    }
                 }
-            }
-        })
+            })
 
     }
 
     override fun onStart() {
         super.onStart()
 
-        TrackingManager.fromActivity(activity).track(TrackingManager.TYPE_STATE, TrackingManager.Screen.D1, TrackingManager.tagFromArguments(arguments))
+        TrackingManager.fromActivity(activity).track(
+            TrackingManager.TYPE_STATE, TrackingManager.Screen.D1, TrackingManager.tagFromArguments(
+                arguments
+            )
+        )
     }
 
-    class StationInfoAdapter(private val serviceContents: List<ServiceContent>, val trackingManager: TrackingManager) : androidx.recyclerview.widget.RecyclerView.Adapter<SelectableItemViewHolder<ServiceContent>>() {
+    class StationInfoAdapter(
+        private val serviceContents: List<ServiceContent>,
+        val trackingManager: TrackingManager
+    ) : androidx.recyclerview.widget.RecyclerView.Adapter<SelectableItemViewHolder<ServiceContent>>() {
         val singleSelectionManager: SingleSelectionManager = SingleSelectionManager(this)
 
-        override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): SelectableItemViewHolder<ServiceContent> {
+        override fun onCreateViewHolder(
+            parent: ViewGroup,
+            viewType: Int
+        ): SelectableItemViewHolder<ServiceContent> {
             return ServiceContentViewHolder(
-                    parent, singleSelectionManager, trackingManager)
+                parent, singleSelectionManager, trackingManager
+            )
         }
 
-        override fun onBindViewHolder(holder: SelectableItemViewHolder<ServiceContent>, position: Int) {
+        override fun onBindViewHolder(
+            holder: SelectableItemViewHolder<ServiceContent>,
+            position: Int
+        ) {
             holder.bind(serviceContents[position])
         }
 
@@ -89,16 +116,26 @@ class StationInfoDetailsFragment : RecyclerFragment<StationInfoDetailsFragment.S
             return serviceContents.size
         }
 
+        val selectedItem get() = singleSelectionManager.getSelectedItem(serviceContents)
     }
 
     class ServiceContentViewHolder(
-            parent: ViewGroup,
-            singleSelectionManager: SingleSelectionManager,
-            val trackingManager: TrackingManager
-    ) : CommonDetailsCardViewHolder<ServiceContent>(parent, R.layout.card_expandable_station_info, singleSelectionManager), View.OnClickListener {
-        private val dbactionbuttonPattern = Pattern.compile("(.*)<dbactionbutton>(.*)</dbactionbutton>(.*)")
+        parent: ViewGroup,
+        singleSelectionManager: SingleSelectionManager,
+        val trackingManager: TrackingManager
+    ) : CommonDetailsCardViewHolder<ServiceContent>(
+        parent,
+        R.layout.card_expandable_station_info,
+        singleSelectionManager
+    ), View.OnClickListener {
+        private val dbactionbuttonPattern =
+            Pattern.compile("(.*)<dbactionbutton>(.*)</dbactionbutton>(.*)")
 
-        protected val threeButtonsViewHolder: ThreeButtonsViewHolder = ThreeButtonsViewHolder(itemView, R.id.buttons_container, this)
+        protected val threeButtonsViewHolder: ThreeButtonsViewHolder = ThreeButtonsViewHolder(
+            itemView,
+            R.id.buttons_container,
+            this
+        )
         private val descriptionLayout: LinearLayout = itemView.findViewById(R.id.description_layout)
         private val layoutInflater: LayoutInflater = LayoutInflater.from(parent.context)
         private val onPhoneClickListener = View.OnClickListener { view ->
@@ -167,12 +204,23 @@ class StationInfoDetailsFragment : RecyclerFragment<StationInfoDetailsFragment.S
                     if (item.address == null) {
                         defaultRender(item)
                     } else {
-                        val linkView = layoutInflater.inflate(R.layout.include_description_link_part, descriptionLayout, false)
-                        linkView.text.text = "<b>Nächstes Reisezentrum</b><br/>${item.address.toString()}".spannedHtml()
+                        val linkView = layoutInflater.inflate(
+                            R.layout.include_description_link_part,
+                            descriptionLayout,
+                            false
+                        )
+                        linkView.text.text =
+                            "<b>Nächstes Reisezentrum</b><br/>${item.address.toString()}".spannedHtml()
                         item.location?.also { location ->
                             linkView.linkButton.setOnClickListener {
                                 layoutInflater.context.startActivity(
-                                        MapIntent(location, item.address.toString().replace("<br/>", ",")))
+                                    MapIntent(
+                                        location, item.address.toString().replace(
+                                            "<br/>",
+                                            ","
+                                        )
+                                    )
+                                )
                             }
                         }
                         descriptionLayout.addView(linkView)
@@ -183,22 +231,36 @@ class StationInfoDetailsFragment : RecyclerFragment<StationInfoDetailsFragment.S
 
                 ServiceContent.Type.Local.CHATBOT -> {
                     addImagePart(R.drawable.chatbot)
-                    dbactionbuttonPattern.matcher(item.descriptionText).takeIf { it.matches() }?.run {
-                        group(1).takeUnless { it.isBlank() }?.also {
-                            addHtmlPart(it)
-                        }
+                    dbactionbuttonPattern.matcher(item.descriptionText).takeIf { it.matches() }
+                        ?.run {
+                            group(1).takeUnless { it.isBlank() }?.also {
+                                addHtmlPart(it)
+                            }
 
-                        if (Calendar.getInstance().get(Calendar.HOUR_OF_DAY) in 7 until 22)
-                            addButtonPart(group(2), itemView.resources.getString(R.string.sr_chatbot), View.OnClickListener {
-                                trackingManager.track(TrackingManager.TYPE_ACTION, TrackingManager.Screen.D1, TrackingManager.Action.TAP, TrackingManager.UiElement.CHATBOT)
-                                it.context.startActivity(Intent(Intent.ACTION_VIEW, Uri.parse("https://console.e-bot7.de/embed/5dc43ff2c65df6001ac43721/5dc528b924b425001a62caf9")))
-                            })
+                            if (Calendar.getInstance().get(Calendar.HOUR_OF_DAY) in 7 until 22)
+                                addButtonPart(
+                                    group(2),
+                                    itemView.resources.getString(R.string.sr_chatbot),
+                                    View.OnClickListener {
+                                        trackingManager.track(
+                                            TrackingManager.TYPE_ACTION,
+                                            TrackingManager.Screen.D1,
+                                            TrackingManager.Action.TAP,
+                                            TrackingManager.UiElement.CHATBOT
+                                        )
+                                        it.context.startActivity(
+                                            Intent(
+                                                Intent.ACTION_VIEW,
+                                                Uri.parse("https://console.e-bot7.de/embed/5dc43ff2c65df6001ac43721/5dc528b924b425001a62caf9")
+                                            )
+                                        )
+                                    })
 
-                        group(3).takeUnless { it.isBlank() }?.also {
-                            addHtmlPart(it)
-                        }
+                            group(3).takeUnless { it.isBlank() }?.also {
+                                addHtmlPart(it)
+                            }
 
-                    } ?: addHtmlPart(item.descriptionText)
+                        } ?: addHtmlPart(item.descriptionText)
                 }
 
                 else -> {
@@ -250,10 +312,19 @@ class StationInfoDetailsFragment : RecyclerFragment<StationInfoDetailsFragment.S
         private fun String.spannedHtml() = Html.fromHtml(this)
 
         private fun addPhonePart(text: String, serviceName: String) {
-            addButtonPart(text, itemView.resources.getString(R.string.sr_template_phone_button, serviceName), onPhoneClickListener)
+            addButtonPart(
+                text, itemView.resources.getString(
+                    R.string.sr_template_phone_button,
+                    serviceName
+                ), onPhoneClickListener
+            )
         }
 
-        private fun addButtonPart(text: String, contentDescription: String, onClickListener: View.OnClickListener) {
+        private fun addButtonPart(
+            text: String,
+            contentDescription: String,
+            onClickListener: View.OnClickListener
+        ) {
             val textView = addPartView(R.layout.include_description_button_part)
             textView.setOnClickListener(onClickListener)
             textView.text = text
@@ -264,8 +335,11 @@ class StationInfoDetailsFragment : RecyclerFragment<StationInfoDetailsFragment.S
             val partTextView = addPartView(R.layout.include_description_text_part)
             partTextView.movementMethod = LinkMovementMethod.getInstance()
             partTextView.text = description
-            partTextView.contentDescription = description.toString().replace("-24:00", " bis 24 Uhr")
-                    .replace("◾", "/")
+            partTextView.contentDescription = description.toString().replace(
+                "-24:00",
+                " bis 24 Uhr"
+            )
+                .replace("◾", "/")
         }
 
         private fun addPartView(@LayoutRes layout: Int): TextView {
@@ -297,9 +371,9 @@ class StationInfoDetailsFragment : RecyclerFragment<StationInfoDetailsFragment.S
         val ARG_SERVICE_CONTENTS = "serviceContents"
 
         fun create(
-                serviceContents: ArrayList<ServiceContent>,
-                title: CharSequence,
-                trackingTag: String
+            serviceContents: ArrayList<ServiceContent>,
+            title: CharSequence,
+            trackingTag: String
         ): StationInfoDetailsFragment {
             val fragment = StationInfoDetailsFragment()
 
@@ -314,5 +388,24 @@ class StationInfoDetailsFragment : RecyclerFragment<StationInfoDetailsFragment.S
             return fragment
         }
     }
+
+    override fun prepareMapIntent(intent: Intent?) = intent?.let {
+        adapter?.selectedItem?.let { serviceContent ->
+            stationViewModel.stationFeatures.value?.firstOrNull { stationFeature ->
+                stationFeature.stationFeatureTemplate.definition.serviceContentType == serviceContent.type
+            }?.let { stationFeature ->
+
+                stationFeature.stationFeatureTemplate.definition.venueFeature?.let {
+                    RimapFilter.putPreset(intent, it.mapPreset)
+                }
+
+                stationFeature.venues?.firstOrNull()?.rimapPOI?.let {
+                    InitialPoiManager.putInitialPoi(intent, Content.Source.RIMAP, it)
+                }
+
+                true
+            }
+        }
+    } != null
 
 }
