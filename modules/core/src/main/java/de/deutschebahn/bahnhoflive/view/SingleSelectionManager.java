@@ -75,6 +75,7 @@ public class SingleSelectionManager {
         return selection;
     }
 
+    @Nullable
     public <T> T getSelectedItem(List<T> items) {
         return getSelectedItem(items, 0);
     }

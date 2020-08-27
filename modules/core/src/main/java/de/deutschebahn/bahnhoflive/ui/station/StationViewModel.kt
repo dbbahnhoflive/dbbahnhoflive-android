@@ -329,7 +329,7 @@ class StationViewModel : HafasTimetableViewModel() {
     val selectedNews = MutableLiveData<News>()
     val selectedServiceContentType = MutableLiveData<String>()
 
-    private val stationFeatures = MediatorLiveData<List<StationFeature>>().apply {
+    val stationFeatures = MediatorLiveData<List<StationFeature>>().apply {
         val observer = Observer<Any> {
             val detailedStopPlace = detailedStopPlaceResource.data.value ?: return@Observer
 
