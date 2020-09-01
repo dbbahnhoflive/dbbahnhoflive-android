@@ -78,6 +78,9 @@ class StationInfoDetailsFragment :
                 }
             })
 
+        stationViewModel.railwayMissionPoiLiveData.observe(viewLifecycleOwner) {
+            // do nothing, just observe
+        }
     }
 
     override fun onStart() {
@@ -404,6 +407,14 @@ class StationInfoDetailsFragment :
                 }
 
                 true
+            } ?: serviceContent.takeIf {
+                it.type == ServiceContent.Type.BAHNHOFSMISSION
+            }?.let {
+                RimapFilter.putPreset(intent, RimapFilter.PRESET_INFO_ON_SITE)
+
+                stationViewModel.railwayMissionPoiLiveData.value?.let {
+                    InitialPoiManager.putInitialPoi(intent, Content.Source.RIMAP, it)
+                }
             }
         }
     } != null

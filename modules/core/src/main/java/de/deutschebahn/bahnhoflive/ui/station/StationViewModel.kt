@@ -2,11 +2,8 @@ package de.deutschebahn.bahnhoflive.ui.station
 
 import android.util.Log
 import android.view.View
-import androidx.lifecycle.LiveData
-import androidx.lifecycle.MediatorLiveData
-import androidx.lifecycle.MutableLiveData
+import androidx.lifecycle.*
 import androidx.lifecycle.Observer
-import androidx.lifecycle.Transformations
 import com.android.volley.VolleyError
 import com.google.gson.GsonBuilder
 import de.deutschebahn.bahnhoflive.BaseApplication
@@ -800,9 +797,9 @@ class StationViewModel : HafasTimetableViewModel() {
     }
 
     val isShowChatbotLiveData = Transformations.distinctUntilChanged(
-            Transformations.map(stationResource.data) {
-                it.isChatbotAvailable && ChatbotStation.isInTeaserPeriod
-            })
+        Transformations.map(stationResource.data) {
+            it.isChatbotAvailable && ChatbotStation.isInTeaserPeriod
+        })
 
     fun navigateToChatbot() {
         selectedServiceContentType.value = ServiceContent.Type.Local.CHATBOT
@@ -813,4 +810,8 @@ class StationViewModel : HafasTimetableViewModel() {
         Transformations.map(shopsResource.data) {
             !(it?.shops).isNullOrEmpty()
         })
+
+    val railwayMissionPoiLiveData = shopsResource.data.map {
+        it.featureVenues[VenueFeature.RAILWAY_MISSION]?.firstOrNull()?.rimapPOI
+    }
 }
