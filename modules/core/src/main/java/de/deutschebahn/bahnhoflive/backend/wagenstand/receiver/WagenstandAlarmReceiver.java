@@ -1,17 +1,23 @@
 package de.deutschebahn.bahnhoflive.backend.wagenstand.receiver;
 
+import android.app.NotificationChannel;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.BitmapFactory;
+import android.os.Build;
 import android.os.Bundle;
 import android.util.Log;
 
+import androidx.annotation.RequiresApi;
 import androidx.core.app.NotificationCompat;
+import androidx.core.app.NotificationCompat.Builder;
 import androidx.core.app.TaskStackBuilder;
 import androidx.localbroadcastmanager.content.LocalBroadcastManager;
+
+import org.jetbrains.annotations.NotNull;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -36,11 +42,25 @@ import static de.deutschebahn.bahnhoflive.backend.wagenstand.WagenstandAlarm.DEF
 
 public class WagenstandAlarmReceiver extends BroadcastReceiver implements RestListener {
 
+    public static final String NOTIFICATION_CHANNEL_ID = "arrival";
+
     private static String TAG = WagenstandAlarmReceiver.class.getSimpleName();
 
     private Context mContext;
 
     private WagenstandAlarm wagenstandAlarm;
+
+    @RequiresApi(api = Build.VERSION_CODES.O)
+    @NotNull
+    public static NotificationChannel createNotificationChannel(@NotNull Context context) {
+        final NotificationChannel notificationChannel = new NotificationChannel(NOTIFICATION_CHANNEL_ID,
+                context.getText(R.string.notification_channel_arrival_name),
+                NotificationManager.IMPORTANCE_DEFAULT);
+
+        notificationChannel.setDescription(context.getString(R.string.notification_channel_arrival_description));
+
+        return notificationChannel;
+    }
 
     /**
      * @param context The Context in which the receiver is running.
@@ -160,18 +180,20 @@ public class WagenstandAlarmReceiver extends BroadcastReceiver implements RestLi
 
         final String mTrainLabel = wagenstandAlarm.trainLabel;
 
-        NotificationCompat.Builder builder = new NotificationCompat.Builder(mContext)
+        Builder builder = new Builder(mContext, NOTIFICATION_CHANNEL_ID)
                 .setSmallIcon(R.drawable.pushicon)
                 .setContentTitle(mContext.getResources().getString(R.string.app_name))
                 .setContentText("Wagenreihungsplan " + mTrainLabel)
                 .setAutoCancel(true)
                 .setVisibility(NotificationCompat.VISIBILITY_PUBLIC)
-                .setLargeIcon(BitmapFactory.decodeResource(mContext.getResources(), R.drawable.app_icon));
+                .setLargeIcon(BitmapFactory.decodeResource(mContext.getResources(), R.drawable.app_icon))
+                .setPriority(NotificationCompat.PRIORITY_DEFAULT);
+
 
         builder.setStyle(new NotificationCompat.BigTextStyle()
                 .bigText(String.format(
                         "Ihr Zug %s fährt in Kürze ein. Jetzt Wagenreihung prüfen.", mTrainLabel
-                   )
+                        )
                 )
         );
 
@@ -191,7 +213,9 @@ public class WagenstandAlarmReceiver extends BroadcastReceiver implements RestLi
         );
         builder.setContentIntent(resultPendingIntent);
 
-        NotificationManager nManager = (NotificationManager) mContext.getSystemService(Context.NOTIFICATION_SERVICE);
-        nManager.notify(wagenstandAlarm.trainNumber.hashCode(), builder.build());
+        final NotificationManager nManager = (NotificationManager) mContext.getSystemService(Context.NOTIFICATION_SERVICE);
+        if (nManager != null) {
+            nManager.notify(wagenstandAlarm.trainNumber.hashCode(), builder.build());
+        }
     }
 }

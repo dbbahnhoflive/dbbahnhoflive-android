@@ -240,4 +240,7 @@
     <string name="parking_feature_disabled_places">Behindertengerechte Parkplätze</string>
     <string name="notice_parking_lacks_location">Für diese Einrichtung liegen keine Ortsdaten vor.</string>
 
+    <string name="notification_channel_arrival_name">Einfahrt</string>
+    <string name="notification_channel_arrival_description">Erinnerungen vor Einfahrt eines Zuges</string>
+
 </resources>
