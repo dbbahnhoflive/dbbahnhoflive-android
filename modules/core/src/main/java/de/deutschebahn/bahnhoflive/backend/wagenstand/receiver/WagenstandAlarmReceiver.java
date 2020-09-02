@@ -55,7 +55,7 @@ public class WagenstandAlarmReceiver extends BroadcastReceiver implements RestLi
     public static NotificationChannel createNotificationChannel(@NotNull Context context) {
         final NotificationChannel notificationChannel = new NotificationChannel(NOTIFICATION_CHANNEL_ID,
                 context.getText(R.string.notification_channel_arrival_name),
-                NotificationManager.IMPORTANCE_DEFAULT);
+                NotificationManager.IMPORTANCE_HIGH);
 
         notificationChannel.setDescription(context.getString(R.string.notification_channel_arrival_description));
 
