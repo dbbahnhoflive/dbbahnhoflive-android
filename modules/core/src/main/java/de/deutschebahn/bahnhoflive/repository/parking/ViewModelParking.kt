@@ -25,11 +25,13 @@ class ViewModelParking {
                             parkingCapacityResources.getOrPut(parkingFacility.id) {
                                 LiveCapacityResource(it).also { liveCapacityResource ->
                                     addSource(liveCapacityResource.data, Observer { liveCapacity ->
-                                        liveCapacities[parkingFacility.id] = liveCapacity
+                                        liveCapacity?.run {
+                                            liveCapacities[parkingFacility.id] = liveCapacity
 
-                                        value = value?.map { parkingFacility ->
-                                            parkingFacility.takeUnless { it.id == liveCapacity.facilityId }
-                                                ?: parkingFacility.copy(liveCapacity = liveCapacity)
+                                            value = value?.map { parkingFacility ->
+                                                parkingFacility.takeUnless { it.id == liveCapacity.facilityId }
+                                                    ?: parkingFacility.copy(liveCapacity = liveCapacity)
+                                            }
                                         }
                                     })
                                 }

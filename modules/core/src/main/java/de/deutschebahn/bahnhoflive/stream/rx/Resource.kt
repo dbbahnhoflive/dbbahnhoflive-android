@@ -8,7 +8,7 @@ import io.reactivex.subjects.BehaviorSubject
 
 fun <T, E : Throwable?> Resource<T, E>.toObservable() = BehaviorSubject.create<ResourceState<T, E>> { emitter ->
     try {
-        val dataObserver = Observer<T> { value ->
+        val dataObserver = Observer<T?> { value ->
             emitter.onNext(ResourceState(value, error.value, loadingStatus.value.any()))
         }
 

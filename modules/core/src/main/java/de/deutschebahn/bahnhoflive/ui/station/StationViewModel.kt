@@ -307,7 +307,7 @@ class StationViewModel : HafasTimetableViewModel() {
     }
 
     val travelCenterLiveData = Transformations.map(detailedStopPlaceResource.data) {
-        it.travelCenter
+        it?.travelCenter
     }
 
     val infoAndServices = InfoAndServices(
@@ -327,7 +327,7 @@ class StationViewModel : HafasTimetableViewModel() {
     val selectedServiceContentType = MutableLiveData<String>()
 
     val stationFeatures = MediatorLiveData<List<StationFeature>>().apply {
-        val observer = Observer<Any> {
+        val observer = Observer<Any?> {
             val detailedStopPlace = detailedStopPlaceResource.data.value ?: return@Observer
 
             val orderedFeatures = ArrayList<StationFeature>()
@@ -812,6 +812,6 @@ class StationViewModel : HafasTimetableViewModel() {
         })
 
     val railwayMissionPoiLiveData = shopsResource.data.map {
-        it.featureVenues[VenueFeature.RAILWAY_MISSION]?.firstOrNull()?.rimapPOI
+        it?.featureVenues?.get(VenueFeature.RAILWAY_MISSION)?.firstOrNull()?.rimapPOI
     }
 }

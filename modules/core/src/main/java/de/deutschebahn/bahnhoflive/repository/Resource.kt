@@ -1,61 +1,41 @@
-package de.deutschebahn.bahnhoflive.repository;
+package de.deutschebahn.bahnhoflive.repository
 
-import androidx.annotation.MainThread;
-import androidx.lifecycle.LiveData;
-import androidx.lifecycle.MutableLiveData;
+import androidx.annotation.MainThread
+import androidx.lifecycle.LiveData
+import androidx.lifecycle.MutableLiveData
 
-public class Resource<T, E extends Throwable> {
-
+open class Resource<T, E : Throwable?> protected constructor(
+    protected val mutableData: MutableLiveData<T?>,
     /**
      * Reflects ongoing loading operation that may be observed by loading indicators.
      */
-    protected final MutableLiveData<LoadingStatus> loadingStatus;
-
+    protected val mutableLoadingStatus: MutableLiveData<LoadingStatus> = MutableLiveData(),
     /**
      * Latest loading error that might be observed by error indicators.
      */
-    protected final MutableLiveData<E> error;
+    protected val mutableError: MutableLiveData<E> = MutableLiveData()
+) {
+    constructor() : this(MutableLiveData<T?>()) {}
 
-    protected final MutableLiveData<T> data;
-
-    protected Resource(MutableLiveData<T> data, MutableLiveData<LoadingStatus> loadingStatus, MutableLiveData<E> error) {
-        this.data = data;
-        this.loadingStatus = loadingStatus;
-        this.error = error;
-    }
-
-    protected Resource(MutableLiveData<T> data) {
-        this(data, new MutableLiveData<LoadingStatus>(), new MutableLiveData<E>());
-    }
-
-    public Resource() {
-        this(new MutableLiveData<T>());
+    @MainThread
+    fun refresh(): Boolean {
+        return onRefresh()
     }
 
     @MainThread
-    public final boolean refresh() {
-        return onRefresh();
-    }
-
-    @MainThread
-    protected boolean onRefresh() {
-        if (loadingStatus.getValue() == LoadingStatus.IDLE) {
-            loadingStatus.setValue(LoadingStatus.IDLE); // By default don't start loading but signal end immediately
-            return false;
+    protected open fun onRefresh(): Boolean {
+        if (mutableLoadingStatus.value == LoadingStatus.IDLE) {
+            mutableLoadingStatus.value =
+                LoadingStatus.IDLE // By default don't start loading but signal end immediately
+            return false
         }
-        return true;
+        return true
     }
 
-
-    public LiveData<T> getData() {
-        return data;
-    }
-
-    public LiveData<LoadingStatus> getLoadingStatus() {
-        return loadingStatus;
-    }
-
-    public LiveData<E> getError() {
-        return error;
-    }
+    open val data: LiveData<T?>
+        get() = mutableData
+    open val loadingStatus: LiveData<LoadingStatus>
+        get() = mutableLoadingStatus
+    open val error: LiveData<E>
+        get() = mutableError
 }

@@ -42,12 +42,10 @@ class HafasTimetableResource : RemoteResource<HafasDepartures>() {
         return ++hours
     }
 
-    override fun isLoadingPreconditionsMet(): Boolean {
-        return hafasStation != null
-    }
+    override val isLoadingPreconditionsMet: Boolean get() = hafasStation != null
 
     fun setData(hafasDepartures: HafasDepartures?) {
-        if (getData().value == null && hafasDepartures != null) {
+        if (data.value == null && hafasDepartures != null) {
             setResult(hafasDepartures)
         }
     }

@@ -1,78 +1,67 @@
-package de.deutschebahn.bahnhoflive.repository;
+package de.deutschebahn.bahnhoflive.repository
 
-import androidx.annotation.MainThread;
+import androidx.annotation.MainThread
+import com.android.volley.VolleyError
+import de.deutschebahn.bahnhoflive.BaseApplication.Companion.get
+import de.deutschebahn.bahnhoflive.backend.BaseRestListener
 
-import com.android.volley.VolleyError;
-
-import de.deutschebahn.bahnhoflive.BaseApplication;
-import de.deutschebahn.bahnhoflive.backend.BaseRestListener;
-import de.deutschebahn.bahnhoflive.backend.RestHelper;
-
-public abstract class RemoteResource<T> extends Resource<T, VolleyError> {
-    protected final BaseApplication baseApplication = BaseApplication.get();
-    protected final RestHelper restHelper = baseApplication.getRestHelper();
-
-    protected boolean loadData(boolean force) {
-        if (isLoadingPreconditionsMet() && (force || getData().getValue() == null)) {
-            startLoading(force);
-            return true;
+abstract class RemoteResource<T> : Resource<T, VolleyError?>() {
+    @JvmField
+    protected val baseApplication = get()
+    protected val restHelper = baseApplication.restHelper
+    protected open fun loadData(force: Boolean): Boolean {
+        return if (isLoadingPreconditionsMet && (force || data.value == null)) {
+            startLoading(force)
+            true
         } else {
-            loadingStopped();
-            return false;
+            loadingStopped()
+            false
         }
     }
 
-    private void startLoading(boolean force) {
-        loadingStatus.setValue(LoadingStatus.BUSY);
-        onStartLoading(force);
+    private fun startLoading(force: Boolean) {
+        mutableLoadingStatus.value = LoadingStatus.BUSY
+        onStartLoading(force)
     }
 
-    protected abstract void onStartLoading(boolean force);
-
-    private void loadingStopped() {
-        loadingStatus.setValue(LoadingStatus.IDLE);
-        onLoadingStopped();
-    }
-
-    @MainThread
-    protected void setError(VolleyError reason) {
-        error.setValue(reason);
-        loadingStopped();
+    protected abstract fun onStartLoading(force: Boolean)
+    private fun loadingStopped() {
+        mutableLoadingStatus.value = LoadingStatus.IDLE
+        onLoadingStopped()
     }
 
     @MainThread
-    protected void setResult(T payload) {
-        data.setValue(payload);
-        setError(null);
+    protected open fun setError(reason: VolleyError?) {
+        mutableError.value = reason
+        loadingStopped()
     }
 
-    protected void onLoadingStopped() {
+    @MainThread
+    protected fun setResult(payload: T) {
+        mutableData.value = payload
+        setError(null)
     }
 
-    public boolean isLoadingPreconditionsMet() {
-        return true;
+    protected open fun onLoadingStopped() {}
+    open val isLoadingPreconditionsMet: Boolean
+        get() = true
+
+    override fun onRefresh(): Boolean {
+        return loadData(true)
     }
 
-    @Override
-    protected boolean onRefresh() {
-        return loadData(true);
+    fun loadIfNecessary(): Boolean {
+        return loadData(false)
     }
 
-    public boolean loadIfNecessary() {
-        return loadData(false);
-    }
-
-    public class Listener extends BaseRestListener<T> {
-
-        @Override
-        public void onSuccess(T payload) {
-            setResult(payload);
+    inner class Listener : BaseRestListener<T>() {
+        override fun onSuccess(payload: T) {
+            setResult(payload)
         }
 
-        @Override
-        public void onFail(VolleyError reason) {
-            super.onFail(reason);
-            setError(reason);
+        override fun onFail(reason: VolleyError) {
+            super.onFail(reason)
+            setError(reason)
         }
     }
 }

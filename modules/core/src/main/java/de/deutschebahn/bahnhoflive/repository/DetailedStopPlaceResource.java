@@ -14,7 +14,7 @@ public class DetailedStopPlaceResource extends RemoteResource<DetailedStopPlace>
 
     @Override
     protected void onStartLoading(boolean force) {
-        if (force || data.getValue() == null) {
+        if (force || getMutableData().getValue() == null) {
             baseApplication.getRepositories().getStationRepository().queryStationDetails(
                     new Listener(), stadaId, force, null);
         }
