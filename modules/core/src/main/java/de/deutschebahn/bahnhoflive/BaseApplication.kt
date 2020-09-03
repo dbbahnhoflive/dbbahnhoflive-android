@@ -13,6 +13,7 @@ import de.deutschebahn.bahnhoflive.analytics.TrackingDelegate
 import de.deutschebahn.bahnhoflive.analytics.TrackingHttpStack
 import de.deutschebahn.bahnhoflive.backend.*
 import de.deutschebahn.bahnhoflive.backend.db.DbAuthorizationTool
+import de.deutschebahn.bahnhoflive.push.createNotificationChannels
 import de.deutschebahn.bahnhoflive.repository.RepositoryHolder
 import de.deutschebahn.bahnhoflive.repository.elevator.Fasta2ElevatorStatusRepository
 import de.deutschebahn.bahnhoflive.repository.poisearch.PoiSearchConfigurationProvider
@@ -62,6 +63,8 @@ abstract class BaseApplication(
         TutorialManager.getInstance(this).seedTutorials()
 
         repositories = onCreateRepositories(restHelper)
+
+        createNotificationChannels()
     }
 
     protected open fun onInitializeIssueTracker(): IssueTracker = IssueTracker(this)

@@ -6,6 +6,8 @@ import android.content.Context;
 import android.content.Intent;
 import android.util.Log;
 
+import androidx.annotation.NonNull;
+
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
@@ -89,21 +91,22 @@ public class WagenstandAlarmManager {
                 alarmIntent,
                 PendingIntent.FLAG_ONE_SHOT);
 
-        AlarmManager manager = (AlarmManager) context.getSystemService(Context.ALARM_SERVICE);
-        int interval = 1000 * 60 * 20;
+        final AlarmManager manager = (AlarmManager) context.getSystemService(Context.ALARM_SERVICE);
 
+        if (manager == null) {
+            return false;
+        }
 
         Log.d(TAG, "manager.set " + formatTime.format(calendar.getTime()));
 
-        manager.set(AlarmManager.RTC_WAKEUP,
-                //calendar.getTimeInMillis(),
-                (new Date().getTime() +(1000 * 20)),
+        manager.setExact(AlarmManager.RTC_WAKEUP,
+                calendar.getTimeInMillis(),
                 pendingIntent
-                );
+        );
 
-        wagenstandAlarms.put(key,pendingIntent);
+        wagenstandAlarms.put(key, pendingIntent);
 
-        removeOldAlarms();
+        removeOldAlarms(manager);
 
         return true;
     }
@@ -145,8 +148,10 @@ public class WagenstandAlarmManager {
 
     /**
      * Remove all old Alarms wich time is lower then the current time
+     *
+     * @param manager
      */
-    public void removeOldAlarms() {
+    public void removeOldAlarms(@NonNull AlarmManager manager) {
         Set<String> keys = wagenstandAlarms.keySet();
 
         for (String key : keys) {
@@ -166,7 +171,6 @@ public class WagenstandAlarmManager {
 
                 PendingIntent pendingIntent = wagenstandAlarms.get(key);
 
-                AlarmManager manager = (AlarmManager) context.getSystemService(Context.ALARM_SERVICE);
                 manager.cancel(pendingIntent);
 
                 // remove the Object from the Map
