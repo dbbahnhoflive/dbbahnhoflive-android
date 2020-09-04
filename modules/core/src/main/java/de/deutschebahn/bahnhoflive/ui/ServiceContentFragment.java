@@ -31,9 +31,11 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
+import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import de.deutschebahn.bahnhoflive.BaseApplication;
 import de.deutschebahn.bahnhoflive.IconMapper;
 import de.deutschebahn.bahnhoflive.R;
 import de.deutschebahn.bahnhoflive.analytics.TrackingManager;
@@ -41,6 +43,9 @@ import de.deutschebahn.bahnhoflive.backend.local.model.ServiceContent;
 import de.deutschebahn.bahnhoflive.ui.station.HistoryFragment;
 import de.deutschebahn.bahnhoflive.ui.station.ServiceContents;
 import de.deutschebahn.bahnhoflive.ui.station.StationViewModel;
+import de.deutschebahn.bahnhoflive.ui.station.info.DbActionButton;
+import de.deutschebahn.bahnhoflive.ui.station.info.DbActionButtonParser;
+import de.deutschebahn.bahnhoflive.ui.station.info.StaticInfoDescriptionPart;
 import de.deutschebahn.bahnhoflive.util.ImageHelper;
 import de.deutschebahn.bahnhoflive.util.TextUtil;
 import de.deutschebahn.bahnhoflive.util.TextViewImageGetter;
@@ -155,79 +160,110 @@ public class ServiceContentFragment extends Fragment {
 
         icon.setImageResource(IconMapper.contentIconForType(serviceContent));
 
+
         if (serviceContent.getDescriptionText() != null && serviceContent.getDescriptionText().length() > 0) {
-            descriptionContainer.removeAllViews();
-            descriptionContainer.setVisibility(View.VISIBLE);
-            String shrinkingDescription = serviceContent.getDescriptionText();
-            boolean keepLooking = true;
+            final List<StaticInfoDescriptionPart> staticInfoDescriptionParts = new DbActionButtonParser().parse(serviceContent.getDescriptionText());
+            if (!staticInfoDescriptionParts.isEmpty()) {
+                descriptionContainer.removeAllViews();
+                descriptionContainer.setVisibility(View.VISIBLE);
 
-            ArrayList<String> components;
-            if (serviceContent.getType().equals("3-s-zentrale")) {
-                components = ServiceContents.parseDreiSComponents(serviceContent.getDescriptionText());
+                for (StaticInfoDescriptionPart staticInfoDescriptionPart : staticInfoDescriptionParts) {
 
-                String firstPart = components.get(0);
-                MBTextView descriptionPartTextView = new MBTextView(activity);
-                descriptionPartTextView.setTextIsSelectable(true);
-                descriptionPartTextView.setTextSize(TypedValue.COMPLEX_UNIT_PX,
-                        getResources().getDimensionPixelSize(serviceDetailsFontSize));
-                descriptionPartTextView.setLinkTextColor(getResources().getColor(R.color.textcolor_light));
-                descriptionPartTextView.setMovementMethod(LinkMovementMethod.getInstance());
-                descriptionPartTextView.setText(Html.fromHtml(firstPart));
+                    if (staticInfoDescriptionPart.getText() != null) {
+                        String shrinkingDescription = staticInfoDescriptionPart.getText();
+                        boolean keepLooking = true;
 
-                TextUtil.linkifyHtml(descriptionPartTextView, firstPart,
-                        Linkify.WEB_URLS,
-                        new TextViewImageGetter(descriptionPartTextView, imageTargetWidth));
+                        ArrayList<String> components;
+                        if (serviceContent.getType().equals("3-s-zentrale")) {
+                            components = ServiceContents.parseDreiSComponents(serviceContent.getDescriptionText());
 
-                descriptionContainer.addView(descriptionPartTextView);
-                descriptionPartTextView.getLayoutParams().height = LayoutParams.WRAP_CONTENT;
+                            String firstPart = components.get(0);
+                            MBTextView descriptionPartTextView = new MBTextView(activity);
+                            descriptionPartTextView.setTextIsSelectable(true);
+                            descriptionPartTextView.setTextSize(TypedValue.COMPLEX_UNIT_PX,
+                                    getResources().getDimensionPixelSize(serviceDetailsFontSize));
+                            descriptionPartTextView.setLinkTextColor(getResources().getColor(R.color.textcolor_light));
+                            descriptionPartTextView.setMovementMethod(LinkMovementMethod.getInstance());
+                            descriptionPartTextView.setText(Html.fromHtml(firstPart));
 
-                makePhoneButton(components.get(1), descriptionContainer);
+                            TextUtil.linkifyHtml(descriptionPartTextView, firstPart,
+                                    Linkify.WEB_URLS,
+                                    new TextViewImageGetter(descriptionPartTextView, imageTargetWidth));
+
+                            descriptionContainer.addView(descriptionPartTextView);
+                            descriptionPartTextView.getLayoutParams().height = LayoutParams.WRAP_CONTENT;
+
+                            makePhoneButton(components.get(1), descriptionContainer);
 
 
-            } else {
-                while (keepLooking) {
-                    //this pattern does not know if we are in or outside of a tag
-                    // Pattern p = Pattern.compile("[0123456789\\- ]{5,}");
+                        } else {
+                            while (keepLooking) {
+                                //this pattern does not know if we are in or outside of a tag
+                                // Pattern p = Pattern.compile("[0123456789\\- ]{5,}");
 
-                    Pattern p = Pattern.compile("(>|\\s)[\\d]{3,}\\/?([^\\D]|\\s)+[\\d]");
-                    final Matcher m = p.matcher(shrinkingDescription);
+                                Pattern p = Pattern.compile("(>|\\s)[\\d]{3,}\\/?([^\\D]|\\s)+[\\d]");
+                                final Matcher m = p.matcher(shrinkingDescription);
 
-                    MBTextView descriptionPartTextView = new MBTextView(activity);
-                    descriptionPartTextView.setTextSize(TypedValue.COMPLEX_UNIT_PX,
-                            getResources().getDimensionPixelSize(serviceDetailsFontSize));
-                    descriptionPartTextView.setLinkTextColor(getResources().getColor(R.color.textcolor_light));
-                    descriptionPartTextView.setMovementMethod(LinkMovementMethod.getInstance());
+                                MBTextView descriptionPartTextView = new MBTextView(activity);
+                                descriptionPartTextView.setTextSize(TypedValue.COMPLEX_UNIT_PX,
+                                        getResources().getDimensionPixelSize(serviceDetailsFontSize));
+                                descriptionPartTextView.setLinkTextColor(getResources().getColor(R.color.textcolor_light));
+                                descriptionPartTextView.setMovementMethod(LinkMovementMethod.getInstance());
 
-                    if (m.find()) {
-                        final String phoneNumber = m.group().substring(1);
+                                if (m.find()) {
+                                    final String phoneNumber = m.group().substring(1);
 
-                        int phoneNumberPosition = shrinkingDescription.indexOf(phoneNumber);
-                        String firstPart = shrinkingDescription.substring(0, phoneNumberPosition) + "</p>";
-                        shrinkingDescription = "<p>" + shrinkingDescription.substring(
-                                phoneNumberPosition + phoneNumber.length());
+                                    int phoneNumberPosition = shrinkingDescription.indexOf(phoneNumber);
+                                    String firstPart = shrinkingDescription.substring(0, phoneNumberPosition) + "</p>";
+                                    shrinkingDescription = "<p>" + shrinkingDescription.substring(
+                                            phoneNumberPosition + phoneNumber.length());
 
-                        descriptionPartTextView.setText(Html.fromHtml(firstPart));
+                                    descriptionPartTextView.setText(Html.fromHtml(firstPart));
 
-                        descriptionContainer.addView(descriptionPartTextView);
+                                    descriptionContainer.addView(descriptionPartTextView);
 
-                        if (serviceContent.getType().equals("wlan")) {
-                            makeSettingsButton("WLAN Einstellungen", descriptionContainer);
+                                    if (serviceContent.getType().equals("wlan")) {
+                                        makeSettingsButton("WLAN Einstellungen", descriptionContainer);
+                                    }
+                                    makePhoneButton(phoneNumber, descriptionContainer);
+                                } else {
+                                    keepLooking = false;
+
+                                    TextUtil.linkifyHtml(descriptionPartTextView,
+                                            shrinkingDescription, Linkify.WEB_URLS,
+                                            new TextViewImageGetter(descriptionPartTextView, imageTargetWidth));
+
+                                    descriptionContainer.addView(descriptionPartTextView);
+                                }
+                            }
                         }
-                        makePhoneButton(phoneNumber, descriptionContainer);
                     } else {
-                        keepLooking = false;
-
-                        TextUtil.linkifyHtml(descriptionPartTextView,
-                                shrinkingDescription, Linkify.WEB_URLS,
-                                new TextViewImageGetter(descriptionPartTextView, imageTargetWidth));
-
-                        descriptionContainer.addView(descriptionPartTextView);
+                        final DbActionButton button = staticInfoDescriptionPart.getButton();
+                        if (button != null) {
+                            final String label = button.getLabel();
+                            if (label != null) {
+                                final TextView buttonView = (TextView) getLayoutInflater().inflate(R.layout.include_description_button_part, descriptionContainer, false);
+                                descriptionContainer.addView(buttonView);
+                                buttonView.setText(label);
+                                buttonView.setContentDescription(label);
+                                buttonView.setOnClickListener(v1 -> {
+                                    final String href = button.getHref();
+                                    if (href != null) {
+                                        try {
+                                            v1.getContext().startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse(href)));
+                                        } catch (Exception e) {
+                                            BaseApplication.get().getIssueTracker().dispatchThrowable(e);
+                                        }
+                                    }
+                                });
+                            }
+                        }
                     }
                 }
+            } else {
+                descriptionContainer.removeAllViews();
+                descriptionContainer.setVisibility(View.GONE);
             }
-        } else {
-            descriptionContainer.removeAllViews();
-            descriptionContainer.setVisibility(View.GONE);
         }
 
         if (serviceContent.getAdditionalText() != null && serviceContent.getAdditionalText().length() > 0) {
