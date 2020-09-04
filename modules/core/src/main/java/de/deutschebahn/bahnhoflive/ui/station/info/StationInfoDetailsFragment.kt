@@ -14,6 +14,7 @@ import android.widget.LinearLayout
 import android.widget.TextView
 import androidx.annotation.LayoutRes
 import androidx.fragment.app.activityViewModels
+import de.deutschebahn.bahnhoflive.BaseApplication
 import de.deutschebahn.bahnhoflive.IconMapper
 import de.deutschebahn.bahnhoflive.R
 import de.deutschebahn.bahnhoflive.analytics.TrackingManager
@@ -37,6 +38,8 @@ class StationInfoDetailsFragment : RecyclerFragment<StationInfoDetailsFragment.S
 
     val stationViewModel: StationViewModel by activityViewModels()
 
+    val dbActionButtonParser = DbActionButtonParser()
+
     lateinit var serviceContents: List<ServiceContent>
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -44,44 +47,65 @@ class StationInfoDetailsFragment : RecyclerFragment<StationInfoDetailsFragment.S
 
         serviceContents = arguments?.getParcelableArrayList(ARG_SERVICE_CONTENTS) ?: emptyList()
         setTitle(arguments?.getCharSequence(FragmentArgs.TITLE))
-        adapter = StationInfoAdapter(serviceContents, TrackingManager.fromActivity(activity))
+        adapter = StationInfoAdapter(
+            serviceContents,
+            TrackingManager.fromActivity(activity),
+            dbActionButtonParser
+        )
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        stationViewModel.selectedServiceContentType.observe(viewLifecycleOwner, androidx.lifecycle.Observer { serviceContentType ->
-            if (serviceContentType != null) {
-                val serviceContentIndex = serviceContents.indexOfFirst { serviceContent ->
-                    serviceContent.type == serviceContentType
-                }
-                if (serviceContentIndex < 0) {
-                    HistoryFragment.parentOf(this).pop()
-                } else {
-                    stationViewModel.selectedServiceContentType.value = null
+        stationViewModel.selectedServiceContentType.observe(
+            viewLifecycleOwner,
+            androidx.lifecycle.Observer { serviceContentType ->
+                if (serviceContentType != null) {
+                    val serviceContentIndex = serviceContents.indexOfFirst { serviceContent ->
+                        serviceContent.type == serviceContentType
+                    }
+                    if (serviceContentIndex < 0) {
+                        HistoryFragment.parentOf(this).pop()
+                    } else {
+                        stationViewModel.selectedServiceContentType.value = null
 
-                    adapter?.singleSelectionManager?.selection = serviceContentIndex
+                        adapter?.singleSelectionManager?.selection = serviceContentIndex
+                    }
                 }
-            }
-        })
+            })
 
     }
 
     override fun onStart() {
         super.onStart()
 
-        TrackingManager.fromActivity(activity).track(TrackingManager.TYPE_STATE, TrackingManager.Screen.D1, TrackingManager.tagFromArguments(arguments))
+        TrackingManager.fromActivity(activity).track(
+            TrackingManager.TYPE_STATE,
+            TrackingManager.Screen.D1,
+            TrackingManager.tagFromArguments(arguments)
+        )
     }
 
-    class StationInfoAdapter(private val serviceContents: List<ServiceContent>, val trackingManager: TrackingManager) : androidx.recyclerview.widget.RecyclerView.Adapter<SelectableItemViewHolder<ServiceContent>>() {
+    class StationInfoAdapter(
+        private val serviceContents: List<ServiceContent>,
+        val trackingManager: TrackingManager,
+        val dbActionButtonParser: DbActionButtonParser
+    ) : androidx.recyclerview.widget.RecyclerView.Adapter<SelectableItemViewHolder<ServiceContent>>() {
         val singleSelectionManager: SingleSelectionManager = SingleSelectionManager(this)
 
-        override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): SelectableItemViewHolder<ServiceContent> {
+        override fun onCreateViewHolder(
+            parent: ViewGroup,
+            viewType: Int
+        ): SelectableItemViewHolder<ServiceContent> {
             return ServiceContentViewHolder(
-                    parent, singleSelectionManager, trackingManager)
+                parent, singleSelectionManager, trackingManager, dbActionButtonParser
+            )
         }
 
-        override fun onBindViewHolder(holder: SelectableItemViewHolder<ServiceContent>, position: Int) {
+        override fun onBindViewHolder(
+            holder: SelectableItemViewHolder<ServiceContent>,
+            position: Int
+        ) {
             holder.bind(serviceContents[position])
         }
 
@@ -92,9 +116,10 @@ class StationInfoDetailsFragment : RecyclerFragment<StationInfoDetailsFragment.S
     }
 
     class ServiceContentViewHolder(
-            parent: ViewGroup,
-            singleSelectionManager: SingleSelectionManager,
-            val trackingManager: TrackingManager
+        parent: ViewGroup,
+        singleSelectionManager: SingleSelectionManager,
+        val trackingManager: TrackingManager,
+        val dbActionButtonParser: DbActionButtonParser
     ) : CommonDetailsCardViewHolder<ServiceContent>(parent, R.layout.card_expandable_station_info, singleSelectionManager), View.OnClickListener {
         private val dbactionbuttonPattern = Pattern.compile("(.*)<dbactionbutton>(.*)</dbactionbutton>(.*)")
 
@@ -230,17 +255,39 @@ class StationInfoDetailsFragment : RecyclerFragment<StationInfoDetailsFragment.S
         }
 
         private fun renderDescriptionText(item: ServiceContent) {
-            val descriptionText = item.descriptionText
-            val matcher = Patterns.PHONE.matcher(descriptionText)
-            var cursor = 0
-            while (matcher.find()) {
-                val start = matcher.start()
-                addHtmlPart(descriptionText.substring(cursor, start))
-                cursor = matcher.end()
-                addPhonePart(descriptionText.substring(start, cursor), item.title)
-            }
-            if (cursor < descriptionText.length) {
-                addHtmlPart(descriptionText.substring(cursor, descriptionText.length))
+            val parts = dbActionButtonParser.parse(item.descriptionText)
+
+            parts.forEach {
+                it.button?.also { dbActionButton ->
+                    dbActionButton.label?.also { label ->
+                        addButtonPart(label, label) {
+                            dbActionButton.href?.let { url ->
+                                try {
+                                    it.context.startActivity(
+                                        Intent(
+                                            Intent.ACTION_VIEW,
+                                            Uri.parse(url)
+                                        )
+                                    )
+                                } catch (e: Exception) {
+                                    BaseApplication.get().issueTracker.dispatchThrowable(e)
+                                }
+                            }
+                        }
+                    }
+                } ?: it.text?.also { descriptionText ->
+                    val matcher = Patterns.PHONE.matcher(descriptionText)
+                    var cursor = 0
+                    while (matcher.find()) {
+                        val start = matcher.start()
+                        addHtmlPart(descriptionText.substring(cursor, start))
+                        cursor = matcher.end()
+                        addPhonePart(descriptionText.substring(start, cursor), item.title)
+                    }
+                    if (cursor < descriptionText.length) {
+                        addHtmlPart(descriptionText.substring(cursor, descriptionText.length))
+                    }
+                }
             }
         }
 
