@@ -32,10 +32,22 @@ class ServiceNumbers(
 
     fun update(detailedStopPlace: DetailedStopPlace, staticInfoCollection: StaticInfoCollection) {
         value = listOfNotNull(
-                composeServiceContent(detailedStopPlace, staticInfoCollection, ServiceContent.Type.MOBILITY_SERVICE, getAdditionalMobilityServiceText(detailedStopPlace)),
-                composeThreeSContent(detailedStopPlace, staticInfoCollection),
-                composeServiceContent(detailedStopPlace, staticInfoCollection, ServiceContent.Type.Local.LOST_AND_FOUND),
-                composeChatbotContent(detailedStopPlace, staticInfoCollection, ServiceContent.Type.Local.CHATBOT)
+            composeServiceContent(
+                detailedStopPlace,
+                staticInfoCollection,
+                ServiceContent.Type.MOBILITY_SERVICE
+            ),
+            composeThreeSContent(detailedStopPlace, staticInfoCollection),
+            composeServiceContent(
+                detailedStopPlace,
+                staticInfoCollection,
+                ServiceContent.Type.Local.LOST_AND_FOUND
+            ),
+            composeChatbotContent(
+                detailedStopPlace,
+                staticInfoCollection,
+                ServiceContent.Type.Local.CHATBOT
+            )
         )
     }
 

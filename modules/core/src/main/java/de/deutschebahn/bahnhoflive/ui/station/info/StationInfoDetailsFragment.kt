@@ -14,6 +14,7 @@ import android.widget.LinearLayout
 import android.widget.TextView
 import androidx.annotation.LayoutRes
 import androidx.fragment.app.activityViewModels
+import de.deutschebahn.bahnhoflive.BaseApplication
 import de.deutschebahn.bahnhoflive.IconMapper
 import de.deutschebahn.bahnhoflive.R
 import de.deutschebahn.bahnhoflive.analytics.TrackingManager
@@ -43,6 +44,8 @@ class StationInfoDetailsFragment :
 
     val stationViewModel: StationViewModel by activityViewModels()
 
+    val dbActionButtonParser = DbActionButtonParser()
+
     lateinit var serviceContents: List<ServiceContent>
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -55,7 +58,11 @@ class StationInfoDetailsFragment :
             // do nothing, just keep contents updated
         }
 
-        adapter = StationInfoAdapter(serviceContents, TrackingManager.fromActivity(activity))
+        adapter = StationInfoAdapter(
+            serviceContents,
+            TrackingManager.fromActivity(activity),
+            dbActionButtonParser
+        )
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -96,6 +103,8 @@ class StationInfoDetailsFragment :
     class StationInfoAdapter(
         private val serviceContents: List<ServiceContent>,
         val trackingManager: TrackingManager
+    ,
+        val dbActionButtonParser: DbActionButtonParser
     ) : androidx.recyclerview.widget.RecyclerView.Adapter<SelectableItemViewHolder<ServiceContent>>() {
         val singleSelectionManager: SingleSelectionManager = SingleSelectionManager(this)
 
@@ -105,6 +114,7 @@ class StationInfoDetailsFragment :
         ): SelectableItemViewHolder<ServiceContent> {
             return ServiceContentViewHolder(
                 parent, singleSelectionManager, trackingManager
+            , dbActionButtonParser
             )
         }
 
@@ -125,7 +135,8 @@ class StationInfoDetailsFragment :
     class ServiceContentViewHolder(
         parent: ViewGroup,
         singleSelectionManager: SingleSelectionManager,
-        val trackingManager: TrackingManager
+        val trackingManager: TrackingManager,
+        val dbActionButtonParser: DbActionButtonParser
     ) : CommonDetailsCardViewHolder<ServiceContent>(
         parent,
         R.layout.card_expandable_station_info,
@@ -294,17 +305,39 @@ class StationInfoDetailsFragment :
         }
 
         private fun renderDescriptionText(item: ServiceContent) {
-            val descriptionText = item.descriptionText
-            val matcher = Patterns.PHONE.matcher(descriptionText)
-            var cursor = 0
-            while (matcher.find()) {
-                val start = matcher.start()
-                addHtmlPart(descriptionText.substring(cursor, start))
-                cursor = matcher.end()
-                addPhonePart(descriptionText.substring(start, cursor), item.title)
-            }
-            if (cursor < descriptionText.length) {
-                addHtmlPart(descriptionText.substring(cursor, descriptionText.length))
+            val parts = dbActionButtonParser.parse(item.descriptionText)
+
+            parts.forEach {
+                it.button?.also { dbActionButton ->
+                    dbActionButton.label?.also { label ->
+                        addButtonPart(label, label) {
+                            dbActionButton.href?.let { url ->
+                                try {
+                                    it.context.startActivity(
+                                        Intent(
+                                            Intent.ACTION_VIEW,
+                                            Uri.parse(url)
+                                        )
+                                    )
+                                } catch (e: Exception) {
+                                    BaseApplication.get().issueTracker.dispatchThrowable(e)
+                                }
+                            }
+                        }
+                    }
+                } ?: it.text?.also { descriptionText ->
+                    val matcher = Patterns.PHONE.matcher(descriptionText)
+                    var cursor = 0
+                    while (matcher.find()) {
+                        val start = matcher.start()
+                        addHtmlPart(descriptionText.substring(cursor, start))
+                        cursor = matcher.end()
+                        addPhonePart(descriptionText.substring(start, cursor), item.title)
+                    }
+                    if (cursor < descriptionText.length) {
+                        addHtmlPart(descriptionText.substring(cursor, descriptionText.length))
+                    }
+                }
             }
         }
 
