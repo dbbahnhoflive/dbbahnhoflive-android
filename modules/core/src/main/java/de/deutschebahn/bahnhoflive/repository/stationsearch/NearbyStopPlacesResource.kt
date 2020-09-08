@@ -28,5 +28,5 @@ class NearbyStopPlacesResource(
         )
     }
 
-    override fun isLoadingPreconditionsMet() = location != null
+    override val isLoadingPreconditionsMet get() = location != null
 }

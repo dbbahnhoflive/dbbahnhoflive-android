@@ -61,10 +61,10 @@ internal class NearbyDeparturesAdapter(
         singleSelectionManager.clearSelection()
     }
 
-    fun setData(stopPlaces: List<StopPlace>) {
+    fun setData(stopPlaces: List<StopPlace>?) {
         clearSelection()
 
-        items = stopPlaces.mapNotNull { stopPlace ->
+        items = stopPlaces?.mapNotNull { stopPlace ->
             when {
                 stopPlace.isDbStation -> {
                     NearbyDbStationItem(
