@@ -1,13 +1,10 @@
 package de.deutschebahn.bahnhoflive.ui;
 
 import android.app.AlertDialog;
-import android.content.Context;
+import android.content.ActivityNotFoundException;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.content.pm.PackageManager;
-import android.content.pm.ResolveInfo;
-import android.net.MailTo;
 import android.net.Uri;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
@@ -27,7 +24,6 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.nio.charset.StandardCharsets;
-import java.util.List;
 
 import de.deutschebahn.bahnhoflive.BaseApplication;
 import de.deutschebahn.bahnhoflive.R;
@@ -78,14 +74,11 @@ public class ImprintFragment extends Fragment {
             @Override
             public boolean shouldOverrideUrlLoading(WebView view, String url) {
                 if (url.startsWith("mailto:")) {
-                    MailTo mt = MailTo.parse(url);
-                    Intent i = newEmailIntent(getActivity(), mt.getTo(), mt.getSubject(), mt.getBody(), mt.getCc());
-                    final PackageManager packageManager = getActivity().getPackageManager();
-                    List<ResolveInfo> list = packageManager.queryIntentActivities(i, 0);
-                    if (list.size() == 0) {
-                        return true;
+                    Intent emailIntent = new Intent(Intent.ACTION_SENDTO, Uri.parse(url));
+                    try {
+                        startActivity(emailIntent);
+                    } catch (ActivityNotFoundException ignored) {
                     }
-                    startActivity(i);
                     return true;
                 } else if ("app:lizenzen.html".equals(url)) {
                     final Intent intent = WebViewActivity.createIntent(getContext(), "lizenzen.html", "Lizenzen");
@@ -223,16 +216,6 @@ public class ImprintFragment extends Fragment {
             sb.append(line);
         }
         return sb.toString();
-    }
-
-    public static Intent newEmailIntent(Context context, String address, String subject, String body, String cc) {
-        Intent intent = new Intent(Intent.ACTION_SEND);
-        intent.putExtra(Intent.EXTRA_EMAIL, new String[]{address});
-        intent.putExtra(Intent.EXTRA_TEXT, body);
-        intent.putExtra(Intent.EXTRA_SUBJECT, subject);
-        intent.putExtra(Intent.EXTRA_CC, cc);
-        intent.setType("message/rfc822");
-        return intent;
     }
 
     @NonNull

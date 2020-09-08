@@ -79,7 +79,7 @@ public class DbTimetableResource extends RemoteResource<Timetable> {
                 @Override
                 public void onChanged(@Nullable LoadingStatus loadingStatus) {
                     if (loadingStatus != null && loadingStatus == LoadingStatus.BUSY) {
-                        DbTimetableResource.this.loadingStatus.setValue(LoadingStatus.BUSY);
+                        DbTimetableResource.this.getMutableLoadingStatus().setValue(LoadingStatus.BUSY);
                     }
                 }
             }, new Observer<VolleyError>() {
@@ -106,7 +106,7 @@ public class DbTimetableResource extends RemoteResource<Timetable> {
     public void setEvaIds(EvaIds evaIds) {
         if (evaIds != null) {
             timetableCollector.getEvaIdsInput().onNext(evaIds.getIds());
-            error.setValue(null);
+            getMutableError().setValue(null);
         }
     }
 

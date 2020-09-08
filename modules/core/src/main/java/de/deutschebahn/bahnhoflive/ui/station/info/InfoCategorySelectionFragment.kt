@@ -25,11 +25,11 @@ class InfoCategorySelectionFragment : CategorySelectionFragment(R.string.title_s
 
     private lateinit var infoAndServices: InfoAndServices
     private lateinit var serviceNumbers: ServiceNumbers
-    private lateinit var detailedStationLiveData: LiveData<DetailedStopPlace>
-    private lateinit var staticInfoLiveData: LiveData<StaticInfoCollection>
+    private lateinit var detailedStationLiveData: LiveData<DetailedStopPlace?>
+    private lateinit var staticInfoLiveData: LiveData<StaticInfoCollection?>
     private lateinit var parkingsResource: ParkingsResource
 
-    private lateinit var elevatorsDataResource: LiveData<List<FacilityStatus>>
+    private lateinit var elevatorsDataResource: LiveData<List<FacilityStatus>?>
 
     private var infoAndServicesCategory: Category? = null
     private var serviceNumbersCategory: Category? = null

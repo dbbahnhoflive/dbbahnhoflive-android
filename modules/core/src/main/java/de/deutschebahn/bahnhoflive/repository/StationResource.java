@@ -68,16 +68,16 @@ public class StationResource extends MediatorResource<Station> {
                     clearStadaError();
                 } else {
                     rimapStationFeatureCollectionResource.loadIfNecessary();
-                    data.addSource(rimapStationFeatureCollectionResource.data, rimapDataObserver);
-                    data.addSource(rimapStationFeatureCollectionResource.error, rimapErrorObserver);
+                    data.addSource(rimapStationFeatureCollectionResource.getMutableData(), rimapDataObserver);
+                    data.addSource(rimapStationFeatureCollectionResource.getMutableError(), rimapErrorObserver);
                 }
             }
         });
     }
 
     private void clearStadaError() {
-        data.removeSource(rimapStationFeatureCollectionResource.data);
-        data.removeSource(rimapStationFeatureCollectionResource.error);
+        data.removeSource(rimapStationFeatureCollectionResource.getMutableData());
+        data.removeSource(rimapStationFeatureCollectionResource.getMutableError());
 
         clearRimapError();
     }

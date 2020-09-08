@@ -27,10 +27,12 @@ class HafasStationsResource(val maxStationDistance: Int) : RemoteResource<List<H
         }
     }
 
-    override fun isLoadingPreconditionsMet() = ::station.isInitialized && ::location.isInitialized && ::origin.isInitialized
+    override val isLoadingPreconditionsMet: Boolean
+        get() = ::station.isInitialized && ::location.isInitialized && ::origin.isInitialized
 
     override fun onStartLoading(force: Boolean) {
-        BaseApplication.get().repositories.localTransportRepository.queryNearbyStations(location.latitude,
+        BaseApplication.get().repositories.localTransportRepository.queryNearbyStations(
+            location.latitude,
             location.longitude,
             object : Filter<HafasStation> {
                 override fun getLimit(): Int {

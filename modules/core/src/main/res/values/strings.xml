@@ -242,4 +242,7 @@
     <string name="error_detail_message_station_search"><![CDATA[<b>Hinweis:</b> Daten konnten nicht geladen werden. Bitte versuchen Sie es später erneut.]]></string>
     <string name="btn_retry">Erneut versuchen</string>
 
+    <string name="notification_channel_arrival_name">Einfahrt</string>
+    <string name="notification_channel_arrival_description">Erinnerungen vor Einfahrt eines Zuges</string>
+
 </resources>

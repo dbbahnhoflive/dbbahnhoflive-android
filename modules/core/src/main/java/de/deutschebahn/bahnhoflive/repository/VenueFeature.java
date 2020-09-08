@@ -10,6 +10,7 @@ import static de.deutschebahn.bahnhoflive.ui.map.content.rimap.RimapFilter.PRESE
 import static de.deutschebahn.bahnhoflive.ui.map.content.rimap.RimapFilter.PRESET_DB_INFO;
 import static de.deutschebahn.bahnhoflive.ui.map.content.rimap.RimapFilter.PRESET_DB_LOUNGE;
 import static de.deutschebahn.bahnhoflive.ui.map.content.rimap.RimapFilter.PRESET_ELEVATORS;
+import static de.deutschebahn.bahnhoflive.ui.map.content.rimap.RimapFilter.PRESET_INFO_ON_SITE;
 import static de.deutschebahn.bahnhoflive.ui.map.content.rimap.RimapFilter.PRESET_LOCKERS;
 import static de.deutschebahn.bahnhoflive.ui.map.content.rimap.RimapFilter.PRESET_LOST_AND_FOUND;
 import static de.deutschebahn.bahnhoflive.ui.map.content.rimap.RimapFilter.PRESET_PARKING;
@@ -32,6 +33,7 @@ public enum VenueFeature {
     TAXI(PRESET_TAXI, new SubcatFilter("Taxi")),
     CAR_RENTAL(PRESET_CAR_RENTAL, new SubcatFilter(/*"Flinkster", "Carsharing",*/ "Mietwagen")),
     LOST_AND_FOUND(PRESET_LOST_AND_FOUND, new SubcatFilter("Fundbüro")),
+    RAILWAY_MISSION(PRESET_INFO_ON_SITE, new SubcatFilter("Bahnhofsmission")),
     ;
 
     VenueFeature(@Preset String mapPreset, RimapFilter rimapFilter) {

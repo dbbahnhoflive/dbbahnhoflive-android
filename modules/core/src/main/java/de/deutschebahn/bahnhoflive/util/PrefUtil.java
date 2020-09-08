@@ -16,6 +16,7 @@ public class PrefUtil {
 
 	private static final String SAVED_FACILITIES = "38";
 	private static final String FACILITIES_PUSH_ACTIVE = "39";
+	public static final String FORMAT_ALARM = "alarm_%s";
 
 
 	private static SharedPreferences getPrefs(Context context) {
@@ -34,7 +35,7 @@ public class PrefUtil {
 
 	public static void storeAlarmKey(@NonNull final String key, @NonNull Context context) {
 
-		final String alarmKey = String.format("alarm_%s", key);
+		final String alarmKey = String.format(FORMAT_ALARM, key);
 
 		getPrefs(context)
 				.edit()
@@ -44,12 +45,12 @@ public class PrefUtil {
 	}
 
 	public static void cleanAlarmKey(@NonNull  String key, @NonNull  Context context) {
-		final String alarmKey = String.format("alarm_%s", key);
+		final String alarmKey = String.format(FORMAT_ALARM, key);
 		getPrefs(context).edit().remove(alarmKey).commit();
 	}
 
 	public static boolean hasAlarmSet(@NonNull final String key, @NonNull Context context) {
-		final String alarmKey = String.format("alarm_%s", key);
+		final String alarmKey = String.format(FORMAT_ALARM, key);
 		return getPrefs(context).contains(alarmKey);
 	}
 

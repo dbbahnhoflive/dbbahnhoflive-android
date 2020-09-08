@@ -31,7 +31,7 @@ public class EinkaufsbahnhofStationResponseResource extends RemoteResource<Stati
     @Override
     protected void setError(VolleyError reason) {
         if (isIdRejected(reason)) {
-            data.setValue(null);
+            getMutableData().setValue(null);
         } else {
             super.setError(reason);
         }

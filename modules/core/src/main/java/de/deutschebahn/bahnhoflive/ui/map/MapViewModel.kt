@@ -4,7 +4,6 @@ import android.content.Context
 import androidx.lifecycle.LiveDataReactiveStreams
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.Observer
-import androidx.lifecycle.distinctUntilChanged
 import com.android.volley.VolleyError
 import de.deutschebahn.bahnhoflive.BaseApplication
 import de.deutschebahn.bahnhoflive.backend.BaseRestListener
@@ -139,29 +138,29 @@ class MapViewModel : StadaStationCacheViewModel() {
         }
     }
 
-    val rimapStationInfoLiveData = stationResource.data.distinctUntilChanged().switchMap {
+    val rimapStationInfoLiveData = stationResource.data.switchMap {
         it?.takeUnless { it.location == null }?.let { station ->
             OneShotLiveData<Pair<Station, RimapStationInfo?>> { receiver ->
                 val evaIds = station.evaIds
                 val mainEvaId = evaIds.main
                 baseApplication.repositories.mapRepository.queryStationInfo(
-                        station.id,
+                    station.id,
                     object : BaseRestListener<StationFeatureCollection>() {
-                            override fun onSuccess(payload: StationFeatureCollection?) {
-                                super.onSuccess(payload)
+                        override fun onSuccess(payload: StationFeatureCollection?) {
+                            super.onSuccess(payload)
 
-                                receiver(station to RimapStationInfo.fromResponse(payload))
-                            }
+                            receiver(station to RimapStationInfo.fromResponse(payload))
+                        }
 
-                            override fun onFail(reason: VolleyError?) {
-                                super.onFail(reason)
+                        override fun onFail(reason: VolleyError?) {
+                            super.onFail(reason)
 
-                                receiver(station to null)
-                            }
-                        },
+                            receiver(station to null)
+                        }
+                    },
                     true,
                     mainEvaId
-                    )
+                )
 
             }
         }
@@ -169,7 +168,7 @@ class MapViewModel : StadaStationCacheViewModel() {
 
     val rimapPoisLiveData = rimapStationInfoLiveData.switchMap {
         it.second?.takeIf { it.levelCount() > 0 }?.let {
-            stationResource.data.distinctUntilChanged().switchMap { station ->
+            stationResource.data.switchMap { station ->
                 station?.let { station ->
                     OneShotLiveData<List<RimapPOI>?> {
                         baseApplication.repositories.mapRepository.queryPois(

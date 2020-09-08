@@ -3,7 +3,11 @@ package de.deutschebahn.bahnhoflive.ui.station.features;
 import android.content.Context;
 import android.os.Bundle;
 
+import androidx.annotation.NonNull;
+
+import de.deutschebahn.bahnhoflive.backend.db.publictrainstation.model.EmbeddedTravelCenter;
 import de.deutschebahn.bahnhoflive.backend.local.model.ServiceContent;
+import de.deutschebahn.bahnhoflive.ui.AvailabilityRenderer;
 import de.deutschebahn.bahnhoflive.ui.ServiceContentFragment;
 import de.deutschebahn.bahnhoflive.ui.station.StaticInfoCollection;
 import de.deutschebahn.bahnhoflive.ui.station.info.StaticInfo;
@@ -19,10 +23,23 @@ public class MapOrInfoLink extends MapLink {
     }
 
     @Override
-    public ServiceContentFragment createServiceContentFragment(Context context, StationFeature stationFeature) {
+    public ServiceContentFragment createServiceContentFragment(Context context, @NonNull StationFeature stationFeature) {
+        final StaticInfo staticInfo = getStaticInfo(stationFeature);
+        if (staticInfo == null) {
+            return null;
+        }
+
+        String additionalText = null;
+        if (ServiceContent.Type.Local.TRAVEL_CENTER.equals(staticInfo.type)) {
+            final EmbeddedTravelCenter travelCenter = stationFeature.getDetailedStopPlace().getTravelCenter();
+            if (travelCenter != null) {
+                additionalText = new AvailabilityRenderer().renderSchedule(travelCenter.getOpeningHours());
+            }
+        }
+
         final String title = context.getString(stationFeature.getStationFeatureTemplate().getDefinition().getLabel());
         final Bundle args = ServiceContentFragment.createArgs(
-                title, new ServiceContent(getStaticInfo(stationFeature)), trackingTag);
+                title, new ServiceContent(staticInfo, additionalText), trackingTag);
         return ServiceContentFragment.create(args);
     }
 
