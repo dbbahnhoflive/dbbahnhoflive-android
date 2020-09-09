@@ -1,7 +1,7 @@
 package de.deutschebahn.bahnhoflive.ui
 
 import de.deutschebahn.bahnhoflive.backend.db.publictrainstation.model.AvailabilityEntry
-import de.deutschebahn.bahnhoflive.ui.station.info.InfoAndServices
+import de.deutschebahn.bahnhoflive.ui.station.info.InfoAndServicesLiveData
 
 class AvailabilityRenderer() {
 
@@ -19,7 +19,7 @@ class AvailabilityRenderer() {
             ?.forEach { availabilityEntry: AvailabilityEntry ->
                 stringBuilder.append(
                     "<br/>${
-                        InfoAndServices.dayLabels[availabilityEntry.day]
+                        InfoAndServicesLiveData.dayLabels[availabilityEntry.day]
                             ?: availabilityEntry.day
                     }: ${availabilityEntry.openTime?.stripSeconds()}-${availabilityEntry.closeTime?.stripSeconds()}"
                 )
