@@ -258,4 +258,8 @@ public class ServiceContent implements Parcelable {
     public LatLng getLocation() {
         return location;
     }
+
+    public void setAdditionalText(String additionalText) {
+        this.additionalText = additionalText;
+    }
 }
