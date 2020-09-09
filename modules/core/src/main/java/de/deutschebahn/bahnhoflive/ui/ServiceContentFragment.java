@@ -196,8 +196,8 @@ public class ServiceContentFragment extends Fragment {
         if (serviceContent.getDescriptionText() != null && serviceContent.getDescriptionText().length() > 0) {
             final List<StaticInfoDescriptionPart> staticInfoDescriptionParts = new DbActionButtonParser().parse(serviceContent.getDescriptionText());
             if (!staticInfoDescriptionParts.isEmpty()) {
-                descriptionContainer.removeAllViews();
-                descriptionContainer.setVisibility(View.VISIBLE);
+                descriptionContainerView.removeAllViews();
+                descriptionContainerView.setVisibility(View.VISIBLE);
 
                 for (StaticInfoDescriptionPart staticInfoDescriptionPart : staticInfoDescriptionParts) {
 
@@ -265,7 +265,7 @@ public class ServiceContentFragment extends Fragment {
                                             shrinkingDescription, Linkify.WEB_URLS,
                                             new TextViewImageGetter(descriptionPartTextView, imageTargetWidth));
 
-                                    descriptionContainer.addView(descriptionPartTextView);
+                                    descriptionContainerView.addView(descriptionPartTextView);
                                 }
                             }
                         }
@@ -274,8 +274,8 @@ public class ServiceContentFragment extends Fragment {
                         if (button != null) {
                             final String label = button.getLabel();
                             if (label != null) {
-                                final TextView buttonView = (TextView) getLayoutInflater().inflate(R.layout.include_description_button_part, descriptionContainer, false);
-                                descriptionContainer.addView(buttonView);
+                                final TextView buttonView = (TextView) getLayoutInflater().inflate(R.layout.include_description_button_part, descriptionContainerView, false);
+                                descriptionContainerView.addView(buttonView);
                                 buttonView.setText(label);
                                 buttonView.setContentDescription(label);
                                 buttonView.setOnClickListener(v1 -> {
@@ -293,8 +293,8 @@ public class ServiceContentFragment extends Fragment {
                     }
                 }
             } else {
-                descriptionContainer.removeAllViews();
-                descriptionContainer.setVisibility(View.GONE);
+                descriptionContainerView.removeAllViews();
+                descriptionContainerView.setVisibility(View.GONE);
             }
         }
 
