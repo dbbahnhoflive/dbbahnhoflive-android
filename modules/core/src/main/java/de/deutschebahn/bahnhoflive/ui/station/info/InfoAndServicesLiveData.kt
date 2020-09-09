@@ -12,7 +12,7 @@ import de.deutschebahn.bahnhoflive.ui.station.StaticInfoCollection
 import de.deutschebahn.bahnhoflive.ui.station.shop.Shop
 import de.deutschebahn.bahnhoflive.util.then
 
-class InfoAndServices(
+class InfoAndServicesLiveData(
     detailedStopPlaceResource: DetailedStopPlaceResource,
     val staticInfoCollectionSource: LiveData<StaticInfoCollection>,
     val travelCenter: LiveData<EmbeddedTravelCenter?>,

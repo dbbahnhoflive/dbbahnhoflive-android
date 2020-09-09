@@ -35,7 +35,6 @@ import de.deutschebahn.bahnhoflive.R;
 import de.deutschebahn.bahnhoflive.analytics.IssueTracker;
 import de.deutschebahn.bahnhoflive.analytics.StationTrackingManager;
 import de.deutschebahn.bahnhoflive.analytics.TrackingManager;
-import de.deutschebahn.bahnhoflive.backend.db.publictrainstation.model.DetailedStopPlace;
 import de.deutschebahn.bahnhoflive.backend.ris.model.TrainInfo;
 import de.deutschebahn.bahnhoflive.repository.InternalStation;
 import de.deutschebahn.bahnhoflive.repository.Station;
@@ -158,10 +157,10 @@ public class StationActivity extends AppCompatActivity implements
         shoppingTabButton = prepareNavigationButton(R.id.tab_shopping, 3, TrackingManager.UiElement.SHOPS);
         shoppingTabButton.setEnabled(false);
 
-        stationViewModel.getDetailedStopPlaceResource().getData().observe(this, new Observer<DetailedStopPlace>() {
+        stationViewModel.getHasInfosLiveData().observe(this, new Observer<Boolean>() {
             @Override
-            public void onChanged(@Nullable DetailedStopPlace detailedStopPlace) {
-                infoTabButton.setEnabled(detailedStopPlace != null);
+            public void onChanged(@Nullable Boolean infosAvailable) {
+                infoTabButton.setEnabled(infosAvailable == Boolean.TRUE);
             }
         });
 

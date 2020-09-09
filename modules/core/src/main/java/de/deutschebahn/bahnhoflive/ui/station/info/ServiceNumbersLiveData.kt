@@ -11,9 +11,9 @@ import de.deutschebahn.bahnhoflive.ui.station.StaticInfoCollection
 import de.deutschebahn.bahnhoflive.util.then
 import java.util.regex.Pattern
 
-class ServiceNumbers(
-        detailedStopPlaceResource: DetailedStopPlaceResource,
-        val staticInfoCollectionSource: LiveData<StaticInfoCollection>
+class ServiceNumbersLiveData(
+    detailedStopPlaceResource: DetailedStopPlaceResource,
+    val staticInfoCollectionSource: LiveData<StaticInfoCollection>
 ) : MergedLiveData<List<ServiceContent>?>(null) {
     val detailedStopPlaceLiveData = detailedStopPlaceResource.data
 
