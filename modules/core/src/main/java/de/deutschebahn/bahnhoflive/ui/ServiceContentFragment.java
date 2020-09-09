@@ -10,7 +10,6 @@ import android.provider.Settings;
 import android.text.Html;
 import android.text.method.LinkMovementMethod;
 import android.text.util.Linkify;
-import android.util.Log;
 import android.util.TypedValue;
 import android.view.Gravity;
 import android.view.LayoutInflater;
@@ -39,6 +38,8 @@ import de.deutschebahn.bahnhoflive.BaseApplication;
 import de.deutschebahn.bahnhoflive.IconMapper;
 import de.deutschebahn.bahnhoflive.R;
 import de.deutschebahn.bahnhoflive.analytics.TrackingManager;
+import de.deutschebahn.bahnhoflive.backend.db.publictrainstation.model.Availability;
+import de.deutschebahn.bahnhoflive.backend.db.publictrainstation.model.Details;
 import de.deutschebahn.bahnhoflive.backend.local.model.ServiceContent;
 import de.deutschebahn.bahnhoflive.ui.station.HistoryFragment;
 import de.deutschebahn.bahnhoflive.ui.station.ServiceContents;
@@ -58,7 +59,7 @@ public class ServiceContentFragment extends Fragment {
     private String actionbarTitle;
     private int imageTargetWidth;
 
-    private View detailsContainer;
+    private View detailsContainerView;
 
     private ServiceContent serviceContent;
 
@@ -67,6 +68,10 @@ public class ServiceContentFragment extends Fragment {
     private boolean forceList;
     private Activity activity;
     private StationViewModel stationViewModel;
+    private ImageView iconView;
+    private LinearLayout descriptionContainerView;
+    private TextView additionalTextView;
+    private LinearLayout tableView;
 
     public String getActionBarTitle() {
         return actionbarTitle;
@@ -97,6 +102,30 @@ public class ServiceContentFragment extends Fragment {
                 }
             }
         });
+
+        if (ServiceContent.Type.DB_INFORMATION.equals(serviceContent.getType()) && serviceContent.getAdditionalText() == null) {
+            final AvailabilityRenderer availabilityRenderer = new AvailabilityRenderer();
+            stationViewModel.getDetailedStopPlaceResource().getData().observe(this, detailedStopPlace -> {
+                if (detailedStopPlace == null) {
+                    return;
+                }
+
+                final Details details = detailedStopPlace.getDetails();
+                if (details == null) {
+                    return;
+                }
+
+                final Availability availability = details.getDbInformation();
+                if (availability == null) {
+                    return;
+                }
+
+                serviceContent.setAdditionalText(availabilityRenderer.renderSchedule(availability.getAvailability()));
+
+                bindViews();
+            });
+
+        }
     }
 
     @Override
@@ -139,26 +168,29 @@ public class ServiceContentFragment extends Fragment {
 
         new ToolbarViewHolder(v, getActionBarTitle());
 
-        detailsContainer = v.findViewById(R.id.services_details_container);
+        detailsContainerView = v.findViewById(R.id.services_details_container);
 
         imageTargetWidth = ImageHelper.getImagewidthTarget(getActivity());
 
+        detailsContainerView.setVisibility(View.VISIBLE);
 
-        Log.e("KK", "showing detail view");
-        detailsContainer.setVisibility(View.VISIBLE);
-
-        ImageView icon = v.findViewById(R.id.service_icon);
-        LinearLayout descriptionContainer = v.findViewById(R.id.service_description);
-        final TextView additionalText = v.findViewById(R.id.service_additionalText);
-        additionalText.setMovementMethod(LinkMovementMethod.getInstance());
-        additionalText.setTextSize(TypedValue.COMPLEX_UNIT_PX,
+        iconView = v.findViewById(R.id.service_icon);
+        descriptionContainerView = v.findViewById(R.id.service_description);
+        additionalTextView = v.findViewById(R.id.service_additionalText);
+        additionalTextView.setMovementMethod(LinkMovementMethod.getInstance());
+        additionalTextView.setTextSize(TypedValue.COMPLEX_UNIT_PX,
                 getResources().getDimensionPixelSize(serviceDetailsFontSize));
-        LinearLayout table = v.findViewById(R.id.service_table);
+        tableView = v.findViewById(R.id.service_table);
 
-        // Make sure the title is correct when accessing the Content View
+        bindViews();
+
+        return v;
+    }
+
+    public void bindViews() {
         actionbarTitle = serviceContent.getTitle();
 
-        icon.setImageResource(IconMapper.contentIconForType(serviceContent));
+        iconView.setImageResource(IconMapper.contentIconForType(serviceContent));
 
 
         if (serviceContent.getDescriptionText() != null && serviceContent.getDescriptionText().length() > 0) {
@@ -190,10 +222,10 @@ public class ServiceContentFragment extends Fragment {
                                     Linkify.WEB_URLS,
                                     new TextViewImageGetter(descriptionPartTextView, imageTargetWidth));
 
-                            descriptionContainer.addView(descriptionPartTextView);
+                            descriptionContainerView.addView(descriptionPartTextView);
                             descriptionPartTextView.getLayoutParams().height = LayoutParams.WRAP_CONTENT;
 
-                            makePhoneButton(components.get(1), descriptionContainer);
+                            makePhoneButton(components.get(1), descriptionContainerView);
 
 
                         } else {
@@ -220,12 +252,12 @@ public class ServiceContentFragment extends Fragment {
 
                                     descriptionPartTextView.setText(Html.fromHtml(firstPart));
 
-                                    descriptionContainer.addView(descriptionPartTextView);
+                                    descriptionContainerView.addView(descriptionPartTextView);
 
                                     if (serviceContent.getType().equals("wlan")) {
-                                        makeSettingsButton("WLAN Einstellungen", descriptionContainer);
+                                        makeSettingsButton("WLAN Einstellungen", descriptionContainerView);
                                     }
-                                    makePhoneButton(phoneNumber, descriptionContainer);
+                                    makePhoneButton(phoneNumber, descriptionContainerView);
                                 } else {
                                     keepLooking = false;
 
@@ -267,27 +299,25 @@ public class ServiceContentFragment extends Fragment {
         }
 
         if (serviceContent.getAdditionalText() != null && serviceContent.getAdditionalText().length() > 0) {
-            additionalText.setVisibility(View.VISIBLE);
-            additionalText.setMovementMethod(LinkMovementMethod.getInstance());
-            TextUtil.linkifyHtml(additionalText,
+            additionalTextView.setVisibility(View.VISIBLE);
+            additionalTextView.setMovementMethod(LinkMovementMethod.getInstance());
+            TextUtil.linkifyHtml(additionalTextView,
                     serviceContent.getAdditionalText(), Linkify.ALL,
-                    new TextViewImageGetter(additionalText, imageTargetWidth));
+                    new TextViewImageGetter(additionalTextView, imageTargetWidth));
 
-            additionalText.setLinkTextColor(getResources().getColor(R.color.textcolor_light));
+            additionalTextView.setLinkTextColor(getResources().getColor(R.color.textcolor_light));
         } else {
-            additionalText.setVisibility(View.GONE);
-            additionalText.setText(null);
+            additionalTextView.setVisibility(View.GONE);
+            additionalTextView.setText(null);
         }
 
-        table.removeAllViews();
+        tableView.removeAllViews();
         if (serviceContent.getTable() != null) {
-            buildTable(serviceContent, table);
-            table.setVisibility(View.VISIBLE);
+            buildTable(serviceContent, tableView);
+            tableView.setVisibility(View.VISIBLE);
         } else {
-            table.setVisibility(View.GONE);
+            tableView.setVisibility(View.GONE);
         }
-
-        return v;
     }
 
     private TextView makeSettingsButton(final String buttonTitle, LinearLayout container) {
