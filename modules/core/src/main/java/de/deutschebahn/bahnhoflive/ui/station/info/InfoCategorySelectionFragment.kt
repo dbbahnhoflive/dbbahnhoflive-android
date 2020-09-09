@@ -23,8 +23,8 @@ class InfoCategorySelectionFragment : CategorySelectionFragment(R.string.title_s
 
     val stationViewModel by activityViewModels<StationViewModel>()
 
-    private lateinit var infoAndServices: InfoAndServices
-    private lateinit var serviceNumbers: ServiceNumbers
+    private lateinit var infoAndServicesLiveData: InfoAndServicesLiveData
+    private lateinit var serviceNumbersLiveData: ServiceNumbersLiveData
     private lateinit var detailedStationLiveData: LiveData<DetailedStopPlace>
     private lateinit var staticInfoLiveData: LiveData<StaticInfoCollection>
     private lateinit var parkingsResource: ParkingsResource
@@ -46,8 +46,8 @@ class InfoCategorySelectionFragment : CategorySelectionFragment(R.string.title_s
                 return
             }
 
-            infoAndServicesCategory = addInfoAndServices(infoAndServices.value)
-            serviceNumbersCategory = addServiceNumbers(serviceNumbers.value)
+            infoAndServicesCategory = addInfoAndServices(infoAndServicesLiveData.value)
+            serviceNumbersCategory = addServiceNumbers(serviceNumbersLiveData.value)
             wifiCategory = addWifi(station, staticInfoCollection)
             accessibilityCategory = addAccessibility(station, staticInfoCollection)
             parkingsCategory = addParkings()
@@ -56,14 +56,16 @@ class InfoCategorySelectionFragment : CategorySelectionFragment(R.string.title_s
                 elevatorsCategory = addElevators()
             }
 
-            adapter?.setCategories(listOfNotNull(
+            adapter?.setCategories(
+                listOfNotNull(
                     infoAndServicesCategory,
                     serviceNumbersCategory,
                     wifiCategory,
                     accessibilityCategory,
                     parkingsCategory,
                     elevatorsCategory
-            ))
+                )
+            )
         }
     }
 
@@ -169,8 +171,8 @@ class InfoCategorySelectionFragment : CategorySelectionFragment(R.string.title_s
 
         detailedStationLiveData = stationViewModel.detailedStopPlaceResource.data
         elevatorsDataResource = stationViewModel.elevatorsResource.data
-        infoAndServices = stationViewModel.infoAndServices
-        serviceNumbers = stationViewModel.serviceNumbers
+        infoAndServicesLiveData = stationViewModel.infoAndServicesLiveData
+        serviceNumbersLiveData = stationViewModel.serviceNumbersLiveData
         parkingsResource = stationViewModel.parking.parkingsResource
         staticInfoLiveData = stationViewModel.staticInfoLiveData
 
@@ -183,52 +185,62 @@ class InfoCategorySelectionFragment : CategorySelectionFragment(R.string.title_s
 
         elevatorsDataResource.observe(this, Observer { updateCategories() })
         detailedStationLiveData.observe(this, Observer { updateCategories() })
-        infoAndServices.observe(this, Observer { updateCategories() })
-        serviceNumbers.observe(this, Observer { updateCategories() })
+        infoAndServicesLiveData.observe(this, Observer { updateCategories() })
+        serviceNumbersLiveData.observe(this, Observer { updateCategories() })
 
         stationViewModel.selectedServiceContentType.observe(this, Observer {
             if (it != null) {
                 when {
                     setOf(
-                            ServiceContent.Type.DB_INFORMATION,
-                            ServiceContent.Type.MOBILE_SERVICE,
-                            ServiceContent.Type.BAHNHOFSMISSION,
-                            ServiceContent.Type.Local.TRAVEL_CENTER,
-                            ServiceContent.Type.Local.DB_LOUNGE
+                        ServiceContent.Type.DB_INFORMATION,
+                        ServiceContent.Type.MOBILE_SERVICE,
+                        ServiceContent.Type.BAHNHOFSMISSION,
+                        ServiceContent.Type.Local.TRAVEL_CENTER,
+                        ServiceContent.Type.Local.DB_LOUNGE
                     ).contains(it) -> {
-                        infoAndServices.value?.let { serviceContents ->
+                        infoAndServicesLiveData.value?.let { serviceContents ->
                             infoAndServicesCategory?.let { category ->
-                                startStationInfoDetailsFragment(serviceContents, category, R.string.stationinfo_infos_and_services)
+                                startStationInfoDetailsFragment(
+                                    serviceContents,
+                                    category,
+                                    R.string.stationinfo_infos_and_services
+                                )
                             }
                         }
                     }
 
                     setOf(
-                            ServiceContent.Type.MOBILITY_SERVICE,
-                            ServiceContent.Type.THREE_S,
-                            ServiceContent.Type.Local.LOST_AND_FOUND,
-                            ServiceContent.Type.Local.CHATBOT
+                        ServiceContent.Type.MOBILITY_SERVICE,
+                        ServiceContent.Type.THREE_S,
+                        ServiceContent.Type.Local.LOST_AND_FOUND,
+                        ServiceContent.Type.Local.CHATBOT
                     ).contains(it) -> {
-                        serviceNumbers.value?.let { serviceContents ->
+                        serviceNumbersLiveData.value?.let { serviceContents ->
                             serviceNumbersCategory?.let { category ->
-                                startStationInfoDetailsFragment(serviceContents, category, serviceNumbersLabelResource)
+                                startStationInfoDetailsFragment(
+                                    serviceContents,
+                                    category,
+                                    serviceNumbersLabelResource
+                                )
                             }
                         }
                     }
 
                     it == ServiceContent.Type.WIFI -> {
-                        wifiCategory?.let {category ->
-                            staticInfoLiveData.value?.typedStationInfos?.get(ServiceContent.Type.WIFI)?.let { staticInfo ->
-                                startServiceContentFragment(staticInfo, category)
-                            }
+                        wifiCategory?.let { category ->
+                            staticInfoLiveData.value?.typedStationInfos?.get(ServiceContent.Type.WIFI)
+                                ?.let { staticInfo ->
+                                    startServiceContentFragment(staticInfo, category)
+                                }
                         }
                     }
 
                     it == ServiceContent.Type.ACCESSIBLE -> {
                         accessibilityCategory?.let { category ->
-                            staticInfoLiveData.value?.typedStationInfos?.get(ServiceContent.Type.ACCESSIBLE)?.let { staticInfo ->
-                                startServiceContentFragment(staticInfo, category)
-                            }
+                            staticInfoLiveData.value?.typedStationInfos?.get(ServiceContent.Type.ACCESSIBLE)
+                                ?.let { staticInfo ->
+                                    startServiceContentFragment(staticInfo, category)
+                                }
                         }
                     }
                 }

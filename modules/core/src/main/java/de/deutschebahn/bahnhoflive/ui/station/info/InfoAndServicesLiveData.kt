@@ -15,11 +15,11 @@ import de.deutschebahn.bahnhoflive.ui.station.StaticInfoCollection
 import de.deutschebahn.bahnhoflive.ui.station.shop.Shop
 import de.deutschebahn.bahnhoflive.util.then
 
-class InfoAndServices(
-        detailedStopPlaceResource: DetailedStopPlaceResource,
-        val staticInfoCollectionSource: LiveData<StaticInfoCollection>,
-        val travelCenter: LiveData<TravelCenter>,
-        shopsResource: ShopsResource
+class InfoAndServicesLiveData(
+    detailedStopPlaceResource: DetailedStopPlaceResource,
+    val staticInfoCollectionSource: LiveData<StaticInfoCollection>,
+    val travelCenter: LiveData<TravelCenter>,
+    shopsResource: ShopsResource
 ) : MergedLiveData<List<ServiceContent>?>(null) {
     val detailedStopPlaceLiveData = detailedStopPlaceResource.data
     val travelCenterOpenHours = Transformations.map(shopsResource.data) {

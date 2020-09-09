@@ -30,12 +30,13 @@ import de.deutschebahn.bahnhoflive.backend.ris.model.TrainInfo
 import de.deutschebahn.bahnhoflive.persistence.RecentContentQueriesStore
 import de.deutschebahn.bahnhoflive.repository.*
 import de.deutschebahn.bahnhoflive.repository.parking.ViewModelParking
+import de.deutschebahn.bahnhoflive.stream.livedata.MergedLiveData
 import de.deutschebahn.bahnhoflive.stream.rx.Optional
 import de.deutschebahn.bahnhoflive.ui.map.Content
 import de.deutschebahn.bahnhoflive.ui.map.MapActivity
 import de.deutschebahn.bahnhoflive.ui.station.features.*
-import de.deutschebahn.bahnhoflive.ui.station.info.InfoAndServices
-import de.deutschebahn.bahnhoflive.ui.station.info.ServiceNumbers
+import de.deutschebahn.bahnhoflive.ui.station.info.InfoAndServicesLiveData
+import de.deutschebahn.bahnhoflive.ui.station.info.ServiceNumbersLiveData
 import de.deutschebahn.bahnhoflive.ui.station.localtransport.LocalTransportViewModel
 import de.deutschebahn.bahnhoflive.ui.station.search.ContentSearchResult
 import de.deutschebahn.bahnhoflive.ui.station.search.QueryPart
@@ -316,19 +317,25 @@ class StationViewModel : HafasTimetableViewModel() {
                 application.repositories.travelCenterRepository.queryTravelCenter(
                     position,
                     object : VolleyRestListener<TravelCenter?> {
-                    override fun onSuccess(payload: TravelCenter?) {
-                        value = payload
-                    }
+                        override fun onSuccess(payload: TravelCenter?) {
+                            value = payload
+                        }
 
-                    override fun onFail(reason: VolleyError?) {
-                    }
+                        override fun onFail(reason: VolleyError?) {
+                        }
                     })
             }
         }
     }
 
-    val infoAndServices = InfoAndServices(detailedStopPlaceResource, staticInfoLiveData, travelCenterLiveData, shopsResource)
-    val serviceNumbers = ServiceNumbers(detailedStopPlaceResource, staticInfoLiveData)
+    val infoAndServicesLiveData = InfoAndServicesLiveData(
+        detailedStopPlaceResource,
+        staticInfoLiveData,
+        travelCenterLiveData,
+        shopsResource
+    )
+    val serviceNumbersLiveData =
+        ServiceNumbersLiveData(detailedStopPlaceResource, staticInfoLiveData)
 
     private val application: BaseApplication
         get() = BaseApplication.get()
@@ -809,9 +816,9 @@ class StationViewModel : HafasTimetableViewModel() {
     }
 
     val isShowChatbotLiveData = Transformations.distinctUntilChanged(
-            Transformations.map(stationResource.data) {
-                it.isChatbotAvailable && ChatbotStation.isInTeaserPeriod
-            })
+        Transformations.map(stationResource.data) {
+            it.isChatbotAvailable && ChatbotStation.isInTeaserPeriod
+        })
 
     fun navigateToChatbot() {
         selectedServiceContentType.value = ServiceContent.Type.Local.CHATBOT
@@ -822,4 +829,27 @@ class StationViewModel : HafasTimetableViewModel() {
         Transformations.map(shopsResource.data) {
             !(it?.shops).isNullOrEmpty()
         })
+
+    val hasInfosLiveData = object : MergedLiveData<Boolean>(false) {
+
+        override fun onSourceChanged(source: LiveData<*>) {
+            value = !infoAndServicesLiveData.value.isNullOrEmpty()
+                    || !serviceNumbersLiveData.value.isNullOrEmpty()
+                    || (staticInfoLiveData.value?.let { staticInfoCollection ->
+                detailedStopPlaceResource.data.value?.run {
+                    hasWifi && staticInfoCollection.typedStationInfos[ServiceContent.Type.WIFI] != null
+                            || hasSteplessAccess && staticInfoCollection.typedStationInfos[ServiceContent.Type.ACCESSIBLE] != null
+                }
+            } == true)
+                    || !parking.parkingsResource.data.value.isNullOrEmpty()
+                    || !elevatorsResource.data.value.isNullOrEmpty()
+
+        }
+
+    }.addSource(infoAndServicesLiveData)
+        .addSource(serviceNumbersLiveData)
+        .addSource(staticInfoLiveData)
+        .addSource(parking.parkingsResource.data)
+        .addSource(elevatorsResource.data)
+        .addSource(detailedStopPlaceResource.data)
 }
