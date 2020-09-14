@@ -11,29 +11,23 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.inputmethod.EditorInfo;
 import android.widget.EditText;
-import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.ViewFlipper;
 
-import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
+import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.DividerItemDecoration;
 import androidx.recyclerview.widget.RecyclerView;
-
-import com.android.volley.VolleyError;
-
-import java.util.List;
 
 import de.deutschebahn.bahnhoflive.BaseApplication;
 import de.deutschebahn.bahnhoflive.R;
 import de.deutschebahn.bahnhoflive.analytics.IssueTracker;
 import de.deutschebahn.bahnhoflive.analytics.TrackingManager;
-import de.deutschebahn.bahnhoflive.backend.SingleRequestRestListener;
-import de.deutschebahn.bahnhoflive.backend.db.publictrainstation.model.StopPlace;
 import de.deutschebahn.bahnhoflive.location.BaseLocationListener;
 import de.deutschebahn.bahnhoflive.persistence.RecentSearchesStore;
+import de.deutschebahn.bahnhoflive.repository.LoadingStatus;
 import de.deutschebahn.bahnhoflive.ui.hub.LocationFragment;
 import de.deutschebahn.bahnhoflive.util.Cancellable;
 import de.deutschebahn.bahnhoflive.view.BaseTextWatcher;
@@ -44,11 +38,9 @@ import static de.deutschebahn.bahnhoflive.util.ImeCloserKt.closeIme;
 public class StationSearchFragment extends Fragment {
 
     public static final int AUTO_SEARCH_DELAY = 750;
-    public static final String ORIGIN_SEARCH = "search";
     public static final String TAG = StationSearchFragment.class.getSimpleName();
     private StationSearchAdapter adapter;
     private EditText inputView;
-    private Cancellable runningStationLookupRequest;
 
     private Handler delayedAutoSearchHandler;
     private Runnable autoSearchRunnable = new Runnable() {
@@ -62,13 +54,10 @@ public class StationSearchFragment extends Fragment {
     private TextView noResultsView;
     private LocationFragment locationFragment;
 
-    private Location location;
-
     private final BaseLocationListener locationListener = new BaseLocationListener() {
 
         @Override
         public void onLocationChanged(Location location) {
-            StationSearchFragment.this.location = location;
         }
     };
     private View clearHistoryView;
@@ -76,12 +65,17 @@ public class StationSearchFragment extends Fragment {
     private View coordinatorLayout;
 
     private final QueryRecorder queryRecorder = new QueryRecorder();
-    private ProgressBar progressIndicator;
     private ViewFlipper viewFlipper;
+    private StationSearchViewModel stationSearchViewModel;
+
+    public StationSearchFragment(Cancellable runningStationLookupRequest) {
+    }
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        stationSearchViewModel = new ViewModelProvider(this).get(StationSearchViewModel.class);
 
         delayedAutoSearchHandler = new Handler();
 
@@ -154,7 +148,7 @@ public class StationSearchFragment extends Fragment {
             }
         });
 
-        progressIndicator = view.findViewById(R.id.progressIndicator);
+        final View progressIndicator = view.findViewById(R.id.progressIndicator);
 
         noResultsView = view.findViewById(R.id.no_results);
         noResultsView.setVisibility(View.GONE);
@@ -169,6 +163,40 @@ public class StationSearchFragment extends Fragment {
         });
 
         viewFlipper = view.findViewById(R.id.viewFlipper);
+
+        final SearchResultResource searchResource = stationSearchViewModel.getSearchResource();
+        searchResource.getLoadingStatus().observe(getViewLifecycleOwner(), loadingStatus -> {
+            progressIndicator.setVisibility(loadingStatus == LoadingStatus.BUSY ? View.VISIBLE : View.GONE);
+        });
+
+        searchResource.getError().observe(getViewLifecycleOwner(), reason -> {
+            if (reason != null) {
+
+                adapter.setDBError();
+
+                showOrHideNoResultsView();
+
+                final String query = searchResource.getQuery();
+
+                final IssueTracker issueTracker = getIssueTracker();
+                issueTracker.log("Failed station query: " + query);
+                issueTracker.dispatchThrowable(new StationSearchException(reason.getMessage(), reason));
+            }
+        });
+
+        searchResource.getData().observe(getViewLifecycleOwner(), stations -> {
+            adapter.setDBStations(stations);
+            if (stations == null /* just to be sure */ || stations.isEmpty()) {
+                //TODO: maybe transport query string through result
+                final String query = searchResource.getQuery();
+                if (query != null) {
+                    queryRecorder.put(query);
+                }
+            }
+
+            showOrHideNoResultsView();
+
+        });
 
         return view;
     }
@@ -221,62 +249,14 @@ public class StationSearchFragment extends Fragment {
         cancelAutoSearch();
 
         final Editable text = inputView.getText();
-        final String query = text.toString().trim();
-
-        if (runningStationLookupRequest != null) {
-            runningStationLookupRequest.cancel();
-        }
+        final SearchResultResource searchResource = stationSearchViewModel.getSearchResource();
+        searchResource.setQuery(text.toString());
+        final String query = searchResource.getQuery();
 
         viewFlipper.setDisplayedChild(0);
 
-        if (query.length() > 1) {
-            final Location location = this.location;
-
+        if (query != null && query.length() > 1) {
             hideNoResultsView();
-            final ProgressBar progressIndicator = this.progressIndicator;
-            if (progressIndicator != null) {
-                progressIndicator.setVisibility(View.VISIBLE);
-            }
-
-            final BaseApplication baseApplication = BaseApplication.get();
-
-            runningStationLookupRequest = baseApplication.getRepositories().getStationRepository().queryStations(
-                    new SingleRequestRestListener<List<StopPlace>>() {
-                        @Override
-                        public void onSuccess(@NonNull List<StopPlace> stations) {
-                            super.onSuccess(stations);
-
-                            adapter.setDBStations(stations);
-                            if (stations == null /* just to be sure */ || stations.isEmpty()) {
-                                queryRecorder.put(query);
-                            }
-
-                            showOrHideNoResultsView();
-                        }
-
-                        @Override
-                        public void onFail(VolleyError reason) {
-                            super.onFail(reason);
-
-                            adapter.setDBError();
-
-                            showOrHideNoResultsView();
-
-                            final IssueTracker issueTracker = getIssueTracker();
-                            issueTracker.log("Failed station query: " + query);
-                            issueTracker.dispatchThrowable(new StationSearchException(reason.getMessage(), reason));
-                        }
-
-                        @Override
-                        public void onDone() {
-                            runningStationLookupRequest = null;
-
-                            if (progressIndicator != null) {
-                                progressIndicator.setVisibility(View.GONE);
-                            }
-                            showOrHideNoResultsView();
-                        }
-                    }, query, null, false, 25, 10000, true, true, false);
         } else {
             listHeadlineView.setText(R.string.search_history);
             clearHistoryView.setVisibility(View.VISIBLE);

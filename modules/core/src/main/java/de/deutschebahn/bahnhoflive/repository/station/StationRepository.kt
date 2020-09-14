@@ -9,7 +9,7 @@ import de.deutschebahn.bahnhoflive.util.Cancellable
 
 open class StationRepository {
     open fun queryStations(
-        listener: VolleyRestListener<List<StopPlace>>,
+        listener: VolleyRestListener<List<StopPlace>?>,
         query: String? = null,
         location: Location? = null,
         force: Boolean = false,

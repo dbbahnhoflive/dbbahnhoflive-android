@@ -35,7 +35,7 @@ class StationSearchAdapter extends RecyclerView.Adapter<ViewHolder> {
     private final HubViewModel hubViewModel;
     private final SearchItemPickedListener searchItemPickedListener;
 
-    private List<StopPlace> dbStations;
+    private List<? extends StopPlace> dbStations;
     private List<HafasStation> hafasStations;
     private List<SearchResult> searchResults;
 
@@ -104,7 +104,7 @@ class StationSearchAdapter extends RecyclerView.Adapter<ViewHolder> {
         return searchResults.size();
     }
 
-    public void setDBStations(final List<StopPlace> stations) {
+    public void setDBStations(final List<? extends StopPlace> stations) {
         dbError = false;
         this.dbStations = stations;
         dbError = false;

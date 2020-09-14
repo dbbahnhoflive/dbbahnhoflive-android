@@ -20,7 +20,7 @@ class PublicTrainStationStationRepository(
     private val trackingManager = TrackingManager()
 
     override fun queryStations(
-        listener: VolleyRestListener<List<StopPlace>>,
+        listener: VolleyRestListener<List<StopPlace>?>,
         query: String?,
         location: Location?,
         force: Boolean,
