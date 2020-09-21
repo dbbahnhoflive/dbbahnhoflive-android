@@ -1,3 +1,9 @@
+/*
+ * SPDX-FileCopyrightText: 2020 DB Station&Service AG <bahnhoflive-opensource@deutschebahn.com>
+ *
+ * SPDX-License-Identifier: Apache-2.0
+ */
+
 package de.deutschebahn.bahnhoflive.repository.poisearch
 
 import android.content.Context
@@ -13,7 +19,7 @@ class PoiSearchConfiguration(context: Context) {
     val template = "[\\[\\]]".toRegex()
 
     val configuration = JsonReader(InputStreamReader(
-            context.resources.openRawResource(R.raw.poi_search))).use { jsonReader ->
+        context.resources.openRawResource(R.raw.poi_search))).use { jsonReader ->
         val mappings = mutableMapOf<String, Set<String>>()
 
         jsonReader.beginObject()

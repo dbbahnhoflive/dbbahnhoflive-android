@@ -1,3 +1,9 @@
+/*
+ * SPDX-FileCopyrightText: 2020 DB Station&Service AG <bahnhoflive-opensource@deutschebahn.com>
+ *
+ * SPDX-License-Identifier: Apache-2.0
+ */
+
 package de.deutschebahn.bahnhoflive.ui.map
 
 import android.annotation.TargetApi
@@ -113,8 +119,8 @@ class MapLevelPicker : FrameLayout {
             imageView.setImageResource(drawable)
             imageView.tag = level
             val layoutParams = FrameLayout.LayoutParams(
-                    ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT,
-                    Gravity.BOTTOM or Gravity.CENTER_HORIZONTAL)
+                ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT,
+                Gravity.BOTTOM or Gravity.CENTER_HORIZONTAL)
             layoutParams.bottomMargin = offset
             offset += context.resources.getDimensionPixelOffset(sizeRes)
             indicatorContainer.addView(imageView, layoutParams)

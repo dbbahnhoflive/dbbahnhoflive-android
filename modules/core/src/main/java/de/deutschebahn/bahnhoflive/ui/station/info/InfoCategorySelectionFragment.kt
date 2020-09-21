@@ -1,3 +1,9 @@
+/*
+ * SPDX-FileCopyrightText: 2020 DB Station&Service AG <bahnhoflive-opensource@deutschebahn.com>
+ *
+ * SPDX-License-Identifier: Apache-2.0
+ */
+
 package de.deutschebahn.bahnhoflive.ui.station.info
 
 import android.os.Bundle
@@ -75,26 +81,26 @@ class InfoCategorySelectionFragment : CategorySelectionFragment(R.string.title_s
     }
 
     private fun addServiceNumbers(serviceContents: List<ServiceContent>?): InfoCategory? =
-            serviceContents?.takeUnless { it.isEmpty() }?.let {
-                val labelResource = serviceNumbersLabelResource
-                InfoCategory(getText(labelResource),
-                        R.drawable.app_service_rufnummern, TrackingManager.Category.SERVICE_UND_RUFNUMMERN,
-                        Category.CategorySelectionListener { category ->
-                            trackCategoryTap(category)
-                            startStationInfoDetailsFragment(it, category, labelResource)
-                        })
-            }
+        serviceContents?.takeUnless { it.isEmpty() }?.let {
+            val labelResource = serviceNumbersLabelResource
+            InfoCategory(getText(labelResource),
+                R.drawable.app_service_rufnummern, TrackingManager.Category.SERVICE_UND_RUFNUMMERN,
+                Category.CategorySelectionListener { category ->
+                    trackCategoryTap(category)
+                    startStationInfoDetailsFragment(it, category, labelResource)
+                })
+        }
 
     private val serviceNumbersLabelResource get() = R.string.stationinfo_service_phone_numbers
 
     private fun addInfoAndServices(infoAndServicesList: List<ServiceContent>?) =
-            infoAndServicesList?.takeUnless { it.isEmpty() }?.let {
-                InfoCategory(getText(R.string.stationinfo_infos_and_services), R.drawable.app_info, TrackingManager.Category.INFOS_UND_SERVICES,
-                        Category.CategorySelectionListener { category ->
-                            trackCategoryTap(category)
-                            startStationInfoDetailsFragment(it, category, R.string.stationinfo_infos_and_services)
-                        })
-            }
+        infoAndServicesList?.takeUnless { it.isEmpty() }?.let {
+            InfoCategory(getText(R.string.stationinfo_infos_and_services), R.drawable.app_info, TrackingManager.Category.INFOS_UND_SERVICES,
+                Category.CategorySelectionListener { category ->
+                    trackCategoryTap(category)
+                    startStationInfoDetailsFragment(it, category, R.string.stationinfo_infos_and_services)
+                })
+        }
 
     private fun startStationInfoDetailsFragment(serviceContents: List<ServiceContent>, category: Category, titleResource: Int) {
         val stationInfoDetailsFragment = StationInfoDetailsFragment.create(ArrayList(serviceContents), getText(titleResource), category.trackingTag)
@@ -103,22 +109,22 @@ class InfoCategorySelectionFragment : CategorySelectionFragment(R.string.title_s
 
 
     private fun addElevators() =
-            InfoCategory(
-                    getText(R.string.title_elevators_and_escalators),
-                    R.drawable.bahnhofsausstattung_aufzug,
-                    TrackingManager.Category.AUFZUEGE, Category.CategorySelectionListener { category ->
+        InfoCategory(
+            getText(R.string.title_elevators_and_escalators),
+            R.drawable.bahnhofsausstattung_aufzug,
+            TrackingManager.Category.AUFZUEGE, Category.CategorySelectionListener { category ->
                 trackCategoryTap(category)
                 startFragment(ElevatorStatusListsFragment.create())
             })
 
     private fun addParkings() =
-            parkingsResource.data.value?.takeUnless { it.isEmpty() }?.let {
-                InfoCategory(getText(R.string.stationinfo_parkings), R.drawable.bahnhofsausstattung_parkplatz, TrackingManager.Category.PARKPLAETZE,
-                        Category.CategorySelectionListener { category ->
-                            trackCategoryTap(category)
-                            startFragment(ParkingListFragment.create())
-                        })
-            }
+        parkingsResource.data.value?.takeUnless { it.isEmpty() }?.let {
+            InfoCategory(getText(R.string.stationinfo_parkings), R.drawable.bahnhofsausstattung_parkplatz, TrackingManager.Category.PARKPLAETZE,
+                Category.CategorySelectionListener { category ->
+                    trackCategoryTap(category)
+                    startFragment(ParkingListFragment.create())
+                })
+        }
 
     private fun addAccessibility(station: DetailedStopPlace?, staticInfoCollection: StaticInfoCollection): InfoCategory? {
         if (station == null || !station.hasSteplessAccess) {
@@ -126,12 +132,12 @@ class InfoCategorySelectionFragment : CategorySelectionFragment(R.string.title_s
         }
 
         val staticInfo = staticInfoCollection.typedStationInfos[ServiceContent.Type.ACCESSIBLE]
-                ?: return null
+            ?: return null
 
         val steplessAccessInfo = station.steplessAccessInfo
         val serviceContent = ServiceContent(staticInfo, if (steplessAccessInfo == null) null else "Zusatzinfomation: $steplessAccessInfo")
         return InfoCategory(serviceContent.title, R.drawable.app_zugang_wege,
-                TrackingManager.Category.ZUGANG_WEGE, ServiceContentCategorySelectionListener(serviceContent))
+            TrackingManager.Category.ZUGANG_WEGE, ServiceContentCategorySelectionListener(serviceContent))
     }
 
     private fun addWifi(station: DetailedStopPlace?, staticInfoCollection: StaticInfoCollection): InfoCategory? {
@@ -142,7 +148,7 @@ class InfoCategorySelectionFragment : CategorySelectionFragment(R.string.title_s
         val staticInfo = staticInfoCollection.typedStationInfos[ServiceContent.Type.WIFI]
         return if (staticInfo != null) {
             InfoCategory(staticInfo.title, R.drawable.rimap_wlan_grau,
-                    TrackingManager.Category.WLAN, ServiceContentCategorySelectionListener(ServiceContent(staticInfo)))
+                TrackingManager.Category.WLAN, ServiceContentCategorySelectionListener(ServiceContent(staticInfo)))
         } else {
             null
         }

@@ -1,8 +1,15 @@
+/*
+ * SPDX-FileCopyrightText: 2020 DB Station&Service AG <bahnhoflive-opensource@deutschebahn.com>
+ *
+ * SPDX-License-Identifier: Apache-2.0
+ */
+
 package de.deutschebahn.bahnhoflive.ui.hub
 
 import de.deutschebahn.bahnhoflive.ui.search.HafasStationSearchResult
 
-class NearbyHafasStationItem(val hafasStationSearchResult: HafasStationSearchResult) : NearbyStationItem {
+class NearbyHafasStationItem(val hafasStationSearchResult: HafasStationSearchResult) :
+    NearbyStationItem {
     override fun onLoadDetails() {
         hafasStationSearchResult.timetable.requestTimetable(true, HubFragment.ORIGIN_HUB)
     }

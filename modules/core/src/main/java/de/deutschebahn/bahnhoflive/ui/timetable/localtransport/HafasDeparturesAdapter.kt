@@ -1,3 +1,9 @@
+/*
+ * SPDX-FileCopyrightText: 2020 DB Station&Service AG <bahnhoflive-opensource@deutschebahn.com>
+ *
+ * SPDX-License-Identifier: Apache-2.0
+ */
+
 package de.deutschebahn.bahnhoflive.ui.timetable.localtransport
 
 import android.view.View
@@ -17,9 +23,9 @@ import de.deutschebahn.bahnhoflive.view.SingleSelectionManager
 import java.util.*
 
 class HafasDeparturesAdapter(
-        private val onFilterClickListener: View.OnClickListener,
-        trackingManager: TrackingManager,
-        private val loadMoreCallback: View.OnClickListener
+    private val onFilterClickListener: View.OnClickListener,
+    trackingManager: TrackingManager,
+    private val loadMoreCallback: View.OnClickListener
 ) : androidx.recyclerview.widget.RecyclerView.Adapter<ViewHolder<out Any>>() {
 
     private val singleSelectionManager = SingleSelectionManager(this)
@@ -47,11 +53,11 @@ class HafasDeparturesAdapter(
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder<out Any> =
-            when (viewType) {
-                VIEW_TYPE_HEADER -> HeaderViewHolder(parent)
-                VIEW_TYPE_FOOTER -> TimetableTrailingItemViewHolder(parent, loadMoreCallback)
-                else -> HafasEventViewHolder(parent, singleSelectionManager)
-            }
+        when (viewType) {
+            VIEW_TYPE_HEADER -> HeaderViewHolder(parent)
+            VIEW_TYPE_FOOTER -> TimetableTrailingItemViewHolder(parent, loadMoreCallback)
+            else -> HafasEventViewHolder(parent, singleSelectionManager)
+        }
 
     private var filterSummary: FilterSummary? = null
 
@@ -63,7 +69,7 @@ class HafasDeparturesAdapter(
     }
 
     override fun getItemCount() =
-            Collections.size(filteredEvents) + filterItemOffset + 1
+        Collections.size(filteredEvents) + filterItemOffset + 1
 
     private fun hasMultipleFilterOptions() = filterOptions.size > 2
 
@@ -122,20 +128,20 @@ class HafasDeparturesAdapter(
         singleSelectionManager.clearSelection()
 
         filterSummary = FilterSummary(trainCategory = filter?.label, matchCount = filteredEvents.size, endTime = intervalEnd?.time
-                ?: System.currentTimeMillis(), isMayLoadMore = isMayLoadMore)
+            ?: System.currentTimeMillis(), isMayLoadMore = isMayLoadMore)
 
         notifyDataSetChanged()
     }
 
     fun getFilterOptions(): Array<String> {
         return sequenceOf("Alle").plus(
-                hafasEvents?.let {
-                    it.asSequence().mapNotNull {
-                        ProductCategory.of(it.hafasEvent)
-                    }.distinct().mapNotNull {
-                        it.label
-                    }.sorted()
-                } ?: emptySequence()
+            hafasEvents?.let {
+                it.asSequence().mapNotNull {
+                    ProductCategory.of(it.hafasEvent)
+                }.distinct().mapNotNull {
+                    it.label
+                }.sorted()
+            } ?: emptySequence()
         ).toList().toTypedArray()
     }
 
@@ -156,8 +162,8 @@ class HafasDeparturesAdapter(
         return filteredEvents.indexOfFirst {
             it.hafasEvent == hafasEvent
         }.plus(filterItemOffset).also {
-                    singleSelectionManager.selection = it
-                }
+            singleSelectionManager.selection = it
+        }
     }
 
     fun preselect(hafasStationProduct: HafasStationProduct): Int? {

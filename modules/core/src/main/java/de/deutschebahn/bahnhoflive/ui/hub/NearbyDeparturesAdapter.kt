@@ -1,3 +1,9 @@
+/*
+ * SPDX-FileCopyrightText: 2020 DB Station&Service AG <bahnhoflive-opensource@deutschebahn.com>
+ *
+ * SPDX-License-Identifier: Apache-2.0
+ */
+
 package de.deutschebahn.bahnhoflive.ui.hub
 
 import android.view.ViewGroup
@@ -15,11 +21,11 @@ import de.deutschebahn.bahnhoflive.ui.search.StopPlaceSearchResult
 import de.deutschebahn.bahnhoflive.view.SingleSelectionManager
 
 internal class NearbyDeparturesAdapter(
-        private val owner: LifecycleOwner,
-        private val recentSearchesStore: RecentSearchesStore,
-        private val favoriteHafasStationsStore: FavoriteStationsStore<HafasStation>,
-        private val favoriteStationsStore: FavoriteStationsStore<InternalStation>,
-        val trackingManager: TrackingManager
+    private val owner: LifecycleOwner,
+    private val recentSearchesStore: RecentSearchesStore,
+    private val favoriteHafasStationsStore: FavoriteStationsStore<HafasStation>,
+    private val favoriteStationsStore: FavoriteStationsStore<InternalStation>,
+    val trackingManager: TrackingManager
 ) : androidx.recyclerview.widget.RecyclerView.Adapter<ViewHolder<*>>() {
 
     private val singleSelectionManager: SingleSelectionManager = SingleSelectionManager(this).apply {

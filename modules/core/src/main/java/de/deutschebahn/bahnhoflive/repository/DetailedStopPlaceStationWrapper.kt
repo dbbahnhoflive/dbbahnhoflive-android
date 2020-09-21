@@ -1,10 +1,17 @@
+/*
+ * SPDX-FileCopyrightText: 2020 DB Station&Service AG <bahnhoflive-opensource@deutschebahn.com>
+ *
+ * SPDX-License-Identifier: Apache-2.0
+ */
+
 package de.deutschebahn.bahnhoflive.repository
 
 import com.google.android.gms.maps.model.LatLng
 import de.deutschebahn.bahnhoflive.backend.db.publictrainstation.model.DetailedStopPlace
 import de.deutschebahn.bahnhoflive.backend.local.model.EvaIds
 
-class DetailedStopPlaceStationWrapper private constructor(val detailedStopPlace: DetailedStopPlace) : Station {
+class DetailedStopPlaceStationWrapper private constructor(val detailedStopPlace: DetailedStopPlace) :
+    Station {
 
     private val location: LatLng?
 

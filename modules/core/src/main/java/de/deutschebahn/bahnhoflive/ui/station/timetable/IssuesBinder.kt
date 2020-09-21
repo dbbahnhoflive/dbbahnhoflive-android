@@ -1,3 +1,9 @@
+/*
+ * SPDX-FileCopyrightText: 2020 DB Station&Service AG <bahnhoflive-opensource@deutschebahn.com>
+ *
+ * SPDX-License-Identifier: Apache-2.0
+ */
+
 package de.deutschebahn.bahnhoflive.ui.station.timetable
 
 import android.content.Context
@@ -9,9 +15,9 @@ import de.deutschebahn.bahnhoflive.backend.ris.model.TrainInfo
 import de.deutschebahn.bahnhoflive.backend.ris.model.TrainMovementInfo
 
 class IssuesBinder(
-        private val issueRow: View? = null,
-        private val issueText: TextView? = null,
-        private val issueIndicatorBinder: IssueIndicatorBinder? = null
+    private val issueRow: View? = null,
+    private val issueText: TextView? = null,
+    private val issueIndicatorBinder: IssueIndicatorBinder? = null
 ) {
 
     fun bindIssues(trainInfo: TrainInfo?, trainMovementInfo: TrainMovementInfo) {

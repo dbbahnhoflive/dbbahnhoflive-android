@@ -1,3 +1,9 @@
+/*
+ * SPDX-FileCopyrightText: 2020 DB Station&Service AG <bahnhoflive-opensource@deutschebahn.com>
+ *
+ * SPDX-License-Identifier: Apache-2.0
+ */
+
 package de.deutschebahn.bahnhoflive.util;
 
 import android.text.Html;
@@ -16,39 +22,39 @@ import java.io.InputStreamReader;
 import java.util.regex.Pattern;
 
 public class TextUtil {
-	public static Spannable linkifyHtml(TextView textView, String html, int linkifyMask, ImageGetter imageGetter) {
-		
-	    Spanned text = Html.fromHtml(html, imageGetter, null);
-	    
-	    URLSpan[] currentSpans = text.getSpans(0, text.length(), URLSpan.class);
+    public static Spannable linkifyHtml(TextView textView, String html, int linkifyMask, ImageGetter imageGetter) {
 
-	    SpannableString buffer = new SpannableString(text);
+        Spanned text = Html.fromHtml(html, imageGetter, null);
 
-	    Linkify.addLinks( textView, linkifyMask);
+        URLSpan[] currentSpans = text.getSpans(0, text.length(), URLSpan.class);
 
-	    for (URLSpan span : currentSpans) {
-	        int end = text.getSpanEnd(span);
-	        int start = text.getSpanStart(span);
-	        buffer.setSpan(span, start, end, 0);
-	    }
-	    textView.setText(buffer);
-	    return buffer;
-	}
-	
-	public static void linkifyTel(TextView textView) {
-		Pattern p = Pattern.compile("[0123456789 ]{6,}");
-		Linkify.addLinks(textView, p, "tel://", Linkify.sPhoneNumberMatchFilter, Linkify.sPhoneNumberTransformFilter);
-	}
+        SpannableString buffer = new SpannableString(text);
 
-	public static String fromStream(InputStream stream) throws IOException {
-		InputStreamReader sr = new InputStreamReader(stream);
-		BufferedReader br = new BufferedReader(sr);
-		String line;
-		StringBuilder sb = new StringBuilder();
-		while ((line = br.readLine()) != null) {
-			sb.append(line);
-		}
-		return sb.toString();
-	}
+        Linkify.addLinks( textView, linkifyMask);
+
+        for (URLSpan span : currentSpans) {
+            int end = text.getSpanEnd(span);
+            int start = text.getSpanStart(span);
+            buffer.setSpan(span, start, end, 0);
+        }
+        textView.setText(buffer);
+        return buffer;
+    }
+
+    public static void linkifyTel(TextView textView) {
+        Pattern p = Pattern.compile("[0123456789 ]{6,}");
+        Linkify.addLinks(textView, p, "tel://", Linkify.sPhoneNumberMatchFilter, Linkify.sPhoneNumberTransformFilter);
+    }
+
+    public static String fromStream(InputStream stream) throws IOException {
+        InputStreamReader sr = new InputStreamReader(stream);
+        BufferedReader br = new BufferedReader(sr);
+        String line;
+        StringBuilder sb = new StringBuilder();
+        while ((line = br.readLine()) != null) {
+            sb.append(line);
+        }
+        return sb.toString();
+    }
 
 }

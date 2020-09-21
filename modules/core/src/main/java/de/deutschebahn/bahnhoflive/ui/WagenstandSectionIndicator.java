@@ -1,3 +1,9 @@
+/*
+ * SPDX-FileCopyrightText: 2020 DB Station&Service AG <bahnhoflive-opensource@deutschebahn.com>
+ *
+ * SPDX-License-Identifier: Apache-2.0
+ */
+
 package de.deutschebahn.bahnhoflive.ui;
 
 import android.content.Context;
@@ -27,6 +33,7 @@ public class WagenstandSectionIndicator extends LinearLayout implements View.OnC
 
     public interface WagenstandSectionIndicatorListener {
         void didSelectSection(String section);
+
         void didSelectTypeOfWagon(String section);
     }
 

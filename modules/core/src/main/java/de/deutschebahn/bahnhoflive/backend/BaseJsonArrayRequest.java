@@ -1,3 +1,9 @@
+/*
+ * SPDX-FileCopyrightText: 2020 DB Station&Service AG <bahnhoflive-opensource@deutschebahn.com>
+ *
+ * SPDX-License-Identifier: Apache-2.0
+ */
+
 package de.deutschebahn.bahnhoflive.backend;
 
 import com.android.volley.DefaultRetryPolicy;
@@ -12,8 +18,8 @@ public class BaseJsonArrayRequest<T> extends JsonArrayRequest {
     public VolleyRestListener<T> mListener;
 
     public BaseJsonArrayRequest(int method, String url, JSONArray jsonRequest,
-                                 Response.Listener<JSONArray> listener,
-                                 Response.ErrorListener errorListener) {
+                                Response.Listener<JSONArray> listener,
+                                Response.ErrorListener errorListener) {
         super(method, url, jsonRequest, listener, errorListener);
 
         this.setShouldCache(false);
@@ -21,8 +27,8 @@ public class BaseJsonArrayRequest<T> extends JsonArrayRequest {
     }
 
     public BaseJsonArrayRequest(String url,
-                                 Response.Listener<JSONArray> listener,
-                                 Response.ErrorListener errorListener) {
+                                Response.Listener<JSONArray> listener,
+                                Response.ErrorListener errorListener) {
         super(url, listener, errorListener);
 
         this.setShouldCache(false);

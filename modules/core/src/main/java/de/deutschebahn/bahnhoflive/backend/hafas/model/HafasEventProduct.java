@@ -1,3 +1,9 @@
+/*
+ * SPDX-FileCopyrightText: 2020 DB Station&Service AG <bahnhoflive-opensource@deutschebahn.com>
+ *
+ * SPDX-License-Identifier: Apache-2.0
+ */
+
 package de.deutschebahn.bahnhoflive.backend.hafas.model;
 
 import android.os.Parcel;
@@ -91,7 +97,7 @@ public class HafasEventProduct implements Parcelable {
             return new HafasEventProduct[size];
         }
     };
-    
+
     @Override
     public String toString() {
         return "HafasProduct{" +

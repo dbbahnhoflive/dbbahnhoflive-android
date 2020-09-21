@@ -1,3 +1,9 @@
+/*
+ * SPDX-FileCopyrightText: 2020 DB Station&Service AG <bahnhoflive-opensource@deutschebahn.com>
+ *
+ * SPDX-License-Identifier: Apache-2.0
+ */
+
 package de.deutschebahn.bahnhoflive.ui.station
 
 import android.view.View
@@ -10,10 +16,10 @@ import kotlinx.android.synthetic.main.fragment_station.view.*
 import kotlinx.android.synthetic.main.stationcard_common.view.*
 
 class StationDetailCardCoordinator(
-        containerView: View,
-        private val localTransportSummary: SummaryBadge,
-        private val shopsSummary: SummaryBadge,
-        private val elevatorSummary: SummaryBadge
+    containerView: View,
+    private val localTransportSummary: SummaryBadge,
+    private val shopsSummary: SummaryBadge,
+    private val elevatorSummary: SummaryBadge
 ) : SummaryBadge.OnChangeListener {
 
     private val localTransportCard = containerView.grabStationDetailCard(R.id.local_departures, R.string.card_button_label_local_transport, R.drawable.app_tram, R.string.sr_template_local_transport_connections, multiIcon = true)

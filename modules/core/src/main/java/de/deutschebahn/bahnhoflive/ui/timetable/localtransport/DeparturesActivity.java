@@ -1,3 +1,9 @@
+/*
+ * SPDX-FileCopyrightText: 2020 DB Station&Service AG <bahnhoflive-opensource@deutschebahn.com>
+ *
+ * SPDX-License-Identifier: Apache-2.0
+ */
+
 package de.deutschebahn.bahnhoflive.ui.timetable.localtransport;
 
 import android.content.Context;
@@ -104,6 +110,7 @@ public class DeparturesActivity extends AppCompatActivity implements TrackingMan
 
         return intent;
     }
+
     public static Intent createIntent(Context context, HafasStation hafasStation, HafasDepartures departures) {
         return createIntent(context, hafasStation, departures, true, null, null);
     }

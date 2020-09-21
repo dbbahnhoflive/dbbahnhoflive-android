@@ -1,3 +1,9 @@
+/*
+ * SPDX-FileCopyrightText: 2020 DB Station&Service AG <bahnhoflive-opensource@deutschebahn.com>
+ *
+ * SPDX-License-Identifier: Apache-2.0
+ */
+
 package de.deutschebahn.bahnhoflive.ui.station.shop
 
 import android.text.TextUtils
@@ -29,9 +35,9 @@ class ShopViewHolder(parent: ViewGroup, singleSelectionManager: SingleSelectionM
         itemView.contentDescription = when {
             isSelected -> null
             else -> listOfNotNull(
-                    item.name,
-                    open?.let { context.getString(getStatus(it)) },
-                    item.getLocationDescription(context)
+                item.name,
+                open?.let { context.getString(getStatus(it)) },
+                item.getLocationDescription(context)
             ).joinToString {
                 it
             }
@@ -71,7 +77,7 @@ class ShopViewHolder(parent: ViewGroup, singleSelectionManager: SingleSelectionM
     }
 
     private fun getStatus(open: Boolean) =
-            if (open) R.string.venue_open else R.string.venue_closed
+        if (open) R.string.venue_open else R.string.venue_closed
 
     protected fun bindPayments(item: Shop) {
         paymentContainer.removeAllViews()

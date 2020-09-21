@@ -1,3 +1,9 @@
+/*
+ * SPDX-FileCopyrightText: 2020 DB Station&Service AG <bahnhoflive-opensource@deutschebahn.com>
+ *
+ * SPDX-License-Identifier: Apache-2.0
+ */
+
 package de.deutschebahn.bahnhoflive.ui.hub
 
 import android.view.ViewGroup
@@ -54,7 +60,7 @@ class FavoritesAdapter(val owner: LifecycleOwner, private val trackingManager: T
     override fun getItemCount() = favorites?.size ?: 0
 
     override fun getItemViewType(position: Int): Int =
-            if (favorites!![position].isLocal) 1 else 0
+        if (favorites!![position].isLocal) 1 else 0
 
     override fun onBindViewHolder(holder: ViewHolder<out Any>, position: Int) {
         val searchResult = favorites?.get(position)

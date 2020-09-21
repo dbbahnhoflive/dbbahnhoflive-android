@@ -1,3 +1,9 @@
+/*
+ * SPDX-FileCopyrightText: 2020 DB Station&Service AG <bahnhoflive-opensource@deutschebahn.com>
+ *
+ * SPDX-License-Identifier: Apache-2.0
+ */
+
 package de.deutschebahn.bahnhoflive.ui.timetable.localtransport
 
 import android.view.ViewGroup
@@ -11,12 +17,12 @@ import kotlinx.android.synthetic.main.card_expandable_hafas_event.view.*
 import java.util.*
 
 internal class HafasEventViewHolder(
-        parent: ViewGroup,
-        singleSelectionManager: SingleSelectionManager
+    parent: ViewGroup,
+    singleSelectionManager: SingleSelectionManager
 ) : SelectableItemViewHolder<DetailedHafasEvent>(
-        parent,
-        R.layout.card_expandable_hafas_event,
-        singleSelectionManager
+    parent,
+    R.layout.card_expandable_hafas_event,
+    singleSelectionManager
 ), DetailedHafasEvent.Listener {
 
     private val overviewViewHolder: HafasEventOverviewViewHolder = HafasEventOverviewViewHolder(this@HafasEventViewHolder.itemView.overview)
@@ -74,12 +80,12 @@ internal class HafasEventViewHolder(
             with(itemView.resources) {
                 itemView.contentDescription = if (isSelected)
                     getString(R.string.sr_template_local_departure_prefix,
-                            detailedHafasEvent.hafasEvent.displayName, detailedHafasEvent.hafasEvent.direction,
-                            routeStops.filterNot {
-                                it.isFirst || it.isCurrent || it.isLast
-                            }.takeUnless { it.isEmpty() }?.run {
-                                getString(R.string.sr_template_local_departure_stops, joinToString(separator = ". ") { it.name.replace("/", " ") })
-                            } ?: "")
+                        detailedHafasEvent.hafasEvent.displayName, detailedHafasEvent.hafasEvent.direction,
+                        routeStops.filterNot {
+                            it.isFirst || it.isCurrent || it.isLast
+                        }.takeUnless { it.isEmpty() }?.run {
+                            getString(R.string.sr_template_local_departure_stops, joinToString(separator = ". ") { it.name.replace("/", " ") })
+                        } ?: "")
                 else null
             }
 

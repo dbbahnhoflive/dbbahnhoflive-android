@@ -1,3 +1,9 @@
+/*
+ * SPDX-FileCopyrightText: 2020 DB Station&Service AG <bahnhoflive-opensource@deutschebahn.com>
+ *
+ * SPDX-License-Identifier: Apache-2.0
+ */
+
 package de.deutschebahn.bahnhoflive.ui.station.search
 
 import android.os.Bundle
@@ -28,7 +34,7 @@ class ContentSearchFragment : Fragment() {
     }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?) =
-            inflater.inflate(R.layout.fragment_content_search, container, false)
+        inflater.inflate(R.layout.fragment_content_search, container, false)
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         view.setOnClickListener {
@@ -77,12 +83,12 @@ class ContentSearchFragment : Fragment() {
         }
 
         view.recycler?.adapter = ContentSearchResultsAdapter(TrackingManager.fromActivity(activity))
-                .also { adapter ->
-                    viewModel.contentSearchResults.observe(viewLifecycleOwner, Observer {
-                        adapter.list = it
-                        view.recycler?.fling(0, -1000)
-                    })
-                }
+            .also { adapter ->
+                viewModel.contentSearchResults.observe(viewLifecycleOwner, Observer {
+                    adapter.list = it
+                    view.recycler?.fling(0, -1000)
+                })
+            }
 
     }
 

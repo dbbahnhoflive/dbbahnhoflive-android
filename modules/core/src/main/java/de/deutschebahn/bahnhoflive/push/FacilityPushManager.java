@@ -1,3 +1,9 @@
+/*
+ * SPDX-FileCopyrightText: 2020 DB Station&Service AG <bahnhoflive-opensource@deutschebahn.com>
+ *
+ * SPDX-License-Identifier: Apache-2.0
+ */
+
 package de.deutschebahn.bahnhoflive.push;
 
 import android.content.Context;
@@ -78,9 +84,11 @@ public class FacilityPushManager {
     private void subscribeFirebase(FacilityStatus f) {
         //FirebaseMessaging.getInstance().subscribeToTopic(TOPIC_PATH+f.getEquipmentNumber());
     }
+
     private void unsubscribeFirebase(FacilityStatus f) {
         //unsubscribeFirebase(f.getEquipmentNumber());
     }
+
     public void unsubscribeFirebase(int equipmentNumber){
         //FirebaseMessaging.getInstance().unsubscribeFromTopic(TOPIC_PATH+equipmentNumber);
     }

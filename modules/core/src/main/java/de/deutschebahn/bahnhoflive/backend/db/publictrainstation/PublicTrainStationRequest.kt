@@ -1,3 +1,9 @@
+/*
+ * SPDX-FileCopyrightText: 2020 DB Station&Service AG <bahnhoflive-opensource@deutschebahn.com>
+ *
+ * SPDX-License-Identifier: Apache-2.0
+ */
+
 package de.deutschebahn.bahnhoflive.backend.db.publictrainstation
 
 import de.deutschebahn.bahnhoflive.backend.VolleyRestListener
@@ -10,10 +16,10 @@ abstract class PublicTrainStationRequest<T>(
     dbAuthorizationTool: DbAuthorizationTool,
     listener: VolleyRestListener<T>
 ) : DbRequest<T>(
-        method,
-        BASE_URL + urlSuffix,
+    method,
+    BASE_URL + urlSuffix,
     dbAuthorizationTool,
-        listener
+    listener
 ) {
     companion object {
         const val BASE_URL =

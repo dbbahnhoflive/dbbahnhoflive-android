@@ -1,3 +1,9 @@
+/*
+ * SPDX-FileCopyrightText: 2020 DB Station&Service AG <bahnhoflive-opensource@deutschebahn.com>
+ *
+ * SPDX-License-Identifier: Apache-2.0
+ */
+
 package de.deutschebahn.bahnhoflive.ui.station.features
 
 import android.view.View
@@ -11,8 +17,8 @@ import de.deutschebahn.bahnhoflive.view.ItemClickListener
 import kotlinx.android.synthetic.main.row_station_feature.view.*
 
 internal class StationFeatureViewHolder(
-        parent: ViewGroup,
-        itemClickListener: ItemClickListener<StationFeature>
+    parent: ViewGroup,
+    itemClickListener: ItemClickListener<StationFeature>
 ) : ViewHolder<StationFeature>(parent, R.layout.row_station_feature) {
 
     private val iconView: ImageView = itemView.icon

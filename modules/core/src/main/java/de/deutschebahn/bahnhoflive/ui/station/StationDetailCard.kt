@@ -1,3 +1,9 @@
+/*
+ * SPDX-FileCopyrightText: 2020 DB Station&Service AG <bahnhoflive-opensource@deutschebahn.com>
+ *
+ * SPDX-License-Identifier: Apache-2.0
+ */
+
 package de.deutschebahn.bahnhoflive.ui.station
 
 import android.view.View
@@ -8,12 +14,12 @@ import androidx.annotation.StringRes
 import kotlinx.android.synthetic.main.stationcard_common.view.*
 
 open class StationDetailCard(
-        val view: View,
-        @StringRes label: Int,
-        @DrawableRes icon: Int? = null,
-        @DrawableRes background: Int? = null,
-        @StringRes contentDescription: Int?,
-        multiIcon: Boolean = false
+    val view: View,
+    @StringRes label: Int,
+    @DrawableRes icon: Int? = null,
+    @DrawableRes background: Int? = null,
+    @StringRes contentDescription: Int?,
+    multiIcon: Boolean = false
 ) {
     init {
         view.label?.apply {
@@ -46,17 +52,17 @@ open class StationDetailCard(
 }
 
 fun View.grabStationDetailCard(
-        @IdRes id: Int,
-        @StringRes label: Int,
-        @DrawableRes icon: Int? = null,
-        @StringRes contentDescription: Int? = null,
-        @DrawableRes background: Int? = null,
-        multiIcon: Boolean = false
+    @IdRes id: Int,
+    @StringRes label: Int,
+    @DrawableRes icon: Int? = null,
+    @StringRes contentDescription: Int? = null,
+    @DrawableRes background: Int? = null,
+    multiIcon: Boolean = false
 ) =
-        findViewById<View>(id)?.let {
-            val parent = it.parent
-            if (parent is ViewGroup) {
-                parent.removeView(it)
-            }
-            StationDetailCard(it, label, icon, background, contentDescription, multiIcon)
+    findViewById<View>(id)?.let {
+        val parent = it.parent
+        if (parent is ViewGroup) {
+            parent.removeView(it)
         }
+        StationDetailCard(it, label, icon, background, contentDescription, multiIcon)
+    }

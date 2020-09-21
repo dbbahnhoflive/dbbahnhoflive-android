@@ -1,3 +1,9 @@
+/*
+ * SPDX-FileCopyrightText: 2020 DB Station&Service AG <bahnhoflive-opensource@deutschebahn.com>
+ *
+ * SPDX-License-Identifier: Apache-2.0
+ */
+
 package de.deutschebahn.bahnhoflive.backend.hafas
 
 import android.os.Parcel
@@ -7,16 +13,16 @@ import java.util.*
 import java.util.concurrent.TimeUnit
 
 data class HafasDepartures(
-        val timestamp: Date,
-        val events: List<HafasEvent>,
-        val intervalInMinutes: Int
+    val timestamp: Date,
+    val events: List<HafasEvent>,
+    val intervalInMinutes: Int
 ) : Parcelable {
     val intervalEnd = Date(timestamp.time + TimeUnit.MINUTES.toMillis(intervalInMinutes.toLong()))
 
     constructor(parcel: Parcel) : this(
-            Date(parcel.readLong()),
-            parcel.createTypedArrayList(HafasEvent.CREATOR).orEmpty(),
-            parcel.readValue(Int::class.java.classLoader) as Int)
+        Date(parcel.readLong()),
+        parcel.createTypedArrayList(HafasEvent.CREATOR).orEmpty(),
+        parcel.readValue(Int::class.java.classLoader) as Int)
 
     override fun writeToParcel(parcel: Parcel, flags: Int) {
         parcel.writeLong(timestamp.time)

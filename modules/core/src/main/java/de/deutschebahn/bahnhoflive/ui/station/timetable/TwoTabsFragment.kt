@@ -1,3 +1,9 @@
+/*
+ * SPDX-FileCopyrightText: 2020 DB Station&Service AG <bahnhoflive-opensource@deutschebahn.com>
+ *
+ * SPDX-License-Identifier: Apache-2.0
+ */
+
 package de.deutschebahn.bahnhoflive.ui.station.timetable
 
 import android.content.Intent
@@ -13,10 +19,10 @@ import kotlinx.android.synthetic.main.fragment_two_tabs.*
 import kotlinx.android.synthetic.main.fragment_two_tabs.view.*
 
 abstract class TwoTabsFragment protected constructor(
-        private val tab1Name: Int,
-        private val tab2Name: Int,
-        private val tab1Description: Int = tab1Name,
-        private val tab2Description: Int = tab2Name
+    private val tab1Name: Int,
+    private val tab2Name: Int,
+    private val tab1Description: Int = tab1Name,
+    private val tab2Description: Int = tab2Name
 ) : androidx.fragment.app.Fragment(), MapPresetProvider {
 
     private val currentFragment: androidx.fragment.app.Fragment?
@@ -48,7 +54,7 @@ abstract class TwoTabsFragment protected constructor(
 
     private fun setHighlighted(tab: TabLayout.Tab, baseDescription: Int, highlighted: Boolean): TabLayout.Tab {
         return tab.setContentDescription(
-                "${getText(baseDescription)} ${getString(if (highlighted) R.string.sr_tab_highlighted else R.string.sr_tab_not_highlighted)}"
+            "${getText(baseDescription)} ${getString(if (highlighted) R.string.sr_tab_highlighted else R.string.sr_tab_not_highlighted)}"
         )
     }
 
@@ -87,7 +93,7 @@ abstract class TwoTabsFragment protected constructor(
 
     protected fun installFragment(tag: String, fragment: androidx.fragment.app.Fragment) {
         childFragmentManager.beginTransaction().replace(R.id.fragment_container, fragment, tag)
-                .commit()
+            .commit()
     }
 
     override fun prepareMapIntent(intent: Intent): Boolean {

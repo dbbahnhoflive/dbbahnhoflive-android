@@ -1,3 +1,9 @@
+/*
+ * SPDX-FileCopyrightText: 2020 DB Station&Service AG <bahnhoflive-opensource@deutschebahn.com>
+ *
+ * SPDX-License-Identifier: Apache-2.0
+ */
+
 package de.deutschebahn.bahnhoflive.ui.map
 
 import android.content.Context
@@ -76,31 +82,31 @@ class MapViewModel : StadaStationCacheViewModel() {
     private val timetableObservable = dbTimetableResource.toObservable()
 
     fun createTrackTimetableObservable(track: String, consumer: Consumer<ResourceState<List<TrainInfo>, VolleyError>>) = timetableObservable
-            .map { upstreamState ->
-                ResourceState(
-                        upstreamState.data?.let { timetable ->
-                            timetable.departures.filter { trainInfo ->
-                                trainInfo.departure?.purePlatform == track
-                            }
-                        },
-                        upstreamState.error,
-                        upstreamState.loadingStatus
-                )
-            }.onErrorReturn {
-                ResourceState<List<TrainInfo>, VolleyError>(
-                        null,
-                        when (it) {
-                            is VolleyError -> it
-                            else -> VolleyError(it)
-                        },
-                        LoadingStatus.IDLE
-                )
-            }
-            .subscribeOn(Schedulers.computation())
-            .observeOn(AndroidSchedulers.mainThread())
-            .subscribe(consumer).also {
-                disposables.add(it)
-            }
+        .map { upstreamState ->
+            ResourceState(
+                upstreamState.data?.let { timetable ->
+                    timetable.departures.filter { trainInfo ->
+                        trainInfo.departure?.purePlatform == track
+                    }
+                },
+                upstreamState.error,
+                upstreamState.loadingStatus
+            )
+        }.onErrorReturn {
+            ResourceState<List<TrainInfo>, VolleyError>(
+                null,
+                when (it) {
+                    is VolleyError -> it
+                    else -> VolleyError(it)
+                },
+                LoadingStatus.IDLE
+            )
+        }
+        .subscribeOn(Schedulers.computation())
+        .observeOn(AndroidSchedulers.mainThread())
+        .subscribe(consumer).also {
+            disposables.add(it)
+        }
 
     private val disposables = CompositeDisposable()
 
@@ -123,9 +129,9 @@ class MapViewModel : StadaStationCacheViewModel() {
     private val tracksAvailableSubject = BehaviorSubject.createDefault(false)
 
     val tracksAvailableLiveData = LiveDataReactiveStreams.fromPublisher(
-            tracksAvailableSubject.toFlowable(BackpressureStrategy.LATEST)
-                    .replay(1).autoConnect()
-                    .observeOn(AndroidSchedulers.mainThread())
+        tracksAvailableSubject.toFlowable(BackpressureStrategy.LATEST)
+            .replay(1).autoConnect()
+            .observeOn(AndroidSchedulers.mainThread())
     )
 
     fun setTracksAvailable() {

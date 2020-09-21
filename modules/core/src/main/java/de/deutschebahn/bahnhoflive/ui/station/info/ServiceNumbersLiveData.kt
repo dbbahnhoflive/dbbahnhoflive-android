@@ -1,3 +1,9 @@
+/*
+ * SPDX-FileCopyrightText: 2020 DB Station&Service AG <bahnhoflive-opensource@deutschebahn.com>
+ *
+ * SPDX-License-Identifier: Apache-2.0
+ */
+
 package de.deutschebahn.bahnhoflive.ui.station.info
 
 import android.util.Patterns
@@ -55,36 +61,36 @@ class ServiceNumbersLiveData(
         return station.tripleSCenter?.let { tripleSCenter ->
             staticInfoCollection.typedStationInfos[ServiceContent.Type.THREE_S]?.let { staticInfo ->
                 ServiceContent(
-                        StaticInfo(
-                                staticInfo.type,
-                                staticInfo.title,
-                            staticInfo.descriptionText.replace(
-                                "[PHONENUMBER]",
-                                tripleSCenter.publicPhoneNumber ?: ""
-                            )
-                        ), null
+                    StaticInfo(
+                        staticInfo.type,
+                        staticInfo.title,
+                        staticInfo.descriptionText.replace(
+                            "[PHONENUMBER]",
+                            tripleSCenter.publicPhoneNumber ?: ""
+                        )
+                    ), null
                 )
             }
         }
     }
 
     private fun composeChatbotContent(detailedStopPlace: DetailedStopPlace, staticInfoCollection: StaticInfoCollection, chatbot: String) =
-            if (detailedStopPlace.isChatbotAvailable) {
-                staticInfoCollection.typedStationInfos[ServiceContent.Type.Local.CHATBOT]?.let { staticInfo ->
-                    ServiceContent(
-                            StaticInfo(
-                                    staticInfo.type,
-                                    staticInfo.title,
-                                    staticInfo.descriptionText)
+        if (detailedStopPlace.isChatbotAvailable) {
+            staticInfoCollection.typedStationInfos[ServiceContent.Type.Local.CHATBOT]?.let { staticInfo ->
+                ServiceContent(
+                    StaticInfo(
+                        staticInfo.type,
+                        staticInfo.title,
+                        staticInfo.descriptionText)
 
-                    )
-                }
-            } else null
+                )
+            }
+        } else null
 
     fun composeServiceContent(detailedStopPlace: DetailedStopPlace, staticInfoCollection: StaticInfoCollection, type: String, additionalInfo: String? = null) =
-            PublicTrainStationService.predicates[type]?.invoke(detailedStopPlace)?.then {
-                staticInfoCollection.typedStationInfos[type]?.let {
-                    ServiceContent(it, additionalInfo)
+        PublicTrainStationService.predicates[type]?.invoke(detailedStopPlace)?.then {
+            staticInfoCollection.typedStationInfos[type]?.let {
+                ServiceContent(it, additionalInfo)
             }}
 
     private fun getAdditionalMobilityServiceText(station: DetailedStopPlace): String? =
@@ -103,10 +109,10 @@ class ServiceNumbersLiveData(
             val start = matcher.start()
             stringBuilder.append(source, cursor, start)
             stringBuilder.append("<a href=\"tel:")
-                    .append(matcher.group())
-                    .append("\">")
-                    .append(matcher.group())
-                    .append("</a>")
+                .append(matcher.group())
+                .append("\">")
+                .append(matcher.group())
+                .append("</a>")
             cursor = matcher.end()
         }
         stringBuilder.append(source, cursor, source.length)

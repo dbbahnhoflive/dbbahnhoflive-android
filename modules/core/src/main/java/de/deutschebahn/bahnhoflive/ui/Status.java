@@ -1,3 +1,9 @@
+/*
+ * SPDX-FileCopyrightText: 2020 DB Station&Service AG <bahnhoflive-opensource@deutschebahn.com>
+ *
+ * SPDX-License-Identifier: Apache-2.0
+ */
+
 package de.deutschebahn.bahnhoflive.ui;
 
 import androidx.annotation.ColorRes;
@@ -12,8 +18,7 @@ public enum Status {
     NEUTRAL(R.color.gray, R.drawable.app_achtung),
     UNKNOWN(R.color.gray, R.drawable.app_unbekannt),
     NEGATIVE(R.color.red, R.drawable.app_kreuz),
-    NONE(R.color.gray, 0)
-    ;
+    NONE(R.color.gray, 0);
 
     @ColorRes
     public final int color;

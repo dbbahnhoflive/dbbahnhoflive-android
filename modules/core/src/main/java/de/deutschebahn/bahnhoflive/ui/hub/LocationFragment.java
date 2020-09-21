@@ -1,3 +1,9 @@
+/*
+ * SPDX-FileCopyrightText: 2020 DB Station&Service AG <bahnhoflive-opensource@deutschebahn.com>
+ *
+ * SPDX-License-Identifier: Apache-2.0
+ */
+
 package de.deutschebahn.bahnhoflive.ui.hub;
 
 import android.annotation.SuppressLint;
@@ -122,7 +128,7 @@ public class LocationFragment extends Fragment {
             public int compare(Location o1, Location o2) {
                 return (int) (
                         (o2.getTime() - o1.getTime()) / 120 +
-                        o2.getAccuracy() - o1.getAccuracy()
+                                o2.getAccuracy() - o1.getAccuracy()
                 ); // 1 minute of currency is worth 500 meters of accuracy
             }
         });

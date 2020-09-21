@@ -1,3 +1,9 @@
+/*
+ * SPDX-FileCopyrightText: 2020 DB Station&Service AG <bahnhoflive-opensource@deutschebahn.com>
+ *
+ * SPDX-License-Identifier: Apache-2.0
+ */
+
 package de.deutschebahn.bahnhoflive.ui.station
 
 import android.view.ViewGroup
@@ -5,7 +11,8 @@ import androidx.recyclerview.widget.RecyclerView
 import de.deutschebahn.bahnhoflive.backend.db.newsapi.model.News
 import de.deutschebahn.bahnhoflive.view.ItemClickListener
 
-class NewsAdapter(private val itemClickListener: ItemClickListener<News?>? = null) : RecyclerView.Adapter<NewsViewHolder>() {
+class NewsAdapter(private val itemClickListener: ItemClickListener<News?>? = null) :
+    RecyclerView.Adapter<NewsViewHolder>() {
 
     var newsList: List<News>? = null
         set(value) {

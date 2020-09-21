@@ -1,10 +1,17 @@
+/*
+ * SPDX-FileCopyrightText: 2020 DB Station&Service AG <bahnhoflive-opensource@deutschebahn.com>
+ *
+ * SPDX-License-Identifier: Apache-2.0
+ */
+
 package de.deutschebahn.bahnhoflive.ui.station.search
 
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import de.deutschebahn.bahnhoflive.analytics.TrackingManager
 
-class ContentSearchResultsAdapter(val trackingManager: TrackingManager) : RecyclerView.Adapter<ContentSearchResultViewHolder>() {
+class ContentSearchResultsAdapter(val trackingManager: TrackingManager) :
+    RecyclerView.Adapter<ContentSearchResultViewHolder>() {
 
     var list: List<ContentSearchResult>? = null
         set(value) {
@@ -14,7 +21,7 @@ class ContentSearchResultsAdapter(val trackingManager: TrackingManager) : Recycl
         }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int) =
-            ContentSearchResultViewHolder(parent, trackingManager)
+        ContentSearchResultViewHolder(parent, trackingManager)
 
     override fun getItemCount() = list?.let { Math.max(it.size, 1) } ?: 0
 
@@ -26,6 +33,6 @@ class ContentSearchResultsAdapter(val trackingManager: TrackingManager) : Recycl
 
     override fun onBindViewHolder(viewHolder: ContentSearchResultViewHolder, position: Int) {
         viewHolder.bind(list?.takeIf { it.size > position }?.get(position)
-                ?: noResultsMessage)
+            ?: noResultsMessage)
     }
 }

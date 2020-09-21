@@ -1,3 +1,9 @@
+/*
+ * SPDX-FileCopyrightText: 2020 DB Station&Service AG <bahnhoflive-opensource@deutschebahn.com>
+ *
+ * SPDX-License-Identifier: Apache-2.0
+ */
+
 package de.deutschebahn.bahnhoflive.ui.station.shop
 
 import android.content.Context
@@ -138,14 +144,14 @@ class RimapShop(private val rimapPOI: RimapPOI) : Shop {
     val kotlinTags by lazy {
         rimapPOI.tags?.let { rimapTags ->
             TAGS_PATTERN.matchEntire(rimapTags)?.groups?.get(1)?.value
-                    ?.splitToSequence(',')
-                    ?.flatMap { tag ->
-                        val subTags = SUB_TAG_PATTERN.findAll(tag).map {
-                            it.value
-                        }
-                        subTags.plus(subTags.reduce { acc, subTag -> acc + subTag }).distinct()
+                ?.splitToSequence(',')
+                ?.flatMap { tag ->
+                    val subTags = SUB_TAG_PATTERN.findAll(tag).map {
+                        it.value
                     }
-                    ?.toList()
+                    subTags.plus(subTags.reduce { acc, subTag -> acc + subTag }).distinct()
+                }
+                ?.toList()
         }
     }
 

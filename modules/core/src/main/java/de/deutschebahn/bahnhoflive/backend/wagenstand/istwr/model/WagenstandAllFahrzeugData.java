@@ -1,3 +1,9 @@
+/*
+ * SPDX-FileCopyrightText: 2020 DB Station&Service AG <bahnhoflive-opensource@deutschebahn.com>
+ *
+ * SPDX-License-Identifier: Apache-2.0
+ */
+
 package de.deutschebahn.bahnhoflive.backend.wagenstand.istwr.model;
 
 import java.util.List;
@@ -14,6 +20,7 @@ public class WagenstandAllFahrzeugData {
     public String wagenordnungsnummer;      //"wagenordnungsnummer":"28",
     public WagenstandPositionAmhaltData positionamhalt;//"positionamhalt":{"endemeter":"237.2","endeprozent":"59","startmeter":"209.3","startprozent":"52"},
     public String status;                   //    "status":"OFFEN"
+
     public interface Category {
 
         String LOK = "LOK";

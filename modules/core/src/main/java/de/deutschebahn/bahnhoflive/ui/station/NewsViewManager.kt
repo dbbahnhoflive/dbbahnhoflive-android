@@ -1,3 +1,9 @@
+/*
+ * SPDX-FileCopyrightText: 2020 DB Station&Service AG <bahnhoflive-opensource@deutschebahn.com>
+ *
+ * SPDX-License-Identifier: Apache-2.0
+ */
+
 package de.deutschebahn.bahnhoflive.ui.station
 
 import android.view.View
@@ -8,8 +14,8 @@ import de.deutschebahn.bahnhoflive.backend.db.newsapi.model.News
 import kotlinx.android.synthetic.main.fragment_station.view.*
 
 class NewsViewManager(
-        containerView: View,
-        private val newsAdapter: NewsAdapter = NewsAdapter()
+    containerView: View,
+    private val newsAdapter: NewsAdapter = NewsAdapter()
 ) : Observer<List<News>> {
 
     val pageIndicator = containerView.newsPagerIndicator

@@ -1,3 +1,9 @@
+/*
+ * SPDX-FileCopyrightText: 2020 DB Station&Service AG <bahnhoflive-opensource@deutschebahn.com>
+ *
+ * SPDX-License-Identifier: Apache-2.0
+ */
+
 package de.deutschebahn.bahnhoflive.ui.map
 
 import com.google.android.gms.maps.GoogleMap
@@ -25,8 +31,8 @@ class Content : OnMapReadyCallback, ZoomChangeMonitor.Listener {
         }
 
     val categorizedMarkerBinders = MapContentPreserver(
-            HashMap<Filter, MutableList<MarkerBinder>>(),
-            ArrayListFactory())
+        HashMap<Filter, MutableList<MarkerBinder>>(),
+        ArrayListFactory())
 
     private val collator = object : NumberAwareCollator<MarkerBinder>() {
         override fun toString(`object`: MarkerBinder): String {

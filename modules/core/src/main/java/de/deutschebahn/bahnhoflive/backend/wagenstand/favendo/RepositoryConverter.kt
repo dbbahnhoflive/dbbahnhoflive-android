@@ -1,3 +1,9 @@
+/*
+ * SPDX-FileCopyrightText: 2020 DB Station&Service AG <bahnhoflive-opensource@deutschebahn.com>
+ *
+ * SPDX-License-Identifier: Apache-2.0
+ */
+
 package de.deutschebahn.bahnhoflive.backend.wagenstand.favendo
 
 import de.deutschebahn.bahnhoflive.backend.wagenstand.favendo.model.LegacyTrain
@@ -16,16 +22,16 @@ fun Wagenstand.toTrainFormation(): TrainFormation {
     }
 
     return TrainFormation(
-            waggons.map {
-                it.toWaggon(getDestinatinationForWaggon(it)?.let { legacyTrain ->
-                    trainMapping[legacyTrain]
-                })
-            },
-            trains,
-            time,
-            platform,
-            isReversed,
-            trainNumbers.first(),
-            false
+        waggons.map {
+            it.toWaggon(getDestinatinationForWaggon(it)?.let { legacyTrain ->
+                trainMapping[legacyTrain]
+            })
+        },
+        trains,
+        time,
+        platform,
+        isReversed,
+        trainNumbers.first(),
+        false
     )
 }

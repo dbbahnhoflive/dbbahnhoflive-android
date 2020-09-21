@@ -1,3 +1,9 @@
+/*
+ * SPDX-FileCopyrightText: 2020 DB Station&Service AG <bahnhoflive-opensource@deutschebahn.com>
+ *
+ * SPDX-License-Identifier: Apache-2.0
+ */
+
 package de.deutschebahn.bahnhoflive.backend.wagenstand.istwr
 
 import android.util.Log
@@ -20,33 +26,33 @@ import java.util.*
 
 class RepositoryConverter {
     private val all = setOf(
-            LOK,
-            TRIEBKOPF,
-            HALBSPEISEWAGENZWEITEKLASSE,
-            HALBSPEISEWAGENERSTEKLASSE,
-            SPEISEWAGEN,
-            REISEZUGWAGENERSTEZWEITEKLASSE,
-            REISEZUGWAGENZWEITEKLASSE,
-            REISEZUGWAGENERSTEKLASSE,
-            STEUERWAGENERSTEKLASSE,
-            STEUERWAGENZWEITEKLASSE,
-            DOPPELSTOCKSTEUERWAGENERSTEKLASSE,
-            DOPPELSTOCKSTEUERWAGENZWEITEKLASSE,
-            DOPPELSTOCKSTEUERWAGENERSTEZWEITEKLASSE,
-            STEUERWAGENERSTEZWEITEKLASSE,
-            DOPPELSTOCKWAGENERSTEZWEITEKLASSE,
-            DOPPELSTOCKWAGENERSTEKLASSE,
-            DOPPELSTOCKWAGENZWEITEKLASSE,
-            DOPPELSTOCKAUTOTRANSPORTWAGENREISEZUGWAGENBAUART,
-            SCHLAFWAGENERSTEKLASSE,
-            SCHLAFWAGENERSTEZWEITEKLASSE,
-            SCHLAFWAGENZWEITEKLASSE,
-            LIEGEWAGENERSTEKLASSE,
-            LIEGEWAGENZWEITEKLASSE,
-            HALBGEPAECKWAGENERSTEKLASSE,
-            HALBGEPAECKWAGENZWEITEKLASSE,
-            GEPAECKWAGEN,
-            TRIEBWAGENBAUREIHE628928
+        LOK,
+        TRIEBKOPF,
+        HALBSPEISEWAGENZWEITEKLASSE,
+        HALBSPEISEWAGENERSTEKLASSE,
+        SPEISEWAGEN,
+        REISEZUGWAGENERSTEZWEITEKLASSE,
+        REISEZUGWAGENZWEITEKLASSE,
+        REISEZUGWAGENERSTEKLASSE,
+        STEUERWAGENERSTEKLASSE,
+        STEUERWAGENZWEITEKLASSE,
+        DOPPELSTOCKSTEUERWAGENERSTEKLASSE,
+        DOPPELSTOCKSTEUERWAGENZWEITEKLASSE,
+        DOPPELSTOCKSTEUERWAGENERSTEZWEITEKLASSE,
+        STEUERWAGENERSTEZWEITEKLASSE,
+        DOPPELSTOCKWAGENERSTEZWEITEKLASSE,
+        DOPPELSTOCKWAGENERSTEKLASSE,
+        DOPPELSTOCKWAGENZWEITEKLASSE,
+        DOPPELSTOCKAUTOTRANSPORTWAGENREISEZUGWAGENBAUART,
+        SCHLAFWAGENERSTEKLASSE,
+        SCHLAFWAGENERSTEZWEITEKLASSE,
+        SCHLAFWAGENZWEITEKLASSE,
+        LIEGEWAGENERSTEKLASSE,
+        LIEGEWAGENZWEITEKLASSE,
+        HALBGEPAECKWAGENERSTEKLASSE,
+        HALBGEPAECKWAGENZWEITEKLASSE,
+        GEPAECKWAGEN,
+        TRIEBWAGENBAUREIHE628928
     )
     private val restaurantCategories = all.filter { it.contains("SPEISE") }.toHashSet()
     private val multiClassCategories = all.filter { it.contains("ERSTEZWEITE") || it.contains("HALB") }.toHashSet()
@@ -75,20 +81,20 @@ class RepositoryConverter {
             val train = trains.lastOrNull()?.takeIf {
                 it.number == number && it.destinationStation == destinationStation
             } ?: Train(
-                    number,
-                    zuggattung,
-                    destinationStation,
-                    WagenstandDataMergeFactory.extractSectionSpan(wagenstandFahrzeugData))
-                    .also {
-                        trains += it
-                    }
+                number,
+                zuggattung,
+                destinationStation,
+                WagenstandDataMergeFactory.extractSectionSpan(wagenstandFahrzeugData))
+                .also {
+                    trains += it
+                }
 
             var front = true
             for (wagenstandAllFahrzeugData in wagenstandFahrzeugData.allFahrzeug) {
                 waggons += if (wagenstandAllFahrzeugData.kategorie in splitWaggonCategories)
                     listOf(
-                            createTerminator(train, wagenstandAllFahrzeugData, front),
-                            createWaggon(train, wagenstandAllFahrzeugData, true, front)
+                        createTerminator(train, wagenstandAllFahrzeugData, front),
+                        createWaggon(train, wagenstandAllFahrzeugData, true, front)
                     ).let {
                         if (front) it else it.reversed()
                     }
@@ -109,84 +115,84 @@ class RepositoryConverter {
         } ?: false
 
         TrainFormation(
-                waggons,
-                trains,
-                halt.abfahrtszeit.let {
-                    SimpleDateFormat("HH:mm").format(
-                            SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss").parse(it))
+            waggons,
+            trains,
+            halt.abfahrtszeit.let {
+                SimpleDateFormat("HH:mm").format(
+                    SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss").parse(it))
 
-                },
-                halt.gleisbezeichnung,
-                reversed,
-                allFahrzeuggruppe.first().verkehrlichezugnummer,
-                true
+            },
+            halt.gleisbezeichnung,
+            reversed,
+            allFahrzeuggruppe.first().verkehrlichezugnummer,
+            true
         )
     }
 
     private fun createTerminator(train: Train, wagenstandAllFahrzeugData: WagenstandAllFahrzeugData, first: Boolean) = Waggon(
-            train,
-            false,
-            emptyList(),
-            emptyList(),
-            "",
-            false,
-            listOf(wagenstandAllFahrzeugData.fahrzeugsektor),
-            "",
-            LegacyWaggon.COLOR_MISC,
-            LegacyWaggon.COLOR_NONE,
-            false,
-            1,
-            first,
-            !first,
-            false,
-            wagenstandAllFahrzeugData.wagenordnungsnummer
+        train,
+        false,
+        emptyList(),
+        emptyList(),
+        "",
+        false,
+        listOf(wagenstandAllFahrzeugData.fahrzeugsektor),
+        "",
+        LegacyWaggon.COLOR_MISC,
+        LegacyWaggon.COLOR_NONE,
+        false,
+        1,
+        first,
+        !first,
+        false,
+        wagenstandAllFahrzeugData.wagenordnungsnummer
     )
 
     private fun createWaggon(train: Train, wagenstandAllFahrzeugData: WagenstandAllFahrzeugData, half: Boolean = false, front: Boolean): Waggon {
         val kategorie = wagenstandAllFahrzeugData.kategorie
         return Waggon(
-                train,
-                kategorie in restaurantCategories,
-                wagenstandAllFahrzeugData.allFahrzeugausstattung.mapNotNull {
-                    try {
-                        val waggonFeature = WaggonFeature.valueOf(it.ausstattungsart)
-                        val status = Status.valueOf(it.status)
-                        FeatureStatus(waggonFeature, status)
-                    } catch (e: Exception) {
-                        Log.i(TrainFormation::class.java.simpleName, "waggon feature unusable", e)
-                        null
-                    }
-                },
-                listOfNotNull(kategorie.takeIf { it in restaurantCategories }?.let { LegacyFeature() }),
-                "",
-                kategorie in multiClassCategories,
-                listOf(wagenstandAllFahrzeugData.fahrzeugsektor),
-                when (kategorie) {
-                    in firstClassCategories -> "1"
-                    in secondClassCategories -> "2"
-                    else -> ""
-                },
-                when (kategorie) {
-                    in firstClassCategories -> LegacyWaggon.COLOR_FIRST_CLASS
-                    in restaurantCategories -> LegacyWaggon.COLOR_RESTAURANT
-                    in secondClassCategories -> LegacyWaggon.COLOR_SECOND_CLASS
-                    in sleepingCategories -> LegacyWaggon.COLOR_SLEEPING
-                    in luggageCategories -> LegacyWaggon.COLOR_LUGGAGE
-                    else -> LegacyWaggon.COLOR_MISC
-                },
-                when (kategorie) {
-                    in luggageCategories -> LegacyWaggon.COLOR_LUGGAGE
-                    in sleepingCategories -> LegacyWaggon.COLOR_SLEEPING
-                    in secondClassCategories -> LegacyWaggon.COLOR_SECOND_CLASS
-                    in restaurantCategories -> LegacyWaggon.COLOR_RESTAURANT
-                    else -> LegacyWaggon.COLOR_NONE
-                },
-                kategorie !in nonWagonCategories,
-                if (half || kategorie in directionalEngineCategory) 1 else 2,
-                front && kategorie in directionalEngineCategory,
-                !front && kategorie in directionalEngineCategory,
-                kategorie in undirectionalEngineCategory,
-                wagenstandAllFahrzeugData.wagenordnungsnummer
+            train,
+            kategorie in restaurantCategories,
+            wagenstandAllFahrzeugData.allFahrzeugausstattung.mapNotNull {
+                try {
+                    val waggonFeature = WaggonFeature.valueOf(it.ausstattungsart)
+                    val status = Status.valueOf(it.status)
+                    FeatureStatus(waggonFeature, status)
+                } catch (e: Exception) {
+                    Log.i(TrainFormation::class.java.simpleName, "waggon feature unusable", e)
+                    null
+                }
+            },
+            listOfNotNull(kategorie.takeIf { it in restaurantCategories }?.let { LegacyFeature() }),
+            "",
+            kategorie in multiClassCategories,
+            listOf(wagenstandAllFahrzeugData.fahrzeugsektor),
+            when (kategorie) {
+                in firstClassCategories -> "1"
+                in secondClassCategories -> "2"
+                else -> ""
+            },
+            when (kategorie) {
+                in firstClassCategories -> LegacyWaggon.COLOR_FIRST_CLASS
+                in restaurantCategories -> LegacyWaggon.COLOR_RESTAURANT
+                in secondClassCategories -> LegacyWaggon.COLOR_SECOND_CLASS
+                in sleepingCategories -> LegacyWaggon.COLOR_SLEEPING
+                in luggageCategories -> LegacyWaggon.COLOR_LUGGAGE
+                else -> LegacyWaggon.COLOR_MISC
+            },
+            when (kategorie) {
+                in luggageCategories -> LegacyWaggon.COLOR_LUGGAGE
+                in sleepingCategories -> LegacyWaggon.COLOR_SLEEPING
+                in secondClassCategories -> LegacyWaggon.COLOR_SECOND_CLASS
+                in restaurantCategories -> LegacyWaggon.COLOR_RESTAURANT
+                else -> LegacyWaggon.COLOR_NONE
+            },
+            kategorie !in nonWagonCategories,
+            if (half || kategorie in directionalEngineCategory) 1 else 2,
+            front && kategorie in directionalEngineCategory,
+            !front && kategorie in directionalEngineCategory,
+            kategorie in undirectionalEngineCategory,
+            wagenstandAllFahrzeugData.wagenordnungsnummer
         )
     }
 }

@@ -1,3 +1,9 @@
+/*
+ * SPDX-FileCopyrightText: 2020 DB Station&Service AG <bahnhoflive-opensource@deutschebahn.com>
+ *
+ * SPDX-License-Identifier: Apache-2.0
+ */
+
 package de.deutschebahn.bahnhoflive.ui.station.news
 
 import android.graphics.BitmapFactory
@@ -11,9 +17,9 @@ import de.deutschebahn.bahnhoflive.view.SingleSelectionManager
 import kotlinx.android.synthetic.main.card_expandable_coupon.view.*
 
 class CouponViewHolder(
-        parent: ViewGroup,
-        singleSelectionManager: SingleSelectionManager,
-        private val itemClickListener: ItemClickListener<News>
+    parent: ViewGroup,
+    singleSelectionManager: SingleSelectionManager,
+    private val itemClickListener: ItemClickListener<News>
 ) : SelectableItemViewHolder<News>(parent, R.layout.card_expandable_coupon, singleSelectionManager) {
 
     init {

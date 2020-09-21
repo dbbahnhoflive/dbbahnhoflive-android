@@ -1,3 +1,9 @@
+/*
+ * SPDX-FileCopyrightText: 2020 DB Station&Service AG <bahnhoflive-opensource@deutschebahn.com>
+ *
+ * SPDX-License-Identifier: Apache-2.0
+ */
+
 package de.deutschebahn.bahnhoflive.ui.hub
 
 import android.content.Context
@@ -37,7 +43,7 @@ class HubFragment : androidx.fragment.app.Fragment() {
 
     private val latestTab
         get() = latestTabPreferences?.getInt(PREF_LATEST_TAB, 0)
-                ?: 0
+            ?: 0
 
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
@@ -56,13 +62,13 @@ class HubFragment : androidx.fragment.app.Fragment() {
         pager.pageMargin = view.resources.getDimensionPixelSize(R.dimen.default_space)
         pager.adapter = object : FragmentPagerAdapter(childFragmentManager, BEHAVIOR_RESUME_ONLY_CURRENT_FRAGMENT) {
             override fun getItem(position: Int): Fragment =
-                    when (position) {
-                        0 -> SearchStarterFragment()
-                        1 -> FavoritesFragment()
-                        2 -> NearbyDeparturesFragment()
+                when (position) {
+                    0 -> SearchStarterFragment()
+                    1 -> FavoritesFragment()
+                    2 -> NearbyDeparturesFragment()
 
-                        else -> throw IllegalArgumentException()
-                    }
+                    else -> throw IllegalArgumentException()
+                }
 
             override fun getCount() = 3
 

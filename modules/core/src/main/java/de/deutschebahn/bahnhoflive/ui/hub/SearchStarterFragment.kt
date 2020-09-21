@@ -1,3 +1,9 @@
+/*
+ * SPDX-FileCopyrightText: 2020 DB Station&Service AG <bahnhoflive-opensource@deutschebahn.com>
+ *
+ * SPDX-License-Identifier: Apache-2.0
+ */
+
 package de.deutschebahn.bahnhoflive.ui.hub
 
 import android.os.Bundle
@@ -14,7 +20,7 @@ class SearchStarterFragment : androidx.fragment.app.Fragment() {
     val trackingManager = TrackingManager()
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? =
-            inflater.inflate(R.layout.fragment_search_starter, container, false)
+        inflater.inflate(R.layout.fragment_search_starter, container, false)
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         search.setOnClickListener { searchView ->

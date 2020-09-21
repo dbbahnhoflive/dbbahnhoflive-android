@@ -1,3 +1,9 @@
+/*
+ * SPDX-FileCopyrightText: 2020 DB Station&Service AG <bahnhoflive-opensource@deutschebahn.com>
+ *
+ * SPDX-License-Identifier: Apache-2.0
+ */
+
 package de.deutschebahn.bahnhoflive.ui.station;
 
 import android.view.ViewGroup;
@@ -73,7 +79,6 @@ class FavoritesAdapter extends RecyclerView.Adapter<ViewHolder<StationWrapper>> 
 
             bookmarkSwitch = new CompoundButtonChecker(itemView.findViewById(R.id.bookmarked_switch), this);
         }
-
 
 
         @Override

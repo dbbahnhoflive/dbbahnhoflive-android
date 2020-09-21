@@ -1,3 +1,9 @@
+/*
+ * SPDX-FileCopyrightText: 2020 DB Station&Service AG <bahnhoflive-opensource@deutschebahn.com>
+ *
+ * SPDX-License-Identifier: Apache-2.0
+ */
+
 package de.deutschebahn.bahnhoflive.ui.station.localtransport
 
 import android.view.ViewGroup
@@ -13,7 +19,7 @@ import java.util.*
 import kotlin.collections.ArrayList
 
 internal class LocalTransportsAdapter(
-        private val itemClickListener: ItemClickListener<HafasStation>
+    private val itemClickListener: ItemClickListener<HafasStation>
 ) : androidx.recyclerview.widget.RecyclerView.Adapter<ViewHolder<*>>() {
 
     private abstract class ItemWrapper (var viewType : Int){
@@ -23,13 +29,13 @@ internal class LocalTransportsAdapter(
     private val items = LinkedList<ItemWrapper>()
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder<*> =
-            when (viewType) {
-                1 -> LocalTransportViewHolder(parent, itemClickListener)
-                else -> HeaderViewHolder(parent)
-            }
+        when (viewType) {
+            1 -> LocalTransportViewHolder(parent, itemClickListener)
+            else -> HeaderViewHolder(parent)
+        }
 
     override fun onBindViewHolder(holder: ViewHolder<*>, position: Int) =
-            items[position].bindViewHolder(holder)
+        items[position].bindViewHolder(holder)
 
     override fun getItemViewType(position: Int) = items[position].viewType
 

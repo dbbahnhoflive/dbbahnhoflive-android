@@ -1,3 +1,9 @@
+/*
+ * SPDX-FileCopyrightText: 2020 DB Station&Service AG <bahnhoflive-opensource@deutschebahn.com>
+ *
+ * SPDX-License-Identifier: Apache-2.0
+ */
+
 package de.deutschebahn.bahnhoflive.ui.station.elevators
 
 import android.view.View
@@ -38,9 +44,9 @@ abstract class FacilityStatusViewHolder(parent: ViewGroup, selectionManager: Sin
 
     private fun renderDescription(status: Status, description: String): CharSequence {
         return "Aufzug " + description
-                .replace("/".toRegex(), " ")
-                .replace("(\\d+)\\.\\s?([UO]G)".toRegex(), "$2 $1")
-                .replace("([UOE]G.*)-(.*[UOE]G)".toRegex(), "$1 bis $2") +
+            .replace("/".toRegex(), " ")
+            .replace("(\\d+)\\.\\s?([UO]G)".toRegex(), "$2 $1")
+            .replace("([UOE]G.*)-(.*[UOE]G)".toRegex(), "$1 bis $2") +
                 "\n" +
                 when (status) {
                     Status.POSITIVE -> "Anlage in Betrieb."

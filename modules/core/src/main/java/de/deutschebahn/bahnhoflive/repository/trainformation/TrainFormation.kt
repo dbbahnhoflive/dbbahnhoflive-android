@@ -1,16 +1,22 @@
+/*
+ * SPDX-FileCopyrightText: 2020 DB Station&Service AG <bahnhoflive-opensource@deutschebahn.com>
+ *
+ * SPDX-License-Identifier: Apache-2.0
+ */
+
 package de.deutschebahn.bahnhoflive.repository.trainformation
 
 import android.os.Parcel
 import android.os.Parcelable
 
 class TrainFormation(
-        val waggons: List<Waggon>,
-        val trains: List<Train>,
-        val time: String,
-        val platform: String,
-        val isReversed: Boolean,
-        val trainNumber: String,
-        val isLive: Boolean
+    val waggons: List<Waggon>,
+    val trains: List<Train>,
+    val time: String,
+    val platform: String,
+    val isReversed: Boolean,
+    val trainNumber: String,
+    val isLive: Boolean
 ) : Parcelable {
     fun sortBySection() {
         //TODO
@@ -20,13 +26,13 @@ class TrainFormation(
         get() = waggons.size
 
     constructor(parcel: Parcel) : this(
-            parcel.createTypedArrayList(Waggon.CREATOR).orEmpty(),
-            parcel.createTypedArrayList(Train.CREATOR).orEmpty(),
-            parcel.readString()!!,
-            parcel.readString()!!,
-            parcel.readByte() != 0.toByte(),
-            parcel.readString()!!,
-            parcel.readByte() != 0.toByte())
+        parcel.createTypedArrayList(Waggon.CREATOR).orEmpty(),
+        parcel.createTypedArrayList(Train.CREATOR).orEmpty(),
+        parcel.readString()!!,
+        parcel.readString()!!,
+        parcel.readByte() != 0.toByte(),
+        parcel.readString()!!,
+        parcel.readByte() != 0.toByte())
 
     override fun writeToParcel(parcel: Parcel, flags: Int) {
         parcel.writeTypedList(waggons)

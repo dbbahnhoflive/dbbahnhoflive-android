@@ -1,3 +1,9 @@
+/*
+ * SPDX-FileCopyrightText: 2020 DB Station&Service AG <bahnhoflive-opensource@deutschebahn.com>
+ *
+ * SPDX-License-Identifier: Apache-2.0
+ */
+
 package de.deutschebahn.bahnhoflive.ui.station.news
 
 import android.view.ViewGroup
@@ -6,7 +12,8 @@ import de.deutschebahn.bahnhoflive.backend.db.newsapi.model.News
 import de.deutschebahn.bahnhoflive.view.ItemClickListener
 import de.deutschebahn.bahnhoflive.view.SingleSelectionManager
 
-class CouponAdapter(val itemClickListener: ItemClickListener<News>) : RecyclerView.Adapter<CouponViewHolder>() {
+class CouponAdapter(val itemClickListener: ItemClickListener<News>) :
+    RecyclerView.Adapter<CouponViewHolder>() {
 
     val singleSelectionManager = SingleSelectionManager(this)
 

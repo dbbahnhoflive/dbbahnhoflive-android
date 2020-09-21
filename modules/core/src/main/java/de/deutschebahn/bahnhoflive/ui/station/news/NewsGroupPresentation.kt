@@ -1,3 +1,9 @@
+/*
+ * SPDX-FileCopyrightText: 2020 DB Station&Service AG <bahnhoflive-opensource@deutschebahn.com>
+ *
+ * SPDX-License-Identifier: Apache-2.0
+ */
+
 package de.deutschebahn.bahnhoflive.ui.station.news
 
 import androidx.annotation.DrawableRes
@@ -7,8 +13,8 @@ import de.deutschebahn.bahnhoflive.backend.db.newsapi.model.News
 
 @Suppress("unused")
 enum class NewsGroupPresentation(
-        @DrawableRes val icon: Int,
-        @StringRes val linkButtonText: Int = R.string.button_news_external_link
+    @DrawableRes val icon: Int,
+    @StringRes val linkButtonText: Int = R.string.button_news_external_link
 ) {
     COUPON(R.drawable.app_news_coupon),
     MALFUNCTION(R.drawable.app_news_malfunction),
@@ -21,6 +27,6 @@ enum class NewsGroupPresentation(
 }
 
 fun News.groupIcon() = group.id
-        .takeIf { it in 1..NewsGroupPresentation.VALUES.size }?.let {
-            NewsGroupPresentation.VALUES[it - 1]
-        }
+    .takeIf { it in 1..NewsGroupPresentation.VALUES.size }?.let {
+        NewsGroupPresentation.VALUES[it - 1]
+    }

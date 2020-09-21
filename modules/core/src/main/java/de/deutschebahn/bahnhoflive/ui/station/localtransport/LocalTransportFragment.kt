@@ -1,3 +1,9 @@
+/*
+ * SPDX-FileCopyrightText: 2020 DB Station&Service AG <bahnhoflive-opensource@deutschebahn.com>
+ *
+ * SPDX-License-Identifier: Apache-2.0
+ */
+
 package de.deutschebahn.bahnhoflive.ui.station.localtransport
 
 import android.os.Bundle
@@ -45,7 +51,6 @@ class LocalTransportFragment : FullBottomSheetDialogFragment() {
     }
 
 
-
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
@@ -63,10 +68,10 @@ class LocalTransportFragment : FullBottomSheetDialogFragment() {
             context?.let { context ->
                 trackingManager.track(TrackingManager.TYPE_ACTION, TrackingManager.Action.TAP, TrackingManager.UiElement.ABFAHRT_OEPNV)
                 val intent = DeparturesActivity.createIntent(
-                        context,
-                        item,
-                        localTransportViewModel.hafasStationsResource.data.value,
-                        stationResource.data.value
+                    context,
+                    item,
+                    localTransportViewModel.hafasStationsResource.data.value,
+                    stationResource.data.value
                 )
                 context.startActivity(intent)
             }
@@ -110,9 +115,9 @@ class LocalTransportFragment : FullBottomSheetDialogFragment() {
         })
 
         hafasStationsResource.error.observe(viewLifecycleOwner, Observer { error ->
-                error?.let {
-                    hafasStationsContainerHolder.showError()
-                }
+            error?.let {
+                hafasStationsContainerHolder.showError()
+            }
         })
 
         appBar.addOnLayoutChangeListener(BottomMarginLinker(view_flipper))

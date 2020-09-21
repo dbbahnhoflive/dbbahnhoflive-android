@@ -1,3 +1,9 @@
+/*
+ * SPDX-FileCopyrightText: 2020 DB Station&Service AG <bahnhoflive-opensource@deutschebahn.com>
+ *
+ * SPDX-License-Identifier: Apache-2.0
+ */
+
 package de.deutschebahn.bahnhoflive.backend;
 
 import android.content.Context;
@@ -19,7 +25,7 @@ import java.io.OutputStream;
 
 public class DiskLruImageCache implements ImageLoader.ImageCache {
 
-	private static final boolean DEBUG = true;
+    private static final boolean DEBUG = true;
 
     private DiskLruCache mDiskCache;
     private CompressFormat mCompressFormat = CompressFormat.JPEG;
@@ -167,7 +173,7 @@ public class DiskLruImageCache implements ImageLoader.ImageCache {
     private String createKey(String key) {
         String generatedKey = String.valueOf(key.hashCode());
         if (DEBUG) {
-        	Log.e("hash code", "" + generatedKey + "----and key" + key);
+            Log.e("hash code", "" + generatedKey + "----and key" + key);
         }
         return generatedKey;
     }

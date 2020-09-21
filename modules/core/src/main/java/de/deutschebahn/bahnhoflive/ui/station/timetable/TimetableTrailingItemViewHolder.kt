@@ -1,3 +1,9 @@
+/*
+ * SPDX-FileCopyrightText: 2020 DB Station&Service AG <bahnhoflive-opensource@deutschebahn.com>
+ *
+ * SPDX-License-Identifier: Apache-2.0
+ */
+
 package de.deutschebahn.bahnhoflive.ui.station.timetable
 
 import android.content.Context
@@ -42,16 +48,16 @@ class TimetableTrailingItemViewHolder(parent: ViewGroup, loadMoreCallback: View.
     }
 
     private fun Context.composeMessage(filterSummary: FilterSummary) = getString(R.string.template_empty_departures,
-            if (filterSummary.matchCount > 0) getString(R.string.timetable_trailer_optional_additional) else "",
-            filterSummary.trainCategory?.let { getString(R.string.template_timetable_trailer_optional_train_type, it) }
-                    ?: "",
-            filterSummary.track?.let { getString(R.string.template_timetable_trailer_optional_platform, it) }
-                    ?: "",
-            when (filterSummary.trainEvent) {
-                TrainEvent.DEPARTURE -> getString(R.string.timetable_trailer_departure)
-                TrainEvent.ARRIVAL -> getString(R.string.timetable_trailer_arrival)
-            },
-            timeFormat.format(filterSummary.endTime),
-            if (DateUtils.isToday(filterSummary.endTime)) "" else getString(R.string.timetable_trailer_tomorrow)
+        if (filterSummary.matchCount > 0) getString(R.string.timetable_trailer_optional_additional) else "",
+        filterSummary.trainCategory?.let { getString(R.string.template_timetable_trailer_optional_train_type, it) }
+            ?: "",
+        filterSummary.track?.let { getString(R.string.template_timetable_trailer_optional_platform, it) }
+            ?: "",
+        when (filterSummary.trainEvent) {
+            TrainEvent.DEPARTURE -> getString(R.string.timetable_trailer_departure)
+            TrainEvent.ARRIVAL -> getString(R.string.timetable_trailer_arrival)
+        },
+        timeFormat.format(filterSummary.endTime),
+        if (DateUtils.isToday(filterSummary.endTime)) "" else getString(R.string.timetable_trailer_tomorrow)
     )
 }

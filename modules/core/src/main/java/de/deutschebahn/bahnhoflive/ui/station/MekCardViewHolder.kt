@@ -1,3 +1,9 @@
+/*
+ * SPDX-FileCopyrightText: 2020 DB Station&Service AG <bahnhoflive-opensource@deutschebahn.com>
+ *
+ * SPDX-License-Identifier: Apache-2.0
+ */
+
 package de.deutschebahn.bahnhoflive.ui.station
 
 import android.content.Intent
@@ -8,12 +14,12 @@ import de.deutschebahn.bahnhoflive.analytics.TrackingManager
 import de.deutschebahn.bahnhoflive.ui.ViewHolder
 
 class MekCardViewHolder(
-        parent: ViewGroup,
-        trackingManager: TrackingManager,
-        portrait: Boolean
+    parent: ViewGroup,
+    trackingManager: TrackingManager,
+    portrait: Boolean
 ) : ViewHolder<Category>(
-        parent,
-        if (portrait) R.layout.card_mek_portrait else R.layout.card_mek_landscape
+    parent,
+    if (portrait) R.layout.card_mek_portrait else R.layout.card_mek_landscape
 ) {
     init {
         itemView.setOnClickListener { v ->

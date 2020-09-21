@@ -1,3 +1,9 @@
+/*
+ * SPDX-FileCopyrightText: 2020 DB Station&Service AG <bahnhoflive-opensource@deutschebahn.com>
+ *
+ * SPDX-License-Identifier: Apache-2.0
+ */
+
 package de.deutschebahn.bahnhoflive.repository.trainformation
 
 import android.os.Parcel
@@ -7,39 +13,40 @@ import de.deutschebahn.bahnhoflive.backend.wagenstand.favendo.model.LegacyWaggon
 import de.deutschebahn.bahnhoflive.backend.wagenstand.models.FeatureStatus
 
 class Waggon(
-        val train: Train?,
-        val isRestaurant: Boolean,
-        val features: List<FeatureStatus>,
-        val legacyFeatures: List<LegacyFeature>,
-        val differentDestination: String,
-        val isMultiClass: Boolean,
-        val sections: List<String>,
-        val `class`: String,
-        @ColorInt val primaryColor: Int,
-        @ColorInt val secondaryColor: Int,
-        val isWaggon: Boolean,
-        val length: Int,
-        val isHead: Boolean,
-        val isTail: Boolean,
-        val isTrainHeadBothWays: Boolean,
-        val displayNumber: String) : Parcelable {
+    val train: Train?,
+    val isRestaurant: Boolean,
+    val features: List<FeatureStatus>,
+    val legacyFeatures: List<LegacyFeature>,
+    val differentDestination: String,
+    val isMultiClass: Boolean,
+    val sections: List<String>,
+    val `class`: String,
+    @ColorInt val primaryColor: Int,
+    @ColorInt val secondaryColor: Int,
+    val isWaggon: Boolean,
+    val length: Int,
+    val isHead: Boolean,
+    val isTail: Boolean,
+    val isTrainHeadBothWays: Boolean,
+    val displayNumber: String
+) : Parcelable {
     constructor(parcel: Parcel) : this(
-            parcel.readParcelable(Train::class.java.classLoader),
-            parcel.readByte() != 0.toByte(),
-            parcel.createTypedArrayList(FeatureStatus.CREATOR).orEmpty(),
-            parcel.createTypedArrayList(LegacyFeature.CREATOR).orEmpty(),
-            parcel.readString()!!,
-            parcel.readByte() != 0.toByte(),
-            parcel.createStringArrayList().orEmpty(),
-            parcel.readString()!!,
-            parcel.readInt(),
-            parcel.readInt(),
-            parcel.readByte() != 0.toByte(),
-            parcel.readInt(),
-            parcel.readByte() != 0.toByte(),
-            parcel.readByte() != 0.toByte(),
-            parcel.readByte() != 0.toByte(),
-            parcel.readString()!!)
+        parcel.readParcelable(Train::class.java.classLoader),
+        parcel.readByte() != 0.toByte(),
+        parcel.createTypedArrayList(FeatureStatus.CREATOR).orEmpty(),
+        parcel.createTypedArrayList(LegacyFeature.CREATOR).orEmpty(),
+        parcel.readString()!!,
+        parcel.readByte() != 0.toByte(),
+        parcel.createStringArrayList().orEmpty(),
+        parcel.readString()!!,
+        parcel.readInt(),
+        parcel.readInt(),
+        parcel.readByte() != 0.toByte(),
+        parcel.readInt(),
+        parcel.readByte() != 0.toByte(),
+        parcel.readByte() != 0.toByte(),
+        parcel.readByte() != 0.toByte(),
+        parcel.readString()!!)
 
     override fun writeToParcel(parcel: Parcel, flags: Int) {
         parcel.writeParcelable(train, flags)
@@ -99,57 +106,57 @@ class LegacyFeature(val symbol: String = "p") : Parcelable { // defaults to rest
     }
 
     val description =
-            when (symbol) {
-                "A" -> "Bordbistro"
-                "B" -> "Lufthansa"
-                "C" -> "bahn.comfort"
-                "D" -> "Snack Point (Imbiss)"
-                "E" -> "Ruhebereich"
-                "F" -> "Familienbereich"
-                "G" -> "Club"
-                "H" -> "Office"
-                "I" -> "Silence"
-                "J" -> "Traveller"
-                "a" -> "ic:kurier"
-                "b" -> "Autotransport"
-                "c" -> "Telefon"
-                "d" -> "Post"
-                "e" -> "Rollstuhlgerecht"
-                "f" -> "Nichtraucher"
-                "g" -> "Raucher"
-                "h" -> "Fahrrad-Beförderung"
-                "k" -> "Großraumwagen"
-                "l" -> "Schlafwagen"
-                "m" -> "Liegewagen"
-                "n" -> "Plätze für mobilitätseingeschränkte Menschen"
-                "o" -> "Kleinkindabteil"
-                "p" -> "Bordrestaurant"
-                "w" -> "Rezeption"
-                "x" -> "Liegesesselwagen"
-                "y" -> "Schlafabteile Deluxe"
-                "{" -> "Ski-Abteil"
-                "}" -> "Gruppenreservierungen"
-                else -> ""
-            }
+        when (symbol) {
+            "A" -> "Bordbistro"
+            "B" -> "Lufthansa"
+            "C" -> "bahn.comfort"
+            "D" -> "Snack Point (Imbiss)"
+            "E" -> "Ruhebereich"
+            "F" -> "Familienbereich"
+            "G" -> "Club"
+            "H" -> "Office"
+            "I" -> "Silence"
+            "J" -> "Traveller"
+            "a" -> "ic:kurier"
+            "b" -> "Autotransport"
+            "c" -> "Telefon"
+            "d" -> "Post"
+            "e" -> "Rollstuhlgerecht"
+            "f" -> "Nichtraucher"
+            "g" -> "Raucher"
+            "h" -> "Fahrrad-Beförderung"
+            "k" -> "Großraumwagen"
+            "l" -> "Schlafwagen"
+            "m" -> "Liegewagen"
+            "n" -> "Plätze für mobilitätseingeschränkte Menschen"
+            "o" -> "Kleinkindabteil"
+            "p" -> "Bordrestaurant"
+            "w" -> "Rezeption"
+            "x" -> "Liegesesselwagen"
+            "y" -> "Schlafabteile Deluxe"
+            "{" -> "Ski-Abteil"
+            "}" -> "Gruppenreservierungen"
+            else -> ""
+        }
 }
 
 fun LegacyWaggon.toWaggon(train: Train?) = Waggon(
-        train,
-        isWaggonOfTypRestaurant,
-        features.orEmpty(),
-        symbols.orEmpty().map {
-            LegacyFeature(it)
-        },
-        differentDestination,
-        waggonHasMultipleClasses,
-        sections,
-        classOfWaggon,
-        colorForType(),
-        secondaryColor,
-        isWaggon,
-        length,
-        isWaggonHead,
-        isWaggonTail,
-        isTrainHeadBothWays,
-        waggonNumber.orEmpty()
+    train,
+    isWaggonOfTypRestaurant,
+    features.orEmpty(),
+    symbols.orEmpty().map {
+        LegacyFeature(it)
+    },
+    differentDestination,
+    waggonHasMultipleClasses,
+    sections,
+    classOfWaggon,
+    colorForType(),
+    secondaryColor,
+    isWaggon,
+    length,
+    isWaggonHead,
+    isWaggonTail,
+    isTrainHeadBothWays,
+    waggonNumber.orEmpty()
 )

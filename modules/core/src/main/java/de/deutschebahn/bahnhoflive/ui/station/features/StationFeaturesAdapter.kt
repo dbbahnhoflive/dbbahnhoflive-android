@@ -1,3 +1,9 @@
+/*
+ * SPDX-FileCopyrightText: 2020 DB Station&Service AG <bahnhoflive-opensource@deutschebahn.com>
+ *
+ * SPDX-License-Identifier: Apache-2.0
+ */
+
 package de.deutschebahn.bahnhoflive.ui.station.features
 
 import android.view.ViewGroup
@@ -5,7 +11,8 @@ import androidx.recyclerview.widget.RecyclerView
 import de.deutschebahn.bahnhoflive.view.ItemClickListener
 import java.util.*
 
-internal class StationFeaturesAdapter(private val itemClickListener: ItemClickListener<StationFeature>) : RecyclerView.Adapter<StationFeatureViewHolder>() {
+internal class StationFeaturesAdapter(private val itemClickListener: ItemClickListener<StationFeature>) :
+    RecyclerView.Adapter<StationFeatureViewHolder>() {
 
     private var orderedFeatures: List<StationFeature>? = ArrayList()
 

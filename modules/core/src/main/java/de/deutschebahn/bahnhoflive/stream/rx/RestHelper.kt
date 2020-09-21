@@ -1,3 +1,9 @@
+/*
+ * SPDX-FileCopyrightText: 2020 DB Station&Service AG <bahnhoflive-opensource@deutschebahn.com>
+ *
+ * SPDX-License-Identifier: Apache-2.0
+ */
+
 package de.deutschebahn.bahnhoflive.stream.rx
 
 import com.android.volley.Request
@@ -17,7 +23,7 @@ class OnSubscribeForRequest<T>(val restHelper: RestHelper, private val factory: 
 }
 
 fun <T> RestHelper.rxQueue(factory: (EmitterRestListener<T>) -> Request<*>) = MaybeSubject.create<T>(
-        OnSubscribeForRequest(this, factory)
+    OnSubscribeForRequest(this, factory)
 ).subscribeOn(Schedulers.io())
 
 class RequestCancellable(val request: Request<*>) : Cancellable {

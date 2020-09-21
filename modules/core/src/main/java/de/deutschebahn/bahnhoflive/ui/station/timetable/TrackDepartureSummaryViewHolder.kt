@@ -1,3 +1,9 @@
+/*
+ * SPDX-FileCopyrightText: 2020 DB Station&Service AG <bahnhoflive-opensource@deutschebahn.com>
+ *
+ * SPDX-License-Identifier: Apache-2.0
+ */
+
 package de.deutschebahn.bahnhoflive.ui.station.timetable
 
 import android.view.View
@@ -6,7 +12,10 @@ import de.deutschebahn.bahnhoflive.backend.ris.model.TrainEvent
 import de.deutschebahn.bahnhoflive.backend.ris.model.TrainInfo
 import kotlinx.android.synthetic.main.item_track_timetable_overview.view.*
 
-class TrackDepartureSummaryViewHolder(view: View, onWaggonOrderClickListener: OnWagonOrderClickListener) : TrainInfoOverviewViewHolder(view, TrainEvent.DEPARTURE_PROVIDER) {
+class TrackDepartureSummaryViewHolder(
+    view: View,
+    onWaggonOrderClickListener: OnWagonOrderClickListener
+) : TrainInfoOverviewViewHolder(view, TrainEvent.DEPARTURE_PROVIDER) {
     val waggonOrderButton: FloatingActionButton = view.wagon_order_indicator.apply {
         setOnClickListener {
             item?.also { trainInfo ->

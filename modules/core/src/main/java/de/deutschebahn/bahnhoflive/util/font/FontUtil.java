@@ -1,3 +1,9 @@
+/*
+ * SPDX-FileCopyrightText: 2020 DB Station&Service AG <bahnhoflive-opensource@deutschebahn.com>
+ *
+ * SPDX-License-Identifier: Apache-2.0
+ */
+
 package de.deutschebahn.bahnhoflive.util.font;
 
 import android.content.Context;
@@ -10,32 +16,32 @@ import java.util.Hashtable;
 
 public class FontUtil {
 
-	private static Typeface dbPicto;
+    private static Typeface dbPicto;
 
-	private static final String TAG = "Typefaces";
+    private static final String TAG = "Typefaces";
 
-	private static final Hashtable<String, Typeface> cache = new Hashtable<>();
+    private static final Hashtable<String, Typeface> cache = new Hashtable<>();
 
-	public static Typeface get(Context c, String assetPath) {
-		synchronized (cache) {
-			if (!cache.containsKey(assetPath)) {
-				try {
-					Typeface t = Typeface.createFromAsset(c.getAssets(),
-							assetPath);
-					cache.put(assetPath, t);
-				} catch (Exception e) {
-					Log.e(TAG, "Could not get typeface '" + assetPath
-							+ "' because " + e.getMessage());
-					return null;
-				}
-			}
-			return cache.get(assetPath);
-		}
-	}
+    public static Typeface get(Context c, String assetPath) {
+        synchronized (cache) {
+            if (!cache.containsKey(assetPath)) {
+                try {
+                    Typeface t = Typeface.createFromAsset(c.getAssets(),
+                            assetPath);
+                    cache.put(assetPath, t);
+                } catch (Exception e) {
+                    Log.e(TAG, "Could not get typeface '" + assetPath
+                            + "' because " + e.getMessage());
+                    return null;
+                }
+            }
+            return cache.get(assetPath);
+        }
+    }
 
-	public static void init(Context context) {
-		dbPicto = get(context, "fonts/dbpicto.ttf");
-	}
+    public static void init(Context context) {
+        dbPicto = get(context, "fonts/dbpicto.ttf");
+    }
 
     @Nullable
     public static Typeface getDbPicto() {

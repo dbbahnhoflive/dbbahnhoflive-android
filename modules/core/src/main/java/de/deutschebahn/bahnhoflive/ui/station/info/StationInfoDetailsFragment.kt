@@ -1,3 +1,9 @@
+/*
+ * SPDX-FileCopyrightText: 2020 DB Station&Service AG <bahnhoflive-opensource@deutschebahn.com>
+ *
+ * SPDX-License-Identifier: Apache-2.0
+ */
+
 package de.deutschebahn.bahnhoflive.ui.station.info
 
 import android.content.Intent
@@ -102,8 +108,7 @@ class StationInfoDetailsFragment :
 
     class StationInfoAdapter(
         private val serviceContents: List<ServiceContent>,
-        val trackingManager: TrackingManager
-    ,
+        val trackingManager: TrackingManager,
         val dbActionButtonParser: DbActionButtonParser
     ) : androidx.recyclerview.widget.RecyclerView.Adapter<SelectableItemViewHolder<ServiceContent>>() {
         val singleSelectionManager: SingleSelectionManager = SingleSelectionManager(this)
@@ -113,8 +118,7 @@ class StationInfoDetailsFragment :
             viewType: Int
         ): SelectableItemViewHolder<ServiceContent> {
             return ServiceContentViewHolder(
-                parent, singleSelectionManager, trackingManager
-            , dbActionButtonParser
+                parent, singleSelectionManager, trackingManager, dbActionButtonParser
             )
         }
 
@@ -298,10 +302,10 @@ class StationInfoDetailsFragment :
 
         private fun renderAdditionalText(item: ServiceContent) {
             item.additionalText
-                    ?.takeIf { it.isNotBlank() }
-                    ?.also {
-                        addHtmlPart(it)
-                    }
+                ?.takeIf { it.isNotBlank() }
+                ?.also {
+                    addHtmlPart(it)
+                }
         }
 
         private fun renderDescriptionText(item: ServiceContent) {

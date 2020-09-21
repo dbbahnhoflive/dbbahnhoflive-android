@@ -1,3 +1,9 @@
+/*
+ * SPDX-FileCopyrightText: 2020 DB Station&Service AG <bahnhoflive-opensource@deutschebahn.com>
+ *
+ * SPDX-License-Identifier: Apache-2.0
+ */
+
 package de.deutschebahn.bahnhoflive.ui.station.shop
 
 import android.content.Intent
@@ -23,8 +29,8 @@ import de.deutschebahn.bahnhoflive.ui.station.news.CouponListFragment
 import de.deutschebahn.bahnhoflive.view.CardButton
 
 class ShopCategorySelectionFragment : CategorySelectionFragment(
-        R.string.title_shopping_categories,
-        TrackingManager.Source.SHOPS
+    R.string.title_shopping_categories,
+    TrackingManager.Source.SHOPS
 ), MapPresetProvider {
 
     val stationViewModel by activityViewModels<StationViewModel>()
@@ -53,9 +59,9 @@ class ShopCategorySelectionFragment : CategorySelectionFragment(
                 it?.shops?.let { shops ->
                     ShopCategory.values().mapNotNull { shopCategory ->
                         shops[shopCategory]?.takeUnless { shopList -> shopList.isEmpty() }
-                                ?.let {
-                                    ShoppingCategory(shopCategory)
-                                }
+                            ?.let {
+                                ShoppingCategory(shopCategory)
+                            }
                     }
                 }
             }
@@ -68,22 +74,22 @@ class ShopCategorySelectionFragment : CategorySelectionFragment(
 
                 value = if (hasCoupons) {
                     shopCategories.plus(
-                            object : Category {
-                                override fun bind(cardButton: CardButton) {
-                                    cardButton.setText(R.string.coupon_category_label)
-                                    cardButton.setDrawable(R.drawable.app_news_coupon)
-                                }
-
-                                override fun getTrackingTag(): String = TrackingManager.Category.COUPONS
-
-                                private val categorySelectionListener = CategorySelectionListener {
-                                    trackCategoryTap(this)
-                                    openCouponListFragment()
-                                }
-
-                                override fun getSelectionListener(): CategorySelectionListener =
-                                        categorySelectionListener
+                        object : Category {
+                            override fun bind(cardButton: CardButton) {
+                                cardButton.setText(R.string.coupon_category_label)
+                                cardButton.setDrawable(R.drawable.app_news_coupon)
                             }
+
+                            override fun getTrackingTag(): String = TrackingManager.Category.COUPONS
+
+                            private val categorySelectionListener = CategorySelectionListener {
+                                trackCategoryTap(this)
+                                openCouponListFragment()
+                            }
+
+                            override fun getSelectionListener(): CategorySelectionListener =
+                                categorySelectionListener
+                        }
                     )
                 } else {
                     shopCategories

@@ -1,12 +1,20 @@
+/*
+ * SPDX-FileCopyrightText: 2020 DB Station&Service AG <bahnhoflive-opensource@deutschebahn.com>
+ *
+ * SPDX-License-Identifier: Apache-2.0
+ */
+
 package de.deutschebahn.bahnhoflive.ui.station.timetable
 
 import androidx.annotation.ColorRes
 import androidx.annotation.DrawableRes
 import de.deutschebahn.bahnhoflive.R
 
-enum class IssueSeverity(@field:DrawableRes
-                                             val icon: Int, @field:ColorRes
-                                             val color: Int) {
+enum class IssueSeverity(
+    @field:DrawableRes
+    val icon: Int, @field:ColorRes
+    val color: Int
+) {
     NONE(0, 0),
     INFO(R.drawable.app_warndreieck_dunkelgrau, R.color.textcolor_default),
     WARNING_TEXT_ONLY(0, R.color.red),

@@ -1,3 +1,9 @@
+/*
+ * SPDX-FileCopyrightText: 2020 DB Station&Service AG <bahnhoflive-opensource@deutschebahn.com>
+ *
+ * SPDX-License-Identifier: Apache-2.0
+ */
+
 package de.deutschebahn.bahnhoflive.ui.station;
 
 import android.app.Activity;
@@ -92,19 +98,19 @@ public class ElevatorIssuesLoaderFragment extends LoaderFragment<ElevatorIssuesL
     private void load(Station station) {
         baseApplication.getRepositories().getElevatorStatusRepository()
                 .queryStationElevatorStatuses(station.getId(), new BaseRestListener<List<FacilityStatus>>() {
-            @Override
-            public void onSuccess(List<FacilityStatus> payload) {
-                onFacilityStatusResponse(payload);
-            }
+                    @Override
+                    public void onSuccess(List<FacilityStatus> payload) {
+                        onFacilityStatusResponse(payload);
+                    }
 
-            @Override
-            public void onFail(VolleyError reason) {
-                super.onFail(reason);
+                    @Override
+                    public void onFail(VolleyError reason) {
+                        super.onFail(reason);
 
-                setState(false, null, false);
-                notifyListeners(1);
-            }
-        });
+                        setState(false, null, false);
+                        notifyListeners(1);
+                    }
+                });
 
     }
 

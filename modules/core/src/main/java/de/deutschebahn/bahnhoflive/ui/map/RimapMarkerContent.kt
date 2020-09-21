@@ -1,3 +1,9 @@
+/*
+ * SPDX-FileCopyrightText: 2020 DB Station&Service AG <bahnhoflive-opensource@deutschebahn.com>
+ *
+ * SPDX-License-Identifier: Apache-2.0
+ */
+
 package de.deutschebahn.bahnhoflive.ui.map
 
 import android.content.Context
@@ -48,16 +54,16 @@ private val mapIcon: Int, @field:DrawableRes
     }
 
     override fun getPreSelectionRating(): Int =
-            when (rimapPOI.category) {
-                "TravelService" -> 2
-                "Exit" -> 1
-                else -> super.getPreSelectionRating()
-            }
+        when (rimapPOI.category) {
+            "TravelService" -> 2
+            "Exit" -> 1
+            else -> super.getPreSelectionRating()
+        }
 
     override fun getStatus1(context: Context): FlyoutViewHolder.Status? {
         val rimapShop = RimapShop(rimapPOI)
         val remainingOpenMinutes = rimapShop.remainingOpenMinutes
-                ?: return super.getStatus1(context)
+            ?: return super.getStatus1(context)
 
         val open = remainingOpenMinutes >= 0
         val formatedTime = if (open)
@@ -103,10 +109,10 @@ private val mapIcon: Int, @field:DrawableRes
     }
 
     override fun getViewType(): MarkerContent.ViewType =
-            when (rimapPOI.type) {
-                "Track" -> ViewType.TRACK
-                else -> super.getViewType()
-            }
+        when (rimapPOI.type) {
+            "Track" -> ViewType.TRACK
+            else -> super.getViewType()
+        }
 
     /**
      * This method currently doesn't bother checking if this is actually a track / platform instance.

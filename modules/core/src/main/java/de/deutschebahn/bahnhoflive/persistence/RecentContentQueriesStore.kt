@@ -1,3 +1,9 @@
+/*
+ * SPDX-FileCopyrightText: 2020 DB Station&Service AG <bahnhoflive-opensource@deutschebahn.com>
+ *
+ * SPDX-License-Identifier: Apache-2.0
+ */
+
 package de.deutschebahn.bahnhoflive.persistence
 
 import android.content.Context
@@ -13,8 +19,8 @@ class RecentContentQueriesStore(context: Context) {
     private val sharedPreferences = context.getSharedPreferences("recentContentQueries", Context.MODE_PRIVATE)
 
     private var list = LinkedList(
-            sharedPreferences.getString("queryList", null)?.split('\n')?.take(HISTORY_LIMIT)
-                    ?: emptyList())
+        sharedPreferences.getString("queryList", null)?.split('\n')?.take(HISTORY_LIMIT)
+            ?: emptyList())
 
     fun putQuery(query: String) {
         list.remove(query)
@@ -29,8 +35,8 @@ class RecentContentQueriesStore(context: Context) {
             sharedPreferences.edit().clear().commit()
         } else {
             sharedPreferences.edit()
-                    .putString("queryList", list.joinToString("\n"))
-                    .commit()
+                .putString("queryList", list.joinToString("\n"))
+                .commit()
         }
     }
 

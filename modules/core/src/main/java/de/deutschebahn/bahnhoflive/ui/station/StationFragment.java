@@ -1,3 +1,9 @@
+/*
+ * SPDX-FileCopyrightText: 2020 DB Station&Service AG <bahnhoflive-opensource@deutschebahn.com>
+ *
+ * SPDX-License-Identifier: Apache-2.0
+ */
+
 package de.deutschebahn.bahnhoflive.ui.station;
 
 import android.app.Activity;
@@ -449,7 +455,7 @@ public class StationFragment extends Fragment implements
         stationViewModel.getRimapStationInfoLiveData().observe(getViewLifecycleOwner(), stationDetailCardCoordinator.getRimapStationInfoObserver());
 
         view.findViewById(R.id.searchCard).setOnClickListener(v -> {
-            getTrackingManager().track(TrackingManager.TYPE_ACTION, TrackingManager.Screen.H1, TrackingManager.Action.TAP, TrackingManager.UiElement.POI_SEARCH);
+                    getTrackingManager().track(TrackingManager.TYPE_ACTION, TrackingManager.Screen.H1, TrackingManager.Action.TAP, TrackingManager.UiElement.POI_SEARCH);
                     stationViewModel.startContentSearch();
                 }
         );
@@ -462,7 +468,7 @@ public class StationFragment extends Fragment implements
 
         ecoTeaser.findViewById(R.id.ecoTeaserButton).setOnClickListener(v -> {
                     getTrackingManager().track(TrackingManager.TYPE_ACTION, TrackingManager.Screen.H1, TrackingManager.Action.TAP, TrackingManager.UiElement.ECO_TEASER);
-            startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse("https://gruen.deutschebahn.com/de/projekte/oekostrombahnhof")));
+                    startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse("https://gruen.deutschebahn.com/de/projekte/oekostrombahnhof")));
                 }
         );
 
