@@ -9,6 +9,7 @@ package de.deutschebahn.bahnhoflive.ui.map;
 import android.view.View;
 import android.view.ViewGroup;
 
+import androidx.annotation.Nullable;
 import androidx.lifecycle.LifecycleOwner;
 
 import de.deutschebahn.bahnhoflive.R;
@@ -36,9 +37,11 @@ class DbStationFlyoutViewHolder extends FlyoutViewHolder {
     }
 
     @Override
-    protected void onBind(MarkerBinder item) {
+    protected void onBind(@Nullable MarkerBinder item) {
         super.onBind(item);
-
+        if (item == null) {
+            return;
+        }
         final MarkerContent markerContent = item.getMarkerContent();
 
         if (markerContent instanceof StationMarkerContent) {

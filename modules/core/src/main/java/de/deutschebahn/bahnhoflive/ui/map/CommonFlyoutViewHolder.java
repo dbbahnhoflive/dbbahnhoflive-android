@@ -10,6 +10,8 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
+import androidx.annotation.Nullable;
+
 import de.deutschebahn.bahnhoflive.R;
 
 public class CommonFlyoutViewHolder extends StatusFlyoutViewHolder implements View.OnClickListener {
@@ -33,9 +35,12 @@ public class CommonFlyoutViewHolder extends StatusFlyoutViewHolder implements Vi
     }
 
     @Override
-    protected void onBind(MarkerBinder item) {
+    protected void onBind(@Nullable MarkerBinder item) {
         super.onBind(item);
 
+        if (item == null) {
+            return;
+        }
         final MarkerContent markerContent = item.getMarkerContent();
         descriptionView.setText(markerContent.getDescription(context));
 

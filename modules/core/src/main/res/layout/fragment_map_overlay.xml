@@ -110,6 +110,7 @@
         </androidx.constraintlayout.widget.ConstraintLayout>
 
         <include layout="@layout/bottom_sheet_overlay_track_flyout" />
+        <include layout="@layout/bottom_sheet_overlay_parking_flyout" />
     </androidx.coordinatorlayout.widget.CoordinatorLayout>
 
     <de.deutschebahn.bahnhoflive.tutorial.TutorialView

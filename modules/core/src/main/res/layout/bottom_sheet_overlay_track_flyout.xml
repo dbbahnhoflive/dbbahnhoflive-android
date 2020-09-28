@@ -14,7 +14,7 @@
     <View
         android:visibility="gone"
         tools:visibility="visible"
-        android:id="@+id/touchInterceptor"
+        android:id="@+id/trackTouchInterceptor"
         android:background="@color/translucent_black"
         android:layout_width="match_parent"
         android:layout_height="match_parent" />
@@ -57,7 +57,7 @@
                 android:orientation="vertical"
                 tools:showIn="@layout/flyout_track">
 
-                <include layout="@layout/include_track_flyout_header" />
+                <include layout="@layout/include_expandable_flyout_header" />
 
                 <ViewFlipper
                     android:id="@+id/view_flipper"

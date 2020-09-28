@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<!--
+  ~ SPDX-FileCopyrightText: 2020 DB Station&Service AG <bahnhoflive-opensource@deutschebahn.com>
+  ~
+  ~ SPDX-License-Identifier: Apache-2.0
+  -->
+
+<merge xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    tools:showIn="@layout/fake_map3">
+
+    <View
+        android:visibility="gone"
+        tools:visibility="visible"
+        android:id="@+id/parkingTouchInterceptor"
+        android:background="@color/translucent_black"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent" />
+
+    <FrameLayout
+        android:minHeight="@dimen/flyout_height"
+        android:visibility="gone"
+        tools:visibility="visible"
+        android:clickable="false"
+        android:id="@+id/parkingFlyoutOverlay"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_horizontal"
+        tools:layout_gravity="center_horizontal|bottom"
+        android:layout_marginLeft="@dimen/flyout_margin"
+        android:layout_marginRight="@dimen/flyout_margin"
+        app:behavior_hideable="false"
+        app:behavior_peekHeight="@dimen/flyout_height"
+        app:layout_anchorGravity="bottom"
+        app:layout_behavior="@string/bottom_sheet_behavior">
+
+        <!-- This nesting is basically for adding up flyout margins and gaps -->
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="@dimen/tiny_space"
+            android:layout_marginRight="@dimen/tiny_space"
+
+            android:background="@color/white"
+            android:animateLayoutChanges="true"
+            android:showDividers="middle"
+            android:divider="@drawable/shape_flyout_track_divider"
+            android:orientation="vertical">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:id="@+id/collapsedFlyout"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                tools:showIn="@layout/flyout_track">
+
+                <include layout="@layout/include_expandable_flyout_header" />
+
+                <TextView
+                    android:text="Parkplatz"
+                    android:layout_width="match_parent"
+                    android:layout_height="0dp"
+                    android:layout_weight="1" />
+
+            </LinearLayout>
+
+        </LinearLayout>
+    </FrameLayout>
+</merge>

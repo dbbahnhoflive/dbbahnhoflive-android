@@ -98,7 +98,7 @@ public class ReducedDbDeparturesViewHolder extends ViewHolder<DbTimetableResourc
     }
 
     @Override
-    protected void onUnbind(@NonNull DbTimetableResource item) {
+    public void onUnbind(@NonNull DbTimetableResource item) {
         super.onUnbind(item);
         item.getData().removeObserver(dataObserver);
         item.getLoadingStatus().removeObserver(loadingStatusObserver);

@@ -36,29 +36,30 @@ internal class TrackFlyoutViewHolder(view: View, private val mapViewModel: MapVi
 
     private var disposable: Disposable? = null
 
-    override fun onBind(markerContent: MarkerContent) {
+    override fun onBind(markerContent: MarkerContent?) {
         super.onBind(markerContent)
 
-        markerContent.track?.let { track ->
-            disposable = mapViewModel.createTrackTimetableObservable(track, Consumer { resourceState ->
-                expandableListener?.invoke(false)
-                when {
-                    resourceState.loadingStatus == LoadingStatus.BUSY -> loadingContentDecorationViewHolder.showProgress()
-                    resourceState.error != null -> loadingContentDecorationViewHolder.showError()
-                    else -> resourceState.data?.apply {
-                        if (isEmpty()) {
-                            loadingContentDecorationViewHolder.showEmpty()
-                        } else {
-                            loadingContentDecorationViewHolder.showContent()
-                            expandableListener?.invoke(true)
-                        }
-                        timetableOverviewViewHolder.bind(firstOrNull())
+        markerContent?.track?.let { track ->
+            disposable =
+                mapViewModel.createTrackTimetableObservable(track, Consumer { resourceState ->
+                    expandableListener?.invoke(false)
+                    when {
+                        resourceState.loadingStatus == LoadingStatus.BUSY -> loadingContentDecorationViewHolder.showProgress()
+                        resourceState.error != null -> loadingContentDecorationViewHolder.showError()
+                        else -> resourceState.data?.apply {
+                            if (isEmpty()) {
+                                loadingContentDecorationViewHolder.showEmpty()
+                            } else {
+                                loadingContentDecorationViewHolder.showContent()
+                                expandableListener?.invoke(true)
+                            }
+                            timetableOverviewViewHolder.bind(firstOrNull())
 
-                        secondTimetableOverviewViewHolder?.bind(getOrNull(1))
-                        thirdTimetableOverviewViewHolder?.bind(getOrNull(2))
+                            secondTimetableOverviewViewHolder?.bind(getOrNull(1))
+                            thirdTimetableOverviewViewHolder?.bind(getOrNull(2))
+                        }
                     }
-                }
-            })
+                })
         }
     }
 

@@ -72,5 +72,6 @@ class ParkingFacilityMarkerContent(private val parkingFacility: ParkingFacility)
         return -1
     }
 
+    override fun getViewType(): ViewType = ViewType.PARKING
 }
 

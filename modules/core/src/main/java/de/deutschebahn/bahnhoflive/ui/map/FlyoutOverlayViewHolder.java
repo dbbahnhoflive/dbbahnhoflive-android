@@ -21,22 +21,25 @@ class FlyoutOverlayViewHolder extends ViewHolder<MarkerBinder> {
 
     private final CompoundButton expansionToggle;
     private final BottomSheetBehavior<View> bottomSheetBehavior;
-    private final TrackFlyoutViewHolder trackFlyoutViewHolder;
     private final View firstRowView;
     private final View flyoutTitleView;
+    private final OverlayFlyoutViewHolderWrapper flyoutViewHolderWrapper;
+    private final FlyoutViewHolder trackFlyoutViewHolder;
     private boolean currentlyWanted;
-    private final View overlayView;
+    private final ViewGroup overlayView;
     private final View touchInterceptor;
 
     private boolean expandable = false;
 
-    public FlyoutOverlayViewHolder(View view, final MapViewModel mapViewModel) {
-        super(view);
+    public FlyoutOverlayViewHolder(View view, final OverlayFlyoutViewHolderWrapper flyoutViewHolderWrapper, final MapViewModel mapViewModel) {
+        super(view.findViewById(flyoutViewHolderWrapper.getOverlayViewId()));
+
+        this.flyoutViewHolderWrapper = flyoutViewHolderWrapper;
 
         expansionToggle = itemView.findViewById(R.id.expansionToggle);
-        overlayView = view.findViewById(R.id.trackFlyoutOverlay);
+        overlayView = (ViewGroup) itemView;
         firstRowView = overlayView.findViewById(R.id.departureOverview);
-        touchInterceptor = view.findViewById(R.id.touchInterceptor);
+        touchInterceptor = view.findViewById(R.id.trackTouchInterceptor);
         flyoutTitleView = overlayView.findViewById(R.id.flyoutTitle);
         bottomSheetBehavior = BottomSheetBehavior.from(overlayView);
 
@@ -77,25 +80,13 @@ class FlyoutOverlayViewHolder extends ViewHolder<MarkerBinder> {
             }
         });
 
-        trackFlyoutViewHolder = new TrackFlyoutViewHolder(overlayView, mapViewModel, expandable -> {
+        trackFlyoutViewHolder = flyoutViewHolderWrapper.createFlyoutViewHolder(overlayView, mapViewModel, expandable -> {
             setExpansionToggleAvailability(expandable);
             return null;
         });
 
         touchInterceptor.setOnClickListener(touchInterceptor -> collapse());
 
-        itemView.findViewById(R.id.departuresButton).setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                final MarkerBinder markerBinder = getItem();
-                if (markerBinder != null) {
-                    final String track = markerBinder.getMarkerContent().getTrack();
-                    if (track != null) {
-                        mapViewModel.openDepartures(view.getContext(), track);
-                    }
-                }
-            }
-        });
     }
 
     private void resetExpansionToggle() {
@@ -144,18 +135,18 @@ class FlyoutOverlayViewHolder extends ViewHolder<MarkerBinder> {
 
     private boolean hasContent() {
         final MarkerBinder item = getItem();
-        return isTrackContent(item);
+        return isTargetContent(item);
     }
 
-    private boolean isTrackContent(MarkerBinder item) {
-        return item != null && item.getMarkerContent().getViewType() == MarkerContent.ViewType.TRACK;
+    private boolean isTargetContent(MarkerBinder item) {
+        return flyoutViewHolderWrapper.accepts(item);
     }
 
     @Override
     protected void onBind(MarkerBinder item) {
         super.onBind(item);
 
-        if (isTrackContent(item)) {
+        if (isTargetContent(item)) {
             trackFlyoutViewHolder.bind(item);
         }
 
@@ -163,11 +154,11 @@ class FlyoutOverlayViewHolder extends ViewHolder<MarkerBinder> {
     }
 
     @Override
-    protected void onUnbind(@NonNull MarkerBinder item) {
+    public void onUnbind(@NonNull MarkerBinder item) {
         super.onUnbind(item);
 
-        if (isTrackContent(item)) {
-            trackFlyoutViewHolder.onUnbind(item);
+        if (isTargetContent(item)) {
+            trackFlyoutViewHolder.bind(null);
         }
 
         updateVisibility();

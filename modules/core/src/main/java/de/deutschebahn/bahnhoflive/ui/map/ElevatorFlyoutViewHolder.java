@@ -9,6 +9,8 @@ package de.deutschebahn.bahnhoflive.ui.map;
 import android.view.ViewGroup;
 import android.widget.CompoundButton;
 
+import androidx.annotation.Nullable;
+
 import de.deutschebahn.bahnhoflive.R;
 import de.deutschebahn.bahnhoflive.backend.db.fasta2.model.FacilityStatus;
 import de.deutschebahn.bahnhoflive.push.FacilityPushManager;
@@ -37,9 +39,11 @@ class ElevatorFlyoutViewHolder extends StatusFlyoutViewHolder {
     }
 
     @Override
-    protected void onBind(MarkerBinder item) {
+    protected void onBind(@Nullable MarkerBinder item) {
         super.onBind(item);
-
+        if (item == null) {
+            return;
+        }
         final MarkerContent markerContent = item.getMarkerContent();
         if (markerContent instanceof FacilityStatusMarkerContent) {
             final FacilityStatus facilityStatus = ((FacilityStatusMarkerContent) markerContent).getFacilityStatus();

@@ -10,6 +10,8 @@ import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import androidx.annotation.Nullable;
+
 import de.deutschebahn.bahnhoflive.R;
 import de.deutschebahn.bahnhoflive.ui.ViewHolder;
 
@@ -25,14 +27,16 @@ public class FlyoutViewHolder extends ViewHolder<MarkerBinder> {
     }
 
     @Override
-    protected void onBind(MarkerBinder item) {
-        final MarkerContent markerContent = item.getMarkerContent();
+    protected void onBind(@Nullable MarkerBinder item) {
+        final MarkerContent markerContent = item == null ? null : item.getMarkerContent();
         onBind(markerContent);
     }
 
-    protected void onBind(MarkerContent markerContent) {
-        iconView.setImageResource(markerContent.getFlyoutIcon());
-        titleView.setText(markerContent.getTitle());
+    protected void onBind(@Nullable MarkerContent markerContent) {
+        if (markerContent != null) {
+            iconView.setImageResource(markerContent.getFlyoutIcon());
+            titleView.setText(markerContent.getTitle());
+        }
     }
 
     protected void bindStatus(TextView statusTextView, Status status) {

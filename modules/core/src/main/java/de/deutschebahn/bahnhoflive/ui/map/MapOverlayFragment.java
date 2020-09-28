@@ -90,7 +90,7 @@ public class MapOverlayFragment extends Fragment implements OnMapReadyCallback, 
     private TutorialView mTutorialView;
     private MapViewModel mapViewModel;
     private StationResource stationResource;
-    private FlyoutOverlayViewHolder flyoutOverlayViewHolder;
+    private FlyoutOverlayViewHolder trackFlyoutOverlayViewHolder;
 
     private final RecyclerView.AdapterDataObserver adapterDataObserver = new RecyclerView.AdapterDataObserver() {
         @Override
@@ -100,6 +100,7 @@ public class MapOverlayFragment extends Fragment implements OnMapReadyCallback, 
     };
     private TextView osmCopyrightView;
     private boolean rimapDone = false;
+    private FlyoutOverlayViewHolder parkingFlyoutOverlayViewHolder;
 
     public RimapFilter getFilter() {
         return rimapFilter;
@@ -396,7 +397,7 @@ public class MapOverlayFragment extends Fragment implements OnMapReadyCallback, 
         if (markerBinder != null) {
             markerBinder.setHighlighted(true);
         }
-        flyoutOverlayViewHolder.bind(markerBinder);
+        trackFlyoutOverlayViewHolder.bind(markerBinder);
 
         mapInterface.scrollToMarker(markerBinder);
     }
@@ -418,8 +419,8 @@ public class MapOverlayFragment extends Fragment implements OnMapReadyCallback, 
         if (flyoutsRecycler != null) {
             flyoutsRecycler.setVisibility(View.GONE);
         }
-        if (flyoutOverlayViewHolder != null) {
-            flyoutOverlayViewHolder.setCurrentlyWanted(false);
+        if (trackFlyoutOverlayViewHolder != null) {
+            trackFlyoutOverlayViewHolder.setCurrentlyWanted(false);
         }
     }
 
@@ -447,7 +448,8 @@ public class MapOverlayFragment extends Fragment implements OnMapReadyCallback, 
 
         mTutorialView = view.findViewById(R.id.map_tutorial_view);
 
-        flyoutOverlayViewHolder = new FlyoutOverlayViewHolder(view, mapViewModel);
+        trackFlyoutOverlayViewHolder = new FlyoutOverlayViewHolder(view, new TrackOverlayFlyoutViewHolderWrapper(), mapViewModel);
+        parkingFlyoutOverlayViewHolder = new FlyoutOverlayViewHolder(view, new ParkingOverlayFlyoutViewHolderWrapper(), mapViewModel);
 
         flyoutsRecycler = view.findViewById(R.id.flyouts);
         linearSnapHelper = new FlyoutLinearSnapHelper();
@@ -465,7 +467,7 @@ public class MapOverlayFragment extends Fragment implements OnMapReadyCallback, 
                     flyoutSettled();
                 }
 
-                flyoutOverlayViewHolder.setCurrentlyWanted(scrollState == RecyclerView.SCROLL_STATE_IDLE && linearSnapHelper.isIdle());
+                trackFlyoutOverlayViewHolder.setCurrentlyWanted(scrollState == RecyclerView.SCROLL_STATE_IDLE && linearSnapHelper.isIdle());
             }
         });
 
@@ -595,8 +597,8 @@ public class MapOverlayFragment extends Fragment implements OnMapReadyCallback, 
         if (flyoutsRecycler != null) {
             flyoutsRecycler.setVisibility(View.VISIBLE);
         }
-        if (flyoutOverlayViewHolder != null) {
-            flyoutOverlayViewHolder.setCurrentlyWanted(true);
+        if (trackFlyoutOverlayViewHolder != null) {
+            trackFlyoutOverlayViewHolder.setCurrentlyWanted(true);
         }
     }
 

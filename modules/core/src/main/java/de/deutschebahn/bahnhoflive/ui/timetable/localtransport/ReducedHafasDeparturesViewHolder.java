@@ -92,7 +92,7 @@ public class ReducedHafasDeparturesViewHolder extends ViewHolder<Resource<HafasD
     }
 
     @Override
-    protected void onUnbind(@NonNull Resource<HafasDepartures, VolleyError> item) {
+    public void onUnbind(@NonNull Resource<HafasDepartures, VolleyError> item) {
         if (item != null) {
             item.getData().removeObserver(dataObserver);
             item.getError().removeObserver(errorObserver);
