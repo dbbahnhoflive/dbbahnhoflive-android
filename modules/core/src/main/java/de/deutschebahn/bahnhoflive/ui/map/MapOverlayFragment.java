@@ -398,6 +398,7 @@ public class MapOverlayFragment extends Fragment implements OnMapReadyCallback, 
             markerBinder.setHighlighted(true);
         }
         trackFlyoutOverlayViewHolder.bind(markerBinder);
+        parkingFlyoutOverlayViewHolder.bind(markerBinder);
 
         mapInterface.scrollToMarker(markerBinder);
     }
@@ -421,6 +422,9 @@ public class MapOverlayFragment extends Fragment implements OnMapReadyCallback, 
         }
         if (trackFlyoutOverlayViewHolder != null) {
             trackFlyoutOverlayViewHolder.setCurrentlyWanted(false);
+        }
+        if (parkingFlyoutOverlayViewHolder != null) {
+            parkingFlyoutOverlayViewHolder.setCurrentlyWanted(false);
         }
     }
 
@@ -448,7 +452,7 @@ public class MapOverlayFragment extends Fragment implements OnMapReadyCallback, 
 
         mTutorialView = view.findViewById(R.id.map_tutorial_view);
 
-        trackFlyoutOverlayViewHolder = new FlyoutOverlayViewHolder(view, new TrackOverlayFlyoutViewHolderWrapper(), mapViewModel);
+        trackFlyoutOverlayViewHolder = new TrackFlyoutOverlayViewHolder(view, new TrackOverlayFlyoutViewHolderWrapper(), mapViewModel);
         parkingFlyoutOverlayViewHolder = new FlyoutOverlayViewHolder(view, new ParkingOverlayFlyoutViewHolderWrapper(), mapViewModel);
 
         flyoutsRecycler = view.findViewById(R.id.flyouts);
@@ -467,7 +471,9 @@ public class MapOverlayFragment extends Fragment implements OnMapReadyCallback, 
                     flyoutSettled();
                 }
 
-                trackFlyoutOverlayViewHolder.setCurrentlyWanted(scrollState == RecyclerView.SCROLL_STATE_IDLE && linearSnapHelper.isIdle());
+                final boolean showFlyoutOverlays = scrollState == RecyclerView.SCROLL_STATE_IDLE && linearSnapHelper.isIdle();
+                trackFlyoutOverlayViewHolder.setCurrentlyWanted(showFlyoutOverlays);
+                parkingFlyoutOverlayViewHolder.setCurrentlyWanted(showFlyoutOverlays);
             }
         });
 
@@ -599,6 +605,9 @@ public class MapOverlayFragment extends Fragment implements OnMapReadyCallback, 
         }
         if (trackFlyoutOverlayViewHolder != null) {
             trackFlyoutOverlayViewHolder.setCurrentlyWanted(true);
+        }
+        if (parkingFlyoutOverlayViewHolder != null) {
+            parkingFlyoutOverlayViewHolder.setCurrentlyWanted(true);
         }
     }
 

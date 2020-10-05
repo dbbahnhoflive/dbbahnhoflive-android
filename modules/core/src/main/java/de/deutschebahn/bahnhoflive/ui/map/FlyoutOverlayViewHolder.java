@@ -17,16 +17,15 @@ import com.google.android.material.bottomsheet.BottomSheetBehavior;
 import de.deutschebahn.bahnhoflive.R;
 import de.deutschebahn.bahnhoflive.ui.ViewHolder;
 
-class FlyoutOverlayViewHolder extends ViewHolder<MarkerBinder> {
+public class FlyoutOverlayViewHolder extends ViewHolder<MarkerBinder> {
 
     private final CompoundButton expansionToggle;
     private final BottomSheetBehavior<View> bottomSheetBehavior;
-    private final View firstRowView;
-    private final View flyoutTitleView;
+    protected final View flyoutTitleView;
     private final OverlayFlyoutViewHolderWrapper flyoutViewHolderWrapper;
-    private final FlyoutViewHolder trackFlyoutViewHolder;
+    private final FlyoutViewHolder flyoutViewHolder;
     private boolean currentlyWanted;
-    private final ViewGroup overlayView;
+    protected final ViewGroup overlayView;
     private final View touchInterceptor;
 
     private boolean expandable = false;
@@ -38,8 +37,7 @@ class FlyoutOverlayViewHolder extends ViewHolder<MarkerBinder> {
 
         expansionToggle = itemView.findViewById(R.id.expansionToggle);
         overlayView = (ViewGroup) itemView;
-        firstRowView = overlayView.findViewById(R.id.departureOverview);
-        touchInterceptor = view.findViewById(R.id.trackTouchInterceptor);
+        touchInterceptor = view.findViewById(flyoutViewHolderWrapper.getTouchInterceptorViewId());
         flyoutTitleView = overlayView.findViewById(R.id.flyoutTitle);
         bottomSheetBehavior = BottomSheetBehavior.from(overlayView);
 
@@ -48,7 +46,7 @@ class FlyoutOverlayViewHolder extends ViewHolder<MarkerBinder> {
             public void onStateChanged(@NonNull View bottomSheet, int newState) {
                 final boolean collapsed = newState == BottomSheetBehavior.STATE_COLLAPSED;
 
-                setFirstRowCollapsedMode(collapsed);
+                onCollapse(collapsed);
 
                 setExpansionToggleChecked(!collapsed);
                 touchInterceptor.setVisibility(collapsed ? View.GONE : View.VISIBLE);
@@ -80,7 +78,7 @@ class FlyoutOverlayViewHolder extends ViewHolder<MarkerBinder> {
             }
         });
 
-        trackFlyoutViewHolder = flyoutViewHolderWrapper.createFlyoutViewHolder(overlayView, mapViewModel, expandable -> {
+        flyoutViewHolder = flyoutViewHolderWrapper.createFlyoutViewHolder(overlayView, mapViewModel, expandable -> {
             setExpansionToggleAvailability(expandable);
             return null;
         });
@@ -100,16 +98,10 @@ class FlyoutOverlayViewHolder extends ViewHolder<MarkerBinder> {
 
     public void onCheckedChanged(CompoundButton compoundButton, boolean checked) {
         if (checked) {
-            setFirstRowCollapsedMode(false);
+            onCollapse(false);
         }
 
         bottomSheetBehavior.setState(checked ? BottomSheetBehavior.STATE_EXPANDED : BottomSheetBehavior.STATE_COLLAPSED);
-    }
-
-    private void setFirstRowCollapsedMode(boolean collapsed) {
-        final ViewGroup.LayoutParams layoutParams = firstRowView.getLayoutParams();
-        layoutParams.height = collapsed ? itemView.getContext().getResources().getDimensionPixelSize(R.dimen.flyout_height) - flyoutTitleView.getHeight() : ViewGroup.LayoutParams.WRAP_CONTENT;
-        firstRowView.setLayoutParams(layoutParams);
     }
 
     public void setCurrentlyWanted(boolean visible) {
@@ -126,8 +118,8 @@ class FlyoutOverlayViewHolder extends ViewHolder<MarkerBinder> {
         overlayView.setVisibility(visible ? View.VISIBLE : View.GONE);
     }
 
-    private void collapse() {
-        setFirstRowCollapsedMode(true);
+    protected void collapse() {
+        onCollapse(true);
         bottomSheetBehavior.setState(BottomSheetBehavior.STATE_COLLAPSED);
         setExpansionToggleChecked(false);
         touchInterceptor.setVisibility(View.GONE);
@@ -147,7 +139,7 @@ class FlyoutOverlayViewHolder extends ViewHolder<MarkerBinder> {
         super.onBind(item);
 
         if (isTargetContent(item)) {
-            trackFlyoutViewHolder.bind(item);
+            flyoutViewHolder.bind(item);
         }
 
         updateVisibility();
@@ -158,7 +150,7 @@ class FlyoutOverlayViewHolder extends ViewHolder<MarkerBinder> {
         super.onUnbind(item);
 
         if (isTargetContent(item)) {
-            trackFlyoutViewHolder.bind(null);
+            flyoutViewHolder.bind(null);
         }
 
         updateVisibility();
@@ -174,4 +166,10 @@ class FlyoutOverlayViewHolder extends ViewHolder<MarkerBinder> {
         ));
         expansionToggle.setClickable(clickable);
     }
+
+    protected void onCollapse(boolean collapsed) {
+
+    }
+
+    ;
 }
