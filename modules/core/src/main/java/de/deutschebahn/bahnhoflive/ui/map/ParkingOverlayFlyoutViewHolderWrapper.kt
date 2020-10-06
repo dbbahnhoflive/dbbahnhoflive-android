@@ -17,7 +17,7 @@ class ParkingOverlayFlyoutViewHolderWrapper : OverlayFlyoutViewHolderWrapper() {
     ) = CommonFlyoutViewHolder(overlayView)
 
     override fun accepts(item: MarkerBinder?) =
-        item?.markerContent?.viewType == MarkerContent.ViewType.PARKING
+        false && item?.markerContent?.viewType == MarkerContent.ViewType.PARKING
 
     override val touchInterceptorViewId: Int
         get() = R.id.parkingTouchInterceptor

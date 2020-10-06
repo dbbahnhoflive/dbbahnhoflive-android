@@ -55,6 +55,8 @@ class FlyoutsAdapter extends RecyclerView.Adapter<ViewHolder<MarkerBinder>> {
                 return new ElevatorFlyoutViewHolder(parent, facilityPushManager);
             case TRACK:
                 return new TrackFlyoutViewHolder(parent, mapViewModel);
+            case PARKING:
+                return new ParkingFlyoutViewHolder(parent);
             case COMMON:
             default:
                 return new CommonFlyoutViewHolder(parent);

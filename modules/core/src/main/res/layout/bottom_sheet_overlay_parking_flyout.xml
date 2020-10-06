@@ -50,6 +50,8 @@
             android:divider="@drawable/shape_flyout_track_divider"
             android:orientation="vertical">
 
+            <include layout="@layout/include_expandable_flyout_header" />
+
             <LinearLayout
                 android:layout_width="match_parent"
                 android:id="@+id/collapsedFlyout"
@@ -57,7 +59,6 @@
                 android:orientation="vertical"
                 tools:showIn="@layout/flyout_track">
 
-                <include layout="@layout/include_expandable_flyout_header" />
 
                 <TextView
                     android:text="Parkplatz"

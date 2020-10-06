@@ -14,7 +14,7 @@ import de.deutschebahn.bahnhoflive.model.parking.ParkingFacility
 import de.deutschebahn.bahnhoflive.model.parking.ParkingStatus
 import de.deutschebahn.bahnhoflive.ui.map.content.MapIntent
 
-class ParkingFacilityMarkerContent(private val parkingFacility: ParkingFacility) :
+class ParkingFacilityMarkerContent(val parkingFacility: ParkingFacility) :
     MarkerContent(if (parkingFacility.roofed) R.drawable.rimap_parkhaus else R.drawable.rimap_parkplatz) {
     override fun getTitle(): String {
         return parkingFacility.name

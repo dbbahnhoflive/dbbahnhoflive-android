@@ -40,6 +40,14 @@ public class FlyoutViewHolder extends ViewHolder<MarkerBinder> {
     }
 
     protected void bindStatus(TextView statusTextView, Status status) {
+        bindStatusWithoutIcon(statusTextView, status);
+
+        if (status != null) {
+            statusTextView.setCompoundDrawablesWithIntrinsicBounds(status.getIcon(), 0, 0, 0);
+        }
+    }
+
+    protected void bindStatusWithoutIcon(TextView statusTextView, Status status) {
         if (status == null) {
             statusTextView.setVisibility(View.GONE);
             return;
@@ -48,7 +56,6 @@ public class FlyoutViewHolder extends ViewHolder<MarkerBinder> {
         statusTextView.setVisibility(View.VISIBLE);
 
         statusTextView.setTextColor(statusTextView.getResources().getColor(status.getColor()));
-        statusTextView.setCompoundDrawablesWithIntrinsicBounds(status.getIcon(), 0, 0, 0);
         statusTextView.setText(status.getText());
     }
 
