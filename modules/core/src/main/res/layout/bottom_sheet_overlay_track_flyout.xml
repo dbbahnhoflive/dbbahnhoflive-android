@@ -20,11 +20,11 @@
         android:layout_height="match_parent" />
 
     <FrameLayout
+        android:id="@+id/trackFlyoutOverlay"
         android:minHeight="@dimen/flyout_height"
         android:visibility="gone"
         tools:visibility="visible"
         android:clickable="false"
-        android:id="@+id/trackFlyoutOverlay"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_gravity="center_horizontal"

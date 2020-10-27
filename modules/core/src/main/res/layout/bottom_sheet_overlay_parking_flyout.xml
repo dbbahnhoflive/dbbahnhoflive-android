@@ -12,19 +12,19 @@
     tools:showIn="@layout/fake_map3">
 
     <View
-        android:visibility="gone"
-        tools:visibility="visible"
         android:id="@+id/parkingTouchInterceptor"
-        android:background="@color/translucent_black"
         android:layout_width="match_parent"
-        android:layout_height="match_parent" />
+        android:layout_height="match_parent"
+        android:background="@color/translucent_black"
+        android:visibility="gone"
+        tools:visibility="visible" />
 
     <FrameLayout
+        android:id="@+id/parkingFlyoutOverlay"
         android:minHeight="@dimen/flyout_height"
         android:visibility="gone"
         tools:visibility="visible"
         android:clickable="false"
-        android:id="@+id/parkingFlyoutOverlay"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_gravity="center_horizontal"
@@ -40,31 +40,176 @@
 
         <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+            android:layout_height="match_parent"
+            android:minHeight="@dimen/flyout_height"
             android:layout_marginLeft="@dimen/tiny_space"
             android:layout_marginRight="@dimen/tiny_space"
-
-            android:background="@color/white"
-            android:animateLayoutChanges="true"
-            android:showDividers="middle"
-            android:divider="@drawable/shape_flyout_track_divider"
             android:orientation="vertical">
 
             <include layout="@layout/include_expandable_flyout_header" />
 
             <LinearLayout
+                android:background="@color/white"
+                android:layout_weight="1"
                 android:layout_width="match_parent"
-                android:id="@+id/collapsedFlyout"
-                android:layout_height="wrap_content"
-                android:orientation="vertical"
-                tools:showIn="@layout/flyout_track">
+                android:layout_height="0dp"
+                android:orientation="horizontal">
+
+                <androidx.core.widget.NestedScrollView
+                    android:layout_width="0dp"
+                    android:layout_weight="1"
+                    android:layout_height="match_parent"
+                    android:fillViewport="true"
+                    android:requiresFadingEdge="vertical">
+
+                    <androidx.constraintlayout.widget.ConstraintLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:paddingTop="@dimen/default_space_half"
+                        android:paddingStart="@dimen/default_space_half"
+                        android:paddingEnd="@dimen/default_space_half">
 
 
-                <TextView
-                    android:text="Parkplatz"
-                    android:layout_width="match_parent"
-                    android:layout_height="0dp"
-                    android:layout_weight="1" />
+                        <TextView
+                            android:id="@+id/status_text_1"
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_margin="@dimen/default_space_half"
+                            android:drawablePadding="@dimen/small_space"
+                            android:ellipsize="end"
+                            android:gravity="center_vertical"
+                            android:lines="1"
+                            android:textSize="@dimen/textsize_h3"
+                            app:layout_constraintStart_toStartOf="@+id/iconBarrier"
+                            app:layout_constraintEnd_toEndOf="parent"
+                            app:layout_constraintTop_toTopOf="parent"
+                            tools:text="50+ freie Stellplätze"
+                            tools:textColor="@color/green" />
+
+                        <TextView
+                            android:id="@+id/openHoursTitle"
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_margin="@dimen/default_space_half"
+                            android:drawablePadding="@dimen/small_space"
+                            android:ellipsize="end"
+                            android:gravity="center_vertical"
+                            android:lines="1"
+                            android:textSize="@dimen/textsize_h3"
+                            app:layout_constraintStart_toStartOf="@+id/iconBarrier"
+                            app:layout_constraintEnd_toEndOf="parent"
+                            app:layout_constraintTop_toBottomOf="@+id/status_text_1"
+                            android:text="Öffnungszeiten" />
+
+                        <TextView
+                            android:id="@+id/openHoursContent"
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_margin="@dimen/default_space_half"
+                            android:drawablePadding="@dimen/small_space"
+                            android:ellipsize="end"
+                            android:gravity="center_vertical"
+                            android:textSize="@dimen/textsize_h3"
+                            app:layout_constraintStart_toStartOf="@+id/iconBarrier"
+                            app:layout_constraintEnd_toEndOf="parent"
+                            app:layout_constraintTop_toBottomOf="@+id/openHoursTitle"
+                            tools:text="Mo-Fr\t6:00-23:30\nSa\t8:00-23:30\nSo\t10:00-23:30" />
+
+                        <TextView
+                            android:id="@+id/accessTitle"
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_margin="@dimen/default_space_half"
+                            android:layout_marginStart="4dp"
+                            android:layout_marginBottom="8dp"
+                            android:drawablePadding="@dimen/small_space"
+                            android:ellipsize="end"
+                            android:gravity="center_vertical"
+                            android:lines="1"
+                            android:textSize="@dimen/textsize_h3"
+                            app:layout_constraintEnd_toEndOf="parent"
+                            app:layout_constraintStart_toStartOf="@+id/iconBarrier"
+                            app:layout_constraintTop_toBottomOf="@+id/openHoursContent"
+                            android:text="Zufahrt" />
+
+                        <TextView
+                            android:id="@+id/accessContent"
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_margin="@dimen/default_space_half"
+                            android:layout_marginStart="4dp"
+                            android:layout_marginBottom="8dp"
+                            android:drawablePadding="@dimen/small_space"
+                            android:ellipsize="end"
+                            android:gravity="center_vertical"
+                            android:textSize="@dimen/textsize_h3"
+                            app:layout_constraintEnd_toEndOf="parent"
+                            app:layout_constraintStart_toStartOf="@+id/iconBarrier"
+                            app:layout_constraintTop_toBottomOf="@+id/accessTitle"
+                            tools:text="1. Merlinstraße\n2. Karl-Kunger-Straße\n3. Christopherusweg" />
+
+                        <ImageView
+                            app:layout_constraintBaseline_toBaselineOf="@+id/status_text_1"
+                            android:baseline="@dimen/smallIconBaseline"
+                            android:id="@+id/statusIcon"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            app:layout_constraintStart_toStartOf="parent"
+                            tools:src="@drawable/app_check" />
+
+                        <ImageView
+                            app:layout_constraintBaseline_toBaselineOf="@+id/openHoursTitle"
+                            android:baseline="@dimen/smallIconBaseline"
+                            android:id="@+id/openHoursIcon"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            app:layout_constraintStart_toStartOf="parent"
+                            android:src="@drawable/app_warndreieck" />
+
+                        <ImageView
+                            app:layout_constraintBaseline_toBaselineOf="@+id/accessTitle"
+                            android:baseline="@dimen/smallIconBaseline"
+                            android:id="@+id/accessIcon"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            app:layout_constraintStart_toStartOf="parent"
+                            android:src="@drawable/app_extern_link" />
+
+                        <androidx.constraintlayout.widget.Barrier
+                            android:id="@+id/iconBarrier"
+                            app:barrierDirection="end"
+                            app:constraint_referenced_ids="statusIcon,openHoursIcon,accessIcon"
+                            android:layout_width="0dp"
+                            android:layout_height="0dp" />
+
+                        <androidx.constraintlayout.widget.Group
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:id="@+id/openHoursGroup"
+                            app:constraint_referenced_ids="openHoursIcon,openHoursTitle,openHoursContent" />
+
+                        <androidx.constraintlayout.widget.Group
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:id="@+id/accessGroup"
+                            app:constraint_referenced_ids="accessIcon,accessTitle,accessContent" />
+
+                    </androidx.constraintlayout.widget.ConstraintLayout>
+                </androidx.core.widget.NestedScrollView>
+
+                <ImageButton
+                    android:contentDescription="@string/sr_link_external"
+                    android:id="@+id/external_link"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginEnd="@dimen/default_space_half"
+                    android:layout_marginBottom="@dimen/default_space"
+                    android:background="@drawable/shape_circle_button"
+                    android:elevation="@dimen/default_elevation"
+                    android:src="@drawable/app_extern_link"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintRight_toRightOf="parent" />
 
             </LinearLayout>
 

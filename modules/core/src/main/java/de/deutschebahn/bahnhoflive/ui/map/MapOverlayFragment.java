@@ -90,7 +90,9 @@ public class MapOverlayFragment extends Fragment implements OnMapReadyCallback, 
     private TutorialView mTutorialView;
     private MapViewModel mapViewModel;
     private StationResource stationResource;
+
     private FlyoutOverlayViewHolder trackFlyoutOverlayViewHolder;
+    private FlyoutOverlayViewHolder parkingFlyoutOverlayViewHolder;
 
     private final RecyclerView.AdapterDataObserver adapterDataObserver = new RecyclerView.AdapterDataObserver() {
         @Override
@@ -100,7 +102,6 @@ public class MapOverlayFragment extends Fragment implements OnMapReadyCallback, 
     };
     private TextView osmCopyrightView;
     private boolean rimapDone = false;
-    private FlyoutOverlayViewHolder parkingFlyoutOverlayViewHolder;
 
     public RimapFilter getFilter() {
         return rimapFilter;

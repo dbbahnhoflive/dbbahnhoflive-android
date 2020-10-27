@@ -14,7 +14,7 @@
     android:layout_marginRight="@dimen/tiny_space"
     android:orientation="vertical">
 
-    <include layout="@layout/header_flyout" />
+    <include layout="@layout/include_expandable_flyout_header" />
 
     <LinearLayout
         android:background="@color/white"
@@ -27,7 +27,8 @@
             android:layout_width="0dp"
             android:layout_weight="1"
             android:layout_height="match_parent"
-            android:fillViewport="true">
+            android:fillViewport="true"
+            android:requiresFadingEdge="vertical">
 
             <androidx.constraintlayout.widget.ConstraintLayout
                 android:layout_width="match_parent"
