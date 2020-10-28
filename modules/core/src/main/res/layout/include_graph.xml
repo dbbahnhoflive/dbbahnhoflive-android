@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="utf-8"?><!--
+  ~ SPDX-FileCopyrightText: 2020 DB Station&Service AG <bahnhoflive-opensource@deutschebahn.com>
+  ~
+  ~ SPDX-License-Identifier: Apache-2.0
+  -->
+
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    tools:showIn="@layout/include_occupancy"
+    android:id="@+id/graph"
+    android:orientation="horizontal"
+    android:layout_width="match_parent"
+    android:showDividers="middle|beginning|end"
+    android:divider="@drawable/shape_graph_divider"
+    android:layout_height="100dp">
+
+    <include layout="@layout/include_graph_slot" />
+
+    <include layout="@layout/include_graph_slot" />
+
+    <include layout="@layout/include_graph_slot" />
+
+    <include layout="@layout/include_graph_slot" />
+
+    <include layout="@layout/include_graph_slot" />
+
+    <include layout="@layout/include_graph_slot" />
+
+    <include layout="@layout/include_graph_slot" />
+
+    <include layout="@layout/include_graph_slot" />
+
+    <include layout="@layout/include_graph_slot" />
+
+    <include layout="@layout/include_graph_slot" />
+
+    <include layout="@layout/include_graph_slot" />
+
+    <include layout="@layout/include_graph_slot" />
+
+    <include layout="@layout/include_graph_slot" />
+
+    <include layout="@layout/include_graph_slot" />
+
+    <include layout="@layout/include_graph_slot" />
+
+    <include layout="@layout/include_graph_slot" />
+
+    <include layout="@layout/include_graph_slot" />
+
+    <include layout="@layout/include_graph_slot" />
+
+    <include layout="@layout/include_graph_slot" />
+
+    <include layout="@layout/include_graph_slot" />
+
+    <include layout="@layout/include_graph_slot" />
+
+    <include layout="@layout/include_graph_slot" />
+
+    <include layout="@layout/include_graph_slot" />
+
+    <include layout="@layout/include_graph_slot" />
+
+</LinearLayout>

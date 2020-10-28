@@ -524,6 +524,9 @@ public class StationFragment extends Fragment implements
                 mapCard.setError(liveDataStation.getLocation() == null);
             });
         }
+
+        final OccupancyViewBinder occupancyViewBinder = new OccupancyViewBinder(view);
+        stationViewModel.getOccupancyResource().getData().observe(getViewLifecycleOwner(), occupancyViewBinder::setOccupancy);
     }
 
     private void showStationFeatures() {

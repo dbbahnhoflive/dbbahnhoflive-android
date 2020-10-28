@@ -63,11 +63,16 @@ class StationViewModel : HafasTimetableViewModel() {
 
     companion object {
         private val stationFeatureTemplates = listOf(
-            StationFeatureTemplate(StationFeatureDefinition.ACCESSIBILITY,
-                MapOrInfoLink(ServiceContent.Type.ACCESSIBLE, TrackingManager.Category.ZUGANG_WEGE)),
-            StationFeatureTemplate(StationFeatureDefinition.TOILET,
-                MapLink()),
-            StationFeatureTemplate(StationFeatureDefinition.WIFI,
+            StationFeatureTemplate(
+                StationFeatureDefinition.ACCESSIBILITY,
+                MapOrInfoLink(ServiceContent.Type.ACCESSIBLE, TrackingManager.Category.ZUGANG_WEGE)
+            ),
+            StationFeatureTemplate(
+                StationFeatureDefinition.TOILET,
+                MapLink()
+            ),
+            StationFeatureTemplate(
+                StationFeatureDefinition.WIFI,
                 MapOrInfoLink(ServiceContent.Type.WIFI, TrackingManager.Category.WLAN)
             ),
             StationFeatureTemplate(StationFeatureDefinition.ELEVATORS,
@@ -76,18 +81,38 @@ class StationViewModel : HafasTimetableViewModel() {
                         return Content.Source.FACILITY_STATUS
                     }
 
-                    override fun getPois(stationFeature: StationFeature) = stationFeature.facilityStatuses
+                    override fun getPois(stationFeature: StationFeature) =
+                        stationFeature.facilityStatuses
                 }),
-            StationFeatureTemplate(StationFeatureDefinition.LOCKERS,
-                MapLink()),
-            StationFeatureTemplate(StationFeatureDefinition.DB_INFO,
-                MapOrInfoLink(ServiceContent.Type.DB_INFORMATION, ServiceContent.Type.DB_INFORMATION)),
-            StationFeatureTemplate(StationFeatureDefinition.TRAVEL_CENTER,
-                MapOrInfoLink(ServiceContent.Type.Local.TRAVEL_CENTER, ServiceContent.Type.Local.TRAVEL_CENTER)),
-            StationFeatureTemplate(StationFeatureDefinition.DB_LOUNGE,
-                MapOrInfoLink(ServiceContent.Type.Local.DB_LOUNGE, ServiceContent.Type.Local.DB_LOUNGE)),
-            StationFeatureTemplate(StationFeatureDefinition.TRAVELER_SUPPLIES,
-                null),
+            StationFeatureTemplate(
+                StationFeatureDefinition.LOCKERS,
+                MapLink()
+            ),
+            StationFeatureTemplate(
+                StationFeatureDefinition.DB_INFO,
+                MapOrInfoLink(
+                    ServiceContent.Type.DB_INFORMATION,
+                    ServiceContent.Type.DB_INFORMATION
+                )
+            ),
+            StationFeatureTemplate(
+                StationFeatureDefinition.TRAVEL_CENTER,
+                MapOrInfoLink(
+                    ServiceContent.Type.Local.TRAVEL_CENTER,
+                    ServiceContent.Type.Local.TRAVEL_CENTER
+                )
+            ),
+            StationFeatureTemplate(
+                StationFeatureDefinition.DB_LOUNGE,
+                MapOrInfoLink(
+                    ServiceContent.Type.Local.DB_LOUNGE,
+                    ServiceContent.Type.Local.DB_LOUNGE
+                )
+            ),
+            StationFeatureTemplate(
+                StationFeatureDefinition.TRAVELER_SUPPLIES,
+                null
+            ),
             StationFeatureTemplate(StationFeatureDefinition.PARKING,
                 object : MapLink() {
                     override fun getMapSource(): Content.Source {
@@ -97,14 +122,25 @@ class StationViewModel : HafasTimetableViewModel() {
                     override fun getPois(stationFeature: StationFeature) =
                         stationFeature.parkingFacilities
                 }),
-            StationFeatureTemplate(StationFeatureDefinition.BICYCLE_PARKING,
-                MapLink()),
-            StationFeatureTemplate(StationFeatureDefinition.TAXI,
-                MapLink()),
-            StationFeatureTemplate(StationFeatureDefinition.CAR_RENTAL,
-                MapLink()),
-            StationFeatureTemplate(StationFeatureDefinition.LOST_AND_FOUND,
-                MapOrInfoLink(ServiceContent.Type.Local.LOST_AND_FOUND, ServiceContent.Type.Local.LOST_AND_FOUND))
+            StationFeatureTemplate(
+                StationFeatureDefinition.BICYCLE_PARKING,
+                MapLink()
+            ),
+            StationFeatureTemplate(
+                StationFeatureDefinition.TAXI,
+                MapLink()
+            ),
+            StationFeatureTemplate(
+                StationFeatureDefinition.CAR_RENTAL,
+                MapLink()
+            ),
+            StationFeatureTemplate(
+                StationFeatureDefinition.LOST_AND_FOUND,
+                MapOrInfoLink(
+                    ServiceContent.Type.Local.LOST_AND_FOUND,
+                    ServiceContent.Type.Local.LOST_AND_FOUND
+                )
+            )
         )
 
     }
@@ -114,6 +150,8 @@ class StationViewModel : HafasTimetableViewModel() {
     val localTransportViewModel = LocalTransportViewModel()
 
     var topInfoFragmentTag: String? = null
+
+    val repositories get() = application.repositories
 
     val contentQuery = object : MutableLiveData<Pair<String?, Boolean>>() {
 
@@ -235,6 +273,8 @@ class StationViewModel : HafasTimetableViewModel() {
 
     val elevatorsResource = ElevatorsResource()
 
+    val occupancyResource = StationOccupancyResource(repositories.occupancyRepository)
+
     private val initializationPending = Token()
 
     private val rimapStationFeatureCollectionResource = RimapStationFeatureCollectionResource()
@@ -275,6 +315,8 @@ class StationViewModel : HafasTimetableViewModel() {
 
             rimapStationFeatureCollectionResource.initialize(station)
             rimapStationFeatureCollectionResource.loadIfNecessary()
+
+            occupancyResource.initialize(station)
         }
 
         stationResource.refresh()
@@ -846,4 +888,5 @@ class StationViewModel : HafasTimetableViewModel() {
         .addSource(parking.parkingsResource.data)
         .addSource(elevatorsResource.data)
         .addSource(detailedStopPlaceResource.data)
+
 }

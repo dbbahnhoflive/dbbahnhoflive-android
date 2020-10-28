@@ -35,7 +35,6 @@ import de.deutschebahn.bahnhoflive.location.BaseLocationListener;
 import de.deutschebahn.bahnhoflive.persistence.RecentSearchesStore;
 import de.deutschebahn.bahnhoflive.repository.LoadingStatus;
 import de.deutschebahn.bahnhoflive.ui.hub.LocationFragment;
-import de.deutschebahn.bahnhoflive.util.Cancellable;
 import de.deutschebahn.bahnhoflive.view.BaseTextWatcher;
 import de.deutschebahn.bahnhoflive.view.ConfirmationDialog;
 
@@ -73,9 +72,6 @@ public class StationSearchFragment extends Fragment {
     private final QueryRecorder queryRecorder = new QueryRecorder();
     private ViewFlipper viewFlipper;
     private StationSearchViewModel stationSearchViewModel;
-
-    public StationSearchFragment(Cancellable runningStationLookupRequest) {
-    }
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {

@@ -13,6 +13,7 @@ import de.deutschebahn.bahnhoflive.repository.localtransport.LocalTransportRepos
 import de.deutschebahn.bahnhoflive.repository.map.MapRepository
 import de.deutschebahn.bahnhoflive.repository.misc.EinkaufsbahnhofRepository
 import de.deutschebahn.bahnhoflive.repository.news.NewsRepository
+import de.deutschebahn.bahnhoflive.repository.occupancy.OccupancyRepository
 import de.deutschebahn.bahnhoflive.repository.parking.ParkingRepository
 import de.deutschebahn.bahnhoflive.repository.station.StationRepository
 import de.deutschebahn.bahnhoflive.repository.timetable.TimetableRepository
@@ -27,7 +28,8 @@ data class RepositoryHolder(
     val timetableRpository: TimetableRepository = TimetableRepository(),
     val einkaufsbahnhofRepository: EinkaufsbahnhofRepository = EinkaufsbahnhofRepository(),
     val mapRepository: MapRepository = MapRepository(),
-    val parkingRepository: ParkingRepository = ParkingRepository()
+    val parkingRepository: ParkingRepository = ParkingRepository(),
+    val occupancyRepository: OccupancyRepository = OccupancyRepository()
 )
 
 val Context.appRepositories get(): RepositoryHolder = (applicationContext as BaseApplication).repositories
