@@ -10,5 +10,7 @@ class HourlyOccupancy(
     val dayOfWeek: Int,
     val hourOfDay: Int,
     val average: Int?,
-    val current: Int?
-)
+    val current: Int?,
+    val statusText: CharSequence?
+) {
+}

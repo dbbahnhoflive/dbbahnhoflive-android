@@ -249,5 +249,7 @@
 
     <string name="notification_channel_arrival_name">Einfahrt</string>
     <string name="notification_channel_arrival_description">Erinnerungen vor Einfahrt eines Zuges</string>
+    <string name="label_current_occupancy">Aktuell:</string>
+    <string name="title_occupancy">Besucheraufkommen</string>
 
 </resources>

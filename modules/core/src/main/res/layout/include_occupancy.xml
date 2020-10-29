@@ -8,6 +8,7 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_margin="@dimen/default_space">
 
     <LinearLayout
@@ -17,6 +18,9 @@
         android:layout_height="wrap_content">
 
         <LinearLayout
+            android:layout_marginStart="@dimen/default_space"
+            android:layout_marginEnd="@dimen/default_space"
+
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="horizontal">
@@ -26,10 +30,13 @@
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent"
                 app:layout_constraintEnd_toStartOf="@+id/occupancyInfoButton"
+                android:layout_gravity="center_vertical"
                 android:layout_width="0dp"
                 android:layout_weight="1"
                 android:layout_height="wrap_content"
-                android:text="Besucheraufkommen" />
+                android:textSize="17sp"
+                android:textStyle="bold"
+                android:text="@string/title_occupancy" />
 
             <ImageView
                 android:id="@+id/occupancyInfoButton"
@@ -45,11 +52,55 @@
             android:layout_width="match_parent"
             android:layout_height="1px" />
 
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:layout_marginStart="@dimen/default_space"
+            android:layout_marginEnd="@dimen/default_space"
+            android:layout_marginTop="15dp"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <Spinner
+                android:id="@+id/dayOfWeekSpinner"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                tools:listitem="@android:layout/simple_list_item_1"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintBottom_toBottomOf="parent" />
+
+            <TextView
+                android:text="@string/label_current_occupancy"
+                android:textSize="10sp"
+                android:id="@+id/labelCurrentOccupancy"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                app:layout_constraintVertical_chainStyle="packed"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintBottom_toTopOf="@+id/valueCurrentOccupancy"
+                app:layout_constraintEnd_toStartOf="@+id/dayOfWeekSpinner" />
+
+            <TextView
+                tools:text="@tools:sample/lorem"
+                android:textSize="10sp"
+                android:id="@+id/valueCurrentOccupancy"
+                android:textStyle="bold"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/labelCurrentOccupancy"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toStartOf="@+id/dayOfWeekSpinner" />
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
         <include
             layout="@layout/include_graph"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintBottom_toBottomOf="parent" />
+            android:layout_marginStart="@dimen/default_space"
+            android:layout_marginEnd="@dimen/default_space"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="34dp"
+            android:layout_marginBottom="20dp" />
     </LinearLayout>
 
 </androidx.cardview.widget.CardView>
