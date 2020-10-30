@@ -4,7 +4,8 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import de.deutschebahn.bahnhoflive.repository.occupancy.model.Occupancy
 
-class DailyOccupancyAdapter : RecyclerView.Adapter<DailyOccupancyViewHolder>() {
+class DailyOccupancyAdapter(private val timeTextWidth: Float) :
+    RecyclerView.Adapter<DailyOccupancyViewHolder>() {
 
     var occupancy: Occupancy? = null
         set(value) {
@@ -15,7 +16,7 @@ class DailyOccupancyAdapter : RecyclerView.Adapter<DailyOccupancyViewHolder>() {
     override fun onCreateViewHolder(
         parent: ViewGroup,
         viewType: Int
-    ) = DailyOccupancyViewHolder(parent)
+    ) = DailyOccupancyViewHolder(parent, timeTextWidth)
 
     override fun getItemCount() = occupancy?.dailyOccupancies?.size ?: 0
 

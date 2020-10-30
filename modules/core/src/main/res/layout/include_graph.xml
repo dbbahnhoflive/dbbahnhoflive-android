@@ -14,81 +14,498 @@
     android:layout_height="match_parent">
 
     <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/graph"
         android:layout_width="match_parent"
-        android:layout_height="64dp">
+        android:layout_height="wrap_content">
 
         <View
             android:background="@color/graph_neutral_color"
             app:layout_constraintTop_toTopOf="parent"
             android:layout_marginTop="2dp"
-            android:id="@+id/upper_scale_line"
+            android:id="@+id/upperScaleLine"
             android:layout_width="match_parent"
             android:layout_height="1dp" />
 
         <View
             android:background="@color/graph_neutral_color"
-            app:layout_constraintTop_toBottomOf="@+id/upper_scale_line"
-            app:layout_constraintBottom_toBottomOf="parent"
-            android:id="@+id/lower_scale_line"
+            app:layout_constraintTop_toBottomOf="@+id/upperScaleLine"
+            app:layout_constraintBottom_toTopOf="@+id/lowerScaleLine"
+            android:id="@+id/middleScaleLine"
             android:layout_width="match_parent"
             android:layout_height="1dp" />
 
-        <LinearLayout
-            android:id="@+id/graph"
-            android:orientation="horizontal"
+        <View
+            android:background="@color/graph_neutral_color"
+            app:layout_constraintBottom_toBottomOf="@+id/occupancyGraphSlot00"
+            android:id="@+id/lowerScaleLine"
             android:layout_width="match_parent"
-            android:showDividers="middle|beginning|end"
-            android:divider="@drawable/shape_graph_divider"
-            android:layout_height="match_parent">
+            android:layout_height="1dp" />
 
-            <include layout="@layout/include_graph_slot" />
+        <include
+            layout="@layout/include_graph_slot"
+            android:id="@+id/occupancyGraphSlot00"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_margin="1dp"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toStartOf="@+id/occupancyGraphSlot01" />
 
-            <include layout="@layout/include_graph_slot" />
+        <include
+            layout="@layout/include_occupancy_graph_inter_slot"
+            android:id="@+id/occupancyInterSlot00"
+            app:layout_constraintStart_toEndOf="@+id/occupancyGraphSlot00"
+            app:layout_constraintTop_toBottomOf="@+id/occupancyGraphSlot00"
+            app:layout_constraintEnd_toStartOf="@+id/occupancyGraphSlot01"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
 
-            <include layout="@layout/include_graph_slot" />
+        <include
+            layout="@layout/include_graph_slot"
+            android:id="@+id/occupancyGraphSlot01"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_margin="1dp"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintStart_toEndOf="@+id/occupancyGraphSlot00"
+            app:layout_constraintEnd_toStartOf="@+id/occupancyGraphSlot02" />
 
-            <include layout="@layout/include_graph_slot" />
+        <include
+            layout="@layout/include_occupancy_graph_inter_slot"
+            android:id="@+id/occupancyInterSlot01"
+            app:layout_constraintStart_toEndOf="@+id/occupancyGraphSlot01"
+            app:layout_constraintTop_toBottomOf="@+id/occupancyGraphSlot01"
+            app:layout_constraintEnd_toStartOf="@+id/occupancyGraphSlot02"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
 
-            <include layout="@layout/include_graph_slot" />
+        <include
+            layout="@layout/include_graph_slot"
+            android:id="@+id/occupancyGraphSlot02"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_margin="1dp"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintStart_toEndOf="@+id/occupancyGraphSlot01"
+            app:layout_constraintEnd_toStartOf="@+id/occupancyGraphSlot03" />
 
-            <include layout="@layout/include_graph_slot" />
+        <include
+            layout="@layout/include_occupancy_graph_inter_slot"
+            android:id="@+id/occupancyInterSlot02"
+            app:layout_constraintStart_toEndOf="@+id/occupancyGraphSlot02"
+            app:layout_constraintTop_toBottomOf="@+id/occupancyGraphSlot02"
+            app:layout_constraintEnd_toStartOf="@+id/occupancyGraphSlot03"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
 
-            <include layout="@layout/include_graph_slot" />
+        <include
+            layout="@layout/include_graph_slot"
+            android:id="@+id/occupancyGraphSlot03"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_margin="1dp"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintStart_toEndOf="@+id/occupancyGraphSlot02"
+            app:layout_constraintEnd_toStartOf="@+id/occupancyGraphSlot04" />
 
-            <include layout="@layout/include_graph_slot" />
+        <include
+            layout="@layout/include_occupancy_graph_inter_slot"
+            android:id="@+id/occupancyInterSlot03"
+            app:layout_constraintStart_toEndOf="@+id/occupancyGraphSlot03"
+            app:layout_constraintTop_toBottomOf="@+id/occupancyGraphSlot03"
+            app:layout_constraintEnd_toStartOf="@+id/occupancyGraphSlot04"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
 
-            <include layout="@layout/include_graph_slot" />
+        <include
+            layout="@layout/include_graph_slot"
+            android:id="@+id/occupancyGraphSlot04"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_margin="1dp"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintStart_toEndOf="@+id/occupancyGraphSlot03"
+            app:layout_constraintEnd_toStartOf="@+id/occupancyGraphSlot05" />
 
-            <include layout="@layout/include_graph_slot" />
+        <include
+            layout="@layout/include_occupancy_graph_inter_slot"
+            android:id="@+id/occupancyInterSlot04"
+            app:layout_constraintStart_toEndOf="@+id/occupancyGraphSlot04"
+            app:layout_constraintTop_toBottomOf="@+id/occupancyGraphSlot04"
+            app:layout_constraintEnd_toStartOf="@+id/occupancyGraphSlot05"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
 
-            <include layout="@layout/include_graph_slot" />
+        <include
+            layout="@layout/include_graph_slot"
+            android:id="@+id/occupancyGraphSlot05"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_margin="1dp"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintStart_toEndOf="@+id/occupancyGraphSlot04"
+            app:layout_constraintEnd_toStartOf="@+id/occupancyGraphSlot06" />
 
-            <include layout="@layout/include_graph_slot" />
+        <include
+            layout="@layout/include_occupancy_graph_inter_slot"
+            android:id="@+id/occupancyInterSlot05"
+            app:layout_constraintStart_toEndOf="@+id/occupancyGraphSlot05"
+            app:layout_constraintTop_toBottomOf="@+id/occupancyGraphSlot05"
+            app:layout_constraintEnd_toStartOf="@+id/occupancyGraphSlot06"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
 
-            <include layout="@layout/include_graph_slot" />
+        <include
+            layout="@layout/include_graph_slot"
+            android:id="@+id/occupancyGraphSlot06"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_margin="1dp"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintStart_toEndOf="@+id/occupancyGraphSlot05"
+            app:layout_constraintEnd_toStartOf="@+id/occupancyGraphSlot07" />
 
-            <include layout="@layout/include_graph_slot" />
+        <include
+            layout="@layout/include_occupancy_graph_inter_slot"
+            android:id="@+id/occupancyInterSlot06"
+            app:layout_constraintStart_toEndOf="@+id/occupancyGraphSlot06"
+            app:layout_constraintTop_toBottomOf="@+id/occupancyGraphSlot06"
+            app:layout_constraintEnd_toStartOf="@+id/occupancyGraphSlot07"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
 
-            <include layout="@layout/include_graph_slot" />
+        <include
+            layout="@layout/include_graph_slot"
+            android:id="@+id/occupancyGraphSlot07"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_margin="1dp"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintStart_toEndOf="@+id/occupancyGraphSlot06"
+            app:layout_constraintEnd_toStartOf="@+id/occupancyGraphSlot08" />
 
-            <include layout="@layout/include_graph_slot" />
+        <include
+            layout="@layout/include_occupancy_graph_inter_slot"
+            android:id="@+id/occupancyInterSlot07"
+            app:layout_constraintStart_toEndOf="@+id/occupancyGraphSlot07"
+            app:layout_constraintTop_toBottomOf="@+id/occupancyGraphSlot07"
+            app:layout_constraintEnd_toStartOf="@+id/occupancyGraphSlot08"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
 
-            <include layout="@layout/include_graph_slot" />
+        <include
+            layout="@layout/include_graph_slot"
+            android:id="@+id/occupancyGraphSlot08"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_margin="1dp"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintStart_toEndOf="@+id/occupancyGraphSlot07"
+            app:layout_constraintEnd_toStartOf="@+id/occupancyGraphSlot09" />
 
-            <include layout="@layout/include_graph_slot" />
+        <include
+            layout="@layout/include_occupancy_graph_inter_slot"
+            android:id="@+id/occupancyInterSlot08"
+            app:layout_constraintStart_toEndOf="@+id/occupancyGraphSlot08"
+            app:layout_constraintTop_toBottomOf="@+id/occupancyGraphSlot08"
+            app:layout_constraintEnd_toStartOf="@+id/occupancyGraphSlot09"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
 
-            <include layout="@layout/include_graph_slot" />
+        <include
+            layout="@layout/include_graph_slot"
+            android:id="@+id/occupancyGraphSlot09"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_margin="1dp"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintStart_toEndOf="@+id/occupancyGraphSlot08"
+            app:layout_constraintEnd_toStartOf="@+id/occupancyGraphSlot10" />
 
-            <include layout="@layout/include_graph_slot" />
+        <include
+            layout="@layout/include_occupancy_graph_inter_slot"
+            android:id="@+id/occupancyInterSlot09"
+            app:layout_constraintStart_toEndOf="@+id/occupancyGraphSlot09"
+            app:layout_constraintTop_toBottomOf="@+id/occupancyGraphSlot09"
+            app:layout_constraintEnd_toStartOf="@+id/occupancyGraphSlot10"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
 
-            <include layout="@layout/include_graph_slot" />
+        <include
+            layout="@layout/include_graph_slot"
+            android:id="@+id/occupancyGraphSlot10"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_margin="1dp"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintStart_toEndOf="@+id/occupancyGraphSlot09"
+            app:layout_constraintEnd_toStartOf="@+id/occupancyGraphSlot11" />
 
-            <include layout="@layout/include_graph_slot" />
+        <include
+            layout="@layout/include_occupancy_graph_inter_slot"
+            android:id="@+id/occupancyInterSlot10"
+            app:layout_constraintStart_toEndOf="@+id/occupancyGraphSlot10"
+            app:layout_constraintTop_toBottomOf="@+id/occupancyGraphSlot10"
+            app:layout_constraintEnd_toStartOf="@+id/occupancyGraphSlot11"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
 
-            <include layout="@layout/include_graph_slot" />
+        <include
+            layout="@layout/include_graph_slot"
+            android:id="@+id/occupancyGraphSlot11"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_margin="1dp"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintStart_toEndOf="@+id/occupancyGraphSlot10"
+            app:layout_constraintEnd_toStartOf="@+id/occupancyGraphSlot12" />
 
-            <include layout="@layout/include_graph_slot" />
+        <include
+            layout="@layout/include_occupancy_graph_inter_slot"
+            android:id="@+id/occupancyInterSlot11"
+            app:layout_constraintStart_toEndOf="@+id/occupancyGraphSlot11"
+            app:layout_constraintTop_toBottomOf="@+id/occupancyGraphSlot11"
+            app:layout_constraintEnd_toStartOf="@+id/occupancyGraphSlot12"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
 
-        </LinearLayout>
+        <include
+            layout="@layout/include_graph_slot"
+            android:id="@+id/occupancyGraphSlot12"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_margin="1dp"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintStart_toEndOf="@+id/occupancyGraphSlot11"
+            app:layout_constraintEnd_toStartOf="@+id/occupancyGraphSlot13" />
+
+        <include
+            layout="@layout/include_occupancy_graph_inter_slot"
+            android:id="@+id/occupancyInterSlot12"
+            app:layout_constraintStart_toEndOf="@+id/occupancyGraphSlot12"
+            app:layout_constraintTop_toBottomOf="@+id/occupancyGraphSlot12"
+            app:layout_constraintEnd_toStartOf="@+id/occupancyGraphSlot13"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
+
+        <include
+            layout="@layout/include_graph_slot"
+            android:id="@+id/occupancyGraphSlot13"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_margin="1dp"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintStart_toEndOf="@+id/occupancyGraphSlot12"
+            app:layout_constraintEnd_toStartOf="@+id/occupancyGraphSlot14" />
+
+        <include
+            layout="@layout/include_occupancy_graph_inter_slot"
+            android:id="@+id/occupancyInterSlot13"
+            app:layout_constraintStart_toEndOf="@+id/occupancyGraphSlot13"
+            app:layout_constraintTop_toBottomOf="@+id/occupancyGraphSlot13"
+            app:layout_constraintEnd_toStartOf="@+id/occupancyGraphSlot14"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
+
+        <include
+            layout="@layout/include_graph_slot"
+            android:id="@+id/occupancyGraphSlot14"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_margin="1dp"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintStart_toEndOf="@+id/occupancyGraphSlot13"
+            app:layout_constraintEnd_toStartOf="@+id/occupancyGraphSlot15" />
+
+        <include
+            layout="@layout/include_occupancy_graph_inter_slot"
+            android:id="@+id/occupancyInterSlot14"
+            app:layout_constraintStart_toEndOf="@+id/occupancyGraphSlot14"
+            app:layout_constraintTop_toBottomOf="@+id/occupancyGraphSlot14"
+            app:layout_constraintEnd_toStartOf="@+id/occupancyGraphSlot15"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
+
+        <include
+            layout="@layout/include_graph_slot"
+            android:id="@+id/occupancyGraphSlot15"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_margin="1dp"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintStart_toEndOf="@+id/occupancyGraphSlot14"
+            app:layout_constraintEnd_toStartOf="@+id/occupancyGraphSlot16" />
+
+        <include
+            layout="@layout/include_occupancy_graph_inter_slot"
+            android:id="@+id/occupancyInterSlot15"
+            app:layout_constraintStart_toEndOf="@+id/occupancyGraphSlot15"
+            app:layout_constraintTop_toBottomOf="@+id/occupancyGraphSlot15"
+            app:layout_constraintEnd_toStartOf="@+id/occupancyGraphSlot16"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
+
+        <include
+            layout="@layout/include_graph_slot"
+            android:id="@+id/occupancyGraphSlot16"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_margin="1dp"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintStart_toEndOf="@+id/occupancyGraphSlot15"
+            app:layout_constraintEnd_toStartOf="@+id/occupancyGraphSlot17" />
+
+        <include
+            layout="@layout/include_occupancy_graph_inter_slot"
+            android:id="@+id/occupancyInterSlot16"
+            app:layout_constraintStart_toEndOf="@+id/occupancyGraphSlot16"
+            app:layout_constraintTop_toBottomOf="@+id/occupancyGraphSlot16"
+            app:layout_constraintEnd_toStartOf="@+id/occupancyGraphSlot17"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
+
+        <include
+            layout="@layout/include_graph_slot"
+            android:id="@+id/occupancyGraphSlot17"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_margin="1dp"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintStart_toEndOf="@+id/occupancyGraphSlot16"
+            app:layout_constraintEnd_toStartOf="@+id/occupancyGraphSlot18" />
+
+        <include
+            layout="@layout/include_occupancy_graph_inter_slot"
+            android:id="@+id/occupancyInterSlot17"
+            app:layout_constraintStart_toEndOf="@+id/occupancyGraphSlot17"
+            app:layout_constraintTop_toBottomOf="@+id/occupancyGraphSlot17"
+            app:layout_constraintEnd_toStartOf="@+id/occupancyGraphSlot18"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
+
+        <include
+            layout="@layout/include_graph_slot"
+            android:id="@+id/occupancyGraphSlot18"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_margin="1dp"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintStart_toEndOf="@+id/occupancyGraphSlot17"
+            app:layout_constraintEnd_toStartOf="@+id/occupancyGraphSlot19" />
+
+        <include
+            layout="@layout/include_occupancy_graph_inter_slot"
+            android:id="@+id/occupancyInterSlot18"
+            app:layout_constraintStart_toEndOf="@+id/occupancyGraphSlot18"
+            app:layout_constraintTop_toBottomOf="@+id/occupancyGraphSlot18"
+            app:layout_constraintEnd_toStartOf="@+id/occupancyGraphSlot19"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
+
+        <include
+            layout="@layout/include_graph_slot"
+            android:id="@+id/occupancyGraphSlot19"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_margin="1dp"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintStart_toEndOf="@+id/occupancyGraphSlot18"
+            app:layout_constraintEnd_toStartOf="@+id/occupancyGraphSlot20" />
+
+        <include
+            layout="@layout/include_occupancy_graph_inter_slot"
+            android:id="@+id/occupancyInterSlot19"
+            app:layout_constraintStart_toEndOf="@+id/occupancyGraphSlot19"
+            app:layout_constraintTop_toBottomOf="@+id/occupancyGraphSlot19"
+            app:layout_constraintEnd_toStartOf="@+id/occupancyGraphSlot20"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
+
+        <include
+            layout="@layout/include_graph_slot"
+            android:id="@+id/occupancyGraphSlot20"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_margin="1dp"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintStart_toEndOf="@+id/occupancyGraphSlot19"
+            app:layout_constraintEnd_toStartOf="@+id/occupancyGraphSlot21" />
+
+        <include
+            layout="@layout/include_occupancy_graph_inter_slot"
+            android:id="@+id/occupancyInterSlot20"
+            app:layout_constraintStart_toEndOf="@+id/occupancyGraphSlot20"
+            app:layout_constraintTop_toBottomOf="@+id/occupancyGraphSlot20"
+            app:layout_constraintEnd_toStartOf="@+id/occupancyGraphSlot21"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
+
+        <include
+            layout="@layout/include_graph_slot"
+            android:id="@+id/occupancyGraphSlot21"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_margin="1dp"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintStart_toEndOf="@+id/occupancyGraphSlot20"
+            app:layout_constraintEnd_toStartOf="@+id/occupancyGraphSlot22" />
+
+        <include
+            layout="@layout/include_occupancy_graph_inter_slot"
+            android:id="@+id/occupancyInterSlot21"
+            app:layout_constraintStart_toEndOf="@+id/occupancyGraphSlot21"
+            app:layout_constraintTop_toBottomOf="@+id/occupancyGraphSlot21"
+            app:layout_constraintEnd_toStartOf="@+id/occupancyGraphSlot22"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
+
+        <include
+            layout="@layout/include_graph_slot"
+            android:id="@+id/occupancyGraphSlot22"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_margin="1dp"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintStart_toEndOf="@+id/occupancyGraphSlot21"
+            app:layout_constraintEnd_toStartOf="@+id/occupancyGraphSlot23" />
+
+        <include
+            layout="@layout/include_occupancy_graph_inter_slot"
+            android:id="@+id/occupancyInterSlot22"
+            app:layout_constraintStart_toEndOf="@+id/occupancyGraphSlot22"
+            app:layout_constraintTop_toBottomOf="@+id/occupancyGraphSlot22"
+            app:layout_constraintEnd_toStartOf="@+id/occupancyGraphSlot23"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
+
+        <include
+            layout="@layout/include_graph_slot"
+            android:id="@+id/occupancyGraphSlot23"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_margin="1dp"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintStart_toEndOf="@+id/occupancyGraphSlot22"
+            app:layout_constraintEnd_toStartOf="@+id/occupancyGraphSlot24" />
+
+        <include
+            layout="@layout/include_occupancy_graph_inter_slot"
+            android:id="@+id/occupancyInterSlot23"
+            app:layout_constraintStart_toEndOf="@+id/occupancyGraphSlot23"
+            app:layout_constraintTop_toBottomOf="@+id/occupancyGraphSlot23"
+            app:layout_constraintEnd_toStartOf="@+id/occupancyGraphSlot24"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
+
+        <include
+            layout="@layout/include_graph_slot"
+            android:id="@+id/occupancyGraphSlot24"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_margin="1dp"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintStart_toEndOf="@+id/occupancyGraphSlot23"
+            app:layout_constraintEnd_toEndOf="parent" />
+
     </androidx.constraintlayout.widget.ConstraintLayout>
 </LinearLayout>

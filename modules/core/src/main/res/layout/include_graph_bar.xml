@@ -10,4 +10,4 @@
     android:background="@drawable/shape_graph_bar"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:translationY="20dp" />
+    tools:layout_marginTop="20dp" />

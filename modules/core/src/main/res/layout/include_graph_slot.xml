@@ -3,16 +3,30 @@
   ~
   ~ SPDX-License-Identifier: Apache-2.0
   -->
-
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/graphSlot"
-    android:layout_weight="1"
+    tools:showIn="@layout/include_graph"
+    android:clipChildren="false"
+    android:clipToPadding="false"
+    android:orientation="vertical"
+    android:layout_height="wrap_content"
     android:layout_width="0dp"
-    android:layout_height="match_parent"
-    tools:showIn="@layout/include_graph">
+    android:layout_weight="1">
 
-    <include layout="@layout/include_graph_bar" />
+    <FrameLayout
+        android:id="@+id/graphSlot"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:clipChildren="true">
 
-    <include layout="@layout/include_graph_bar_highlight" />
-</FrameLayout>
+        <FrameLayout
+            android:layout_width="match_parent"
+            android:layout_height="64dp">
+
+            <include layout="@layout/include_graph_bar" />
+
+            <include layout="@layout/include_graph_bar_highlight" />
+        </FrameLayout>
+    </FrameLayout>
+
+</LinearLayout>

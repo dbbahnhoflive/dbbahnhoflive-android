@@ -6,6 +6,7 @@
 
 package de.deutschebahn.bahnhoflive.ui.station.occupancy
 
+import android.view.LayoutInflater
 import android.view.View
 import android.widget.AdapterView
 import androidx.viewpager2.widget.ViewPager2
@@ -13,6 +14,7 @@ import com.google.android.material.tabs.TabLayoutMediator
 import de.deutschebahn.bahnhoflive.R
 import de.deutschebahn.bahnhoflive.repository.occupancy.model.Occupancy
 import kotlinx.android.synthetic.main.include_occupancy.view.*
+import kotlinx.android.synthetic.main.include_occupancy_time_label.view.*
 
 class OccupancyViewBinder(
     parent: View
@@ -22,7 +24,11 @@ class OccupancyViewBinder(
 
     private val dayOfWeekAdapter = DayOfWeekAdapter(parent.context)
 
-    private val dailyOccupancyAdapter = DailyOccupancyAdapter()
+    private val dailyOccupancyAdapter = DailyOccupancyAdapter(
+        LayoutInflater.from(parent.context)
+            .inflate(R.layout.include_occupancy_time_label, null)
+            .timeScale.paint.measureText("22:00") * 1.5f
+    )
 
     private var selectedDay = 0
         set(value) {
