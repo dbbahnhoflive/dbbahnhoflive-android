@@ -6,67 +6,89 @@
 
 
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
-    tools:showIn="@layout/include_occupancy"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:orientation="vertical"
+    android:layout_marginStart="@dimen/default_space"
+    android:layout_marginEnd="@dimen/default_space"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content">
+    android:layout_height="match_parent">
 
-    <LinearLayout
-        android:id="@+id/graph"
-        android:orientation="horizontal"
+    <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
-        android:showDividers="middle|beginning|end"
-        android:divider="@drawable/shape_graph_divider"
         android:layout_height="64dp">
 
-        <include layout="@layout/include_graph_slot" />
+        <View
+            android:background="@color/graph_neutral_color"
+            app:layout_constraintTop_toTopOf="parent"
+            android:layout_marginTop="2dp"
+            android:id="@+id/upper_scale_line"
+            android:layout_width="match_parent"
+            android:layout_height="1dp" />
 
-        <include layout="@layout/include_graph_slot" />
+        <View
+            android:background="@color/graph_neutral_color"
+            app:layout_constraintTop_toBottomOf="@+id/upper_scale_line"
+            app:layout_constraintBottom_toBottomOf="parent"
+            android:id="@+id/lower_scale_line"
+            android:layout_width="match_parent"
+            android:layout_height="1dp" />
 
-        <include layout="@layout/include_graph_slot" />
+        <LinearLayout
+            android:id="@+id/graph"
+            android:orientation="horizontal"
+            android:layout_width="match_parent"
+            android:showDividers="middle|beginning|end"
+            android:divider="@drawable/shape_graph_divider"
+            android:layout_height="match_parent">
 
-        <include layout="@layout/include_graph_slot" />
+            <include layout="@layout/include_graph_slot" />
 
-        <include layout="@layout/include_graph_slot" />
+            <include layout="@layout/include_graph_slot" />
 
-        <include layout="@layout/include_graph_slot" />
+            <include layout="@layout/include_graph_slot" />
 
-        <include layout="@layout/include_graph_slot" />
+            <include layout="@layout/include_graph_slot" />
 
-        <include layout="@layout/include_graph_slot" />
+            <include layout="@layout/include_graph_slot" />
 
-        <include layout="@layout/include_graph_slot" />
+            <include layout="@layout/include_graph_slot" />
 
-        <include layout="@layout/include_graph_slot" />
+            <include layout="@layout/include_graph_slot" />
 
-        <include layout="@layout/include_graph_slot" />
+            <include layout="@layout/include_graph_slot" />
 
-        <include layout="@layout/include_graph_slot" />
+            <include layout="@layout/include_graph_slot" />
 
-        <include layout="@layout/include_graph_slot" />
+            <include layout="@layout/include_graph_slot" />
 
-        <include layout="@layout/include_graph_slot" />
+            <include layout="@layout/include_graph_slot" />
 
-        <include layout="@layout/include_graph_slot" />
+            <include layout="@layout/include_graph_slot" />
 
-        <include layout="@layout/include_graph_slot" />
+            <include layout="@layout/include_graph_slot" />
 
-        <include layout="@layout/include_graph_slot" />
+            <include layout="@layout/include_graph_slot" />
 
-        <include layout="@layout/include_graph_slot" />
+            <include layout="@layout/include_graph_slot" />
 
-        <include layout="@layout/include_graph_slot" />
+            <include layout="@layout/include_graph_slot" />
 
-        <include layout="@layout/include_graph_slot" />
+            <include layout="@layout/include_graph_slot" />
 
-        <include layout="@layout/include_graph_slot" />
+            <include layout="@layout/include_graph_slot" />
 
-        <include layout="@layout/include_graph_slot" />
+            <include layout="@layout/include_graph_slot" />
 
-        <include layout="@layout/include_graph_slot" />
+            <include layout="@layout/include_graph_slot" />
 
-        <include layout="@layout/include_graph_slot" />
+            <include layout="@layout/include_graph_slot" />
 
-    </LinearLayout>
+            <include layout="@layout/include_graph_slot" />
+
+            <include layout="@layout/include_graph_slot" />
+
+            <include layout="@layout/include_graph_slot" />
+
+        </LinearLayout>
+    </androidx.constraintlayout.widget.ConstraintLayout>
 </LinearLayout>

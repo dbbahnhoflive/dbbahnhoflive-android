@@ -60,4 +60,7 @@
 
     <color name="eco_green">#78BD14</color>
     <color name="page_indicator_unselected">@color/button_grey</color>
+
+    <color name="graph_neutral_color">#E9E9E9</color>
+    <color name="occupancy_today">#76c030</color>
 </resources>

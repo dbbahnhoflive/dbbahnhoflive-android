@@ -55,6 +55,7 @@ import de.deutschebahn.bahnhoflive.ui.hub.StationImageResolver;
 import de.deutschebahn.bahnhoflive.ui.map.MapActivity;
 import de.deutschebahn.bahnhoflive.ui.station.elevators.ElevatorStatusListsFragment;
 import de.deutschebahn.bahnhoflive.ui.station.info.StaticInfo;
+import de.deutschebahn.bahnhoflive.ui.station.occupancy.OccupancyViewBinder;
 import de.deutschebahn.bahnhoflive.ui.station.shop.CategorizedShops;
 import de.deutschebahn.bahnhoflive.ui.station.shop.Shop;
 import de.deutschebahn.bahnhoflive.ui.station.shop.ShopCategory;

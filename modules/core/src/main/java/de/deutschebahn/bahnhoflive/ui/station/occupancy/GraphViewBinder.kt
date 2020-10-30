@@ -4,7 +4,7 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
-package de.deutschebahn.bahnhoflive.ui.station
+package de.deutschebahn.bahnhoflive.ui.station.occupancy
 
 import android.view.View
 import androidx.core.view.children
