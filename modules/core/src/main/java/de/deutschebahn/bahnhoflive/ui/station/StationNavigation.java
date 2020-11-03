@@ -28,6 +28,8 @@ public interface StationNavigation extends TimetablesFragment.Host {
 
     void showNewsDetails(final int newsIndex);
 
+    void showOccupancyExplanation();
+
     void showInfoFragment(boolean clearStack);
 
     void showElevators();

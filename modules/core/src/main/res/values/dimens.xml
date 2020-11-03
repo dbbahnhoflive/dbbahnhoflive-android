@@ -75,6 +75,8 @@
     <dimen name="textsize_h3">14sp</dimen>
     <dimen name="textsize_h4">12sp</dimen>
 
+    <dimen name="textsize_occupancy_day_of_week">@dimen/textsize_h3</dimen>
+
     <dimen name="textsize_default">@dimen/textsize_h2</dimen>
     <dimen name="card_badge_size">32dp</dimen>
     <dimen name="default_elevation">4dp</dimen>

@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?><!--
+  ~ SPDX-FileCopyrightText: 2020 DB Station&Service AG <bahnhoflive-opensource@deutschebahn.com>
+  ~
+  ~ SPDX-License-Identifier: Apache-2.0
+  -->
+
+<layer-list xmlns:android="http://schemas.android.com/apk/res/android">
+    <item android:gravity="center">
+        <shape android:shape="rectangle">
+            <corners android:radius="@dimen/round_button_half_size_large" />
+            <stroke
+                android:color="@color/graph_neutral_color"
+                android:width="2dp" />
+            <padding
+                android:left="14dp"
+                android:right="14dp"
+                android:top="11dp"
+                android:bottom="11dp" />
+        </shape>
+    </item>
+</layer-list>

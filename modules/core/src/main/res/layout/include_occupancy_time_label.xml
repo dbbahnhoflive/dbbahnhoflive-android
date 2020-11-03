@@ -6,6 +6,7 @@
     android:singleLine="true"
     android:id="@+id/timeScale"
     android:layout_gravity="center"
+    android:textStyle="bold"
     android:gravity="center"
     android:ellipsize="none"
     android:layout_width="wrap_content"

@@ -111,7 +111,7 @@ class GraphViewBinder(
 
         val timeScaleCount = floor(graphView.measuredWidth / timeTextWidth).toInt()
         val timeScalePeriod = if (timeScaleCount == 0) 1 else
-            ceil((dailyOccupancy.hourlyOccupancies.size / timeScaleCount).toDouble()).toInt()
+            ceil(dailyOccupancy.hourlyOccupancies.size / timeScaleCount.toDouble()).toInt()
 
 
         slotViews.forEachIndexed { hourIndex, view ->
@@ -139,7 +139,7 @@ class GraphViewBinder(
                 view.visibility = View.GONE
             } else {
                 view.visibility = View.VISIBLE
-                if ((timeScalePeriod / 2 + index) % timeScalePeriod == 0) {
+                if ((timeScalePeriod / 1.5f + index + 1).toInt() % timeScalePeriod == 0) {
                     view.timeScale.text = "${hourlyOccupancy.hourOfDay}:00"
 
                     view.scaleLine.visibility = View.VISIBLE

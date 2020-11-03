@@ -5,6 +5,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.BaseAdapter
+import android.widget.TextView
 import de.deutschebahn.bahnhoflive.R
 import kotlinx.android.synthetic.main.item_day_of_week_spinner_dropdown.view.*
 
@@ -52,10 +53,14 @@ class DayOfWeekAdapter(context: Context) : BaseAdapter() {
             ))
             .apply {
                 text.text = getItem(position)
-                text.setTextColor(
-                    if (position == today) textColorToday else textColor
-                )
+                applyTextColor(text, position)
             }
+
+    fun applyTextColor(textView: TextView, position: Int) {
+        textView.setTextColor(
+            if (position == today) textColorToday else textColor
+        )
+    }
 
     override fun getDropDownView(position: Int, convertView: View?, parent: ViewGroup?): View =
         super.getDropDownView(position, convertView, parent).apply {

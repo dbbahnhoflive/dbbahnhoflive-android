@@ -1,0 +1,108 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:orientation="vertical"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    tools:background="@drawable/shape_background_occupancy_day_of_week_popup">
+
+    <TextView
+        android:id="@+id/today"
+        android:text="@string/today"
+        android:drawableEnd="@drawable/app_occupancy_arrow_down"
+        android:textColor="@color/occupancy_today"
+        android:drawablePadding="14dp"
+        android:paddingTop="11dp"
+        android:paddingBottom="11dp"
+        style="@style/App.TextAppearance.OccupancyDayOfWeek"
+
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" />
+
+    <TextView
+        android:background="@color/graph_neutral_color"
+        android:layout_width="match_parent"
+        android:layout_height="2dp" />
+
+    <androidx.core.widget.NestedScrollView
+        android:layout_width="match_parent"
+        android:layout_weight="1"
+        android:layout_height="0dp">
+
+        <LinearLayout
+            android:orientation="horizontal"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content">
+
+            <LinearLayout
+                android:orientation="vertical"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content">
+
+                <TextView
+                    android:id="@+id/monday"
+                    android:text="@string/mondays"
+                    style="@style/App.TextAppearance.OccupancyDayOfWeek"
+
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content" />
+
+                <TextView
+                    android:id="@+id/tuesday"
+                    android:text="@string/tuesdys"
+                    style="@style/App.TextAppearance.OccupancyDayOfWeek"
+
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content" />
+
+                <TextView
+                    android:id="@+id/wednesday"
+                    android:text="@string/wednesdays"
+                    style="@style/App.TextAppearance.OccupancyDayOfWeek"
+
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content" />
+
+                <TextView
+                    android:id="@+id/thursday"
+                    android:text="@string/thursdays"
+                    style="@style/App.TextAppearance.OccupancyDayOfWeek"
+
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content" />
+
+                <TextView
+                    android:id="@+id/friday"
+                    android:text="@string/fridays"
+                    style="@style/App.TextAppearance.OccupancyDayOfWeek"
+
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content" />
+
+                <TextView
+                    android:id="@+id/saturday"
+                    android:text="@string/saturdays"
+                    style="@style/App.TextAppearance.OccupancyDayOfWeek"
+
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content" />
+
+                <TextView
+                    android:id="@+id/sunday"
+                    android:text="@string/sundays"
+                    style="@style/App.TextAppearance.OccupancyDayOfWeek"
+
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content" />
+
+            </LinearLayout>
+
+            <ImageView
+                android:src="@drawable/app_occupancy_arrow_down"
+                android:layout_marginEnd="14dp"
+                android:visibility="invisible"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content" />
+        </LinearLayout>
+    </androidx.core.widget.NestedScrollView>
+</LinearLayout>
