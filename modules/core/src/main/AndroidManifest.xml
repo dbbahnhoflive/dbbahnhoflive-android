@@ -91,6 +91,11 @@
             android:name=".ui.WebViewActivity"
             android:screenOrientation="portrait" />
         <activity android:name=".ui.timetable.localtransport.DeparturesActivity" />
+
+        <meta-data
+            android:name="io.sentry.auto-init"
+            android:value="false" />
+
     </application>
 
 </manifest>

@@ -39,6 +39,7 @@ import java.util.List;
 import de.deutschebahn.bahnhoflive.BuildConfig;
 import de.deutschebahn.bahnhoflive.R;
 import de.deutschebahn.bahnhoflive.analytics.IssueTracker;
+import de.deutschebahn.bahnhoflive.analytics.IssueTrackerKt;
 import de.deutschebahn.bahnhoflive.analytics.StationTrackingManager;
 import de.deutschebahn.bahnhoflive.analytics.TrackingManager;
 import de.deutschebahn.bahnhoflive.backend.ris.model.TrainInfo;
@@ -118,7 +119,7 @@ public class StationActivity extends AppCompatActivity implements
             initializeShowingDepartures = savedInstanceState.getBoolean(ARG_SHOW_DEPARTURES);
         } else {
             if (station != null) {
-                IssueTracker.Companion.getInstance().setCondition("station", station.getId());
+                IssueTracker.Companion.getInstance().setContext("station", IssueTrackerKt.toContextMap(station));
             }
         }
 
