@@ -223,6 +223,8 @@ public class StationSearchFragment extends Fragment {
 
     @Override
     public void onDestroyView() {
+        super.onDestroyView();
+
         recyclerView.setAdapter(null);
         recyclerView = null;
 
@@ -230,8 +232,6 @@ public class StationSearchFragment extends Fragment {
         listHeadlineView = null;
         noResultsView = null;
         viewFlipper = null;
-
-        super.onDestroyView();
     }
 
     private boolean primeAutoSearch() {
@@ -272,10 +272,13 @@ public class StationSearchFragment extends Fragment {
     }
 
     public void showOrHideNoResultsView() {
-        if (adapter.hasErrors()) {
-            viewFlipper.setDisplayedChild(1);
-        } else {
-            viewFlipper.setDisplayedChild(0);
+        final ViewFlipper viewFlipper = this.viewFlipper;
+        if (viewFlipper != null) {
+            if (adapter.hasErrors()) {
+                viewFlipper.setDisplayedChild(1);
+            } else {
+                viewFlipper.setDisplayedChild(0);
+            }
         }
 
         if (adapter.getItemCount() == 0) {
