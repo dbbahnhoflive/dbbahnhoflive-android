@@ -35,7 +35,6 @@ import de.deutschebahn.bahnhoflive.location.BaseLocationListener;
 import de.deutschebahn.bahnhoflive.persistence.RecentSearchesStore;
 import de.deutschebahn.bahnhoflive.repository.LoadingStatus;
 import de.deutschebahn.bahnhoflive.ui.hub.LocationFragment;
-import de.deutschebahn.bahnhoflive.util.Cancellable;
 import de.deutschebahn.bahnhoflive.view.BaseTextWatcher;
 import de.deutschebahn.bahnhoflive.view.ConfirmationDialog;
 
@@ -73,9 +72,6 @@ public class StationSearchFragment extends Fragment {
     private final QueryRecorder queryRecorder = new QueryRecorder();
     private ViewFlipper viewFlipper;
     private StationSearchViewModel stationSearchViewModel;
-
-    public StationSearchFragment(Cancellable runningStationLookupRequest) {
-    }
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
@@ -223,6 +219,8 @@ public class StationSearchFragment extends Fragment {
 
     @Override
     public void onDestroyView() {
+        super.onDestroyView();
+
         recyclerView.setAdapter(null);
         recyclerView = null;
 
@@ -230,8 +228,6 @@ public class StationSearchFragment extends Fragment {
         listHeadlineView = null;
         noResultsView = null;
         viewFlipper = null;
-
-        super.onDestroyView();
     }
 
     private boolean primeAutoSearch() {
@@ -272,10 +268,13 @@ public class StationSearchFragment extends Fragment {
     }
 
     public void showOrHideNoResultsView() {
-        if (adapter.hasErrors()) {
-            viewFlipper.setDisplayedChild(1);
-        } else {
-            viewFlipper.setDisplayedChild(0);
+        final ViewFlipper viewFlipper = this.viewFlipper;
+        if (viewFlipper != null) {
+            if (adapter.hasErrors()) {
+                viewFlipper.setDisplayedChild(1);
+            } else {
+                viewFlipper.setDisplayedChild(0);
+            }
         }
 
         if (adapter.getItemCount() == 0) {
