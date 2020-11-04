@@ -260,5 +260,14 @@
     <string name="fridays">Freitags</string>
     <string name="saturdays">Samstags</string>
     <string name="sundays">Sonntags</string>
-    <string name="occupancy_unknown">Es liegt keine aktuelle Information vor.</string>
+    <string name="title_occupancy_explanation">Besucheraufkommen</string>
+    <string name="occupancy_level_unknown">Es liegt keine aktuelle Information vor.</string>
+    <string name="occupancy_level_low">Weniger Besucher als üblich</string>
+    <string name="occupancy_explanation_low">Vor Ort ist aktuell mit weniger Besuchern als gewöhnlich zu rechnen. In der Regel ist das Besucheraufkommen zu dieser Uhrzeit an diesem Wochentag höher.</string>
+    <string name="occupancy_level_average">Übliches Besucheraufkommen</string>
+    <string name="occupancy_explanation_average">Die Anzahl der Besucher vor Ort entspricht dem gewöhnlichen Besucheraufkommen zu dieser Uhrzeit an diesem Wochentag.</string>
+    <string name="occupancy_level_high">Mehr Besucher als üblich</string>
+    <string name="occupancy_explanation_high">Vor Ort ist aktuell mit mehr Besuchern als gewöhnlich zu rechnen. In der Regel ist das Besucheraufkommen zu dieser Uhrzeit an diesem Wochentag geringer.</string>
+    <string name="occupancy_advice_title">Hinweise</string>
+    <string name="occupancy_advice_copy">Bitte beachten Sie: Diese Info-Grafik gibt Auskunft über das aktuelle Besucheraufkommen im Vergleich zum durchschnittlichen Besucheraufkommen dervergangen acht Wochen. Für diese Grafik werden Näherungswerte errechnet und keine absoluten Zahlen verwendet. Folglich sind Abweichungen zum tatsächlichen Besucheraufkommen vor Ort möglich. Diese Grafik gibt außerdem keine Auskunft hinsichtlich des Besucheraufkommens im Verhältnis zu den räumlichen Kapazitäten vor Ort. Alle Angaben sind ohne Gewähr.</string>
 </resources>

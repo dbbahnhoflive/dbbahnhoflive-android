@@ -11,6 +11,7 @@ import android.view.View
 import android.view.WindowManager
 import android.widget.PopupWindow
 import android.widget.TextView
+import androidx.annotation.StringRes
 import androidx.core.widget.PopupWindowCompat
 import androidx.viewpager2.widget.ViewPager2
 import com.google.android.material.tabs.TabLayoutMediator
@@ -21,10 +22,21 @@ import kotlinx.android.synthetic.main.include_occupancy_time_label.view.*
 import kotlinx.android.synthetic.main.popup_occupancy_day_of_week.view.*
 
 class OccupancyViewBinder(
-    parent: View
+    parent: View,
+    onShowDetailsListener: () -> Unit
 ) {
 
-    private val view = parent.occupancyView
+    enum class Level(@StringRes val stringRes: Int) {
+        LOW(R.string.occupancy_level_low),
+        AVERAGE(R.string.occupancy_level_average),
+        HIGH(R.string.occupancy_level_high)
+    }
+
+    private val view = parent.occupancyView.apply {
+        occupancyInfoButton.setOnClickListener {
+            onShowDetailsListener()
+        }
+    }
 
     private val context get() = view.context
 
@@ -144,14 +156,16 @@ class OccupancyViewBinder(
     private fun bind() {
         view.visibility = if (occupancy == null) View.GONE else View.VISIBLE
 
-        val statusText = occupancy?.mostRecent?.statusText
+        val level = occupancy?.mostRecent?.level?.let {
+            it - 1
+        }?.takeIf { it >= 0 && it < Level.values().size }
 
-        if (statusText.isNullOrBlank()) {
+        if (level == null) {
             currentStatusLabelView.visibility = View.GONE
-            currentStatusView.setText(R.string.occupancy_unknown)
+            currentStatusView.setText(R.string.occupancy_level_unknown)
         } else {
             currentStatusLabelView.visibility = View.VISIBLE
-            currentStatusView.text = statusText
+            currentStatusView.setText(Level.values()[level].stringRes)
         }
 
         dailyOccupancyAdapter.occupancy = this.occupancy

@@ -526,7 +526,11 @@ public class StationFragment extends Fragment implements
             });
         }
 
-        final OccupancyViewBinder occupancyViewBinder = new OccupancyViewBinder(view);
+        final OccupancyViewBinder occupancyViewBinder = new OccupancyViewBinder(view,
+                () -> {
+                    stationViewModel.getStationNavigation().showOccupancyExplanation();
+                    return Unit.INSTANCE;
+                });
         stationViewModel.getOccupancyResource().getData().observe(getViewLifecycleOwner(), occupancyViewBinder::setOccupancy);
     }
 

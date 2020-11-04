@@ -11,6 +11,7 @@ class HourlyOccupancy(
     val hourOfDay: Int,
     val average: Int?,
     val current: Int?,
+    val level: Int?,
     val statusText: CharSequence?
 ) {
 }
