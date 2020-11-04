@@ -184,7 +184,7 @@ public class LocationFragment extends Fragment {
 
         fragmentManager.beginTransaction()
                 .add(locationFragment, FRAGMENT_TAG)
-                .commit();
+                .commitAllowingStateLoss();
 
         return locationFragment;
     }
