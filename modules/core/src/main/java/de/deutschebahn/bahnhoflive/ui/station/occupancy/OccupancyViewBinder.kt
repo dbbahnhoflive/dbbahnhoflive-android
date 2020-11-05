@@ -11,6 +11,7 @@ import android.view.View
 import android.view.WindowManager
 import android.widget.PopupWindow
 import android.widget.TextView
+import androidx.annotation.ColorRes
 import androidx.annotation.StringRes
 import androidx.core.widget.PopupWindowCompat
 import androidx.viewpager2.widget.ViewPager2
@@ -19,6 +20,7 @@ import de.deutschebahn.bahnhoflive.R
 import de.deutschebahn.bahnhoflive.repository.occupancy.model.Occupancy
 import kotlinx.android.synthetic.main.include_occupancy.view.*
 import kotlinx.android.synthetic.main.include_occupancy_time_label.view.*
+import kotlinx.android.synthetic.main.item_occupancy_day_of_week.view.*
 import kotlinx.android.synthetic.main.popup_occupancy_day_of_week.view.*
 
 class OccupancyViewBinder(
@@ -40,8 +42,6 @@ class OccupancyViewBinder(
 
     private val context get() = view.context
 
-    private val dayOfWeekAdapter = DayOfWeekAdapter(parent.context)
-
     private val dailyOccupancyAdapter = DailyOccupancyAdapter(
         LayoutInflater.from(parent.context)
             .inflate(R.layout.include_occupancy_time_label, null)
@@ -50,35 +50,68 @@ class OccupancyViewBinder(
 
     private var selectedDay = 0
         set(value) {
+            val oldValue = field
+
             field = value
 
-//            if (dayOfWeekSpinner.selectedItemPosition != field) {
-//                dayOfWeekSpinner.setSelection(field)
-//            }
+            selectedDayView.updateDayView(selectedDay)
+            selectedDayPopupView.updateDayView(selectedDay)
+            popupDayViews[field].updateDayView(field)
 
-            dayOfWeekSpinner.text = dayOfWeekAdapter.getItem(field)
-            dayOfWeekAdapter.applyTextColor(dayOfWeekSpinner, field)
+            if (oldValue != field) {
+                popupDayViews[oldValue].updateDayView(oldValue)
+            }
 
             if (pager.currentItem != field) {
                 pager.currentItem = field
             }
         }
 
+    var today: Int? = null
+        set(value) {
+            if (value != field) {
+                val oldValue = field
+
+                field = value
+
+                field?.let {
+                    selectedDayView.updateDayView(selectedDay)
+                    selectedDayPopupView.updateDayView(selectedDay)
+                    popupDayViews[it].updateDayView(it)
+                }
+
+                oldValue?.let {
+                    popupDayViews[it].updateDayView(it)
+                }
+
+            }
+        }
+
+
     private val dayOfWeekPopupView = LayoutInflater.from(view.context)
         .inflate(R.layout.popup_occupancy_day_of_week, null)
 
-    private val popupTodayView = dayOfWeekPopupView.today
+    private val selectedDayPopupView = dayOfWeekPopupView.currentlySelectedDay
 
     private val onDayViewClickListener = View.OnClickListener {
-        DAY_OF_WEEK_VIEW_IDS.indexOf(it.id).takeUnless { it < 0 }?.let {
-            dayOfWeekPopup.dismiss()
-            selectedDay = it
+        dayOfWeekPopup.dismiss()
+        (it.tag as? Int?)?.also { dayIndex ->
+            selectedDay = dayIndex
         }
     }
 
-    private val popupDayViews = DAY_OF_WEEK_VIEW_IDS.map {
-        dayOfWeekPopupView.findViewById<TextView?>(it)?.apply {
-            setOnClickListener(onDayViewClickListener)
+    private val popupDayViews = dayOfWeekPopupView.dayOfWeekListContainer.let { container ->
+        with(LayoutInflater.from(container.context)) {
+            DAY_OF_WEEK_LABELS.mapIndexed { dayIndex, labelStringRes ->
+                inflate(R.layout.item_occupancy_day_of_week, container, false).let { dayView ->
+                    container.addView(dayView)
+                    dayView.textView.apply {
+                        setText(labelStringRes)
+                        tag = dayIndex
+                        setOnClickListener(onDayViewClickListener)
+                    }
+                }
+            }
         }
     }
 
@@ -97,25 +130,23 @@ class OccupancyViewBinder(
         contentView.measure(View.MeasureSpec.UNSPECIFIED, View.MeasureSpec.UNSPECIFIED)
     }
 
+    private fun TextView.updateDayView(dayIndex: Int) {
+        if (dayIndex == today) {
+            setText(R.string.today)
+            setColorResource(R.color.occupancy_today)
+        } else {
+            setText(DAY_OF_WEEK_LABELS[dayIndex])
+            setColorResource(
+                if (tag == selectedDay) R.color.graph_neutral_color else R.color.anthracite
+            )
+        }
+    }
 
-    private val dayOfWeekSpinner = view.dayOfWeekSpinner.also { textView ->
-//        adapter = dayOfWeekAdapter
-//
-//        onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
-//            override fun onItemSelected(
-//                parent: AdapterView<*>?,
-//                view: View?,
-//                position: Int,
-//                id: Long
-//            ) {
-//                selectedDay = position
-//                dayOfWeekAdapter.selectedItem = position
-//            }
-//
-//            override fun onNothingSelected(parent: AdapterView<*>?) {
-//
-//            }
-//        }
+    private fun TextView.setColorResource(@ColorRes colorRes: Int) {
+        setTextColor(context.resources.getColor(colorRes))
+    }
+
+    private val selectedDayView = view.dayOfWeekSpinner.also { textView ->
         textView?.setOnClickListener {
             dayOfWeekPopup.showAsDropDown(
                 textView,
@@ -176,20 +207,21 @@ class OccupancyViewBinder(
         dailyOccupancyAdapter.occupancy = this.occupancy
 
         occupancy?.mostRecent?.dayOfWeek?.also {
-            dayOfWeekAdapter.today = it
+            today = it
             selectedDay = it
         }
     }
 
     companion object {
-        val DAY_OF_WEEK_VIEW_IDS = listOf(
-            R.id.monday,
-            R.id.tuesday,
-            R.id.wednesday,
-            R.id.thursday,
-            R.id.friday,
-            R.id.saturday,
-            R.id.sunday
+
+        val DAY_OF_WEEK_LABELS = listOf(
+            R.string.mondays,
+            R.string.tuesdays,
+            R.string.wednesdays,
+            R.string.thursdays,
+            R.string.fridays,
+            R.string.saturdays,
+            R.string.sundays
         )
     }
 }

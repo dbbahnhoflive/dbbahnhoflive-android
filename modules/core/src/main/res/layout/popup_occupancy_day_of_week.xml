@@ -7,7 +7,7 @@
     tools:background="@drawable/shape_background_occupancy_day_of_week_popup">
 
     <TextView
-        android:id="@+id/today"
+        android:id="@+id/currentlySelectedDay"
         android:text="@string/today"
         android:drawableEnd="@drawable/app_occupancy_arrow_down"
         android:textColor="@color/occupancy_today"
@@ -35,67 +35,10 @@
             android:layout_height="wrap_content">
 
             <LinearLayout
+                android:id="@+id/dayOfWeekListContainer"
                 android:orientation="vertical"
                 android:layout_width="wrap_content"
-                android:layout_height="wrap_content">
-
-                <TextView
-                    android:id="@+id/monday"
-                    android:text="@string/mondays"
-                    style="@style/App.TextAppearance.OccupancyDayOfWeek"
-
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content" />
-
-                <TextView
-                    android:id="@+id/tuesday"
-                    android:text="@string/tuesdys"
-                    style="@style/App.TextAppearance.OccupancyDayOfWeek"
-
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content" />
-
-                <TextView
-                    android:id="@+id/wednesday"
-                    android:text="@string/wednesdays"
-                    style="@style/App.TextAppearance.OccupancyDayOfWeek"
-
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content" />
-
-                <TextView
-                    android:id="@+id/thursday"
-                    android:text="@string/thursdays"
-                    style="@style/App.TextAppearance.OccupancyDayOfWeek"
-
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content" />
-
-                <TextView
-                    android:id="@+id/friday"
-                    android:text="@string/fridays"
-                    style="@style/App.TextAppearance.OccupancyDayOfWeek"
-
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content" />
-
-                <TextView
-                    android:id="@+id/saturday"
-                    android:text="@string/saturdays"
-                    style="@style/App.TextAppearance.OccupancyDayOfWeek"
-
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content" />
-
-                <TextView
-                    android:id="@+id/sunday"
-                    android:text="@string/sundays"
-                    style="@style/App.TextAppearance.OccupancyDayOfWeek"
-
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content" />
-
-            </LinearLayout>
+                android:layout_height="wrap_content" />
 
             <ImageView
                 android:src="@drawable/app_occupancy_arrow_down"
