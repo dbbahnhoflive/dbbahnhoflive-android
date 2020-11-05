@@ -48,22 +48,26 @@ class OccupancyViewBinder(
             .timeScale.paint.measureText("22:00") * 1.5f
     )
 
-    private var selectedDay = 0
+    private var selectedDay: Int? = null
         set(value) {
-            val oldValue = field
+            if (field != value) {
+                val oldValue = field
 
-            field = value
+                field = value
 
-            selectedDayView.updateDayView(selectedDay)
-            selectedDayPopupView.updateDayView(selectedDay)
-            popupDayViews[field].updateDayView(field)
+                field?.also { newValue ->
+                    selectedDayView.updateDayView(newValue)
+                    selectedDayPopupView.updateDayView(newValue)
+                    popupDayViews[newValue].updateDayView(newValue)
 
-            if (oldValue != field) {
-                popupDayViews[oldValue].updateDayView(oldValue)
-            }
+                    if (oldValue != null) {
+                        popupDayViews[oldValue].updateDayView(oldValue)
+                    }
 
-            if (pager.currentItem != field) {
-                pager.currentItem = field
+                    if (pager.currentItem != newValue) {
+                        pager.setCurrentItem(newValue, oldValue != null)
+                    }
+                }
             }
         }
 
@@ -74,9 +78,12 @@ class OccupancyViewBinder(
 
                 field = value
 
-                field?.let {
+                selectedDay?.also { selectedDay ->
                     selectedDayView.updateDayView(selectedDay)
                     selectedDayPopupView.updateDayView(selectedDay)
+                }
+
+                field?.let {
                     popupDayViews[it].updateDayView(it)
                 }
 
