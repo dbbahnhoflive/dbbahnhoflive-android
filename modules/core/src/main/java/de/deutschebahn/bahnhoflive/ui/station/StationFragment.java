@@ -615,8 +615,6 @@ public class StationFragment extends Fragment implements
     public void onRefresh() {
         stationViewModel.refresh();
         stationViewModel.getStationResource().refresh();
-        dbTimetableResource.refresh();
-        shopsResource.refresh();
     }
 
     @Override
