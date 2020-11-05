@@ -6,7 +6,6 @@
 
 package de.deutschebahn.bahnhoflive.ui.station
 
-import android.text.TextUtils
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
@@ -21,13 +20,7 @@ import kotlinx.android.synthetic.main.item_news.view.*
 class NewsViewHolder(parent: ViewGroup, itemClickListener: ItemClickListener<News?>? = null) : ViewHolder<News>(parent, R.layout.item_news) {
 
     val newsHeadline: TextView? = itemView.newsHeadline
-    val newsCopy: TextView? = itemView.newsCopy?.apply {
-        addOnLayoutChangeListener { v, left, top, right, bottom, oldLeft, oldTop, oldRight, oldBottom ->
-            maxLines = (bottom - top) / lineHeight
-            ellipsize = TextUtils.TruncateAt.START
-            ellipsize = TextUtils.TruncateAt.END
-        }
-    }
+    val newsCopy: TextView? = itemView.newsCopy
     val linkButton: View? = itemView.btnLink
     val iconView: ImageView? = itemView.icon
 

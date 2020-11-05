@@ -96,10 +96,15 @@
             android:contentDescription="@null" />
 
         <TextView
-            android:layout_margin="@dimen/default_space"
+            android:layout_marginTop="@dimen/default_space"
+            android:layout_marginBottom="@dimen/default_space_half"
+            android:layout_marginStart="@dimen/default_space"
+            android:layout_marginEnd="@dimen/default_space"
+            app:layout_constraintVertical_chainStyle="packed"
             android:id="@+id/newsHeadline"
             tools:text="@tools:sample/lorem/random"
             app:layout_constraintTop_toBottomOf="@id/divider"
+            app:layout_constraintBottom_toTopOf="@+id/newsCopy"
             android:lineSpacingMultiplier="1.2"
             android:textSize="@dimen/textsize_h3"
             android:ellipsize="end"
@@ -108,6 +113,7 @@
             android:paddingEnd="@dimen/default_space_double"
             app:layout_constraintStart_toEndOf="@+id/icon"
             app:layout_constraintEnd_toEndOf="parent"
+            android:gravity="bottom"
             android:layout_width="0dp"
             android:layout_height="wrap_content" />
 
@@ -127,16 +133,20 @@
             app:layout_constraintEnd_toEndOf="parent" />
 
         <TextView
-            android:layout_margin="@dimen/default_space"
+            android:layout_marginTop="@dimen/default_space_half"
+            android:layout_marginBottom="@dimen/default_space"
+            android:layout_marginStart="@dimen/default_space"
+            android:layout_marginEnd="@dimen/default_space"
             app:layout_constraintTop_toBottomOf="@+id/newsHeadline"
             app:layout_constraintBottom_toBottomOf="parent"
             android:paddingEnd="@dimen/default_space_double"
+            android:maxLines="3"
             android:textSize="@dimen/textsize_h3"
             android:lineSpacingMultiplier="1.2"
             android:id="@+id/newsCopy"
             tools:text="@tools:sample/lorem/random"
             android:ellipsize="end"
-            android:maxLines="2"
+            app:layout_constraintHeight_default="wrap"
             android:importantForAccessibility="no"
             app:layout_constraintStart_toEndOf="@+id/icon"
             app:layout_constraintEnd_toStartOf="@+id/btnLink"
