@@ -26,10 +26,12 @@ open class TimetableItemOverviewViewHolder<T>(view: View) : ViewHolder<T>(view) 
         delayView?.apply {
             text = actualTime
             contentDescription = context.getString(R.string.sr_template_estimated, actualTime)
-            setTextColor(if (delayInMinutes in 0..4)
-                getColor(R.color.green)
-            else
-                getColor(R.color.red))
+            setTextColor(
+                if (delayInMinutes < 5)
+                    getColor(R.color.green)
+                else
+                    getColor(R.color.red)
+            )
         }
     }
 
