@@ -19,6 +19,7 @@ android {
         release {
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+            multiDexKeepProguard file('multidex-config.pro')
         }
         debug {
             minifyEnabled false
@@ -66,5 +67,6 @@ dependencies {
     api 'io.reactivex.rxjava2:rxandroid:2.1.1'
     api 'io.reactivex.rxjava2:rxkotlin:2.3.0'
 
+    implementation 'io.sentry:sentry-android:3.1.0'
 }
 

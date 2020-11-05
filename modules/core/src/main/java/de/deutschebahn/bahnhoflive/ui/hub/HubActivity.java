@@ -25,6 +25,7 @@ import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
 
 import de.deutschebahn.bahnhoflive.R;
+import de.deutschebahn.bahnhoflive.analytics.IssueTracker;
 import de.deutschebahn.bahnhoflive.analytics.TrackingManager;
 import de.deutschebahn.bahnhoflive.permission.Permission;
 import de.deutschebahn.bahnhoflive.ui.tutorial.TutorialFragment;
@@ -60,6 +61,8 @@ public class HubActivity extends AppCompatActivity implements TutorialFragment.H
 
     @Override
     protected void onResume() {
+        IssueTracker.Companion.getInstance().setContext("station", null);
+
         super.onResume();
 
         trackingManager.collectLifecycleData(this);

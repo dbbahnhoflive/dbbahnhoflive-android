@@ -25,7 +25,10 @@ import de.deutschebahn.bahnhoflive.ui.station.parking.ParkingListFragment
 import de.deutschebahn.bahnhoflive.util.Collections
 import de.deutschebahn.bahnhoflive.view.CardButton
 
-class InfoCategorySelectionFragment : CategorySelectionFragment(R.string.title_stationinfo_categories, TrackingManager.Source.INFO) {
+class InfoCategorySelectionFragment : CategorySelectionFragment(
+    R.string.title_stationinfo_categories,
+    TrackingManager.Source.INFO
+) {
 
     val stationViewModel by activityViewModels<StationViewModel>()
 
@@ -95,15 +98,29 @@ class InfoCategorySelectionFragment : CategorySelectionFragment(R.string.title_s
 
     private fun addInfoAndServices(infoAndServicesList: List<ServiceContent>?) =
         infoAndServicesList?.takeUnless { it.isEmpty() }?.let {
-            InfoCategory(getText(R.string.stationinfo_infos_and_services), R.drawable.app_info, TrackingManager.Category.INFOS_UND_SERVICES,
+            InfoCategory(getText(R.string.stationinfo_infos_and_services),
+                R.drawable.app_info,
+                TrackingManager.Category.INFOS_UND_SERVICES,
                 Category.CategorySelectionListener { category ->
                     trackCategoryTap(category)
-                    startStationInfoDetailsFragment(it, category, R.string.stationinfo_infos_and_services)
+                    startStationInfoDetailsFragment(
+                        it,
+                        category,
+                        R.string.stationinfo_infos_and_services
+                    )
                 })
         }
 
-    private fun startStationInfoDetailsFragment(serviceContents: List<ServiceContent>, category: Category, titleResource: Int) {
-        val stationInfoDetailsFragment = StationInfoDetailsFragment.create(ArrayList(serviceContents), getText(titleResource), category.trackingTag)
+    private fun startStationInfoDetailsFragment(
+        serviceContents: List<ServiceContent>,
+        category: Category,
+        titleResource: Int
+    ) {
+        val stationInfoDetailsFragment = StationInfoDetailsFragment.create(
+            ArrayList(serviceContents), getText(
+                titleResource
+            ), category.trackingTag
+        )
         startFragment(stationInfoDetailsFragment)
     }
 
@@ -119,14 +136,19 @@ class InfoCategorySelectionFragment : CategorySelectionFragment(R.string.title_s
 
     private fun addParkings() =
         parkingsResource.data.value?.takeUnless { it.isEmpty() }?.let {
-            InfoCategory(getText(R.string.stationinfo_parkings), R.drawable.bahnhofsausstattung_parkplatz, TrackingManager.Category.PARKPLAETZE,
+            InfoCategory(getText(R.string.stationinfo_parkings),
+                R.drawable.bahnhofsausstattung_parkplatz,
+                TrackingManager.Category.PARKPLAETZE,
                 Category.CategorySelectionListener { category ->
                     trackCategoryTap(category)
                     startFragment(ParkingListFragment.create())
                 })
         }
 
-    private fun addAccessibility(station: DetailedStopPlace?, staticInfoCollection: StaticInfoCollection): InfoCategory? {
+    private fun addAccessibility(
+        station: DetailedStopPlace?,
+        staticInfoCollection: StaticInfoCollection
+    ): InfoCategory? {
         if (station == null || !station.hasSteplessAccess) {
             return null
         }
@@ -135,9 +157,16 @@ class InfoCategorySelectionFragment : CategorySelectionFragment(R.string.title_s
             ?: return null
 
         val steplessAccessInfo = station.steplessAccessInfo
-        val serviceContent = ServiceContent(staticInfo, if (steplessAccessInfo == null) null else "Zusatzinfomation: $steplessAccessInfo")
-        return InfoCategory(serviceContent.title, R.drawable.app_zugang_wege,
-            TrackingManager.Category.ZUGANG_WEGE, ServiceContentCategorySelectionListener(serviceContent))
+        val serviceContent = ServiceContent(
+            staticInfo,
+            if (steplessAccessInfo == null) null else "Zusatzinfomation: $steplessAccessInfo"
+        )
+        return InfoCategory(
+            serviceContent.title, R.drawable.app_zugang_wege,
+            TrackingManager.Category.ZUGANG_WEGE, ServiceContentCategorySelectionListener(
+                serviceContent
+            )
+        )
     }
 
     private fun addWifi(station: DetailedStopPlace?, staticInfoCollection: StaticInfoCollection): InfoCategory? {
@@ -147,14 +176,25 @@ class InfoCategorySelectionFragment : CategorySelectionFragment(R.string.title_s
 
         val staticInfo = staticInfoCollection.typedStationInfos[ServiceContent.Type.WIFI]
         return if (staticInfo != null) {
-            InfoCategory(staticInfo.title, R.drawable.rimap_wlan_grau,
-                TrackingManager.Category.WLAN, ServiceContentCategorySelectionListener(ServiceContent(staticInfo)))
+            InfoCategory(
+                staticInfo.title, R.drawable.rimap_wlan_grau,
+                TrackingManager.Category.WLAN, ServiceContentCategorySelectionListener(
+                    ServiceContent(
+                        staticInfo
+                    )
+                )
+            )
         } else {
             null
         }
     }
 
-    private class InfoCategory(private val label: CharSequence, private val icon: Int, private val trackingTag: String, private val categorySelectionListener: Category.CategorySelectionListener) : Category {
+    private class InfoCategory(
+        private val label: CharSequence,
+        private val icon: Int,
+        private val trackingTag: String,
+        private val categorySelectionListener: Category.CategorySelectionListener
+    ) : Category {
 
         override fun getSelectionListener(): Category.CategorySelectionListener {
             return categorySelectionListener
@@ -256,7 +296,13 @@ class InfoCategorySelectionFragment : CategorySelectionFragment(R.string.title_s
 
     private fun startServiceContentFragment(staticInfo: StaticInfo, category: Category): Int {
         val serviceContent = ServiceContent(staticInfo)
-        return startFragment(ServiceContentFragment.create(serviceContent.title, serviceContent, category.trackingTag))
+        return startFragment(
+            ServiceContentFragment.create(
+                serviceContent.title,
+                serviceContent,
+                category.trackingTag
+            )
+        )
     }
 
     fun startFragment(fragment: Fragment): Int {
@@ -268,7 +314,13 @@ class InfoCategorySelectionFragment : CategorySelectionFragment(R.string.title_s
         override fun onCategorySelected(category: Category) {
             trackCategoryTap(category)
 
-            startFragment(ServiceContentFragment.create(serviceContent.title, serviceContent, category.trackingTag))
+            startFragment(
+                ServiceContentFragment.create(
+                    serviceContent.title,
+                    serviceContent,
+                    category.trackingTag
+                )
+            )
         }
     }
 }

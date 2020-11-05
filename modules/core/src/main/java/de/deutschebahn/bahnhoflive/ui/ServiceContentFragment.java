@@ -290,7 +290,7 @@ public class ServiceContentFragment extends Fragment {
                                         try {
                                             v1.getContext().startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse(href)));
                                         } catch (Exception e) {
-                                            BaseApplication.get().getIssueTracker().dispatchThrowable(e);
+                                            BaseApplication.get().getIssueTracker().dispatchThrowable(e, null);
                                         }
                                     }
                                 });

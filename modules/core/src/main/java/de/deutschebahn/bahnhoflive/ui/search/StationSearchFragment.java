@@ -27,6 +27,8 @@ import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.DividerItemDecoration;
 import androidx.recyclerview.widget.RecyclerView;
 
+import java.util.HashMap;
+
 import de.deutschebahn.bahnhoflive.BaseApplication;
 import de.deutschebahn.bahnhoflive.R;
 import de.deutschebahn.bahnhoflive.analytics.IssueTracker;
@@ -44,6 +46,7 @@ public class StationSearchFragment extends Fragment {
 
     public static final int AUTO_SEARCH_DELAY = 750;
     public static final String TAG = StationSearchFragment.class.getSimpleName();
+    public static final String ISSUE_CONTEXT_STATION_SEARCH = "station search";
     private StationSearchAdapter adapter;
     private EditText inputView;
 
@@ -181,8 +184,7 @@ public class StationSearchFragment extends Fragment {
                 final String query = searchResource.getQuery();
 
                 final IssueTracker issueTracker = getIssueTracker();
-                issueTracker.log("Failed station query: " + query);
-                issueTracker.dispatchThrowable(new StationSearchException(reason.getMessage(), reason));
+                issueTracker.dispatchThrowable(new StationSearchException(reason.getMessage(), reason), "Failed station query: " + query);
             }
         });
 
@@ -328,11 +330,18 @@ public class StationSearchFragment extends Fragment {
         final String concatenatedQueries = queryRecorder.getConcatenatedQueries();
         if (!concatenatedQueries.isEmpty()) {
             final IssueTracker issueTracker = getIssueTracker();
-            getIssueTracker().log("Unsuccessful queries: " + queryRecorder.getConcatenatedQueries());
+
+            final HashMap<String, String> values = new HashMap<>();
+            values.put("queries", concatenatedQueries);
+            issueTracker.setContext(ISSUE_CONTEXT_STATION_SEARCH, values);
+
             issueTracker.dispatchThrowable(new StationSearchException(
                     "User left search after unsuccessful queries",
                     null
-            ));
+            ), "Unsuccessful queries: " + concatenatedQueries);
+
+            issueTracker.setContext(ISSUE_CONTEXT_STATION_SEARCH, null);
+
             queryRecorder.clear();
         }
     }

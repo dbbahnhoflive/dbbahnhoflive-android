@@ -8,6 +8,7 @@ package de.deutschebahn.bahnhoflive.analytics
 
 import android.util.Log
 import de.deutschebahn.bahnhoflive.BaseApplication
+import de.deutschebahn.bahnhoflive.repository.Station
 
 open class IssueTracker(application: BaseApplication) {
 
@@ -27,12 +28,24 @@ open class IssueTracker(application: BaseApplication) {
         Log.d(TAG, msg)
     }
 
-    open fun dispatchThrowable(throwable: Throwable) {
+    open fun dispatchThrowable(throwable: Throwable, hint: String? = null) {
         Log.i(TAG, "Catched", throwable)
     }
 
-    open fun setCondition(key: String, value: String?) {
-        log("Condition '$key' is now '$value'.")
+    open fun setTag(key: String, value: String?) {
+        log("Tag '$key' is now '$value'.")
+    }
+
+    open fun setContext(name: String, values: Map<String, out Any>?) {
+        log("Context $name")
+        values?.forEach { entry ->
+            setTag("$name.${entry.key}", entry.value.toString())
+        }
     }
 
 }
+
+fun Station.toContextMap() = mapOf(
+    "id" to id,
+    "name" to title
+)
