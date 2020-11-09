@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+
+<LinearLayout xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:orientation="horizontal"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    tools:showIn="@layout/item_news">
+
+    <TextView
+        android:layout_margin="@dimen/default_space"
+        android:text="@string/newsHeadlineDecoration"
+        android:textStyle="bold"
+        android:textSize="@dimen/textsize_h2"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toStartOf="@+id/title"
+        android:textColor="@color/red"
+        android:contentDescription="@null"
+        android:gravity="end"
+        android:maxLines="1"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content" />
+
+    <TextView
+        android:layout_margin="@dimen/default_space"
+        android:text="@string/newsHeadline"
+        android:textStyle="bold"
+        android:textSize="@dimen/textsize_h2"
+        android:contentDescription="@string/sr_news_title"
+        android:gravity="center"
+        android:maxLines="1"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content" />
+
+</LinearLayout>
+
+        
