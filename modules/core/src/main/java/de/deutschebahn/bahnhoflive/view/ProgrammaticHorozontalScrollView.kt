@@ -7,26 +7,36 @@ import android.view.MotionEvent
 import android.widget.HorizontalScrollView
 import androidx.annotation.RequiresApi
 
-@RequiresApi(Build.VERSION_CODES.LOLLIPOP)
-class ProgrammaticHorozontalScrollView(
-    context: Context,
-    attr: AttributeSet?,
-    defSytelAttr: Int,
-    defStyleRes: Int
-) : HorizontalScrollView(
-    context,
-    attr,
-    defSytelAttr,
-    defStyleRes
-) {
+class ProgrammaticHorozontalScrollView : HorizontalScrollView {
+
+    @RequiresApi(Build.VERSION_CODES.LOLLIPOP)
+    constructor(
+        context: Context,
+        attr: AttributeSet?,
+        defSytelAttr: Int,
+        defStyleRes: Int
+    ) : super(context, attr, defSytelAttr, defStyleRes)
 
     constructor(context: Context, attrs: AttributeSet?, defStyleAttr: Int) :
-            this(context, attrs, defStyleAttr, 0)
+            super(context, attrs, defStyleAttr)
 
-    constructor(context: Context, attrs: AttributeSet?) : this(context, attrs, 0)
+    constructor(context: Context, attrs: AttributeSet?) : super(context, attrs)
 
-    constructor(context: Context) : this(context, null)
+    constructor(context: Context) : super(context)
+
+    init {
+        measureAllChildren = true
+    }
 
     override fun onGenericMotionEvent(event: MotionEvent?): Boolean = false
 
+    override fun onInterceptTouchEvent(ev: MotionEvent?): Boolean = false
+
+    override fun onTouchEvent(ev: MotionEvent?): Boolean = false
+
+    override fun onAttachedToWindow() {
+        super.onAttachedToWindow()
+
+        forceLayout()
+    }
 }

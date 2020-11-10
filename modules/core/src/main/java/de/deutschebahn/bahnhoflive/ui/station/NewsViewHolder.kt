@@ -9,18 +9,17 @@ package de.deutschebahn.bahnhoflive.ui.station
 import android.animation.ObjectAnimator
 import android.animation.ValueAnimator
 import android.text.TextUtils
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.view.animation.LinearInterpolator
 import android.widget.ImageView
 import android.widget.TextView
+import androidx.core.view.get
 import de.deutschebahn.bahnhoflive.R
 import de.deutschebahn.bahnhoflive.backend.db.newsapi.model.News
 import de.deutschebahn.bahnhoflive.ui.ViewHolder
 import de.deutschebahn.bahnhoflive.ui.station.news.groupIcon
-import de.deutschebahn.bahnhoflive.util.TAG
 import de.deutschebahn.bahnhoflive.view.ItemClickListener
 import kotlinx.android.synthetic.main.item_news.view.*
 
@@ -44,7 +43,9 @@ class NewsViewHolder(parent: ViewGroup, itemClickListener: ItemClickListener<New
             }
         }
 
-        itemView.animatedHeadlineContainer.also { scroller ->
+        itemView.animatedHeadlineScroller.also { scroller ->
+            val layoutInflater = LayoutInflater.from(itemView.context)
+
             val container = scroller.animatedHeadlineContainer
 
             var width = 0
@@ -57,40 +58,54 @@ class NewsViewHolder(parent: ViewGroup, itemClickListener: ItemClickListener<New
                 animator.interpolator = LinearInterpolator()
             }
 
-            scroller.addOnLayoutChangeListener { v, left, top, right, bottom, oldLeft, oldTop, oldRight, oldBottom ->
-                val newWidth = right - left
-                if (newWidth != width) {
-                    width = newWidth
+            if (container.childCount > 0) {
+                container[0].addOnLayoutChangeListener { v, left, top, right, bottom, oldLeft, oldTop, oldRight, oldBottom ->
+                    val newWidth = right - left
+                    if (newWidth != width) {
+                        width = newWidth
 
-                    container.removeAllViews()
-
-                    val layoutInflater = LayoutInflater.from(itemView.context)
-                    val childView =
-                        layoutInflater.inflate(R.layout.item_news_headline, container, false)
-                    container.addView(childView)
-                    val measureSpec =
-                        View.MeasureSpec.makeMeasureSpec(0, View.MeasureSpec.UNSPECIFIED)
-                    childView.measure(measureSpec, measureSpec)
-                    val childWidth = childView.measuredWidth
-
-                    if (childWidth > 0) {
-                        val count = newWidth / childWidth + 1
-
-                        Log.i(TAG, "Adding $count views")
-
-                        for (i in 1..count) {
-                            layoutInflater.inflate(R.layout.item_news_headline, container, true)
+                        if (width > 0) {
+                            animator.setIntValues(0, width)
+                            animator.start()
+                        } else {
+                            animator.pause()
                         }
-
-                        animator.setIntValues(0, childWidth)
-                        animator.start()
-                    } else {
-                        animator.pause()
                     }
-
-                    container.requestLayout()
                 }
             }
+
+
+//            scroller.addOnLayoutChangeListener { v, left, top, right, bottom, oldLeft, oldTop, oldRight, oldBottom ->
+//                val newWidth = right - left
+//                if (newWidth != width) {
+//                    width = newWidth
+//
+//                    container.removeAllViews()
+//
+//                    val childView =
+//                        layoutInflater.inflate(R.layout.item_news_headline, container, false)
+//                    val measureSpec =
+//                        View.MeasureSpec.makeMeasureSpec(0, View.MeasureSpec.UNSPECIFIED)
+//                    childView.measure(measureSpec, measureSpec)
+//                    val childWidth = childView.measuredWidth
+//                    container.addView(childView)
+//
+//                    if (childWidth > 0) {
+//                        val count = newWidth / childWidth + 1
+//
+//                        Log.i(TAG, "Adding $count views")
+//
+//                        for (i in 1..count) {
+//                            layoutInflater.inflate(R.layout.item_news_headline, container, true)
+//                        }
+//
+////                        animator.setIntValues(0, childWidth)
+////                        animator.start()
+//                    } else {
+////                        animator.pause()
+//                    }
+//                }
+//            }
         }
     }
 

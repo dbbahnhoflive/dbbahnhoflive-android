@@ -20,25 +20,31 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
 
-        <!--        <de.deutschebahn.bahnhoflive.view.ProgrammaticHorozontalScrollView-->
-        <!--            android:id="@+id/animatedHeadlineScroller"-->
-        <!--            android:layout_width="match_parent"-->
-        <!--            android:layout_height="wrap_content"-->
-        <!--            android:scrollbars="none"-->
-        <!--            >-->
-
-        <LinearLayout
-            android:orientation="horizontal"
-            android:id="@+id/animatedHeadlineContainer"
-            android:layout_width="wrap_content"
+        <de.deutschebahn.bahnhoflive.view.ProgrammaticHorozontalScrollView
+            android:id="@+id/animatedHeadlineScroller"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:clipChildren="false">
+            android:scrollbars="none">
 
-            <include layout="@layout/item_news_headline" />
+            <LinearLayout
+                android:orientation="horizontal"
+                android:id="@+id/animatedHeadlineContainer"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content">
 
-            <include layout="@layout/item_news_headline" />
-        </LinearLayout>
-        <!--        </de.deutschebahn.bahnhoflive.view.ProgrammaticHorozontalScrollView>-->
+                <include layout="@layout/item_news_headline" />
+
+                <include layout="@layout/item_news_headline" />
+
+                <include layout="@layout/item_news_headline" />
+
+                <include layout="@layout/item_news_headline" />
+
+                <include layout="@layout/item_news_headline" />
+
+                <include layout="@layout/item_news_headline" />
+            </LinearLayout>
+        </de.deutschebahn.bahnhoflive.view.ProgrammaticHorozontalScrollView>
 
         <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"
