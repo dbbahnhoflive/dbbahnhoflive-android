@@ -12,5 +12,5 @@
     <corners
         android:topLeftRadius="1024dp"
         android:topRightRadius="1024dp" />
-    <solid android:color="#00cdeb" />
+    <solid android:color="@color/graph_current_bar" />
 </shape>

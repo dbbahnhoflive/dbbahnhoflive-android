@@ -10,7 +10,7 @@
             <corners android:radius="@dimen/round_button_half_size" />
             <solid android:color="@color/white" />
             <stroke
-                android:color="@color/graph_neutral_color"
+                android:color="@color/graph_average_bar"
                 android:width="2dp" />
         </shape>
     </item>

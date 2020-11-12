@@ -12,13 +12,13 @@
     <View
         android:layout_width="1dp"
         android:layout_height="3dp"
-        android:background="@color/graph_neutral_color" />
+        android:background="@color/graph_scale" />
 
     <View
         android:id="@+id/scaleLine"
         android:layout_width="1dp"
         android:layout_height="3dp"
-        android:background="@color/graph_neutral_color" />
+        android:background="@color/graph_scale" />
 
     <include layout="@layout/include_occupancy_time_label" />
 </LinearLayout>

@@ -19,7 +19,7 @@
         android:layout_height="wrap_content">
 
         <View
-            android:background="@color/graph_neutral_color"
+            android:background="@color/graph_scale"
             app:layout_constraintTop_toTopOf="parent"
             android:layout_marginTop="2dp"
             android:id="@+id/upperScaleLine"
@@ -27,7 +27,7 @@
             android:layout_height="1dp" />
 
         <View
-            android:background="@color/graph_neutral_color"
+            android:background="@color/graph_scale"
             app:layout_constraintTop_toBottomOf="@+id/upperScaleLine"
             app:layout_constraintBottom_toTopOf="@+id/lowerScaleLine"
             android:id="@+id/middleScaleLine"
@@ -35,7 +35,7 @@
             android:layout_height="1dp" />
 
         <View
-            android:background="@color/graph_neutral_color"
+            android:background="@color/graph_scale"
             app:layout_constraintBottom_toBottomOf="@+id/occupancyGraphSlot00"
             android:id="@+id/lowerScaleLine"
             android:layout_width="match_parent"

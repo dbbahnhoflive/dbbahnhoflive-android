@@ -144,7 +144,7 @@ class OccupancyViewBinder(
         } else {
             setText(DAY_OF_WEEK_LABELS[dayIndex])
             setColorResource(
-                if (tag == selectedDay) R.color.graph_neutral_color else R.color.anthracite
+                if (tag == selectedDay) R.color.graph_scale else R.color.anthracite
             )
         }
     }
