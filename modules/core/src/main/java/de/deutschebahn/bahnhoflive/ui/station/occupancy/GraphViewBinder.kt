@@ -10,8 +10,8 @@ import android.view.View
 import de.deutschebahn.bahnhoflive.repository.occupancy.model.DailyOccupancy
 import de.deutschebahn.bahnhoflive.repository.occupancy.model.HourlyOccupancy
 import kotlinx.android.synthetic.main.include_graph.view.*
-import kotlinx.android.synthetic.main.include_graph_bar.view.*
 import kotlinx.android.synthetic.main.include_graph_bar_highlight.view.*
+import kotlinx.android.synthetic.main.include_graph_slot.view.*
 import kotlinx.android.synthetic.main.include_occupancy_graph_inter_slot.view.*
 import kotlinx.android.synthetic.main.include_occupancy_time_label.view.*
 import kotlin.math.ceil
@@ -124,10 +124,23 @@ class GraphViewBinder(
 
                 view.graphBarHighlighted.run {
                     if (hourlyOccupancy == currentOccupancy) {
-                        visibility = View.VISIBLE
                         offset(this, hourlyOccupancy.current)
+                        visibility = View.VISIBLE
+                        hourlyOccupancy.average != null && hourlyOccupancy.current != null && hourlyOccupancy.average <= hourlyOccupancy.current
                     } else {
+                        view.graphBarOverlay.visibility = View.GONE
                         visibility = View.GONE
+                        false
+                    }
+                }.also { showOverlayedAverage ->
+                    with(view.graphBarOverlay) {
+                        visibility = if (showOverlayedAverage) {
+                            offset(this, hourlyOccupancy.average)
+                            background?.alpha = 51 // 20%
+                            View.VISIBLE
+                        } else {
+                            View.GONE
+                        }
                     }
                 }
             }

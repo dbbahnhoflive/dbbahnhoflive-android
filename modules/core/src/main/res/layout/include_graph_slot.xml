@@ -23,9 +23,16 @@
             android:layout_width="match_parent"
             android:layout_height="64dp">
 
-            <include layout="@layout/include_graph_bar" />
+            <include
+                layout="@layout/include_graph_bar"
+                android:id="@+id/graphBar" />
 
             <include layout="@layout/include_graph_bar_highlight" />
+
+            <include
+                layout="@layout/include_graph_bar"
+                android:visibility="gone"
+                android:id="@+id/graphBarOverlay" />
         </FrameLayout>
     </FrameLayout>
 

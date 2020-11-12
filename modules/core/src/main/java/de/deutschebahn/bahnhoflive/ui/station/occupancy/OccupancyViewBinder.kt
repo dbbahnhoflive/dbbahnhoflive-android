@@ -25,7 +25,7 @@ import kotlinx.android.synthetic.main.popup_occupancy_day_of_week.view.*
 
 class OccupancyViewBinder(
     parent: View,
-    onShowDetailsListener: () -> Unit
+    onShowDetailsListener: View.OnClickListener
 ) {
 
     enum class Level(@StringRes val stringRes: Int) {
@@ -35,9 +35,8 @@ class OccupancyViewBinder(
     }
 
     private val view = parent.occupancyView.apply {
-        occupancyInfoButton.setOnClickListener {
-            onShowDetailsListener()
-        }
+//        occupancyInfoButton.
+        setOnClickListener(onShowDetailsListener)
     }
 
     private val context get() = view.context
@@ -45,7 +44,8 @@ class OccupancyViewBinder(
     private val dailyOccupancyAdapter = DailyOccupancyAdapter(
         LayoutInflater.from(parent.context)
             .inflate(R.layout.include_occupancy_time_label, null)
-            .timeScale.paint.measureText("22:00") * 1.5f
+            .timeScale.paint.measureText("22:00") * 1.5f,
+        onShowDetailsListener
     )
 
     private var selectedDay: Int? = null
@@ -144,7 +144,7 @@ class OccupancyViewBinder(
         } else {
             setText(DAY_OF_WEEK_LABELS[dayIndex])
             setColorResource(
-                if (tag == selectedDay) R.color.graph_neutral_color else R.color.anthracite
+                if (tag == selectedDay) R.color.graph_scale else R.color.anthracite
             )
         }
     }

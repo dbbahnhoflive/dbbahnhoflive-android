@@ -1,10 +1,14 @@
 package de.deutschebahn.bahnhoflive.ui.station.occupancy
 
+import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import de.deutschebahn.bahnhoflive.repository.occupancy.model.Occupancy
 
-class DailyOccupancyAdapter(private val timeTextWidth: Float) :
+class DailyOccupancyAdapter(
+    private val timeTextWidth: Float,
+    val onItemClickListener: View.OnClickListener?
+) :
     RecyclerView.Adapter<DailyOccupancyViewHolder>() {
 
     var occupancy: Occupancy? = null
@@ -16,7 +20,7 @@ class DailyOccupancyAdapter(private val timeTextWidth: Float) :
     override fun onCreateViewHolder(
         parent: ViewGroup,
         viewType: Int
-    ) = DailyOccupancyViewHolder(parent, timeTextWidth)
+    ) = DailyOccupancyViewHolder(parent, timeTextWidth, onItemClickListener)
 
     override fun getItemCount() = occupancy?.dailyOccupancies?.size ?: 0
 
