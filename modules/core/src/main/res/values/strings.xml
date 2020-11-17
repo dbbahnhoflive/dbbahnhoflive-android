@@ -270,4 +270,7 @@
     <string name="occupancy_explanation_high">Vor Ort ist aktuell mit mehr Besuchern als gewöhnlich zu rechnen. In der Regel ist das Besucheraufkommen zu dieser Uhrzeit an diesem Wochentag geringer.</string>
     <string name="occupancy_advice_title">Hinweise</string>
     <string name="occupancy_advice_copy">Bitte beachten Sie: Diese Info-Grafik gibt Auskunft über das aktuelle Besucheraufkommen im Vergleich zum durchschnittlichen Besucheraufkommen dervergangen acht Wochen. Für diese Grafik werden Näherungswerte errechnet und keine absoluten Zahlen verwendet. Folglich sind Abweichungen zum tatsächlichen Besucheraufkommen vor Ort möglich. Diese Grafik gibt außerdem keine Auskunft hinsichtlich des Besucheraufkommens im Verhältnis zu den räumlichen Kapazitäten vor Ort. Alle Angaben sind ohne Gewähr.</string>
+    <string name="occupancy_additional_info_title">Weiterführende Informationen</string>
+    <string name="occupancy_additional_info_copy">Aktuelle Informationen und Service-Hinweise zum sicheren Aufenthalt am Bahnhof sowie ihrer Reise finden sie auf gemeinsamgehtdas.de.</string>
+    <string name="occupancy_external_link_button">gemeinsamgehtdas.de</string>
 </resources>
