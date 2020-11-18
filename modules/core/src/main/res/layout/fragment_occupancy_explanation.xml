@@ -48,7 +48,7 @@
                 android:lineSpacingMultiplier="1.2"
                 android:textStyle="bold"
                 android:layout_marginTop="40dp"
-                android:layout_marginBottom="30dp"
+                android:layout_marginBottom="@dimen/occupancy_headline_space"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content" />
 
@@ -57,13 +57,13 @@
                 android:lineSpacingMultiplier="1.2"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginBottom="50dp" />
+                android:layout_marginBottom="@dimen/occupancy_paragraph_space" />
 
             <TextView
                 android:text="@string/occupancy_level_average"
                 android:lineSpacingMultiplier="1.2"
                 android:textStyle="bold"
-                android:layout_marginBottom="30dp"
+                android:layout_marginBottom="@dimen/occupancy_headline_space"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content" />
 
@@ -72,13 +72,13 @@
                 android:lineSpacingMultiplier="1.2"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginBottom="50dp" />
+                android:layout_marginBottom="@dimen/occupancy_paragraph_space" />
 
             <TextView
                 android:text="@string/occupancy_level_high"
                 android:lineSpacingMultiplier="1.2"
                 android:textStyle="bold"
-                android:layout_marginBottom="30dp"
+                android:layout_marginBottom="@dimen/occupancy_headline_space"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content" />
 
@@ -87,13 +87,13 @@
                 android:lineSpacingMultiplier="1.2"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginBottom="50dp" />
+                android:layout_marginBottom="@dimen/occupancy_paragraph_space" />
 
             <TextView
                 android:text="@string/occupancy_advice_title"
                 android:lineSpacingMultiplier="1.2"
                 android:textStyle="bold"
-                android:layout_marginBottom="30dp"
+                android:layout_marginBottom="@dimen/occupancy_headline_space"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content" />
 
@@ -102,13 +102,13 @@
                 android:lineSpacingMultiplier="1.2"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginBottom="50dp" />
+                android:layout_marginBottom="@dimen/occupancy_paragraph_space" />
 
             <TextView
                 android:text="@string/occupancy_additional_info_title"
                 android:lineSpacingMultiplier="1.2"
                 android:textStyle="bold"
-                android:layout_marginBottom="30dp"
+                android:layout_marginBottom="@dimen/occupancy_headline_space"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content" />
 
@@ -117,7 +117,7 @@
                 android:lineSpacingMultiplier="1.2"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginBottom="50dp" />
+                android:layout_marginBottom="@dimen/occupancy_button_space" />
 
             <TextView
                 android:id="@+id/btnExternalLink"
