@@ -1,5 +1,7 @@
 package de.deutschebahn.bahnhoflive.ui.station.occupancy
 
+import android.content.Intent
+import android.net.Uri
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -20,6 +22,15 @@ class OccupancyExplanationFragment : FullBottomSheetDialogFragment() {
 
         view.btnClose?.setOnClickListener {
             dismiss()
+        }
+
+        view.btnExternalLink?.setOnClickListener {
+            it.context.startActivity(
+                Intent(
+                    Intent.ACTION_VIEW,
+                    Uri.parse("https://gemeinsamgehtdas.de")
+                )
+            )
         }
     }
 }

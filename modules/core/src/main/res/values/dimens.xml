@@ -115,4 +115,9 @@
 
     <dimen name="card_elevation">4dp</dimen>
     <dimen name="chatbot_service_image_height">104dp</dimen>
+
+    <dimen name="occupancy_headline_space">10dp</dimen>
+    <dimen name="occupancy_paragraph_space">30dp</dimen>
+    <dimen name="occupancy_button_space">20dp</dimen>
+
 </resources>
