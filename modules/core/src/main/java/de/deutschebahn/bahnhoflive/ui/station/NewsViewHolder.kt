@@ -46,7 +46,7 @@ class NewsViewHolder(parent: ViewGroup, itemClickListener: ItemClickListener<New
             val animator = ObjectAnimator().also { animator ->
                 animator.target = container
                 animator.setPropertyName("scrollX")
-                animator.duration = 4000
+                animator.duration = 6000
                 animator.repeatMode = ValueAnimator.RESTART
                 animator.repeatCount = ValueAnimator.INFINITE
                 animator.interpolator = LinearInterpolator()
