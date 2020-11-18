@@ -31,7 +31,7 @@ class StationDetailCardCoordinator(
     private val feedbackCard = containerView.grabStationDetailCard(R.id.feedback, R.string.card_button_label_feedback, R.drawable.app_dialog)
 
     private val featureRow = containerView.rowFeatures
-    private val overvlowRow = containerView.rowOverflow
+    private val overflowRow = containerView.rowOverflow
     private val staticRow = containerView.rowStatic
 
     private var hasLevels = false
@@ -67,9 +67,9 @@ class StationDetailCardCoordinator(
                     featuresCard?.addTo(featureRow)
 
                     if (shopsSummary.isAvailable) {
-                        shopsCard?.addTo(overvlowRow)
+                        shopsCard?.addTo(overflowRow)
                     }
-                    mapCard?.addTo(overvlowRow)
+                    mapCard?.addTo(overflowRow)
 
                     if (elevatorSummary.isAvailable) {
                         elevatorsCard?.addTo(staticRow)
@@ -81,8 +81,8 @@ class StationDetailCardCoordinator(
 
                     when {
                         shopsSummary.isAvailable -> if (elevatorSummary.isAvailable) {
-                            shopsCard?.addTo(overvlowRow)
-                            elevatorsCard?.addTo(overvlowRow)
+                            shopsCard?.addTo(overflowRow)
+                            elevatorsCard?.addTo(overflowRow)
                             divider.visibility = View.GONE
                         } else {
                             shopsCard?.addTo(staticRow)
@@ -93,6 +93,8 @@ class StationDetailCardCoordinator(
                     }
                 }
             }
+
+            overflowRow.visibility = if (overflowRow.childCount > 0) View.VISIBLE else View.GONE
 
             settingsCard?.addTo(staticRow)
             feedbackCard?.addTo(staticRow)

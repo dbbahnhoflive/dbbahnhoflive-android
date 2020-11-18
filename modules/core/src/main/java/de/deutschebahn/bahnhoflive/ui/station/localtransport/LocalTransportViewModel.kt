@@ -7,6 +7,7 @@
 package de.deutschebahn.bahnhoflive.ui.station.localtransport
 
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.map
 import de.deutschebahn.bahnhoflive.backend.hafas.model.HafasStation
 import de.deutschebahn.bahnhoflive.repository.HafasStationsResource
 import de.deutschebahn.bahnhoflive.repository.MediatorResource
@@ -20,6 +21,10 @@ class LocalTransportViewModel : ViewModel() {
     val MAX_NEARBY_DEPARTURES_DISTANCE = 250 // BAHNHOFLIVE-1311: radius 250m
 
     val hafasStationsResource = HafasStationsResource(MAX_NEARBY_DEPARTURES_DISTANCE)
+
+    val hafasStationsAvailableLiveData = hafasStationsResource.data.map { hafasStations ->
+        hafasStations?.isNotEmpty()
+    }
 
     private val mediatorResource = object : MediatorResource<List<HafasStation>>() {
         override fun onRefresh(): Boolean {
