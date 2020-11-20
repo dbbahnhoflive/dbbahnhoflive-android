@@ -24,8 +24,9 @@
             android:layout_height="wrap_content">
 
             <LinearLayout
-                android:layout_marginStart="@dimen/default_space"
-                android:layout_marginEnd="@dimen/default_space"
+                android:layout_margin="@dimen/default_space"
+                android:paddingStart="@dimen/default_space"
+                android:paddingEnd="@dimen/default_space"
                 android:gravity="center_vertical"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -33,9 +34,7 @@
 
                 <TextView
                     android:id="@+id/occupancyTitle"
-                    android:paddingTop="15dp"
                     android:lastBaselineToBottomHeight="15dp"
-                    android:paddingBottom="15dp"
                     android:layout_width="0dp"
                     android:layout_weight="1"
                     android:layout_height="wrap_content"
@@ -44,8 +43,6 @@
                     android:text="@string/title_occupancy" />
 
                 <ImageView
-                    android:paddingTop="9dp"
-                    android:paddingBottom="9dp"
                     android:id="@+id/occupancyInfoButton"
                     android:src="@drawable/app_occupancy_information"
                     android:layout_width="wrap_content"
@@ -57,20 +54,20 @@
             android:layout_width="match_parent"
             android:layout_height="1px" />
 
-        <androidx.constraintlayout.widget.ConstraintLayout
-            android:layout_marginStart="@dimen/default_space"
-            android:layout_marginEnd="@dimen/default_space"
-            android:layout_marginTop="15dp"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content">
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:layout_margin="@dimen/default_space"
+                android:paddingStart="@dimen/default_space"
+                android:paddingEnd="@dimen/default_space"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
 
-            <Spinner
-                android:visibility="gone"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                tools:listitem="@android:layout/simple_list_item_1"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintTop_toTopOf="parent"
+                <Spinner
+                    android:visibility="gone"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    tools:listitem="@android:layout/simple_list_item_1"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintTop_toTopOf="parent"
                 app:layout_constraintBottom_toBottomOf="parent" />
 
             <TextView
@@ -118,8 +115,8 @@
         </androidx.constraintlayout.widget.ConstraintLayout>
 
             <androidx.viewpager2.widget.ViewPager2
-                android:paddingTop="34dp"
-                android:paddingBottom="20dp"
+                android:paddingTop="@dimen/default_space"
+                android:paddingBottom="@dimen/default_space"
                 android:id="@+id/occupancyViewPager"
                 tools:layout="@layout/include_graph"
                 android:layout_width="match_parent"
