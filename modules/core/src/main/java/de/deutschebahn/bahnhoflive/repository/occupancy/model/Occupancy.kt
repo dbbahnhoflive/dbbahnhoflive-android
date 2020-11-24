@@ -13,7 +13,7 @@ class Occupancy(
     val max = dailyOccupancies.mapNotNull { it.max }.maxOfOrNull { it }
 
     val mostRecent by lazy {
-        dailyOccupancies.mapNotNull { it.mostRecent }.firstOrNull()
+        dailyOccupancies.mapNotNull { it.mostRecent }.lastOrNull()
             ?: dailyOccupancies.lastOrNull()?.hourlyOccupancies?.lastOrNull()
     }
 }
