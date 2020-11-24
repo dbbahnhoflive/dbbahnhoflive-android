@@ -94,7 +94,7 @@ class GraphViewBinder(
     fun set(dailyOccupancy: DailyOccupancy?, currentOccupancy: HourlyOccupancy?, max: Int?) {
         this.dailyOccupancy = dailyOccupancy
         this.currentOccupancy = currentOccupancy
-        this.max = max ?: dailyOccupancy?.max ?: MAX_FALLBACK
+        this.max = max ?: dailyOccupancy?.max?.takeUnless { it == 0 } ?: MAX_FALLBACK
 
         bind()
     }

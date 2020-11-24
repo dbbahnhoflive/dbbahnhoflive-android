@@ -44,7 +44,7 @@ class OccupancyViewBinder(
     private val dailyOccupancyAdapter = DailyOccupancyAdapter(
         LayoutInflater.from(parent.context)
             .inflate(R.layout.include_occupancy_time_label, null)
-            .timeScale.paint.measureText("22:00") * 1.5f,
+            .timeScale.paint.measureText("22:00"),
         onShowDetailsListener
     )
 
