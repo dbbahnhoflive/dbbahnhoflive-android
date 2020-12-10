@@ -41,7 +41,7 @@ public class DeparturesActivity extends AppCompatActivity implements TrackingMan
     public static final String ARG_DB_STATION = "dbStation";
     public static final String ARG_DB_STATION_HAFAS_STATIONS = "dbStationHafasStations";
 
-    private final TrackingManager trackingManager = new TrackingManager();
+    private final TrackingManager trackingManager = new TrackingManager(this);
     private ToolbarViewHolder toolbarViewHolder;
 
     public static Bundle createArguments(HafasStation hafasStation, HafasDepartures departures, boolean filterStrictly, Station station, List<HafasStation> hafasStations) {

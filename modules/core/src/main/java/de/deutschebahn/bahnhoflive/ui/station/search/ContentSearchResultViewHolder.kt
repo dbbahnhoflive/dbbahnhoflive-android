@@ -11,7 +11,6 @@ import android.view.ViewGroup
 import de.deutschebahn.bahnhoflive.BaseApplication
 import de.deutschebahn.bahnhoflive.R
 import de.deutschebahn.bahnhoflive.analytics.TrackingManager
-import de.deutschebahn.bahnhoflive.analytics.TrackingManager.Screen.H1
 import de.deutschebahn.bahnhoflive.tutorial.TutorialManager
 import de.deutschebahn.bahnhoflive.ui.ViewHolder
 import kotlinx.android.synthetic.main.item_content_search.view.*
@@ -43,7 +42,13 @@ class ContentSearchResultViewHolder(
     }
 
     private fun track(type: String, additionalVariables: Map<String, Any?>) {
-        trackingManager.track(TrackingManager.TYPE_ACTION, additionalVariables, H1, TrackingManager.UiElement.POI_SEARCH, type)
+        trackingManager.track(
+            TrackingManager.TYPE_ACTION,
+            additionalVariables,
+            TrackingManager.Screen.H1,
+            TrackingManager.UiElement.POI_SEARCH,
+            type
+        )
     }
 
     override fun onBind(item: ContentSearchResult?) {

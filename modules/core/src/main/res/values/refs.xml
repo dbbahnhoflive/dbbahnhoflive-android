@@ -111,4 +111,5 @@
     <drawable name="listrightarrow">@drawable/missing</drawable>
     <drawable name="app_occupancy_arrow_down">@drawable/missing</drawable>
     <drawable name="app_occupancy_information">@drawable/missing</drawable>
+    <drawable name="pin_mit_bahnhof_invertiert">@drawable/missing</drawable>
 </resources>
