@@ -6,14 +6,17 @@
 
 package de.deutschebahn.bahnhoflive.repository.occupancy.model
 
+import java.util.*
+
 class Occupancy(
+    val max: Int,
     val dailyOccupancies: List<DailyOccupancy>
 ) {
 
-    val max = dailyOccupancies.mapNotNull { it.max }.maxOfOrNull { it }
-
-    val mostRecent by lazy {
-        dailyOccupancies.mapNotNull { it.mostRecent }.lastOrNull()
-            ?: dailyOccupancies.lastOrNull()?.hourlyOccupancies?.lastOrNull()
+    fun getCurrentHourlyOccupancy() = Calendar.getInstance(Locale.GERMANY).let { calendar ->
+        calendar.add(Calendar.HOUR_OF_DAY, -1)
+        dailyOccupancies[(calendar.get(Calendar.DAY_OF_WEEK) + 5) % 7]
+            .hourlyOccupancies.getOrNull(calendar.get(Calendar.HOUR_OF_DAY))
     }
+
 }

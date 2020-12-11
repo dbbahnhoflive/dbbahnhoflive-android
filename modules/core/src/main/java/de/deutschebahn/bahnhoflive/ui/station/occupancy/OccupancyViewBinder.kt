@@ -192,6 +192,7 @@ class OccupancyViewBinder(
         }
 
     private fun bind() {
+        val occupancy = occupancy
         if (occupancy == null) {
             view.visibility = View.GONE
             return
@@ -199,7 +200,9 @@ class OccupancyViewBinder(
 
         view.visibility = View.VISIBLE
 
-        val level = occupancy?.mostRecent?.level?.let {
+        val currentHourlyOccupancy = occupancy.getCurrentHourlyOccupancy()
+
+        val level = currentHourlyOccupancy?.level?.let {
             it - 1
         }?.takeIf { it >= 0 && it < Level.values().size }
 
@@ -213,7 +216,7 @@ class OccupancyViewBinder(
 
         dailyOccupancyAdapter.occupancy = this.occupancy
 
-        occupancy?.mostRecent?.dayOfWeek?.also {
+        currentHourlyOccupancy?.dayOfWeek?.also {
             today = it
             selectedDay = it
         }
