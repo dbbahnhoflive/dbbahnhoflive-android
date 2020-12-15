@@ -269,7 +269,7 @@ class StationInfoDetailsFragment :
                                         it.context.startActivity(
                                             Intent(
                                                 Intent.ACTION_VIEW,
-                                                Uri.parse("https://console.e-bot7.de/embed/5dc43ff2c65df6001ac43721/5dc528b924b425001a62caf9")
+                                                Uri.parse("https://bahnhof-bot.deutschebahn.com/")
                                             )
                                         )
                                     })
