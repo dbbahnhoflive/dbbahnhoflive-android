@@ -15,10 +15,10 @@ private val String.isChatbotAvailable
     get() = ChatbotStation.isInTeaserPeriod && ChatbotStation.ids.contains(this)
 
 val Station.isChatbotAvailable: Boolean
-    get() = id.isChatbotAvailable
+    get() = true //id.isChatbotAvailable
 
 val DetailedStopPlace.isChatbotAvailable
-    get() = stadaId.isChatbotAvailable == true
+    get() = true //stadaId.isChatbotAvailable
 
 object ChatbotStation {
 
@@ -297,8 +297,8 @@ object ChatbotStation {
         }
 
     val isInTeaserPeriod: Boolean
-        get() =
-            Calendar.getInstance().run {
-                before(teaserPeriodEnd) && after(teaserPeriodStart)
-            }
+        get() = true
+//            Calendar.getInstance().run {
+//                before(teaserPeriodEnd) && after(teaserPeriodStart)
+//            }
 }
