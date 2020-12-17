@@ -8,7 +8,7 @@
 
     <string name="app_name">Bahnhof live CE</string>
 
-    <string name="app_id">BahnhofLive</string>
+    <string name="app_id">de.deutschebahn.bahnhoflive</string>
 
     <string name="home_suggestionsMessageNoResult">Bitte überprüfen Sie Ihre Eingabe</string>
 
