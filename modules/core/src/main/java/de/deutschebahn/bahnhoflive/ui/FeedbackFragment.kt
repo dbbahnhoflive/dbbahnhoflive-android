@@ -17,13 +17,15 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.LiveData
-import androidx.lifecycle.ViewModelProviders
 import de.deutschebahn.bahnhoflive.BaseApplication
 import de.deutschebahn.bahnhoflive.R
 import de.deutschebahn.bahnhoflive.analytics.TrackingManager
 import de.deutschebahn.bahnhoflive.repository.Station
 import de.deutschebahn.bahnhoflive.ui.station.StationViewModel
 import de.deutschebahn.bahnhoflive.util.DummyObserver
+import kotlinx.android.synthetic.main.fragment_feedback.view.*
+import java.net.URLEncoder
+import java.nio.charset.StandardCharsets
 
 class FeedbackFragment : Fragment() {
 
@@ -35,16 +37,20 @@ class FeedbackFragment : Fragment() {
 
     lateinit var station: LiveData<Station>
 
+    val stationViewModel by activityViewModels<StationViewModel>()
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        val stationViewModel =
-            ViewModelProviders.of(requireActivity()).get(StationViewModel::class.java)
         station = stationViewModel.stationResource.data
         station.observe(this, DummyObserver())
     }
 
-    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
+    override fun onCreateView(
+        inflater: LayoutInflater,
+        container: ViewGroup?,
+        savedInstanceState: Bundle?
+    ): View? {
         val view = inflater.inflate(R.layout.fragment_feedback, container, false)
 
         ToolbarViewHolder(view, R.string.menu_feedback)
@@ -56,14 +62,47 @@ class FeedbackFragment : Fragment() {
         super.onStart()
 
         val trackingManager = TrackingManager.fromActivity(activity)
-        trackingManager.track(TrackingManager.TYPE_STATE, TrackingManager.Screen.D2, TrackingManager.Entity.FEEDBACK)
+        trackingManager.track(
+            TrackingManager.TYPE_STATE,
+            TrackingManager.Screen.D2,
+            TrackingManager.Entity.FEEDBACK
+        )
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        view.findViewById<View>(R.id.send_feedback_button).setOnClickListener { openFeedbackMail(view.context) }
+        view.findViewById<View>(R.id.send_feedback_button)
+            .setOnClickListener { openFeedbackMail(view.context) }
 
-        view.findViewById<View>(R.id.rate_app_button).setOnClickListener { openAppInPlayStore(view.context) }
+        view.findViewById<View>(R.id.rate_app_button)
+            .setOnClickListener { openAppInPlayStore(view.context) }
+
+        stationViewModel.stationFeedbackWhatsappContact.observe(viewLifecycleOwner) { whatsappContact ->
+            if (whatsappContact.isNullOrBlank()) {
+                view.whatsapp.visibility = View.GONE
+            } else {
+                view.whatsapp.visibility = View.VISIBLE
+                view.whatsapp.setOnClickListener {
+                    openFeedbackWhatsapp(it.context, whatsappContact)
+                }
+            }
+        }
+    }
+
+    private fun openFeedbackWhatsapp(context: Context, whatsappContact: String) {
+        val intent = Intent(
+            Intent.ACTION_VIEW,
+            Uri.parse(
+                "https://wa.me/$whatsappContact?text=${
+                    URLEncoder.encode(
+                        "Diese Testnachricht wurde von Bahnhof Live generiert am Bahnhof ${station.value?.title}.",
+                        StandardCharsets.UTF_8.name()
+                    )
+                }"
+            )
+        )
+
+        context.startActivity(intent)
     }
 
 

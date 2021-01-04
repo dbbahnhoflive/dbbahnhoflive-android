@@ -74,6 +74,16 @@
                 android:text="@string/feedback_button"
                 android:textAllCaps="false"
                 android:textColor="#fff" />
+
+            <Button
+                android:id="@+id/whatsapp"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="12dp"
+                android:background="@drawable/shape_round_button_grey"
+                android:text="WhatsApp"
+                android:textAllCaps="false"
+                android:textColor="#fff" />
         </LinearLayout>
     </androidx.core.widget.NestedScrollView>
 
