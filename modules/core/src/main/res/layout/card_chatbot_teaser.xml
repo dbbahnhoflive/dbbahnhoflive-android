@@ -26,12 +26,11 @@
             android:layout_height="match_parent">
 
             <Space
-                android:layout_weight="0.2"
-                android:layout_width="0dp"
+                android:layout_width="26dp"
                 android:layout_height="wrap_content" />
 
             <LinearLayout
-                android:paddingTop="8dp"
+                android:paddingTop="44dp"
                 android:paddingBottom="8dp"
                 android:orientation="vertical"
                 android:layout_width="0dp"
@@ -46,8 +45,7 @@
                     app:layout_constraintHorizontal_bias="0"
                     android:id="@+id/chatbotHeadline"
                     android:text="@string/chatbot_headline"
-                    android:gravity="center_vertical"
-                    android:layout_weight="1"
+                    android:gravity="bottom"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content" />
 
@@ -58,7 +56,6 @@
                     android:layout_marginTop="18dp"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintHorizontal_bias="0"
-                    android:layout_weight="2"
                     android:text="@string/chatbot_subheadline"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
@@ -68,18 +65,17 @@
 
             <ImageView
                 android:id="@+id/chatbotImage"
-                android:paddingTop="17dp"
+                android:paddingVertical="15dp"
                 android:adjustViewBounds="true"
                 android:src="@drawable/chatbot"
-                android:layout_gravity="bottom"
+                android:layout_gravity="center"
                 android:scaleType="fitEnd"
                 android:layout_width="0dp"
                 android:layout_weight="1"
                 android:layout_height="match_parent" />
 
             <Space
-                android:layout_weight="0.2"
-                android:layout_width="0dp"
+                android:layout_width="24dp"
                 android:layout_height="wrap_content" />
 
         </LinearLayout>

@@ -32,7 +32,7 @@ import de.deutschebahn.bahnhoflive.ui.tutorial.TutorialFragment;
 
 public class HubActivity extends AppCompatActivity implements TutorialFragment.Host {
 
-    private TrackingManager trackingManager = new TrackingManager();
+    private TrackingManager trackingManager = new TrackingManager(this);
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -77,6 +77,7 @@ public class HubActivity extends AppCompatActivity implements TutorialFragment.H
 
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
         Permission.LOCATION.onRequestPermissionsResult(requestCode, permissions, grantResults);
     }
 

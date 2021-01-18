@@ -8,7 +8,7 @@
 
     <string name="app_name">Bahnhof live CE</string>
 
-    <string name="app_id">BahnhofLive</string>
+    <string name="app_id">de.deutschebahn.bahnhoflive</string>
 
     <string name="home_suggestionsMessageNoResult">Bitte überprüfen Sie Ihre Eingabe</string>
 
@@ -273,4 +273,9 @@
     <string name="occupancy_additional_info_title">Weiterführende Informationen</string>
     <string name="occupancy_additional_info_copy">Aktuelle Informationen und Service-Hinweise zum sicheren Aufenthalt am Bahnhof sowie Ihrer Reise finden Sie auf gemeinsamgehtdas.de.</string>
     <string name="occupancy_external_link_button">gemeinsamgehtdas.de</string>
+    <string name="consent_headline">Gemeinsam mit Ihnen wollen wir besser werden!</string>
+    <string name="consent_option_dissent">Nein, Danke</string>
+    <string name="consent_option_consent">Ich stimme zu</string>
+    <string name="consent_copy_1">Um DB Bahnhof live gemeinsam mit Ihnen weiter zu verbessern, <b>möchten wir Sie bitten, der Verarbeitung Ihrer Daten im Umgang mit dieser App für Statistiken und Analysen zuzustimmen.</b> Mithilfe dieser anonymisierten Daten können wir die <b>Nutzererfahrung verbessern und frühzeitig Fehler erkennen und beseitigen.</b> Für Details sehen Sie bitte unsere <a href="">Datenschutzhinweise</a>.</string>
+    <string name="consent_copy_2">Diese Zustimmung erfolgt freiwillig. Sie können Sie jederzeit unter <a href="">Datenschutz</a> widerrufen.</string>
 </resources>

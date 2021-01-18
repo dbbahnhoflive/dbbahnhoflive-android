@@ -10,10 +10,8 @@ import android.app.AlertDialog;
 import android.content.ActivityNotFoundException;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.net.Uri;
 import android.os.Bundle;
-import android.preference.PreferenceManager;
 import android.provider.Settings;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -33,12 +31,12 @@ import java.nio.charset.StandardCharsets;
 
 import de.deutschebahn.bahnhoflive.BaseApplication;
 import de.deutschebahn.bahnhoflive.R;
+import de.deutschebahn.bahnhoflive.analytics.ConsentState;
 import de.deutschebahn.bahnhoflive.analytics.TrackingManager;
 
 public class ImprintFragment extends Fragment {
 
     public static final String TAG = ImprintFragment.class.getSimpleName();
-    public static final String PREF_KEY_TRACKING_ENABLED = "tracking_enabled";
     private String title;
     private String url;
 
@@ -108,12 +106,9 @@ public class ImprintFragment extends Fragment {
                         startActivity(i);
                     } else if (url.contains("analytics")) {
 
-                        final SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(getActivity());
-                        final SharedPreferences.Editor editor = preferences.edit();
-                        boolean trackingEnabled = preferences.getBoolean(PREF_KEY_TRACKING_ENABLED, true);
-
+                        final ConsentState consentState = trackingManager.getConsentState();
                         int alertMessage = R.string.settings_tracking_active_msg;
-                        if (!trackingEnabled) {
+                        if (!consentState.getTrackingAllowed()) {
                             alertMessage = R.string.settings_tracking_not_active_msg;
                         }
 
@@ -124,23 +119,14 @@ public class ImprintFragment extends Fragment {
                                 .setPositiveButton(R.string.dlg_yes, new DialogInterface.OnClickListener() {
                                     @Override
                                     public void onClick(DialogInterface dialog, int which) {
-                                        editor.putBoolean(PREF_KEY_TRACKING_ENABLED, true);
-                                        editor.commit();
+                                        trackingManager.setConsented(true);
+
                                         dialog.dismiss();
-
-                                        trackingManager.setOptOut(false);
-                                        trackingManager.track(TrackingManager.TYPE_ACTION, TrackingManager.Action.TRACKING_ACTIVATE);
-
                                     }
                                 }).setNeutralButton(R.string.dlg_no, new DialogInterface.OnClickListener() {
                                     @Override
                                     public void onClick(DialogInterface dialog, int which) {
-                                        trackingManager.track(TrackingManager.TYPE_ACTION, TrackingManager.Action.TRACKING_DEACTIVATE);
-
-                                        editor.putBoolean(PREF_KEY_TRACKING_ENABLED, false);
-                                        editor.commit();
-
-                                        trackingManager.setOptOut(true);
+                                        trackingManager.setConsented(false);
 
                                         dialog.dismiss();
                                     }

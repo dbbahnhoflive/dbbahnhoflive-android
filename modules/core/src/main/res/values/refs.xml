@@ -111,4 +111,5 @@
     <drawable name="listrightarrow">@drawable/missing</drawable>
     <drawable name="app_occupancy_arrow_down">@drawable/missing</drawable>
     <drawable name="app_occupancy_information">@drawable/missing</drawable>
+    <drawable name="app_analytics_poi_icon">@drawable/missing</drawable>
 </resources>

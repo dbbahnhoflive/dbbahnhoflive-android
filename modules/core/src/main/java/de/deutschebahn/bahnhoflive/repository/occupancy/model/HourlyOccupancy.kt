@@ -9,9 +9,8 @@ package de.deutschebahn.bahnhoflive.repository.occupancy.model
 class HourlyOccupancy(
     val dayOfWeek: Int,
     val hourOfDay: Int,
-    val average: Int?,
-    val current: Int?,
-    val level: Int?,
-    val statusText: CharSequence?
-) {
-}
+    var average: Int? = null,
+    var current: Int? = null,
+    var level: Int? = null,
+    val statusText: CharSequence? = null
+)

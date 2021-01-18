@@ -9,6 +9,7 @@ package de.deutschebahn.bahnhoflive.model.parking
 import android.os.Parcelable
 import de.deutschebahn.bahnhoflive.R
 import de.deutschebahn.bahnhoflive.util.nonBlankOrNull
+import kotlinx.android.parcel.IgnoredOnParcel
 import kotlinx.android.parcel.Parcelize
 import java.util.*
 
@@ -38,14 +39,25 @@ class Duration(
         val TAGS_REGEX = Regex("$TAG_DISCOUNT|$TAG_VENDING_MACHINE|$TAG_LONG_TERM|$TAG_RESERVATION")
     }
 
+    @IgnoredOnParcel
     val amount: Int?
+
+    @IgnoredOnParcel
     val timeUnit: TimeUnit?
 
+    @IgnoredOnParcel
     val discount: Boolean
+
+    @IgnoredOnParcel
     var vendingMachine: Boolean
+
+    @IgnoredOnParcel
     var longTerm: Boolean
+
+    @IgnoredOnParcel
     var reservation: Boolean
 
+    @IgnoredOnParcel
     val unrecognizedTags: String?
 
     init {
