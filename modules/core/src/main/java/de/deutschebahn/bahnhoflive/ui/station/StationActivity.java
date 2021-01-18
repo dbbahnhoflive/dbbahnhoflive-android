@@ -124,7 +124,7 @@ public class StationActivity extends AppCompatActivity implements
             }
         }
 
-        trackingManager = new StationTrackingManager(station);
+        trackingManager = new StationTrackingManager(this, station);
 
         stationViewModel.initialize(station);
 
