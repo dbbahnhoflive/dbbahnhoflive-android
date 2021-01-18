@@ -248,7 +248,7 @@ class StationInfoDetailsFragment :
                 }
 
                 ServiceContent.Type.Local.CHATBOT -> {
-                    addImagePart(R.drawable.padded_chatbot)
+                    addImagePart(R.drawable.chatbot)
                     dbactionbuttonPattern.matcher(item.descriptionText).takeIf { it.matches() }
                         ?.run {
                             group(1).takeUnless { it.isBlank() }?.also {
