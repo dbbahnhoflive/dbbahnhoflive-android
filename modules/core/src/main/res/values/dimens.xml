@@ -75,6 +75,8 @@
     <dimen name="textsize_h3">14sp</dimen>
     <dimen name="textsize_h4">12sp</dimen>
 
+    <dimen name="textsize_occupancy_day_of_week">@dimen/textsize_h3</dimen>
+
     <dimen name="textsize_default">@dimen/textsize_h2</dimen>
     <dimen name="card_badge_size">32dp</dimen>
     <dimen name="default_elevation">4dp</dimen>
@@ -114,4 +116,9 @@
     <dimen name="card_elevation">4dp</dimen>
     <dimen name="chatbot_service_image_height">104dp</dimen>
     <dimen name="smallIconBaseline">18dp</dimen>
+
+    <dimen name="occupancy_headline_space">10dp</dimen>
+    <dimen name="occupancy_paragraph_space">30dp</dimen>
+    <dimen name="occupancy_button_space">20dp</dimen>
+
 </resources>

@@ -60,4 +60,15 @@
 
     <color name="eco_green">#78BD14</color>
     <color name="page_indicator_unselected">@color/button_grey</color>
+
+    <color name="cool_gray_250">#C8CDD2</color>
+    <color name="cool_gray_300">#AFB4BB</color>
+    <color name="blue_400">#347DE0</color>
+
+    <color name="graph_average_bar">@color/cool_gray_250</color>
+    <color name="graph_current_bar">@color/blue_400</color>
+    <color name="graph_scale">@color/cool_gray_300</color>
+
+    <color name="occupancy_graph">#E9E9E9</color>
+    <color name="occupancy_today">#76c030</color>
 </resources>

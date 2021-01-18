@@ -39,6 +39,7 @@ import java.util.List;
 import de.deutschebahn.bahnhoflive.BuildConfig;
 import de.deutschebahn.bahnhoflive.R;
 import de.deutschebahn.bahnhoflive.analytics.IssueTracker;
+import de.deutschebahn.bahnhoflive.analytics.IssueTrackerKt;
 import de.deutschebahn.bahnhoflive.analytics.StationTrackingManager;
 import de.deutschebahn.bahnhoflive.analytics.TrackingManager;
 import de.deutschebahn.bahnhoflive.backend.ris.model.TrainInfo;
@@ -57,6 +58,7 @@ import de.deutschebahn.bahnhoflive.ui.station.features.StationFeaturesFragment;
 import de.deutschebahn.bahnhoflive.ui.station.info.InfoCategorySelectionFragment;
 import de.deutschebahn.bahnhoflive.ui.station.localtransport.LocalTransportFragment;
 import de.deutschebahn.bahnhoflive.ui.station.localtransport.LocalTransportViewModel;
+import de.deutschebahn.bahnhoflive.ui.station.occupancy.OccupancyExplanationFragment;
 import de.deutschebahn.bahnhoflive.ui.station.parking.ParkingListFragment;
 import de.deutschebahn.bahnhoflive.ui.station.search.ContentSearchFragment;
 import de.deutschebahn.bahnhoflive.ui.station.shop.ShopCategorySelectionFragment;
@@ -118,11 +120,11 @@ public class StationActivity extends AppCompatActivity implements
             initializeShowingDepartures = savedInstanceState.getBoolean(ARG_SHOW_DEPARTURES);
         } else {
             if (station != null) {
-                IssueTracker.Companion.getInstance().setCondition("station", station.getId());
+                IssueTracker.Companion.getInstance().setContext("station", IssueTrackerKt.toContextMap(station));
             }
         }
 
-        trackingManager = new StationTrackingManager(station);
+        trackingManager = new StationTrackingManager(this, station);
 
         stationViewModel.initialize(station);
 
@@ -388,6 +390,11 @@ public class StationActivity extends AppCompatActivity implements
 
     public void showNewsDetails(final int newsIndex) {
         showBottomSheetFragment(NewsDetailsFragment.Companion.create(newsIndex), "news");
+    }
+
+    @Override
+    public void showOccupancyExplanation() {
+        showBottomSheetFragment(new OccupancyExplanationFragment(), "occupancyExplanation");
     }
 
     @Override

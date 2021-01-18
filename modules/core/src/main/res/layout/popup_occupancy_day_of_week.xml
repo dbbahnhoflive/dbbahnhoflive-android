@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:orientation="vertical"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    tools:background="@drawable/shape_background_occupancy_day_of_week_popup">
+
+    <TextView
+        android:id="@+id/currentlySelectedDay"
+        android:text="@string/today"
+        android:drawableEnd="@drawable/app_occupancy_arrow_down"
+        android:textColor="@color/occupancy_today"
+        android:drawablePadding="14dp"
+        android:paddingTop="11dp"
+        android:paddingBottom="11dp"
+        style="@style/App.TextAppearance.OccupancyDayOfWeek"
+
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" />
+
+    <TextView
+        android:background="@color/graph_scale"
+        android:layout_width="match_parent"
+        android:layout_height="2dp" />
+
+    <androidx.core.widget.NestedScrollView
+        android:layout_width="match_parent"
+        android:layout_weight="1"
+        android:layout_height="0dp">
+
+        <LinearLayout
+            android:orientation="horizontal"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content">
+
+            <LinearLayout
+                android:id="@+id/dayOfWeekListContainer"
+                android:orientation="vertical"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content" />
+
+            <ImageView
+                android:src="@drawable/app_occupancy_arrow_down"
+                android:layout_marginEnd="14dp"
+                android:visibility="invisible"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content" />
+        </LinearLayout>
+    </androidx.core.widget.NestedScrollView>
+</LinearLayout>

@@ -23,6 +23,7 @@ import de.deutschebahn.bahnhoflive.push.createNotificationChannels
 import de.deutschebahn.bahnhoflive.repository.ApplicationServices
 import de.deutschebahn.bahnhoflive.repository.RepositoryHolder
 import de.deutschebahn.bahnhoflive.repository.elevator.Fasta2ElevatorStatusRepository
+import de.deutschebahn.bahnhoflive.repository.occupancy.OccupancyRepository
 import de.deutschebahn.bahnhoflive.repository.poisearch.PoiSearchConfigurationProvider
 import de.deutschebahn.bahnhoflive.repository.station.PublicTrainStationStationRepository
 import de.deutschebahn.bahnhoflive.tutorial.TutorialManager
@@ -87,7 +88,8 @@ abstract class BaseApplication(
             elevatorStatusRepository = Fasta2ElevatorStatusRepository(
                 restHelper,
                 dbAuthorizationTool
-            )
+            ),
+            occupancyRepository = OccupancyRepository()
         )
     }
 

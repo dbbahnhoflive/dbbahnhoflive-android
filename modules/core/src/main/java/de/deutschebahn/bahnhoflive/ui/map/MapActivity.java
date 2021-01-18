@@ -64,7 +64,7 @@ public class MapActivity extends AppCompatActivity implements
         mapViewModel = ViewModelProviders.of(this).get(MapViewModel.class);
         mapViewModel.setStation(station);
 
-        trackingManager = station == null ? new TrackingManager() : new StationTrackingManager(station);
+        trackingManager = station == null ? new TrackingManager(this) : new StationTrackingManager(this, station);
 
         final ElevatorIssuesLoaderFragment elevatorIssuesLoaderFragment = ElevatorIssuesLoaderFragment.of(this);
 

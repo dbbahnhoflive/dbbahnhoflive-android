@@ -113,6 +113,8 @@
                     </LinearLayout>
                 </androidx.cardview.widget.CardView>
 
+                <include layout="@layout/include_occupancy" />
+
                 <ViewFlipper
                     android:id="@+id/liveCardsProgressFlipper"
                     android:layout_width="match_parent"

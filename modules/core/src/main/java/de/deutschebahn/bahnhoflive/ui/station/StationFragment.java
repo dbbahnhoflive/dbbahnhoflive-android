@@ -55,6 +55,8 @@ import de.deutschebahn.bahnhoflive.ui.hub.StationImageResolver;
 import de.deutschebahn.bahnhoflive.ui.map.MapActivity;
 import de.deutschebahn.bahnhoflive.ui.station.elevators.ElevatorStatusListsFragment;
 import de.deutschebahn.bahnhoflive.ui.station.info.StaticInfo;
+import de.deutschebahn.bahnhoflive.ui.station.occupancy.OccupancyViewBinder;
+import de.deutschebahn.bahnhoflive.ui.station.localtransport.LocalTransportViewModel;
 import de.deutschebahn.bahnhoflive.ui.station.shop.CategorizedShops;
 import de.deutschebahn.bahnhoflive.ui.station.shop.Shop;
 import de.deutschebahn.bahnhoflive.ui.station.shop.ShopCategory;
@@ -186,7 +188,6 @@ public class StationFragment extends Fragment implements
 //                parkingsSummary = new SummaryBadge();
                 elevatorsSummary = new SummaryBadge();
                 localTransportSummary = new SummaryBadge();
-                localTransportSummary.setAvailable(true);
 //                elevatorsSummary.setAvailable(BackspinMapper.getBackspinId(stationLiveData.getValue()) != null);
             } else {
                 shopsSummary = savedInstanceState.getParcelable(STATE_SUMMARY_SHOPS);
@@ -268,6 +269,17 @@ public class StationFragment extends Fragment implements
             public void onChanged(@Nullable VolleyError volleyError) {
                 stationFeaturesButton.setEnabled(volleyError == null);
             }
+        });
+
+        final LocalTransportViewModel localTransportViewModel = stationViewModel.getLocalTransportViewModel();
+        localTransportViewModel.getHafasStationsAvailableLiveData().observe(this, availability -> {
+            if (availability != null) {
+                localTransportSummary.setAvailable(availability);
+            }
+        });
+
+        localTransportViewModel.getHafasStationsResource().getError().observe(this, error -> {
+            localTransportSummary.setError();
         });
     }
 
@@ -524,6 +536,15 @@ public class StationFragment extends Fragment implements
                 mapCard.setError(liveDataStation.getLocation() == null);
             });
         }
+
+        final OccupancyViewBinder occupancyViewBinder = new OccupancyViewBinder(view,
+                v -> {
+                    final StationNavigation stationNavigation = stationViewModel.getStationNavigation();
+                    if (stationNavigation != null) {
+                        stationNavigation.showOccupancyExplanation();
+                    }
+                });
+        stationViewModel.getOccupancyResource().getData().observe(getViewLifecycleOwner(), occupancyViewBinder::setOccupancy);
     }
 
     private void showStationFeatures() {
@@ -607,8 +628,6 @@ public class StationFragment extends Fragment implements
     public void onRefresh() {
         stationViewModel.refresh();
         stationViewModel.getStationResource().refresh();
-        dbTimetableResource.refresh();
-        shopsResource.refresh();
     }
 
     @Override

@@ -109,4 +109,7 @@
     <drawable name="feedback_close">@drawable/missing</drawable>
     <drawable name="wagenstand_train_numer_icon">@drawable/missing</drawable>
     <drawable name="listrightarrow">@drawable/missing</drawable>
+    <drawable name="app_occupancy_arrow_down">@drawable/missing</drawable>
+    <drawable name="app_occupancy_information">@drawable/missing</drawable>
+    <drawable name="app_analytics_poi_icon">@drawable/missing</drawable>
 </resources>

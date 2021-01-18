@@ -8,7 +8,7 @@
 
     <string name="app_name">Bahnhof live CE</string>
 
-    <string name="app_id">BahnhofLive</string>
+    <string name="app_id">de.deutschebahn.bahnhoflive</string>
 
     <string name="home_suggestionsMessageNoResult">Bitte überprüfen Sie Ihre Eingabe</string>
 
@@ -249,5 +249,33 @@
 
     <string name="notification_channel_arrival_name">Einfahrt</string>
     <string name="notification_channel_arrival_description">Erinnerungen vor Einfahrt eines Zuges</string>
+    <string name="label_current_occupancy">Aktuell:</string>
+    <string name="title_occupancy">Besucheraufkommen</string>
 
+    <string name="today">Heute</string>
+    <string name="mondays">Montags</string>
+    <string name="tuesdays">Dienstags</string>
+    <string name="wednesdays">Mittwochs</string>
+    <string name="thursdays">Donnerstags</string>
+    <string name="fridays">Freitags</string>
+    <string name="saturdays">Samstags</string>
+    <string name="sundays">Sonntags</string>
+    <string name="title_occupancy_explanation">Besucheraufkommen</string>
+    <string name="occupancy_level_unknown">Es liegt keine aktuelle Information vor.</string>
+    <string name="occupancy_level_low">Weniger Besucher als üblich</string>
+    <string name="occupancy_explanation_low">Vor Ort ist aktuell mit weniger Besuchern als gewöhnlich zu rechnen. In der Regel ist das Besucheraufkommen zu dieser Uhrzeit an diesem Wochentag höher.</string>
+    <string name="occupancy_level_average">Übliches Besucheraufkommen</string>
+    <string name="occupancy_explanation_average">Die Anzahl der Besucher vor Ort entspricht dem gewöhnlichen Besucheraufkommen zu dieser Uhrzeit an diesem Wochentag.</string>
+    <string name="occupancy_level_high">Mehr Besucher als üblich</string>
+    <string name="occupancy_explanation_high">Vor Ort ist aktuell mit mehr Besuchern als gewöhnlich zu rechnen. In der Regel ist das Besucheraufkommen zu dieser Uhrzeit an diesem Wochentag geringer.</string>
+    <string name="occupancy_advice_title">Hinweise</string>
+    <string name="occupancy_advice_copy">Bitte beachten Sie: Diese Info-Grafik gibt Auskunft über das aktuelle Besucheraufkommen im Vergleich zum durchschnittlichen Besucheraufkommen der vergangenen acht Wochen. Für diese Grafik werden Näherungswerte errechnet und keine absoluten Zahlen verwendet. Folglich sind Abweichungen zum tatsächlichen Besucheraufkommen vor Ort möglich. Diese Grafik gibt außerdem keine Auskunft hinsichtlich des Besucheraufkommens im Verhältnis zu den räumlichen Kapazitäten vor Ort. Alle Angaben sind ohne Gewähr.</string>
+    <string name="occupancy_additional_info_title">Weiterführende Informationen</string>
+    <string name="occupancy_additional_info_copy">Aktuelle Informationen und Service-Hinweise zum sicheren Aufenthalt am Bahnhof sowie Ihrer Reise finden Sie auf gemeinsamgehtdas.de.</string>
+    <string name="occupancy_external_link_button">gemeinsamgehtdas.de</string>
+    <string name="consent_headline">Gemeinsam mit Ihnen wollen wir besser werden!</string>
+    <string name="consent_option_dissent">Nein, Danke</string>
+    <string name="consent_option_consent">Ich stimme zu</string>
+    <string name="consent_copy_1">Um DB Bahnhof live gemeinsam mit Ihnen weiter zu verbessern, <b>möchten wir Sie bitten, der Verarbeitung Ihrer Daten im Umgang mit dieser App für Statistiken und Analysen zuzustimmen.</b> Mithilfe dieser anonymisierten Daten können wir die <b>Nutzererfahrung verbessern und frühzeitig Fehler erkennen und beseitigen.</b> Für Details sehen Sie bitte unsere <a href="">Datenschutzhinweise</a>.</string>
+    <string name="consent_copy_2">Diese Zustimmung erfolgt freiwillig. Sie können Sie jederzeit unter <a href="">Datenschutz</a> widerrufen.</string>
 </resources>
