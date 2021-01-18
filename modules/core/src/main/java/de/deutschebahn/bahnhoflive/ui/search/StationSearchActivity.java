@@ -27,6 +27,7 @@ public class StationSearchActivity extends AppCompatActivity {
 
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
         Permission.LOCATION.onRequestPermissionsResult(requestCode, permissions, grantResults);
     }
 

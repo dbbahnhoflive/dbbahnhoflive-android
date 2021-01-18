@@ -28,7 +28,7 @@ class DailyOccupancyViewHolder(
 
         graphViewBinder.set(
             item?.second?.let { occupancy?.dailyOccupancies?.get(it) },
-            occupancy?.mostRecent,
+            occupancy?.getCurrentHourlyOccupancy(),
             occupancy?.max
         )
 

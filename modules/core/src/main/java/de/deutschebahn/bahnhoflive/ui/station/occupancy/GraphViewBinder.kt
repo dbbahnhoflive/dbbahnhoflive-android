@@ -94,7 +94,7 @@ class GraphViewBinder(
     fun set(dailyOccupancy: DailyOccupancy?, currentOccupancy: HourlyOccupancy?, max: Int?) {
         this.dailyOccupancy = dailyOccupancy
         this.currentOccupancy = currentOccupancy
-        this.max = max ?: dailyOccupancy?.max?.takeUnless { it == 0 } ?: MAX_FALLBACK
+        this.max = max ?: MAX_FALLBACK
 
         bind()
     }
@@ -126,7 +126,11 @@ class GraphViewBinder(
                     if (hourlyOccupancy == currentOccupancy) {
                         offset(this, hourlyOccupancy.current)
                         visibility = View.VISIBLE
-                        hourlyOccupancy.average != null && hourlyOccupancy.current != null && hourlyOccupancy.average <= hourlyOccupancy.current
+                        hourlyOccupancy.average?.let { average ->
+                            hourlyOccupancy.current?.let { current ->
+                                average <= current
+                            }
+                        } ?: false
                     } else {
                         view.graphBarOverlay.visibility = View.GONE
                         visibility = View.GONE

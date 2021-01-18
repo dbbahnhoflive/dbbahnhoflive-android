@@ -9,8 +9,11 @@ package de.deutschebahn.bahnhoflive.analytics;
 import android.os.Bundle;
 import android.util.Log;
 
+import androidx.activity.ComponentActivity;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+
+import org.jetbrains.annotations.NotNull;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -31,7 +34,8 @@ public class StationTrackingManager extends TrackingManager {
 
     private Map<String, Object> contextVariables = new HashMap<>();
 
-    public StationTrackingManager(Station station) {
+    public StationTrackingManager(ComponentActivity activity, Station station) {
+        super(activity);
         pagePrefix = exploitStation(new ContextVariableHolder() {
             @Override
             public void put(String key, String value) {
@@ -105,16 +109,15 @@ public class StationTrackingManager extends TrackingManager {
         return stationName;
     }
 
-    @NonNull
+    @NotNull
     @Override
-    protected Map<String, Object> composeContextVariables(Map<String, Object> additionalVariables, String[] pages) {
+    protected Map<String, Object> composeContextVariables(@org.jetbrains.annotations.Nullable Map<String, ?> additionalVariables, @NotNull String[]... pages) {
         final Map<String, Object> contextVariables = super.composeContextVariables(additionalVariables, pages);
 
         contextVariables.putAll(this.contextVariables);
 
         return contextVariables;
     }
-
 //    @Override
 //    protected String composePageName(String... states) {
 //        return pagePrefix + super.composePageName(states);
