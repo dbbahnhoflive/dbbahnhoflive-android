@@ -23,6 +23,7 @@
     <string name="dep_arr_filter_Type">Zugtyp</string>
 
     <string name="menu_feedback">Feedback</string>
+    <string name="title_feedback">@string/menu_feedback</string>
 
     <string name="settings_tracking_not_active_msg">Das Tracking ist derzeit nicht aktiviert. Möchten Sie die Datenerfassung erlauben?</string>
     <string name="settings_tracking_active_msg">Das Tracking ist derzeit aktiviert. Möchten Sie die Datenerfassung weiterhin erlauben?</string>
@@ -72,6 +73,10 @@
     <string name="rating_title">Zufrieden mit der App?</string>
     <string name="rating_text">Unterstützen Sie uns mit einer positiven Bewertung im Play Store.</string>
     <string name="rating_button">App bewerten</string>
+    <string name="bugreport_button">Problem mit der App melden</string>
+    <string name="complaint_button">Verschmutzung oder Defekt melden</string>
+
+    <string name="feedback_whatsapp_template">Sehr geehrte Damen und Herren, mir ist eine Verschmutzung an folgendem Bahnhof aufgefallen: *%1$s* %2$s</string>
 
     <!-- Tutorial -->
 
@@ -278,4 +283,12 @@
     <string name="consent_option_consent">Ich stimme zu</string>
     <string name="consent_copy_1">Um DB Bahnhof live gemeinsam mit Ihnen weiter zu verbessern, <b>möchten wir Sie bitten, der Verarbeitung Ihrer Daten im Umgang mit dieser App für Statistiken und Analysen zuzustimmen.</b> Mithilfe dieser anonymisierten Daten können wir die <b>Nutzererfahrung verbessern und frühzeitig Fehler erkennen und beseitigen.</b> Für Details sehen Sie bitte unsere <a href="">Datenschutzhinweise</a>.</string>
     <string name="consent_copy_2">Diese Zustimmung erfolgt freiwillig. Sie können Sie jederzeit unter <a href="">Datenschutz</a> widerrufen.</string>
+    <string name="feedback_complaint_title">Verschmutzung melden</string>
+    <string name="complaint_headline">Verschmutzung oder Defekt melden</string>
+    <string name="feedback_complaint_explanation">Ihnen ist eine Verunreinigung oder eine defekte Anlage an einem Bahnhof aufgefallen? Benachrichtigen Sie uns gerne direkt über <b>WhatsApp</b>.</string>
+    <string name="feeback_whatsapp_button">WhatsApp öffnen</string>
+    <string name="feedback_cost_notice">Dieser Service ist <b>kostenlos</b>. Es fällt ggf. das Datenentgelte Ihres Mobilfunkproviders an.</string>
+    <string name="feeback_mail_alternative">Alternativ erreichen Sie uns über E-Mail. marketing-bahnhoefe@deutschebahn.com</string>
+    <string name="feeback_disclaimer"><b>Bitte beachten Sie,</b> dass die Meldung einer Verschmutzung auf diesem Weg ein bestehendes Nutzerkonto beim Dienst „WhatsApp“ voraussetzt und über den Dienst „WhatsBroadcast“ weitergeleitet wird. Diese Dienste und deren Datenverarbeitung werden ausschließlich durch die jeweiligen Anbieter eigenverantwortlich angeboten, betrieben und ausgestaltet. Sofern Sie diese Dienste freiwillig und eigenständig nutzen, um uns eine Verschmutzung zu melden, sind die Erklärungen zum Datenschutz von „WhatsApp“ und „WhatsBroadcast“ zu beachten. Hinsichtlich der Verarbeitung Ihrer Daten bei der DB Station&amp;Service AG im Zuge einer Verschmutzungsmeldung über diese Dienste lesen Sie bitte vorab auch aufmerksam unsere Datenschutzerklärung: bahnhof.de/reinigungsteam</string>
+    <string name="feedback_whatsapp_unavailable">Sie benötigen ein bestehendes Nutzerkonto beim Dienst „WhatsApp“. Aktuell ist dieser Dienst nicht auf ihrem Gerät installiert.</string>
 </resources>

@@ -31,7 +31,7 @@ import de.deutschebahn.bahnhoflive.backend.ris.model.RISTimetable
 import de.deutschebahn.bahnhoflive.backend.ris.model.TrainInfo
 import de.deutschebahn.bahnhoflive.persistence.RecentContentQueriesStore
 import de.deutschebahn.bahnhoflive.repository.*
-import de.deutschebahn.bahnhoflive.repository.feedback.WhatsAppContacts
+import de.deutschebahn.bahnhoflive.repository.feedback.WhatsAppFeeback
 import de.deutschebahn.bahnhoflive.repository.parking.ViewModelParking
 import de.deutschebahn.bahnhoflive.stream.livedata.MergedLiveData
 import de.deutschebahn.bahnhoflive.stream.rx.Optional
@@ -1180,11 +1180,13 @@ class StationViewModel : HafasTimetableViewModel() {
         .addSource(elevatorsResource.data)
         .addSource(detailedStopPlaceResource.data)
 
-    private val whatsAppContacts = WhatsAppContacts(application)
-
-    val stationFeedbackWhatsappContact = stationResource.data.switchMap { station ->
-        whatsAppContacts.map { contacts ->
-            station?.let { contacts[it.title] }
+    val stationWhatsappFeedbackLiveData: LiveData<String?> =
+        stationResource.data.map { station ->
+            station?.let {
+                WhatsAppFeeback.stadaIds.contains(it.id) then {
+                    WhatsAppFeeback.phoneNumber
+                }
+            }
         }
-    }
+
 }

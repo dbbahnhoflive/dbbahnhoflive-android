@@ -30,7 +30,7 @@
                 android:layout_height="wrap_content"
                 android:text="@string/rating_title"
                 android:textStyle="bold"
-                android:textColor="@color/textcolor_default"/>
+                android:textColor="@color/textcolor_default" />
 
             <TextView
                 android:layout_width="match_parent"
@@ -49,41 +49,6 @@
                 android:textAllCaps="false"
                 android:textColor="#fff" />
 
-
-            <TextView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="22dp"
-                android:text="@string/feedback_title"
-                android:textStyle="bold"
-                android:textColor="@color/textcolor_default" />
-
-            <TextView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="12dp"
-                android:text="@string/feedback_text"
-                android:textSize="@dimen/textsize_h3" />
-
-            <Button
-                android:id="@+id/send_feedback_button"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="12dp"
-                android:background="@drawable/shape_round_button_grey"
-                android:text="@string/feedback_button"
-                android:textAllCaps="false"
-                android:textColor="#fff" />
-
-            <Button
-                android:id="@+id/whatsapp"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="12dp"
-                android:background="@drawable/shape_round_button_grey"
-                android:text="WhatsApp"
-                android:textAllCaps="false"
-                android:textColor="#fff" />
         </LinearLayout>
     </androidx.core.widget.NestedScrollView>
 
