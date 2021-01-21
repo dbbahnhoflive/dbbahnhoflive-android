@@ -7,13 +7,15 @@ import android.os.Bundle
 import android.view.View
 import de.deutschebahn.bahnhoflive.BaseApplication
 import de.deutschebahn.bahnhoflive.R
+import de.deutschebahn.bahnhoflive.analytics.TrackingManager
 import de.deutschebahn.bahnhoflive.repository.Station
 import de.deutschebahn.bahnhoflive.util.MailUri
 import kotlinx.android.synthetic.main.fragment_report_bug.view.*
 
 class ReportBugFragment : FeedbackFragment(
     R.layout.fragment_report_bug,
-    R.string.bugreport_button
+    R.string.bugreport_button,
+    TrackingManager.Entity.REPORT_BUG
 ) {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {

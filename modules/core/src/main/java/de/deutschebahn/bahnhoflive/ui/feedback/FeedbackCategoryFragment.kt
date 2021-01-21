@@ -41,8 +41,7 @@ class FeedbackCategoryFragment : CategorySelectionFragment(
     override fun onStart() {
         super.onStart()
 
-        val trackingManager = TrackingManager.fromActivity(activity)
-        trackingManager.track(
+        TrackingManager.fromActivity(activity).track(
             TrackingManager.TYPE_STATE,
             TrackingManager.Screen.D2,
             TrackingManager.Entity.FEEDBACK

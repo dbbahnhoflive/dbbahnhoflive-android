@@ -25,21 +25,11 @@ import java.nio.charset.StandardCharsets
 
 class StationComplaintFragment : FeedbackFragment(
     R.layout.fragment_complaint,
-    R.string.feedback_complaint_title
+    R.string.feedback_complaint_title,
+    TrackingManager.Entity.COMPLAINT
 ) {
 
     val whatsAppViewModel by viewModels<WhatsAppViewModel>()
-
-    override fun onStart() {
-        super.onStart()
-
-        val trackingManager = TrackingManager.fromActivity(activity)
-        trackingManager.track(
-            TrackingManager.TYPE_STATE,
-            TrackingManager.Screen.D2,
-            TrackingManager.Entity.FEEDBACK
-        )
-    }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
