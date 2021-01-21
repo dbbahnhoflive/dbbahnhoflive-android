@@ -67,7 +67,7 @@
                 android:id="@+id/chatbotImage"
                 android:paddingVertical="15dp"
                 android:adjustViewBounds="true"
-                android:src="@drawable/chatbot"
+                android:src="@drawable/chatbot_card"
                 android:layout_gravity="center"
                 android:scaleType="fitEnd"
                 android:layout_width="0dp"
