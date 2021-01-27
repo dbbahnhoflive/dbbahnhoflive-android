@@ -14,6 +14,7 @@ public class FragmentArgs {
     public static final String TYPE = "type";
     public static final String URL = "url";
     public static final String TITLE = "title";
+    public static final String TITLE_DESCRIPTION = "titleDescription";
     public static final String TRACKING_TITLE = "tracking_title";
     public static final String PARENT_TRACKING_TITLE = "parent_tracking_title";
 

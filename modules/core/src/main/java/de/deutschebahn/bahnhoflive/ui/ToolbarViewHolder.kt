@@ -3,45 +3,36 @@
  *
  * SPDX-License-Identifier: Apache-2.0
  */
+package de.deutschebahn.bahnhoflive.ui
 
-package de.deutschebahn.bahnhoflive.ui;
+import android.view.View
+import android.widget.TextView
+import androidx.annotation.StringRes
+import androidx.recyclerview.widget.RecyclerView
+import de.deutschebahn.bahnhoflive.R
 
-import android.view.View;
-import android.widget.TextView;
+class ToolbarViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
 
-import androidx.annotation.StringRes;
-import androidx.recyclerview.widget.RecyclerView;
+    private val titleView: TextView? = itemView.findViewById(R.id.screen_title)
 
-import de.deutschebahn.bahnhoflive.R;
-
-public class ToolbarViewHolder extends RecyclerView.ViewHolder {
-
-    private final TextView titleView;
-
-    public ToolbarViewHolder(View itemView) {
-        super(itemView);
-
-        titleView = itemView.findViewById(R.id.screen_title);
+    constructor(itemView: View, title: CharSequence?) : this(itemView) {
+        setTitle(title)
     }
 
-    public ToolbarViewHolder(View itemView, CharSequence title) {
-        this(itemView);
-        setTitle(title);
+    constructor(itemView: View, @StringRes title: Int) : this(itemView) {
+        setTitle(title)
     }
 
-    public ToolbarViewHolder(View itemView, @StringRes int title) {
-        this(itemView);
-        setTitle(title);
+    fun setTitle(title: Int) {
+        setTitle(if (title == 0) null else itemView.context.getText(title))
     }
 
-
-    public void setTitle(int title) {
-        setTitle(title == 0 ? null : itemView.getContext().getText(title));
+    fun setTitle(title: CharSequence?) {
+        titleView?.text = title
     }
 
-    public void setTitle(CharSequence title) {
-        if (titleView != null) {
-            titleView.setText(title);
-        }
+    fun setContentDescription(contentDescription: CharSequence?) {
+        titleView?.contentDescription = contentDescription
     }
+
 }
