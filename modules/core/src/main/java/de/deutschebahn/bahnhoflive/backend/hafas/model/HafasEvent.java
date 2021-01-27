@@ -155,7 +155,8 @@ public class HafasEvent implements Parcelable {
      * @return A String containing the name of the line and it's identification number
      */
     public String getDisplayName() {
-        return String.format("%s %s", product.catOut, product.line);
+        final String line = product.line == null ? product.num : product.line;
+        return String.format("%s %s", product.catOut, line);
     }
 
     /**
