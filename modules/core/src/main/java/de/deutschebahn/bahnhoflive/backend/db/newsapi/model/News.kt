@@ -33,7 +33,7 @@ class News {
     val decodedImage by lazy {
         image?.substringAfter(",")?.let {
             Base64.decode(it, Base64.DEFAULT)
-        }?.also { image = null }
+        }?.also { image = null }?.takeUnless { it.isEmpty() }
     }
 
     var image: String? = null
