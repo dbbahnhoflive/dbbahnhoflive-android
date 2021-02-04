@@ -151,7 +151,34 @@ class RimapShop(private val rimapPOI: RimapPOI) : Shop {
                     }
                     subTags.plus(subTags.reduce { acc, subTag -> acc + subTag }).distinct()
                 }
-                ?.toList()
+                ?.toMutableList()
+        }.let {
+            if (name == "everyworks") {
+                mutableListOf(
+                    "every",
+                    "work",
+                    "Arbeit",
+                    "office",
+                    "Büro",
+                    "Buero",
+                    "coworking",
+                    "working",
+                    "smart",
+                    "city",
+                    "Arbeitsplatz",
+                    "Platz",
+                    "Meeting",
+                    "Room",
+                    "Meetingraum",
+                    "Raum"
+                ).apply {
+                    if (it != null) {
+                        addAll(it)
+                    }
+                }
+            } else {
+                it
+            }
         }
     }
 
