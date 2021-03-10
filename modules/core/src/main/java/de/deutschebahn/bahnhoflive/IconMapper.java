@@ -39,6 +39,7 @@ public class IconMapper {
                 return R.drawable.app_mobiler_service;
             case ServiceContent.Type.IMPAIRED_MOBILITY:
                 return R.drawable.app_mobilitaetservice;
+            case ServiceContent.Type.MOBILITY_SERVICE_DEPRECATED:
             case ServiceContent.Type.MOBILITY_SERVICE:
                 return R.drawable.app_mobilitaetservice;
             case ServiceContent.Type.REGIONAL_TRANSPORTATION:

@@ -30,6 +30,9 @@ object PublicTrainStationService {
         ServiceContent.Type.Local.DB_LOUNGE to { detailedStopPlace: DetailedStopPlace ->
             detailedStopPlace.hasDbLounge
         },
+        ServiceContent.Type.MOBILITY_SERVICE_DEPRECATED to { detailedStopPlace: DetailedStopPlace ->
+            detailedStopPlace.hasMobilityService
+        },
         ServiceContent.Type.MOBILITY_SERVICE to { detailedStopPlace: DetailedStopPlace ->
             detailedStopPlace.hasMobilityService
         },

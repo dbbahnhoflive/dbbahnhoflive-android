@@ -243,6 +243,7 @@ class StationViewModel : HafasTimetableViewModel() {
                         detailedStopPlace.hasTravelCenter then { ServiceContent.Type.Local.TRAVEL_CENTER },
                         detailedStopPlace.hasDbLounge then { ServiceContent.Type.Local.DB_LOUNGE },
                         detailedStopPlace.hasMobilityService then { ServiceContent.Type.MOBILITY_SERVICE },
+                        detailedStopPlace.hasMobilityService then { ServiceContent.Type.MOBILITY_SERVICE_DEPRECATED },
                         detailedStopPlace.hasSzentrale then { ServiceContent.Type.THREE_S },
                         detailedStopPlace.hasLostAndFound then { ServiceContent.Type.Local.LOST_AND_FOUND },
                         detailedStopPlace.hasWifi then { ServiceContent.Type.WIFI },
@@ -747,6 +748,7 @@ class StationViewModel : HafasTimetableViewModel() {
                                             ServiceContent.Type.Local.TRAVEL_CENTER,
                                             ServiceContent.Type.Local.DB_LOUNGE,
                                             ServiceContent.Type.MOBILITY_SERVICE,
+                                            ServiceContent.Type.MOBILITY_SERVICE_DEPRECATED,
                                             ServiceContent.Type.THREE_S,
                                             ServiceContent.Type.Local.LOST_AND_FOUND
                                         ).any { availableInfos.containsKey(it) } then {

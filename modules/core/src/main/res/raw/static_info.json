@@ -18,9 +18,13 @@
 		{
 			"descriptionText": "<p>Die Mobilitätsservice-Zentrale organisiert alles Notwendige, wenn Sie Hilfe beim Ein-, Um- oder Aussteigen benötigen. Damit wir Sie optimal betreuen können bitten wir Sie, sich bis spätestens bis <b>20:00 Uhr des Vortages</b> Ihrer Reise anzumelden. Bei Internationalen Reisen <b>spätestens 48 Stunden</b> im Voraus.</p><dbactionbutton href=\"https://msz-hilfe.specials-bahn.de/\">Online-Formular</dbactionbutton><p><b><br>Weitere Kontaktmöglichkeiten</b></p><dbactionbutton href=\"tel:01806512512\">01806 512 512</dbactionbutton><p>(20 ct/Anruf aus dem Festnetz, Tarif bei Mobilfunk max. 60 ct/Anruf)</p><dbactionbutton href=\"mailto:msz@deutschebahn.com\">E-Mail</dbactionbutton>",
 			"title": "Mobilitätsservice",
+			"type": "mobilitaetsservice_deprecated"
+		},
+		{
+			"descriptionText": "<p>Die Mobilitätsservice-Zentrale organisiert alles Notwendige, wenn Sie Hilfe beim Ein-, Um- oder Aussteigen benötigen. Damit wir Sie optimal betreuen können bitten wir Sie, sich bis spätestens bis <b>20:00 Uhr des Vortages</b> Ihrer Reise anzumelden. Bei Internationalen Reisen <b>spätestens 48 Stunden</b> im Voraus.</p><dbactionbutton href=\"https://msz-hilfe.specials-bahn.de/\">Online-Formular</dbactionbutton><p><b><br>Weitere Kontaktmöglichkeiten</b></p><dbactionbutton href=\"tel:03065212888\">030 6521 2888</dbactionbutton><dbactionbutton href=\"mailto:msz@deutschebahn.com\">E-Mail</dbactionbutton>",
+			"title": "Mobilitätsservice",
 			"type": "mobilitaetsservice"
 		},
-
 		{
 			"descriptionText": "<p>Das 3-S-Konzept (Service, Sicherheit und Sauberkeit) steht für den sicheren und kundenorientierten Betrieb des Bahnhofs.<br><br>In der 3-S-Zentrale laufen rund um die Uhr alle wichtigen Informationen zum Betriebsablauf im Bahnhof zusammen. Über vorhandene Notruf- und Informationssäulen können Sie jederzeit direkt Kontakt zu der 3-S-Zentrale aufnehmen.<br><br>Zusätzlich sind unsere Sicherheits-Teams im Bahnhof präsent. Für polizeiliche Aufgaben ist auf dem Gebiet der Bahnanlagen des Bundes die Bundespolizei zuständig.</p> [PHONENUMBER]",
 			"title": "3-S-Zentrale",

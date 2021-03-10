@@ -15,6 +15,7 @@ import de.deutschebahn.bahnhoflive.repository.DetailedStopPlaceResource
 import de.deutschebahn.bahnhoflive.stream.livedata.MergedLiveData
 import de.deutschebahn.bahnhoflive.ui.station.StaticInfoCollection
 import de.deutschebahn.bahnhoflive.util.then
+import java.util.*
 import java.util.regex.Pattern
 
 class ServiceNumbersLiveData(
@@ -41,7 +42,8 @@ class ServiceNumbersLiveData(
             composeServiceContent(
                 detailedStopPlace,
                 staticInfoCollection,
-                ServiceContent.Type.MOBILITY_SERVICE
+                if (Calendar.getInstance(Locale.GERMANY).beforeMobilityServiceChange())
+                    ServiceContent.Type.MOBILITY_SERVICE_DEPRECATED else ServiceContent.Type.MOBILITY_SERVICE
             ),
             composeThreeSContent(detailedStopPlace, staticInfoCollection),
             composeServiceContent(
@@ -120,4 +122,7 @@ class ServiceNumbersLiveData(
         return stringBuilder.toString()
     }
 
+    //TODO remove after 2021-04-01
+    private fun Calendar.beforeMobilityServiceChange() =
+        get(Calendar.MONTH) < 3 && get(Calendar.YEAR) <= 2021
 }
