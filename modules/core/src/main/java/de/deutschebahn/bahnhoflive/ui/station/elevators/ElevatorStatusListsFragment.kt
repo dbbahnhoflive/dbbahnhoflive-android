@@ -10,9 +10,8 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.Observer
-import androidx.lifecycle.ViewModelProviders
-
 import de.deutschebahn.bahnhoflive.R
 import de.deutschebahn.bahnhoflive.tutorial.TutorialManager
 import de.deutschebahn.bahnhoflive.tutorial.TutorialView
@@ -26,7 +25,7 @@ class ElevatorStatusListsFragment : TwoTabsFragment(R.string.facilityStatus_over
 
     private var mTutorialView: TutorialView? = null
 
-    lateinit var stationViewModel: StationViewModel
+    val stationViewModel: StationViewModel by activityViewModels()
 
     override fun showFragment(position: Int) {
         when (position) {
@@ -54,7 +53,7 @@ class ElevatorStatusListsFragment : TwoTabsFragment(R.string.facilityStatus_over
             return
         }
 
-        mTutorialView = activity!!.findViewById(R.id.tab_tutorial_view)
+        mTutorialView = requireActivity().findViewById(R.id.tab_tutorial_view)
         // Show tutorial
         TutorialManager.getInstance(activity).showTutorialIfNecessary(mTutorialView, "d1_aufzuege")
 
@@ -65,7 +64,9 @@ class ElevatorStatusListsFragment : TwoTabsFragment(R.string.facilityStatus_over
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         val view = super.onCreateView(inflater, container, savedInstanceState)
 
-        ToolbarViewHolder(view, R.string.title_elevators_and_escalators)
+        if (view != null) {
+            ToolbarViewHolder(view, R.string.title_elevators_and_escalators)
+        }
 
         return view
     }
@@ -73,7 +74,6 @@ class ElevatorStatusListsFragment : TwoTabsFragment(R.string.facilityStatus_over
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        stationViewModel = ViewModelProviders.of(activity!!)[StationViewModel::class.java]
         stationViewModel.selectedServiceContentType.observe(this, Observer {
             if (it != null) {
                 HistoryFragment.parentOf(this).pop()

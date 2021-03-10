@@ -16,8 +16,6 @@ import androidx.lifecycle.DefaultLifecycleObserver
 import androidx.lifecycle.LifecycleOwner
 import de.deutschebahn.bahnhoflive.BaseApplication.Companion.get
 import de.deutschebahn.bahnhoflive.ui.consent.ConsentActivity
-import java.lang.annotation.Retention
-import java.lang.annotation.RetentionPolicy
 import java.util.*
 
 open class TrackingManager(activity: ComponentActivity? = null) {
@@ -119,6 +117,9 @@ open class TrackingManager(activity: ComponentActivity? = null) {
             const val EINSTELLUNGEN = "einstellungen"
             const val FAVORITEN = "favoriten"
             const val FEEDBACK = "feedback"
+            const val COMPLAINT = "verschmutzung"
+            const val RATE = "bewerten"
+            const val REPORT_BUG = "kontakt"
             const val FILTER = "filter"
             const val IMPRESSUM = "impressum"
             const val INFO = "info"
@@ -207,7 +208,7 @@ open class TrackingManager(activity: ComponentActivity? = null) {
         }
     }
 
-    @Retention(RetentionPolicy.SOURCE)
+    @kotlin.annotation.Retention(AnnotationRetention.SOURCE)
     @IntDef(TYPE_STATE, TYPE_ACTION)
     annotation class Type
 
