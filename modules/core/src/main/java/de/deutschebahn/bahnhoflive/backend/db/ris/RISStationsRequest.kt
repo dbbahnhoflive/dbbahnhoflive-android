@@ -72,6 +72,9 @@ class RISStationsRequest(
             val stopPlaces = stopPlacesResponse.stopPlaces ?: emptyList()
             val filteredStopPlaceSequence = stopPlaces.asSequence()
                 .filterNotNull()
+                .filter {
+                    !it.availableTransports.isNullOrEmpty()
+                }
                 .filter(
                     if (mixedResults) { stopPlace -> stopPlace.isLocalTransportStation || stopPlace.isDbStation }
                     else { stopPlace -> stopPlace.isDbStation }
