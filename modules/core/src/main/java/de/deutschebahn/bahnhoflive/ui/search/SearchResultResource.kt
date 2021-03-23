@@ -6,7 +6,7 @@
 
 package de.deutschebahn.bahnhoflive.ui.search
 
-import de.deutschebahn.bahnhoflive.backend.db.publictrainstation.model.StopPlace
+import de.deutschebahn.bahnhoflive.backend.db.ris.model.StopPlace
 import de.deutschebahn.bahnhoflive.repository.RemoteResource
 import de.deutschebahn.bahnhoflive.util.Cancellable
 

@@ -4,7 +4,7 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
-package de.deutschebahn.bahnhoflive.backend.db.publictrainstation
+package de.deutschebahn.bahnhoflive.backend.db.ris
 
 import android.location.Location
 import com.android.volley.NetworkResponse
@@ -14,12 +14,14 @@ import de.deutschebahn.bahnhoflive.backend.ForcedCacheEntryFactory
 import de.deutschebahn.bahnhoflive.backend.GsonResponseParser
 import de.deutschebahn.bahnhoflive.backend.VolleyRestListener
 import de.deutschebahn.bahnhoflive.backend.db.DbAuthorizationTool
-import de.deutschebahn.bahnhoflive.backend.db.publictrainstation.model.StopPlace
-import de.deutschebahn.bahnhoflive.backend.db.publictrainstation.model.StopPlacesPage
+import de.deutschebahn.bahnhoflive.backend.db.DbRequest
+import de.deutschebahn.bahnhoflive.backend.db.publictrainstation.DistanceCalculator
+import de.deutschebahn.bahnhoflive.backend.db.ris.model.StopPlace
+import de.deutschebahn.bahnhoflive.backend.db.ris.model.StopPlaces
 import java.net.URLEncoder
 import kotlin.math.roundToInt
 
-class StopPlacesRequest(
+class RISStationsRequest(
     listener: VolleyRestListener<List<StopPlace>>,
     dbAuthorizationTool: DbAuthorizationTool,
     query: String? = null,
@@ -30,24 +32,25 @@ class StopPlacesRequest(
     private val mixedResults: Boolean,
     private val collapseNeighbours: Boolean,
     private val pullUpFirstDbStation: Boolean
-) : PublicTrainStationRequest<List<StopPlace>>(
+) : DbRequest<List<StopPlace>>(
     Method.GET,
-    "stop-places?" + sequenceOf(
+    "https://gateway.businesshub.deutschebahn.com/ris-stations/v1/stop-places/" +
+            (query?.trim()?.takeUnless { it.isEmpty() }
+                ?.let { "by-name/" + URLEncoder.encode(it, "UTF-8") }
+                ?: "by-position") + sequenceOf(
         "size" to (limit).toString()
     ).let { sequence ->
-        query?.trim()?.takeUnless { it.isEmpty() }?.let { "name" to URLEncoder.encode(it, "UTF-8") }
-            ?.let { sequence.plus(it) }
-            ?: location?.let { location ->
-                sequence.plus(
-                    sequenceOf(
-                        "latitude" to location.latitude.obfuscate().toString(),
-                        "longitude" to location.longitude.obfuscate().toString(),
-                        "radius" to radius.toString()
-                    )
+        location?.let { location ->
+            sequence.plus(
+                sequenceOf(
+                    "latitude" to location.latitude.obfuscate().toString(),
+                    "longitude" to location.longitude.obfuscate().toString(),
+                    "radius" to radius.toString()
                 )
-            }
+            )
+        }
             ?: sequence
-    }.filterNotNull().joinToString("&") {
+    }.filterNotNull().joinToString("&", "?") {
         "${it.first}=${it.second}"
     },
     dbAuthorizationTool,
@@ -58,15 +61,15 @@ class StopPlacesRequest(
         setShouldCache(!force)
     }
 
-    override fun getCountKey() = "PTS/stop-places"
+    override fun getCountKey() = "RIS/stations"
 
     override fun parseNetworkResponse(response: NetworkResponse?): Response<List<StopPlace>> {
         super.parseNetworkResponse(response)
 
         return try {
-            val stationQueryResponseParser = GsonResponseParser(StopPlacesPage::class.java)
-            val stopPlacesPage = stationQueryResponseParser.parseResponse(response)
-            val stopPlaces = stopPlacesPage.stopPlaces ?: emptyList()
+            val stationQueryResponseParser = GsonResponseParser(StopPlaces::class.java)
+            val stopPlacesResponse = stationQueryResponseParser.parseResponse(response)
+            val stopPlaces = stopPlacesResponse.stopPlaces ?: emptyList()
             val filteredStopPlaceSequence = stopPlaces.asSequence()
                 .filterNotNull()
                 .filter(
@@ -76,7 +79,7 @@ class StopPlacesRequest(
                 .run {
                     location?.let { location ->
                         val distanceCalulator =
-                            DistanceCalulator(
+                            DistanceCalculator(
                                 location.latitude,
                                 location.longitude
                             )
@@ -111,11 +114,11 @@ class StopPlacesRequest(
 
                             if (stopPlace.isDbStation) {
                                 acc.first += stopPlace
-                            } else if (stopPlace.evaIds.ids.none {
-                                    acc.second.contains(it)
-                                }) {
-                                acc.first += stopPlace
-                                acc.second += stopPlace.evaIds.ids
+                            } else stopPlace.evaNumber?.let { evaNumber ->
+                                if (!acc.second.contains(evaNumber)) {
+                                    acc.first += stopPlace
+                                    acc.second += evaNumber
+                                }
                             }
                             acc
                         }.first
@@ -131,6 +134,8 @@ class StopPlacesRequest(
             Response.error(VolleyError(e))
         }
     }
+
+    override fun getAuthorizationHeaderKey() = "db-api-key"
 
     companion object {
         fun Double.obfuscate() = (this * 1000).roundToInt() / 1000.0
