@@ -6,6 +6,7 @@
 
 package de.deutschebahn.bahnhoflive.repository.map
 
+import com.google.android.gms.maps.model.TileProvider
 import de.deutschebahn.bahnhoflive.backend.VolleyRestListener
 import de.deutschebahn.bahnhoflive.backend.rimap.model.RimapPOI
 import de.deutschebahn.bahnhoflive.backend.rimap.model.StationFeatureCollection
@@ -39,7 +40,7 @@ open class MapRepository {
     open fun createIndoorTileProvider(width: Int, height: Int): IndoorTileProvider =
         IndoorTileProvider(width, height)
 
-    open fun createGroundTileProvider(width: Int, height: Int): GroundTileProvider =
+    open fun createGroundTileProvider(width: Int, height: Int): TileProvider =
         GroundTileProvider("", width, height)
 
 }

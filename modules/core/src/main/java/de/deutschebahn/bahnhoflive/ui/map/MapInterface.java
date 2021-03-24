@@ -71,6 +71,10 @@ class MapInterface {
         return levelCount;
     }
 
+    /**
+     * @deprecated We don't use Google map content any more.
+     */
+    @Deprecated
     public void setMapTypeGoogle() {
         currentMapType = MapType.GOOGLE_MAPS;
         updateMapType();

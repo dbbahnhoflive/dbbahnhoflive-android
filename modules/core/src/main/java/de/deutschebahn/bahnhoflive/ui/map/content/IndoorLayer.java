@@ -11,11 +11,10 @@ import com.google.android.gms.maps.model.TileOverlay;
 import com.google.android.gms.maps.model.TileOverlayOptions;
 
 import de.deutschebahn.bahnhoflive.BaseApplication;
-import de.deutschebahn.bahnhoflive.backend.rimap.model.RimapStationInfo;
 import de.deutschebahn.bahnhoflive.ui.map.content.tiles.IndoorTileProvider;
 
 public class IndoorLayer {
-    private static final int TILE_SIZE = 512;
+    private static final int TILE_SIZE = 256;
 
     private TileOverlay tileOverlay;
     private IndoorTileProvider tileProvider;
@@ -58,7 +57,7 @@ public class IndoorLayer {
     }
 
     public void setLevel(int level, GoogleMap googleMap) {
-        getTileProvider().setIndoorLevel(RimapStationInfo.levelToCode(level));
+        getTileProvider().setLevel(level);
         detach();
         attach(googleMap);
     }

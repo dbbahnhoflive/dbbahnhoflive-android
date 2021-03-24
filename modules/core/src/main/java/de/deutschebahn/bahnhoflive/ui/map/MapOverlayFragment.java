@@ -191,7 +191,7 @@ public class MapOverlayFragment extends Fragment implements OnMapReadyCallback, 
         mapViewModel.getRimapPoisLiveData().observe(this, payload -> {
             if (payload == null || payload.size() == 0) {
                 zoom = MapConstants.minimumZoomForIndoorMarkers;
-                mapInterface.setMapTypeGoogle();
+                mapInterface.setMapTypeOsm();
             } else {
 
                 mapInterface.setMapTypeOsm();

@@ -12,7 +12,6 @@ import com.google.android.gms.maps.model.TileOverlayOptions;
 import com.google.android.gms.maps.model.TileProvider;
 
 import de.deutschebahn.bahnhoflive.BaseApplication;
-import de.deutschebahn.bahnhoflive.ui.map.content.tiles.CanvasTileProvider;
 
 public class BackgroundLayer {
     private static final int TILE_SIZE = 512;
@@ -54,9 +53,6 @@ public class BackgroundLayer {
 
     public void reset() {
         this.detach();
-        if (mTileProvider instanceof CanvasTileProvider) {
-            ((CanvasTileProvider) mTileProvider).recycle();
-        }
         mTileProvider = null;
         mTileOverlayOptions = null;
     }
