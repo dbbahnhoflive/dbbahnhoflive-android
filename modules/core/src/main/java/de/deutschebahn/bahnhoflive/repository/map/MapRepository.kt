@@ -37,7 +37,7 @@ open class MapRepository {
         listener.fail()
     }
 
-    open fun createIndoorTileProvider(width: Int, height: Int): IndoorTileProvider =
+    open fun createIndoorTileProvider(width: Int, height: Int, zoneId: Int?): IndoorTileProvider =
         IndoorTileProvider(width, height)
 
     open fun createGroundTileProvider(width: Int, height: Int): TileProvider =

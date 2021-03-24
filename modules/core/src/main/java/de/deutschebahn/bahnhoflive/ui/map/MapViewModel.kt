@@ -58,8 +58,12 @@ class MapViewModel : StadaStationCacheViewModel() {
 
     val isMapLayedOut = MutableLiveData<Boolean>()
 
+    val zoneIdLiveData = MutableLiveData<String>()
+
     fun setStation(station: Station?) {
         if (station != null) {
+            zoneIdLiveData.value = station.id
+
             detailedStopPlaceResource.initialize(station)
             rimapStationFeatureCollectionResource.initialize(station)
 

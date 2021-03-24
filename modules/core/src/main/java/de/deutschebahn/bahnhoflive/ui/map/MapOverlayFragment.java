@@ -147,6 +147,14 @@ public class MapOverlayFragment extends Fragment implements OnMapReadyCallback, 
         mapInterface = MapInterface.createPlaceholder(this);
         rimapFilter = RimapFilter.load(getActivity());
         mapViewModel = ViewModelProviders.of(getActivity()).get(MapViewModel.class);
+
+        mapViewModel.getZoneIdLiveData().observe(this, zoneId -> {
+            try {
+                mapInterface.setZoneId(Integer.parseInt(zoneId));
+            } catch (Exception e) {
+                Log.w(TAG, "Could not read zone id: " + zoneId, e);
+            }
+        });
         flyoutsAdapter = new FlyoutsAdapter(content, this, mapViewModel);
 
         initialPoiManager = new InitialPoiManager(getActivity().getIntent(), savedInstanceState);

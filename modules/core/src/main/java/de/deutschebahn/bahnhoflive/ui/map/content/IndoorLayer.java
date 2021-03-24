@@ -10,19 +10,28 @@ import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.model.TileOverlay;
 import com.google.android.gms.maps.model.TileOverlayOptions;
 
+import org.jetbrains.annotations.Nullable;
+
 import de.deutschebahn.bahnhoflive.BaseApplication;
 import de.deutschebahn.bahnhoflive.ui.map.content.tiles.IndoorTileProvider;
 
 public class IndoorLayer {
     private static final int TILE_SIZE = 256;
 
+    @Nullable
+    private final Integer zoneId;
+
     private TileOverlay tileOverlay;
     private IndoorTileProvider tileProvider;
     private TileOverlayOptions tileOverlayOptions;
 
+    public IndoorLayer(@androidx.annotation.Nullable Integer zoneId) {
+        this.zoneId = zoneId;
+    }
+
     private IndoorTileProvider getTileProvider() {
         if (tileProvider == null) {
-            tileProvider = BaseApplication.get().getRepositories().getMapRepository().createIndoorTileProvider(TILE_SIZE, TILE_SIZE);
+            tileProvider = BaseApplication.get().getRepositories().getMapRepository().createIndoorTileProvider(TILE_SIZE, TILE_SIZE, zoneId);
         }
         return tileProvider;
     }

@@ -14,6 +14,7 @@ import de.deutschebahn.bahnhoflive.ui.map.content.MapType;
 
 class MapInterface {
 
+
     public interface MapTypeListener {
         void onMapTypeChanged(MapType mapType);
     }
@@ -22,6 +23,7 @@ class MapInterface {
         return new MapInterface(mapTypeListener);
     }
 
+    protected Integer zoneId;
     protected int levelCount;
     public MapType currentMapType = MapType.OSM;
 
@@ -36,11 +38,16 @@ class MapInterface {
     }
 
     protected MapInterface(MapInterface source) {
+        this.zoneId = source.zoneId;
         this.levelCount = source.levelCount;
         this.currentMapType = source.currentMapType;
         this.laidOut = source.laidOut;
         this.pendingLocation = source.pendingLocation;
         mapTypeListener = source.mapTypeListener;
+    }
+
+    public void setZoneId(int zoneId) {
+        this.zoneId = zoneId;
     }
 
     public void setIndoorLevel(int level) {

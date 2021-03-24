@@ -32,7 +32,7 @@ class GoogleMapsMapInterface extends MapInterface {
     private final GoogleMap googleMap;
 
     private final BackgroundLayer backgroundLayer = new BackgroundLayer();
-    private final IndoorLayer indoorLayer = new IndoorLayer();
+    private final IndoorLayer indoorLayer = new IndoorLayer(zoneId);
 
     private Context context;
 
