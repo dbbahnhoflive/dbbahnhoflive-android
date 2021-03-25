@@ -54,7 +54,7 @@
 			"type": "local_lostfound"
 		},
 		{
-			"descriptionText": "<p>Hallo, mein Name ist DB Smile. Ich bin Ihr digitaler Assistent und helfe bei Fragen zum Bahnhof.</p><dbactionbutton>Chatten Sie mit mir</dbactionbutton><p>Ich bin <b>Montag bis Sonntag von 07:00 - 22:00 Uhr</b> in vollem Umfang für Sie da.</p>",
+			"descriptionText": "<p>Hallo, mein Name ist DB Smile. Ich bin Ihr digitaler Assistent und helfe bei Fragen zum Bahnhof.</p> <dbactionbutton>Chatten Sie mit mir</dbactionbutton> <p>Ich bin <b>Montag bis Sonntag von 07:00 - 22:00 Uhr</b> in vollem Umfang für Sie da.</p><p><b>Alternative Kontaktmöglichkeiten</b><dbactionbutton href=\"mailto:feedback@bahnhof.de\">E-Mail</dbactionbutton> <dbactionbutton href=\"tel:030 586020930\">030 586020930</dbactionbutton>Montag bis Sonntag von 07:00 - 22:00 Uhr</p>",
 			"title": "Chatbot",
 			"type": "chatbot"
 		},

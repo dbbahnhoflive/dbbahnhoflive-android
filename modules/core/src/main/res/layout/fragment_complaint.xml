@@ -77,14 +77,42 @@
                 android:text="@string/feedback_whatsapp_unavailable"
                 android:textSize="@dimen/textsize_h3" />
 
-
             <TextView
-                android:id="@+id/mailAlternative"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/feedback_headline_alternative_contacts"
+                android:layout_marginTop="12dp"
+                android:textStyle="bold"
+                android:textSize="@dimen/textsize_h3" />
+
+
+            <Button
+                android:id="@+id/feedbackMail"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="12dp"
-                android:text="@string/feeback_mail_alternative"
-                android:autoLink="email"
+                android:background="@drawable/shape_round_button_grey"
+                android:text="@string/feedback_mail_alternative"
+                android:textAllCaps="false"
+                android:textColor="#fff" />
+
+
+            <Button
+                android:id="@+id/feedbackPhone"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="12dp"
+                android:background="@drawable/shape_round_button_grey"
+                android:text="@string/feedback_phone_number"
+                android:textAllCaps="false"
+                android:textColor="#fff" />
+
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="12dp"
+                android:text="Montag bis Sonntag von 07:00 - 22:00 Uhr"
                 android:textSize="@dimen/textsize_h3" />
 
             <TextView

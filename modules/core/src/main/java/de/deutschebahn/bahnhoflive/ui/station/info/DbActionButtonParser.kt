@@ -12,7 +12,7 @@ class DbActionButtonParser {
         const val TAG_NAME = "dbactionbutton"
     }
 
-    val pattern = Regex("<$TAG_NAME\\s+(?:href=\"(.*?)\")?\\s*>(.*?)</$TAG_NAME>")
+    val pattern = Regex("<$TAG_NAME(?:\\s+href=\"(.*?)\")?\\s*>(.*?)</$TAG_NAME>")
 
     fun parse(input: String): List<StaticInfoDescriptionPart> {
 
