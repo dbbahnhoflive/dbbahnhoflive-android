@@ -24,6 +24,7 @@ import de.deutschebahn.bahnhoflive.stream.livedata.switchMap
 import de.deutschebahn.bahnhoflive.stream.rx.ResourceState
 import de.deutschebahn.bahnhoflive.stream.rx.toObservable
 import de.deutschebahn.bahnhoflive.ui.StadaStationCacheViewModel
+import de.deutschebahn.bahnhoflive.ui.map.content.tiles.DbTileProviderStations
 import de.deutschebahn.bahnhoflive.ui.station.StationActivity
 import io.reactivex.BackpressureStrategy
 import io.reactivex.android.schedulers.AndroidSchedulers
@@ -65,7 +66,11 @@ class MapViewModel : StadaStationCacheViewModel() {
             zoneIdLiveData.value = station.id
 
             detailedStopPlaceResource.initialize(station)
-            rimapStationFeatureCollectionResource.initialize(station)
+            if (DbTileProviderStations.zoneIds.contains(station.id)) {
+
+            } else {
+                rimapStationFeatureCollectionResource.initialize(station)
+            }
 
             dbTimetableResource.initialize(station)
 
