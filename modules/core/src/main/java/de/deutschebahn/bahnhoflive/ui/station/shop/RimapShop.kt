@@ -44,13 +44,17 @@ class RimapShop(private val rimapPOI: RimapPOI) : Shop {
         return weekLists
     }
 
-    private fun findOpenHours(weekLists: MutableList<OpenHour>, dayString: String, timeString: String) {
-        val timeMatcher = TIME_RANGE_PATTERN.matcher(timeString)
+    private fun findOpenHours(
+        weekLists: MutableList<OpenHour>,
+        dayString: String?,
+        timeString: String?
+    ) {
+        val timeMatcher = TIME_RANGE_PATTERN.matcher(timeString ?: "")
         if (!timeMatcher.matches()) {
             return
         }
 
-        val dayMatcher = DAY_RANGE_PATTERN.matcher(dayString)
+        val dayMatcher = DAY_RANGE_PATTERN.matcher(dayString ?: "")
         if (!dayMatcher.matches()) {
             return
         }
@@ -99,7 +103,7 @@ class RimapShop(private val rimapPOI: RimapPOI) : Shop {
         return TextUtils.join("\n", hoursLines)
     }
 
-    private fun appendHours(list: MutableList<String>, day: String, time: String) {
+    private fun appendHours(list: MutableList<String>, day: String?, time: String?) {
         if (TextUtils.isEmpty(day) || TextUtils.isEmpty(time)) {
             return
         }
