@@ -56,14 +56,19 @@ public enum ShopCategory {
         String DB_SERVICES = "Deutsche Bahn Services";
     }
 
-    interface Menucat {
+    public interface Menucat {
         String GASTRONOMIE_LEBENSMITTEL = "Gastronomie & Lebensmittel";
         String EINKAUFEN = "Einkaufen";
         String DIENSTLEISTUNGEN = "Dienstleistungen";
         String TICKETSREISEAUSKUNFT = "Tickets & Reiseauskunft";
+        String BAHNGLEISEFERNVERKEHR = "Bahngleise & Fernverkehr";
+        String OEPNV = "Öffentlicher Nahverkehr";
+        String INDIVIDUALTRAFFIC = "Individualverkehr";
+        String STATIONSERVICES = "Bahnhofseinrichtungen";
+        String ROUTING = "Wegeleitung";
     }
 
-    interface Menusubcat {
+    public interface Menusubcat {
 
         String LEBENSMITTEL = "Lebensmittel";
         String SUPERMARKT = "Supermarkt";

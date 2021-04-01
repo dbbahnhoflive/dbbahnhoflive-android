@@ -11,3 +11,11 @@ import org.json.JSONObject
 
 fun JSONArray.asJSONObjectSequence(nullHandler: ((Any) -> Unit)? = null): Sequence<JSONObject?> =
     Sequence { JsonArrayObjectIterator(this, nullHandler) }
+
+fun JSONArray.toStringList(): List<String> = ArrayList<String>(length())
+    .also {
+        JsonArrayStringIterator(this)
+            .asSequence()
+            .filterNotNull()
+            .toCollection(it)
+    }

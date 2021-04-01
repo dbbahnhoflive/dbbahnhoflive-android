@@ -25,7 +25,7 @@ private val mapIcon: Int, @field:DrawableRes
                          private val flyoutIcon: Int) : MarkerContent(mapIcon) {
 
     private val level: Int
-        get() = RimapPOI.codeToLevel(rimapPOI.levelcode)
+        get() = RimapPOI.codeToLevel(rimapPOI.level)
 
     override fun createMarkerOptions(): MarkerOptions? {
         return super.createMarkerOptions()

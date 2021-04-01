@@ -36,10 +36,13 @@ class RimapShop(private val rimapPOI: RimapPOI) : Shop {
     private fun createOpenHours(): List<OpenHour> {
         val weekLists = ArrayList<OpenHour>(4)
 
-        findOpenHours(weekLists, rimapPOI.day1, rimapPOI.time1)
-        findOpenHours(weekLists, rimapPOI.day2, rimapPOI.time2)
-        findOpenHours(weekLists, rimapPOI.day3, rimapPOI.time3)
-        findOpenHours(weekLists, rimapPOI.day4, rimapPOI.time4)
+        rimapPOI.openings?.forEach { openingTimes ->
+            openingTimes.forEach { openingTime ->
+                openingTime.openTimes?.forEach { openTime ->
+                    findOpenHours(weekLists, openingTime.days, openTime)
+                }
+            }
+        }
 
         return weekLists
     }
@@ -95,10 +98,13 @@ class RimapShop(private val rimapPOI: RimapPOI) : Shop {
     override fun getOpenHoursInfo(): String {
         val hoursLines = ArrayList<String>()
 
-        appendHours(hoursLines, rimapPOI.day1, rimapPOI.time1)
-        appendHours(hoursLines, rimapPOI.day2, rimapPOI.time2)
-        appendHours(hoursLines, rimapPOI.day3, rimapPOI.time3)
-        appendHours(hoursLines, rimapPOI.day4, rimapPOI.time4)
+        rimapPOI.openings?.forEach { openingTimes ->
+            openingTimes.forEach { openingTime ->
+                openingTime.openTimes?.forEach { openTime ->
+                    appendHours(hoursLines, openingTime.days, openTime)
+                }
+            }
+        }
 
         return TextUtils.join("\n", hoursLines)
     }
@@ -112,7 +118,7 @@ class RimapShop(private val rimapPOI: RimapPOI) : Shop {
     }
 
     override fun getLocationDescription(context: Context): CharSequence {
-        return RimapPOI.renderFloorDescription(context, RimapPOI.codeToLevel(rimapPOI.levelcode))
+        return RimapPOI.renderFloorDescription(context, RimapPOI.codeToLevel(rimapPOI.level))
     }
 
     override fun getPaymentTypes(): List<String>? {
