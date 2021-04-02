@@ -24,8 +24,9 @@ class RimapMarkerContent(val rimapPOI: RimapPOI, private val rimapConfigItem: Ri
 private val mapIcon: Int, @field:DrawableRes
                          private val flyoutIcon: Int) : MarkerContent(mapIcon) {
 
-    private val level: Int
-        get() = RimapPOI.codeToLevel(rimapPOI.level)
+    private val level by lazy {
+        RimapPOI.codeToLevel(rimapPOI.level)
+    }
 
     override fun createMarkerOptions(): MarkerOptions? {
         return super.createMarkerOptions()
@@ -54,9 +55,9 @@ private val mapIcon: Int, @field:DrawableRes
     }
 
     override fun getPreSelectionRating(): Int =
-        when (rimapPOI.category) {
-            "TravelService" -> 2
-            "Exit" -> 1
+        when (rimapPOI.type) {
+            "DB_TRAVEL_CENTER" -> 2
+            "ENTRANCE_EXIT" -> 1
             else -> super.getPreSelectionRating()
         }
 

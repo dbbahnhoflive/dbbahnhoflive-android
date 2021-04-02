@@ -17,6 +17,7 @@ import de.deutschebahn.bahnhoflive.ui.map.content.rimap.RimapFilter
 import de.deutschebahn.bahnhoflive.util.JSONHelper
 import de.deutschebahn.bahnhoflive.util.json.asJSONObjectSequence
 import de.deutschebahn.bahnhoflive.util.json.string
+import de.deutschebahn.bahnhoflive.util.json.toStringList
 import org.json.JSONObject
 import java.text.SimpleDateFormat
 import java.util.*
@@ -24,7 +25,6 @@ import java.util.regex.Pattern
 
 class RimapPOI : Parcelable, MarkerFilterable {
     val id: Int
-    val srcLayer: String?
     val level: String?
     val type: String?
     val category: String?
@@ -35,7 +35,6 @@ class RimapPOI : Parcelable, MarkerFilterable {
     @JvmField
     val displname: String
     val displmap: String?
-    val detail: String?
 
     @JvmField
     val menucat: String?
@@ -80,11 +79,9 @@ class RimapPOI : Parcelable, MarkerFilterable {
             displayY = displayPositionJsonObject.optDouble("lat")
         }
 
-        srcLayer = JSONHelper.getStringFromJson(props, "src_layer", "")
         type = JSONHelper.getStringFromJson(props, "type", "")
         category = JSONHelper.getStringFromJson(props, "group", "")
 
-        detail = JSONHelper.getStringFromJson(props, "detail", "")
         tags = JSONHelper.getStringFromJson(props, "tags", null)
 
         val menuMapping = MenuMapping.mapping[type]
@@ -121,9 +118,26 @@ class RimapPOI : Parcelable, MarkerFilterable {
                     }?.toList()
             }?.toList()
 
-        phone = JSONHelper.getStringFromJson(props, "phone", null)
-        email = JSONHelper.getStringFromJson(props, "email", null)
-        website = JSONHelper.getStringFromJson(props, "website", null)
+        var phone: String? = null
+        var email: String? = null
+        var website: String? = null
+
+        fun JSONObject.contactRef() = optJSONArray("refs")?.toStringList()?.firstOrNull()
+
+        props.optJSONArray("contacts")?.asJSONObjectSequence()?.filterNotNull()
+            ?.forEach { contactJsonObject ->
+                when (contactJsonObject.string("type")) {
+                    "URL" -> website = contactJsonObject.contactRef()
+                    "EMAIL" -> email = contactJsonObject.contactRef()
+                    "PHONE" -> phone = contactJsonObject.contactRef()
+                }
+            }
+
+        this.phone = phone
+        this.email = email
+        this.website = website
+
+
         icon = 0
         zoom = 0
         showLabelAtZoom = 0
@@ -142,14 +156,12 @@ class RimapPOI : Parcelable, MarkerFilterable {
 
     private constructor(`in`: Parcel) {
         id = `in`.readInt()
-        srcLayer = `in`.readString()
         level = `in`.readString()
         type = `in`.readString()
         category = `in`.readString()
         name = `in`.readString()
         displname = `in`.readString()!!
         displmap = `in`.readString()
-        detail = `in`.readString()
         menucat = `in`.readString()
         menusubcat = `in`.readString()
         displayX = `in`.readDouble()
@@ -170,14 +182,12 @@ class RimapPOI : Parcelable, MarkerFilterable {
 
     override fun writeToParcel(parcel: Parcel, i: Int) {
         parcel.writeInt(id)
-        parcel.writeString(srcLayer)
         parcel.writeString(level)
         parcel.writeString(type)
         parcel.writeString(category)
         parcel.writeString(name)
         parcel.writeString(displname)
         parcel.writeString(displmap)
-        parcel.writeString(detail)
         parcel.writeString(menucat)
         parcel.writeString(menusubcat)
         parcel.writeDouble(displayX)
@@ -324,12 +334,24 @@ class RimapPOI : Parcelable, MarkerFilterable {
             }
         }
 
-        fun codeToLevel(code: String?): Int {
-            return try {
-                code?.toLowerCase()?.replace("b", "-")?.replace("l", "")?.toInt()
-            } catch (e: Exception) {
-                0
-            } ?: 0
+        private const val LEVEL_PREFIX_UPPER_FLOOR = "UPPER_FLOOR_"
+        private const val LEVEL_PREFIX_BASEMENT_FLOOR = "BASEMENT_FLOOR_"
+        private const val LEVEL_GROUND_FLOOR = "GROUND_FLOOR"
+
+        fun codeToLevel(code: String?): Int = try {
+            when {
+                code == null -> 0
+                code == LEVEL_GROUND_FLOOR -> 0
+                code.startsWith(LEVEL_PREFIX_BASEMENT_FLOOR) -> code.removePrefix(
+                    LEVEL_PREFIX_BASEMENT_FLOOR
+                ).toInt() * -1
+                code.startsWith(LEVEL_PREFIX_UPPER_FLOOR) -> code.removePrefix(
+                    LEVEL_PREFIX_UPPER_FLOOR
+                ).toInt()
+                else -> 0
+            }
+        } catch (e: Exception) {
+            0
         }
     }
 }
