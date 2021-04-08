@@ -32,6 +32,11 @@ import de.deutschebahn.bahnhoflive.backend.db.fasta2.model.FacilityStatus;
 public class FacilityStatusRequest extends Fasta2Request {
 
     private final RestListener<List<FacilityStatus>, VolleyError> mListener;
+
+    /**
+     * @deprecated always false
+     */
+    @Deprecated
     private boolean isFacilityEquipmentRequest;
 
 
@@ -66,7 +71,8 @@ public class FacilityStatusRequest extends Fasta2Request {
                 String jsonString = new String(response.data,
                         HttpHeaderParser.parseCharset(response.headers, PROTOCOL_CHARSET));
                 JSONObject obj = new JSONObject();
-                obj.put("facilities",new JSONArray(jsonString));
+                obj.put("facilities", new JSONArray(jsonString));
+                filterRelevant(obj);
 
                 return Response.success(obj,
                         HttpHeaderParser.parseCacheHeaders(response));
@@ -77,7 +83,28 @@ public class FacilityStatusRequest extends Fasta2Request {
                 return Response.error(new ParseError(je));
             }
         } else {
-            return super.parseNetworkResponse(response);
+            final Response<JSONObject> jsonObjectResponse = super.parseNetworkResponse(response);
+            if (jsonObjectResponse.isSuccess()) {
+                filterRelevant(jsonObjectResponse.result);
+            }
+            return jsonObjectResponse;
+        }
+    }
+
+    private void filterRelevant(JSONObject jsonObject) {
+        try {
+            final JSONArray facilities = jsonObject.getJSONArray("facilities");
+            for (int i = facilities.length() - 1; i >= 0; i--) {
+                try {
+                    if ("Nicht Reisendenrelevant".equals(facilities.getJSONObject(i).get("description"))) {
+                        facilities.remove(i);
+                    }
+                } catch (JSONException inner) {
+                    inner.printStackTrace();
+                }
+            }
+        } catch (JSONException e) {
+            e.printStackTrace();
         }
     }
 
