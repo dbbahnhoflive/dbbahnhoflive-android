@@ -237,7 +237,6 @@ class InfoCategorySelectionFragment : CategorySelectionFragment(
 
                     setOf(
                         ServiceContent.Type.MOBILITY_SERVICE,
-                        ServiceContent.Type.MOBILITY_SERVICE_DEPRECATED,
                         ServiceContent.Type.THREE_S,
                         ServiceContent.Type.Local.LOST_AND_FOUND,
                         ServiceContent.Type.Local.CHATBOT

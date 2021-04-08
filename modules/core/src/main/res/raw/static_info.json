@@ -16,11 +16,6 @@
 			"type": "bahnhofsmission"
 		},
 		{
-			"descriptionText": "<p>Die Mobilitätsservice-Zentrale organisiert alles Notwendige, wenn Sie Hilfe beim Ein-, Um- oder Aussteigen benötigen. Damit wir Sie optimal betreuen können bitten wir Sie, sich bis spätestens bis <b>20:00 Uhr des Vortages</b> Ihrer Reise anzumelden. Bei Internationalen Reisen <b>spätestens 48 Stunden</b> im Voraus.</p><dbactionbutton href=\"https://msz-hilfe.specials-bahn.de/\">Online-Formular</dbactionbutton><p><b><br>Weitere Kontaktmöglichkeiten</b></p><dbactionbutton href=\"tel:01806512512\">01806 512 512</dbactionbutton><p>(20 ct/Anruf aus dem Festnetz, Tarif bei Mobilfunk max. 60 ct/Anruf)</p><dbactionbutton href=\"mailto:msz@deutschebahn.com\">E-Mail</dbactionbutton>",
-			"title": "Mobilitätsservice",
-			"type": "mobilitaetsservice_deprecated"
-		},
-		{
 			"descriptionText": "<p>Die Mobilitätsservice-Zentrale organisiert alles Notwendige, wenn Sie Hilfe beim Ein-, Um- oder Aussteigen benötigen. Damit wir Sie optimal betreuen können bitten wir Sie, sich bis spätestens bis <b>20:00 Uhr des Vortages</b> Ihrer Reise anzumelden. Bei Internationalen Reisen <b>spätestens 48 Stunden</b> im Voraus.</p><dbactionbutton href=\"https://msz-hilfe.specials-bahn.de/\">Online-Formular</dbactionbutton><p><b><br>Weitere Kontaktmöglichkeiten</b></p><dbactionbutton href=\"tel:03065212888\">030 6521 2888</dbactionbutton><dbactionbutton href=\"mailto:msz@deutschebahn.com\">E-Mail</dbactionbutton>",
 			"title": "Mobilitätsservice",
 			"type": "mobilitaetsservice"
@@ -38,7 +33,7 @@
 		},
 
 		{
-			"descriptionText": "<p>Dieser Bahnhof bietet Ihnen stufenfreien Zugang.</p><p>Bei Fragen wenden Sie sich bitte an die zuständige 3-S-Zentrale oder an die Mobilitätsservice-Zentrale unter 0180 6 512 512 (20 ct/Anruf aus dem Festnetz, Tarif bei Mobilfunk max. 60 ct/Anruf).</p>",
+			"descriptionText": "<p>Dieser Bahnhof bietet Ihnen stufenfreien Zugang.</p><p>Bei Fragen wenden Sie sich bitte an die zuständige 3-S-Zentrale oder an die Mobilitätsservice-Zentrale unter 030 6521 2888.</p>",
 			"title": "Zugang & Wege",
 			"type": "stufenfreier_zugang"
 		},

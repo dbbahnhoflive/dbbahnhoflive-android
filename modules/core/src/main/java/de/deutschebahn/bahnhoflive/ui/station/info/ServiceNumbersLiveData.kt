@@ -42,8 +42,7 @@ class ServiceNumbersLiveData(
             composeServiceContent(
                 detailedStopPlace,
                 staticInfoCollection,
-                if (Calendar.getInstance(Locale.GERMANY).beforeMobilityServiceChange())
-                    ServiceContent.Type.MOBILITY_SERVICE_DEPRECATED else ServiceContent.Type.MOBILITY_SERVICE
+                ServiceContent.Type.MOBILITY_SERVICE
             ),
             composeThreeSContent(detailedStopPlace, staticInfoCollection),
             composeServiceContent(

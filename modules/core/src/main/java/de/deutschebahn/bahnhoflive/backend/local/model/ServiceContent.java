@@ -41,11 +41,6 @@ public class ServiceContent implements Parcelable {
         String CAR_RENTAL = "mietwagen";
         String MOBILE_SERVICE = "mobiler_service";
         String IMPAIRED_MOBILITY = "mobilitaethandicap";
-        /**
-         * @deprecated remove after 2021-04-01
-         */
-        @Deprecated
-        String MOBILITY_SERVICE_DEPRECATED = "mobilitaetsservice_deprecated";
         String MOBILITY_SERVICE = "mobilitaetsservice";
         String REGIONAL_TRANSPORTATION = "oepnv";
         String PARKING = "parkplaetze";
