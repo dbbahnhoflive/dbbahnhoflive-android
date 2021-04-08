@@ -12,12 +12,18 @@ open class DbAuthorizationTool(
 
     open val key get() = apiKey
 
-    fun putAuthorizationHeader(headers: MutableMap<String, String>?): Map<String, String> {
+    fun putAuthorizationHeader(headers: MutableMap<String, String>?) =
+        putAuthorizationHeader(headers, "key")
+
+    fun putAuthorizationHeader(
+        headers: MutableMap<String, String>?,
+        keyName: String = "key"
+    ): Map<String, String> {
         var headers = headers
         if (headers == null || headers == emptyMap<Any, Any>()) {
             headers = HashMap()
         }
-        headers["key"] = key
+        headers[keyName] = key
 
         return headers
     }

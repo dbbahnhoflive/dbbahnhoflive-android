@@ -47,6 +47,12 @@ public class EvaIds implements Parcelable {
         main = Collections.hasContent(ids) ? ids.get(0) : null;
     }
 
+    public EvaIds(String evaId) {
+        main = evaId;
+        ids = new ArrayList<>();
+        ids.add(main);
+    }
+
     public List<String> getIds() {
         return ids;
     }

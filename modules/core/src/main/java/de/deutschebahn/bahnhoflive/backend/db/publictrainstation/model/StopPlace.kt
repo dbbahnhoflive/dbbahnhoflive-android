@@ -8,7 +8,7 @@ package de.deutschebahn.bahnhoflive.backend.db.publictrainstation.model
 
 import com.google.android.gms.maps.model.LatLng
 import com.google.gson.annotations.SerializedName
-import de.deutschebahn.bahnhoflive.backend.db.publictrainstation.DistanceCalulator
+import de.deutschebahn.bahnhoflive.backend.db.publictrainstation.DistanceCalculator
 import de.deutschebahn.bahnhoflive.backend.local.model.EvaIds
 import de.deutschebahn.bahnhoflive.repository.InternalStation
 
@@ -33,7 +33,7 @@ open class StopPlace {
 
     private fun getIdentifier(type: String) = identifiers?.firstOrNull { it?.type == type }?.value
 
-    fun calculateDistance(distanceCalculator: DistanceCalulator) {
+    fun calculateDistance(distanceCalculator: DistanceCalculator) {
         location?.run {
             distanceInKm = distanceCalculator.calculateDistance(latitude, longitude)
         }

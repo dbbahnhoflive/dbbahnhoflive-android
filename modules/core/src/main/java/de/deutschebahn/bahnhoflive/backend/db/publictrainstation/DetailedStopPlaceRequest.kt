@@ -46,7 +46,7 @@ class DetailedStopPlaceRequest(
 
             if (currentPosition != null) {
                 detailedStopPlace.calculateDistance(
-                    DistanceCalulator(
+                    DistanceCalculator(
                         currentPosition.latitude,
                         currentPosition.longitude
                     )
