@@ -8,7 +8,6 @@ package de.deutschebahn.bahnhoflive.ui.feedback
 
 import android.content.Context
 import android.content.Intent
-import android.net.MailTo
 import android.net.Uri
 import android.os.Bundle
 import android.provider.Browser
@@ -18,7 +17,7 @@ import androidx.fragment.app.viewModels
 import de.deutschebahn.bahnhoflive.R
 import de.deutschebahn.bahnhoflive.analytics.TrackingManager
 import de.deutschebahn.bahnhoflive.util.MailUri
-import de.deutschebahn.bahnhoflive.view.replaceURLSpans
+import de.deutschebahn.bahnhoflive.util.PhoneIntent
 import kotlinx.android.synthetic.main.fragment_complaint.view.*
 import java.net.URLEncoder
 import java.nio.charset.StandardCharsets
@@ -57,10 +56,11 @@ class StationComplaintFragment : FeedbackFragment(
                 }
             }
 
-            mailAlternative.text = mailAlternative.text.replaceURLSpans { url ->
 
-                if (MailTo.isMailTo(url)) {
-                    val intent = Intent(Intent.ACTION_VIEW, MailUri(url).apply {
+            feedbackMail.apply {
+                setOnClickListener {
+                    val intent = Intent(Intent.ACTION_VIEW, MailUri().apply {
+                        to = "feedback@bahnhof.de"
                         subject = stationLiveData.value?.let {
                             "Verschmutzungs-Meldung: ${it.title} ${it.id}"
                         } ?: "Verschmutzungs-Meldung"
@@ -71,8 +71,19 @@ class StationComplaintFragment : FeedbackFragment(
                     } catch (e: Exception) {
                         Log.w(TAG, "Could not send mail", e)
                     }
-                } else {
-                    Log.w(TAG, "Unexpected link clicked: $url")
+                }
+            }
+
+            feedbackPhone.apply {
+                val phoneNumber = getString(R.string.feedback_phone_number)
+                setOnClickListener {
+                    try {
+                        startActivity(
+                            PhoneIntent(phoneNumber)
+                        )
+                    } catch (e: Exception) {
+                        Log.w(TAG, "Could not initiate phone call", e)
+                    }
                 }
             }
 
