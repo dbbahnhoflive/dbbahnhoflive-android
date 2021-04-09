@@ -36,6 +36,7 @@ open class StopPlace {
     val name get() = names?.get("DE")?.nameLong
 
     val isLocalTransportStation get() = availableTransports?.intersects(TransportType.LOCAL_TRANSPORT_TYPES) == true
+            || (!isDbStation && availableTransports?.intersects(TransportType.DB_TYPES) == true)
 
     val isDbStation get() = stationID != null
 
