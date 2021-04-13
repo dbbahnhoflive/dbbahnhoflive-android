@@ -15,6 +15,7 @@ import com.google.android.gms.maps.model.LatLngBounds
 import com.google.android.gms.maps.model.MarkerOptions
 import de.deutschebahn.bahnhoflive.R
 import de.deutschebahn.bahnhoflive.backend.rimap.RimapConfig
+import de.deutschebahn.bahnhoflive.backend.rimap.model.LevelMapping
 import de.deutschebahn.bahnhoflive.backend.rimap.model.RimapPOI
 import de.deutschebahn.bahnhoflive.ui.map.content.rimap.Track
 import de.deutschebahn.bahnhoflive.ui.station.shop.OpenStatusResolver
@@ -25,7 +26,7 @@ private val mapIcon: Int, @field:DrawableRes
                          private val flyoutIcon: Int) : MarkerContent(mapIcon) {
 
     private val level by lazy {
-        RimapPOI.codeToLevel(rimapPOI.level)
+        LevelMapping.codeToLevel(rimapPOI.level)
     }
 
     override fun createMarkerOptions(): MarkerOptions? {
@@ -47,7 +48,7 @@ private val mapIcon: Int, @field:DrawableRes
     }
 
     override fun suggestLevel(level: Int): Int {
-        return this.level
+        return this.level ?: 0
     }
 
     override fun getBounds(): LatLngBounds? {
@@ -87,7 +88,7 @@ private val mapIcon: Int, @field:DrawableRes
     }
 
     override fun getDescription(context: Context): CharSequence? {
-        return RimapPOI.renderFloorDescription(context, level)
+        return RimapPOI.renderFloorDescription(context, level ?: 0)
     }
 
     override fun wraps(item: Parcelable?): Boolean {

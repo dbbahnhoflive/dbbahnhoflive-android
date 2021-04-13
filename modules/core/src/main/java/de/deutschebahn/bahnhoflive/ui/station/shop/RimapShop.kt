@@ -8,6 +8,7 @@ package de.deutschebahn.bahnhoflive.ui.station.shop
 
 import android.content.Context
 import android.text.TextUtils
+import de.deutschebahn.bahnhoflive.backend.rimap.model.LevelMapping
 import de.deutschebahn.bahnhoflive.backend.rimap.model.RimapPOI
 import de.deutschebahn.bahnhoflive.ui.station.shop.OpenStatusResolver.DAY_IN_MINUTES
 import java.util.*
@@ -118,7 +119,10 @@ class RimapShop(private val rimapPOI: RimapPOI) : Shop {
     }
 
     override fun getLocationDescription(context: Context): CharSequence {
-        return RimapPOI.renderFloorDescription(context, RimapPOI.codeToLevel(rimapPOI.level))
+        return RimapPOI.renderFloorDescription(
+            context,
+            LevelMapping.codeToLevel(rimapPOI.level) ?: 0
+        )
     }
 
     override fun getPaymentTypes(): List<String>? {

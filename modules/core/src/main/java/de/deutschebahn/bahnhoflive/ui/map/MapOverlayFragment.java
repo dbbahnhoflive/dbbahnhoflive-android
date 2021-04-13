@@ -56,7 +56,7 @@ import de.deutschebahn.bahnhoflive.backend.hafas.model.HafasTimetable;
 import de.deutschebahn.bahnhoflive.backend.hafas.model.ProductCategory;
 import de.deutschebahn.bahnhoflive.backend.rimap.RimapConfig;
 import de.deutschebahn.bahnhoflive.backend.rimap.model.RimapPOI;
-import de.deutschebahn.bahnhoflive.backend.rimap.model.RimapStationInfo;
+import de.deutschebahn.bahnhoflive.backend.rimap.model.RimapStation;
 import de.deutschebahn.bahnhoflive.location.GPSLocationManager;
 import de.deutschebahn.bahnhoflive.model.parking.ParkingFacility;
 import de.deutschebahn.bahnhoflive.repository.DbTimetableResource;
@@ -169,25 +169,21 @@ public class MapOverlayFragment extends Fragment implements OnMapReadyCallback, 
 
         mapViewModel.getRimapStationInfoLiveData().observe(this, rimapStationInfoPair -> {
             final Station station = rimapStationInfoPair.component1();
-            final RimapStationInfo rimapStationInfo = rimapStationInfoPair.component2();
+            final RimapStation rimapStation = rimapStationInfoPair.component2();
 
-            if (rimapStationInfo == null) {
+            if (rimapStation == null) {
                 mapLevelPicker.setVisibility(View.GONE);
                 showStationOnMap(station);
                 return;
             }
 
-            final int maxLevel = rimapStationInfo.maxLevel();
-            final int minLevel = rimapStationInfo.minLevel();
+            final int maxLevel = rimapStation.getMaxLevel();
+            final int minLevel = rimapStation.getMinLevel();
             mapLevelPicker.setRange(minLevel, maxLevel);
 
-            if (minLevel > 0) {
-                setIndoorLevel(minLevel);
-            } else if (maxLevel < 0) {
-                setIndoorLevel(maxLevel);
-            }
+            setIndoorLevel(rimapStation.getLevelInit());
 
-            mapInterface.setLevelCount(rimapStationInfo.levelCount());
+            mapInterface.setLevelCount(rimapStation.getLevelCount());
 
             mapLevelPicker.setVisibility(mapInterface.getLevelCount() > 1 ? View.VISIBLE : View.GONE);
 

@@ -14,8 +14,7 @@ import com.android.volley.VolleyError
 import de.deutschebahn.bahnhoflive.BaseApplication
 import de.deutschebahn.bahnhoflive.backend.BaseRestListener
 import de.deutschebahn.bahnhoflive.backend.rimap.model.RimapPOI
-import de.deutschebahn.bahnhoflive.backend.rimap.model.RimapStationInfo
-import de.deutschebahn.bahnhoflive.backend.rimap.model.StationFeatureCollection
+import de.deutschebahn.bahnhoflive.backend.rimap.model.RimapStation
 import de.deutschebahn.bahnhoflive.backend.ris.model.TrainInfo
 import de.deutschebahn.bahnhoflive.repository.*
 import de.deutschebahn.bahnhoflive.repository.parking.ViewModelParking
@@ -57,7 +56,7 @@ class MapViewModel : StadaStationCacheViewModel() {
     val stationResource =
         StationResource(detailedStopPlaceResource, rimapStationFeatureCollectionResource)
 
-    val isMapLayedOut = MutableLiveData<Boolean>()
+    val isMapLayedOut = MutableLiveData<Boolean?>()
 
     val zoneIdLiveData = MutableLiveData<String>()
 
@@ -155,16 +154,16 @@ class MapViewModel : StadaStationCacheViewModel() {
 
     val rimapStationInfoLiveData = stationResource.data.switchMap {
         it?.takeUnless { it.location == null }?.let { station ->
-            OneShotLiveData<Pair<Station, RimapStationInfo?>> { receiver ->
+            OneShotLiveData<Pair<Station, RimapStation?>> { receiver ->
                 val evaIds = station.evaIds
                 val mainEvaId = evaIds.main
-                baseApplication.repositories.mapRepository.queryStationInfo(
+                baseApplication.repositories.mapRepository.queryLevels(
                     station.id,
-                    object : BaseRestListener<StationFeatureCollection>() {
-                        override fun onSuccess(payload: StationFeatureCollection?) {
+                    object : BaseRestListener<RimapStation?>() {
+                        override fun onSuccess(payload: RimapStation?) {
                             super.onSuccess(payload)
 
-                            receiver(station to RimapStationInfo.fromResponse(payload))
+                            receiver(station to payload)
                         }
 
                         override fun onFail(reason: VolleyError?) {
@@ -182,7 +181,7 @@ class MapViewModel : StadaStationCacheViewModel() {
     }
 
     val rimapPoisLiveData = rimapStationInfoLiveData.switchMap {
-        it.second?.takeIf { it.levelCount() > 0 }?.let {
+        it.second?.takeIf { it.levelCount > 0 }?.let {
             stationResource.data.switchMap { station ->
                 station?.let { station ->
                     OneShotLiveData<List<RimapPOI>?> {

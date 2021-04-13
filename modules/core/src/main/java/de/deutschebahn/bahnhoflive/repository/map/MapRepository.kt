@@ -7,8 +7,10 @@
 package de.deutschebahn.bahnhoflive.repository.map
 
 import com.google.android.gms.maps.model.TileProvider
+import de.deutschebahn.bahnhoflive.backend.BaseRestListener
 import de.deutschebahn.bahnhoflive.backend.VolleyRestListener
 import de.deutschebahn.bahnhoflive.backend.rimap.model.RimapPOI
+import de.deutschebahn.bahnhoflive.backend.rimap.model.RimapStation
 import de.deutschebahn.bahnhoflive.backend.rimap.model.StationFeatureCollection
 import de.deutschebahn.bahnhoflive.repository.Station
 import de.deutschebahn.bahnhoflive.repository.fail
@@ -43,4 +45,10 @@ open class MapRepository {
     open fun createGroundTileProvider(width: Int, height: Int): TileProvider =
         GroundTileProvider("", width, height)
 
+    open fun queryLevels(
+        id: String,
+        listener: BaseRestListener<RimapStation?>,
+        useCache: Boolean,
+        evaId: String?
+    ): Cancellable? = listener.fail()
 }
