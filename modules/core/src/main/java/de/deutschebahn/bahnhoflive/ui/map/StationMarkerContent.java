@@ -45,6 +45,8 @@ class StationMarkerContent extends MarkerContent {
         if (location != null) {
             markerOptions.position(location);
         }
+        markerOptions.title(station.getTitle());
+        markerOptions.snippet(station.getTitle());
         return markerOptions;
     }
 

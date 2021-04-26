@@ -292,6 +292,10 @@ public class MapOverlayFragment extends Fragment implements OnMapReadyCallback, 
         filterButton.setVisibility(station == null || initialPoiManager.source == Content.Source.HAFAS ? View.GONE : View.VISIBLE);
 
         updateFilterButton();
+
+        if (station != null) {
+            showStationOnMap(station);
+        }
     }
 
     private void showStationOnMap(Station station) {
