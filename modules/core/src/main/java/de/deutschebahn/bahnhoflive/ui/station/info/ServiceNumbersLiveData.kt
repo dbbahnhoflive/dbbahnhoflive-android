@@ -15,6 +15,7 @@ import de.deutschebahn.bahnhoflive.repository.DetailedStopPlaceResource
 import de.deutschebahn.bahnhoflive.stream.livedata.MergedLiveData
 import de.deutschebahn.bahnhoflive.ui.station.StaticInfoCollection
 import de.deutschebahn.bahnhoflive.util.then
+import java.util.*
 import java.util.regex.Pattern
 
 class ServiceNumbersLiveData(
@@ -120,4 +121,7 @@ class ServiceNumbersLiveData(
         return stringBuilder.toString()
     }
 
+    //TODO remove after 2021-04-01
+    private fun Calendar.beforeMobilityServiceChange() =
+        get(Calendar.MONTH) < 3 && get(Calendar.YEAR) <= 2021
 }

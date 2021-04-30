@@ -23,7 +23,6 @@ import de.deutschebahn.bahnhoflive.ui.station.*
 import de.deutschebahn.bahnhoflive.ui.station.elevators.ElevatorStatusListsFragment
 import de.deutschebahn.bahnhoflive.ui.station.parking.ParkingListFragment
 import de.deutschebahn.bahnhoflive.util.Collections
-import de.deutschebahn.bahnhoflive.view.CardButton
 
 class InfoCategorySelectionFragment : CategorySelectionFragment(
     R.string.title_stationinfo_categories,
@@ -83,10 +82,10 @@ class InfoCategorySelectionFragment : CategorySelectionFragment(
         updateCategories()
     }
 
-    private fun addServiceNumbers(serviceContents: List<ServiceContent>?): InfoCategory? =
+    private fun addServiceNumbers(serviceContents: List<ServiceContent>?): SimpleDynamicCategory? =
         serviceContents?.takeUnless { it.isEmpty() }?.let {
             val labelResource = serviceNumbersLabelResource
-            InfoCategory(getText(labelResource),
+            SimpleDynamicCategory(getText(labelResource),
                 R.drawable.app_service_rufnummern, TrackingManager.Category.SERVICE_UND_RUFNUMMERN,
                 Category.CategorySelectionListener { category ->
                     trackCategoryTap(category)
@@ -98,7 +97,7 @@ class InfoCategorySelectionFragment : CategorySelectionFragment(
 
     private fun addInfoAndServices(infoAndServicesList: List<ServiceContent>?) =
         infoAndServicesList?.takeUnless { it.isEmpty() }?.let {
-            InfoCategory(getText(R.string.stationinfo_infos_and_services),
+            SimpleDynamicCategory(getText(R.string.stationinfo_infos_and_services),
                 R.drawable.app_info,
                 TrackingManager.Category.INFOS_UND_SERVICES,
                 Category.CategorySelectionListener { category ->
@@ -126,7 +125,7 @@ class InfoCategorySelectionFragment : CategorySelectionFragment(
 
 
     private fun addElevators() =
-        InfoCategory(
+        SimpleDynamicCategory(
             getText(R.string.title_elevators_and_escalators),
             R.drawable.bahnhofsausstattung_aufzug,
             TrackingManager.Category.AUFZUEGE, Category.CategorySelectionListener { category ->
@@ -136,7 +135,7 @@ class InfoCategorySelectionFragment : CategorySelectionFragment(
 
     private fun addParkings() =
         parkingsResource.data.value?.takeUnless { it.isEmpty() }?.let {
-            InfoCategory(getText(R.string.stationinfo_parkings),
+            SimpleDynamicCategory(getText(R.string.stationinfo_parkings),
                 R.drawable.bahnhofsausstattung_parkplatz,
                 TrackingManager.Category.PARKPLAETZE,
                 Category.CategorySelectionListener { category ->
@@ -148,7 +147,7 @@ class InfoCategorySelectionFragment : CategorySelectionFragment(
     private fun addAccessibility(
         station: DetailedStopPlace?,
         staticInfoCollection: StaticInfoCollection
-    ): InfoCategory? {
+    ): SimpleDynamicCategory? {
         if (station == null || !station.hasSteplessAccess) {
             return null
         }
@@ -161,7 +160,7 @@ class InfoCategorySelectionFragment : CategorySelectionFragment(
             staticInfo,
             if (steplessAccessInfo == null) null else "Zusatzinfomation: $steplessAccessInfo"
         )
-        return InfoCategory(
+        return SimpleDynamicCategory(
             serviceContent.title, R.drawable.app_zugang_wege,
             TrackingManager.Category.ZUGANG_WEGE, ServiceContentCategorySelectionListener(
                 serviceContent
@@ -169,14 +168,17 @@ class InfoCategorySelectionFragment : CategorySelectionFragment(
         )
     }
 
-    private fun addWifi(station: DetailedStopPlace?, staticInfoCollection: StaticInfoCollection): InfoCategory? {
+    private fun addWifi(
+        station: DetailedStopPlace?,
+        staticInfoCollection: StaticInfoCollection
+    ): SimpleDynamicCategory? {
         if (station == null || !station.hasWifi) {
             return null
         }
 
         val staticInfo = staticInfoCollection.typedStationInfos[ServiceContent.Type.WIFI]
         return if (staticInfo != null) {
-            InfoCategory(
+            SimpleDynamicCategory(
                 staticInfo.title, R.drawable.rimap_wlan_grau,
                 TrackingManager.Category.WLAN, ServiceContentCategorySelectionListener(
                     ServiceContent(
@@ -187,28 +189,6 @@ class InfoCategorySelectionFragment : CategorySelectionFragment(
         } else {
             null
         }
-    }
-
-    private class InfoCategory(
-        private val label: CharSequence,
-        private val icon: Int,
-        private val trackingTag: String,
-        private val categorySelectionListener: Category.CategorySelectionListener
-    ) : Category {
-
-        override fun getSelectionListener(): Category.CategorySelectionListener {
-            return categorySelectionListener
-        }
-
-        override fun bind(cardButton: CardButton) {
-            cardButton.setText(label)
-            cardButton.setDrawable(icon)
-        }
-
-        override fun getTrackingTag(): String {
-            return trackingTag
-        }
-
     }
 
 

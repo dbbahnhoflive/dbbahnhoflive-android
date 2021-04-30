@@ -20,11 +20,17 @@ import de.deutschebahn.bahnhoflive.ui.RecyclerFragment;
 public abstract class CategorySelectionFragment extends RecyclerFragment<CategoryAdapter> {
 
     private final String trackingHierarchyTag;
+    private final String topLevelTrackingHierarchyTag;
     private final CategoryAdapter categoryAdapter = new CategoryAdapter();
 
     public CategorySelectionFragment(int title, String trackingHierarchyTag) {
+        this(title, trackingHierarchyTag, TrackingManager.Screen.H3);
+    }
+
+    public CategorySelectionFragment(int title, String trackingHierarchyTag, String topLevelTrackingHierarchyTag) {
         super(R.layout.fragment_recycler_grid);
         this.trackingHierarchyTag = trackingHierarchyTag;
+        this.topLevelTrackingHierarchyTag = topLevelTrackingHierarchyTag;
         setTitle(title);
 
         setAdapter(categoryAdapter);
@@ -46,7 +52,7 @@ public abstract class CategorySelectionFragment extends RecyclerFragment<Categor
     public void trackCategoryTap(@NonNull Category category) {
         final String categoryTag = category.getTrackingTag();
         final TrackingManager trackingManager = getTrackingManager();
-        trackingManager.track(TrackingManager.TYPE_ACTION, TrackingManager.Screen.H3, trackingHierarchyTag, TrackingManager.Action.TAP, categoryTag);
+        trackingManager.track(TrackingManager.TYPE_ACTION, topLevelTrackingHierarchyTag, trackingHierarchyTag, TrackingManager.Action.TAP, categoryTag);
     }
 
     @NonNull

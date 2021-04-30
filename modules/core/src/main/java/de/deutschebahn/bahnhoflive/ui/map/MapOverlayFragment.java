@@ -49,7 +49,7 @@ import de.deutschebahn.bahnhoflive.backend.BaseRestListener;
 import de.deutschebahn.bahnhoflive.backend.RestHelper;
 import de.deutschebahn.bahnhoflive.backend.StopPlaceXKt;
 import de.deutschebahn.bahnhoflive.backend.db.fasta2.model.FacilityStatus;
-import de.deutschebahn.bahnhoflive.backend.db.publictrainstation.model.StopPlace;
+import de.deutschebahn.bahnhoflive.backend.db.ris.model.StopPlace;
 import de.deutschebahn.bahnhoflive.backend.hafas.LocalTransportFilter;
 import de.deutschebahn.bahnhoflive.backend.hafas.model.HafasStation;
 import de.deutschebahn.bahnhoflive.backend.hafas.model.HafasTimetable;
@@ -704,7 +704,7 @@ public class MapOverlayFragment extends Fragment implements OnMapReadyCallback, 
         final List<HafasTimetable> localTransportTimetables = new ArrayList<>(stations.size());
 
         for (final StopPlace stopPlace : stations) {
-            final String stadaId = stopPlace.getStadaId();
+            final String stadaId = stopPlace.getStationID();
             if (stadaId == null) {
                 localTransportTimetables.add(new HafasTimetable(StopPlaceXKt.toHafasStation(stopPlace)));
             } else {

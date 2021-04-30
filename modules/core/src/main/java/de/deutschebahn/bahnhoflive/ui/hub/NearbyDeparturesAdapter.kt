@@ -9,7 +9,7 @@ package de.deutschebahn.bahnhoflive.ui.hub
 import android.view.ViewGroup
 import androidx.lifecycle.LifecycleOwner
 import de.deutschebahn.bahnhoflive.analytics.TrackingManager
-import de.deutschebahn.bahnhoflive.backend.db.publictrainstation.model.StopPlace
+import de.deutschebahn.bahnhoflive.backend.db.ris.model.StopPlace
 import de.deutschebahn.bahnhoflive.backend.hafas.model.HafasStation
 import de.deutschebahn.bahnhoflive.backend.toHafasStation
 import de.deutschebahn.bahnhoflive.persistence.FavoriteStationsStore

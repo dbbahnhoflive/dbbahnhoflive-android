@@ -13,9 +13,8 @@ import de.deutschebahn.bahnhoflive.backend.RestHelper
 import de.deutschebahn.bahnhoflive.backend.VolleyRestListener
 import de.deutschebahn.bahnhoflive.backend.db.DbAuthorizationTool
 import de.deutschebahn.bahnhoflive.backend.db.publictrainstation.DetailedStopPlaceRequest
-import de.deutschebahn.bahnhoflive.backend.db.publictrainstation.StopPlacesRequest
 import de.deutschebahn.bahnhoflive.backend.db.publictrainstation.model.DetailedStopPlace
-import de.deutschebahn.bahnhoflive.backend.db.publictrainstation.model.StopPlace
+import de.deutschebahn.bahnhoflive.backend.db.ris.RISStationsRequest
 import de.deutschebahn.bahnhoflive.util.volley.cancellable
 
 class PublicTrainStationStationRepository(
@@ -26,7 +25,7 @@ class PublicTrainStationStationRepository(
     private val trackingManager = TrackingManager()
 
     override fun queryStations(
-        listener: VolleyRestListener<List<StopPlace>?>,
+        listener: VolleyRestListener<List<de.deutschebahn.bahnhoflive.backend.db.ris.model.StopPlace>?>,
         query: String?,
         location: Location?,
         force: Boolean,
@@ -37,9 +36,10 @@ class PublicTrainStationStationRepository(
         pullUpFirstDbStation: Boolean
     ) = restHelper
         .add(
-            StopPlacesRequest(
-                object : VolleyRestListener<List<StopPlace>> {
-                    override fun onSuccess(payload: List<StopPlace>?) {
+            RISStationsRequest(
+                object :
+                    VolleyRestListener<List<de.deutschebahn.bahnhoflive.backend.db.ris.model.StopPlace>> {
+                    override fun onSuccess(payload: List<de.deutschebahn.bahnhoflive.backend.db.ris.model.StopPlace>?) {
                         listener.onSuccess(payload)
 
                         track("success")

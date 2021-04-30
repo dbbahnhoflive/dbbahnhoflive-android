@@ -34,9 +34,13 @@ public abstract class DbRequest<T> extends BaseRequest<T> implements Countable {
     public Map<String, String> getHeaders() throws AuthFailureError {
         return TaloTracing.INSTANCE.putTraceHeader(
                 dbAuthorizationTool.putAuthorizationHeader(
-                        super.getHeaders()
+                        super.getHeaders(), getAuthorizationHeaderKey()
                 )
         );
+    }
+
+    protected String getAuthorizationHeaderKey() {
+        return "key";
     }
 
     @NotNull

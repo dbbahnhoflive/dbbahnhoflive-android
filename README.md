@@ -29,4 +29,6 @@ Im Rahmen des Open Source Projekts wollen wir uns gegenüber Neuem öffnen und g
 * Angebot zur Bewältigung der letzten Reise-Meile
 * Bahnhöfe als zentrale, urbane Knotenpunkte
 
+Eine Übersicht der Themen, die wir für kommende Release-Zyklen zur Umsetzung eingeplant haben findet sich in unserer [ROADMAP](https://github.com/dbbahnhoflive/dbbahnhoflive-android/blob/master/ROADMAP.md).
+
 Die offizielle DB Bahnhof live App-Version bietet unseren Reisenden und Bahnhofsbesuchern mobilen Zugriff auf 5.400 Bahnhöfe und alle ÖPNV-Haltestellen deutschlandweit. Die App steht im Google Play Store und im Apple App Store zum kostenfreien Download bereit und wird stetig weiterentwickelt und optimiert. Weitere Informationen unter [https://www.bahnhof.de/bahnhof-de/ueberuns/db_bahnhof_live-519228](https://www.bahnhof.de/bahnhof-de/ueberuns/db_bahnhof_live-519228)

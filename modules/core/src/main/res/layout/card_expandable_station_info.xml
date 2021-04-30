@@ -32,7 +32,7 @@
                 android:id="@+id/contentHeaderImage"
                 android:visibility="gone"
                 tools:visibility="visible"
-                android:src="@drawable/chatbot"
+                android:src="@drawable/chatbot_card"
                 android:layout_width="match_parent"
                 android:layout_height="@dimen/chatbot_service_image_height" />
 

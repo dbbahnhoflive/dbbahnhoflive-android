@@ -10,9 +10,9 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.Observer
 import androidx.lifecycle.Transformations
-import androidx.lifecycle.ViewModelProviders
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
 import de.deutschebahn.bahnhoflive.BaseApplication
 import de.deutschebahn.bahnhoflive.R
@@ -34,7 +34,7 @@ class HafasDeparturesFragment : RecyclerFragment<HafasDeparturesAdapter>(R.layou
 
     private var swipeRefreshLayout: SwipeRefreshLayout? = null
     private var loadingContentDecorationViewHolder: LoadingContentDecorationViewHolder? = null
-    private lateinit var hafasTimetableViewModel: HafasTimetableViewModel
+    private val hafasTimetableViewModel: HafasTimetableViewModel by activityViewModels()
     private val hafasTimetableResource get() = hafasTimetableViewModel.hafasTimetableResource
 
     val trackingManager: TrackingManager
@@ -42,8 +42,6 @@ class HafasDeparturesFragment : RecyclerFragment<HafasDeparturesAdapter>(R.layou
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-
-        hafasTimetableViewModel = ViewModelProviders.of(activity!!).get(HafasTimetableViewModel::class.java)
 
         adapter = HafasDeparturesAdapter(View.OnClickListener {
             trackingManager.track(TrackingManager.TYPE_ACTION, TrackingManager.Screen.H2, TrackingManager.Action.TAP, TrackingManager.UiElement.FILTER_BUTTON)

@@ -19,7 +19,7 @@ import de.deutschebahn.bahnhoflive.BaseApplication;
 import de.deutschebahn.bahnhoflive.R;
 import de.deutschebahn.bahnhoflive.analytics.TrackingManager;
 import de.deutschebahn.bahnhoflive.backend.StopPlaceXKt;
-import de.deutschebahn.bahnhoflive.backend.db.publictrainstation.model.StopPlace;
+import de.deutschebahn.bahnhoflive.backend.db.ris.model.StopPlace;
 import de.deutschebahn.bahnhoflive.backend.hafas.model.HafasStation;
 import de.deutschebahn.bahnhoflive.persistence.FavoriteStationsStore;
 import de.deutschebahn.bahnhoflive.persistence.RecentSearchesStore;

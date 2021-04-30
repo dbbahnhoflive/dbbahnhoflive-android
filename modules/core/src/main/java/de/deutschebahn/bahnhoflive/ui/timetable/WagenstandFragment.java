@@ -91,6 +91,7 @@ public class WagenstandFragment extends Fragment implements View.OnLayoutChangeL
     private ViewGroup headerLayout;
     private LiveData<Station> stationLiveData;
     private StationViewModel stationViewModel;
+    private String titleDescription;
 
     @Override
     public void setArguments(Bundle args) {
@@ -131,6 +132,7 @@ public class WagenstandFragment extends Fragment implements View.OnLayoutChangeL
 
     public void setUIArguments(Bundle args) {
         this.title = args.getString(FragmentArgs.TITLE);
+        this.titleDescription = args.getString(FragmentArgs.TITLE_DESCRIPTION);
         selectedWaggon = args.getString(FragmentArgs.WAGENSTAND_WAGGON);
         timestamp = args.getString(FragmentArgs.WAGENSTAND_TIMESTAMP, "");
 
@@ -149,6 +151,7 @@ public class WagenstandFragment extends Fragment implements View.OnLayoutChangeL
 
     public void setTitle() {
         this.title = String.format("%s | Gl. %s", trainFormation.getTime(), trainFormation.getPlatform());
+        this.titleDescription = String.format("%s | Gleis %s", trainFormation.getTime(), trainFormation.getPlatform());
     }
 
     public String getActionBarTitle() {
@@ -165,7 +168,7 @@ public class WagenstandFragment extends Fragment implements View.OnLayoutChangeL
             setUIArguments(savedInstanceState);
         }
 
-        new ToolbarViewHolder(v, getActionBarTitle());
+        new ToolbarViewHolder(v, getActionBarTitle()).setContentDescription(titleDescription);
 
         waggonListview = v.findViewById(R.id.waggon_list);
 
@@ -354,6 +357,7 @@ public class WagenstandFragment extends Fragment implements View.OnLayoutChangeL
 
             outState.putParcelable(FragmentArgs.TRAIN_FORMATION, trainFormation);
             outState.putString(FragmentArgs.TITLE, title);
+            outState.putString(FragmentArgs.TITLE_DESCRIPTION, titleDescription);
 
             if (selectedWaggon != null) {
                 outState.putString(FragmentArgs.WAGENSTAND_WAGGON, selectedWaggon);

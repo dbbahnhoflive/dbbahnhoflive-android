@@ -8,7 +8,7 @@ package de.deutschebahn.bahnhoflive.backend.db.publictrainstation
 
 import android.location.Location
 
-class DistanceCalulator(
+class DistanceCalculator(
     private val latitude: Double,
     private val longitude: Double
 ) {

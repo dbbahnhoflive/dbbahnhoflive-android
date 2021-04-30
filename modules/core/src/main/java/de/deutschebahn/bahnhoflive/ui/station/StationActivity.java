@@ -48,7 +48,7 @@ import de.deutschebahn.bahnhoflive.repository.Station;
 import de.deutschebahn.bahnhoflive.repository.StationResource;
 import de.deutschebahn.bahnhoflive.tutorial.TutorialManager;
 import de.deutschebahn.bahnhoflive.tutorial.TutorialView;
-import de.deutschebahn.bahnhoflive.ui.FeedbackFragment;
+import de.deutschebahn.bahnhoflive.ui.feedback.FeedbackCategoryFragment;
 import de.deutschebahn.bahnhoflive.ui.hub.HubActivity;
 import de.deutschebahn.bahnhoflive.ui.map.MapActivity;
 import de.deutschebahn.bahnhoflive.ui.map.MapPresetProvider;
@@ -348,7 +348,7 @@ public class StationActivity extends AppCompatActivity implements
     @Override
     public void showFeedbackFragment() {
         showTab(0);
-        overviewFragment.push(FeedbackFragment.Companion.create());
+        overviewFragment.push(new FeedbackCategoryFragment());
     }
 
     @Override
