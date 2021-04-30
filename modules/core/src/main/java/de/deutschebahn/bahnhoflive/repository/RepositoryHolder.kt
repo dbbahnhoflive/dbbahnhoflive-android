@@ -29,7 +29,8 @@ data class RepositoryHolder(
     val einkaufsbahnhofRepository: EinkaufsbahnhofRepository = EinkaufsbahnhofRepository(),
     val mapRepository: MapRepository = MapRepository(),
     val parkingRepository: ParkingRepository = ParkingRepository(),
-    val occupancyRepository: OccupancyRepository = OccupancyRepository()
+    val occupancyRepository: OccupancyRepository = OccupancyRepository(),
+    val fontRepository: FontRepository = FontRepository()
 )
 
 val Context.appRepositories get(): RepositoryHolder = (applicationContext as BaseApplication).repositories

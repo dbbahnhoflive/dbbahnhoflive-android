@@ -3,84 +3,74 @@
  *
  * SPDX-License-Identifier: Apache-2.0
  */
+package de.deutschebahn.bahnhoflive.ui.map
 
-package de.deutschebahn.bahnhoflive.ui.map;
+import android.content.Context
+import android.graphics.Paint
+import android.graphics.Typeface
+import android.os.Parcelable
+import androidx.core.content.ContextCompat
+import com.google.android.gms.maps.model.MarkerOptions
+import de.deutschebahn.bahnhoflive.R
+import de.deutschebahn.bahnhoflive.repository.DbTimetableResource
+import de.deutschebahn.bahnhoflive.repository.Station
+import de.deutschebahn.bahnhoflive.repository.appRepositories
+import de.deutschebahn.bahnhoflive.ui.ViewHolder
+import de.deutschebahn.bahnhoflive.ui.station.StationActivity
+import de.deutschebahn.bahnhoflive.view.TextDrawable
+import de.deutschebahn.bahnhoflive.view.VerticalStackDrawable
 
-import android.content.Context;
-import android.content.Intent;
-import android.os.Parcelable;
+internal class StationMarkerContent(private val station: Station, context: Context) :
+    MarkerContent(DrawableBitmapDescriptorFactory { highlighted ->
+        VerticalStackDrawable(
+            ContextCompat.getDrawable(context, R.drawable.legacy_dbmappinicon)!!,
+            TextDrawable(Paint().apply {
+                typeface = Typeface.create(
+                    context.appRepositories.fontRepository.defaultFont,
+                    Typeface.BOLD
+                )
+                textSize = context.resources.getDimension(R.dimen.textsize_h3)
+            }, context.resources.getDimensionPixelOffset(R.dimen.default_space), station.title)
+        )
+    }) {
+    var departures: DbTimetableResource? = null
+        private set
 
-import com.google.android.gms.maps.model.LatLng;
-import com.google.android.gms.maps.model.MarkerOptions;
-
-import de.deutschebahn.bahnhoflive.R;
-import de.deutschebahn.bahnhoflive.repository.DbTimetableResource;
-import de.deutschebahn.bahnhoflive.repository.Station;
-import de.deutschebahn.bahnhoflive.ui.ViewHolder;
-import de.deutschebahn.bahnhoflive.ui.station.StationActivity;
-
-class StationMarkerContent extends MarkerContent {
-    private final Station station;
-    private DbTimetableResource timetable;
-
-    public StationMarkerContent(Station station) {
-        super(R.drawable.legacy_dbmappinicon);
-        this.station = station;
+    override fun getTitle(): String {
+        return station.title
     }
 
-    @Override
-    public String getTitle() {
-        return station.getTitle();
+    override fun getMapIcon(): Int {
+        return R.drawable.legacy_dbmappinicon
     }
 
-    @Override
-    public int getMapIcon() {
-        return R.drawable.legacy_dbmappinicon;
-    }
-
-    @Override
-    public MarkerOptions createMarkerOptions() {
-        final MarkerOptions markerOptions = super.createMarkerOptions();
-        final LatLng location = station.getLocation();
+    override fun createMarkerOptions(): MarkerOptions? = super.createMarkerOptions()?.apply {
+        val location = station.location
         if (location != null) {
-            markerOptions.position(location);
+            position(location)
         }
-        markerOptions.title(station.getTitle());
-        markerOptions.snippet(station.getTitle());
-        return markerOptions;
+        zIndex(100f)
     }
 
-    @Override
-    public boolean wraps(Parcelable item) {
-        return station.equals(item);
+    override fun wraps(item: Parcelable?): Boolean {
+        return station == item
     }
 
-    @Override
-    public void onFlyoutClick(Context context) {
-        final Intent intent = StationActivity.createIntent(context, station);
-        context.startActivity(intent);
+    override fun onFlyoutClick(context: Context) {
+        val intent = StationActivity.createIntent(context, station)
+        context.startActivity(intent)
     }
 
-    @Override
-    public ViewType getViewType() {
-        return ViewType.DB_STATION;
+    override fun getViewType(): ViewType {
+        return ViewType.DB_STATION
     }
 
-    public void setTimetable(DbTimetableResource timetable) {
-        this.timetable = timetable;
+    fun setTimetable(timetable: DbTimetableResource?) {
+        departures = timetable
     }
 
-    @Override
-    public void bindTo(ViewHolder<MarkerBinder> flyoutViewHolder) {
+    override fun bindTo(flyoutViewHolder: ViewHolder<MarkerBinder>) {}
+    override fun getPreSelectionRating(): Int {
+        return 1
     }
-
-    @Override
-    public int getPreSelectionRating() {
-        return 1;
-    }
-
-    public DbTimetableResource getDepartures() {
-        return timetable;
-    }
-
 }

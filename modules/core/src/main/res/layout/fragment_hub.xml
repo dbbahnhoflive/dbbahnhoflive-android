@@ -44,6 +44,11 @@
             app:layout_constraintLeft_toLeftOf="parent"
             app:layout_constraintRight_toRightOf="parent" />
 
+        <ImageView
+            android:id="@+id/demo"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"></ImageView>
+
         <FrameLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"

@@ -301,7 +301,7 @@ public class MapOverlayFragment extends Fragment implements OnMapReadyCallback, 
     private void showStationOnMap(Station station) {
         final RimapFilter.Item stationFilterItem = rimapFilter.getStationFilterItem();
 
-        final StationMarkerContent markerContent = new StationMarkerContent(station);
+        final StationMarkerContent markerContent = new StationMarkerContent(station, requireContext());
         final DbTimetableResource timetable = new DbTimetableResource(InternalStation.of(station));
         timetable.loadIfNecessary();
         markerContent.setTimetable(timetable);
@@ -730,7 +730,7 @@ public class MapOverlayFragment extends Fragment implements OnMapReadyCallback, 
             stationResourceData.observe(this, new Observer<Station>() {
                 @Override
                 public void onChanged(@Nullable Station station) {
-                    final StationMarkerContent stationMarkerContent = new StationMarkerContent(station);
+                    final StationMarkerContent stationMarkerContent = new StationMarkerContent(station, requireContext());
                     final MarkerBinder markerBinder = new MarkerBinder(stationMarkerContent, zoom, level, stationRequestArguments.filterItem);
                     stationRequestArguments.categoryMarkerBinders.add(markerBinder);
                     markerBinders.add(markerBinder);
