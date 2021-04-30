@@ -249,36 +249,27 @@ class StationInfoDetailsFragment :
 
                 ServiceContent.Type.Local.CHATBOT -> {
                     addImagePart(R.drawable.chatbot_card)
-                    dbactionbuttonPattern.matcher(item.descriptionText).takeIf { it.matches() }
-                        ?.run {
-                            group(1).takeUnless { it.isBlank() }?.also {
-                                addHtmlPart(it)
-                            }
-
-                            if (Calendar.getInstance().get(Calendar.HOUR_OF_DAY) in 7 until 22)
-                                addButtonPart(
-                                    group(2),
-                                    itemView.resources.getString(R.string.sr_chatbot),
-                                    View.OnClickListener {
-                                        trackingManager.track(
-                                            TrackingManager.TYPE_ACTION,
-                                            TrackingManager.Screen.D1,
-                                            TrackingManager.Action.TAP,
-                                            TrackingManager.UiElement.CHATBOT
+                    renderDescriptionText(item, false) { dbActionButton ->
+                        if (Calendar.getInstance().get(Calendar.HOUR_OF_DAY) in 7 until 22)
+                            addButtonPart(
+                                dbActionButton.label ?: "Chatbot",
+                                itemView.resources.getString(R.string.sr_chatbot),
+                                View.OnClickListener {
+                                    trackingManager.track(
+                                        TrackingManager.TYPE_ACTION,
+                                        TrackingManager.Screen.D1,
+                                        TrackingManager.Action.TAP,
+                                        TrackingManager.UiElement.CHATBOT
+                                    )
+                                    it.context.startActivity(
+                                        Intent(
+                                            Intent.ACTION_VIEW,
+                                            Uri.parse("https://bahnhof-bot.deutschebahn.com/")
                                         )
-                                        it.context.startActivity(
-                                            Intent(
-                                                Intent.ACTION_VIEW,
-                                                Uri.parse("https://bahnhof-bot.deutschebahn.com/")
-                                            )
-                                        )
-                                    })
+                                    )
+                                })
 
-                            group(3).takeUnless { it.isBlank() }?.also {
-                                addHtmlPart(it)
-                            }
-
-                        } ?: addHtmlPart(item.descriptionText)
+                    }
                 }
 
                 else -> {
@@ -308,19 +299,27 @@ class StationInfoDetailsFragment :
                 }
         }
 
-        private fun renderDescriptionText(item: ServiceContent) {
+        private fun renderDescriptionText(
+            item: ServiceContent,
+            findPhoneButtons: Boolean = true,
+            specialActionButtonFactory: ((DbActionButton) -> Unit)? = null
+        ) {
             val parts = dbActionButtonParser.parse(item.descriptionText)
 
             parts.forEach {
                 it.button?.also { dbActionButton ->
-                    dbActionButton.label?.also { label ->
-                        addButtonPart(label, label) {
-                            dbActionButton.href?.let { url ->
+                    val href = dbActionButton.href
+
+                    if (href == null) {
+                        specialActionButtonFactory?.invoke(dbActionButton)
+                    } else {
+                        dbActionButton.label?.also { label ->
+                            addButtonPart(label, label) {
                                 try {
                                     it.context.startActivity(
                                         Intent(
                                             Intent.ACTION_VIEW,
-                                            Uri.parse(url)
+                                            Uri.parse(href)
                                         )
                                     )
                                 } catch (e: Exception) {
@@ -330,16 +329,20 @@ class StationInfoDetailsFragment :
                         }
                     }
                 } ?: it.text?.also { descriptionText ->
-                    val matcher = Patterns.PHONE.matcher(descriptionText)
-                    var cursor = 0
-                    while (matcher.find()) {
-                        val start = matcher.start()
-                        addHtmlPart(descriptionText.substring(cursor, start))
-                        cursor = matcher.end()
-                        addPhonePart(descriptionText.substring(start, cursor), item.title)
-                    }
-                    if (cursor < descriptionText.length) {
-                        addHtmlPart(descriptionText.substring(cursor, descriptionText.length))
+                    if (findPhoneButtons) {
+                        val matcher = Patterns.PHONE.matcher(descriptionText)
+                        var cursor = 0
+                        while (matcher.find()) {
+                            val start = matcher.start()
+                            addHtmlPart(descriptionText.substring(cursor, start))
+                            cursor = matcher.end()
+                            addPhonePart(descriptionText.substring(start, cursor), item.title)
+                        }
+                        if (cursor < descriptionText.length) {
+                            addHtmlPart(descriptionText.substring(cursor, descriptionText.length))
+                        }
+                    } else {
+                        addHtmlPart(descriptionText)
                     }
                 }
             }

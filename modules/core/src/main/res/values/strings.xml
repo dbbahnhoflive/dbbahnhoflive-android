@@ -285,10 +285,12 @@
     <string name="consent_copy_2">Diese Zustimmung erfolgt freiwillig. Sie können Sie jederzeit unter <a href="">Datenschutz</a> widerrufen.</string>
     <string name="feedback_complaint_title">@string/complaint_button</string>
     <string name="complaint_headline">@string/feedback_complaint_title</string>
-    <string name="feedback_complaint_explanation">Ihnen ist eine Verunreinigung oder eine defekte Anlage an einem Bahnhof aufgefallen? Benachrichtigen Sie uns gerne direkt über <b>WhatsApp</b>.</string>
+    <string name="feedback_complaint_explanation">Ihnen ist eine Verunreinigung oder eine defekte Anlage an einem Bahnhof aufgefallen? Benachrichtigen Sie uns gerne direkt über <b>WhatsApp</b>.*</string>
     <string name="feeback_whatsapp_button">WhatsApp öffnen</string>
     <string name="feedback_cost_notice">Dieser Service ist <b>kostenlos</b>. Es fällt ggf. das Datenentgelte Ihres Mobilfunkproviders an.</string>
-    <string name="feeback_mail_alternative">Alternativ erreichen Sie uns über E-Mail. marketing-bahnhoefe@deutschebahn.com</string>
-    <string name="feeback_disclaimer"><b>Bitte beachten Sie,</b> dass die Benachrichtigung auf diesem Weg ein bestehendes Nutzerkonto beim Dienst „WhatsApp“ voraussetzt und über den Dienst „MessengerPeople“ weitergeleitet wird. Diese Dienste und deren Datenverarbeitung werden ausschließlich durch die jeweiligen Anbieter eigenverantwortlich angeboten, betrieben und ausgestaltet. Sofern Sie diese Dienste freiwillig und eigenständig nutzen, um uns eine Verschmutzung zu melden, sind die Erklärungen zum Datenschutz von „WhatsApp“ und „MessengerPeople GmbH“ zu beachten. Hinsichtlich der Verarbeitung Ihrer Daten bei der DB Station&amp;Service AG im Zuge einer Verschmutzungsmeldung über diese Dienste lesen Sie bitte vorab auch aufmerksam unsere Datenschutzerklärung: bahnhof.de/dbreiniger</string>
+    <string name="feedback_mail_alternative">E-Mail</string>
+    <string name="feedback_phone_number">030 586020930</string>
+    <string name="feeback_disclaimer"><b>* Bitte beachten Sie,</b> dass die Benachrichtigung auf diesem Weg ein bestehendes Nutzerkonto beim Dienst „WhatsApp“ voraussetzt und über den Dienst „MessengerPeople“ weitergeleitet wird. Diese Dienste und deren Datenverarbeitung werden ausschließlich durch die jeweiligen Anbieter eigenverantwortlich angeboten, betrieben und ausgestaltet. Sofern Sie diese Dienste freiwillig und eigenständig nutzen, um uns eine Verschmutzung zu melden, sind die Erklärungen zum Datenschutz von „WhatsApp“ und „MessengerPeople GmbH“ zu beachten. Hinsichtlich der Verarbeitung Ihrer Daten bei der DB Station&amp;Service AG im Zuge einer Verschmutzungsmeldung über diese Dienste lesen Sie bitte vorab auch aufmerksam unsere Datenschutzerklärung: bahnhof.de/dbreiniger</string>
     <string name="feedback_whatsapp_unavailable">Sie benötigen ein bestehendes Nutzerkonto beim Dienst „WhatsApp“. Aktuell ist dieser Dienst nicht auf ihrem Gerät installiert.</string>
+    <string name="feedback_headline_alternative_contacts">Alternative Kontaktmöglichkeiten</string>
 </resources>

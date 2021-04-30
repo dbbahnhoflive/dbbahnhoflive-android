@@ -8,7 +8,7 @@ package de.deutschebahn.bahnhoflive.repository.stationsearch
 
 import android.location.Location
 import de.deutschebahn.bahnhoflive.BaseApplication
-import de.deutschebahn.bahnhoflive.backend.db.publictrainstation.model.StopPlace
+import de.deutschebahn.bahnhoflive.backend.db.ris.model.StopPlace
 import de.deutschebahn.bahnhoflive.repository.RemoteResource
 
 class NearbyStopPlacesResource(

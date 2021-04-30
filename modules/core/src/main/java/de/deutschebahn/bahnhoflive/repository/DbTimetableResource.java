@@ -15,7 +15,7 @@ import java.util.List;
 
 import de.deutschebahn.bahnhoflive.BaseApplication;
 import de.deutschebahn.bahnhoflive.backend.db.publictrainstation.model.DetailedStopPlace;
-import de.deutschebahn.bahnhoflive.backend.db.publictrainstation.model.StopPlace;
+import de.deutschebahn.bahnhoflive.backend.db.ris.model.StopPlace;
 import de.deutschebahn.bahnhoflive.backend.local.model.EvaIds;
 import de.deutschebahn.bahnhoflive.repository.timetable.Timetable;
 import de.deutschebahn.bahnhoflive.repository.timetable.TimetableCollector;
@@ -41,11 +41,11 @@ public class DbTimetableResource extends RemoteResource<Timetable> {
 
     public DbTimetableResource(Station station, StopPlace stopPlace) {
         distanceInKm = stopPlace.getDistanceInKm();
-        stationId = stopPlace.getStadaId();
+        stationId = stopPlace.getStationID();
         stationName = stopPlace.getName();
 
         if (station == null) {
-            setEvaIds(stopPlace.getEvaIds());
+            setEvaIds(new EvaIds(stopPlace.getEvaNumber()));
         } else {
             setEvaIds(station.getEvaIds());
             initialize(station);

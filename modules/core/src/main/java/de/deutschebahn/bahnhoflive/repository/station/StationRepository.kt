@@ -9,7 +9,7 @@ package de.deutschebahn.bahnhoflive.repository.station
 import android.location.Location
 import de.deutschebahn.bahnhoflive.backend.VolleyRestListener
 import de.deutschebahn.bahnhoflive.backend.db.publictrainstation.model.DetailedStopPlace
-import de.deutschebahn.bahnhoflive.backend.db.publictrainstation.model.StopPlace
+import de.deutschebahn.bahnhoflive.backend.db.ris.model.StopPlace
 import de.deutschebahn.bahnhoflive.repository.fail
 import de.deutschebahn.bahnhoflive.util.Cancellable
 
