@@ -17,7 +17,7 @@ import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
-import androidx.lifecycle.ViewModelProviders;
+import androidx.lifecycle.ViewModelProvider;
 
 import com.google.android.gms.maps.MapFragment;
 
@@ -61,7 +61,7 @@ public class MapActivity extends AppCompatActivity implements
             station = intent.getParcelableExtra(ARG_STATION);
         }
 
-        mapViewModel = ViewModelProviders.of(this).get(MapViewModel.class);
+        mapViewModel = new ViewModelProvider(this).get(MapViewModel.class);
         mapViewModel.setStation(station);
 
         trackingManager = station == null ? new TrackingManager(this) : new StationTrackingManager(this, station);

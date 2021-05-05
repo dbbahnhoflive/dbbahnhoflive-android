@@ -26,7 +26,7 @@ import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentActivity;
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.Observer;
-import androidx.lifecycle.ViewModelProviders;
+import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.android.volley.VolleyError;
@@ -146,7 +146,7 @@ public class MapOverlayFragment extends Fragment implements OnMapReadyCallback, 
         super.onCreate(savedInstanceState);
         mapInterface = MapInterface.createPlaceholder(this);
         rimapFilter = RimapFilter.load(getActivity());
-        mapViewModel = ViewModelProviders.of(getActivity()).get(MapViewModel.class);
+        mapViewModel = new ViewModelProvider(getActivity()).get(MapViewModel.class);
         flyoutsAdapter = new FlyoutsAdapter(content, this, mapViewModel);
 
         initialPoiManager = new InitialPoiManager(getActivity().getIntent(), savedInstanceState);

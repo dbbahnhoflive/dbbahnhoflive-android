@@ -10,7 +10,7 @@ import android.view.ViewGroup;
 
 import androidx.fragment.app.FragmentActivity;
 import androidx.lifecycle.LifecycleOwner;
-import androidx.lifecycle.ViewModelProviders;
+import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.RecyclerView;
 
 import java.util.List;
@@ -51,7 +51,7 @@ class StationSearchAdapter extends RecyclerView.Adapter<ViewHolder> {
     private final TrackingManager trackingManager;
 
     StationSearchAdapter(FragmentActivity context, RecentSearchesStore recentSearchesStore, SearchItemPickedListener searchItemPickedListener, LifecycleOwner owner, TrackingManager trackingManager) {
-        hubViewModel = ViewModelProviders.of(context).get(HubViewModel.class);
+        hubViewModel = new ViewModelProvider(context).get(HubViewModel.class);
 
         this.favoriteDbStationsStore = BaseApplication.get().getApplicationServices().getFavoriteDbStationStore();
         this.favoriteHafasStationsStore = BaseApplication.get().getApplicationServices().getFavoriteHafasStationsStore();

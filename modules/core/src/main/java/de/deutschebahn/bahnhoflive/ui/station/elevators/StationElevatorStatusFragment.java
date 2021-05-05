@@ -16,7 +16,7 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.Observer;
-import androidx.lifecycle.ViewModelProviders;
+import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.RecyclerView;
 
 import java.util.Collections;
@@ -96,7 +96,7 @@ public class StationElevatorStatusFragment extends Fragment
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        final StationViewModel stationViewModel = ViewModelProviders.of(getActivity()).get(StationViewModel.class);
+        final StationViewModel stationViewModel = new ViewModelProvider(getActivity()).get(StationViewModel.class);
         stationViewModel.getElevatorsResource().getData().observe(this, new Observer<List<FacilityStatus>>() {
             @Override
             public void onChanged(@Nullable List<FacilityStatus> facilityStatuses) {

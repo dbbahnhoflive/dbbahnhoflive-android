@@ -11,7 +11,7 @@ import android.os.Bundle;
 import android.widget.Toast;
 
 import androidx.annotation.Nullable;
-import androidx.lifecycle.ViewModelProviders;
+import androidx.lifecycle.ViewModelProvider;
 
 import com.google.android.gms.maps.model.LatLng;
 
@@ -48,7 +48,7 @@ public class ParkingListFragment extends RecyclerFragment<ParkingLotAdapter>
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        stationViewModel = ViewModelProviders.of(getActivity()).get(StationViewModel.class);
+        stationViewModel = new ViewModelProvider(getActivity()).get(StationViewModel.class);
 
         setAdapter(new ParkingLotAdapter(getContext(), getChildFragmentManager(), (context, parkingFacility) ->
         {

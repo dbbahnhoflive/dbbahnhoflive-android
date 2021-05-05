@@ -31,6 +31,7 @@ import de.deutschebahn.bahnhoflive.backend.ris.model.RISTimetable
 import de.deutschebahn.bahnhoflive.backend.ris.model.TrainInfo
 import de.deutschebahn.bahnhoflive.persistence.RecentContentQueriesStore
 import de.deutschebahn.bahnhoflive.repository.*
+import de.deutschebahn.bahnhoflive.repository.accessibility.AccessibilityFeaturesResource
 import de.deutschebahn.bahnhoflive.repository.feedback.WhatsAppFeeback
 import de.deutschebahn.bahnhoflive.repository.parking.ViewModelParking
 import de.deutschebahn.bahnhoflive.stream.livedata.MergedLiveData
@@ -263,10 +264,12 @@ class StationViewModel : HafasTimetableViewModel() {
             dbTimetableResource.setEvaIdsMissing()
         }
     }
-    private val evaIdsDataObserver = Observer<Station> { evaIds ->
-        if (evaIds != null) {
-            dbTimetableResource.setEvaIds(evaIds.evaIds)
+    private val evaIdsDataObserver = Observer<Station> { station ->
+        if (station != null) {
+            dbTimetableResource.setEvaIds(station.evaIds)
             dbTimetableResource.loadIfNecessary()
+
+            accesibilityFeaturesResource.evaIds = station.evaIds
         }
     }
 
@@ -1189,4 +1192,7 @@ class StationViewModel : HafasTimetableViewModel() {
             }
         }
 
+
+    val accesibilityFeaturesResource =
+        AccessibilityFeaturesResource(application.repositories.stationRepository)
 }

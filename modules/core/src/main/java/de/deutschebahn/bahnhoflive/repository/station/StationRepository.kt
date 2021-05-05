@@ -9,9 +9,12 @@ package de.deutschebahn.bahnhoflive.repository.station
 import android.location.Location
 import de.deutschebahn.bahnhoflive.backend.VolleyRestListener
 import de.deutschebahn.bahnhoflive.backend.db.publictrainstation.model.DetailedStopPlace
+import de.deutschebahn.bahnhoflive.backend.db.ris.model.Platform
 import de.deutschebahn.bahnhoflive.backend.db.ris.model.StopPlace
+import de.deutschebahn.bahnhoflive.backend.local.model.EvaIds
 import de.deutschebahn.bahnhoflive.repository.fail
 import de.deutschebahn.bahnhoflive.util.Cancellable
+import de.deutschebahn.bahnhoflive.util.volley.VolleyRequestCancellable
 
 open class StationRepository {
     open fun queryStations(
@@ -37,5 +40,13 @@ open class StationRepository {
     ): Cancellable? {
         listener.fail()
         return null
+    }
+
+    open fun queryAccessibilityDetails(
+        listener: VolleyRestListener<List<Platform>>,
+        evaIds: EvaIds,
+        force: Boolean
+    ): VolleyRequestCancellable<List<Platform>> {
+        TODO("Not yet implemented")
     }
 }

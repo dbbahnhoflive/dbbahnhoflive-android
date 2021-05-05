@@ -293,4 +293,17 @@
     <string name="feeback_disclaimer"><b>* Bitte beachten Sie,</b> dass die Benachrichtigung auf diesem Weg ein bestehendes Nutzerkonto beim Dienst „WhatsApp“ voraussetzt und über den Dienst „MessengerPeople“ weitergeleitet wird. Diese Dienste und deren Datenverarbeitung werden ausschließlich durch die jeweiligen Anbieter eigenverantwortlich angeboten, betrieben und ausgestaltet. Sofern Sie diese Dienste freiwillig und eigenständig nutzen, um uns eine Verschmutzung zu melden, sind die Erklärungen zum Datenschutz von „WhatsApp“ und „MessengerPeople GmbH“ zu beachten. Hinsichtlich der Verarbeitung Ihrer Daten bei der DB Station&amp;Service AG im Zuge einer Verschmutzungsmeldung über diese Dienste lesen Sie bitte vorab auch aufmerksam unsere Datenschutzerklärung: bahnhof.de/dbreiniger</string>
     <string name="feedback_whatsapp_unavailable">Sie benötigen ein bestehendes Nutzerkonto beim Dienst „WhatsApp“. Aktuell ist dieser Dienst nicht auf ihrem Gerät installiert.</string>
     <string name="feedback_headline_alternative_contacts">Alternative Kontaktmöglichkeiten</string>
+
+    <string name="accessibilityStepFreeAccess">Stufenfreier Zugang</string>
+    <string name="accessibilityStandardPlatformHeight">Bahnsteighöhe >= 55 cm</string>
+    <string name="accessibilityPassengerInformationDisplay">Zuganzeiger</string>
+    <string name="accessibilityAudibleSignalsAvailable">Lautsprecheranlage</string>
+    <string name="accessibilityTactilePlatformAccess">Taktiler Weg zum Bahnsteig</string>
+    <string name="accessibilityTactileGuidingStrips">Taktiles Leitsystem auf dem Bahnsteig</string>
+    <string name="accessibilityTactileHandrailLabel">Ttaktile Handlaufschilder</string>
+    <string name="accessibilityStairsMarking">Treppenstufenmarkierung</string>
+    <string name="accessibilityPlatformSign">Kontrastreiche Wegeleitung</string>
+    <string name="accessibilityBoardingAid">Einstiegshilfe</string>
+    <string name="accessibilityAutomaticDoor">Automatiktüren</string>
+
 </resources>

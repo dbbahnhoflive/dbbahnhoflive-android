@@ -23,7 +23,7 @@ import androidx.fragment.app.FragmentActivity;
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.Observer;
-import androidx.lifecycle.ViewModelProviders;
+import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
@@ -72,7 +72,7 @@ public class DbTimetableFragment extends Fragment
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        final StationViewModel stationViewModel = ViewModelProviders.of(getActivity()).get(StationViewModel.class);
+        final StationViewModel stationViewModel = new ViewModelProvider(getActivity()).get(StationViewModel.class);
         stationLiveData = stationViewModel.getStationResource().getData();
 
         dbTimetableResource = stationViewModel.getDbTimetableResource();
