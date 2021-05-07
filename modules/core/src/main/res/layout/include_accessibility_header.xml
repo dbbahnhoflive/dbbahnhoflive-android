@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical"
+    android:layout_height="wrap_content"
+    android:layout_width="match_parent">
+
+    <FrameLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@drawable/shape_gradient_background"
+        android:padding="@dimen/default_space_double">
+
+        <ImageView
+            android:importantForAccessibility="no"
+            android:id="@+id/service_icon"
+            android:layout_width="@dimen/icon_size"
+            android:layout_height="@dimen/icon_size"
+            android:layout_gravity="center"
+            android:contentDescription="@null"
+            android:src="@drawable/bahnhofsausstattung_stufenfreier_zugang" />
+
+    </FrameLayout>
+
+    <TextView
+        android:id="@+id/steplessAccessHint"
+        android:text="Dieser Bahnhof bietet Ihnen stufenfreien Zugang."
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" />
+
+    <TextView
+        android:text="Bei Fragen wenden Sie sich bitte an die zuständige 3-S-Zentrale oder an die Mobilitätsservice-Zentrale unter 030 6521 2888."
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" />
+
+    <TextView
+        android:text="Die nachfolgend genannten Ausstattungsmerkmale dienen der barrierefreien Zugänglichkeit des Bahnhofs."
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        android:orientation="horizontal">
+
+        <TextView
+            android:id="@+id/selectedPlatform"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="Kein Gleis ausgewählt"
+            android:textStyle="bold" />
+
+        <include
+            layout="@layout/button_filter"
+            android:layout_margin="@dimen/default_space"
+            android:layout_height="wrap_content"
+            android:layout_width="wrap_content"
+            android:id="@+id/filter" />
+    </LinearLayout>
+</LinearLayout>

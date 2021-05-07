@@ -305,5 +305,7 @@
     <string name="accessibilityPlatformSign">Kontrastreiche Wegeleitung</string>
     <string name="accessibilityBoardingAid">Einstiegshilfe</string>
     <string name="accessibilityAutomaticDoor">Automatiktüren</string>
+    <string name="accessibility_title">Barrierefreiheit</string>
+    <string name="platform">Gleis</string>
 
 </resources>

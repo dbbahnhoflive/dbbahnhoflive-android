@@ -20,6 +20,7 @@ import de.deutschebahn.bahnhoflive.backend.local.model.ServiceContent
 import de.deutschebahn.bahnhoflive.repository.parking.ParkingsResource
 import de.deutschebahn.bahnhoflive.ui.ServiceContentFragment
 import de.deutschebahn.bahnhoflive.ui.station.*
+import de.deutschebahn.bahnhoflive.ui.station.accessibility.AccessibilityFragment
 import de.deutschebahn.bahnhoflive.ui.station.elevators.ElevatorStatusListsFragment
 import de.deutschebahn.bahnhoflive.ui.station.parking.ParkingListFragment
 import de.deutschebahn.bahnhoflive.util.Collections
@@ -162,10 +163,10 @@ class InfoCategorySelectionFragment : CategorySelectionFragment(
         )
         return SimpleDynamicCategory(
             serviceContent.title, R.drawable.app_zugang_wege,
-            TrackingManager.Category.ZUGANG_WEGE, ServiceContentCategorySelectionListener(
-                serviceContent
-            )
-        )
+            TrackingManager.Category.ZUGANG_WEGE, Category.CategorySelectionListener { category ->
+                trackCategoryTap(category)
+                startFragment(AccessibilityFragment())
+            })
     }
 
     private fun addWifi(
