@@ -11,8 +11,8 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.core.text.HtmlCompat
+import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.Observer
-import androidx.lifecycle.ViewModelProviders
 import de.deutschebahn.bahnhoflive.R
 import de.deutschebahn.bahnhoflive.analytics.TrackingManager
 import de.deutschebahn.bahnhoflive.repository.HafasStationsResource
@@ -50,13 +50,11 @@ class LocalTransportFragment : FullBottomSheetDialogFragment() {
         }
     }
 
+    val stationViewModel by activityViewModels<StationViewModel>()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        val viewModelProvider = ViewModelProviders.of(activity!!)
-
-        val stationViewModel = viewModelProvider.get(StationViewModel::class.java)
         stationResource = stationViewModel.stationResource
 
         localTransportViewModel = stationViewModel.localTransportViewModel

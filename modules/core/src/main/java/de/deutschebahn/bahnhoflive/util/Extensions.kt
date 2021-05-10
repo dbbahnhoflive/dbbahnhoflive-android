@@ -13,3 +13,14 @@ inline fun <T> T?.destroy(block: T.() -> Unit): T? {
     this?.block()
     return null
 }
+
+inline fun <T> tryCatching(
+    catchBlock: (e: Exception) -> T? = {
+        null
+    },
+    tryBlock: () -> T
+) = try {
+    tryBlock()
+} catch (e: Exception) {
+    catchBlock(e)
+}

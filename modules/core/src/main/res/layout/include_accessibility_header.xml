@@ -1,0 +1,89 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical"
+    android:layout_height="wrap_content"
+    android:layout_width="match_parent">
+
+    <FrameLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@drawable/shape_gradient_background"
+        android:padding="@dimen/default_space_double">
+
+        <ImageView
+            android:importantForAccessibility="no"
+            android:id="@+id/service_icon"
+            android:layout_width="@dimen/icon_size"
+            android:layout_height="@dimen/icon_size"
+            android:layout_gravity="center"
+            android:contentDescription="@null"
+            android:src="@drawable/bahnhofsausstattung_stufenfreier_zugang" />
+
+    </FrameLayout>
+
+    <LinearLayout
+        android:padding="@dimen/default_space"
+        android:elevation="@dimen/card_elevation"
+        android:divider="@drawable/shape_divider"
+        android:showDividers="middle"
+        android:orientation="vertical"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <TextView
+            android:id="@+id/steplessAccessHint"
+            android:text="@string/accessibilityStepFreeNone"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" />
+
+        <TextView
+            android:text="@string/accessibility_hotline_advice"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" />
+
+        <TextView
+            android:id="@+id/phone"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@drawable/shape_round_button_grey"
+            android:gravity="center"
+            android:minHeight="64dp"
+            android:text="@string/accessibility_hotline"
+            android:textColor="@color/white"
+            android:textStyle="bold" />
+
+        <TextView
+            android:text="@string/accessibility_advice"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:clipToPadding="false"
+            android:gravity="center"
+            android:orientation="horizontal"
+            android:padding="@dimen/default_space">
+
+            <TextView
+                android:id="@+id/selectedPlatform"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="@string/accessibility_no_platform_selected"
+                android:textStyle="bold" />
+
+            <include
+                layout="@layout/button_filter"
+                android:id="@+id/filter" />
+        </LinearLayout>
+
+        <TextView
+            android:id="@+id/selectPlatformInvitation"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:padding="@dimen/default_space"
+            android:text="@string/accessibility_select_platform_invitation"
+            android:textStyle="italic" />
+    </LinearLayout>
+</LinearLayout>

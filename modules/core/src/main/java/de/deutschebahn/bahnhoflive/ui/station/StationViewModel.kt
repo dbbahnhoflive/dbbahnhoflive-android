@@ -19,6 +19,7 @@ import de.deutschebahn.bahnhoflive.analytics.TrackingManager
 import de.deutschebahn.bahnhoflive.backend.VolleyRestListener
 import de.deutschebahn.bahnhoflive.backend.db.newsapi.GroupId
 import de.deutschebahn.bahnhoflive.backend.db.newsapi.model.News
+import de.deutschebahn.bahnhoflive.backend.db.ris.model.Platform
 import de.deutschebahn.bahnhoflive.backend.einkaufsbahnhof.model.StationList
 import de.deutschebahn.bahnhoflive.backend.hafas.model.ProductCategory
 import de.deutschebahn.bahnhoflive.backend.local.model.ChatbotStation
@@ -31,6 +32,7 @@ import de.deutschebahn.bahnhoflive.backend.ris.model.RISTimetable
 import de.deutschebahn.bahnhoflive.backend.ris.model.TrainInfo
 import de.deutschebahn.bahnhoflive.persistence.RecentContentQueriesStore
 import de.deutschebahn.bahnhoflive.repository.*
+import de.deutschebahn.bahnhoflive.repository.accessibility.AccessibilityFeaturesResource
 import de.deutschebahn.bahnhoflive.repository.feedback.WhatsAppFeeback
 import de.deutschebahn.bahnhoflive.repository.parking.ViewModelParking
 import de.deutschebahn.bahnhoflive.stream.livedata.MergedLiveData
@@ -66,7 +68,7 @@ class StationViewModel : HafasTimetableViewModel() {
         private val stationFeatureTemplates = listOf(
             StationFeatureTemplate(
                 StationFeatureDefinition.ACCESSIBILITY,
-                MapOrInfoLink(ServiceContent.Type.ACCESSIBLE, TrackingManager.Category.ZUGANG_WEGE)
+                AccessibilityLink(TrackingManager.Category.ZUGANG_WEGE)
             ),
             StationFeatureTemplate(
                 StationFeatureDefinition.TOILET,
@@ -146,6 +148,19 @@ class StationViewModel : HafasTimetableViewModel() {
 
     }
 
+
+    private val selectedAccessibilityPlatformMutableLiveData = MutableLiveData<Platform?>(null)
+
+    val accessibilityPlatformsAndSelectedLiveData =
+        selectedAccessibilityPlatformMutableLiveData.switchMap { selectedPlatform ->
+            accessibilityFeaturesResource.data.map { platforms ->
+                platforms to selectedPlatform?.takeIf { selectedPlatform ->
+                    platforms?.any { matchingPlatform ->
+                        selectedPlatform.name == matchingPlatform.name
+                    } == true
+                }
+            }
+        }
 
     val hafasTimetableViewModel = this
     val localTransportViewModel = LocalTransportViewModel()
@@ -263,10 +278,12 @@ class StationViewModel : HafasTimetableViewModel() {
             dbTimetableResource.setEvaIdsMissing()
         }
     }
-    private val evaIdsDataObserver = Observer<Station> { evaIds ->
-        if (evaIds != null) {
-            dbTimetableResource.setEvaIds(evaIds.evaIds)
+    private val evaIdsDataObserver = Observer<Station> { station ->
+        if (station != null) {
+            dbTimetableResource.setEvaIds(station.evaIds)
             dbTimetableResource.loadIfNecessary()
+
+            accessibilityFeaturesResource.evaIds = station.evaIds
         }
     }
 
@@ -617,16 +634,12 @@ class StationViewModel : HafasTimetableViewModel() {
                                         currentRawQuery,
                                         stationFeaturesOnClickListener
                                     )
-                                    "Bahnhofsausstattung Stufenfreier Zugang" -> (!hasInfo(
-                                        ServiceContent.Type.ACCESSIBLE
-                                    ) && featureVisible(StationFeatureDefinition.ACCESSIBILITY)) then {
-                                        ContentSearchResult(
-                                            "Stufenfreier Zugang",
-                                            R.drawable.bahnhofsausstattung_stufenfreier_zugang,
-                                            currentRawQuery,
-                                            stationFeaturesOnClickListener
-                                        )
-                                    }
+                                    "Barrierefreiheit" -> ContentSearchResult(
+                                        "Barrierefreiheit",
+                                        R.drawable.bahnhofsausstattung_stufenfreier_zugang,
+                                        currentRawQuery,
+                                        { stationNavigation?.showAccessibility() }
+                                    )
                                     "Bahnhofsausstattung WC" -> featureVisible(
                                         StationFeatureDefinition.TOILET
                                     ) then {
@@ -1148,6 +1161,10 @@ class StationViewModel : HafasTimetableViewModel() {
         stationNavigation?.showInfoFragment(false)
     }
 
+    fun setSelectedAccessibilityPlatform(platform: Platform?) {
+        selectedAccessibilityPlatformMutableLiveData.value = platform
+    }
+
     val shoppingAvailableLiveData: LiveData<Boolean> = Transformations.distinctUntilChanged(
         Transformations.map(shopsResource.data) {
             !(it?.shops).isNullOrEmpty()
@@ -1189,4 +1206,7 @@ class StationViewModel : HafasTimetableViewModel() {
             }
         }
 
+
+    val accessibilityFeaturesResource =
+        AccessibilityFeaturesResource(application.repositories.stationRepository)
 }

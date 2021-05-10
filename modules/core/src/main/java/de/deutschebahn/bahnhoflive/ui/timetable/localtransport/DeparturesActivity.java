@@ -16,7 +16,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.lifecycle.Observer;
-import androidx.lifecycle.ViewModelProviders;
+import androidx.lifecycle.ViewModelProvider;
 
 import org.jetbrains.annotations.NotNull;
 
@@ -64,7 +64,7 @@ public class DeparturesActivity extends AppCompatActivity implements TrackingMan
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        final HafasTimetableViewModel hafasTimetableViewModel = ViewModelProviders.of(this).get(HafasTimetableViewModel.class);
+        final HafasTimetableViewModel hafasTimetableViewModel = new ViewModelProvider(this).get(HafasTimetableViewModel.class);
 
         final Intent intent = getIntent();
         final Bundle arguments = intent.getBundleExtra(ARG_HAFAS_LOADER_ARGUMENTS);

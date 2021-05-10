@@ -17,7 +17,7 @@ import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.Transformations;
-import androidx.lifecycle.ViewModelProviders;
+import androidx.lifecycle.ViewModelProvider;
 
 import java.util.List;
 
@@ -62,7 +62,7 @@ public class ShopListFragment extends RecyclerFragment<ShopAdapter>
         adapter = new ShopAdapter(category);
         setAdapter(adapter);
 
-        stationViewModel = ViewModelProviders.of(getActivity()).get(StationViewModel.class);
+        stationViewModel = new ViewModelProvider(getActivity()).get(StationViewModel.class);
 
         selectedShopCategory = stationViewModel.getSelectedShopCategory();
         selectedShopCategory.observe(this, shopCategory -> {

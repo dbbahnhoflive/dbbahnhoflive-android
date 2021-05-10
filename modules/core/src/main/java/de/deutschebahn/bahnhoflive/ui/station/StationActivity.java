@@ -27,7 +27,6 @@ import androidx.lifecycle.LiveData;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModel;
 import androidx.lifecycle.ViewModelProvider;
-import androidx.lifecycle.ViewModelProviders;
 
 import com.google.android.material.internal.CheckableImageButton;
 
@@ -53,6 +52,7 @@ import de.deutschebahn.bahnhoflive.ui.hub.HubActivity;
 import de.deutschebahn.bahnhoflive.ui.map.MapActivity;
 import de.deutschebahn.bahnhoflive.ui.map.MapPresetProvider;
 import de.deutschebahn.bahnhoflive.ui.map.content.rimap.RimapFilter;
+import de.deutschebahn.bahnhoflive.ui.station.accessibility.AccessibilityFragment;
 import de.deutschebahn.bahnhoflive.ui.station.elevators.ElevatorStatusListsFragment;
 import de.deutschebahn.bahnhoflive.ui.station.features.StationFeaturesFragment;
 import de.deutschebahn.bahnhoflive.ui.station.info.InfoCategorySelectionFragment;
@@ -99,7 +99,7 @@ public class StationActivity extends AppCompatActivity implements
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        final ViewModelProvider viewModelProvider = ViewModelProviders.of(this, new ViewModelProvider.AndroidViewModelFactory(getApplication()) {
+        final ViewModelProvider viewModelProvider = new ViewModelProvider(this, new ViewModelProvider.AndroidViewModelFactory(getApplication()) {
             @NonNull
             @Override
             public <T extends ViewModel> T create(@NonNull Class<T> modelClass) {
@@ -420,6 +420,15 @@ public class StationActivity extends AppCompatActivity implements
 
         if (!ParkingListFragment.TAG.equals(stationViewModel.getTopInfoFragmentTag())) {
             infoFragment.push(ParkingListFragment.create());
+        }
+    }
+
+    @Override
+    public void showAccessibility() {
+        showInfoFragment(false);
+
+        if (!AccessibilityFragment.TAG.equals(stationViewModel.getTopInfoFragmentTag())) {
+            infoFragment.push(new AccessibilityFragment());
         }
     }
 

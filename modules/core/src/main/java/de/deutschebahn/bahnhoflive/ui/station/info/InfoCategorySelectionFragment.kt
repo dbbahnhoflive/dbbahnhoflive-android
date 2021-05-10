@@ -20,6 +20,7 @@ import de.deutschebahn.bahnhoflive.backend.local.model.ServiceContent
 import de.deutschebahn.bahnhoflive.repository.parking.ParkingsResource
 import de.deutschebahn.bahnhoflive.ui.ServiceContentFragment
 import de.deutschebahn.bahnhoflive.ui.station.*
+import de.deutschebahn.bahnhoflive.ui.station.accessibility.AccessibilityFragment
 import de.deutschebahn.bahnhoflive.ui.station.elevators.ElevatorStatusListsFragment
 import de.deutschebahn.bahnhoflive.ui.station.parking.ParkingListFragment
 import de.deutschebahn.bahnhoflive.util.Collections
@@ -57,7 +58,7 @@ class InfoCategorySelectionFragment : CategorySelectionFragment(
             infoAndServicesCategory = addInfoAndServices(infoAndServicesLiveData.value)
             serviceNumbersCategory = addServiceNumbers(serviceNumbersLiveData.value)
             wifiCategory = addWifi(station, staticInfoCollection)
-            accessibilityCategory = addAccessibility(station, staticInfoCollection)
+            accessibilityCategory = addAccessibility()
             parkingsCategory = addParkings()
 
             if (Collections.hasContent(elevatorsDataResource.value)) {
@@ -144,28 +145,14 @@ class InfoCategorySelectionFragment : CategorySelectionFragment(
                 })
         }
 
-    private fun addAccessibility(
-        station: DetailedStopPlace?,
-        staticInfoCollection: StaticInfoCollection
-    ): SimpleDynamicCategory? {
-        if (station == null || !station.hasSteplessAccess) {
-            return null
-        }
-
-        val staticInfo = staticInfoCollection.typedStationInfos[ServiceContent.Type.ACCESSIBLE]
-            ?: return null
-
-        val steplessAccessInfo = station.steplessAccessInfo
-        val serviceContent = ServiceContent(
-            staticInfo,
-            if (steplessAccessInfo == null) null else "Zusatzinfomation: $steplessAccessInfo"
-        )
+    private fun addAccessibility(): SimpleDynamicCategory? {
         return SimpleDynamicCategory(
-            serviceContent.title, R.drawable.app_zugang_wege,
-            TrackingManager.Category.ZUGANG_WEGE, ServiceContentCategorySelectionListener(
-                serviceContent
-            )
-        )
+            "Barrierefreiheit", R.drawable.app_zugang_wege,
+            TrackingManager.Category.ZUGANG_WEGE
+        ) { category ->
+            trackCategoryTap(category)
+            startFragment(AccessibilityFragment())
+        }
     }
 
     private fun addWifi(

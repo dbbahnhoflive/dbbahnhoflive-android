@@ -29,7 +29,7 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
-import androidx.lifecycle.ViewModelProviders;
+import androidx.lifecycle.ViewModelProvider;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -97,7 +97,7 @@ public class ServiceContentFragment extends Fragment {
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        stationViewModel = ViewModelProviders.of(getActivity()).get(StationViewModel.class);
+        stationViewModel = new ViewModelProvider(getActivity()).get(StationViewModel.class);
 
         stationViewModel.getSelectedServiceContentType().observe(this, s -> {
             if (s != null) {

@@ -28,7 +28,7 @@ import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.Observer;
-import androidx.lifecycle.ViewModelProviders;
+import androidx.lifecycle.ViewModelProvider;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 import com.android.volley.VolleyError;
@@ -110,7 +110,7 @@ public class WagenstandFragment extends Fragment implements View.OnLayoutChangeL
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        stationViewModel = ViewModelProviders.of(getActivity()).get(StationViewModel.class);
+        stationViewModel = new ViewModelProvider(getActivity()).get(StationViewModel.class);
         stationLiveData = stationViewModel.getStationResource().getData();
         stationLiveData.observe(this, new Observer<Station>() {
             @Override

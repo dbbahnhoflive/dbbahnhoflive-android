@@ -14,10 +14,13 @@ import de.deutschebahn.bahnhoflive.backend.VolleyRestListener
 import de.deutschebahn.bahnhoflive.backend.db.DbAuthorizationTool
 import de.deutschebahn.bahnhoflive.backend.db.publictrainstation.DetailedStopPlaceRequest
 import de.deutschebahn.bahnhoflive.backend.db.publictrainstation.model.DetailedStopPlace
+import de.deutschebahn.bahnhoflive.backend.db.ris.RISPlatformsRequest
 import de.deutschebahn.bahnhoflive.backend.db.ris.RISStationsRequest
+import de.deutschebahn.bahnhoflive.backend.db.ris.model.Platform
+import de.deutschebahn.bahnhoflive.util.volley.VolleyRequestCancellable
 import de.deutschebahn.bahnhoflive.util.volley.cancellable
 
-class PublicTrainStationStationRepository(
+class OfficialStationRepository(
     private val restHelper: RestHelper,
     private val dbAuthorizationTool: DbAuthorizationTool
 ) : StationRepository() {
@@ -92,4 +95,15 @@ class PublicTrainStationStationRepository(
             )
         )
         .cancellable()
+
+    override fun queryAccessibilityDetails(
+        listener: VolleyRestListener<List<Platform>>,
+        evaId: String,
+        force: Boolean
+    ): VolleyRequestCancellable<List<Platform>> = restHelper
+        .add(
+            RISPlatformsRequest(listener, dbAuthorizationTool, evaId, force)
+        )
+        .cancellable()
+
 }

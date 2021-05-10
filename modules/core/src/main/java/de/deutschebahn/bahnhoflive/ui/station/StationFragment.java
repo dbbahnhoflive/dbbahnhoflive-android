@@ -18,11 +18,9 @@ import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-import androidx.fragment.app.Fragment;
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
-import androidx.lifecycle.ViewModelProviders;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 import com.android.volley.VolleyError;
@@ -55,8 +53,8 @@ import de.deutschebahn.bahnhoflive.ui.hub.StationImageResolver;
 import de.deutschebahn.bahnhoflive.ui.map.MapActivity;
 import de.deutschebahn.bahnhoflive.ui.station.elevators.ElevatorStatusListsFragment;
 import de.deutschebahn.bahnhoflive.ui.station.info.StaticInfo;
-import de.deutschebahn.bahnhoflive.ui.station.occupancy.OccupancyViewBinder;
 import de.deutschebahn.bahnhoflive.ui.station.localtransport.LocalTransportViewModel;
+import de.deutschebahn.bahnhoflive.ui.station.occupancy.OccupancyViewBinder;
 import de.deutschebahn.bahnhoflive.ui.station.shop.CategorizedShops;
 import de.deutschebahn.bahnhoflive.ui.station.shop.Shop;
 import de.deutschebahn.bahnhoflive.ui.station.shop.ShopCategory;
@@ -65,7 +63,7 @@ import de.deutschebahn.bahnhoflive.ui.timetable.localtransport.ReducedDbDepartur
 import de.deutschebahn.bahnhoflive.view.StatusPreviewButton;
 import kotlin.Unit;
 
-public class StationFragment extends Fragment implements
+public class StationFragment extends androidx.fragment.app.Fragment implements
         SwipeRefreshLayout.OnRefreshListener {
 
     public static final String TAG = StationFragment.class.getSimpleName();
@@ -159,7 +157,7 @@ public class StationFragment extends Fragment implements
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        final ViewModelProvider viewModelProvider = ViewModelProviders.of(getActivity());
+        final ViewModelProvider viewModelProvider = new ViewModelProvider(getActivity());
         stationViewModel = viewModelProvider.get(StationViewModel.class);
 
         Resource<Station, ? extends Throwable> stationResource = stationViewModel.getStationResource();
@@ -593,7 +591,7 @@ public class StationFragment extends Fragment implements
         });
     }
 
-    public void startFragment(Fragment fragment) {
+    public void startFragment(androidx.fragment.app.Fragment fragment) {
         final HistoryFragment historyFragment = getHistoryFragment();
         historyFragment.push(fragment);
     }

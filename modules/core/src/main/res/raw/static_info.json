@@ -33,10 +33,10 @@
 		},
 
 		{
-			"descriptionText": "<p>Dieser Bahnhof bietet Ihnen stufenfreien Zugang.</p><p>Bei Fragen wenden Sie sich bitte an die zuständige 3-S-Zentrale oder an die Mobilitätsservice-Zentrale unter 030 6521 2888.</p>",
-			"title": "Zugang & Wege",
-			"type": "stufenfreier_zugang"
-		},
+          "descriptionText": "<p>Dieser Bahnhof bietet Ihnen stufenfreien Zugang.</p><p>Bei Fragen wenden Sie sich bitte an die zuständige 3-S-Zentrale oder an die Mobilitätsservice-Zentrale unter 030 6521 2888.</p>",
+          "title": "Barrierefreiheit",
+          "type": "stufenfreier_zugang"
+        },
 		{
 			"descriptionText": "<p>Im DB Reisezentrum erhalten Sie bei persönlicher Beratung dieses Leistungsangebot:<p>◾ Fahrkarten und Reservierungen bis kurz vor Abfahrt</p><p>◾ Zeitkarten und DB Monatskarten im Abo</p><p>◾ Nationale und internationale Fahrplan- und Tarifauskünfte im Verbund, Nahverkehr und Fernverkehr</p><p>◾ Angebote rund um die BahnCard</p><p>◾ Ergänzende Leistungen und Angebote rund um Ihre Bahnreise (z.B. Gepäckbeförderung, Parkplätze am Bahnhof, Mietwagen, Carsharing, Reiseschutz, Hotels uvm.)</p>",
 			"title": "DB Reisezentrum",

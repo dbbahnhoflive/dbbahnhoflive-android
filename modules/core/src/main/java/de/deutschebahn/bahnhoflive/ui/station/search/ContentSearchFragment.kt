@@ -12,8 +12,8 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.appcompat.widget.SearchView
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.Observer
-import androidx.lifecycle.ViewModelProviders
 import de.deutschebahn.bahnhoflive.R
 import de.deutschebahn.bahnhoflive.analytics.TrackingManager
 import de.deutschebahn.bahnhoflive.ui.station.StationViewModel
@@ -23,15 +23,7 @@ import kotlinx.android.synthetic.main.fragment_content_search.view.*
 
 class ContentSearchFragment : Fragment() {
 
-    lateinit var viewModel: StationViewModel
-
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-
-        activity?.let {
-            viewModel = ViewModelProviders.of(it).get(StationViewModel::class.java)
-        }
-    }
+    val viewModel: StationViewModel by activityViewModels<StationViewModel>()
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?) =
         inflater.inflate(R.layout.fragment_content_search, container, false)
