@@ -50,30 +50,30 @@ class RISPlatformsRequest(
                     ?.mapNotNull { platformJsonObject ->
                         platformJsonObject.takeUnless { it.has("parentPlatform") }
                             ?.optString("name")?.let { name ->
-                            platformJsonObject.optJSONObject("accessibility")
-                                .let { accessibilityJsonObject ->
-                                    Platform(
-                                        name,
-                                        AccessibilityFeature.VALUES.fold(
-                                            EnumMap<AccessibilityFeature, AccessibilityStatus>(
-                                                AccessibilityFeature::class.java
-                                            )
-                                        ) { acc, accessibilityFeature ->
-                                            acc[accessibilityFeature] =
-                                                accessibilityJsonObject?.optString(
-                                                    accessibilityFeature.tag
-                                                )?.let {
-                                                    try {
-                                                        AccessibilityStatus.valueOf(it)
-                                                    } catch (e: Exception) {
-                                                        null
-                                                    }
-                                                } ?: AccessibilityStatus.UNKNOWN
-                                            acc
-                                        }
-                                    )
-                                }
-                        }
+                                platformJsonObject.optJSONObject("accessibility")
+                                    ?.let { accessibilityJsonObject ->
+                                        Platform(
+                                            name,
+                                            AccessibilityFeature.VALUES.fold(
+                                                EnumMap<AccessibilityFeature, AccessibilityStatus>(
+                                                    AccessibilityFeature::class.java
+                                                )
+                                            ) { acc, accessibilityFeature ->
+                                                acc[accessibilityFeature] =
+                                                    accessibilityJsonObject.optString(
+                                                        accessibilityFeature.tag
+                                                    )?.let {
+                                                        try {
+                                                            AccessibilityStatus.valueOf(it)
+                                                        } catch (e: Exception) {
+                                                            null
+                                                        }
+                                                    } ?: AccessibilityStatus.UNKNOWN
+                                                acc
+                                            }
+                                        )
+                                    }
+                            }
                     }?.toList()
             } ?: emptyList()
 

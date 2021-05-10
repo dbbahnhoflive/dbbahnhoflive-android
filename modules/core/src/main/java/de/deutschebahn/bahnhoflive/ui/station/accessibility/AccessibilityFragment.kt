@@ -3,12 +3,12 @@ package de.deutschebahn.bahnhoflive.ui.station.accessibility
 import android.os.Bundle
 import android.view.View
 import android.view.ViewGroup
-import android.widget.ProgressBar
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.recyclerview.widget.ConcatAdapter
 import de.deutschebahn.bahnhoflive.R
 import de.deutschebahn.bahnhoflive.backend.db.ris.model.AccessibilityStatus
+import de.deutschebahn.bahnhoflive.repository.LoadingStatus
 import de.deutschebahn.bahnhoflive.repository.accessibility.AccessibilityFeature
 import de.deutschebahn.bahnhoflive.ui.station.StationViewModel
 import de.deutschebahn.bahnhoflive.util.PhoneIntent
@@ -16,6 +16,7 @@ import de.deutschebahn.bahnhoflive.view.BaseListAdapter
 import de.deutschebahn.bahnhoflive.view.ListViewHolderDelegate
 import de.deutschebahn.bahnhoflive.view.SimpleAdapter
 import de.deutschebahn.bahnhoflive.view.inflate
+import kotlinx.android.synthetic.main.fragment_accessibility.*
 import kotlinx.android.synthetic.main.fragment_accessibility.view.*
 import kotlinx.android.synthetic.main.include_accessibility_header.view.*
 import kotlinx.android.synthetic.main.titlebar_static.view.*
@@ -30,9 +31,7 @@ class AccessibilityFragment : Fragment(R.layout.fragment_accessibility) {
         view.screen_title.setText(R.string.accessibility_title)
 
         val progressAdapter = SimpleAdapter(
-            ProgressBar(context).apply {
-                isIndeterminate = true
-            }
+            view.recycler.inflate(R.layout.item_progress)
         )
 
         val headerView = view.recycler.inflate(
@@ -70,10 +69,19 @@ class AccessibilityFragment : Fragment(R.layout.fragment_accessibility) {
             accessibilityAdapter
         )
 
-        view.recycler.adapter = concatAdapter
+        view.recycler.adapter = progressAdapter
 
         headerView.phone?.setOnClickListener {
             startActivity(PhoneIntent(view.phone.text.toString()))
+        }
+
+        val accessibilityFeaturesResource = viewModel.accessibilityFeaturesResource.apply {
+            loadIfNecessary()
+        }
+
+        accessibilityFeaturesResource.error.observe(viewLifecycleOwner) {
+            headerView.steplessAccessHint.visibility = if (it == null) View.VISIBLE else View.GONE
+
         }
 
         viewModel.accessibilityPlatformsAndSelectedLiveData.observe(viewLifecycleOwner) { platformsAndSelection ->
@@ -103,10 +111,24 @@ class AccessibilityFragment : Fragment(R.layout.fragment_accessibility) {
                 headerView.selectPlatformInvitation.visibility = View.VISIBLE
 
                 accessibilityAdapter.submitList(emptyList())
-
             }
 
         }
+
+        view.refresher.setOnRefreshListener {
+            accessibilityFeaturesResource.refresh()
+        }
+
+        accessibilityFeaturesResource.loadingStatus.observe(viewLifecycleOwner) { loadingStatus ->
+            if (loadingStatus == LoadingStatus.IDLE) {
+                view.refresher.isRefreshing = false
+
+                if (recycler.adapter != concatAdapter) {
+                    recycler.adapter = concatAdapter
+                }
+            }
+        }
+
 
     }
 

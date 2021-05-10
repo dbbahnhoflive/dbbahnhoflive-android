@@ -15,7 +15,9 @@ class AccessibilityFeaturesResource(
         set(value) {
             field = value
 
-            loadIfNecessary()
+            if (data.hasActiveObservers()) {
+                loadIfNecessary()
+            }
         }
 
     override fun onStartLoading(force: Boolean) {
@@ -54,7 +56,7 @@ class AccessibilityFeaturesResource(
             evaIds.forEach { evaId ->
                 stationRepository.queryAccessibilityDetails(
                     listener,
-                    evaId, false
+                    evaId, force
                 )
             }
         }
