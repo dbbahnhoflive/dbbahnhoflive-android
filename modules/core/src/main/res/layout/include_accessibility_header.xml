@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:orientation="vertical"
     android:layout_height="wrap_content"
     android:layout_width="match_parent">
@@ -21,41 +22,49 @@
 
     </FrameLayout>
 
-    <TextView
-        android:id="@+id/steplessAccessHint"
-        android:text="Dieser Bahnhof bietet Ihnen stufenfreien Zugang."
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content" />
-
-    <TextView
-        android:text="Bei Fragen wenden Sie sich bitte an die zuständige 3-S-Zentrale oder an die Mobilitätsservice-Zentrale unter 030 6521 2888."
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content" />
-
-    <TextView
-        android:text="Die nachfolgend genannten Ausstattungsmerkmale dienen der barrierefreien Zugänglichkeit des Bahnhofs."
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content" />
-
     <LinearLayout
+        android:padding="@dimen/default_space"
+        app:elevation="@dimen/card_elevation"
+        android:orientation="vertical"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:gravity="center"
-        android:orientation="horizontal">
+        android:layout_height="wrap_content">
 
         <TextView
-            android:id="@+id/selectedPlatform"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:text="Kein Gleis ausgewählt"
-            android:textStyle="bold" />
+            android:id="@+id/steplessAccessHint"
+            android:text="@string/accessibilityStepFreeNone"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" />
 
-        <include
-            layout="@layout/button_filter"
-            android:layout_margin="@dimen/default_space"
+        <TextView
+            android:text="Bei Fragen wenden Sie sich bitte an die zuständige 3-S-Zentrale oder an die Mobilitätsservice-Zentrale unter 030 6521 2888."
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" />
+
+        <TextView
+            android:text="Die nachfolgend genannten Ausstattungsmerkmale dienen der barrierefreien Zugänglichkeit des Bahnhofs."
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_width="wrap_content"
-            android:id="@+id/filter" />
+            android:clipToPadding="false"
+            android:gravity="center"
+            android:orientation="horizontal"
+            android:padding="@dimen/default_space">
+
+            <TextView
+                android:id="@+id/selectedPlatform"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="Kein Gleis ausgewählt"
+                android:textStyle="bold" />
+
+            <include
+                layout="@layout/button_filter"
+                android:id="@+id/filter" />
+        </LinearLayout>
+
     </LinearLayout>
 </LinearLayout>

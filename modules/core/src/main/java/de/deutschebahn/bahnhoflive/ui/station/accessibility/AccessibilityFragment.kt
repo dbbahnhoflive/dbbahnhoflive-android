@@ -16,6 +16,7 @@ import de.deutschebahn.bahnhoflive.view.ListViewHolderDelegate
 import de.deutschebahn.bahnhoflive.view.SimpleAdapter
 import de.deutschebahn.bahnhoflive.view.inflate
 import kotlinx.android.synthetic.main.fragment_accessibility.view.*
+import kotlinx.android.synthetic.main.include_accessibility_header.view.*
 import kotlinx.android.synthetic.main.titlebar_static.view.*
 
 class AccessibilityFragment : Fragment(R.layout.fragment_accessibility) {
@@ -33,10 +34,16 @@ class AccessibilityFragment : Fragment(R.layout.fragment_accessibility) {
             }
         )
 
+        val headerView = view.recycler.inflate(
+            R.layout.include_accessibility_header
+        ).apply {
+            filter.setOnClickListener {
+                PlatformSelectionFragment().show(childFragmentManager, "platformSelection")
+            }
+        }
         val headerAdapter = SimpleAdapter(
-            view.recycler.inflate(
-                R.layout.include_accessibility_header
-            )
+            headerView
+
         )
 
         val platformSelectionPendingAdapter = SimpleAdapter(
@@ -62,23 +69,46 @@ class AccessibilityFragment : Fragment(R.layout.fragment_accessibility) {
                 }
 
             }
-        ).apply {
-            viewModel.accesibilityFeaturesResource.data.observe(viewLifecycleOwner) { platforms ->
-                platforms?.firstOrNull()?.also {
-                    submitList(it.accessibility.filter {
-                        it.component2() == AccessibilityStatus.AVAILABLE
-                    }.toList())
-                }
-            }
-
-        }
+        )
 
         val concatAdapter = ConcatAdapter(
             headerAdapter,
-            platformSelectionPendingAdapter
+            platformSelectionPendingAdapter,
+            accessibilityAdapter
         )
 
         view.recycler.adapter = concatAdapter
+
+        viewModel.accessibilityPlatformsAndSelectedLiveData.observe(viewLifecycleOwner) { platformsAndSelection ->
+            platformsAndSelection?.first?.also { platforms ->
+                headerView.steplessAccessHint.setText(when {
+                    platforms.all { platform ->
+                        platform.accessibility[AccessibilityFeature.STEP_FREE_ACCESS] == AccessibilityStatus.AVAILABLE
+                    } -> R.string.accessibilityStepFreeAll
+                    platforms.all { platform ->
+                        platform.accessibility[AccessibilityFeature.STEP_FREE_ACCESS] == AccessibilityStatus.NOT_AVAILABLE
+                    } -> R.string.accessibilityStepFreeNone
+                    else -> R.string.accessibilityStepFreePartial
+                })
+            }
+
+            platformsAndSelection?.second?.also { platform ->
+                headerView.selectedPlatform.text = "Gleis ${platform.name}"
+                headerView.filter.isSelected = true
+
+                accessibilityAdapter.submitList(platform.accessibility.filter { accessibility ->
+                    accessibility.component2() == AccessibilityStatus.AVAILABLE
+                }.toList())
+
+            } ?: kotlin.run {
+                headerView.selectedPlatform.text = "Kein Gleis ausgewählt"
+                headerView.filter.isSelected = false
+
+                accessibilityAdapter.submitList(emptyList())
+
+            }
+        }
+
     }
 }
 

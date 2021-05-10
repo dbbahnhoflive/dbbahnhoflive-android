@@ -294,6 +294,10 @@
     <string name="feedback_whatsapp_unavailable">Sie benötigen ein bestehendes Nutzerkonto beim Dienst „WhatsApp“. Aktuell ist dieser Dienst nicht auf ihrem Gerät installiert.</string>
     <string name="feedback_headline_alternative_contacts">Alternative Kontaktmöglichkeiten</string>
 
+    <string name="accessibilityStepFreeAll">Dieser Bahnhof bietet Ihnen stufenfreien Zugang.</string>
+    <string name="accessibilityStepFreeNone">Dieser Bahnhof bietet Ihnen leider <b>keinen</b> stufenfreien Zugang.</string>
+    <string name="accessibilityStepFreePartial">Dieser Bahnhof bietet Ihnen <b>teilweise</b> stufenfreien Zugang.</string>
+
     <string name="accessibilityStepFreeAccess">Stufenfreier Zugang</string>
     <string name="accessibilityStandardPlatformHeight">Bahnsteighöhe >= 55 cm</string>
     <string name="accessibilityPassengerInformationDisplay">Zuganzeiger</string>

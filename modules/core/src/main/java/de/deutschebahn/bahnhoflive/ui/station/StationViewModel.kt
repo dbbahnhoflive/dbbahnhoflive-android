@@ -19,6 +19,7 @@ import de.deutschebahn.bahnhoflive.analytics.TrackingManager
 import de.deutschebahn.bahnhoflive.backend.VolleyRestListener
 import de.deutschebahn.bahnhoflive.backend.db.newsapi.GroupId
 import de.deutschebahn.bahnhoflive.backend.db.newsapi.model.News
+import de.deutschebahn.bahnhoflive.backend.db.ris.model.Platform
 import de.deutschebahn.bahnhoflive.backend.einkaufsbahnhof.model.StationList
 import de.deutschebahn.bahnhoflive.backend.hafas.model.ProductCategory
 import de.deutschebahn.bahnhoflive.backend.local.model.ChatbotStation
@@ -148,6 +149,19 @@ class StationViewModel : HafasTimetableViewModel() {
     }
 
 
+    private val selectedAccessibilityPlatformMutableLiveData = MutableLiveData<Platform?>(null)
+
+    val accessibilityPlatformsAndSelectedLiveData =
+        selectedAccessibilityPlatformMutableLiveData.switchMap { selectedPlatform ->
+            accessibilityFeaturesResource.data.map { platforms ->
+                platforms to selectedPlatform?.takeIf { selectedPlatform ->
+                    platforms?.any { matchingPlatform ->
+                        selectedPlatform.name == matchingPlatform.name
+                    } == true
+                }
+            }
+        }
+
     val hafasTimetableViewModel = this
     val localTransportViewModel = LocalTransportViewModel()
 
@@ -269,7 +283,7 @@ class StationViewModel : HafasTimetableViewModel() {
             dbTimetableResource.setEvaIds(station.evaIds)
             dbTimetableResource.loadIfNecessary()
 
-            accesibilityFeaturesResource.evaIds = station.evaIds
+            accessibilityFeaturesResource.evaIds = station.evaIds
         }
     }
 
@@ -1151,6 +1165,10 @@ class StationViewModel : HafasTimetableViewModel() {
         stationNavigation?.showInfoFragment(false)
     }
 
+    fun setSelectedAccessibilityPlatform(platform: Platform?) {
+        selectedAccessibilityPlatformMutableLiveData.value = platform
+    }
+
     val shoppingAvailableLiveData: LiveData<Boolean> = Transformations.distinctUntilChanged(
         Transformations.map(shopsResource.data) {
             !(it?.shops).isNullOrEmpty()
@@ -1193,6 +1211,6 @@ class StationViewModel : HafasTimetableViewModel() {
         }
 
 
-    val accesibilityFeaturesResource =
+    val accessibilityFeaturesResource =
         AccessibilityFeaturesResource(application.repositories.stationRepository)
 }
