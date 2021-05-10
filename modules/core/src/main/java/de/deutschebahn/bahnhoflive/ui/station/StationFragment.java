@@ -18,7 +18,6 @@ import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-import androidx.fragment.app.Fragment;
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
@@ -64,7 +63,7 @@ import de.deutschebahn.bahnhoflive.ui.timetable.localtransport.ReducedDbDepartur
 import de.deutschebahn.bahnhoflive.view.StatusPreviewButton;
 import kotlin.Unit;
 
-public class StationFragment extends Fragment implements
+public class StationFragment extends androidx.fragment.app.Fragment implements
         SwipeRefreshLayout.OnRefreshListener {
 
     public static final String TAG = StationFragment.class.getSimpleName();
@@ -592,7 +591,7 @@ public class StationFragment extends Fragment implements
         });
     }
 
-    public void startFragment(Fragment fragment) {
+    public void startFragment(androidx.fragment.app.Fragment fragment) {
         final HistoryFragment historyFragment = getHistoryFragment();
         historyFragment.push(fragment);
     }

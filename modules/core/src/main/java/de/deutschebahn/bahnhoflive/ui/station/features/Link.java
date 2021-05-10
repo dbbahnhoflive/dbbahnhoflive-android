@@ -11,10 +11,9 @@ import android.content.Intent;
 import android.os.Parcelable;
 
 import androidx.annotation.Nullable;
+import androidx.fragment.app.Fragment;
 
 import java.util.List;
-
-import de.deutschebahn.bahnhoflive.ui.ServiceContentFragment;
 
 public abstract class Link {
     @Nullable
@@ -23,7 +22,7 @@ public abstract class Link {
     }
 
     @Nullable
-    public ServiceContentFragment createServiceContentFragment(Context context, StationFeature stationFeature) {
+    public Fragment createServiceContentFragment(Context context, StationFeature stationFeature) {
         return null;
     }
 

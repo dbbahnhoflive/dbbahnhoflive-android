@@ -27,7 +27,7 @@ internal class StationFeatureViewHolder(
     private val button: View = itemView.button.apply {
         setOnClickListener {
             item?.also {
-                itemClickListener(it, adapterPosition)
+                itemClickListener(it, bindingAdapterPosition)
             }
         }
     }

@@ -11,6 +11,7 @@ import de.deutschebahn.bahnhoflive.R
 import de.deutschebahn.bahnhoflive.backend.db.ris.model.AccessibilityStatus
 import de.deutschebahn.bahnhoflive.repository.accessibility.AccessibilityFeature
 import de.deutschebahn.bahnhoflive.ui.station.StationViewModel
+import de.deutschebahn.bahnhoflive.util.PhoneIntent
 import de.deutschebahn.bahnhoflive.view.BaseListAdapter
 import de.deutschebahn.bahnhoflive.view.ListViewHolderDelegate
 import de.deutschebahn.bahnhoflive.view.SimpleAdapter
@@ -43,13 +44,6 @@ class AccessibilityFragment : Fragment(R.layout.fragment_accessibility) {
         }
         val headerAdapter = SimpleAdapter(
             headerView
-
-        )
-
-        val platformSelectionPendingAdapter = SimpleAdapter(
-            view.recycler.inflate(
-                R.layout.include_platform_selection_pending
-            )
         )
 
         val accessibilityAdapter = BaseListAdapter(
@@ -73,11 +67,14 @@ class AccessibilityFragment : Fragment(R.layout.fragment_accessibility) {
 
         val concatAdapter = ConcatAdapter(
             headerAdapter,
-            platformSelectionPendingAdapter,
             accessibilityAdapter
         )
 
         view.recycler.adapter = concatAdapter
+
+        headerView.phone?.setOnClickListener {
+            startActivity(PhoneIntent(view.phone.text.toString()))
+        }
 
         viewModel.accessibilityPlatformsAndSelectedLiveData.observe(viewLifecycleOwner) { platformsAndSelection ->
             platformsAndSelection?.first?.also { platforms ->
@@ -95,7 +92,7 @@ class AccessibilityFragment : Fragment(R.layout.fragment_accessibility) {
             platformsAndSelection?.second?.also { platform ->
                 headerView.selectedPlatform.text = "Gleis ${platform.name}"
                 headerView.filter.isSelected = true
-
+                headerView.selectPlatformInvitation.visibility = View.GONE
                 accessibilityAdapter.submitList(platform.accessibility.filter { accessibility ->
                     accessibility.component2() == AccessibilityStatus.AVAILABLE
                 }.toList())
@@ -103,12 +100,31 @@ class AccessibilityFragment : Fragment(R.layout.fragment_accessibility) {
             } ?: kotlin.run {
                 headerView.selectedPlatform.text = "Kein Gleis ausgewählt"
                 headerView.filter.isSelected = false
+                headerView.selectPlatformInvitation.visibility = View.VISIBLE
 
                 accessibilityAdapter.submitList(emptyList())
 
             }
+
         }
 
+    }
+
+    companion object {
+        @JvmField
+        var TAG: String = AccessibilityFragment::class.java.simpleName
+    }
+
+    override fun onStart() {
+        super.onStart()
+
+        viewModel.topInfoFragmentTag = TAG
+    }
+
+    override fun onStop() {
+        viewModel.topInfoFragmentTag = null
+
+        super.onStop()
     }
 }
 

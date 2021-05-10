@@ -17,7 +17,6 @@ import de.deutschebahn.bahnhoflive.backend.db.publictrainstation.model.DetailedS
 import de.deutschebahn.bahnhoflive.backend.db.ris.RISPlatformsRequest
 import de.deutschebahn.bahnhoflive.backend.db.ris.RISStationsRequest
 import de.deutschebahn.bahnhoflive.backend.db.ris.model.Platform
-import de.deutschebahn.bahnhoflive.backend.local.model.EvaIds
 import de.deutschebahn.bahnhoflive.util.volley.VolleyRequestCancellable
 import de.deutschebahn.bahnhoflive.util.volley.cancellable
 
@@ -99,11 +98,11 @@ class OfficialStationRepository(
 
     override fun queryAccessibilityDetails(
         listener: VolleyRestListener<List<Platform>>,
-        evaIds: EvaIds,
+        evaId: String,
         force: Boolean
     ): VolleyRequestCancellable<List<Platform>> = restHelper
         .add(
-            RISPlatformsRequest(listener, dbAuthorizationTool, evaIds.ids.first(), force)
+            RISPlatformsRequest(listener, dbAuthorizationTool, evaId, force)
         )
         .cancellable()
 

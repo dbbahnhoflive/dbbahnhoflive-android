@@ -68,7 +68,7 @@ class StationViewModel : HafasTimetableViewModel() {
         private val stationFeatureTemplates = listOf(
             StationFeatureTemplate(
                 StationFeatureDefinition.ACCESSIBILITY,
-                MapOrInfoLink(ServiceContent.Type.ACCESSIBLE, TrackingManager.Category.ZUGANG_WEGE)
+                AccessibilityLink(TrackingManager.Category.ZUGANG_WEGE)
             ),
             StationFeatureTemplate(
                 StationFeatureDefinition.TOILET,
@@ -634,16 +634,12 @@ class StationViewModel : HafasTimetableViewModel() {
                                         currentRawQuery,
                                         stationFeaturesOnClickListener
                                     )
-                                    "Bahnhofsausstattung Stufenfreier Zugang" -> (!hasInfo(
-                                        ServiceContent.Type.ACCESSIBLE
-                                    ) && featureVisible(StationFeatureDefinition.ACCESSIBILITY)) then {
-                                        ContentSearchResult(
-                                            "Stufenfreier Zugang",
-                                            R.drawable.bahnhofsausstattung_stufenfreier_zugang,
-                                            currentRawQuery,
-                                            stationFeaturesOnClickListener
-                                        )
-                                    }
+                                    "Barrierefreiheit" -> ContentSearchResult(
+                                        "Barrierefreiheit",
+                                        R.drawable.bahnhofsausstattung_stufenfreier_zugang,
+                                        currentRawQuery,
+                                        { stationNavigation?.showAccessibility() }
+                                    )
                                     "Bahnhofsausstattung WC" -> featureVisible(
                                         StationFeatureDefinition.TOILET
                                     ) then {

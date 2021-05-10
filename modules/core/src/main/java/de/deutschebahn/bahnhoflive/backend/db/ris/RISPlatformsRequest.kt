@@ -45,28 +45,30 @@ class RISPlatformsRequest(
         return try {
             val platforms = response?.data?.decodeToString()?.let { responseString ->
                 JSONObject(responseString).optJSONArray("platforms")
-                    ?.asJSONObjectSequence()?.filterNotNull()
+                    ?.asJSONObjectSequence()
+                    ?.filterNotNull()
                     ?.mapNotNull { platformJsonObject ->
-                        platformJsonObject.optString("name").let { name ->
+                        platformJsonObject.takeUnless { it.has("parentPlatform") }
+                            ?.optString("name")?.let { name ->
                             platformJsonObject.optJSONObject("accessibility")
                                 .let { accessibilityJsonObject ->
-                                    Platform(name,
+                                    Platform(
+                                        name,
                                         AccessibilityFeature.VALUES.fold(
                                             EnumMap<AccessibilityFeature, AccessibilityStatus>(
                                                 AccessibilityFeature::class.java
                                             )
                                         ) { acc, accessibilityFeature ->
                                             acc[accessibilityFeature] =
-                                                accessibilityJsonObject.optString(
+                                                accessibilityJsonObject?.optString(
                                                     accessibilityFeature.tag
-                                                )
-                                                    ?.let {
-                                                        try {
-                                                            AccessibilityStatus.valueOf(it)
-                                                        } catch (e: Exception) {
-                                                            null
-                                                        }
-                                                    } ?: AccessibilityStatus.UNKNOWN
+                                                )?.let {
+                                                    try {
+                                                        AccessibilityStatus.valueOf(it)
+                                                    } catch (e: Exception) {
+                                                        null
+                                                    }
+                                                } ?: AccessibilityStatus.UNKNOWN
                                             acc
                                         }
                                     )

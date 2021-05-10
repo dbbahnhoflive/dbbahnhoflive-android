@@ -311,5 +311,10 @@
     <string name="accessibilityAutomaticDoor">Automatiktüren</string>
     <string name="accessibility_title">Barrierefreiheit</string>
     <string name="platform">Gleis</string>
+    <string name="accessibility_select_platform_invitation">Bitte wählen Sie ein Gleis aus.</string>
+    <string name="accessibility_no_platform_selected">Kein Gleis ausgewählt</string>
+    <string name="accessibility_hotline">030 6521 2888</string>
+    <string name="accessibility_hotline_advice">Bei Fragen wenden Sie sich bitte an die zuständige 3-S-Zentrale oder an die Mobilitätsservice-Zentrale unter</string>
+    <string name="accessibility_advice">Die nachfolgend genannten Ausstattungsmerkmale dienen der barrierefreien Zugänglichkeit des Bahnhofs.</string>
 
 </resources>

@@ -19,24 +19,44 @@ class AccessibilityFeaturesResource(
         }
 
     override fun onStartLoading(force: Boolean) {
-        evaIds?.also {
+        evaIds?.ids?.also { evaIds ->
 
-            stationRepository.queryAccessibilityDetails(
-                object : VolleyRestListener<List<Platform>> {
-                    override fun onSuccess(payload: List<Platform>?) {
-                        payload?.let {
-                            setResult(it)
-                        } ?: kotlin.run {
-                            setError(null)
+            val results = mutableListOf<List<Platform>?>()
+            val errors = mutableListOf<VolleyError?>()
+
+            val listener = object : VolleyRestListener<List<Platform>> {
+
+                @Synchronized
+                override fun onSuccess(payload: List<Platform>?) {
+                    results.add(payload)
+                    eventuallyDeliver()
+                }
+
+                @Synchronized
+                override fun onFail(reason: VolleyError?) {
+                    errors.add(reason)
+                    eventuallyDeliver()
+                }
+
+                fun eventuallyDeliver() {
+                    if (results.size + errors.size >= evaIds.size) {
+                        if (results.isEmpty()) {
+                            setError(VolleyError("No results", errors.firstOrNull()))
+                        } else {
+                            setResult(results.filterNotNull().flatMap {
+                                it
+                            }.sorted())
                         }
                     }
+                }
+            }
 
-                    override fun onFail(reason: VolleyError?) {
-                        setError(reason)
-                    }
-                },
-                it, false
-            )
+            evaIds.forEach { evaId ->
+                stationRepository.queryAccessibilityDetails(
+                    listener,
+                    evaId, false
+                )
+            }
         }
     }
 
