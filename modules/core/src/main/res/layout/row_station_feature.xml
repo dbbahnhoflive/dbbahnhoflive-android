@@ -58,6 +58,21 @@
         tools:text="vorhanden"
         tools:textColor="@color/green" />
 
+    <TextView
+        android:id="@+id/staticInfo"
+        android:textSize="@dimen/textsize_h3"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:drawablePadding="@dimen/small_space"
+        android:gravity="center_vertical"
+        android:text="mehr Informationen"
+        android:textStyle="italic"
+        android:visibility="invisible"
+        app:layout_constraintBottom_toBottomOf="@id/status"
+        app:layout_constraintRight_toRightOf="@+id/status"
+        app:layout_constraintLeft_toLeftOf="@+id/status"
+        app:layout_constraintTop_toTopOf="@+id/status" />
+
     <androidx.cardview.widget.CardView
         android:id="@+id/button"
         android:layout_width="@dimen/round_button_size"

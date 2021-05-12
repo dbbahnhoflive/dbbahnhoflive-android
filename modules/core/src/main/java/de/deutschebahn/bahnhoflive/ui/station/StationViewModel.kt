@@ -415,7 +415,7 @@ class StationViewModel : HafasTimetableViewModel() {
                     elevatorsResource.data.value
                 )
                 if (stationFeature.isVisible) {
-                    if (stationFeature.isFeatured) {
+                    if (stationFeature.isFeatured != false) {
                         orderedFeatures.add(stationFeature)
                     } else {
                         unavailableFeatures.add(stationFeature)
@@ -1092,7 +1092,7 @@ class StationViewModel : HafasTimetableViewModel() {
 
 
     val visibileOrderedStationFeatures = Transformations.map(stationFeatures) {
-        it.asSequence().filter { it.isVisible }.sortedBy { !it.isFeatured }.toList()
+        it.asSequence().filter { it.isVisible }.sortedBy { it.isFeatured == false }.toList()
     }
 
     val isEcoStation = Transformations.map(stationResource.data) {

@@ -24,6 +24,7 @@ internal class StationFeatureViewHolder(
     private val iconView: ImageView = itemView.icon
     private val labelView: TextView = itemView.label
     private val statusView: TextView = itemView.status
+    private val staticInfoView: TextView = itemView.staticInfo
     private val button: View = itemView.button.apply {
         setOnClickListener {
             item?.also {
@@ -37,23 +38,32 @@ internal class StationFeatureViewHolder(
         iconView.setImageResource(stationFeatureTemplate.definition.icon)
         labelView.setText(stationFeatureTemplate.definition.label)
 
-        val featured = stationFeature.isFeatured
-        if (featured) {
-            bindStatusView(R.string.available, Status.POSITIVE)
-        } else {
-            bindStatusView(R.string.not_available, Status.NEGATIVE)
+        when (stationFeature.isFeatured) {
+            true -> bindStatusView(R.string.available, Status.POSITIVE)
+            false -> bindStatusView(R.string.not_available, Status.NEGATIVE)
+            else -> bindStatusView(0, Status.NONE)
         }
 
         button.visibility = if (stationFeature.isLinkVisible) View.VISIBLE else View.GONE
 
         val context = button.context
-        button.contentDescription = context.getString(R.string.sr_template_details, context.getString(stationFeatureTemplate.definition.label))
+        button.contentDescription = context.getString(
+            R.string.sr_template_details,
+            context.getString(stationFeatureTemplate.definition.label)
+        )
     }
 
     private fun bindStatusView(text: Int, status: Status) {
-        statusView.setText(text)
-        statusView.setTextColor(statusView.context.resources.getColor(status.color))
-        statusView.setCompoundDrawablesWithIntrinsicBounds(status.icon, 0, 0, 0)
+        if (status == Status.NONE) {
+            staticInfoView.visibility = View.VISIBLE
+            statusView.visibility = View.INVISIBLE
+        } else {
+            staticInfoView.visibility = View.GONE
+            statusView.visibility = View.VISIBLE
+            statusView.setText(text)
+            statusView.setTextColor(statusView.context.resources.getColor(status.color))
+            statusView.setCompoundDrawablesWithIntrinsicBounds(status.icon, 0, 0, 0)
+        }
     }
 
 }

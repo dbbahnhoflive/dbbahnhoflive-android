@@ -162,7 +162,7 @@
     <string name="feature_lost_and_found">Fundservice</string>
     <string name="feature_parkings">Parkplätze</string>
     <string name="feature_elevators">Aufzüge</string>
-    <string name="feature_accessibility">Stufenfreier Zugang</string>
+    <string name="feature_accessibility">@string/accessibility_title</string>
     <string name="not_available">nicht vorhanden</string>
     <string name="available">vorhanden</string>
     <string name="transition_home_logo">homeLogo</string>
