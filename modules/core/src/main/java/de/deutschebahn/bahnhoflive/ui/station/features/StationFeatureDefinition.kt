@@ -32,7 +32,10 @@ class StationFeatureDefinition(
     abstract class CategoryAvailability protected constructor(private val hideFromCategory: Int) : Availability {
 
         override fun isVisible(detailedStopPlace: DetailedStopPlace, stationFeature: StationFeature): Boolean {
-            return hideFromCategory > detailedStopPlace.category || isAvailable(detailedStopPlace, stationFeature)
+            return hideFromCategory > detailedStopPlace.category || isAvailable(
+                detailedStopPlace,
+                stationFeature
+            ) != false
         }
     }
 
@@ -40,9 +43,10 @@ class StationFeatureDefinition(
 
         val ACCESSIBILITY = StationFeatureDefinition(R.string.feature_accessibility, R.drawable.bahnhofsausstattung_stufenfreier_zugang, ServiceContent.Type.ACCESSIBLE, null,
             object : BasicAvailability() {
-                override fun isAvailable(detailedStopPlace: DetailedStopPlace, stationFeature: StationFeature): Boolean {
-                    return detailedStopPlace.hasSteplessAccess
-                }
+                override fun isAvailable(
+                    detailedStopPlace: DetailedStopPlace,
+                    stationFeature: StationFeature
+                ) = null
             })
         val TOILET = StationFeatureDefinition(R.string.feature_toilet,
             R.drawable.bahnhofsausstattung_wc,

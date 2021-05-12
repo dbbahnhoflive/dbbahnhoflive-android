@@ -23,14 +23,14 @@ class StationFeature(
 ) {
     val venues: List<Shop>?
 
-    val isFeatured: Boolean
+    val isFeatured: Boolean?
         get() = stationFeatureTemplate.definition.availability.isAvailable(detailedStopPlace, this)
 
     val isVisible: Boolean
         get() = stationFeatureTemplate.definition.availability.isVisible(detailedStopPlace, this)
 
     val isLinkVisible: Boolean
-        get() = (isFeatured
+        get() = (isFeatured != false
                 && (stationFeatureTemplate.link?.isAvailable(this)) == true)
 
     init {
