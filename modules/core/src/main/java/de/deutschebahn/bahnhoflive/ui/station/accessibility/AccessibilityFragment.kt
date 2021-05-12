@@ -5,6 +5,9 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
+import androidx.lifecycle.MediatorLiveData
+import androidx.lifecycle.Observer
+import androidx.lifecycle.distinctUntilChanged
 import androidx.recyclerview.widget.ConcatAdapter
 import de.deutschebahn.bahnhoflive.R
 import de.deutschebahn.bahnhoflive.backend.db.ris.model.AccessibilityStatus
@@ -79,22 +82,23 @@ class AccessibilityFragment : Fragment(R.layout.fragment_accessibility) {
             loadIfNecessary()
         }
 
-        accessibilityFeaturesResource.error.observe(viewLifecycleOwner) {
-            headerView.steplessAccessHint.visibility = if (it == null) View.VISIBLE else View.GONE
-
-        }
-
         viewModel.accessibilityPlatformsAndSelectedLiveData.observe(viewLifecycleOwner) { platformsAndSelection ->
-            platformsAndSelection?.first?.also { platforms ->
-                headerView.steplessAccessHint.setText(when {
-                    platforms.all { platform ->
-                        platform.accessibility[AccessibilityFeature.STEP_FREE_ACCESS] == AccessibilityStatus.AVAILABLE
-                    } -> R.string.accessibilityStepFreeAll
-                    platforms.all { platform ->
-                        platform.accessibility[AccessibilityFeature.STEP_FREE_ACCESS] == AccessibilityStatus.NOT_AVAILABLE
-                    } -> R.string.accessibilityStepFreeNone
-                    else -> R.string.accessibilityStepFreePartial
-                })
+            with(platformsAndSelection?.first) {
+                if (isNullOrEmpty()) {
+                    headerView.steplessAccessHint.visibility = View.GONE
+                } else {
+                    headerView.steplessAccessHint.visibility = View.VISIBLE
+
+                    headerView.steplessAccessHint.setText(when {
+                        all { platform ->
+                            platform.accessibility[AccessibilityFeature.STEP_FREE_ACCESS] == AccessibilityStatus.AVAILABLE
+                        } -> R.string.accessibilityStepFreeAll
+                        all { platform ->
+                            platform.accessibility[AccessibilityFeature.STEP_FREE_ACCESS] == AccessibilityStatus.NOT_AVAILABLE
+                        } -> R.string.accessibilityStepFreeNone
+                        else -> R.string.accessibilityStepFreePartial
+                    })
+                }
             }
 
             platformsAndSelection?.second?.also { platform ->
@@ -106,9 +110,11 @@ class AccessibilityFragment : Fragment(R.layout.fragment_accessibility) {
                 }.toList())
 
             } ?: kotlin.run {
-                headerView.selectedPlatform.text = "Kein Gleis ausgewählt"
-                headerView.filter.isSelected = false
-                headerView.selectPlatformInvitation.visibility = View.VISIBLE
+                if (!platformsAndSelection?.first.isNullOrEmpty()) {
+                    headerView.selectedPlatform.text = "Kein Gleis ausgewählt"
+                    headerView.filter.isSelected = false
+                    headerView.selectPlatformInvitation.visibility = View.VISIBLE
+                }
 
                 accessibilityAdapter.submitList(emptyList())
             }
@@ -126,6 +132,25 @@ class AccessibilityFragment : Fragment(R.layout.fragment_accessibility) {
                 if (recycler.adapter != concatAdapter) {
                     recycler.adapter = concatAdapter
                 }
+            }
+        }
+
+        val noDataLiveData = MediatorLiveData<Boolean>().apply {
+            val onChanged = Observer<Any?> {
+                value = accessibilityFeaturesResource.data.value.isNullOrEmpty()
+            }
+
+            addSource(accessibilityFeaturesResource.error, onChanged)
+            addSource(accessibilityFeaturesResource.data, onChanged)
+        }.distinctUntilChanged().observe(viewLifecycleOwner) { noData ->
+            if (noData) {
+                headerView.steplessAccessHint.visibility = View.GONE
+                headerView.filter.visibility = View.GONE
+                headerView.selectPlatformInvitation.visibility = View.GONE
+                headerView.selectedPlatform.text = "Keine Daten verfügbar"
+            } else {
+                headerView.steplessAccessHint.visibility = View.VISIBLE
+                headerView.filter.visibility = View.VISIBLE
             }
         }
 
