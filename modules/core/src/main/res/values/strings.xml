@@ -304,7 +304,7 @@
     <string name="accessibilityAudibleSignalsAvailable">Lautsprecheranlage</string>
     <string name="accessibilityTactilePlatformAccess">Taktiler Weg zum Bahnsteig</string>
     <string name="accessibilityTactileGuidingStrips">Taktiles Leitsystem auf dem Bahnsteig</string>
-    <string name="accessibilityTactileHandrailLabel">Ttaktile Handlaufschilder</string>
+    <string name="accessibilityTactileHandrailLabel">Taktile Handlaufschilder</string>
     <string name="accessibilityStairsMarking">Treppenstufenmarkierung</string>
     <string name="accessibilityPlatformSign">Kontrastreiche Wegeleitung</string>
     <string name="accessibilityBoardingAid">Einstiegshilfe</string>
