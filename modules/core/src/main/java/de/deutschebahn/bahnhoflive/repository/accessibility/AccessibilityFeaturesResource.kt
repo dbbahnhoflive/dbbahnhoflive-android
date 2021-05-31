@@ -45,9 +45,7 @@ class AccessibilityFeaturesResource(
                         if (results.isEmpty()) {
                             setError(VolleyError("No results", errors.firstOrNull()))
                         } else {
-                            setResult(results.filterNotNull().flatMap {
-                                it
-                            }.sorted())
+                            setResult(results.filterNotNull().flatten().toSortedSet().toList())
                         }
                     }
                 }

@@ -30,4 +30,13 @@ class Platform(
             collator.compare(name, other.name)
         }
 
+    override fun equals(other: Any?): Boolean = when {
+        this === other -> true
+        other !is Platform -> false
+        name != other.name -> false
+        else -> true
+    }
+
+    override fun hashCode(): Int = name.hashCode()
+
 }
