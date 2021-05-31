@@ -493,7 +493,7 @@
             "position": 1
           },
           {
-            "descriptionText": "<p>Dieser Bahnhof bietet Ihnen stufenfreien Zugang.</p><p>Bei Fragen wenden Sie sich bitte an die zuständige 3-S-Zentrale oder an die Mobilitätsservice-Zentrale unter 0180 6 512 512 (20 ct/Anruf aus dem Festnetz, Tarif bei Mobilfunk max. 60 ct/Anruf).</p>",
+            "descriptionText": "<p>Dieser Bahnhof bietet Ihnen stufenfreien Zugang.</p><p>Bei Fragen wenden Sie sich bitte an die Mobilitätsservice-Zentrale unter 030 6521 2888.</p>",
             "title": "Zugang & Wege",
             "type": "stufenfreier_zugang",
             "position": 2

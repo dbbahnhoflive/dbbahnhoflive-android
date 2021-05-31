@@ -33,7 +33,7 @@
 		},
 
 		{
-			"descriptionText": "<p>Dieser Bahnhof bietet Ihnen stufenfreien Zugang.</p><p>Bei Fragen wenden Sie sich bitte an die zuständige 3-S-Zentrale oder an die Mobilitätsservice-Zentrale unter 030 6521 2888.</p>",
+			"descriptionText": "<p>Dieser Bahnhof bietet Ihnen stufenfreien Zugang.</p><p>Bei Fragen wenden Sie sich bitte an die Mobilitätsservice-Zentrale unter 030 6521 2888.</p>",
 			"title": "Zugang & Wege",
 			"type": "stufenfreier_zugang"
 		},
