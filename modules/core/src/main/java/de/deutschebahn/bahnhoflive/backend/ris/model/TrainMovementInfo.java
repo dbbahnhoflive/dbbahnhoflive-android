@@ -25,7 +25,6 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.Date;
-import java.util.HashMap;
 import java.util.Locale;
 import java.util.Map;
 import java.util.regex.Matcher;
@@ -244,48 +243,17 @@ public class TrainMovementInfo implements Parcelable {
     }
 
     private static boolean relevevantMessage(String code) {
-
-        String[] relevantCodes = new String[]{"80", "82", "83", "84", "85", "86", "87", "88", "89", "90", "91"};
-
-        return Arrays.asList(relevantCodes).contains(code);
+        return RimapMessageCodes.INSTANCE.isCodeRelevant(code);
     }
 
+    @Nullable
     private static String messageForKey(String key) {
-        if (map == null) {
-            map = new HashMap<>();
-            map.put("80", "Andere Reihenfolge der Wagen");
-            map.put("82", "Mehrere Wagen fehlen");
-            map.put("83", "Störung fahrzeuggebundene Einstiegshilfe");
-            map.put("85", "Ein Wagen fehlt");
-            map.put("86", "Gesamter Zug ohne Reservierung");
-            map.put("87", "Einzelne Wagen ohne Reservierung");
-            map.put("90", "Kein gastronomisches Angebot");
-            map.put("91", "Fehlende Fahrradbeförderung");
-            map.put("92", "Eingeschränkte Fahrradbeförderung");
-            map.put("93", "Keine behindertengerechte Einrichtung");
-            map.put("95", "Ohne behindertengerechtes WC");
-        }
-        if (!map.containsKey(key)) {
-            return null;
-        }
-
-        return map.get(key);
+        return RimapMessageCodes.INSTANCE.getMessages().get(key);
     }
 
+    @NonNull
     private static String[] revocationCodesForKey(String key) {
-
-        if (codesMap == null) {
-            codesMap = new HashMap<>();
-            codesMap.put("84", new String[]{"80", "82", "85"});
-            codesMap.put("88", new String[]{"80", "82", "83", "85", "86", "87", "90", "91", "92", "93", "94", "95", "96", "97", "98"});
-            codesMap.put("89", new String[]{"86", "87"});
-        }
-
-        if (!codesMap.containsKey(key)) {
-            return new String[]{};
-        }
-
-        return codesMap.get(key);
+        return RimapMessageCodes.INSTANCE.getRevocationsOf(key);
     }
 
     public long getPlannedDateTime() { return plannedDateTime; }
