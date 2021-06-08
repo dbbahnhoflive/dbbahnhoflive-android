@@ -255,12 +255,15 @@ public class TrainMovementInfo implements Parcelable {
             map = new HashMap<>();
             map.put("80", "Andere Reihenfolge der Wagen");
             map.put("82", "Mehrere Wagen fehlen");
-            map.put("83", "Fehlender Zugteil");
+            map.put("83", "Störung fahrzeuggebundene Einstiegshilfe");
             map.put("85", "Ein Wagen fehlt");
             map.put("86", "Gesamter Zug ohne Reservierung");
             map.put("87", "Einzelne Wagen ohne Reservierung");
             map.put("90", "Kein gastronomisches Angebot");
-            map.put("91", "Eingeschränkte Fahrradbeförderung");
+            map.put("91", "Fehlende Fahrradbeförderung");
+            map.put("92", "Eingeschränkte Fahrradbeförderung");
+            map.put("93", "Keine behindertengerechte Einrichtung");
+            map.put("95", "Ohne behindertengerechtes WC");
         }
         if (!map.containsKey(key)) {
             return null;
@@ -273,8 +276,8 @@ public class TrainMovementInfo implements Parcelable {
 
         if (codesMap == null) {
             codesMap = new HashMap<>();
-            codesMap.put("84", new String[]{"80", "82", "83", "85"});
-            codesMap.put("88", new String[]{"80", "82", "83", "85", "86", "87", "90", "91", "92", "93", "94", "96", "97", "98"});
+            codesMap.put("84", new String[]{"80", "82", "85"});
+            codesMap.put("88", new String[]{"80", "82", "83", "85", "86", "87", "90", "91", "92", "93", "94", "95", "96", "97", "98"});
             codesMap.put("89", new String[]{"86", "87"});
         }
 
