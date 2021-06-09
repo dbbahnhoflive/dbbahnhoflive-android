@@ -40,6 +40,8 @@ class AccessibilityFragment : Fragment(R.layout.fragment_accessibility) {
         val headerView = view.recycler.inflate(
             R.layout.include_accessibility_header
         ).apply {
+            filter.contentDescription = getText(R.string.accessibilityFilterButton)
+
             filter.setOnClickListener {
                 PlatformSelectionFragment().show(childFragmentManager, "platformSelection")
             }

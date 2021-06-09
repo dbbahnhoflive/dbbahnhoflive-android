@@ -27,7 +27,7 @@ class RISPlatformsRequest(
     force: Boolean = false,
 ) : DbRequest<List<Platform>>(
     Method.GET,
-    "https://gateway.businesshub.deutschebahn.com/ris-stations/v1/stop-places/$evaId/platforms" +
+    "https://gateway.businesshub.deutschebahn.com/ris-stations/v1/platforms/$evaId" +
             "?includeAccessibility=true",
     dbAuthorizationTool,
     listener

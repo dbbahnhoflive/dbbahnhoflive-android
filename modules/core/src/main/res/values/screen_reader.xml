@@ -81,6 +81,7 @@
     <string name="sr_chatbot">Zum Chatbot</string>
     <string name="sr_news_title">Aktuelle Informationen</string>
     <string name="news_detail_image">Bild zur Meldung</string>
+    <string name="accessibilityFilterButton">Filter für Gleis</string>
 
     <plurals name="sr_bus">
         <item quantity="one">Bus</item>
