@@ -22,7 +22,6 @@ import androidx.fragment.app.Fragment;
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
-import androidx.lifecycle.ViewModelProviders;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 import com.android.volley.VolleyError;
@@ -55,8 +54,8 @@ import de.deutschebahn.bahnhoflive.ui.hub.StationImageResolver;
 import de.deutschebahn.bahnhoflive.ui.map.MapActivity;
 import de.deutschebahn.bahnhoflive.ui.station.elevators.ElevatorStatusListsFragment;
 import de.deutschebahn.bahnhoflive.ui.station.info.StaticInfo;
-import de.deutschebahn.bahnhoflive.ui.station.occupancy.OccupancyViewBinder;
 import de.deutschebahn.bahnhoflive.ui.station.localtransport.LocalTransportViewModel;
+import de.deutschebahn.bahnhoflive.ui.station.occupancy.OccupancyViewBinder;
 import de.deutschebahn.bahnhoflive.ui.station.shop.CategorizedShops;
 import de.deutschebahn.bahnhoflive.ui.station.shop.Shop;
 import de.deutschebahn.bahnhoflive.ui.station.shop.ShopCategory;
@@ -159,7 +158,7 @@ public class StationFragment extends Fragment implements
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        final ViewModelProvider viewModelProvider = ViewModelProviders.of(getActivity());
+        final ViewModelProvider viewModelProvider = new ViewModelProvider(requireActivity());
         stationViewModel = viewModelProvider.get(StationViewModel.class);
 
         Resource<Station, ? extends Throwable> stationResource = stationViewModel.getStationResource();

@@ -15,7 +15,6 @@ import de.deutschebahn.bahnhoflive.repository.DetailedStopPlaceResource
 import de.deutschebahn.bahnhoflive.stream.livedata.MergedLiveData
 import de.deutschebahn.bahnhoflive.ui.station.StaticInfoCollection
 import de.deutschebahn.bahnhoflive.util.then
-import java.util.*
 import java.util.regex.Pattern
 
 class ServiceNumbersLiveData(
@@ -39,6 +38,11 @@ class ServiceNumbersLiveData(
 
     fun update(detailedStopPlace: DetailedStopPlace, staticInfoCollection: StaticInfoCollection) {
         value = listOfNotNull(
+            composeChatbotContent(
+                detailedStopPlace,
+                staticInfoCollection,
+                ServiceContent.Type.Local.CHATBOT
+            ),
             composeServiceContent(
                 detailedStopPlace,
                 staticInfoCollection,
@@ -50,15 +54,22 @@ class ServiceNumbersLiveData(
                 staticInfoCollection,
                 ServiceContent.Type.Local.LOST_AND_FOUND
             ),
-            composeChatbotContent(
-                detailedStopPlace,
-                staticInfoCollection,
-                ServiceContent.Type.Local.CHATBOT
-            )
+            composeStationComplaintsContent(),
+            composeAppIssuesContent(),
+            composeRateAppContent()
         )
     }
 
-    private fun composeThreeSContent(station: DetailedStopPlace, staticInfoCollection: StaticInfoCollection): ServiceContent? {
+    private fun composeRateAppContent(): ServiceContent? = null
+
+    private fun composeAppIssuesContent(): ServiceContent? = null
+
+    private fun composeStationComplaintsContent(): ServiceContent? = null
+
+    private fun composeThreeSContent(
+        station: DetailedStopPlace,
+        staticInfoCollection: StaticInfoCollection
+    ): ServiceContent? {
         return station.tripleSCenter?.let { tripleSCenter ->
             staticInfoCollection.typedStationInfos[ServiceContent.Type.THREE_S]?.let { staticInfo ->
                 ServiceContent(
@@ -121,7 +132,4 @@ class ServiceNumbersLiveData(
         return stringBuilder.toString()
     }
 
-    //TODO remove after 2021-04-01
-    private fun Calendar.beforeMobilityServiceChange() =
-        get(Calendar.MONTH) < 3 && get(Calendar.YEAR) <= 2021
 }

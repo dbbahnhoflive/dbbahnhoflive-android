@@ -65,6 +65,9 @@ public class ServiceContent implements Parcelable {
             String DB_LOUNGE = "local_db_lounge";
             String LOST_AND_FOUND = "local_lostfound";
             String CHATBOT = "chatbot";
+            String STATION_COMPLAINT = "station_complaint";
+            String APP_ISSUE = "app_issue";
+            String RATE_APP = "rate_app";
         }
     }
 
