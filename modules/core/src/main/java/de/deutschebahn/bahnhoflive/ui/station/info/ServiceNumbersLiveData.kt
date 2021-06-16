@@ -10,6 +10,7 @@ import android.util.Patterns
 import androidx.lifecycle.LiveData
 import de.deutschebahn.bahnhoflive.backend.db.publictrainstation.model.DetailedStopPlace
 import de.deutschebahn.bahnhoflive.backend.local.model.ServiceContent
+import de.deutschebahn.bahnhoflive.backend.local.model.ServiceContentType
 import de.deutschebahn.bahnhoflive.backend.local.model.isChatbotAvailable
 import de.deutschebahn.bahnhoflive.repository.DetailedStopPlaceResource
 import de.deutschebahn.bahnhoflive.stream.livedata.MergedLiveData
@@ -41,18 +42,18 @@ class ServiceNumbersLiveData(
             composeChatbotContent(
                 detailedStopPlace,
                 staticInfoCollection,
-                ServiceContent.Type.Local.CHATBOT
+                ServiceContentType.Local.CHATBOT
             ),
             composeServiceContent(
                 detailedStopPlace,
                 staticInfoCollection,
-                ServiceContent.Type.MOBILITY_SERVICE
+                ServiceContentType.MOBILITY_SERVICE
             ),
             composeThreeSContent(detailedStopPlace, staticInfoCollection),
             composeServiceContent(
                 detailedStopPlace,
                 staticInfoCollection,
-                ServiceContent.Type.Local.LOST_AND_FOUND
+                ServiceContentType.Local.LOST_AND_FOUND
             ),
             composeStationComplaintsContent(),
             composeAppIssuesContent(),
@@ -71,7 +72,7 @@ class ServiceNumbersLiveData(
         staticInfoCollection: StaticInfoCollection
     ): ServiceContent? {
         return station.tripleSCenter?.let { tripleSCenter ->
-            staticInfoCollection.typedStationInfos[ServiceContent.Type.THREE_S]?.let { staticInfo ->
+            staticInfoCollection.typedStationInfos[ServiceContentType.THREE_S]?.let { staticInfo ->
                 ServiceContent(
                     StaticInfo(
                         staticInfo.type,
@@ -88,12 +89,13 @@ class ServiceNumbersLiveData(
 
     private fun composeChatbotContent(detailedStopPlace: DetailedStopPlace, staticInfoCollection: StaticInfoCollection, chatbot: String) =
         if (detailedStopPlace.isChatbotAvailable) {
-            staticInfoCollection.typedStationInfos[ServiceContent.Type.Local.CHATBOT]?.let { staticInfo ->
+            staticInfoCollection.typedStationInfos[ServiceContentType.Local.CHATBOT]?.let { staticInfo ->
                 ServiceContent(
                     StaticInfo(
                         staticInfo.type,
                         staticInfo.title,
-                        staticInfo.descriptionText)
+                        staticInfo.descriptionText
+                    )
 
                 )
             }

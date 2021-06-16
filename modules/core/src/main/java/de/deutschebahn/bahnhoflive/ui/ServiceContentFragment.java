@@ -47,6 +47,7 @@ import de.deutschebahn.bahnhoflive.analytics.TrackingManager;
 import de.deutschebahn.bahnhoflive.backend.db.publictrainstation.model.Availability;
 import de.deutschebahn.bahnhoflive.backend.db.publictrainstation.model.Details;
 import de.deutschebahn.bahnhoflive.backend.local.model.ServiceContent;
+import de.deutschebahn.bahnhoflive.backend.local.model.ServiceContentType;
 import de.deutschebahn.bahnhoflive.ui.station.HistoryFragment;
 import de.deutschebahn.bahnhoflive.ui.station.ServiceContents;
 import de.deutschebahn.bahnhoflive.ui.station.StationViewModel;
@@ -109,7 +110,7 @@ public class ServiceContentFragment extends Fragment {
             }
         });
 
-        if (ServiceContent.Type.DB_INFORMATION.equals(serviceContent.getType()) && serviceContent.getAdditionalText() == null) {
+        if (ServiceContentType.DB_INFORMATION.equals(serviceContent.getType()) && serviceContent.getAdditionalText() == null) {
             final AvailabilityRenderer availabilityRenderer = new AvailabilityRenderer();
             stationViewModel.getDetailedStopPlaceResource().getData().observe(this, detailedStopPlace -> {
                 if (detailedStopPlace == null) {

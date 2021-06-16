@@ -13,6 +13,7 @@ import androidx.fragment.app.activityViewModels
 import de.deutschebahn.bahnhoflive.R
 import de.deutschebahn.bahnhoflive.analytics.TrackingManager
 import de.deutschebahn.bahnhoflive.backend.local.model.ServiceContent
+import de.deutschebahn.bahnhoflive.backend.local.model.ServiceContentType
 import de.deutschebahn.bahnhoflive.ui.FragmentArgs
 import de.deutschebahn.bahnhoflive.ui.RecyclerFragment
 import de.deutschebahn.bahnhoflive.ui.map.Content
@@ -124,7 +125,7 @@ class StationInfoDetailsFragment :
 
                 true
             } ?: serviceContent.takeIf {
-                it.type == ServiceContent.Type.BAHNHOFSMISSION
+                it.type == ServiceContentType.BAHNHOFSMISSION
             }?.let {
                 RimapFilter.putPreset(intent, RimapFilter.PRESET_INFO_ON_SITE)
 

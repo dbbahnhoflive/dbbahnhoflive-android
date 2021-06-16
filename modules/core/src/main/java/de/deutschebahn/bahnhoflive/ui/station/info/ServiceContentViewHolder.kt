@@ -17,6 +17,7 @@ import de.deutschebahn.bahnhoflive.IconMapper
 import de.deutschebahn.bahnhoflive.R
 import de.deutschebahn.bahnhoflive.analytics.TrackingManager
 import de.deutschebahn.bahnhoflive.backend.local.model.ServiceContent
+import de.deutschebahn.bahnhoflive.backend.local.model.ServiceContentType
 import de.deutschebahn.bahnhoflive.ui.map.content.MapIntent
 import de.deutschebahn.bahnhoflive.ui.station.CommonDetailsCardViewHolder
 import de.deutschebahn.bahnhoflive.ui.station.ServiceContents
@@ -74,7 +75,7 @@ class ServiceContentViewHolder(
         contentHeaderImage.visibility = View.GONE
 
         when (item.type.toLowerCase()) {
-            ServiceContent.Type.THREE_S -> {
+            ServiceContentType.THREE_S -> {
                 val threeSComponents = ServiceContents.ThreeSComponents(item)
 
                 addTextPart(threeSComponents.description)
@@ -84,7 +85,7 @@ class ServiceContentViewHolder(
                 }
             }
 
-            ServiceContent.Type.Local.LOST_AND_FOUND -> {
+            ServiceContentType.Local.LOST_AND_FOUND -> {
                 run {
                     FundserviceContentElement.render(
                         descriptionLayout,
@@ -114,7 +115,7 @@ class ServiceContentViewHolder(
                 }
             }
 
-            ServiceContent.Type.Local.TRAVEL_CENTER -> {
+            ServiceContentType.Local.TRAVEL_CENTER -> {
                 if (item.address == null) {
                     defaultRender(item)
                 } else {
@@ -143,7 +144,7 @@ class ServiceContentViewHolder(
                 }
             }
 
-            ServiceContent.Type.Local.CHATBOT -> {
+            ServiceContentType.Local.CHATBOT -> {
                 addImagePart(R.drawable.chatbot_card)
                 renderDescriptionText(item, false) { dbActionButton ->
                     if (Calendar.getInstance().get(Calendar.HOUR_OF_DAY) in 7 until 22)
@@ -291,7 +292,7 @@ class ServiceContentViewHolder(
         when (v.id) {
             R.id.button_right -> {
                 val item = item
-                if (ServiceContent.Type.THREE_S == item?.type?.toLowerCase(Locale.GERMAN)) {
+                if (ServiceContentType.THREE_S == item?.type?.toLowerCase(Locale.GERMAN)) {
                     val threeSComponents = ServiceContents.ThreeSComponents(item)
 
                     if (threeSComponents.phoneNumber != null) {

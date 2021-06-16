@@ -10,6 +10,7 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.Transformations
 import de.deutschebahn.bahnhoflive.backend.db.publictrainstation.model.*
 import de.deutschebahn.bahnhoflive.backend.local.model.ServiceContent
+import de.deutschebahn.bahnhoflive.backend.local.model.ServiceContentType
 import de.deutschebahn.bahnhoflive.repository.DetailedStopPlaceResource
 import de.deutschebahn.bahnhoflive.repository.ShopsResource
 import de.deutschebahn.bahnhoflive.stream.livedata.MergedLiveData
@@ -56,22 +57,22 @@ class InfoAndServicesLiveData(
             composeServiceContent(
                 detailedStopPlace,
                 staticInfoCollection,
-                ServiceContent.Type.DB_INFORMATION,
+                ServiceContentType.DB_INFORMATION,
                 renderSchedule(detailedStopPlace.details?.dbInformation)
             ),
             composeServiceContent(
                 detailedStopPlace,
                 staticInfoCollection,
-                ServiceContent.Type.MOBILE_SERVICE,
+                ServiceContentType.MOBILE_SERVICE,
                 renderSchedule(detailedStopPlace.details?.localServiceStaff)
             ),
             composeServiceContent(
                 detailedStopPlace,
                 staticInfoCollection,
-                ServiceContent.Type.BAHNHOFSMISSION
+                ServiceContentType.BAHNHOFSMISSION
             ),
-            staticInfoCollection.typedStationInfos[ServiceContent.Type.Local.TRAVEL_CENTER]?.let { staticInfo ->
-                (PublicTrainStationService.predicates[ServiceContent.Type.Local.TRAVEL_CENTER]?.invoke(
+            staticInfoCollection.typedStationInfos[ServiceContentType.Local.TRAVEL_CENTER]?.let { staticInfo ->
+                (PublicTrainStationService.predicates[ServiceContentType.Local.TRAVEL_CENTER]?.invoke(
                     detailedStopPlace
                 ) == true).then {
                     ServiceContent(
@@ -90,7 +91,7 @@ class InfoAndServicesLiveData(
             composeServiceContent(
                 detailedStopPlace,
                 staticInfoCollection,
-                ServiceContent.Type.Local.DB_LOUNGE
+                ServiceContentType.Local.DB_LOUNGE
             )
         )
     }
