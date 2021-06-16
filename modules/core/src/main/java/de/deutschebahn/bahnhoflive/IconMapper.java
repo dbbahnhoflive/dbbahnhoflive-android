@@ -84,6 +84,12 @@ public class IconMapper {
                 return R.drawable.rimap_fundsachen_grau;
             case ServiceContentType.Local.CHATBOT:
                 return R.drawable.chatbot_icon;
+            case ServiceContentType.Local.RATE_APP:
+                return R.drawable.app_app_bewerten;
+            case ServiceContentType.Local.APP_ISSUE:
+                return R.drawable.app_probleme_app_melden;
+            case ServiceContentType.Local.STATION_COMPLAINT:
+                return R.drawable.app_verschmutzungmelden;
             default:
                 return defaultResource;
         }

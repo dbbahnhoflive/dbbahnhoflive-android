@@ -56,14 +56,18 @@ class ServiceNumbersLiveData(
                 ServiceContentType.Local.LOST_AND_FOUND
             ),
             composeStationComplaintsContent(),
-            composeAppIssuesContent(),
-            composeRateAppContent()
+            composeAppIssuesContent(staticInfoCollection),
+            composeRateAppContent(staticInfoCollection)
         )
     }
 
-    private fun composeRateAppContent(): ServiceContent? = null
+    fun StaticInfo?.wrapServiceContent() = this?.let { ServiceContent(it) }
 
-    private fun composeAppIssuesContent(): ServiceContent? = null
+    private fun composeRateAppContent(staticInfoCollection: StaticInfoCollection): ServiceContent? =
+        staticInfoCollection.typedStationInfos[ServiceContentType.Local.RATE_APP].wrapServiceContent()
+
+    private fun composeAppIssuesContent(staticInfoCollection: StaticInfoCollection): ServiceContent? =
+        staticInfoCollection.typedStationInfos[ServiceContentType.Local.APP_ISSUE].wrapServiceContent()
 
     private fun composeStationComplaintsContent(): ServiceContent? = null
 
