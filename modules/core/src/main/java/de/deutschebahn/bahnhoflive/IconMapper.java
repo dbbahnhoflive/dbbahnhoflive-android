@@ -6,6 +6,8 @@
 
 package de.deutschebahn.bahnhoflive;
 
+import androidx.annotation.NonNull;
+
 import java.util.Locale;
 
 import de.deutschebahn.bahnhoflive.backend.local.model.ServiceContent;
@@ -14,11 +16,11 @@ import de.deutschebahn.bahnhoflive.backend.local.model.ServiceContentType;
 public class IconMapper {
 
 
-    public static int contentIconForType(ServiceContent serviceContent) {
+    public static int contentIconForType(@NonNull ServiceContent serviceContent) {
         return contentIconForType(serviceContent.getType());
     }
 
-    public static int contentIconForType(String type) {
+    public static int contentIconForType(@NonNull String type) {
         switch (type.toLowerCase(Locale.GERMAN)) {
             case ServiceContentType.ELEVATOR_AVAILIBITY:
                 return R.drawable.app_aufzug;

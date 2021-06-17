@@ -16,6 +16,7 @@ import de.deutschebahn.bahnhoflive.backend.local.model.ServiceContent
 import de.deutschebahn.bahnhoflive.backend.local.model.ServiceContentType
 import de.deutschebahn.bahnhoflive.ui.FragmentArgs
 import de.deutschebahn.bahnhoflive.ui.RecyclerFragment
+import de.deutschebahn.bahnhoflive.ui.feedback.WhatsAppInstallation
 import de.deutschebahn.bahnhoflive.ui.map.Content
 import de.deutschebahn.bahnhoflive.ui.map.InitialPoiManager
 import de.deutschebahn.bahnhoflive.ui.map.MapPresetProvider
@@ -47,8 +48,17 @@ class StationInfoDetailsFragment :
         adapter = StationInfoAdapter(
             serviceContents,
             TrackingManager.fromActivity(activity),
-            dbActionButtonParser
-        )
+            dbActionButtonParser,
+            stationViewModel.stationResource.data,
+            WhatsAppInstallation(requireContext()),
+            stationViewModel.stationWhatsappFeedbackLiveData,
+            {
+                kotlin.runCatching { viewLifecycleOwner }.getOrNull()
+                    ?: this@StationInfoDetailsFragment
+            }
+        ) { intent ->
+            startActivity(intent)
+        }
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {

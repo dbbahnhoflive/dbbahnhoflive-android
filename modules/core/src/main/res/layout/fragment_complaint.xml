@@ -9,8 +9,7 @@
 <androidx.coordinatorlayout.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    xmlns:tools="http://schemas.android.com/tools">
+    android:layout_height="match_parent">
 
     <include layout="@layout/titlebar_common" />
 
@@ -19,111 +18,12 @@
         android:layout_height="match_parent"
         app:layout_behavior="@string/appbar_scrolling_view_behavior">
 
-        <LinearLayout
-            android:padding="@dimen/default_space_double"
+        <include
+            layout="@layout/include_complaint"
+            android:id="@+id/complaintContent"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="vertical"
-            android:layout_marginBottom="@dimen/round_button_size_large">
-
-            <TextView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="@string/complaint_headline"
-                android:textStyle="bold"
-                android:textSize="@dimen/textsize_h3" />
-
-            <TextView
-                android:id="@+id/complaintExplanation"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="12dp"
-                android:text="@string/feedback_complaint_explanation"
-                android:textSize="@dimen/textsize_h3" />
-
-            <LinearLayout
-                android:id="@+id/whatsappContainer"
-                android:orientation="vertical"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content">
-
-                <Button
-                    android:id="@+id/whatsapp"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="12dp"
-                    android:background="@drawable/shape_round_button_grey"
-                    android:text="@string/feeback_whatsapp_button"
-                    android:textAllCaps="false"
-                    android:textColor="#fff" />
-
-                <TextView
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="12dp"
-                    android:text="@string/feedback_cost_notice"
-                    android:textSize="@dimen/textsize_h3" />
-            </LinearLayout>
-
-
-            <TextView
-                tools:visibility="visible"
-                android:visibility="gone"
-                android:id="@+id/whatsapp_missing"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="12dp"
-                android:textStyle="italic"
-                android:text="@string/feedback_whatsapp_unavailable"
-                android:textSize="@dimen/textsize_h3" />
-
-            <TextView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="@string/feedback_headline_alternative_contacts"
-                android:layout_marginTop="12dp"
-                android:textStyle="bold"
-                android:textSize="@dimen/textsize_h3" />
-
-
-            <Button
-                android:id="@+id/feedbackMail"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="12dp"
-                android:background="@drawable/shape_round_button_grey"
-                android:text="@string/feedback_mail_alternative"
-                android:textAllCaps="false"
-                android:textColor="#fff" />
-
-
-            <Button
-                android:id="@+id/feedbackPhone"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="12dp"
-                android:background="@drawable/shape_round_button_grey"
-                android:text="@string/feedback_phone_number"
-                android:textAllCaps="false"
-                android:textColor="#fff" />
-
-
-            <TextView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="12dp"
-                android:text="Montag bis Sonntag von 07:00 - 22:00 Uhr"
-                android:textSize="@dimen/textsize_h3" />
-
-            <TextView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="12dp"
-                android:autoLink="web"
-                android:text="@string/feeback_disclaimer"
-                android:textSize="@dimen/textsize_h3" />
-
-        </LinearLayout>
+            android:layout_marginBottom="@dimen/round_button_size_large" />
     </androidx.core.widget.NestedScrollView>
 
 </androidx.coordinatorlayout.widget.CoordinatorLayout>

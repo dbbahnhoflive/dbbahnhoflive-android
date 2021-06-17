@@ -25,11 +25,9 @@ import de.deutschebahn.bahnhoflive.util.PhoneIntent
 import de.deutschebahn.bahnhoflive.view.SingleSelectionManager
 import kotlinx.android.synthetic.main.card_expandable_station_info.view.*
 import kotlinx.android.synthetic.main.include_description_link_part.view.*
-
 import java.util.*
-import java.util.regex.Pattern
 
-class ServiceContentViewHolder(
+open class ServiceContentViewHolder(
     parent: ViewGroup,
     singleSelectionManager: SingleSelectionManager,
     val trackingManager: TrackingManager,
@@ -39,8 +37,6 @@ class ServiceContentViewHolder(
     R.layout.card_expandable_station_info,
     singleSelectionManager
 ), View.OnClickListener {
-    private val dbactionbuttonPattern =
-        Pattern.compile("(.*)<dbactionbutton>(.*)</dbactionbutton>(.*)")
 
     protected val threeButtonsViewHolder: ThreeButtonsViewHolder = ThreeButtonsViewHolder(
         itemView,

@@ -69,7 +69,13 @@ class ServiceNumbersLiveData(
     private fun composeAppIssuesContent(staticInfoCollection: StaticInfoCollection): ServiceContent? =
         staticInfoCollection.typedStationInfos[ServiceContentType.Local.APP_ISSUE].wrapServiceContent()
 
-    private fun composeStationComplaintsContent(): ServiceContent? = null
+    private fun composeStationComplaintsContent(): ServiceContent? = ServiceContent(
+        StaticInfo(
+            ServiceContentType.Local.STATION_COMPLAINT,
+            "Verschmutzung melden" /* dummy */,
+            "Verschmutzung melden" /* dummy */
+        )
+    )
 
     private fun composeThreeSContent(
         station: DetailedStopPlace,
