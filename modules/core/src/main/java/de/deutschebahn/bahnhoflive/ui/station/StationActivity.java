@@ -42,13 +42,13 @@ import de.deutschebahn.bahnhoflive.analytics.IssueTracker;
 import de.deutschebahn.bahnhoflive.analytics.IssueTrackerKt;
 import de.deutschebahn.bahnhoflive.analytics.StationTrackingManager;
 import de.deutschebahn.bahnhoflive.analytics.TrackingManager;
+import de.deutschebahn.bahnhoflive.backend.local.model.ServiceContentType;
 import de.deutschebahn.bahnhoflive.backend.ris.model.TrainInfo;
 import de.deutschebahn.bahnhoflive.repository.InternalStation;
 import de.deutschebahn.bahnhoflive.repository.Station;
 import de.deutschebahn.bahnhoflive.repository.StationResource;
 import de.deutschebahn.bahnhoflive.tutorial.TutorialManager;
 import de.deutschebahn.bahnhoflive.tutorial.TutorialView;
-import de.deutschebahn.bahnhoflive.ui.feedback.FeedbackCategoryFragment;
 import de.deutschebahn.bahnhoflive.ui.hub.HubActivity;
 import de.deutschebahn.bahnhoflive.ui.map.MapActivity;
 import de.deutschebahn.bahnhoflive.ui.map.MapPresetProvider;
@@ -347,8 +347,7 @@ public class StationActivity extends AppCompatActivity implements
 
     @Override
     public void showFeedbackFragment() {
-        showTab(0);
-        overviewFragment.push(new FeedbackCategoryFragment());
+        stationViewModel.navigateToInfo(ServiceContentType.Local.STATION_COMPLAINT);
     }
 
     @Override

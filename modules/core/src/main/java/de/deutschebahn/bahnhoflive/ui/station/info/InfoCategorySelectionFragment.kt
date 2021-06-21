@@ -236,12 +236,9 @@ class InfoCategorySelectionFragment : CategorySelectionFragment(
                         }
                     }
 
-                    setOf(
-                        ServiceContentType.MOBILITY_SERVICE,
-                        ServiceContentType.THREE_S,
-                        ServiceContentType.Local.LOST_AND_FOUND,
-                        ServiceContentType.Local.CHATBOT
-                    ).contains(it) -> {
+                    serviceNumbersLiveData.value?.any { serviceContent ->
+                        serviceContent.type == it
+                    } == true -> {
                         serviceNumbersLiveData.value?.let { serviceContents ->
                             serviceNumbersCategory?.let { category ->
                                 startStationInfoDetailsFragment(

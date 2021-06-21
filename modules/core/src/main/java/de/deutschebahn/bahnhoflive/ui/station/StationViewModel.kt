@@ -1141,7 +1141,11 @@ class StationViewModel : HafasTimetableViewModel() {
         })
 
     fun navigateToChatbot() {
-        selectedServiceContentType.value = ServiceContentType.Local.CHATBOT
+        navigateToInfo(ServiceContentType.Local.CHATBOT)
+    }
+
+    fun navigateToInfo(serviceContentType: String) {
+        selectedServiceContentType.value = serviceContentType
         stationNavigation?.showInfoFragment(false)
     }
 
