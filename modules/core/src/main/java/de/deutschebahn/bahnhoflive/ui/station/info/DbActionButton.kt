@@ -6,12 +6,21 @@
 
 package de.deutschebahn.bahnhoflive.ui.station.info
 
+import android.util.Log
+
 data class DbActionButton(
-    val href: String? = null,
+    val type: Type = Type.LEGACY,
+    val data: String? = null,
     val label: String? = null
 ) {
-    enum class Action {
+
+    init {
+        Log.d(DbActionButton::class.java.simpleName, "Creating action button $label: $type = $data")
+    }
+
+    enum class Type {
+        LEGACY,
         HREF,
-        APP_ISSUE_FEEDBACK
+        ACTION
     }
 }

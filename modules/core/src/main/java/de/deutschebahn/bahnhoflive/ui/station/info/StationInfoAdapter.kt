@@ -1,15 +1,21 @@
 package de.deutschebahn.bahnhoflive.ui.station.info
 
 import android.content.Intent
+import android.os.Build
 import android.view.ViewGroup
 import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.LiveData
+import de.deutschebahn.bahnhoflive.BaseApplication
+import de.deutschebahn.bahnhoflive.R
 import de.deutschebahn.bahnhoflive.analytics.TrackingManager
 import de.deutschebahn.bahnhoflive.backend.local.model.ServiceContent
 import de.deutschebahn.bahnhoflive.backend.local.model.ServiceContentType
 import de.deutschebahn.bahnhoflive.repository.Station
 import de.deutschebahn.bahnhoflive.ui.feedback.WhatsAppInstallation
+import de.deutschebahn.bahnhoflive.ui.feedback.createPlaystoreIntent
+import de.deutschebahn.bahnhoflive.ui.feedback.deviceName
 import de.deutschebahn.bahnhoflive.ui.station.CommonDetailsCardViewHolder
+import de.deutschebahn.bahnhoflive.util.MailUri
 import de.deutschebahn.bahnhoflive.view.SingleSelectionManager
 
 class StationInfoAdapter(
@@ -39,7 +45,37 @@ class StationInfoAdapter(
         )
         else -> ServiceContentViewHolder(
             parent, singleSelectionManager, trackingManager, dbActionButtonParser
-        )
+        ) { dbActionButton: DbActionButton ->
+            if (dbActionButton.type == DbActionButton.Type.ACTION) {
+                when (dbActionButton.data) {
+                    "appIssue" -> {
+                        val emailIntent = Intent(
+                            Intent.ACTION_SENDTO,
+                            MailUri().apply {
+                                to = parent.context.getString(R.string.feedback_send_to)
+                                this.subject = parent.context.getString(R.string.feedback_subject)
+                                body = BaseApplication.get().run {
+                                    "\n\n\n\n" +
+                                            "Um meine folgenden Anmerkungen leichter nachvollziehen zu können, sende ich Ihnen anbei meine Geräteinformationen:\n\n" +
+                                            (stationLiveData.value?.let<Station, String> { "Bahnhof: ${it.title} (${it.id})\n" }
+                                                ?: "") +
+                                            "Gerät: $deviceName (${Build.VERSION.SDK_INT})\n" +
+                                            "App-Version: $versionName ($versionCode)"
+                                }
+                            }.build()
+                        )
+                        activityStarter(Intent.createChooser(emailIntent, "E-Mail senden..."))
+
+                    }
+                    "chatbot" -> {
+
+                    }
+                    "rateApp" -> {
+                        activityStarter(parent.context.createPlaystoreIntent())
+                    }
+                }
+            }
+        }
     }
 
     override fun onBindViewHolder(

@@ -286,7 +286,7 @@ public class ServiceContentFragment extends Fragment {
                                 buttonView.setText(label);
                                 buttonView.setContentDescription(label);
                                 buttonView.setOnClickListener(v1 -> {
-                                    final String href = button.getHref();
+                                    final String href = button.getData();
                                     if (href != null) {
                                         try {
                                             v1.getContext().startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse(href)));

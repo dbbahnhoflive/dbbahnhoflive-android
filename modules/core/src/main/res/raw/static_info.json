@@ -63,12 +63,12 @@
 			"type": "pickpack"
 		},
 		{
-			"descriptionText": "<p><b>Zufrieden mit der App?</b></p>Unterstützen Sie uns mit einer positiven Bewertung im Play Store.<dbactionbutton>App bewerten</dbactionbutton>",
+			"descriptionText": "<p><b>Zufrieden mit der App?</b></p>Unterstützen Sie uns mit einer positiven Bewertung im Play Store.<dbactionbutton action=\"rateApp\">App bewerten</dbactionbutton>",
 			"title": "App bewerten",
 			"type": "rate_app"
 		},
 		{
-			"descriptionText": "<p><b>Kontakt</b></p>Schreiben Sie uns, sollten Ihnen Unstimmigkeiten in der App auffallen.<dbactionbutton href=\"mailto:marketing-bahnhoefe@deutschebahn.com\">Kontakt aufnehmen</dbactionbutton>",
+			"descriptionText": "<p><b>Kontakt</b></p>Schreiben Sie uns, sollten Ihnen Unstimmigkeiten in der App auffallen.<dbactionbutton action=\"appIssue\">Kontakt aufnehmen</dbactionbutton>",
 			"title": "Probleme mit der App melden",
 			"type": "app_issue"
 		}

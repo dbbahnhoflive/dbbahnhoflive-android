@@ -31,7 +31,8 @@ open class ServiceContentViewHolder(
     parent: ViewGroup,
     singleSelectionManager: SingleSelectionManager,
     val trackingManager: TrackingManager,
-    val dbActionButtonParser: DbActionButtonParser
+    val dbActionButtonParser: DbActionButtonParser,
+    val dbActionButtonCallback: (dbActionButton: DbActionButton) -> Unit
 ) : CommonDetailsCardViewHolder<ServiceContent>(
     parent,
     R.layout.card_expandable_station_info,
@@ -201,24 +202,30 @@ open class ServiceContentViewHolder(
 
         parts.forEach {
             it.button?.also { dbActionButton ->
-                val href = dbActionButton.href
+                when (dbActionButton.type) {
+                    DbActionButton.Type.HREF -> {
+                        val href = dbActionButton.data
 
-                if (href == null) {
-                    specialActionButtonFactory?.invoke(dbActionButton)
-                } else {
-                    dbActionButton.label?.also { label ->
-                        addButtonPart(label, label) {
-                            try {
-                                it.context.startActivity(
+                        if (href == null) {
+                            specialActionButtonFactory?.invoke(dbActionButton)
+                        } else {
+                            addActionButton(dbActionButton) { view, dbActionButton ->
+                                view.context.startActivity(
                                     Intent(
                                         Intent.ACTION_VIEW,
                                         Uri.parse(href)
                                     )
                                 )
-                            } catch (e: Exception) {
-                                BaseApplication.get().issueTracker.dispatchThrowable(e)
                             }
                         }
+                    }
+                    DbActionButton.Type.ACTION -> {
+                        addActionButton(dbActionButton) { view, dbActionButton ->
+                            dbActionButtonCallback(dbActionButton)
+                        }
+                    }
+                    else -> {
+                        specialActionButtonFactory?.invoke(dbActionButton)
                     }
                 }
             } ?: it.text?.also { descriptionText ->
@@ -236,6 +243,21 @@ open class ServiceContentViewHolder(
                     }
                 } else {
                     addHtmlPart(descriptionText)
+                }
+            }
+        }
+    }
+
+    private fun addActionButton(
+        dbActionButton: DbActionButton,
+        action: (View, DbActionButton) -> Unit
+    ) {
+        dbActionButton.label?.also { label ->
+            addButtonPart(label, label) {
+                try {
+                    action(it, dbActionButton)
+                } catch (e: Exception) {
+                    BaseApplication.get().issueTracker.dispatchThrowable(e)
                 }
             }
         }
