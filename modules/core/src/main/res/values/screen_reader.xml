@@ -82,6 +82,7 @@
     <string name="sr_news_title">Aktuelle Informationen</string>
     <string name="news_detail_image">Bild zur Meldung</string>
     <string name="accessibilityFilterButton">Filter für Gleis</string>
+    <string name="sr_accessibilityStandardPlatformHeight">Moderne Bahnsteighöhe, 55cm oder höher</string>
 
     <plurals name="sr_bus">
         <item quantity="one">Bus</item>
