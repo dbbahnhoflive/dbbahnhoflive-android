@@ -6,14 +6,10 @@
 
 package de.deutschebahn.bahnhoflive.ui.station.info
 
-class StaticInfoDescriptionPart {
-    val text: String?
-    val button: DbActionButton?
-
-    private constructor(text: String? = null, button: DbActionButton? = null) {
-        this.text = text
-        this.button = button
-    }
+class StaticInfoDescriptionPart private constructor(
+    val text: String? = null,
+    val button: DbActionButton? = null
+) {
 
     constructor(text: String) : this(text, null)
     constructor(button: DbActionButton) : this(null, button)

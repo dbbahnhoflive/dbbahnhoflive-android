@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<!--
+  ~ SPDX-FileCopyrightText: 2020 DB Station&Service AG <bahnhoflive-opensource@deutschebahn.com>
+  ~
+  ~ SPDX-License-Identifier: Apache-2.0
+  -->
+
+<de.deutschebahn.bahnhoflive.view.DecoratedCard xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+
+        android:background="@color/card_background"
+        android:orientation="vertical">
+
+        <include
+            layout="@layout/common_detail_overview"
+            android:id="@+id/overview" />
+
+        <include
+            layout="@layout/include_complaint"
+            android:id="@+id/details" />
+
+    </LinearLayout>
+</de.deutschebahn.bahnhoflive.view.DecoratedCard>

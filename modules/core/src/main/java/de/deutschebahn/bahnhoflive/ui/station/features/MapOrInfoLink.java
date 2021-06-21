@@ -13,6 +13,7 @@ import androidx.annotation.NonNull;
 
 import de.deutschebahn.bahnhoflive.backend.db.publictrainstation.model.EmbeddedTravelCenter;
 import de.deutschebahn.bahnhoflive.backend.local.model.ServiceContent;
+import de.deutschebahn.bahnhoflive.backend.local.model.ServiceContentType;
 import de.deutschebahn.bahnhoflive.ui.AvailabilityRenderer;
 import de.deutschebahn.bahnhoflive.ui.ServiceContentFragment;
 import de.deutschebahn.bahnhoflive.ui.station.StaticInfoCollection;
@@ -36,7 +37,7 @@ public class MapOrInfoLink extends MapLink {
         }
 
         String additionalText = null;
-        if (ServiceContent.Type.Local.TRAVEL_CENTER.equals(staticInfo.type)) {
+        if (ServiceContentType.Local.TRAVEL_CENTER.equals(staticInfo.type)) {
             final EmbeddedTravelCenter travelCenter = stationFeature.getDetailedStopPlace().getTravelCenter();
             if (travelCenter != null) {
                 additionalText = new AvailabilityRenderer().renderSchedule(travelCenter.getOpeningHours());

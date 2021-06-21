@@ -17,6 +17,7 @@ import de.deutschebahn.bahnhoflive.analytics.TrackingManager
 import de.deutschebahn.bahnhoflive.backend.db.fasta2.model.FacilityStatus
 import de.deutschebahn.bahnhoflive.backend.db.publictrainstation.model.DetailedStopPlace
 import de.deutschebahn.bahnhoflive.backend.local.model.ServiceContent
+import de.deutschebahn.bahnhoflive.backend.local.model.ServiceContentType
 import de.deutschebahn.bahnhoflive.repository.parking.ParkingsResource
 import de.deutschebahn.bahnhoflive.ui.ServiceContentFragment
 import de.deutschebahn.bahnhoflive.ui.station.*
@@ -163,7 +164,7 @@ class InfoCategorySelectionFragment : CategorySelectionFragment(
             return null
         }
 
-        val staticInfo = staticInfoCollection.typedStationInfos[ServiceContent.Type.WIFI]
+        val staticInfo = staticInfoCollection.typedStationInfos[ServiceContentType.WIFI]
         return if (staticInfo != null) {
             SimpleDynamicCategory(
                 staticInfo.title, R.drawable.rimap_wlan_grau,
@@ -205,11 +206,11 @@ class InfoCategorySelectionFragment : CategorySelectionFragment(
             if (it != null) {
                 when {
                     setOf(
-                        ServiceContent.Type.DB_INFORMATION,
-                        ServiceContent.Type.MOBILE_SERVICE,
-                        ServiceContent.Type.BAHNHOFSMISSION,
-                        ServiceContent.Type.Local.TRAVEL_CENTER,
-                        ServiceContent.Type.Local.DB_LOUNGE
+                        ServiceContentType.DB_INFORMATION,
+                        ServiceContentType.MOBILE_SERVICE,
+                        ServiceContentType.BAHNHOFSMISSION,
+                        ServiceContentType.Local.TRAVEL_CENTER,
+                        ServiceContentType.Local.DB_LOUNGE
                     ).contains(it) -> {
                         infoAndServicesLiveData.value?.let { serviceContents ->
                             infoAndServicesCategory?.let { category ->
@@ -222,12 +223,9 @@ class InfoCategorySelectionFragment : CategorySelectionFragment(
                         }
                     }
 
-                    setOf(
-                        ServiceContent.Type.MOBILITY_SERVICE,
-                        ServiceContent.Type.THREE_S,
-                        ServiceContent.Type.Local.LOST_AND_FOUND,
-                        ServiceContent.Type.Local.CHATBOT
-                    ).contains(it) -> {
+                    serviceNumbersLiveData.value?.any { serviceContent ->
+                        serviceContent.type == it
+                    } == true -> {
                         serviceNumbersLiveData.value?.let { serviceContents ->
                             serviceNumbersCategory?.let { category ->
                                 startStationInfoDetailsFragment(
@@ -239,18 +237,18 @@ class InfoCategorySelectionFragment : CategorySelectionFragment(
                         }
                     }
 
-                    it == ServiceContent.Type.WIFI -> {
+                    it == ServiceContentType.WIFI -> {
                         wifiCategory?.let { category ->
-                            staticInfoLiveData.value?.typedStationInfos?.get(ServiceContent.Type.WIFI)
+                            staticInfoLiveData.value?.typedStationInfos?.get(ServiceContentType.WIFI)
                                 ?.let { staticInfo ->
                                     startServiceContentFragment(staticInfo, category)
                                 }
                         }
                     }
 
-                    it == ServiceContent.Type.ACCESSIBLE -> {
+                    it == ServiceContentType.ACCESSIBLE -> {
                         accessibilityCategory?.let { category ->
-                            staticInfoLiveData.value?.typedStationInfos?.get(ServiceContent.Type.ACCESSIBLE)
+                            staticInfoLiveData.value?.typedStationInfos?.get(ServiceContentType.ACCESSIBLE)
                                 ?.let { staticInfo ->
                                     startServiceContentFragment(staticInfo, category)
                                 }

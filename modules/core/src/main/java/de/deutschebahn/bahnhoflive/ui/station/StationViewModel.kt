@@ -22,10 +22,7 @@ import de.deutschebahn.bahnhoflive.backend.db.newsapi.model.News
 import de.deutschebahn.bahnhoflive.backend.db.ris.model.Platform
 import de.deutschebahn.bahnhoflive.backend.einkaufsbahnhof.model.StationList
 import de.deutschebahn.bahnhoflive.backend.hafas.model.ProductCategory
-import de.deutschebahn.bahnhoflive.backend.local.model.ChatbotStation
-import de.deutschebahn.bahnhoflive.backend.local.model.ServiceContent
-import de.deutschebahn.bahnhoflive.backend.local.model.isChatbotAvailable
-import de.deutschebahn.bahnhoflive.backend.local.model.isEco
+import de.deutschebahn.bahnhoflive.backend.local.model.*
 import de.deutschebahn.bahnhoflive.backend.rimap.RimapConfig
 import de.deutschebahn.bahnhoflive.backend.rimap.model.RimapStationInfo
 import de.deutschebahn.bahnhoflive.backend.ris.model.RISTimetable
@@ -76,7 +73,7 @@ class StationViewModel : HafasTimetableViewModel() {
             ),
             StationFeatureTemplate(
                 StationFeatureDefinition.WIFI,
-                MapOrInfoLink(ServiceContent.Type.WIFI, TrackingManager.Category.WLAN)
+                MapOrInfoLink(ServiceContentType.WIFI, TrackingManager.Category.WLAN)
             ),
             StationFeatureTemplate(StationFeatureDefinition.ELEVATORS,
                 object : MapLink() {
@@ -94,22 +91,22 @@ class StationViewModel : HafasTimetableViewModel() {
             StationFeatureTemplate(
                 StationFeatureDefinition.DB_INFO,
                 MapOrInfoLink(
-                    ServiceContent.Type.DB_INFORMATION,
-                    ServiceContent.Type.DB_INFORMATION
+                    ServiceContentType.DB_INFORMATION,
+                    ServiceContentType.DB_INFORMATION
                 )
             ),
             StationFeatureTemplate(
                 StationFeatureDefinition.TRAVEL_CENTER,
                 MapOrInfoLink(
-                    ServiceContent.Type.Local.TRAVEL_CENTER,
-                    ServiceContent.Type.Local.TRAVEL_CENTER
+                    ServiceContentType.Local.TRAVEL_CENTER,
+                    ServiceContentType.Local.TRAVEL_CENTER
                 )
             ),
             StationFeatureTemplate(
                 StationFeatureDefinition.DB_LOUNGE,
                 MapOrInfoLink(
-                    ServiceContent.Type.Local.DB_LOUNGE,
-                    ServiceContent.Type.Local.DB_LOUNGE
+                    ServiceContentType.Local.DB_LOUNGE,
+                    ServiceContentType.Local.DB_LOUNGE
                 )
             ),
             StationFeatureTemplate(
@@ -140,8 +137,8 @@ class StationViewModel : HafasTimetableViewModel() {
             StationFeatureTemplate(
                 StationFeatureDefinition.LOST_AND_FOUND,
                 MapOrInfoLink(
-                    ServiceContent.Type.Local.LOST_AND_FOUND,
-                    ServiceContent.Type.Local.LOST_AND_FOUND
+                    ServiceContentType.Local.LOST_AND_FOUND,
+                    ServiceContentType.Local.LOST_AND_FOUND
                 )
             )
         )
@@ -252,16 +249,16 @@ class StationViewModel : HafasTimetableViewModel() {
             Transformations.map(staticInfoLiveData) {
                 it?.let { staticInfoCollection ->
                     sequenceOf(
-                        detailedStopPlace.hasDbInformation then { ServiceContent.Type.DB_INFORMATION },
-                        detailedStopPlace.hasMobileService then { ServiceContent.Type.MOBILE_SERVICE },
-                        detailedStopPlace.hasRailwayMission then { ServiceContent.Type.BAHNHOFSMISSION },
-                        detailedStopPlace.hasTravelCenter then { ServiceContent.Type.Local.TRAVEL_CENTER },
-                        detailedStopPlace.hasDbLounge then { ServiceContent.Type.Local.DB_LOUNGE },
-                        detailedStopPlace.hasMobilityService then { ServiceContent.Type.MOBILITY_SERVICE },
-                        detailedStopPlace.hasSzentrale then { ServiceContent.Type.THREE_S },
-                        detailedStopPlace.hasLostAndFound then { ServiceContent.Type.Local.LOST_AND_FOUND },
-                        detailedStopPlace.hasWifi then { ServiceContent.Type.WIFI },
-                        detailedStopPlace.hasSteplessAccess then { ServiceContent.Type.ACCESSIBLE }
+                        detailedStopPlace.hasDbInformation then { ServiceContentType.DB_INFORMATION },
+                        detailedStopPlace.hasMobileService then { ServiceContentType.MOBILE_SERVICE },
+                        detailedStopPlace.hasRailwayMission then { ServiceContentType.BAHNHOFSMISSION },
+                        detailedStopPlace.hasTravelCenter then { ServiceContentType.Local.TRAVEL_CENTER },
+                        detailedStopPlace.hasDbLounge then { ServiceContentType.Local.DB_LOUNGE },
+                        detailedStopPlace.hasMobilityService then { ServiceContentType.MOBILITY_SERVICE },
+                        detailedStopPlace.hasSzentrale then { ServiceContentType.THREE_S },
+                        detailedStopPlace.hasLostAndFound then { ServiceContentType.Local.LOST_AND_FOUND },
+                        detailedStopPlace.hasWifi then { ServiceContentType.WIFI },
+                        detailedStopPlace.hasSteplessAccess then { ServiceContentType.ACCESSIBLE }
                     ).filterNotNull().mapNotNull {
                         staticInfoCollection.typedStationInfos[it]
                     }.associate {
@@ -650,7 +647,7 @@ class StationViewModel : HafasTimetableViewModel() {
                                             stationFeaturesOnClickListener
                                         )
                                     }
-                                    "Bahnhofsausstattung DB Lounge" -> (!hasInfo(ServiceContent.Type.Local.DB_LOUNGE) && featureVisible(
+                                    "Bahnhofsausstattung DB Lounge" -> (!hasInfo(ServiceContentType.Local.DB_LOUNGE) && featureVisible(
                                         StationFeatureDefinition.DB_LOUNGE
                                     )) then {
                                         ContentSearchResult(
@@ -670,7 +667,7 @@ class StationViewModel : HafasTimetableViewModel() {
                                             stationFeaturesOnClickListener
                                         )
                                     }
-                                    "Bahnhofsausstattung DB Info" -> (!hasInfo(ServiceContent.Type.DB_INFORMATION) && featureVisible(
+                                    "Bahnhofsausstattung DB Info" -> (!hasInfo(ServiceContentType.DB_INFORMATION) && featureVisible(
                                         StationFeatureDefinition.DB_INFO
                                     )) then {
                                         ContentSearchResult(
@@ -681,7 +678,7 @@ class StationViewModel : HafasTimetableViewModel() {
                                         )
                                     }
                                     "Bahnhofsausstattung DB Reisezentrum" -> (!hasInfo(
-                                        ServiceContent.Type.Local.TRAVEL_CENTER
+                                        ServiceContentType.Local.TRAVEL_CENTER
                                     ) && featureVisible(StationFeatureDefinition.TRAVEL_CENTER)) then {
                                         ContentSearchResult(
                                             "DB Reisezentrum",
@@ -730,7 +727,7 @@ class StationViewModel : HafasTimetableViewModel() {
                                             stationFeaturesOnClickListener
                                         )
                                     }
-                                    "Bahnhofsausstattung WLAN" -> (!hasInfo(ServiceContent.Type.WIFI) && featureVisible(
+                                    "Bahnhofsausstattung WLAN" -> (!hasInfo(ServiceContentType.WIFI) && featureVisible(
                                         StationFeatureDefinition.ACCESSIBILITY
                                     )) then {
                                         ContentSearchResult(
@@ -754,14 +751,14 @@ class StationViewModel : HafasTimetableViewModel() {
                                     )
                                     "Bahnhofsinformation Info & Services" -> infoAvailability.value?.let { availableInfos ->
                                         sequenceOf(
-                                            ServiceContent.Type.DB_INFORMATION,
-                                            ServiceContent.Type.MOBILE_SERVICE,
-                                            ServiceContent.Type.BAHNHOFSMISSION,
-                                            ServiceContent.Type.Local.TRAVEL_CENTER,
-                                            ServiceContent.Type.Local.DB_LOUNGE,
-                                            ServiceContent.Type.MOBILITY_SERVICE,
-                                            ServiceContent.Type.THREE_S,
-                                            ServiceContent.Type.Local.LOST_AND_FOUND
+                                            ServiceContentType.DB_INFORMATION,
+                                            ServiceContentType.MOBILE_SERVICE,
+                                            ServiceContentType.BAHNHOFSMISSION,
+                                            ServiceContentType.Local.TRAVEL_CENTER,
+                                            ServiceContentType.Local.DB_LOUNGE,
+                                            ServiceContentType.MOBILITY_SERVICE,
+                                            ServiceContentType.THREE_S,
+                                            ServiceContentType.Local.LOST_AND_FOUND
                                         ).any { availableInfos.containsKey(it) } then {
                                             ContentSearchResult(
                                                 "Info & Services",
@@ -777,34 +774,34 @@ class StationViewModel : HafasTimetableViewModel() {
                                         }
                                     }
                                     "Bahnhofsinformation Info & Services DB Information" -> eventuallyGenerateInfoResult(
-                                        ServiceContent.Type.DB_INFORMATION
+                                        ServiceContentType.DB_INFORMATION
                                     )
                                     "Bahnhofsinformation Info & Services Mobiler Service" -> eventuallyGenerateInfoResult(
-                                        ServiceContent.Type.MOBILE_SERVICE
+                                        ServiceContentType.MOBILE_SERVICE
                                     )
                                     "Bahnhofsinformation Info & Services Bahnhofsmission" -> eventuallyGenerateInfoResult(
-                                        ServiceContent.Type.BAHNHOFSMISSION
+                                        ServiceContentType.BAHNHOFSMISSION
                                     )
                                     "Bahnhofsinformation Info & Services DB Reisezentrum" -> eventuallyGenerateInfoResult(
-                                        ServiceContent.Type.Local.TRAVEL_CENTER
+                                        ServiceContentType.Local.TRAVEL_CENTER
                                     )
                                     "Bahnhofsinformation Info & Services DB Lounge" -> eventuallyGenerateInfoResult(
-                                        ServiceContent.Type.Local.DB_LOUNGE
+                                        ServiceContentType.Local.DB_LOUNGE
                                     )
                                     "Bahnhofsinformation Info & Services Mobilitätsservice" -> eventuallyGenerateInfoResult(
-                                        ServiceContent.Type.MOBILITY_SERVICE
+                                        ServiceContentType.MOBILITY_SERVICE
                                     )
                                     "Bahnhofsinformation Info & Services 3-S-Zentrale" -> eventuallyGenerateInfoResult(
-                                        ServiceContent.Type.THREE_S
+                                        ServiceContentType.THREE_S
                                     )
                                     "Bahnhofsinformation Info & Services Fundservice" -> eventuallyGenerateInfoResult(
-                                        ServiceContent.Type.Local.LOST_AND_FOUND
+                                        ServiceContentType.Local.LOST_AND_FOUND
                                     )
                                     "Bahnhofsinformation WLAN" -> eventuallyGenerateInfoResult(
-                                        ServiceContent.Type.WIFI
+                                        ServiceContentType.WIFI
                                     )
                                     "Bahnhofsinformation Zugang & Wege" -> eventuallyGenerateInfoResult(
-                                        ServiceContent.Type.ACCESSIBLE
+                                        ServiceContentType.ACCESSIBLE
                                     )
 
                                     else -> null
@@ -1157,7 +1154,11 @@ class StationViewModel : HafasTimetableViewModel() {
         })
 
     fun navigateToChatbot() {
-        selectedServiceContentType.value = ServiceContent.Type.Local.CHATBOT
+        navigateToInfo(ServiceContentType.Local.CHATBOT)
+    }
+
+    fun navigateToInfo(serviceContentType: String) {
+        selectedServiceContentType.value = serviceContentType
         stationNavigation?.showInfoFragment(false)
     }
 
@@ -1181,8 +1182,8 @@ class StationViewModel : HafasTimetableViewModel() {
                     || !serviceNumbersLiveData.value.isNullOrEmpty()
                     || (staticInfoLiveData.value?.let { staticInfoCollection ->
                 detailedStopPlaceResource.data.value?.run {
-                    hasWifi && staticInfoCollection.typedStationInfos[ServiceContent.Type.WIFI] != null
-                            || hasSteplessAccess && staticInfoCollection.typedStationInfos[ServiceContent.Type.ACCESSIBLE] != null
+                    hasWifi && staticInfoCollection.typedStationInfos[ServiceContentType.WIFI] != null
+                            || hasSteplessAccess && staticInfoCollection.typedStationInfos[ServiceContentType.ACCESSIBLE] != null
                 }
             } == true)
                     || !parking.parkingsResource.data.value.isNullOrEmpty()

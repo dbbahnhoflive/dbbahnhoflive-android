@@ -10,12 +10,12 @@ import android.util.Patterns
 import androidx.lifecycle.LiveData
 import de.deutschebahn.bahnhoflive.backend.db.publictrainstation.model.DetailedStopPlace
 import de.deutschebahn.bahnhoflive.backend.local.model.ServiceContent
+import de.deutschebahn.bahnhoflive.backend.local.model.ServiceContentType
 import de.deutschebahn.bahnhoflive.backend.local.model.isChatbotAvailable
 import de.deutschebahn.bahnhoflive.repository.DetailedStopPlaceResource
 import de.deutschebahn.bahnhoflive.stream.livedata.MergedLiveData
 import de.deutschebahn.bahnhoflive.ui.station.StaticInfoCollection
 import de.deutschebahn.bahnhoflive.util.then
-import java.util.*
 import java.util.regex.Pattern
 
 class ServiceNumbersLiveData(
@@ -39,28 +39,50 @@ class ServiceNumbersLiveData(
 
     fun update(detailedStopPlace: DetailedStopPlace, staticInfoCollection: StaticInfoCollection) {
         value = listOfNotNull(
+            composeChatbotContent(
+                detailedStopPlace,
+                staticInfoCollection,
+                ServiceContentType.Local.CHATBOT
+            ),
             composeServiceContent(
                 detailedStopPlace,
                 staticInfoCollection,
-                ServiceContent.Type.MOBILITY_SERVICE
+                ServiceContentType.MOBILITY_SERVICE
             ),
             composeThreeSContent(detailedStopPlace, staticInfoCollection),
             composeServiceContent(
                 detailedStopPlace,
                 staticInfoCollection,
-                ServiceContent.Type.Local.LOST_AND_FOUND
+                ServiceContentType.Local.LOST_AND_FOUND
             ),
-            composeChatbotContent(
-                detailedStopPlace,
-                staticInfoCollection,
-                ServiceContent.Type.Local.CHATBOT
-            )
+            composeStationComplaintsContent(),
+            composeAppIssuesContent(staticInfoCollection),
+            composeRateAppContent(staticInfoCollection)
         )
     }
 
-    private fun composeThreeSContent(station: DetailedStopPlace, staticInfoCollection: StaticInfoCollection): ServiceContent? {
+    fun StaticInfo?.wrapServiceContent() = this?.let { ServiceContent(it) }
+
+    private fun composeRateAppContent(staticInfoCollection: StaticInfoCollection): ServiceContent? =
+        staticInfoCollection.typedStationInfos[ServiceContentType.Local.RATE_APP].wrapServiceContent()
+
+    private fun composeAppIssuesContent(staticInfoCollection: StaticInfoCollection): ServiceContent? =
+        staticInfoCollection.typedStationInfos[ServiceContentType.Local.APP_ISSUE].wrapServiceContent()
+
+    private fun composeStationComplaintsContent(): ServiceContent? = ServiceContent(
+        StaticInfo(
+            ServiceContentType.Local.STATION_COMPLAINT,
+            "Verschmutzung melden" /* dummy */,
+            "Verschmutzung melden" /* dummy */
+        )
+    )
+
+    private fun composeThreeSContent(
+        station: DetailedStopPlace,
+        staticInfoCollection: StaticInfoCollection
+    ): ServiceContent? {
         return station.tripleSCenter?.let { tripleSCenter ->
-            staticInfoCollection.typedStationInfos[ServiceContent.Type.THREE_S]?.let { staticInfo ->
+            staticInfoCollection.typedStationInfos[ServiceContentType.THREE_S]?.let { staticInfo ->
                 ServiceContent(
                     StaticInfo(
                         staticInfo.type,
@@ -77,12 +99,13 @@ class ServiceNumbersLiveData(
 
     private fun composeChatbotContent(detailedStopPlace: DetailedStopPlace, staticInfoCollection: StaticInfoCollection, chatbot: String) =
         if (detailedStopPlace.isChatbotAvailable) {
-            staticInfoCollection.typedStationInfos[ServiceContent.Type.Local.CHATBOT]?.let { staticInfo ->
+            staticInfoCollection.typedStationInfos[ServiceContentType.Local.CHATBOT]?.let { staticInfo ->
                 ServiceContent(
                     StaticInfo(
                         staticInfo.type,
                         staticInfo.title,
-                        staticInfo.descriptionText)
+                        staticInfo.descriptionText
+                    )
 
                 )
             }
@@ -121,7 +144,4 @@ class ServiceNumbersLiveData(
         return stringBuilder.toString()
     }
 
-    //TODO remove after 2021-04-01
-    private fun Calendar.beforeMobilityServiceChange() =
-        get(Calendar.MONTH) < 3 && get(Calendar.YEAR) <= 2021
 }

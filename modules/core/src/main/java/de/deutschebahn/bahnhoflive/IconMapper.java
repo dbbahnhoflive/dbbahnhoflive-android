@@ -6,83 +6,92 @@
 
 package de.deutschebahn.bahnhoflive;
 
+import androidx.annotation.NonNull;
+
 import java.util.Locale;
 
 import de.deutschebahn.bahnhoflive.backend.local.model.ServiceContent;
+import de.deutschebahn.bahnhoflive.backend.local.model.ServiceContentType;
 
 public class IconMapper {
 
 
-    public static int contentIconForType(ServiceContent serviceContent) {
+    public static int contentIconForType(@NonNull ServiceContent serviceContent) {
         return contentIconForType(serviceContent.getType());
     }
 
-    public static int contentIconForType(String type) {
+    public static int contentIconForType(@NonNull String type) {
         switch (type.toLowerCase(Locale.GERMAN)) {
-            case ServiceContent.Type.ELEVATOR_AVAILIBITY:
+            case ServiceContentType.ELEVATOR_AVAILIBITY:
                 return R.drawable.app_aufzug;
-            case ServiceContent.Type.BAHNHOFSMISSION:
+            case ServiceContentType.BAHNHOFSMISSION:
                 return R.drawable.rimap_bahnhofsmission_grau;
-            case ServiceContent.Type.BICYCLE_SERVICE:
+            case ServiceContentType.BICYCLE_SERVICE:
                 return R.drawable.fahrradservice_dark;
-            case ServiceContent.Type.LOST_AND_FOUND:
+            case ServiceContentType.LOST_AND_FOUND:
                 return R.drawable.app_fundservice;
-            case ServiceContent.Type.LEGAL_NOTICE:
+            case ServiceContentType.LEGAL_NOTICE:
                 return R.drawable.impressum_dark;
-            case ServiceContent.Type.DB_INFORMATION:
+            case ServiceContentType.DB_INFORMATION:
                 return R.drawable.app_information;
-            case ServiceContent.Type.DB_LOUNGE:
+            case ServiceContentType.DB_LOUNGE:
                 return R.drawable.app_db_lounge;
-            case ServiceContent.Type.CAR_RENTAL:
+            case ServiceContentType.CAR_RENTAL:
                 return R.drawable.app_mietwagen;
-            case ServiceContent.Type.MOBILE_SERVICE:
+            case ServiceContentType.MOBILE_SERVICE:
                 return R.drawable.app_mobiler_service;
-            case ServiceContent.Type.IMPAIRED_MOBILITY:
+            case ServiceContentType.IMPAIRED_MOBILITY:
                 return R.drawable.app_mobilitaetservice;
-            case ServiceContent.Type.MOBILITY_SERVICE:
+            case ServiceContentType.MOBILITY_SERVICE:
                 return R.drawable.app_mobilitaetservice;
-            case ServiceContent.Type.REGIONAL_TRANSPORTATION:
+            case ServiceContentType.REGIONAL_TRANSPORTATION:
                 return R.drawable.app_bus;
-            case ServiceContent.Type.PARKING:
+            case ServiceContentType.PARKING:
                 return R.drawable.app_parkplatz;
-            case ServiceContent.Type.TRAVELERS_SUPPLIES:
+            case ServiceContentType.TRAVELERS_SUPPLIES:
                 return R.drawable.bahnhofsausstattung_reisebedarf;
-            case ServiceContent.Type.REISEZENTRUM:
+            case ServiceContentType.REISEZENTRUM:
                 return R.drawable.app_db_reisezentrum;
-            case ServiceContent.Type.LOCKERS:
+            case ServiceContentType.LOCKERS:
                 return R.drawable.bahnhofsausstattung_schlie_faecher;
-            case ServiceContent.Type.THREE_S:
+            case ServiceContentType.THREE_S:
                 return R.drawable.app_3s;
-            case ServiceContent.Type.TAXI:
+            case ServiceContentType.TAXI:
                 return R.drawable.app_taxi;
-            case ServiceContent.Type.WC:
+            case ServiceContentType.WC:
                 return R.drawable.app_wc;
-            case ServiceContent.Type.WIFI:
+            case ServiceContentType.WIFI:
                 return R.drawable.rimap_wlan_grau;
-            case ServiceContent.Type.INFO_SERVICES:
+            case ServiceContentType.INFO_SERVICES:
                 return R.drawable.app_information;
-            case ServiceContent.Type.BICYCLE:
+            case ServiceContentType.BICYCLE:
                 return R.drawable.rimap_fahrradverleih_grau;
-            case ServiceContent.Type.CONNECTED_MOBILITY:
+            case ServiceContentType.CONNECTED_MOBILITY:
                 return R.drawable.legacy_anschlussmobilitaet_dark;
-            case ServiceContent.Type.ELEVATION_AIDS:
+            case ServiceContentType.ELEVATION_AIDS:
                 return R.drawable.bahnhofsausstattung_aufzug;
-            case ServiceContent.Type.SERVICE_STORE:
+            case ServiceContentType.SERVICE_STORE:
                 return R.drawable.icon_servicestorelist;
-            case ServiceContent.Type.PRIVACY:
+            case ServiceContentType.PRIVACY:
                 return R.drawable.legacy_datenschutz_dark;
-            case ServiceContent.Type.ACCESSIBLE:
+            case ServiceContentType.ACCESSIBLE:
                 return R.drawable.bahnhofsausstattung_stufenfreier_zugang;
-            case ServiceContent.Type.LOCAL_MAP:
+            case ServiceContentType.LOCAL_MAP:
                 return R.drawable.app_karte_liste;
-            case ServiceContent.Type.Local.TRAVEL_CENTER:
+            case ServiceContentType.Local.TRAVEL_CENTER:
                 return R.drawable.rimap_reisezentrum_grau;
-            case ServiceContent.Type.Local.DB_LOUNGE:
+            case ServiceContentType.Local.DB_LOUNGE:
                 return R.drawable.app_db_lounge;
-            case ServiceContent.Type.Local.LOST_AND_FOUND:
+            case ServiceContentType.Local.LOST_AND_FOUND:
                 return R.drawable.rimap_fundsachen_grau;
-            case ServiceContent.Type.Local.CHATBOT:
+            case ServiceContentType.Local.CHATBOT:
                 return R.drawable.chatbot_icon;
+            case ServiceContentType.Local.RATE_APP:
+                return R.drawable.app_app_bewerten;
+            case ServiceContentType.Local.APP_ISSUE:
+                return R.drawable.app_probleme_app_melden;
+            case ServiceContentType.Local.STATION_COMPLAINT:
+                return R.drawable.app_verschmutzungmelden;
             default:
                 return defaultResource;
         }

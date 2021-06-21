@@ -43,6 +43,11 @@ fun capitalize(str: String): String? {
 
 fun openAppInPlayStore(context: Context) {
     //        TrackingManager.trackActions(trackingManager, new String[]{TrackingManager.TRACK_KEY_FEEDBACK, "rating"});
-    val link = "market://details?id=" + context.packageName.replace(".debug", "")
-    context.startActivity(Intent(Intent.ACTION_VIEW, Uri.parse(link)))
+    context.startActivity(context.createPlaystoreIntent())
 }
+
+fun Context.createPlaystoreIntent() = Intent(
+    Intent.ACTION_VIEW, Uri.parse(
+        "market://details?id=" + packageName.replace(".debug", "")
+    )
+)

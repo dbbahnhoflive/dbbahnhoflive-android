@@ -157,7 +157,7 @@ public class StationFragment extends androidx.fragment.app.Fragment implements
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        final ViewModelProvider viewModelProvider = new ViewModelProvider(getActivity());
+        final ViewModelProvider viewModelProvider = new ViewModelProvider(requireActivity());
         stationViewModel = viewModelProvider.get(StationViewModel.class);
 
         Resource<Station, ? extends Throwable> stationResource = stationViewModel.getStationResource();

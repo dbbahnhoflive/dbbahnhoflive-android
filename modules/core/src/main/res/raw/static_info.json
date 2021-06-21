@@ -54,13 +54,23 @@
 		},
 		{
 			"descriptionText": "<p>Hallo, mein Name ist DB Smile. Ich bin Ihr digitaler Assistent und helfe bei Fragen zum Bahnhof.</p> <dbactionbutton>Chatten Sie mit mir</dbactionbutton> <p>Ich bin <b>Montag bis Sonntag von 07:00 - 22:00 Uhr</b> in vollem Umfang für Sie da.</p><p><b>Alternative Kontaktmöglichkeiten</b><dbactionbutton href=\"mailto:feedback@bahnhof.de\">E-Mail</dbactionbutton> <dbactionbutton href=\"tel:030 586020930\">030 586020930</dbactionbutton>Montag bis Sonntag von 07:00 - 22:00 Uhr</p>",
-			"title": "Chatbot",
+			"title": "Fragen & Feedback zum Bahnhof",
 			"type": "chatbot"
 		},
 		{
 			"descriptionText": "<p><b>Einfach vorbestellen</b></p><p>Machen Sie es sich bequem, mit der pickpack App. Zum Beispiel das Lieblingsessen vorbestellen, Abholzeit aussuchen und ohne extra Wartezeit genießen. Das pickpack Einkaufserlebnis ermöglichen wir gemeinsam mit Partnerläden Ihres Bahnhofs.</p><p><b>Ihre Vorteile</b><ul><li>Kein Anstehen</li><li>Kein Bargeld</li><li>Keine Wartezeit</li></ul></p><p> </p>",
 			"title": "pickpack",
 			"type": "pickpack"
+		},
+		{
+			"descriptionText": "<p><b>Zufrieden mit der App?</b></p>Unterstützen Sie uns mit einer positiven Bewertung im Play Store.<dbactionbutton action=\"rateApp\">App bewerten</dbactionbutton>",
+			"title": "App bewerten",
+			"type": "rate_app"
+		},
+		{
+			"descriptionText": "<p><b>Kontakt</b></p>Schreiben Sie uns, sollten Ihnen Unstimmigkeiten in der App auffallen.<dbactionbutton action=\"appIssue\">Kontakt aufnehmen</dbactionbutton>",
+			"title": "Probleme mit der App melden",
+			"type": "app_issue"
 		}
 	]
 }
