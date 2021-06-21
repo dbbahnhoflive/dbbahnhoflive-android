@@ -14,6 +14,9 @@ class AccessibilityViewHolder(parent: ViewGroup) :
     val text = itemView.text
 
     fun bind(item: Pair<AccessibilityFeature, AccessibilityStatus>) {
+        text.contentDescription = item.first.contentDescription?.let { contentDescriptionResource ->
+            text.context.getText(contentDescriptionResource)
+        }
         text.setText(item.first.label)
     }
 

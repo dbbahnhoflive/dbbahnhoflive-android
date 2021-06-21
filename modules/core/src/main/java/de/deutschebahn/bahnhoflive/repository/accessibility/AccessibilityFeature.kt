@@ -5,13 +5,15 @@ import de.deutschebahn.bahnhoflive.R
 
 enum class AccessibilityFeature(
     val tag: String,
-    @StringRes val label: Int
+    @StringRes val label: Int,
+    @StringRes val contentDescription: Int? = null
 ) {
 
     STEP_FREE_ACCESS("stepFreeAccess", R.string.accessibilityStepFreeAccess),
     STANDARD_PLATFORM_HEIGHT(
         "standardPlatformHeight",
-        R.string.accessibilityStandardPlatformHeight
+        R.string.accessibilityStandardPlatformHeight,
+        R.string.sr_accessibilityStandardPlatformHeight
     ),
     PASSENGER_INFORMATION_DISPLAY(
         "passengerInformationDisplay",
