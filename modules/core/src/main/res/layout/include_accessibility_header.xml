@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:orientation="vertical"
     android:layout_height="wrap_content"
     android:layout_width="match_parent">
@@ -23,39 +24,63 @@
 
     <LinearLayout
         android:padding="@dimen/default_space"
-        android:elevation="@dimen/card_elevation"
         android:divider="@drawable/shape_divider"
         android:showDividers="middle"
         android:orientation="vertical"
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
 
-        <TextView
-            android:id="@+id/steplessAccessHint"
-            android:text="@string/accessibilityStepFreeNone"
+        <LinearLayout
+            android:padding="@dimen/default_space"
+            android:elevation="@dimen/card_elevation"
+            android:divider="@drawable/shape_divider"
+            android:showDividers="middle"
+            android:orientation="vertical"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content" />
+            android:layout_height="wrap_content">
 
-        <TextView
-            android:text="@string/accessibility_hotline_advice"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content" />
+            <TextView
+                android:id="@+id/steplessAccessHint"
+                android:text="@string/accessibilityStepFreeNone"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content" />
 
-        <TextView
-            android:id="@+id/phone"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:background="@drawable/shape_round_button_grey"
-            android:gravity="center"
-            android:minHeight="64dp"
-            android:text="@string/accessibility_hotline"
-            android:textColor="@color/white"
-            android:textStyle="bold" />
+            <TextView
+                android:text="@string/accessibility_hotline_advice"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content" />
 
-        <TextView
-            android:text="@string/accessibility_advice"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content" />
+            <TextView
+                android:id="@+id/phone"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@drawable/shape_round_button_grey"
+                android:gravity="center"
+                android:minHeight="64dp"
+                android:text="@string/accessibility_hotline"
+                android:textColor="@color/white"
+                android:textStyle="bold" />
+
+            <TextView
+                android:text="@string/accessibility_advice"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content" />
+
+            <TextView
+                android:id="@+id/key"
+
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+
+                android:gravity="fill_vertical"
+                android:text="@string/accessibility_key"
+                android:textStyle="bold"
+                app:drawableEndCompat="@drawable/app_occupancy_information" />
+
+
+        </LinearLayout>
+
+        <include layout="@layout/include_divider" />
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -77,6 +102,15 @@
                 layout="@layout/button_filter"
                 android:id="@+id/filter" />
         </LinearLayout>
+
+        <FrameLayout
+            android:layout_marginStart="@dimen/default_space"
+            android:layout_marginEnd="@dimen/default_space"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <include layout="@layout/include_divider" />
+        </FrameLayout>
 
         <TextView
             android:id="@+id/selectPlatformInvitation"

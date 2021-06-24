@@ -3,6 +3,8 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:minHeight="?android:attr/listPreferredItemHeight"
     android:orientation="vertical"
+    android:layout_marginStart="@dimen/default_space"
+    android:layout_marginEnd="@dimen/default_space"
     android:layout_width="match_parent"
     android:layout_height="wrap_content">
 
@@ -11,14 +13,10 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:gravity="center_vertical|start"
-        android:padding="@dimen/default_space_double"
+        android:padding="@dimen/default_space"
+        android:layout_marginTop="@dimen/default_space"
+        android:layout_marginBottom="@dimen/default_space"
         tools:text="@tools:sample/lorem" />
 
-    <View
-        android:layout_width="match_parent"
-        android:layout_height="1dp"
-        android:layout_marginStart="@dimen/default_space"
-        android:layout_marginEnd="@dimen/default_space"
-        android:background="#E3E7EC" />
-
+    <include layout="@layout/include_divider" />
 </LinearLayout>
