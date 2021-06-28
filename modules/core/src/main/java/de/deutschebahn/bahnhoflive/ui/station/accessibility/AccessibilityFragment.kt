@@ -15,10 +15,7 @@ import de.deutschebahn.bahnhoflive.repository.LoadingStatus
 import de.deutschebahn.bahnhoflive.repository.accessibility.AccessibilityFeature
 import de.deutschebahn.bahnhoflive.ui.station.StationViewModel
 import de.deutschebahn.bahnhoflive.util.PhoneIntent
-import de.deutschebahn.bahnhoflive.view.BaseListAdapter
-import de.deutschebahn.bahnhoflive.view.ListViewHolderDelegate
-import de.deutschebahn.bahnhoflive.view.SimpleAdapter
-import de.deutschebahn.bahnhoflive.view.inflate
+import de.deutschebahn.bahnhoflive.view.*
 import kotlinx.android.synthetic.main.fragment_accessibility.*
 import kotlinx.android.synthetic.main.fragment_accessibility.view.*
 import kotlinx.android.synthetic.main.include_accessibility_header.view.*
@@ -69,9 +66,14 @@ class AccessibilityFragment : Fragment(R.layout.fragment_accessibility) {
             }
         )
 
+        val elevatorsLinkOptionalAdapter = OptionalAdapter(
+            view.recycler.inflate(R.layout.include_accessibility_elevator_link),
+            false
+        )
         val concatAdapter = ConcatAdapter(
             headerAdapter,
-            accessibilityAdapter
+            accessibilityAdapter,
+            elevatorsLinkOptionalAdapter
         )
 
         view.recycler.adapter = progressAdapter
@@ -110,7 +112,8 @@ class AccessibilityFragment : Fragment(R.layout.fragment_accessibility) {
                 accessibilityAdapter.submitList(platform.accessibility.filter { accessibility ->
                     accessibility.component2() == AccessibilityStatus.AVAILABLE
                 }.toList())
-
+                elevatorsLinkOptionalAdapter.enabled =
+                    platform.accessibility[AccessibilityFeature.STEP_FREE_ACCESS] == AccessibilityStatus.AVAILABLE
             } ?: kotlin.run {
                 if (!platformsAndSelection?.first.isNullOrEmpty()) {
                     headerView.selectedPlatform.text = "Kein Gleis ausgewählt"
@@ -119,6 +122,8 @@ class AccessibilityFragment : Fragment(R.layout.fragment_accessibility) {
                 }
 
                 accessibilityAdapter.submitList(emptyList())
+
+                elevatorsLinkOptionalAdapter.enabled = false
             }
 
         }
