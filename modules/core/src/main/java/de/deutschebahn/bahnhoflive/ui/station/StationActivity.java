@@ -347,7 +347,7 @@ public class StationActivity extends AppCompatActivity implements
 
     @Override
     public void showFeedbackFragment() {
-        stationViewModel.navigateToInfo(ServiceContentType.Local.STATION_COMPLAINT);
+        stationViewModel.navigateToInfo(ServiceContentType.DummyForCategory.FEEDBACK);
     }
 
     @Override

@@ -236,18 +236,16 @@ class InfoCategorySelectionFragment : CategorySelectionFragment(
                         }
                     }
 
+                    it == ServiceContentType.DummyForCategory.FEEDBACK -> {
+                        stationViewModel.selectedServiceContentType.value = null
+                        startFeedbackCategory()
+
+                    }
+
                     serviceNumbersLiveData.value?.any { serviceContent ->
                         serviceContent.type == it
                     } == true -> {
-                        serviceNumbersLiveData.value?.let { serviceContents ->
-                            serviceNumbersCategory?.let { category ->
-                                startStationInfoDetailsFragment(
-                                    serviceContents,
-                                    category,
-                                    serviceNumbersLabelResource
-                                )
-                            }
-                        }
+                        startFeedbackCategory()
                     }
 
                     it == ServiceContentType.WIFI -> {
@@ -270,6 +268,18 @@ class InfoCategorySelectionFragment : CategorySelectionFragment(
                 }
             }
         })
+    }
+
+    private fun startFeedbackCategory() {
+        serviceNumbersLiveData.value?.let { serviceContents ->
+            serviceNumbersCategory?.let { category ->
+                startStationInfoDetailsFragment(
+                    serviceContents,
+                    category,
+                    serviceNumbersLabelResource
+                )
+            }
+        }
     }
 
     private fun startServiceContentFragment(staticInfo: StaticInfo, category: Category): Int {
