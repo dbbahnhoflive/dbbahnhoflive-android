@@ -41,4 +41,8 @@ public interface ServiceContentType {
         String APP_ISSUE = "app_issue";
         String RATE_APP = "rate_app";
     }
+
+    interface DummyForCategory {
+        String FEEDBACK = "category_feedback";
+    }
 }
