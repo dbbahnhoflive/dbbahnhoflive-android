@@ -8,6 +8,8 @@ import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.MediatorLiveData
 import androidx.lifecycle.Observer
 import androidx.lifecycle.distinctUntilChanged
+import androidx.lifecycle.map
+import androidx.lifecycle.switchMap
 import androidx.recyclerview.widget.ConcatAdapter
 import de.deutschebahn.bahnhoflive.R
 import de.deutschebahn.bahnhoflive.backend.db.ris.model.AccessibilityStatus
@@ -15,12 +17,10 @@ import de.deutschebahn.bahnhoflive.repository.LoadingStatus
 import de.deutschebahn.bahnhoflive.repository.accessibility.AccessibilityFeature
 import de.deutschebahn.bahnhoflive.ui.station.StationViewModel
 import de.deutschebahn.bahnhoflive.util.PhoneIntent
-import de.deutschebahn.bahnhoflive.view.BaseListAdapter
-import de.deutschebahn.bahnhoflive.view.ListViewHolderDelegate
-import de.deutschebahn.bahnhoflive.view.SimpleAdapter
-import de.deutschebahn.bahnhoflive.view.inflate
+import de.deutschebahn.bahnhoflive.view.*
 import kotlinx.android.synthetic.main.fragment_accessibility.*
 import kotlinx.android.synthetic.main.fragment_accessibility.view.*
+import kotlinx.android.synthetic.main.include_accessibility_elevator_link.view.*
 import kotlinx.android.synthetic.main.include_accessibility_header.view.*
 import kotlinx.android.synthetic.main.titlebar_static.view.*
 
@@ -73,9 +73,19 @@ class AccessibilityFragment : Fragment(R.layout.fragment_accessibility) {
             }
         )
 
+        val elevatorsLinkOptionalAdapter = OptionalAdapter(
+            view.recycler.inflate(R.layout.include_accessibility_elevator_link).apply {
+                elevators_link.setOnClickListener {
+                    viewModel.stationNavigation?.showElevators()
+                }
+            },
+            false
+        )
+
         val concatAdapter = ConcatAdapter(
             headerAdapter,
-            accessibilityAdapter
+            accessibilityAdapter,
+            elevatorsLinkOptionalAdapter
         )
 
         view.recycler.adapter = progressAdapter
@@ -114,7 +124,6 @@ class AccessibilityFragment : Fragment(R.layout.fragment_accessibility) {
                 accessibilityAdapter.submitList(platform.accessibility.filter { accessibility ->
                     accessibility.component2() == AccessibilityStatus.AVAILABLE
                 }.toList())
-
             } ?: kotlin.run {
                 if (!platformsAndSelection?.first.isNullOrEmpty()) {
                     headerView.selectedPlatform.text = "Kein Gleis ausgewählt"
@@ -141,7 +150,16 @@ class AccessibilityFragment : Fragment(R.layout.fragment_accessibility) {
             }
         }
 
-        val noDataLiveData = MediatorLiveData<Boolean>().apply {
+        viewModel.elevatorsResource.data.switchMap { facilityStatusList ->
+            viewModel.accessibilityPlatformsAndSelectedLiveData.map { platformsAndSelection ->
+                !facilityStatusList.isNullOrEmpty() &&
+                        platformsAndSelection.second?.accessibility?.get(AccessibilityFeature.STEP_FREE_ACCESS) == AccessibilityStatus.AVAILABLE
+            }
+        }.distinctUntilChanged().observe(viewLifecycleOwner) {
+            elevatorsLinkOptionalAdapter.enabled = it
+        }
+
+        MediatorLiveData<Boolean>().apply {
             val onChanged = Observer<Any?> {
                 value = accessibilityFeaturesResource.data.value.isNullOrEmpty()
             }

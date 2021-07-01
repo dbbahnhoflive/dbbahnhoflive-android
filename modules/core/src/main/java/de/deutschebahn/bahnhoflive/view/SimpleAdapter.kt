@@ -4,7 +4,7 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 
-class SimpleAdapter(val view: View) : RecyclerView.Adapter<SimpleAdapter.SimpleViewHolder>() {
+open class SimpleAdapter(val view: View) : RecyclerView.Adapter<SimpleAdapter.SimpleViewHolder>() {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int) = SimpleViewHolder(view)
 

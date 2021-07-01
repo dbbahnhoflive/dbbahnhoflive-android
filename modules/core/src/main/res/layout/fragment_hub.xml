@@ -126,6 +126,7 @@
                     android:background="?android:selectableItemBackground"
                     android:drawableLeft="@drawable/app_links_pfeil"
                     android:padding="@dimen/default_space"
+                    android:textStyle="bold"
                     android:text="@string/legal_notice"
                     android:textSize="@dimen/textsize_h3" />
 
@@ -137,6 +138,7 @@
                     android:background="?android:selectableItemBackground"
                     android:drawableLeft="@drawable/app_links_pfeil"
                     android:padding="@dimen/default_space"
+                    android:textStyle="bold"
                     android:text="@string/privacy_policy"
                     android:textSize="@dimen/textsize_h3" />
 

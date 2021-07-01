@@ -100,4 +100,7 @@
         <item quantity="one">U-Bahn</item>
         <item quantity="other">U-Bahnen</item>
     </plurals>
+
+    <string name="sr_accessibility_link_elevators">Zur Übersicht der Aufzüge wechseln</string>
+
 </resources>
