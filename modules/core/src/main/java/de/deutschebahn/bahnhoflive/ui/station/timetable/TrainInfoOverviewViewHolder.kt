@@ -14,14 +14,15 @@ import de.deutschebahn.bahnhoflive.backend.ris.model.TrainEvent
 import de.deutschebahn.bahnhoflive.backend.ris.model.TrainInfo
 import de.deutschebahn.bahnhoflive.ui.TimetableItemOverviewViewHolder
 
-open class TrainInfoOverviewViewHolder(view: View, private val provider: TrainEvent.Provider) : TimetableItemOverviewViewHolder<TrainInfo>(view) {
+open class TrainInfoOverviewViewHolder(view: View, protected val provider: TrainEvent.Provider) :
+    TimetableItemOverviewViewHolder<TrainInfo>(view) {
 
     private val wagonOrderIndicator: View
     private val issuesBinder: IssuesBinder
 
-    init {
+    protected val issueIndicator = itemView.findViewById<ImageView>(R.id.issue_indicator)
 
-        val issueIndicator = itemView.findViewById<ImageView>(R.id.issue_indicator)
+    init {
         val issueIndicatorBinder = issueIndicator?.let { IssueIndicatorBinder(it) }
         val issuesTextView = itemView.findViewById<TextView>(R.id.issue_text)
         issuesBinder = IssuesBinder(issuesTextView, issuesTextView, issueIndicatorBinder)

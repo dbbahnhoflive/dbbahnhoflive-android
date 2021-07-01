@@ -10,6 +10,7 @@ import android.content.Context;
 import android.widget.ImageView;
 
 import androidx.annotation.DrawableRes;
+import androidx.core.content.res.ResourcesCompat;
 
 public class IssueIndicatorBinder {
 
@@ -22,7 +23,7 @@ public class IssueIndicatorBinder {
     }
 
     private void bindIssueIndicator(@DrawableRes int imageResourceId) {
-        view.setImageDrawable(imageResourceId == 0 ? null : context.getResources().getDrawable(imageResourceId));
+        view.setImageDrawable(imageResourceId == 0 ? null : ResourcesCompat.getDrawable(context.getResources(), imageResourceId, null));
     }
 
     public void bind(IssueSeverity issueSeverity) {

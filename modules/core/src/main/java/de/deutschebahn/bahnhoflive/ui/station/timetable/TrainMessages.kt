@@ -6,6 +6,9 @@
 
 package de.deutschebahn.bahnhoflive.ui.station.timetable
 
+import android.content.Context
+import android.content.res.Resources
+import de.deutschebahn.bahnhoflive.R
 import de.deutschebahn.bahnhoflive.backend.ris.model.TrainInfo
 import de.deutschebahn.bahnhoflive.backend.ris.model.TrainMovementInfo
 
@@ -35,6 +38,14 @@ class TrainMessages(private val trainInfo: TrainInfo, val trainMovementInfo: Tra
             )
         }
     } ?: listOf()
+
+    fun renderContentDescription(resources: Resources) = takeIf { it.hasMessages() }?.messages
+        ?.joinToString(prefix = resources.getText(R.string.sr_indicator_issue)) {
+            it.message
+        } ?: ""
+
+    fun renderContentDescription(context: Context) = renderContentDescription(context.resources)
+
 
     companion object {
         fun String?.toTrainMessage(severity: IssueSeverity = IssueSeverity.WARNING) =

@@ -120,10 +120,7 @@ class TrainInfoViewHolder internal constructor(
             }
                 ?: "",
             trainInfo?.let { TrainMessages(trainInfo, trainMovementInfo) }
-                ?.takeIf { it.hasMessages() }?.messages
-                ?.joinToString(prefix = getText(R.string.sr_indicator_issue)) {
-                    it.message
-                } ?: ""
+                ?.renderContentDescription(this)
         )
     }
 
