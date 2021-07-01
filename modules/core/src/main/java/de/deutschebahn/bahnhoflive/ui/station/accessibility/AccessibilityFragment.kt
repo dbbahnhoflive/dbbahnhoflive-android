@@ -8,6 +8,8 @@ import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.MediatorLiveData
 import androidx.lifecycle.Observer
 import androidx.lifecycle.distinctUntilChanged
+import androidx.lifecycle.map
+import androidx.lifecycle.switchMap
 import androidx.recyclerview.widget.ConcatAdapter
 import de.deutschebahn.bahnhoflive.R
 import de.deutschebahn.bahnhoflive.backend.db.ris.model.AccessibilityStatus
@@ -112,8 +114,6 @@ class AccessibilityFragment : Fragment(R.layout.fragment_accessibility) {
                 accessibilityAdapter.submitList(platform.accessibility.filter { accessibility ->
                     accessibility.component2() == AccessibilityStatus.AVAILABLE
                 }.toList())
-                elevatorsLinkOptionalAdapter.enabled =
-                    platform.accessibility[AccessibilityFeature.STEP_FREE_ACCESS] == AccessibilityStatus.AVAILABLE
             } ?: kotlin.run {
                 if (!platformsAndSelection?.first.isNullOrEmpty()) {
                     headerView.selectedPlatform.text = "Kein Gleis ausgewählt"
@@ -122,8 +122,6 @@ class AccessibilityFragment : Fragment(R.layout.fragment_accessibility) {
                 }
 
                 accessibilityAdapter.submitList(emptyList())
-
-                elevatorsLinkOptionalAdapter.enabled = false
             }
 
         }
@@ -142,7 +140,16 @@ class AccessibilityFragment : Fragment(R.layout.fragment_accessibility) {
             }
         }
 
-        val noDataLiveData = MediatorLiveData<Boolean>().apply {
+        viewModel.elevatorsResource.data.switchMap { facilityStatusList ->
+            viewModel.accessibilityPlatformsAndSelectedLiveData.map { platformsAndSelection ->
+                !facilityStatusList.isNullOrEmpty() &&
+                        platformsAndSelection.second?.accessibility?.get(AccessibilityFeature.STEP_FREE_ACCESS) == AccessibilityStatus.AVAILABLE
+            }
+        }.distinctUntilChanged().observe(viewLifecycleOwner) {
+            elevatorsLinkOptionalAdapter.enabled = it
+        }
+
+        MediatorLiveData<Boolean>().apply {
             val onChanged = Observer<Any?> {
                 value = accessibilityFeaturesResource.data.value.isNullOrEmpty()
             }
