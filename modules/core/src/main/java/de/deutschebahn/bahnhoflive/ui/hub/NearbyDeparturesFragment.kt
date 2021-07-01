@@ -11,7 +11,7 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.lifecycle.ViewModelProviders
+import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.switchMap
 import com.android.volley.Request
 import de.deutschebahn.bahnhoflive.BaseApplication
@@ -48,7 +48,7 @@ class NearbyDeparturesFragment : androidx.fragment.app.Fragment(), Permission.Li
     private var timetableRequests = ArrayList<Request<RISTimetable>>()
     private var nearbyDeparturesAdapter: NearbyDeparturesAdapter? = null
 
-    private lateinit var hubViewModel: HubViewModel
+    private val hubViewModel: HubViewModel by activityViewModels()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -63,8 +63,6 @@ class NearbyDeparturesFragment : androidx.fragment.app.Fragment(), Permission.Li
         )
 
         locationFragment = LocationFragment.get(parentFragmentManager)
-
-        hubViewModel = ViewModelProviders.of(requireActivity()).get(HubViewModel::class.java)
 
         if (savedInstanceState != null) {
             askForPermission = savedInstanceState.getBoolean(STATE_ASK_FOR_PERMISSION, false)

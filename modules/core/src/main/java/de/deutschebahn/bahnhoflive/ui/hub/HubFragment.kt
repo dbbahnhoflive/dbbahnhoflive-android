@@ -14,7 +14,7 @@ import android.view.ViewGroup
 import android.widget.TextView
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentPagerAdapter
-import androidx.lifecycle.ViewModelProviders
+import androidx.fragment.app.activityViewModels
 import de.deutschebahn.bahnhoflive.R
 import de.deutschebahn.bahnhoflive.analytics.TrackingManager
 import de.deutschebahn.bahnhoflive.repository.AssetDocumentBroker
@@ -29,14 +29,9 @@ class HubFragment : androidx.fragment.app.Fragment() {
     private var mTutorialView: TutorialView? = null
 
     private val trackingManager = TrackingManager()
-    private var hubViewModel: HubViewModel? = null
+    private val hubViewModel: HubViewModel by activityViewModels()
 
     var unhandledClickListener: View.OnClickListener? = null
-
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        hubViewModel = ViewModelProviders.of(activity!!).get(HubViewModel::class.java)
-    }
 
     private val latestTabPreferences
         get() = activity?.getSharedPreferences("hubTab", Context.MODE_PRIVATE)

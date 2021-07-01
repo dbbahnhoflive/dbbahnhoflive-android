@@ -15,6 +15,8 @@ open class StopPlace {
 
     var evaNumber: String? = null
 
+    var groupMembers: List<String>? = null
+
     var stationID: String? = null
 
     var names: Map<String, StopPlaceName?>? = null
@@ -54,7 +56,11 @@ open class StopPlace {
 
     val asInternalStation
         get() = stationID?.let { stadaId ->
-            InternalStation(stadaId, name, position?.toLatLng(), EvaIds(listOfNotNull(evaNumber)))
+            InternalStation(stadaId, name, position?.toLatLng(), evaIds)
         }
+
+    val evaIds by lazy {
+        EvaIds(listOfNotNull(evaNumber, *(groupMembers?.toTypedArray() ?: emptyArray())))
+    }
 
 }
