@@ -19,11 +19,14 @@
         android:text="@string/accessibility_advice_elevators" />
 
     <TextView
+        android:id="@+id/elevators_link"
+
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
 
         android:drawablePadding="@dimen/default_space_half"
         android:gravity="fill_vertical"
+        android:contentDescription="@string/sr_accessibility_link_elevators"
         android:text="@string/accessibility_link_elevators"
         android:textStyle="bold"
         app:drawableStartCompat="@drawable/ic_arrow_right" />

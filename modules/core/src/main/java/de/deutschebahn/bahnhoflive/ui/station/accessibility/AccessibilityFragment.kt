@@ -20,6 +20,7 @@ import de.deutschebahn.bahnhoflive.util.PhoneIntent
 import de.deutschebahn.bahnhoflive.view.*
 import kotlinx.android.synthetic.main.fragment_accessibility.*
 import kotlinx.android.synthetic.main.fragment_accessibility.view.*
+import kotlinx.android.synthetic.main.include_accessibility_elevator_link.view.*
 import kotlinx.android.synthetic.main.include_accessibility_header.view.*
 import kotlinx.android.synthetic.main.titlebar_static.view.*
 
@@ -69,9 +70,14 @@ class AccessibilityFragment : Fragment(R.layout.fragment_accessibility) {
         )
 
         val elevatorsLinkOptionalAdapter = OptionalAdapter(
-            view.recycler.inflate(R.layout.include_accessibility_elevator_link),
+            view.recycler.inflate(R.layout.include_accessibility_elevator_link).apply {
+                elevators_link.setOnClickListener {
+                    viewModel.stationNavigation?.showElevators()
+                }
+            },
             false
         )
+
         val concatAdapter = ConcatAdapter(
             headerAdapter,
             accessibilityAdapter,
