@@ -15,7 +15,7 @@ import kotlinx.android.synthetic.main.item_track_timetable_overview.view.*
 class TrackDepartureSummaryViewHolder(
     view: View,
     onWaggonOrderClickListener: OnWagonOrderClickListener
-) : TrainInfoOverviewViewHolder(view, TrainEvent.DEPARTURE_PROVIDER) {
+) : ReducedTrainInfoOverviewViewHolder(view, TrainEvent.DEPARTURE_PROVIDER) {
     val waggonOrderButton: FloatingActionButton = view.wagon_order_indicator.apply {
         setOnClickListener {
             item?.also { trainInfo ->

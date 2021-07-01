@@ -27,6 +27,7 @@ import de.deutschebahn.bahnhoflive.repository.LoadingStatus;
 import de.deutschebahn.bahnhoflive.repository.timetable.Timetable;
 import de.deutschebahn.bahnhoflive.ui.LoadingContentDecorationViewHolder;
 import de.deutschebahn.bahnhoflive.ui.ViewHolder;
+import de.deutschebahn.bahnhoflive.ui.station.timetable.ReducedTrainInfoOverviewViewHolder;
 import de.deutschebahn.bahnhoflive.ui.station.timetable.TrainInfoOverviewViewHolder;
 import de.deutschebahn.bahnhoflive.util.Collections;
 
@@ -85,7 +86,7 @@ public class ReducedDbDeparturesViewHolder extends ViewHolder<DbTimetableResourc
         final int childCount = departuresContainer.getChildCount();
         for (int i = 0; i < childCount; i++) {
             final View child = departuresContainer.getChildAt(i);
-            final TrainInfoOverviewViewHolder hafasEventOverviewViewHolder = new TrainInfoOverviewViewHolder(child, TrainEvent.DEPARTURE_PROVIDER);
+            final TrainInfoOverviewViewHolder hafasEventOverviewViewHolder = new ReducedTrainInfoOverviewViewHolder(child, TrainEvent.DEPARTURE_PROVIDER);
             trainInfoOverviewViewHolders.add(hafasEventOverviewViewHolder);
         }
     }
