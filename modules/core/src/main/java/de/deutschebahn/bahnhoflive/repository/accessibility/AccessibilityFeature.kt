@@ -41,15 +41,15 @@ enum class AccessibilityFeature(
         R.string.accessibilityTactileGuidingStrips,
         R.string.accessibilityDescriptionTactileGuidingStrips
     ),
-    TACTILE_HANDRAIL_LABEL(
-        "tactileHandrailLabel",
-        R.string.accessibilityTactileHandrailLabel,
-        R.string.accessibilityDescriptionTactileHandrailLabel
-    ),
     STAIRS_MARKING(
         "stairsMarking",
         R.string.accessibilityStairsMarking,
         R.string.accessibilityDescriptionStairsMarking
+    ),
+    TACTILE_HANDRAIL_LABEL(
+        "tactileHandrailLabel",
+        R.string.accessibilityTactileHandrailLabel,
+        R.string.accessibilityDescriptionTactileHandrailLabel
     ),
     PLATFORM_SIGN(
         "platformSign",
