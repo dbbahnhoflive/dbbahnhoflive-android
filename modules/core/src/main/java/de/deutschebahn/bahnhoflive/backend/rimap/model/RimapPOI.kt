@@ -277,6 +277,9 @@ class RimapPOI : Parcelable, MarkerFilterable {
         const val SUBCAT_ELEVATORS = "Aufzüge"
         const val SUBCAT_CAR_PARK = "Parkplatz"
         const val SUBCAT_PARKING_GARAGE = "Parkhaus"
+
+        val EXCLUDED_SUBCATS = setOf(SUBCAT_ELEVATORS, SUBCAT_CAR_PARK, SUBCAT_PARKING_GARAGE)
+
         val TIME_FORMAT = SimpleDateFormat("hh:mm", Locale.GERMAN)
         val TAG = RimapPOI::class.java.simpleName
         val TIME_PATTERN = Pattern.compile(".*(\\d\\d).*:.*(\\d\\d).*-.*(\\d\\d).*:.*(\\d\\d).*")
@@ -285,31 +288,16 @@ class RimapPOI : Parcelable, MarkerFilterable {
             "Fashion and Accessories", "Services", "Health", "Deutsche Bahn Services"
         )
 
-
-        private fun addIfValid(target: MutableList<RimapPOI>, item: RimapPOI) {
-            if ("Y" != item.displmap) {
-                return
-            }
-            if (item.displname == null || item.displname.isEmpty()) {
-                return
-            }
-            if (java.lang.Double.isNaN(item.displayX) || java.lang.Double.isNaN(item.displayY)) {
-                Log.d("requestRimapItems", "invalid coordinate for: " + item.name)
-                return
-            }
-            if (SUBCAT_ELEVATORS == item.menusubcat || SUBCAT_CAR_PARK == item.menusubcat || SUBCAT_PARKING_GARAGE == item.menusubcat) {
-                return
-            }
-            target.add(item)
-        }
-
         fun fromJson(properties: JSONObject?): RimapPOI? {
             return try {
                 RimapPOI(properties)
             } catch (e: Exception) {
                 null
             }?.takeUnless {
-                it.id == 0 || it.menucat == null || it.menusubcat == null
+                it.displmap != "Y" ||
+                        it.displname.isEmpty() ||
+                        it.displayX.isNaN() || it.displayY.isNaN() ||
+                        it.id == 0 || it.menucat == null || it.menusubcat == null || it.menusubcat in EXCLUDED_SUBCATS
             }
         }
 
