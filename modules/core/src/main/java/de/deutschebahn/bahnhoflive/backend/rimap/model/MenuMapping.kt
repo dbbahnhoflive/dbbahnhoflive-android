@@ -8,6 +8,10 @@ object MenuMapping {
     const val TICKETS = "TICKETS"
     const val TOURIST_INFORMATION = "TOURIST_INFORMATION"
     const val PLATFROM = "PLATFROM"
+
+    /**
+     * Note that as of 2021-07-07 Rimap is still using the wrong spelling [PLATFROM]
+     */
     const val PLATFORM = "PLATFORM"
     const val PLATFORM_SECTOR_CUBE = "PLATFORM_SECTOR_CUBE"
     const val AIRPORT = "AIRPORT"

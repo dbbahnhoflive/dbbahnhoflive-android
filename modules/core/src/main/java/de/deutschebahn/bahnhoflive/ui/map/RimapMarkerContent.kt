@@ -16,6 +16,7 @@ import com.google.android.gms.maps.model.MarkerOptions
 import de.deutschebahn.bahnhoflive.R
 import de.deutschebahn.bahnhoflive.backend.rimap.RimapConfig
 import de.deutschebahn.bahnhoflive.backend.rimap.model.LevelMapping
+import de.deutschebahn.bahnhoflive.backend.rimap.model.MenuMapping
 import de.deutschebahn.bahnhoflive.backend.rimap.model.RimapPOI
 import de.deutschebahn.bahnhoflive.ui.map.content.rimap.Track
 import de.deutschebahn.bahnhoflive.ui.station.shop.OpenStatusResolver
@@ -96,7 +97,7 @@ private val mapIcon: Int, @field:DrawableRes
             return true
         }
 
-        if ("TrackNumber" == rimapPOI.category && item is Track) {
+        if (MenuMapping.PLATFROM == rimapPOI.type && item is Track) {
             val platform = item.number
             if (!TextUtils.isEmpty(platform)) {
                 return platform == rimapPOI.name
@@ -112,7 +113,7 @@ private val mapIcon: Int, @field:DrawableRes
 
     override fun getViewType(): MarkerContent.ViewType =
         when (rimapPOI.type) {
-            "Track" -> ViewType.TRACK
+            MenuMapping.PLATFROM -> ViewType.TRACK
             else -> super.getViewType()
         }
 
