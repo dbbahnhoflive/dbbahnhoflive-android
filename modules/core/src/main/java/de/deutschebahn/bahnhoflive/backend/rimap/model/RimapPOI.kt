@@ -65,9 +65,19 @@ class RimapPOI : Parcelable, MarkerFilterable {
         id = props.getString("poiID").toInt()
         display = props.optBoolean("display")
 
+        type = JSONHelper.getStringFromJson(props, "type", "")
+        category = JSONHelper.getStringFromJson(props, "group", "")
+
+        tags = JSONHelper.getStringFromJson(props, "tags", null)
+
         name = props.optString("name")
-        displname = name
-        displmap = name
+
+        displname = when {
+            type == MenuMapping.PLATFORM_SECTOR_CUBE && !name.startsWith(PREFIX_SECTOR_CUBE) -> "$PREFIX_SECTOR_CUBE$name"
+            type == MenuMapping.PLATFROM && !name.startsWith(PREFIX_PLATFORM) -> "$PREFIX_PLATFORM$name"
+            else -> name
+        }
+        displmap = displname
 
         level = props.string("level")
 
@@ -79,10 +89,6 @@ class RimapPOI : Parcelable, MarkerFilterable {
             displayY = displayPositionJsonObject.optDouble("lat")
         }
 
-        type = JSONHelper.getStringFromJson(props, "type", "")
-        category = JSONHelper.getStringFromJson(props, "group", "")
-
-        tags = JSONHelper.getStringFromJson(props, "tags", null)
 
         val menuMapping = MenuMapping.mapping[type]
         menucat = menuMapping?.first
@@ -274,6 +280,10 @@ class RimapPOI : Parcelable, MarkerFilterable {
                 return arrayOfNulls(size)
             }
         }
+
+        const val PREFIX_SECTOR_CUBE = "Abschnitt "
+        const val PREFIX_PLATFORM = "Gleis "
+
         const val SUBCAT_ELEVATORS = "Aufzüge"
         const val SUBCAT_CAR_PARK = "Parkplatz"
         const val SUBCAT_PARKING_GARAGE = "Parkhaus"
@@ -294,7 +304,7 @@ class RimapPOI : Parcelable, MarkerFilterable {
             } catch (e: Exception) {
                 null
             }?.takeUnless {
-                it.displmap != "Y" ||
+                !it.display ||
                         it.displname.isEmpty() ||
                         it.displayX.isNaN() || it.displayY.isNaN() ||
                         it.id == 0 || it.menucat == null || it.menusubcat == null || it.menusubcat in EXCLUDED_SUBCATS
