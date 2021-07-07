@@ -304,10 +304,10 @@
     <string name="accessibilityAudibleSignalsAvailable">Lautsprecheranlage</string>
     <string name="accessibilityTactilePlatformAccess">Taktiler Weg zum Bahnsteig</string>
     <string name="accessibilityTactileGuidingStrips">Taktiles Leitsystem auf dem Bahnsteig</string>
-    <string name="accessibilityTactileHandrailLabel">Taktile Handlaufschilder</string>
+    <string name="accessibilityTactileHandrailLabel">Handlaufschilder</string>
     <string name="accessibilityStairsMarking">Treppenstufenmarkierung</string>
     <string name="accessibilityPlatformSign">Kontrastreiche Wegeleitung</string>
-    <string name="accessibilityBoardingAid">Einstiegshilfe</string>
+    <string name="accessibilityBoardingAid">Einstieghilfe</string>
     <string name="accessibilityAutomaticDoor">Automatiktüren</string>
 
     <string name="accessibilityDescriptionStepFreeAccess">Der Bahnsteig ist über Aufzüge, Rampen, Gehwege oder weitere ebenerdige Zugänge (stufenfrei, höhengleich) erreichbar.</string>
