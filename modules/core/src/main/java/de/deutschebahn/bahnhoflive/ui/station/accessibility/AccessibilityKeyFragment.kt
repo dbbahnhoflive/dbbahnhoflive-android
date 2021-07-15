@@ -28,6 +28,8 @@ class AccessibilityKeyFragment : BottomSheetDialogFragment() {
             AccessibilityFeature.values().forEach { accessibilityFeature ->
                 inflater.inflate(R.layout.item_key, contentContainer, false).also { itemView ->
                     itemView.key.setText(accessibilityFeature.label)
+                    itemView.key.contentDescription =
+                        accessibilityFeature.contentDescription?.let { getText(it) }
                     itemView.description.setText(accessibilityFeature.description)
 
                     contentContainer.addView(itemView)
