@@ -7,6 +7,8 @@
     android:layout_marginStart="@dimen/default_space"
     android:layout_marginEnd="@dimen/default_space"
 
+    android:focusable="true"
+
     android:divider="@drawable/shape_divider"
     android:orientation="vertical"
     android:padding="@dimen/default_space"

@@ -102,5 +102,6 @@
     </plurals>
 
     <string name="sr_accessibility_link_elevators">Zur Übersicht der Aufzüge wechseln</string>
+    <string name="sr_accessibility_hotline">Telefon 030 6521 2888</string>
 
 </resources>

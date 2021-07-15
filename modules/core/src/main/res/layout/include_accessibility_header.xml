@@ -31,26 +31,38 @@
         android:layout_height="wrap_content">
 
         <LinearLayout
-            android:padding="@dimen/default_space"
-            android:elevation="@dimen/card_elevation"
-            android:divider="@drawable/shape_divider"
-            android:showDividers="middle"
-            android:orientation="vertical"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content">
+            android:layout_height="wrap_content"
+            android:divider="@drawable/shape_divider"
+            android:elevation="@dimen/card_elevation"
+            android:orientation="vertical"
+            android:padding="@dimen/default_space"
+            android:showDividers="middle">
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:divider="@drawable/shape_divider"
+                android:focusable="true"
+                android:orientation="vertical"
+                android:showDividers="middle">
+
+                <TextView
+                    android:id="@+id/steplessAccessHint"
+                    android:text="@string/accessibilityStepFreeNone"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content" />
+
+
+                <TextView
+                    android:text="@string/accessibility_hotline_advice"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content" />
+
+            </LinearLayout>
 
             <TextView
-                android:id="@+id/steplessAccessHint"
-                android:text="@string/accessibilityStepFreeNone"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content" />
-
-            <TextView
-                android:text="@string/accessibility_hotline_advice"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content" />
-
-            <TextView
+                android:importantForAccessibility="yes"
                 android:id="@+id/phone"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -58,11 +70,14 @@
                 android:gravity="center"
                 android:minHeight="64dp"
                 android:text="@string/accessibility_hotline"
+                android:contentDescription="@string/sr_accessibility_hotline"
                 android:textColor="@color/white"
                 android:textStyle="bold" />
 
+
             <TextView
                 android:text="@string/accessibility_advice"
+                android:focusable="true"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content" />
 
@@ -77,7 +92,6 @@
                 android:textStyle="bold"
                 app:drawableEndCompat="@drawable/app_occupancy_information" />
 
-
         </LinearLayout>
 
         <include layout="@layout/include_divider" />
@@ -88,7 +102,8 @@
             android:clipToPadding="false"
             android:gravity="center"
             android:orientation="horizontal"
-            android:padding="@dimen/default_space">
+            android:padding="@dimen/default_space"
+            android:id="@+id/filterAction">
 
             <TextView
                 android:id="@+id/selectedPlatform"

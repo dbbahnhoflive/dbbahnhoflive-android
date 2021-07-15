@@ -46,7 +46,7 @@ class AccessibilityFragment : Fragment(R.layout.fragment_accessibility) {
 
             filter.contentDescription = getText(R.string.accessibilityFilterButton)
 
-            filter.setOnClickListener {
+            filterAction.setOnClickListener {
                 PlatformSelectionFragment().show(childFragmentManager, "platformSelection")
             }
         }
