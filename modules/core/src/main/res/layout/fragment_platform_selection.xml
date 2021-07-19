@@ -42,10 +42,11 @@
         </LinearLayout>
 
         <NumberPicker
+            android:focusable="true"
             android:id="@+id/picker"
+            android:descendantFocusability="blocksDescendants"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:descendantFocusability="blocksDescendants" />
+            android:layout_height="wrap_content" />
 
         <FrameLayout
             android:layout_width="match_parent"
