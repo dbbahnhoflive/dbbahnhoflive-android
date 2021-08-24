@@ -6,6 +6,8 @@
 
 package de.deutschebahn.bahnhoflive.ui.station.elevators;
 
+import static de.deutschebahn.bahnhoflive.ui.map.content.rimap.RimapFilter.PRESET_ELEVATORS;
+
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
@@ -22,10 +24,10 @@ import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 import java.util.List;
 
+import de.deutschebahn.bahnhoflive.BaseApplication;
 import de.deutschebahn.bahnhoflive.R;
 import de.deutschebahn.bahnhoflive.analytics.TrackingManager;
 import de.deutschebahn.bahnhoflive.backend.BaseRestListener;
-import de.deutschebahn.bahnhoflive.backend.db.fasta2.FacilityEquipmentListStatusRequest;
 import de.deutschebahn.bahnhoflive.backend.db.fasta2.model.FacilityStatus;
 import de.deutschebahn.bahnhoflive.push.FacilityPushManager;
 import de.deutschebahn.bahnhoflive.ui.map.Content;
@@ -34,8 +36,6 @@ import de.deutschebahn.bahnhoflive.ui.map.MapPresetProvider;
 import de.deutschebahn.bahnhoflive.ui.map.content.rimap.RimapFilter;
 import de.deutschebahn.bahnhoflive.util.PrefUtil;
 import de.deutschebahn.bahnhoflive.view.SingleSelectionManager;
-
-import static de.deutschebahn.bahnhoflive.ui.map.content.rimap.RimapFilter.PRESET_ELEVATORS;
 
 public class BookmarkedElevatorStatusFragment extends Fragment
         implements SwipeRefreshLayout.OnRefreshListener, MapPresetProvider {
@@ -87,8 +87,8 @@ public class BookmarkedElevatorStatusFragment extends Fragment
     public void updateStatus() {
         final List<FacilityStatus> facilityStatuses = getAdapter().getData();
 
-        final FacilityEquipmentListStatusRequest facilityEquipmentListStatusRequest = new FacilityEquipmentListStatusRequest(facilityStatuses);
-        facilityEquipmentListStatusRequest.requestStatus(new BaseRestListener<List<FacilityStatus>>() {
+        final BaseApplication baseApplication = BaseApplication.get();
+        baseApplication.getRepositories().getElevatorStatusRepository().queryElevatorStatus(facilityStatuses, new BaseRestListener<List<FacilityStatus>>() {
             @Override
             public void onSuccess(@NonNull List<FacilityStatus> payload) {
                 final FragmentActivity activity = getActivity();
