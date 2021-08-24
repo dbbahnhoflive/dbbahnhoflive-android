@@ -96,7 +96,7 @@ public class BookmarkedElevatorStatusFragment extends Fragment
                     return;
                 }
 
-                getAdapter().invalidateContent();
+                getAdapter().setData(payload);
 
                 PrefUtil.storeSavedFacilities(activity, payload);
             }

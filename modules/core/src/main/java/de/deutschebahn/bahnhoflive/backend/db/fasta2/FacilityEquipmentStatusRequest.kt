@@ -51,6 +51,8 @@ class FacilityEquipmentStatusRequest(
                         sourceFacilityStatus.longitude = facilityStatus.longitude
                         sourceFacilityStatus.type = facilityStatus.type
                         sourceFacilityStatus.state = facilityStatus.state
+                    } ?: kotlin.run {
+                        sourceFacilityStatus.state = ""
                     }
                 }
 

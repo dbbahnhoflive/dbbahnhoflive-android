@@ -10,6 +10,7 @@ import android.os.Parcel;
 import android.os.Parcelable;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 
 import com.google.android.gms.maps.model.LatLng;
 import com.google.gson.Gson;
@@ -31,6 +32,7 @@ public class FacilityStatus implements Parcelable, Comparable<FacilityStatus>, M
     private int equipmentNumber;
     private String type;
     private String description;
+    @Nullable
     private String state;
     @SerializedName("stationnumber")
     private int stationNumber;
