@@ -49,8 +49,10 @@ import de.deutschebahn.bahnhoflive.ui.map.content.rimap.Track;
 import de.deutschebahn.bahnhoflive.ui.station.HistoryFragment;
 import de.deutschebahn.bahnhoflive.ui.station.StationViewModel;
 import de.deutschebahn.bahnhoflive.ui.timetable.WagenstandFragment;
+import de.deutschebahn.bahnhoflive.ui.timetable.journey.JourneyFragment;
 import io.reactivex.disposables.CompositeDisposable;
 import io.reactivex.functions.Consumer;
+import kotlin.Unit;
 
 public class DbTimetableFragment extends Fragment
         implements FilterDialogFragment.Consumer, MapPresetProvider {
@@ -96,6 +98,10 @@ public class DbTimetableFragment extends Fragment
 
         }, getTrackingManager(), view -> {
             dbTimetableResource.loadMore();
+        }, (trainInfo, integer) -> {
+            final HistoryFragment historyFragment = HistoryFragment.parentOf(this);
+            historyFragment.push(new JourneyFragment(trainInfo, TrainEvent.DEPARTURE));
+            return Unit.INSTANCE;
         });
 
         stationLiveData.observe(this, station -> {

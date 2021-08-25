@@ -17,6 +17,7 @@ import de.deutschebahn.bahnhoflive.backend.ris.model.TrainMovementInfo
 import de.deutschebahn.bahnhoflive.repository.Station
 import de.deutschebahn.bahnhoflive.ui.timetable.RouteStop
 import de.deutschebahn.bahnhoflive.ui.timetable.RouteStopsAdapter
+import de.deutschebahn.bahnhoflive.view.ItemClickListener
 import de.deutschebahn.bahnhoflive.view.SelectableItemViewHolder
 import de.deutschebahn.bahnhoflive.view.SingleSelectionManager
 import java.util.*
@@ -25,7 +26,8 @@ class TrainInfoViewHolder internal constructor(
     parent: ViewGroup,
     private val timetableAdapter: DbTimetableAdapter,
     var station: Station?,
-    selectionManager: SingleSelectionManager
+    selectionManager: SingleSelectionManager,
+    clickListener: ItemClickListener<TrainInfo>
 ) : SelectableItemViewHolder<TrainInfo>(
     parent,
     R.layout.card_expandable_timetable_db,
@@ -72,6 +74,12 @@ class TrainInfoViewHolder internal constructor(
 
         wagonOrderRow = itemView.findViewById(R.id.row_wagon_order)
         itemView.findViewById<View>(R.id.button_wagon_order).setOnClickListener(this)
+
+        itemView.setOnClickListener {
+            item?.also {
+                clickListener(it, bindingAdapterPosition)
+            }
+        }
     }
 
     private val trainEvent: TrainEvent
@@ -131,6 +139,20 @@ class TrainInfoViewHolder internal constructor(
             return
         }
 
+        val routeStops = compileRouteStops(
+            trainMovementInfo,
+            station?.title,
+            trainInfo.departure === trainMovementInfo
+        )
+
+        adapter.setRouteStops(routeStops)
+    }
+
+    private fun compileRouteStops(
+        trainMovementInfo: TrainMovementInfo,
+        currentStopName: String?,
+        isDeparture: Boolean
+    ): ArrayList<RouteStop> {
         val routeStops = ArrayList<RouteStop>()
         val stopNames = trainMovementInfo.correctedViaAsArray
 
@@ -138,18 +160,16 @@ class TrainInfoViewHolder internal constructor(
             routeStops.add(RouteStop(stopName))
         }
 
-        station?.title?.also { title ->
-            val departure = trainInfo.departure === trainMovementInfo
+        currentStopName?.also { title ->
             routeStops.add(
-                if (departure) 0 else routeStops.size,
+                if (isDeparture) 0 else routeStops.size,
                 RouteStop(title, true)
             )
         }
 
         routeStops[0].isFirst = true
         routeStops[routeStops.size - 1].isLast = true
-
-        adapter.setRouteStops(routeStops)
+        return routeStops
     }
 
     private fun updateWagonOrderViews(item: TrainInfo?) {

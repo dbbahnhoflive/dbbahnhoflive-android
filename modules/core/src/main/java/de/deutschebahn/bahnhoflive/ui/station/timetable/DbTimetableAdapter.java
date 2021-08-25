@@ -30,6 +30,8 @@ import de.deutschebahn.bahnhoflive.repository.timetable.Timetable;
 import de.deutschebahn.bahnhoflive.ui.ViewHolder;
 import de.deutschebahn.bahnhoflive.ui.map.content.rimap.Track;
 import de.deutschebahn.bahnhoflive.view.SingleSelectionManager;
+import kotlin.Unit;
+import kotlin.jvm.functions.Function2;
 
 
 class DbTimetableAdapter extends RecyclerView.Adapter<ViewHolder<?>> implements TrainEvent.Provider {
@@ -61,16 +63,18 @@ class DbTimetableAdapter extends RecyclerView.Adapter<ViewHolder<?>> implements 
     private final List<String> trainCategories = new LinkedList<>();
 
     private Timetable timetable;
+    private final Function2<? super TrainInfo, ? super Integer, Unit> itemClickListener;
 
     DbTimetableAdapter(@Nullable Station station, FilterUI filterUI,
                        OnWagonOrderClickListener onWagonOrderClickListener,
                        @NonNull final TrackingManager trackingManager,
-                       View.OnClickListener loadMoreListener) {
+                       View.OnClickListener loadMoreListener, Function2<? super TrainInfo, ? super Integer, Unit> itemClickListener) {
         this.station = station;
         this.filterUI = filterUI;
         this.onWagonOrderClickListener = onWagonOrderClickListener;
         this.trackingManager = trackingManager;
         this.loadMoreListener = loadMoreListener;
+        this.itemClickListener = itemClickListener;
 
         selectionManager = new SingleSelectionManager(this);
         SingleSelectionManager.type = "h2_departure";
@@ -85,7 +89,7 @@ class DbTimetableAdapter extends RecyclerView.Adapter<ViewHolder<?>> implements 
             case ITEM_TYPE_EMPTY:
                 return createEmptyMessageViewHolder(parent);
             default:
-                return new TrainInfoViewHolder(parent, this, station, selectionManager);
+                return new TrainInfoViewHolder(parent, this, station, selectionManager, itemClickListener);
         }
 
     }
