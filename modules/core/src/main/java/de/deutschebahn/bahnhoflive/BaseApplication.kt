@@ -26,6 +26,7 @@ import de.deutschebahn.bahnhoflive.repository.elevator.Fasta2ElevatorStatusRepos
 import de.deutschebahn.bahnhoflive.repository.occupancy.OccupancyRepository
 import de.deutschebahn.bahnhoflive.repository.poisearch.PoiSearchConfigurationProvider
 import de.deutschebahn.bahnhoflive.repository.station.OfficialStationRepository
+import de.deutschebahn.bahnhoflive.repository.timetable.RisTimetableRepository
 import de.deutschebahn.bahnhoflive.tutorial.TutorialManager
 import de.deutschebahn.bahnhoflive.util.font.FontUtil
 import de.deutschebahn.bahnhoflive.util.volley.TLSSocketFactory
@@ -89,7 +90,10 @@ abstract class BaseApplication(
                 restHelper,
                 dbAuthorizationTool
             ),
-            occupancyRepository = OccupancyRepository()
+            occupancyRepository = OccupancyRepository(),
+            timetableRpository = RisTimetableRepository(
+                restHelper, dbAuthorizationTool
+            )
         )
     }
 

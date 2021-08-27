@@ -42,6 +42,7 @@ class JourneyViewModel(savedStateHandle: SavedStateHandle) : ViewModel() {
         }
     }
 
+
     override fun onCleared() {
         super.onCleared()
 

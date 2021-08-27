@@ -20,12 +20,16 @@ android {
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
             multiDexKeepProguard file('multidex-config.pro')
+
+            buildConfigField "String", "RIS_JOURNEYS_BASE_URL", "\"https://gateway.businesshub.deutschebahn.com/ris-journeys/v1/\""
         }
         demo {
             initWith release
         }
         debug {
             minifyEnabled false
+
+            buildConfigField "String", "RIS_JOURNEYS_BASE_URL", "\"https://gateway.businesshub.deutschebahn.com/ris-journeys/trial/v1/\""
         }
     }
 
