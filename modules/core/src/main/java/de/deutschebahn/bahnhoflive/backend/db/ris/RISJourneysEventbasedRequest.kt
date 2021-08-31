@@ -7,41 +7,27 @@ import com.google.gson.Gson
 import de.deutschebahn.bahnhoflive.backend.DetailedVolleyError
 import de.deutschebahn.bahnhoflive.backend.VolleyRestListener
 import de.deutschebahn.bahnhoflive.backend.db.DbAuthorizationTool
-import de.deutschebahn.bahnhoflive.backend.db.ris.model.DepartureMatches
+import de.deutschebahn.bahnhoflive.backend.db.ris.model.JourneyEventBased
 import java.io.ByteArrayInputStream
-import java.net.URLEncoder
 
-class RISJourneysByRelationRequest(
-    parameters: Parameters,
+class RISJourneysEventbasedRequest(
+    journeyID: String,
     dbAuthorizationTool: DbAuthorizationTool,
-    restListener: VolleyRestListener<DepartureMatches>
-) : RISJourneysRequest<DepartureMatches>(
-    "byrelation?${parameters.toUrlParameters()}",
+    restListener: VolleyRestListener<JourneyEventBased>
+) : RISJourneysRequest<JourneyEventBased>(
+    "eventbased/$journeyID",
     dbAuthorizationTool,
     restListener
 ) {
 
-    class Parameters(
-        val number: String?,
-        val category: String?,
-        val line: String? = null
-    ) {
-        fun toUrlParameters() = listOfNotNull(
-            number?.let { "number" to number },
-            category?.let { "category" to category },
-            line?.let { "line" to it }
-        ).joinToString("&") { (key, value) ->
-            "$key=${URLEncoder.encode(value, Charsets.UTF_8.name())}"
-        }
-    }
 
-    override fun parseNetworkResponse(networkResponse: NetworkResponse): Response<DepartureMatches> {
+    override fun parseNetworkResponse(networkResponse: NetworkResponse): Response<JourneyEventBased> {
         super.parseNetworkResponse(networkResponse)
 
         return kotlin.runCatching {
             val departureMatches = Gson().fromJson(
                 ByteArrayInputStream(networkResponse.data).reader(),
-                DepartureMatches::class.java
+                JourneyEventBased::class.java
             )
 
             Response.success(

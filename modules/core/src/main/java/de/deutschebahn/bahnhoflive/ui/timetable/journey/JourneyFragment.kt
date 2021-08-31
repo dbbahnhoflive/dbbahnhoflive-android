@@ -1,6 +1,7 @@
 package de.deutschebahn.bahnhoflive.ui.timetable.journey
 
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -44,11 +45,29 @@ class JourneyFragment() : Fragment() {
             //TODO
         }
 
-        recycler.adapter = ReducedJourneyAdapter().also {
-            journeyViewModel.routeStopsLiveData.observe(viewLifecycleOwner) { routeStops ->
-                it.submitList(routeStops)
+        JourneyAdapter().also { adapter ->
+            journeyViewModel.journeysByRelationLiveData.observe(viewLifecycleOwner) {
+                it.fold({
+                    if (recycler.adapter != adapter) {
+                        recycler.adapter = adapter
+                    }
+
+                    adapter.submitList(it)
+                }, {
+                    Log.d(JourneyFragment::class.java.simpleName, "Error: $it")
+                })
             }
         }
+
+
+//        ReducedJourneyAdapter().also {
+//            if (recycler.adapter != it) {
+//                recycler.adapter = it
+//            }
+//            journeyViewModel.routeStopsLiveData.observe(viewLifecycleOwner) { routeStops ->
+//                it.submitList(routeStops)
+//            }
+//        }
 
     }.root
 

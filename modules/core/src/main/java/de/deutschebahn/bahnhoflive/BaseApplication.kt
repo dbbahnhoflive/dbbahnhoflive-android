@@ -91,7 +91,7 @@ abstract class BaseApplication(
                 dbAuthorizationTool
             ),
             occupancyRepository = OccupancyRepository(),
-            timetableRpository = RisTimetableRepository(
+            timetableRepository = RisTimetableRepository(
                 restHelper, dbAuthorizationTool
             )
         )

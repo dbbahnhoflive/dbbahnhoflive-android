@@ -25,7 +25,7 @@ data class RepositoryHolder(
     val newsRepository: NewsRepository = NewsRepository(),
     val elevatorStatusRepository: ElevatorStatusRepository = ElevatorStatusRepository(),
     val wagonOrderRepository: WagonOrderRepository = WagonOrderRepository(),
-    val timetableRpository: TimetableRepository = TimetableRepository(),
+    val timetableRepository: TimetableRepository = TimetableRepository(),
     val einkaufsbahnhofRepository: EinkaufsbahnhofRepository = EinkaufsbahnhofRepository(),
     val mapRepository: MapRepository = MapRepository(),
     val parkingRepository: ParkingRepository = ParkingRepository(),

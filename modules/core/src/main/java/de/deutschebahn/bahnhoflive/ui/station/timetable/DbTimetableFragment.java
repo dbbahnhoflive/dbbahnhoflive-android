@@ -98,9 +98,9 @@ public class DbTimetableFragment extends Fragment
 
         }, getTrackingManager(), view -> {
             dbTimetableResource.loadMore();
-        }, (trainInfo, integer) -> {
+        }, (trainInfo, trainEvent, integer) -> {
             final HistoryFragment historyFragment = HistoryFragment.parentOf(this);
-            historyFragment.push(new JourneyFragment(trainInfo, TrainEvent.DEPARTURE));
+            historyFragment.push(new JourneyFragment(trainInfo, trainEvent));
             return Unit.INSTANCE;
         });
 

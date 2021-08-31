@@ -32,5 +32,6 @@ class ArrivalDepartureEvent(
      */
     val additional: Boolean,
 ) {
-    val eventType = runCatching { EventType.valueOf(type) }.getOrNull()
+    val eventType: EventType?
+        get() = EventType.VALUES.firstOrNull { it.key == type }
 }

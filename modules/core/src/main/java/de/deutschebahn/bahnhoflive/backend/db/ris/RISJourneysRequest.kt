@@ -15,5 +15,7 @@ open class RISJourneysRequest<T>(
     dbAuthorizationTool,
     restListener
 ) {
+    override fun getAuthorizationHeaderKey(): String = "db-api-key"
+
     override fun getCountKey(): String = "ris-journeys"
 }

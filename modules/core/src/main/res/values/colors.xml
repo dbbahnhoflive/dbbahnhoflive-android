@@ -59,6 +59,8 @@
     <color name="flyout_track_divider">#e1e6eb</color>
     <color name="backgroundH1">#eff2f4</color>
 
+    <color name="journey_item_background">#f3f4f7</color>
+
     <color name="eco_green">#78BD14</color>
     <color name="page_indicator_unselected">@color/button_grey</color>
 
