@@ -84,7 +84,7 @@ open class RisTimetableRepository(
                                             when (journeyStopEvent.eventType) {
                                                 EventType.ARRIVAL -> acc.add(
                                                     journeyStopEvent
-                                                        .wrapJourneyStop()
+                                                        .wrapJourneyStop(currentStationEvaNumber)
                                                 )
                                                 EventType.DEPARTURE -> acc.lastOrNull()
                                                     ?.takeIf { journeyStop ->
@@ -93,11 +93,17 @@ open class RisTimetableRepository(
                                                     }
                                                     ?.apply { departure = journeyStopEvent }
                                                     ?: kotlin.run {
-                                                        acc.add(journeyStopEvent.wrapJourneyStop())
+                                                        acc.add(
+                                                            journeyStopEvent.wrapJourneyStop(
+                                                                currentStationEvaNumber
+                                                            )
+                                                        )
                                                     }
                                             }
                                             acc
                                         }.also {
+                                            it.firstOrNull()?.first = true
+                                            it.lastOrNull()?.last = true
                                             listener.onSuccess(it)
                                         }
                                 } ?: kotlin.run {

@@ -17,9 +17,10 @@ data class JourneyStopEvent(
         val TIME_PARSER = EpochParser.getInstance()
     }
 
-    fun wrapJourneyStop() = JourneyStop(
+    fun wrapJourneyStop(currentStationEvaNumber: String) = JourneyStop(
         if (eventType == EventType.ARRIVAL) this else null,
         if (eventType == EventType.DEPARTURE) this else null,
+        current = currentStationEvaNumber == evaNumber
     )
 
     val parsedScheduledTime by lazy { TIME_PARSER.parse(scheduledTime) }

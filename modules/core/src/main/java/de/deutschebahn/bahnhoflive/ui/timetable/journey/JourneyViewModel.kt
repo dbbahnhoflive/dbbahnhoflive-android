@@ -19,6 +19,7 @@ class JourneyViewModel(app: Application, savedStateHandle: SavedStateHandle) :
         const val ARG_TRAIN_EVENT = "trainEvent"
     }
 
+
     val timetableRepository = getApplication<BaseApplication>().repositories.timetableRepository
 
     private val stationProxyLiveData = MediatorLiveData<Station>()
@@ -80,10 +81,28 @@ class JourneyViewModel(app: Application, savedStateHandle: SavedStateHandle) :
         }
     }
 
+    val loadingProgressLiveData = MediatorLiveData<Boolean>().apply {
+        value = true
+
+
+        val observer = Observer<Any?> {
+            if (it != null) {
+                value = false
+            }
+        }
+        addSource(journeysByRelationLiveData, observer)
+        addSource(routeStopsLiveData, observer)
+    }
+
 
     override fun onCleared() {
         super.onCleared()
 
         stationLiveData = null
+    }
+
+    fun onRefresh() {
+        loadingProgressLiveData.value = true
+        trainEventLiveData.value = trainEventLiveData.value // trigger reload
     }
 }

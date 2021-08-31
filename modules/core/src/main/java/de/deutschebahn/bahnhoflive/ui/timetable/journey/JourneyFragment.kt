@@ -41,6 +41,16 @@ class JourneyFragment() : Fragment() {
         savedInstanceState: Bundle?
     ): View = FragmentJourneyBinding.inflate(inflater).apply {
 
+        refresher.setOnRefreshListener {
+            journeyViewModel.onRefresh()
+        }
+
+        journeyViewModel.loadingProgressLiveData.observe(viewLifecycleOwner) {
+            if (!it) {
+                refresher.isRefreshing = false
+            }
+        }
+
         buttonWagonOrder.root.setOnClickListener {
             //TODO
         }

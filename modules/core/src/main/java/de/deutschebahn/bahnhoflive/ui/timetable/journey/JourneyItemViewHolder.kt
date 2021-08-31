@@ -1,5 +1,6 @@
 package de.deutschebahn.bahnhoflive.ui.timetable.journey
 
+import android.graphics.Typeface
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import android.widget.TextView
@@ -23,6 +24,10 @@ class JourneyItemViewHolder(val itemJourneyDetailedBinding: ItemJourneyDetailedB
         )
     )
 
+    val highlightableTextViews = itemJourneyDetailedBinding.run {
+        listOf(stopName, scheduledArrival, expectedArrival, scheduledDeparture, expectedDeparture)
+    }
+
     override fun onBind(item: JourneyStop?) {
         super.onBind(item)
 
@@ -33,6 +38,12 @@ class JourneyItemViewHolder(val itemJourneyDetailedBinding: ItemJourneyDetailedB
 
             bindTimes(scheduledArrival, expectedArrival, item?.arrival)
             bindTimes(scheduledDeparture, expectedDeparture, item?.departure)
+
+            (if (item?.highlight == true) Typeface.BOLD else Typeface.NORMAL).let { textStyle ->
+                highlightableTextViews.forEach { textView ->
+                    textView.setTypeface(null, textStyle)
+                }
+            }
         }
 
     }
