@@ -7,8 +7,8 @@
 <shape xmlns:android="http://schemas.android.com/apk/res/android"
     android:shape="oval">
     <size
-        android:width="8dp"
-        android:height="8dp" />
-    <solid android:color="@color/journey_track" />
+        android:width="@dimen/journey_stop_size"
+        android:height="@dimen/journey_stop_size" />
+    <solid android:color="@color/journey_track_selectable" />
 
 </shape>

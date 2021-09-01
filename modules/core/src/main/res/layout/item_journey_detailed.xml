@@ -2,25 +2,25 @@
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    android:background="@color/journey_item_background"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content">
+    android:layout_height="wrap_content"
+    android:background="@color/journey_item_background">
 
     <androidx.constraintlayout.widget.Guideline
         android:id="@+id/track_guide"
         android:layout_width="0dp"
         android:layout_height="match_parent"
         android:orientation="vertical"
-        app:layout_constraintGuide_begin="64dp" />
+        app:layout_constraintGuide_begin="48dp" />
 
     <View
         android:id="@+id/track_anchor"
         android:layout_width="1dp"
         android:layout_height="1dp"
-        app:layout_constraintBottom_toBottomOf="@+id/stop_name"
+        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="@+id/track_guide"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="@+id/stop_name" />
+        app:layout_constraintTop_toTopOf="parent" />
 
     <ImageView
         android:id="@+id/upper_track"
@@ -60,16 +60,20 @@
 
     <TextView
         android:id="@+id/platform"
+        android:layout_margin="@dimen/default_space"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:textColor="@color/text_color_secondary"
+        android:textSize="@dimen/textsize_h2"
+        app:layout_constraintBaseline_toBaselineOf="@+id/stop_name"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
         tools:text="Gl. 12" />
 
     <TextView
         android:id="@+id/scheduledArrival"
-        android:layout_width="0dp"
+        android:layout_width="@dimen/journey_time_width"
         android:layout_height="wrap_content"
+        android:textSize="@dimen/textsize_h2"
         app:layout_constraintBaseline_toBaselineOf="@+id/platform"
         app:layout_constraintStart_toEndOf="@+id/track_guide"
         tools:text="@tools:sample/date/hhmm" />
@@ -78,14 +82,16 @@
         android:id="@+id/scheduledDeparture"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
+        android:textSize="@dimen/textsize_h2"
         app:layout_constraintStart_toStartOf="@+id/scheduledArrival"
         app:layout_constraintTop_toBottomOf="@+id/scheduledArrival"
         tools:text="@tools:sample/date/hhmm" />
 
     <TextView
         android:id="@+id/expectedArrival"
-        android:layout_width="0dp"
+        android:layout_width="@dimen/journey_time_width"
         android:layout_height="wrap_content"
+        android:textSize="@dimen/textsize_h2"
         app:layout_constraintBaseline_toBaselineOf="@+id/scheduledArrival"
         app:layout_constraintStart_toEndOf="@id/scheduledArrival"
         tools:text="@tools:sample/date/hhmm" />
@@ -94,6 +100,7 @@
         android:id="@+id/expectedDeparture"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
+        android:textSize="@dimen/textsize_h2"
         app:layout_constraintBaseline_toBaselineOf="@id/scheduledDeparture"
         app:layout_constraintStart_toStartOf="@id/expectedArrival"
         tools:text="@tools:sample/date/hhmm" />
@@ -102,12 +109,14 @@
         android:id="@+id/stop_name"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/default_space"
         android:ellipsize="end"
         android:lines="1"
-        app:layout_constraintBaseline_toBaselineOf="@+id/platform"
+        android:textSize="@dimen/textsize_h2"
         app:layout_constraintBottom_toTopOf="@+id/placeholder_text"
         app:layout_constraintEnd_toStartOf="@+id/platform"
         app:layout_constraintStart_toEndOf="@+id/expectedArrival"
+        app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintVertical_chainStyle="packed"
         tools:text="@tools:sample/cities" />
 
@@ -115,8 +124,10 @@
         android:id="@+id/placeholder_text"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
+        android:layout_marginBottom="@dimen/default_space"
         android:ellipsize="end"
         android:lines="1"
+        android:textSize="@dimen/textsize_h2"
         android:visibility="invisible"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
