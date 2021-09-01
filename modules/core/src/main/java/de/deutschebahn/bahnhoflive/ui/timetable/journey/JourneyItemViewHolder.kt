@@ -49,7 +49,7 @@ class JourneyItemViewHolder(val itemJourneyDetailedBinding: ItemJourneyDetailedB
 
             (if (item?.highlight == true) Typeface.BOLD else Typeface.NORMAL).let { textStyle ->
                 highlightableTextViews.forEach { textView ->
-                    textView.setTypeface(null, textStyle)
+                    textView.setTypeface(textView.typeface, textStyle)
                 }
             }
         }
