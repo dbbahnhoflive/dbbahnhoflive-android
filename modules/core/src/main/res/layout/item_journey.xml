@@ -63,7 +63,7 @@
         android:layout_height="wrap_content"
         android:ellipsize="end"
         android:lines="1"
-        app:layout_constraintBottom_toTopOf="@+id/placeholder_text"
+        app:layout_constraintBottom_toTopOf="@+id/advice"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="@+id/track_guide"
         app:layout_constraintTop_toTopOf="parent"
@@ -71,7 +71,7 @@
         tools:text="@tools:sample/cities" />
 
     <TextView
-        android:id="@+id/placeholder_text"
+        android:id="@+id/advice"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:ellipsize="end"

@@ -43,7 +43,7 @@ class JourneyViewModel(app: Application, savedStateHandle: SavedStateHandle) :
     private val trainEventLiveData = savedStateHandle.getLiveData<TrainEvent>(ARG_TRAIN_EVENT)
 
     val journeysByRelationLiveData = stationProxyLiveData.switchMap { station ->
-        station.evaIds.main?.let { evaNumber ->
+        station.evaIds.let { evaIds ->
             trainInfoLiveData.switchMap { trainInfo ->
                 trainEventLiveData.switchMap { trainEvent ->
                     val trainMovementInfo =
@@ -51,7 +51,7 @@ class JourneyViewModel(app: Application, savedStateHandle: SavedStateHandle) :
 
                     MutableLiveData<Result<List<JourneyStop>>>().apply {
                         timetableRepository.queryJourneys(
-                            evaNumber,
+                            evaIds,
                             trainMovementInfo.plannedDateTime,
                             trainEvent,
                             trainInfo.genuineName,

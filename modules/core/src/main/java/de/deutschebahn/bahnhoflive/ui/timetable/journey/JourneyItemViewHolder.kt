@@ -5,6 +5,7 @@ import android.view.LayoutInflater
 import android.view.ViewGroup
 import android.widget.TextView
 import androidx.core.view.isVisible
+import de.deutschebahn.bahnhoflive.R
 import de.deutschebahn.bahnhoflive.databinding.ItemJourneyDetailedBinding
 import de.deutschebahn.bahnhoflive.ui.Status
 import de.deutschebahn.bahnhoflive.ui.ViewHolder
@@ -38,6 +39,12 @@ class JourneyItemViewHolder(val itemJourneyDetailedBinding: ItemJourneyDetailedB
             stopName.text = item?.name
 
             platform.text = item?.platform?.let { "Gl. $it" }
+
+            when {
+                item?.isAdditional == true -> advice.setText(R.string.journey_stop_additional)
+                item?.isPlatformChange == true -> advice.setText(R.string.journey_stop_platform_change)
+                else -> advice.text = null
+            }
 
             bindTimes(scheduledArrival, expectedArrival, item?.arrival)
             bindTimes(scheduledDeparture, expectedDeparture, item?.departure)

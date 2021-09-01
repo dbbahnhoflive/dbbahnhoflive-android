@@ -10,6 +10,7 @@ import de.deutschebahn.bahnhoflive.backend.db.ris.model.DepartureMatch
 import de.deutschebahn.bahnhoflive.backend.db.ris.model.DepartureMatches
 import de.deutschebahn.bahnhoflive.backend.db.ris.model.EventType
 import de.deutschebahn.bahnhoflive.backend.db.ris.model.JourneyEventBased
+import de.deutschebahn.bahnhoflive.backend.local.model.EvaIds
 import de.deutschebahn.bahnhoflive.backend.ris.model.TrainEvent
 import de.deutschebahn.bahnhoflive.ui.timetable.journey.JourneyStop
 import de.deutschebahn.bahnhoflive.ui.timetable.journey.toJourneyStopEvent
@@ -21,7 +22,7 @@ open class RisTimetableRepository(
     protected val dbAuthorizationTool: DbAuthorizationTool
 ) : TimetableRepository() {
     override fun queryJourneys(
-        currentStationEvaNumber: String,
+        evaIds: EvaIds,
         scheduledTime: Long,
         trainEvent: TrainEvent,
         number: String?,
@@ -30,7 +31,7 @@ open class RisTimetableRepository(
         listener: VolleyRestListener<List<JourneyStop>>
     ) {
         requestJourneys(
-            currentStationEvaNumber,
+            evaIds,
             scheduledTime,
             trainEvent,
             number,
@@ -39,7 +40,7 @@ open class RisTimetableRepository(
             listener
         ) {
             requestJourneys(
-                currentStationEvaNumber,
+                evaIds,
                 scheduledTime,
                 trainEvent,
                 number,
@@ -54,7 +55,7 @@ open class RisTimetableRepository(
     }
 
     private fun requestJourneys(
-        currentStationEvaNumber: String,
+        evaIds: EvaIds,
         scheduledTime: Long,
         trainEvent: TrainEvent,
         number: String?,
@@ -73,7 +74,7 @@ open class RisTimetableRepository(
                         payload?.journeys?.also {
                             JourneyDetailsFetcher(
                                 listener,
-                                currentStationEvaNumber,
+                                evaIds,
                                 scheduledTime,
                                 trainEvent,
                                 it,
@@ -92,7 +93,7 @@ open class RisTimetableRepository(
 
     inner class JourneyDetailsFetcher(
         val listener: VolleyRestListener<List<JourneyStop>>,
-        private val currentStationEvaNumber: String,
+        private val evaIds: EvaIds,
         private val scheduledTime: Long,
         private val trainEvent: TrainEvent,
         departureMatches: List<DepartureMatch>,
@@ -113,7 +114,7 @@ open class RisTimetableRepository(
                             override fun onSuccess(payload: JourneyEventBased?) {
                                 payload?.apply {
                                     events.firstOrNull { arrivalDepartureEvent ->
-                                        arrivalDepartureEvent.station.evaNumber == currentStationEvaNumber
+                                        arrivalDepartureEvent.station.evaNumber in evaIds.ids
                                                 && arrivalDepartureEvent.eventType == trainEvent.correspondingEventType
                                     }?.also {
                                         if (it.toJourneyStopEvent()?.parsedScheduledTime != scheduledTime) {
@@ -130,7 +131,7 @@ open class RisTimetableRepository(
                                                 .fold(ArrayList<JourneyStop>(events.size / 2)) { acc, journeyStopEvent ->
                                                     when (journeyStopEvent.eventType) {
                                                         EventType.ARRIVAL -> journeyStopEvent
-                                                            .wrapJourneyStop(currentStationEvaNumber)
+                                                            .wrapJourneyStop(evaIds)
                                                             .also { acc.add(it) }
                                                         EventType.DEPARTURE -> acc.lastOrNull()
                                                             ?.takeIf { journeyStop ->
@@ -139,7 +140,7 @@ open class RisTimetableRepository(
                                                             }
                                                             ?.apply { departure = journeyStopEvent }
                                                             ?: journeyStopEvent.wrapJourneyStop(
-                                                                currentStationEvaNumber
+                                                                evaIds
                                                             ).also { acc.add(it) }
                                                     }
                                                     acc
