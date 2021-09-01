@@ -16,6 +16,7 @@ open class TimetableRepository {
 
     open fun queryJourneys(
         currentStationEvaNumber: String,
+        scheduledTime: Long,
         trainEvent: TrainEvent,
         number: String?,
         category: String?,

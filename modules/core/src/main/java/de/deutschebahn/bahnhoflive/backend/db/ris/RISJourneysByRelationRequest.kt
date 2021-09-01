@@ -10,6 +10,8 @@ import de.deutschebahn.bahnhoflive.backend.db.DbAuthorizationTool
 import de.deutschebahn.bahnhoflive.backend.db.ris.model.DepartureMatches
 import java.io.ByteArrayInputStream
 import java.net.URLEncoder
+import java.text.SimpleDateFormat
+import java.util.*
 
 class RISJourneysByRelationRequest(
     parameters: Parameters,
@@ -24,12 +26,14 @@ class RISJourneysByRelationRequest(
     class Parameters(
         val number: String?,
         val category: String?,
-        val line: String? = null
+        val line: String? = null,
+        val date: Long?
     ) {
         fun toUrlParameters() = listOfNotNull(
             number?.let { "number" to number },
             category?.let { "category" to category },
-            line?.let { "line" to it }
+            line?.let { "line" to it },
+            date?.let { "date" to SimpleDateFormat("yyyy-MM-dd", Locale.US).format(it) }
         ).joinToString("&") { (key, value) ->
             "$key=${URLEncoder.encode(value, Charsets.UTF_8.name())}"
         }

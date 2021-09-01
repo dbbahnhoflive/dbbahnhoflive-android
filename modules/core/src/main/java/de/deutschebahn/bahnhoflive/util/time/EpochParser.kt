@@ -7,8 +7,8 @@ interface EpochParser {
 
     companion object {
         fun getInstance(): EpochParser =
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O && false) {
-                LocalDateTimeEpochParser()
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+                InstantEpochParser()
             } else {
                 SimpleDateFormatEpochParser()
             }

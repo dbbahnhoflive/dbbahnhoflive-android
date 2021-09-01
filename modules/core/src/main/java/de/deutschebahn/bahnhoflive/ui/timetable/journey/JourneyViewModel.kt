@@ -52,6 +52,7 @@ class JourneyViewModel(app: Application, savedStateHandle: SavedStateHandle) :
                     MutableLiveData<Result<List<JourneyStop>>>().apply {
                         timetableRepository.queryJourneys(
                             evaNumber,
+                            trainMovementInfo.plannedDateTime,
                             trainEvent,
                             trainInfo.genuineName,
                             trainInfo.trainCategory,
