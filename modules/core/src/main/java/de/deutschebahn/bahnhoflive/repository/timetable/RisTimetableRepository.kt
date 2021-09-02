@@ -145,9 +145,13 @@ open class RisTimetableRepository(
                                                     }
                                                     acc
                                                 }.also { journeyStops ->
-                                                    journeyStops.firstOrNull()?.first = true
-                                                    journeyStops.lastOrNull()?.last = true
-                                                    listener.onSuccess(journeyStops)
+                                                    if (journeyStops.isEmpty()) {
+                                                        processPendingJourney()
+                                                    } else {
+                                                        journeyStops.firstOrNull()?.first = true
+                                                        journeyStops.lastOrNull()?.last = true
+                                                        listener.onSuccess(journeyStops)
+                                                    }
                                                 }
                                         }
                                     } ?: processPendingJourney()

@@ -49,8 +49,7 @@
 
         <include
             android:id="@+id/button_wagon_order"
-            layout="@layout/include_btn_wagon_order"
-            android:visibility="gone" />
+            layout="@layout/include_btn_wagon_order" />
 
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/recycler"
@@ -58,7 +57,7 @@
             android:layout_height="0dp"
             android:layout_weight="1"
             app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
-            tools:listitem="@layout/item_journey" />
+            tools:listitem="@layout/item_journey_detailed" />
 
 
     </LinearLayout>

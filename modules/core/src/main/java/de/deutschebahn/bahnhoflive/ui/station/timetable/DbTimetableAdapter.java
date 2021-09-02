@@ -53,7 +53,6 @@ class DbTimetableAdapter extends RecyclerView.Adapter<ViewHolder<?>> implements 
     private String trainCategory;
     private String track;
 
-    private final OnWagonOrderClickListener onWagonOrderClickListener;
     private TrackingManager trackingManager;
     private final View.OnClickListener loadMoreListener;
 
@@ -66,12 +65,10 @@ class DbTimetableAdapter extends RecyclerView.Adapter<ViewHolder<?>> implements 
     private final Function3<? super TrainInfo, ? super TrainEvent, ? super Integer, Unit> itemClickListener;
 
     DbTimetableAdapter(@Nullable Station station, FilterUI filterUI,
-                       OnWagonOrderClickListener onWagonOrderClickListener,
                        @NonNull final TrackingManager trackingManager,
                        View.OnClickListener loadMoreListener, Function3<? super TrainInfo, ? super TrainEvent, ? super Integer, Unit> itemClickListener) {
         this.station = station;
         this.filterUI = filterUI;
-        this.onWagonOrderClickListener = onWagonOrderClickListener;
         this.trackingManager = trackingManager;
         this.loadMoreListener = loadMoreListener;
         this.itemClickListener = itemClickListener;
@@ -132,10 +129,6 @@ class DbTimetableAdapter extends RecyclerView.Adapter<ViewHolder<?>> implements 
         notifyItemChanged(0);
 
         applyFilters();
-    }
-
-    public void onWagonOrderClick(TrainInfo trainInfo) {
-        onWagonOrderClickListener.onWagonOrderClick(trainInfo, trainEvent);
     }
 
     public void setTimetable(@NonNull Timetable timetable) {
