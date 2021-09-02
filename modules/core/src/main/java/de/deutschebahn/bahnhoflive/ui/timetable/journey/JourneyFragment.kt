@@ -23,8 +23,11 @@ import de.deutschebahn.bahnhoflive.repository.Station
 import de.deutschebahn.bahnhoflive.repository.trainformation.TrainFormation
 import de.deutschebahn.bahnhoflive.ui.station.HistoryFragment
 import de.deutschebahn.bahnhoflive.ui.station.StationViewModel
+import de.deutschebahn.bahnhoflive.ui.station.timetable.IssueIndicatorBinder
+import de.deutschebahn.bahnhoflive.ui.station.timetable.IssuesBinder
 import de.deutschebahn.bahnhoflive.ui.station.timetable.TimetableViewHelper
 import de.deutschebahn.bahnhoflive.ui.timetable.WagenstandFragment
+import kotlinx.android.synthetic.main.titlebar_static.*
 
 class JourneyFragment() : Fragment() {
 
@@ -58,14 +61,31 @@ class JourneyFragment() : Fragment() {
             journeyViewModel.onRefresh()
         }
 
-        journeyViewModel.loadingProgressLiveData.observe(viewLifecycleOwner) {
-            if (!it) {
-                refresher.isRefreshing = false
+        journeyViewModel.loadingProgressLiveData.observe(viewLifecycleOwner) { loading ->
+            if (loading != null) {
+                if (!loading) {
+                    refresher.isRefreshing = false
+                }
             }
         }
 
+        val issueBinder = IssuesBinder(issueContainer, issueText, IssueIndicatorBinder(issueIcon))
+
         journeyViewModel.essentialParametersLiveData.observe(viewLifecycleOwner) { (station, trainInfo, trainEvent) ->
-            with(buttonWagonOrder.root) {
+            titleBar.screenTitle.text = getString(
+                R.string.template_journey_title,
+                TimetableViewHelper.composeName(trainInfo, trainInfo.departure),
+                trainInfo.departure?.getDestinationStop(true)?.let {
+                    getString(R.string.template_journey_title_destination, it)
+                } ?: ""
+            )
+
+            issueBinder.bindIssues(
+                trainInfo,
+                trainEvent.movementRetriever.getTrainMovementInfo(trainInfo)
+            )
+
+            with(buttonWagonOrder) {
                 if (trainInfo.shouldOfferWagenOrder()) {
                     setOnClickListener {
                         activity?.also {

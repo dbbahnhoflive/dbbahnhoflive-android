@@ -93,17 +93,10 @@ class JourneyViewModel(app: Application, savedStateHandle: SavedStateHandle) :
             }
         }
 
-    val loadingProgressLiveData = MediatorLiveData<Boolean>().apply {
-        value = true
-
-
-        val observer = Observer<Any?> {
-            if (it != null) {
-                value = false
-            }
+    val loadingProgressLiveData = journeysByRelationLiveData.switchMap { journeyStops ->
+        routeStopsLiveData.map { routeStops ->
+            journeyStops == null && routeStops == null
         }
-        addSource(journeysByRelationLiveData, observer)
-        addSource(routeStopsLiveData, observer)
     }
 
 
@@ -114,7 +107,6 @@ class JourneyViewModel(app: Application, savedStateHandle: SavedStateHandle) :
     }
 
     fun onRefresh() {
-        loadingProgressLiveData.value = true
         trainEventLiveData.value = trainEventLiveData.value // trigger reload
     }
 }

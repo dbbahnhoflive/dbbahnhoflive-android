@@ -28,6 +28,8 @@ class JourneyItemViewHolder(val itemJourneyDetailedBinding: ItemJourneyDetailedB
         )
     )
 
+    val normalTypeFace = Typeface.defaultFromStyle(Typeface.NORMAL)
+
     val highlightableTextViews = itemJourneyDetailedBinding.run {
         listOf(stopName, scheduledArrival, expectedArrival, scheduledDeparture, expectedDeparture)
     }
@@ -56,7 +58,10 @@ class JourneyItemViewHolder(val itemJourneyDetailedBinding: ItemJourneyDetailedB
 
             (if (item?.highlight == true) Typeface.BOLD else Typeface.NORMAL).let { textStyle ->
                 highlightableTextViews.forEach { textView ->
-                    textView.setTypeface(textView.typeface, textStyle)
+                    textView.setTypeface(
+                        Typeface.create(textView.typeface, textStyle),
+                        textStyle
+                    )
                 }
             }
         }
