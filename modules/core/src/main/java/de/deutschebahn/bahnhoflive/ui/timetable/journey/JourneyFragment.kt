@@ -2,6 +2,7 @@ package de.deutschebahn.bahnhoflive.ui.timetable.journey
 
 import android.app.AlertDialog
 import android.app.ProgressDialog
+import android.content.Intent
 import android.os.Bundle
 import android.util.Log
 import android.view.LayoutInflater
@@ -21,6 +22,10 @@ import de.deutschebahn.bahnhoflive.backend.wagenstand.WagenstandRequestManager
 import de.deutschebahn.bahnhoflive.databinding.FragmentJourneyBinding
 import de.deutschebahn.bahnhoflive.repository.Station
 import de.deutschebahn.bahnhoflive.repository.trainformation.TrainFormation
+import de.deutschebahn.bahnhoflive.ui.map.Content
+import de.deutschebahn.bahnhoflive.ui.map.InitialPoiManager
+import de.deutschebahn.bahnhoflive.ui.map.MapPresetProvider
+import de.deutschebahn.bahnhoflive.ui.map.content.rimap.Track
 import de.deutschebahn.bahnhoflive.ui.station.HistoryFragment
 import de.deutschebahn.bahnhoflive.ui.station.StationViewModel
 import de.deutschebahn.bahnhoflive.ui.station.timetable.IssueIndicatorBinder
@@ -29,7 +34,7 @@ import de.deutschebahn.bahnhoflive.ui.station.timetable.TimetableViewHelper
 import de.deutschebahn.bahnhoflive.ui.timetable.WagenstandFragment
 import kotlinx.android.synthetic.main.titlebar_static.*
 
-class JourneyFragment() : Fragment() {
+class JourneyFragment() : Fragment(), MapPresetProvider {
 
     constructor(
         trainInfo: TrainInfo,
@@ -64,6 +69,7 @@ class JourneyFragment() : Fragment() {
         journeyViewModel.loadingProgressLiveData.observe(viewLifecycleOwner) { loading ->
             if (loading != null) {
                 if (!loading) {
+                    contentFlipper.displayedChild = 1
                     refresher.isRefreshing = false
                 }
             }
@@ -76,7 +82,7 @@ class JourneyFragment() : Fragment() {
                 R.string.template_journey_title,
                 TimetableViewHelper.composeName(trainInfo, trainInfo.departure),
                 trainInfo.departure?.getDestinationStop(true)?.let {
-                    getString(R.string.template_journey_title_destination, it)
+                    " ${getString(R.string.template_journey_title_destination, it)}"
                 } ?: ""
             )
 
@@ -188,6 +194,21 @@ class JourneyFragment() : Fragment() {
                 .create()
                 .show()
         }
+    }
+
+    override fun prepareMapIntent(intent: Intent): Boolean {
+        journeyViewModel.essentialParametersLiveData.value?.also { (station, trainInfo, trainEvent) ->
+
+            trainInfo?.let { trainInfo ->
+                trainEvent?.movementRetriever?.getTrainMovementInfo(trainInfo)
+                    ?.purePlatform?.let {
+                        InitialPoiManager.putInitialPoi(intent, Content.Source.RIMAP, Track(it))
+                        return true
+                    }
+            }
+
+        }
+        return false
     }
 
 }

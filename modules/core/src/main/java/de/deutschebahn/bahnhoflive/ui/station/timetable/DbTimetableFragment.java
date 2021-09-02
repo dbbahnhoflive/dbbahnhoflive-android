@@ -197,7 +197,7 @@ public class DbTimetableFragment extends Fragment
     }
 
     @Override
-    public boolean prepareMapIntent(Intent intent) {
+    public boolean prepareMapIntent(@NonNull Intent intent) {
         final Track track = adapter.getCurrentTrack();
 
         if (track != null) {

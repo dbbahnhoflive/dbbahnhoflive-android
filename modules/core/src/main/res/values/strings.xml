@@ -336,6 +336,6 @@
     <string name="journey_stop_additional">Zusätzlicher Halt</string>
     <string name="journey_stop_platform_change">Gleiswechsel</string>
     <string name="template_journey_title">Zuglauf %s%s</string>
-    <string name="template_journey_title_destination">&#032;nach %s</string>
+    <string name="template_journey_title_destination">nach %s</string>
 
 </resources>

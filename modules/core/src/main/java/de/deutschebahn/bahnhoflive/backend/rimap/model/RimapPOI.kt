@@ -74,7 +74,9 @@ class RimapPOI : Parcelable, MarkerFilterable {
 
         displname = when {
             type == MenuMapping.PLATFORM_SECTOR_CUBE && !name.startsWith(PREFIX_SECTOR_CUBE) -> "$PREFIX_SECTOR_CUBE$name"
-            type == MenuMapping.PLATFROM && !name.startsWith(PREFIX_PLATFORM) -> "$PREFIX_PLATFORM$name"
+            type in MenuMapping.PLATFORM_TYPES && !name.startsWith(
+                PREFIX_PLATFORM
+            ) -> "$PREFIX_PLATFORM$name"
             else -> name
         }
         displmap = displname

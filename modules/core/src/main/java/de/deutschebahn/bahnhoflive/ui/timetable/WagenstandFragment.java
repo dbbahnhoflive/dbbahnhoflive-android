@@ -338,7 +338,7 @@ public class WagenstandFragment extends Fragment implements View.OnLayoutChangeL
     }
 
     @Override
-    public boolean prepareMapIntent(Intent intent) {
+    public boolean prepareMapIntent(@NonNull Intent intent) {
         InitialPoiManager.putInitialPoi(intent, Content.Source.RIMAP, new Track(trainFormation.getPlatform()));
         return true;
     }

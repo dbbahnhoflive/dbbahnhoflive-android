@@ -155,7 +155,7 @@ public class ShopListFragment extends RecyclerFragment<ShopAdapter>
     }
 
     @Override
-    public boolean prepareMapIntent(Intent intent) {
+    public boolean prepareMapIntent(@NonNull Intent intent) {
         final Shop selectedItem = getAdapter().getSelectedItem();
         if (selectedItem instanceof RimapShop) { //FIXME hand over shop to map without backend dependency
             InitialPoiManager.putInitialPoi(intent, Content.Source.RIMAP, selectedItem.getRimapPOI());

@@ -119,7 +119,7 @@ class StationInfoDetailsFragment :
         }
     }
 
-    override fun prepareMapIntent(intent: Intent?) = intent?.let {
+    override fun prepareMapIntent(intent: Intent) =
         adapter?.selectedItem?.let { serviceContent ->
             stationViewModel.stationFeatures.value?.firstOrNull { stationFeature ->
                 stationFeature.stationFeatureTemplate.definition.serviceContentType == serviceContent.type
@@ -143,7 +143,6 @@ class StationInfoDetailsFragment :
                     InitialPoiManager.putInitialPoi(intent, Content.Source.RIMAP, it)
                 }
             }
-        }
-    } != null
+        } != null
 
 }
