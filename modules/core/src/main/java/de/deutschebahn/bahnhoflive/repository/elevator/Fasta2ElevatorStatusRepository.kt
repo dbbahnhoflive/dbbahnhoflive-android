@@ -26,9 +26,15 @@ class Fasta2ElevatorStatusRepository(
     }
 
     override fun queryElevatorStatus(
-        equipmentNumber: String,
-        listener: VolleyRestListener<FacilityStatus>
+        sourceFacilityStatuses: List<FacilityStatus>,
+        listener: VolleyRestListener<List<FacilityStatus>>
     ) {
-        restHelper.add(FacilityEquipmentStatusRequest(equipmentNumber, authorizationTool, listener))
+        restHelper.add(
+            FacilityEquipmentStatusRequest(
+                sourceFacilityStatuses,
+                authorizationTool,
+                listener
+            )
+        )
     }
 }

@@ -24,10 +24,10 @@ import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 import java.util.List;
 
+import de.deutschebahn.bahnhoflive.BaseApplication;
 import de.deutschebahn.bahnhoflive.R;
 import de.deutschebahn.bahnhoflive.analytics.TrackingManager;
 import de.deutschebahn.bahnhoflive.backend.BaseRestListener;
-import de.deutschebahn.bahnhoflive.backend.db.fasta2.FacilityEquipmentListStatusRequest;
 import de.deutschebahn.bahnhoflive.backend.db.fasta2.model.FacilityStatus;
 import de.deutschebahn.bahnhoflive.push.FacilityPushManager;
 import de.deutschebahn.bahnhoflive.ui.map.Content;
@@ -87,8 +87,8 @@ public class BookmarkedElevatorStatusFragment extends Fragment
     public void updateStatus() {
         final List<FacilityStatus> facilityStatuses = getAdapter().getData();
 
-        final FacilityEquipmentListStatusRequest facilityEquipmentListStatusRequest = new FacilityEquipmentListStatusRequest(facilityStatuses);
-        facilityEquipmentListStatusRequest.requestStatus(new BaseRestListener<List<FacilityStatus>>() {
+        final BaseApplication baseApplication = BaseApplication.get();
+        baseApplication.getRepositories().getElevatorStatusRepository().queryElevatorStatus(facilityStatuses, new BaseRestListener<List<FacilityStatus>>() {
             @Override
             public void onSuccess(@NonNull List<FacilityStatus> payload) {
                 final FragmentActivity activity = getActivity();
@@ -96,7 +96,7 @@ public class BookmarkedElevatorStatusFragment extends Fragment
                     return;
                 }
 
-                getAdapter().invalidateContent();
+                getAdapter().setData(payload);
 
                 PrefUtil.storeSavedFacilities(activity, payload);
             }
