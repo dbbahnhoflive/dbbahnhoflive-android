@@ -65,6 +65,9 @@ class DetailedStopPlace : StopPlace() {
 
     val tripleSCenter get() = embeddings?.tripleSCenter
 
-    val travelCenter get() = embeddings?.travelCenters?.firstOrNull()
+    val travelCenter
+        get() = embeddings?.travelCenters
+            ?.filter { it.identifier != 511113 } // temporarily skip S-Bahn Kundencenter Stuttgart Hbf
+            ?.sortedBy { it.distanceToStopPlace }?.firstOrNull()
 }
 
