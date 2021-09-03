@@ -1,6 +1,7 @@
 package de.deutschebahn.bahnhoflive.ui.timetable.journey
 
 import android.graphics.Typeface
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import android.widget.TextView
@@ -64,9 +65,42 @@ class JourneyItemViewHolder(val itemJourneyDetailedBinding: ItemJourneyDetailedB
                     )
                 }
             }
+
+            root.contentDescription = item?.run {
+                listOfNotNull(
+                    listOfNotNull(
+                        name,
+                        platform?.let { "Gleis $it " }
+                    ).joinToString(", ", postfix = "."),
+                    listOfNotNull(
+                        when {
+                            isAdditional -> "(Hinweis: \"Zusätzlicher Halt\")"
+                            isPlatformChange -> "(Hinweis: \"Gleiswechsel\")"
+                            else -> null
+                        },
+                        arrival?.formatContentDescription("Ankunft"),
+                        departure?.formatContentDescription("Abfahrt")
+                    ).joinToString("; ", postfix = ".")
+                ).joinToString(separator = " ")
+            }.also {
+                Log.d(JourneyItemViewHolder::class.java.simpleName, "Content description:\n$it")
+            }
         }
 
     }
+
+    private fun JourneyStopEvent.formatContentDescription(prefix: String) =
+        listOfNotNull(
+            prefix,
+            parsedScheduledTime?.run {
+                "${formatTime()} Uhr"
+            },
+            parsedEstimatedTime?.takeUnless { it == parsedScheduledTime }?.run {
+                "(heute voraussichtlich ${formatTime()} Uhr)"
+            }
+        ).joinToString(" ")
+
+    private fun Long.formatTime() = dateFormat.format(this)
 
     private fun bindTimes(
         scheduledTimeView: TextView,
