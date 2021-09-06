@@ -6,7 +6,8 @@
     android:layout_height="wrap_content"
     android:background="@color/journey_item_background"
     android:focusable="true"
-    android:focusableInTouchMode="true">
+    android:focusableInTouchMode="true"
+    android:minHeight="64sp">
 
     <androidx.constraintlayout.widget.Guideline
         android:id="@+id/track_guide"
@@ -64,7 +65,8 @@
         android:id="@+id/platform"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_margin="@dimen/default_space"
+        android:layout_marginStart="@dimen/default_space"
+        android:layout_marginEnd="@dimen/default_space"
         android:textColor="@color/text_color_secondary"
         android:textSize="@dimen/textsize_h2"
         app:layout_constraintBaseline_toBaselineOf="@+id/stop_name"
@@ -76,16 +78,19 @@
         android:layout_width="@dimen/journey_time_width"
         android:layout_height="wrap_content"
         android:textSize="@dimen/textsize_h2"
-        app:layout_constraintBaseline_toBaselineOf="@+id/platform"
+        app:layout_constraintBottom_toTopOf="@+id/scheduledDeparture"
         app:layout_constraintStart_toEndOf="@+id/track_guide"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_chainStyle="packed"
         tools:text="@tools:sample/date/hhmm" />
 
     <TextView
         android:id="@+id/scheduledDeparture"
-        android:layout_width="0dp"
+        android:layout_width="@dimen/journey_time_width"
         android:layout_height="wrap_content"
         android:textSize="@dimen/textsize_h2"
-        app:layout_constraintStart_toStartOf="@+id/scheduledArrival"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toEndOf="@+id/track_guide"
         app:layout_constraintTop_toBottomOf="@+id/scheduledArrival"
         tools:text="@tools:sample/date/hhmm" />
 
@@ -100,24 +105,30 @@
 
     <TextView
         android:id="@+id/expectedDeparture"
-        android:layout_width="0dp"
+        android:layout_width="@dimen/journey_time_width"
         android:layout_height="wrap_content"
         android:textSize="@dimen/textsize_h2"
         app:layout_constraintBaseline_toBaselineOf="@id/scheduledDeparture"
-        app:layout_constraintStart_toStartOf="@id/expectedArrival"
+        app:layout_constraintStart_toEndOf="@id/scheduledDeparture"
         tools:text="@tools:sample/date/hhmm" />
+
+    <androidx.constraintlayout.widget.Barrier
+        android:id="@+id/barrier_time"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:barrierDirection="end"
+        app:constraint_referenced_ids="expectedArrival,expectedDeparture" />
 
     <TextView
         android:id="@+id/stop_name"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_marginTop="@dimen/default_space"
         android:ellipsize="end"
         android:lines="1"
         android:textSize="@dimen/textsize_h2"
         app:layout_constraintBottom_toTopOf="@+id/advice"
         app:layout_constraintEnd_toStartOf="@+id/platform"
-        app:layout_constraintStart_toEndOf="@+id/expectedArrival"
+        app:layout_constraintStart_toEndOf="@+id/barrier_time"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintVertical_chainStyle="packed"
         tools:text="@tools:sample/cities" />
@@ -126,7 +137,6 @@
         android:id="@+id/advice"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="@dimen/default_space"
         android:ellipsize="end"
         android:lines="1"
         android:textColor="@color/text_color_secondary"
