@@ -69,5 +69,7 @@ class DetailedStopPlace : StopPlace() {
         get() = embeddings?.travelCenters
             ?.filter { it.identifier != 511113 } // temporarily skip S-Bahn Kundencenter Stuttgart Hbf
             ?.sortedBy { it.distanceToStopPlace }?.firstOrNull()
+
+    var errorCode: Long? = null
 }
 
