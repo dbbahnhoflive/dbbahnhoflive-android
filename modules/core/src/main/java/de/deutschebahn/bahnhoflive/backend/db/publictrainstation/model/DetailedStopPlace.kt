@@ -66,5 +66,7 @@ class DetailedStopPlace : StopPlace() {
     val tripleSCenter get() = embeddings?.tripleSCenter
 
     val travelCenter get() = embeddings?.travelCenters?.firstOrNull()
+
+    var errorCode: Long? = null
 }
 
