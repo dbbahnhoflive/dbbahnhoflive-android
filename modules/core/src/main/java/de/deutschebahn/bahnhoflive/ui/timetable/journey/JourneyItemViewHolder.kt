@@ -5,6 +5,7 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import android.widget.TextView
+import androidx.core.view.isGone
 import androidx.core.view.isVisible
 import de.deutschebahn.bahnhoflive.R
 import de.deutschebahn.bahnhoflive.databinding.ItemJourneyDetailedBinding
@@ -44,9 +45,18 @@ class JourneyItemViewHolder(val itemJourneyDetailedBinding: ItemJourneyDetailedB
             platform.text = item?.platform?.let { "Gl. $it" }
 
             when {
-                item?.isAdditional == true -> advice.setText(R.string.journey_stop_additional)
-                item?.isPlatformChange == true -> advice.setText(R.string.journey_stop_platform_change)
-                else -> advice.text = null
+                item?.isAdditional == true -> {
+                    advice.setText(R.string.journey_stop_additional)
+                    advice.isGone = false
+                }
+                item?.isPlatformChange == true -> {
+                    advice.setText(R.string.journey_stop_platform_change)
+                    advice.isGone = false
+                }
+                else -> {
+                    advice.text = null
+                    advice.isGone = true
+                }
             }
 
             bindTimes(scheduledArrival, expectedArrival, item?.arrival)
@@ -107,8 +117,10 @@ class JourneyItemViewHolder(val itemJourneyDetailedBinding: ItemJourneyDetailedB
         estimatedTimeView: TextView,
         journeyStopEvent: JourneyStopEvent?
     ) {
+        val parsedScheduledTime = journeyStopEvent?.parsedScheduledTime
+
         scheduledTimeView.text =
-            journeyStopEvent?.parsedScheduledTime?.let { dateFormat.format(it) }
+            parsedScheduledTime?.let { dateFormat.format(it) }
         estimatedTimeView.text =
             journeyStopEvent?.parsedEstimatedTime?.let { dateFormat.format(it) }
         estimatedTimeView.setTextColor(
@@ -123,5 +135,9 @@ class JourneyItemViewHolder(val itemJourneyDetailedBinding: ItemJourneyDetailedB
                     }
                 } ?: Status.POSITIVE.color)
         )
+
+        val viewsGone = parsedScheduledTime == null
+        scheduledTimeView.isGone = viewsGone
+        estimatedTimeView.isGone = viewsGone
     }
 }
