@@ -35,8 +35,8 @@ import java.util.Map;
 
 public class TrainInfo implements Parcelable {
 
-    private boolean replacement;
-    private boolean special;
+    private boolean replacement = false;
+    private boolean special = false;
 
     public void setReplacement(boolean replacement) {
         this.replacement = replacement;
@@ -199,9 +199,7 @@ public class TrainInfo implements Parcelable {
             // Starts by looking for the entry tag
             if (name.equals(_train)) {
                 TrainInfo train = readTrain(parser);
-                if (train != null) {
-                    target.put(train.getId(), train);
-                }
+                target.put(train.getId(), train);
             } else {
                 skip(parser);
             }
