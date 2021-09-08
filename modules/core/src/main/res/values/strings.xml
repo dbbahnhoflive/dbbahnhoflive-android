@@ -333,7 +333,7 @@
     <string name="title_accessibility_key">Merkmale der Barrierefreiheit</string>
     <string name="accessibility_advice_elevators">Bitte beachten Sie, dass die Stufenfreiheit vor Ort durch Aufzugsanlagen oder Rampen ermöglicht werden kann. Eine Übersicht der Aufzugsanlagen und deren aktuelle Verfügbarkeit finden Sie hier:</string>
     <string name="accessibility_link_elevators">Übersicht Aufzüge</string>
-    <string name="wagon_feature_comfort">BahnComfort BEreich</string>
+    <string name="wagon_feature_comfort">BahnComfort Bereich</string>
     <string name="wagon_feature_severely_disabled">Vorrangplätze für Reisende mit eingeschränkter Mobilität</string>
     <string name="wagon_feature_family">Familienbereich</string>
 

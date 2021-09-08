@@ -40,15 +40,15 @@ public enum WaggonFeature implements Parcelable {
     ),
     PLAETZEBAHNCOMFORT(
             R.string.wagon_feature_comfort,
-            R.drawable.tag_accessible // TODO
+            R.drawable.tag_bahncomfort
     ),
     PLAETZESCHWERBEH(
             R.string.wagon_feature_severely_disabled,
-            R.drawable.tag_accessible // TODO
+            R.drawable.tag_mobilitaetseingeschraenkt
     ),
     FAMILIE(
             R.string.wagon_feature_family,
-            R.drawable.tag_accessible // TODO
+            R.drawable.tag_familienbereich
     ),
     ;
 
