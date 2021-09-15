@@ -14,7 +14,6 @@ import static de.deutschebahn.bahnhoflive.backend.ris.model.TrainInfo.Category.S
 import android.os.Parcel;
 import android.os.Parcelable;
 import android.text.TextUtils;
-import android.util.Log;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -201,9 +200,6 @@ public class TrainInfo implements Parcelable {
             // Starts by looking for the entry tag
             if (name.equals(_train)) {
                 final TrainInfo train = readTrain(parser);
-                if (isAdditional(train.departure) || isAdditional(train.arrival)) {
-                    Log.i(TrainInfo.class.getSimpleName(), "Additional stop at train: " + train.trainName);
-                }
                 target.put(train.getId(), train);
             } else {
                 skip(parser);
