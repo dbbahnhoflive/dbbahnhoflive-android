@@ -52,8 +52,11 @@ public class TrainMovementInfo implements Parcelable {
     private static final String _message = "m";
     private static final String TRAIN_INFO_ALTERNATIVE_NAME = TrainInfo._train_info_alternative_name;
     public static final Pattern TRACK_PATTERN = TrackKt.getTRACK_PATTERN();
-    private static Map<String,String> map = null;
-    private static Map<String,String[]> codesMap = null;
+
+    public static final String PLANNED_STATUS_ADDITIONAL = "a";
+
+    private static Map<String, String> map = null;
+    private static Map<String, String[]> codesMap = null;
 
     private String platform;
     private String via;
@@ -544,15 +547,19 @@ public class TrainMovementInfo implements Parcelable {
         }
     }
 
+    public boolean isAdditional() {
+        return PLANNED_STATUS_ADDITIONAL.equals(getPlannedStatus());
+    }
+
     public String getAdditionalTrainMessage() {
 
         String correctedStatus = getCorrectedStatus();
         String plannedStatus = getPlannedStatus();
-        if (correctedStatus  != null && correctedStatus.length() > 0) {
+        if (correctedStatus != null && correctedStatus.length() > 0) {
             plannedStatus = correctedStatus;
         }
-        if (plannedStatus != null && plannedStatus.equals("a")) {
-            return "Ersatzzug";
+        if (isAdditional()) {
+            return "Zusätzlicher Halt";
         }
 
         return null;

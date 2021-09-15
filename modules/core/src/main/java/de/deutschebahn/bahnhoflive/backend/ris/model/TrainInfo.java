@@ -14,6 +14,7 @@ import static de.deutschebahn.bahnhoflive.backend.ris.model.TrainInfo.Category.S
 import android.os.Parcel;
 import android.os.Parcelable;
 import android.text.TextUtils;
+import android.util.Log;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -71,9 +72,10 @@ public class TrainInfo implements Parcelable {
     private static final String _train_info_name = "n";
     private static final String _ref = "ref";
 
+    @NonNull
     static TrainInfo readTrain(XmlPullParser parser) throws XmlPullParserException, IOException {
         parser.require(XmlPullParser.START_TAG, null, _train);
-        TrainInfo info = new TrainInfo();
+        final TrainInfo info = new TrainInfo();
         TrainMovementInfo arrival = null;
         TrainMovementInfo departure = null;
         TrainInfo referenceTrainInfo = null;
@@ -198,13 +200,20 @@ public class TrainInfo implements Parcelable {
             String name = parser.getName();
             // Starts by looking for the entry tag
             if (name.equals(_train)) {
-                TrainInfo train = readTrain(parser);
+                final TrainInfo train = readTrain(parser);
+                if (isAdditional(train.departure) || isAdditional(train.arrival)) {
+                    Log.i(TrainInfo.class.getSimpleName(), "Additional stop at train: " + train.trainName);
+                }
                 target.put(train.getId(), train);
             } else {
                 skip(parser);
             }
         }
         return target;
+    }
+
+    static boolean isAdditional(@Nullable final TrainMovementInfo trainMovementInfo) {
+        return trainMovementInfo != null && trainMovementInfo.isAdditional();
     }
 
     public static Map<String, TrainInfo> merge(@NonNull Map<String, TrainInfo> target, @NonNull Map<String, TrainInfo> source) {
@@ -226,7 +235,7 @@ public class TrainInfo implements Parcelable {
             final TrainInfo targetTrainInfo = target.get(sourceTrainInfo.getId());
 
             if (targetTrainInfo == null) {
-                if (sourceTrainInfo.isReplacement() || sourceTrainInfo.isSpecial()) {
+                if (sourceTrainInfo.isReplacement() || sourceTrainInfo.isSpecial() || sourceTrainInfo.isAdditional()) {
                     target.put(sourceTrainInfo.getId(), sourceTrainInfo);
                 }
             } else {
@@ -235,6 +244,10 @@ public class TrainInfo implements Parcelable {
         }
 
         return target;
+    }
+
+    private boolean isAdditional() {
+        return isAdditional(departure) || isAdditional(arrival);
     }
 
     public interface ChangeListener {
