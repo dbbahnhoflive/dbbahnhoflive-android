@@ -13,6 +13,7 @@ android {
         multiDexEnabled true
 
         buildConfigField "String", "BUSINESS_HUB_API_KEY", "\"TOL1jxXeqIW72s7vKPCcUuPNqFJTvPQx\"" // open source community API key
+        buildConfigField "String", "RIS_JOURNEYS_BASE_URL", "\"https://gateway.businesshub.deutschebahn.com/ris-journeys/v1/\""
 
     }
     buildTypes {
@@ -21,7 +22,6 @@ android {
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
             multiDexKeepProguard file('multidex-config.pro')
 
-            buildConfigField "String", "RIS_JOURNEYS_BASE_URL", "\"https://gateway.businesshub.deutschebahn.com/ris-journeys/v1/\""
         }
         demo {
             initWith release
@@ -29,7 +29,7 @@ android {
         debug {
             minifyEnabled false
 
-            buildConfigField "String", "RIS_JOURNEYS_BASE_URL", "\"https://gateway.businesshub.deutschebahn.com/ris-journeys/trial/v1/\""
+//            buildConfigField "String", "RIS_JOURNEYS_BASE_URL", "\"https://gateway.businesshub.deutschebahn.com/ris-journeys/trial/v1/\""
         }
     }
 
