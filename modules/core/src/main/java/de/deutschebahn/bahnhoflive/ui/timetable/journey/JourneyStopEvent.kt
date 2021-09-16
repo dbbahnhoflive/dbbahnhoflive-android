@@ -28,6 +28,7 @@ data class JourneyStopEvent(
 
     val parsedScheduledTime by lazy { TIME_PARSER.parse(scheduledTime) }
     val parsedEstimatedTime by lazy { TIME_PARSER.parse(estimatedTime) }
+    val bestEffortTime get() = parsedEstimatedTime ?: parsedScheduledTime
 
     val isPlatformChange = scheduledPlatform?.let { it != platform } == true
 }

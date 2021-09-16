@@ -31,10 +31,12 @@ class JourneyItemViewHolder(val itemJourneyDetailedBinding: ItemJourneyDetailedB
         )
     )
 
-    val normalTypeFace = Typeface.defaultFromStyle(Typeface.NORMAL)
-
     val highlightableTextViews = itemJourneyDetailedBinding.run {
         listOf(stopName, scheduledArrival, expectedArrival, scheduledDeparture, expectedDeparture)
+    }
+
+    companion object {
+        const val MAX_LEVEL = 10000
     }
 
     override fun onBind(item: JourneyStop?) {
@@ -81,8 +83,18 @@ class JourneyItemViewHolder(val itemJourneyDetailedBinding: ItemJourneyDetailedB
             bindTimes(scheduledDeparture, expectedDeparture, item?.departure)
 
             trackStop.isSelected = item?.current == true
+            trackStop.isActivated = item?.progress?.let { it >= 0f } == true
             upperTrack.isVisible = item?.first == false
+            upperTrackHighlight.isVisible = item?.first == false
             lowerTrack.isVisible = item?.last == false
+            lowerTrack.isVisible = item?.last == false
+
+            item?.progress?.let {
+                upperTrackHighlight.setImageLevel(
+                    (MAX_LEVEL + it * MAX_LEVEL).toInt().coerceIn(0, MAX_LEVEL)
+                )
+                lowerTrackHighlight.setImageLevel((it * MAX_LEVEL).toInt().coerceIn(0, MAX_LEVEL))
+            }
 
 
             (if (item?.highlight == true) Typeface.BOLD else Typeface.NORMAL).let { textStyle ->

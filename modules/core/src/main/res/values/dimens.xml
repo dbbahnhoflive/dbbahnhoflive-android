@@ -122,5 +122,6 @@
     <dimen name="journey_stop_size">12dp</dimen>
     <dimen name="journey_time_width">56sp</dimen>
     <dimen name="journey_stop_gap">1dp</dimen>
+    <dimen name="journey_track_width">2dp</dimen>
 
 </resources>
