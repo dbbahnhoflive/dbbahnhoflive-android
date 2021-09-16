@@ -7,6 +7,7 @@ import android.view.ViewGroup
 import android.widget.TextView
 import androidx.core.view.isGone
 import androidx.core.view.isVisible
+import androidx.core.widget.TextViewCompat
 import de.deutschebahn.bahnhoflive.R
 import de.deutschebahn.bahnhoflive.databinding.ItemJourneyDetailedBinding
 import de.deutschebahn.bahnhoflive.ui.Status
@@ -43,14 +44,31 @@ class JourneyItemViewHolder(val itemJourneyDetailedBinding: ItemJourneyDetailedB
             stopName.text = item?.name
 
             platform.text = item?.platform?.let { "Gl. $it" }
+            platform.isSelected = item?.isPlatformChange == true
 
             when {
                 item?.isAdditional == true -> {
                     advice.setText(R.string.journey_stop_additional)
+                    TextViewCompat.setCompoundDrawablesRelativeWithIntrinsicBounds(
+                        advice,
+                        0,
+                        0,
+                        0,
+                        0
+                    )
+                    advice.isSelected = false
                     advice.isGone = false
                 }
                 item?.isPlatformChange == true -> {
                     advice.setText(R.string.journey_stop_platform_change)
+                    TextViewCompat.setCompoundDrawablesRelativeWithIntrinsicBounds(
+                        advice,
+                        R.drawable.app_warndreieck,
+                        0,
+                        0,
+                        0
+                    )
+                    advice.isSelected = true
                     advice.isGone = false
                 }
                 else -> {

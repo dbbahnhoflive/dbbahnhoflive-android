@@ -25,10 +25,11 @@
         android:id="@+id/upper_track"
         android:layout_width="wrap_content"
         android:layout_height="0dp"
+        android:layout_marginBottom="@dimen/journey_stop_gap"
         android:importantForAccessibility="no"
         android:scaleType="fitXY"
         android:src="@drawable/shape_journey_track"
-        app:layout_constraintBottom_toBottomOf="@+id/track_anchor"
+        app:layout_constraintBottom_toTopOf="@+id/track_stop"
         app:layout_constraintEnd_toEndOf="@+id/track_guide"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
@@ -37,13 +38,14 @@
         android:id="@+id/lower_track"
         android:layout_width="wrap_content"
         android:layout_height="0dp"
+        android:layout_marginTop="@dimen/journey_stop_gap"
         android:importantForAccessibility="no"
         android:scaleType="fitXY"
         android:src="@drawable/shape_journey_track"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="@+id/track_guide"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="@+id/track_anchor" />
+        app:layout_constraintTop_toBottomOf="@+id/track_stop" />
 
 
     <ImageView

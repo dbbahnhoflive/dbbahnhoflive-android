@@ -9,4 +9,5 @@
     android:text="@string/journeys_show_all"
     android:textSize="@dimen/textsize_h3"
     android:textStyle="bold"
+    android:background="@color/journey_item_background"
     app:drawableLeftCompat="@drawable/ic_arrow_right" />
