@@ -658,8 +658,16 @@ public class TrainMovementInfo implements Parcelable {
         return null;
     }
 
-    public boolean isTrainMovementCancelled(){
-        return getCorrectedStatus() != null && getCorrectedStatus().equals("c");
+    public boolean isTrainMovementCancelled() {
+        return isStatusCanceled(getCorrectedStatus());
+    }
+
+    private boolean isStatusCanceled(String correctedStatus) {
+        return correctedStatus != null && correctedStatus.equals("c");
+    }
+
+    public boolean isCompletelyCanceled() {
+        return isTrainMovementCancelled() || isStatusCanceled(getPlannedStatus());
     }
 
     public String getFormattedTime() {

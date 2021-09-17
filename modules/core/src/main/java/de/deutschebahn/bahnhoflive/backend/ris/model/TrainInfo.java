@@ -17,6 +17,7 @@ import android.text.TextUtils;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.core.os.ParcelCompat;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -34,7 +35,8 @@ import java.util.Map;
 
 public class TrainInfo implements Parcelable {
 
-    private boolean replacement;
+    private boolean replacement = false;
+    private boolean special = false;
     @NonNull
     private String genuineName;
 
@@ -56,6 +58,14 @@ public class TrainInfo implements Parcelable {
     @Nullable
     public String getGenuineName() {
         return genuineName;
+    }
+
+    public void setSpecial(boolean special) {
+        this.special = special;
+    }
+
+    public boolean isSpecial() {
+        return special;
     }
 
     public interface Category {
@@ -148,6 +158,9 @@ public class TrainInfo implements Parcelable {
         if ("e".equals(type)) {
             info.setReplacement(true);
         }
+        if ("s".equals(type)) {
+            info.setSpecial(true);
+        }
 
 
         if (name != null) {
@@ -206,9 +219,7 @@ public class TrainInfo implements Parcelable {
             // Starts by looking for the entry tag
             if (name.equals(_train)) {
                 TrainInfo train = readTrain(parser);
-                if (train != null) {
-                    target.put(train.getId(), train);
-                }
+                target.put(train.getId(), train);
             } else {
                 skip(parser);
             }
@@ -235,7 +246,7 @@ public class TrainInfo implements Parcelable {
             final TrainInfo targetTrainInfo = target.get(sourceTrainInfo.getId());
 
             if (targetTrainInfo == null) {
-                if (sourceTrainInfo.isReplacement()) {
+                if (sourceTrainInfo.isReplacement() || sourceTrainInfo.isSpecial()) {
                     target.put(sourceTrainInfo.getId(), sourceTrainInfo);
                 }
             } else {
@@ -274,6 +285,8 @@ public class TrainInfo implements Parcelable {
         referenceTrainInfo = in.readParcelable(TrainInfo.class.getClassLoader());
         hasWagenstand = in.readInt() == 1;
         genuineName = in.readString();
+        replacement = ParcelCompat.readBoolean(in);
+        special = ParcelCompat.readBoolean(in);
     }
 
     public TrainInfo() {
@@ -297,6 +310,8 @@ public class TrainInfo implements Parcelable {
         dest.writeParcelable(referenceTrainInfo, 0);
         dest.writeInt(hasWagenstand ? 1 : 0);
         dest.writeString(genuineName);
+        ParcelCompat.writeBoolean(dest, replacement);
+        ParcelCompat.writeBoolean(dest, special);
     }
 
     public static final Creator<TrainInfo> CREATOR = new Creator<TrainInfo>() {
@@ -429,6 +444,10 @@ public class TrainInfo implements Parcelable {
             }
 
             return "Ersatzzug";
+        }
+
+        if (isSpecial()) {
+            return "Sonderzug";
         }
 
         return null;
