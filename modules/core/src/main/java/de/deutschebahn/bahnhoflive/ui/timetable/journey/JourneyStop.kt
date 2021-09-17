@@ -8,7 +8,7 @@ class JourneyStop(
     var current: Boolean = false,
     var last: Boolean = false,
 ) {
-    var progress: Float = 0f
+    var progress: Float = -1f
 
     val highlight get() = current || first || last
     val platform = arrival?.platform?.takeUnless { it.isBlank() }
@@ -17,7 +17,7 @@ class JourneyStop(
     val isPlatformChange get() = arrival?.isPlatformChange == true || departure?.isPlatformChange == true
     val isAdditional get() = arrival?.additional == true || departure?.additional == true
 
-    val bestEffortArrival get() = arrival?.bestEffortTime ?: Long.MIN_VALUE
-    val bestEffortDeparture get() = departure?.bestEffortTime ?: Long.MAX_VALUE
+    val bestEffortArrival get() = arrival?.bestEffortTime
+    val bestEffortDeparture get() = departure?.bestEffortTime
 }
 
