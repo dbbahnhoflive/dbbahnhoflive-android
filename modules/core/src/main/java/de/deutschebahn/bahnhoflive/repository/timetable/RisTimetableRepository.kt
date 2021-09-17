@@ -148,37 +148,7 @@ open class RisTimetableRepository(
                                                     journeyStops.firstOrNull()?.first = true
                                                     journeyStops.lastOrNull()?.last = true
 
-                                                    var passedNow = false
-                                                    var now = System.currentTimeMillis()
-
-                                                    journeyStops.forEachIndexed { index, journeyStop ->
-                                                        journeyStop.progress =
-                                                            if (now < journeyStop.bestEffortDeparture) {
-                                                                if (journeyStop.bestEffortArrival < now) {
-                                                                    0f
-                                                                } else {
-                                                                    journeyStops.getOrNull(index - 1)?.bestEffortDeparture?.takeIf { it < now }
-                                                                        ?.let { departureTime ->
-                                                                            val difference =
-                                                                                journeyStop.bestEffortArrival - departureTime
-                                                                            if (difference != 0L)
-                                                                                2f * (now - journeyStop.bestEffortArrival) / difference else null
-                                                                        }
-                                                                        ?: if (passedNow) -1f else 0f
-                                                                }
-                                                            } else {
-                                                                passedNow = true
-
-                                                                journeyStops.getOrNull(index + 1)?.bestEffortArrival?.takeIf { now < it }
-                                                                    ?.let { arrivalTime ->
-                                                                        val difference =
-                                                                            arrivalTime - journeyStop.bestEffortDeparture
-                                                                        if (difference != 0L)
-                                                                            2f * (now - journeyStop.bestEffortDeparture) / difference else null
-                                                                    } ?: if (passedNow) 1f else 0f
-                                                            }
-
-                                                    }
+                                                    calculateProgress(journeyStops)
 
                                                     listener.onSuccess(journeyStops)
                                                 }
@@ -198,4 +168,54 @@ open class RisTimetableRepository(
             }
         }
     }
+
+    private fun calculateProgress(journeyStops: List<JourneyStop>) {
+        val now = System.currentTimeMillis()
+
+        for (index in journeyStops.indices) {
+            val nextStop = journeyStops.getOrNull(index + 1)
+            val currentStop = journeyStops[index]
+
+            val departure = currentStop.bestEffortDeparture
+            val arrival = nextStop?.bestEffortArrival
+
+            if (when {
+                    now before departure -> {
+                        true
+                    }
+
+                    nextStop == null -> {
+                        currentStop.progress = 0f
+                        true
+                    }
+
+                    now before arrival -> {
+                        if (departure == null || /* impossible but helps the compiler */ arrival == null) {
+                            currentStop.progress = 0f
+                        } else {
+                            val difference = arrival - departure
+                            if (difference != 0L) {
+                                val progress = 2f * (now - departure) / difference
+                                currentStop.progress = progress.coerceAtMost(1f)
+                                nextStop.progress = (progress - 2).coerceAtLeast(-1f)
+                            } else {
+                                currentStop.progress = 1f
+                                nextStop.progress = 0f
+                            }
+                        }
+                        true
+                    }
+
+                    else -> {
+                        currentStop.progress = 1f
+                        false
+                    }
+                }
+            ) break
+
+        }
+    }
+
+    infix fun Long?.before(other: Long?) = this != null && other != null && this < other
+    infix fun Long?.after(other: Long?) = this != null && other != null && this > other
 }
