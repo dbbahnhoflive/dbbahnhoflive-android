@@ -3,12 +3,10 @@
   ~
   ~ SPDX-License-Identifier: Apache-2.0
   -->
-
 <shape xmlns:android="http://schemas.android.com/apk/res/android"
     android:shape="rectangle">
     <size
         android:width="@dimen/journey_track_width"
         android:height="5dp" />
-    <solid android:color="@color/journey_track" />
-
+    <solid android:color="@color/red" />
 </shape>

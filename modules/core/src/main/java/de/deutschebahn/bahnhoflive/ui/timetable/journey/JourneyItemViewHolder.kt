@@ -7,6 +7,7 @@ import android.view.ViewGroup
 import android.widget.TextView
 import androidx.core.view.isGone
 import androidx.core.view.isVisible
+import androidx.core.widget.TextViewCompat
 import de.deutschebahn.bahnhoflive.R
 import de.deutschebahn.bahnhoflive.databinding.ItemJourneyDetailedBinding
 import de.deutschebahn.bahnhoflive.ui.Status
@@ -30,10 +31,12 @@ class JourneyItemViewHolder(val itemJourneyDetailedBinding: ItemJourneyDetailedB
         )
     )
 
-    val normalTypeFace = Typeface.defaultFromStyle(Typeface.NORMAL)
-
     val highlightableTextViews = itemJourneyDetailedBinding.run {
         listOf(stopName, scheduledArrival, expectedArrival, scheduledDeparture, expectedDeparture)
+    }
+
+    companion object {
+        const val MAX_LEVEL = 10000
     }
 
     override fun onBind(item: JourneyStop?) {
@@ -43,14 +46,31 @@ class JourneyItemViewHolder(val itemJourneyDetailedBinding: ItemJourneyDetailedB
             stopName.text = item?.name
 
             platform.text = item?.platform?.let { "Gl. $it" }
+            platform.isSelected = item?.isPlatformChange == true
 
             when {
                 item?.isAdditional == true -> {
                     advice.setText(R.string.journey_stop_additional)
+                    TextViewCompat.setCompoundDrawablesRelativeWithIntrinsicBounds(
+                        advice,
+                        0,
+                        0,
+                        0,
+                        0
+                    )
+                    advice.isSelected = false
                     advice.isGone = false
                 }
                 item?.isPlatformChange == true -> {
                     advice.setText(R.string.journey_stop_platform_change)
+                    TextViewCompat.setCompoundDrawablesRelativeWithIntrinsicBounds(
+                        advice,
+                        R.drawable.app_warndreieck,
+                        0,
+                        0,
+                        0
+                    )
+                    advice.isSelected = true
                     advice.isGone = false
                 }
                 else -> {
@@ -63,8 +83,18 @@ class JourneyItemViewHolder(val itemJourneyDetailedBinding: ItemJourneyDetailedB
             bindTimes(scheduledDeparture, expectedDeparture, item?.departure)
 
             trackStop.isSelected = item?.current == true
+            trackStop.isActivated = item?.progress?.let { it >= 0f } == true
             upperTrack.isVisible = item?.first == false
+            upperTrackHighlight.isVisible = item?.first == false
             lowerTrack.isVisible = item?.last == false
+            lowerTrack.isVisible = item?.last == false
+
+            item?.progress?.let {
+                upperTrackHighlight.setImageLevel(
+                    (MAX_LEVEL + it * MAX_LEVEL).toInt().coerceIn(0, MAX_LEVEL)
+                )
+                lowerTrackHighlight.setImageLevel((it * MAX_LEVEL).toInt().coerceIn(0, MAX_LEVEL))
+            }
 
 
             (if (item?.highlight == true) Typeface.BOLD else Typeface.NORMAL).let { textStyle ->

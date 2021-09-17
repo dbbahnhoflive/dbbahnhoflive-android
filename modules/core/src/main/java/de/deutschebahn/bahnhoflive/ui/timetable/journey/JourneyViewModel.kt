@@ -42,6 +42,8 @@ class JourneyViewModel(app: Application, savedStateHandle: SavedStateHandle) :
     private val trainInfoLiveData = savedStateHandle.getLiveData<TrainInfo>(ARG_TRAIN_INFO)
     private val trainEventLiveData = savedStateHandle.getLiveData<TrainEvent>(ARG_TRAIN_EVENT)
 
+    val filterPastDepartures = savedStateHandle.getLiveData("filterPastDepartures", true)
+
     val essentialParametersLiveData = stationProxyLiveData.switchMap { station ->
         station.evaIds.let { evaIds ->
             trainInfoLiveData.switchMap { trainInfo ->
@@ -79,6 +81,22 @@ class JourneyViewModel(app: Application, savedStateHandle: SavedStateHandle) :
                             }
                         }
                     )
+                }
+            }
+        }
+
+
+    val eventuallyFilteredJourneysLiveData: LiveData<Result<Pair<Boolean, List<JourneyStop>>>> =
+        filterPastDepartures.switchMap { filterPastDepartures ->
+            essentialParametersLiveData.switchMap { (_, _, trainEvent) ->
+                journeysByRelationLiveData.map { journeyStopsResult ->
+                    journeyStopsResult.map { journeyStops ->
+                        (if (filterPastDepartures && trainEvent == TrainEvent.DEPARTURE) {
+                            journeyStops.indexOfFirst { it.current }.takeIf { it > 0 }?.let {
+                                true to journeyStops.subList(it, journeyStops.size)
+                            }
+                        } else null) ?: false to journeyStops
+                    }
                 }
             }
         }

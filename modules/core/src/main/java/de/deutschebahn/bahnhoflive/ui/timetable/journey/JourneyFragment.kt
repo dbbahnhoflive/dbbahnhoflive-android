@@ -12,6 +12,7 @@ import androidx.core.view.isGone
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.fragment.app.viewModels
+import androidx.recyclerview.widget.ConcatAdapter
 import com.android.volley.VolleyError
 import de.deutschebahn.bahnhoflive.R
 import de.deutschebahn.bahnhoflive.analytics.TrackingManager
@@ -20,6 +21,7 @@ import de.deutschebahn.bahnhoflive.backend.ris.model.TrainEvent
 import de.deutschebahn.bahnhoflive.backend.ris.model.TrainInfo
 import de.deutschebahn.bahnhoflive.backend.wagenstand.WagenstandRequestManager
 import de.deutschebahn.bahnhoflive.databinding.FragmentJourneyBinding
+import de.deutschebahn.bahnhoflive.databinding.ItemJourneyFilterRemoveBinding
 import de.deutschebahn.bahnhoflive.repository.Station
 import de.deutschebahn.bahnhoflive.repository.trainformation.TrainFormation
 import de.deutschebahn.bahnhoflive.ui.map.Content
@@ -32,6 +34,8 @@ import de.deutschebahn.bahnhoflive.ui.station.timetable.IssueIndicatorBinder
 import de.deutschebahn.bahnhoflive.ui.station.timetable.IssuesBinder
 import de.deutschebahn.bahnhoflive.ui.station.timetable.TimetableViewHelper
 import de.deutschebahn.bahnhoflive.ui.timetable.WagenstandFragment
+import de.deutschebahn.bahnhoflive.view.SimpleViewHolderAdapter
+import de.deutschebahn.bahnhoflive.view.toViewHolder
 import kotlinx.android.synthetic.main.titlebar_static.*
 
 class JourneyFragment() : Fragment(), MapPresetProvider {
@@ -112,18 +116,30 @@ class JourneyFragment() : Fragment(), MapPresetProvider {
         }
 
 
-        JourneyAdapter().also { adapter ->
-            journeyViewModel.journeysByRelationLiveData.observe(viewLifecycleOwner) {
-                it.fold({
-                    if (recycler.adapter != adapter) {
-                        recycler.adapter = adapter
-                    }
+        val journeyAdapter = JourneyAdapter()
+        val filterAdapter = SimpleViewHolderAdapter { parent, _ ->
+            ItemJourneyFilterRemoveBinding.inflate(
+                inflater,
+                parent,
+                false
+            ).apply {
+                root.setOnClickListener {
+                    journeyViewModel.filterPastDepartures.value = false
+                }
+            }.root.toViewHolder()
+        }
+        val journeyConcatAdapter = ConcatAdapter(journeyAdapter, filterAdapter)
+        journeyViewModel.eventuallyFilteredJourneysLiveData.observe(viewLifecycleOwner) {
+            it.fold({ (filtered, journeyStops) ->
+                if (recycler.adapter != journeyConcatAdapter) {
+                    recycler.adapter = journeyConcatAdapter
+                }
 
-                    adapter.submitList(it)
-                }, {
-                    Log.d(JourneyFragment::class.java.simpleName, "Error: $it")
-                })
-            }
+                filterAdapter.count = if (filtered) 1 else 0
+                journeyAdapter.submitList(journeyStops)
+            }, {
+                Log.d(JourneyFragment::class.java.simpleName, "Error: $it")
+            })
         }
 
 

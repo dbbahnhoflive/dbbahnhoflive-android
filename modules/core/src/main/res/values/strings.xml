@@ -337,5 +337,6 @@
     <string name="journey_stop_platform_change">Gleiswechsel</string>
     <string name="template_journey_title">Zuglauf %s%s</string>
     <string name="template_journey_title_destination">nach %s</string>
+    <string name="journeys_show_all">Gesamten Fahrtverlauf anzeigen</string>
 
 </resources>

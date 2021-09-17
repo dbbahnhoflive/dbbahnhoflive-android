@@ -188,8 +188,11 @@ public class TrainMovementInfo implements Parcelable {
 
         ArrayList<String> displayMessages = new ArrayList<>();
         for (Message message : messages) {
-            if (!message.isRevoked() && !displayMessages.contains(message.getDisplayMessage())) {
-                displayMessages.add(message.getDisplayMessage());
+            if (!message.isRevoked()) {
+                final String displayMessage = message.getDisplayMessage();
+                if (displayMessage != null && !displayMessages.contains(displayMessage)) {
+                    displayMessages.add(displayMessage);
+                }
             }
         }
 
