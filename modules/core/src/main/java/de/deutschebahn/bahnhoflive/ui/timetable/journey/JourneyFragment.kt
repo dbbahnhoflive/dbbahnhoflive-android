@@ -57,7 +57,8 @@ class JourneyFragment() : Fragment(), MapPresetProvider {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        journeyViewModel.stationLiveData = stationViewModel.stationResource.data
+        journeyViewModel.stationProxyLiveData.source = stationViewModel.stationResource.data
+        journeyViewModel.timetableProxyLiveData.source = stationViewModel.dbTimetableResource.data
     }
 
     override fun onCreateView(
@@ -67,6 +68,7 @@ class JourneyFragment() : Fragment(), MapPresetProvider {
     ): View = FragmentJourneyBinding.inflate(inflater).apply {
 
         refresher.setOnRefreshListener {
+            stationViewModel.dbTimetableResource.refresh()
             journeyViewModel.onRefresh()
         }
 
