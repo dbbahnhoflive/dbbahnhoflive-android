@@ -122,6 +122,7 @@ class JourneyViewModel(app: Application, savedStateHandle: SavedStateHandle) :
         super.onCleared()
 
         stationProxyLiveData.source = null
+        timetableProxyLiveData.source = null
     }
 
     fun onRefresh() {
