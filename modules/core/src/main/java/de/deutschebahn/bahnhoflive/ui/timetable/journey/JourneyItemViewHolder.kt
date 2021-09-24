@@ -118,8 +118,8 @@ class JourneyItemViewHolder(val itemJourneyDetailedBinding: ItemJourneyDetailedB
                             isPlatformChange -> "(Hinweis: \"Gleiswechsel\")"
                             else -> null
                         },
-                        arrival?.formatContentDescription("Ankunft"),
-                        departure?.formatContentDescription("Abfahrt")
+                        arrival?.formatContentDescription("Ankunft", progress >= 0),
+                        departure?.formatContentDescription("Abfahrt", progress > 0)
                     ).joinToString("; ", postfix = ".")
                 ).joinToString(separator = " ")
             }.also {
@@ -129,14 +129,14 @@ class JourneyItemViewHolder(val itemJourneyDetailedBinding: ItemJourneyDetailedB
 
     }
 
-    private fun JourneyStopEvent.formatContentDescription(prefix: String) =
+    private fun JourneyStopEvent.formatContentDescription(prefix: String, past: Boolean) =
         listOfNotNull(
             prefix,
             parsedScheduledTime?.run {
                 "${formatTime()} Uhr"
             },
             parsedEstimatedTime?.takeUnless { it == parsedScheduledTime }?.run {
-                "(heute voraussichtlich ${formatTime()} Uhr)"
+                "(heute ${if (!past) "voraussichtlich " else ""}${formatTime()} Uhr)"
             }
         ).joinToString(" ")
 

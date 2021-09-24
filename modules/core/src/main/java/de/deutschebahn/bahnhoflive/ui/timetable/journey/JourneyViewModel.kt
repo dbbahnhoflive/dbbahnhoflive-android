@@ -8,7 +8,9 @@ import de.deutschebahn.bahnhoflive.backend.VolleyRestListener
 import de.deutschebahn.bahnhoflive.backend.ris.model.TrainEvent
 import de.deutschebahn.bahnhoflive.backend.ris.model.TrainInfo
 import de.deutschebahn.bahnhoflive.repository.Station
+import de.deutschebahn.bahnhoflive.repository.timetable.Timetable
 import de.deutschebahn.bahnhoflive.ui.timetable.routeStops
+import de.deutschebahn.bahnhoflive.util.ProxyLiveData
 import de.deutschebahn.bahnhoflive.util.emptyLiveData
 
 class JourneyViewModel(app: Application, savedStateHandle: SavedStateHandle) :
@@ -22,24 +24,22 @@ class JourneyViewModel(app: Application, savedStateHandle: SavedStateHandle) :
 
     val timetableRepository = getApplication<BaseApplication>().repositories.timetableRepository
 
-    private val stationProxyLiveData = MediatorLiveData<Station>()
+    val stationProxyLiveData = ProxyLiveData<Station>()
+    val timetableProxyLiveData = ProxyLiveData<Timetable?>()
 
-    var stationLiveData: LiveData<Station>? = null
-        set(value) {
-            if (field != value) {
-                field?.also {
-                    stationProxyLiveData.removeSource(it)
-                }
-                field = value
-                field?.also {
-                    stationProxyLiveData.addSource(it) {
-                        stationProxyLiveData.value = it
-                    }
+    private val argumentTrainInfoLiveData = savedStateHandle.getLiveData<TrainInfo>(ARG_TRAIN_INFO)
+
+    private val trainInfoLiveData = timetableProxyLiveData.switchMap { timetable ->
+        argumentTrainInfoLiveData.map { argumentTrainInfo ->
+            argumentTrainInfo.id?.let { id ->
+                timetable?.getTrainInfos()?.firstOrNull {
+                    it.id == id
                 }
             }
+                ?: argumentTrainInfo
         }
+    }
 
-    private val trainInfoLiveData = savedStateHandle.getLiveData<TrainInfo>(ARG_TRAIN_INFO)
     private val trainEventLiveData = savedStateHandle.getLiveData<TrainEvent>(ARG_TRAIN_EVENT)
 
     val filterPastDepartures = savedStateHandle.getLiveData("filterPastDepartures", true)
@@ -47,8 +47,8 @@ class JourneyViewModel(app: Application, savedStateHandle: SavedStateHandle) :
     val essentialParametersLiveData = stationProxyLiveData.switchMap { station ->
         station.evaIds.let { evaIds ->
             trainInfoLiveData.switchMap { trainInfo ->
-                trainEventLiveData.map {
-                    Triple(station, trainInfo, it)
+                trainEventLiveData.map { trainEvent ->
+                    Triple(station, trainInfo, trainEvent)
                 }
             }
         }
@@ -121,10 +121,13 @@ class JourneyViewModel(app: Application, savedStateHandle: SavedStateHandle) :
     override fun onCleared() {
         super.onCleared()
 
-        stationLiveData = null
+        stationProxyLiveData.source = null
+        timetableProxyLiveData.source = null
     }
 
     fun onRefresh() {
         trainEventLiveData.value = trainEventLiveData.value // trigger reload
     }
+
+
 }

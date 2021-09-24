@@ -57,7 +57,8 @@ class JourneyFragment() : Fragment(), MapPresetProvider {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        journeyViewModel.stationLiveData = stationViewModel.stationResource.data
+        journeyViewModel.stationProxyLiveData.source = stationViewModel.stationResource.data
+        journeyViewModel.timetableProxyLiveData.source = stationViewModel.dbTimetableResource.data
     }
 
     override fun onCreateView(
@@ -67,6 +68,7 @@ class JourneyFragment() : Fragment(), MapPresetProvider {
     ): View = FragmentJourneyBinding.inflate(inflater).apply {
 
         refresher.setOnRefreshListener {
+            stationViewModel.dbTimetableResource.refresh()
             journeyViewModel.onRefresh()
         }
 
@@ -115,6 +117,7 @@ class JourneyFragment() : Fragment(), MapPresetProvider {
             }
         }
 
+        var filterClicked = false
 
         val journeyAdapter = JourneyAdapter()
         val filterAdapter = SimpleViewHolderAdapter { parent, _ ->
@@ -124,6 +127,7 @@ class JourneyFragment() : Fragment(), MapPresetProvider {
                 false
             ).apply {
                 root.setOnClickListener {
+                    filterClicked = true
                     journeyViewModel.filterPastDepartures.value = false
                 }
             }.root.toViewHolder()
@@ -136,7 +140,14 @@ class JourneyFragment() : Fragment(), MapPresetProvider {
                 }
 
                 filterAdapter.count = if (filtered) 1 else 0
-                journeyAdapter.submitList(journeyStops)
+                journeyAdapter.submitList(journeyStops) {
+                    if (filterClicked) {
+                        filterClicked = false
+
+                        recycler.scrollToPosition(0)
+                    }
+                }
+
             }, {
                 Log.d(JourneyFragment::class.java.simpleName, "Error: $it")
             })
