@@ -9,6 +9,7 @@ import de.deutschebahn.bahnhoflive.backend.ris.model.TrainEvent
 import de.deutschebahn.bahnhoflive.backend.ris.model.TrainInfo
 import de.deutschebahn.bahnhoflive.repository.Station
 import de.deutschebahn.bahnhoflive.repository.timetable.Timetable
+import de.deutschebahn.bahnhoflive.repository.trainformation.TrainFormation
 import de.deutschebahn.bahnhoflive.ui.timetable.routeStops
 import de.deutschebahn.bahnhoflive.util.ProxyLiveData
 import de.deutschebahn.bahnhoflive.util.emptyLiveData
@@ -21,6 +22,8 @@ class JourneyViewModel(app: Application, savedStateHandle: SavedStateHandle) :
         const val ARG_TRAIN_EVENT = "trainEvent"
     }
 
+
+    val trainFormationInputLiveData = MutableLiveData<TrainFormation?>()
 
     val timetableRepository = getApplication<BaseApplication>().repositories.timetableRepository
 
@@ -45,12 +48,16 @@ class JourneyViewModel(app: Application, savedStateHandle: SavedStateHandle) :
     val filterPastDepartures = savedStateHandle.getLiveData("filterPastDepartures", true)
 
     val essentialParametersLiveData = stationProxyLiveData.switchMap { station ->
-        station.evaIds.let { evaIds ->
-            trainInfoLiveData.switchMap { trainInfo ->
-                trainEventLiveData.map { trainEvent ->
-                    Triple(station, trainInfo, trainEvent)
-                }
+        trainInfoLiveData.switchMap { trainInfo ->
+            trainEventLiveData.map { trainEvent ->
+                Triple(station, trainInfo, trainEvent)
             }
+        }
+    }
+
+    val trainFormationOutputLiveData = trainFormationInputLiveData.switchMap { trainFormation ->
+        essentialParametersLiveData.map { (_, trainInfo, trainEvent) ->
+            Triple(trainFormation, trainInfo, trainEvent)
         }
     }
 
