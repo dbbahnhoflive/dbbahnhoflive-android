@@ -6,6 +6,8 @@
 
 package de.deutschebahn.bahnhoflive.ui.station;
 
+import static de.deutschebahn.bahnhoflive.analytics.TrackingManager.Screen.H1;
+
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
@@ -64,8 +66,6 @@ import de.deutschebahn.bahnhoflive.ui.station.search.ContentSearchFragment;
 import de.deutschebahn.bahnhoflive.ui.station.shop.ShopCategorySelectionFragment;
 import de.deutschebahn.bahnhoflive.ui.station.timetable.TimetablesFragment;
 import de.deutschebahn.bahnhoflive.ui.timetable.localtransport.HafasTimetableViewModel;
-
-import static de.deutschebahn.bahnhoflive.analytics.TrackingManager.Screen.H1;
 
 public class StationActivity extends AppCompatActivity implements
         StationProvider, HistoryFragment.RootProvider,
@@ -491,18 +491,20 @@ public class StationActivity extends AppCompatActivity implements
             return;
         }
 
-        final int currentFragmentIndex = getCurrentFragmentIndex();
-        final HistoryFragment historyFragment = historyFragments.get(currentFragmentIndex);
-        if (historyFragment != null && historyFragment.pop()) {
-            return;
-        }
+        if (getOnBackPressedDispatcher().hasEnabledCallbacks()) {
+            super.onBackPressed();
+        } else {
+            final int currentFragmentIndex = getCurrentFragmentIndex();
+            final HistoryFragment historyFragment = historyFragments.get(currentFragmentIndex);
+            if (historyFragment != null && historyFragment.pop()) {
+                return;
+            }
 
-        if (currentFragmentIndex != 0) {
-            showTab(0);
-            return;
+            if (currentFragmentIndex != 0) {
+                showTab(0);
+                return;
+            }
         }
-
-        super.onBackPressed();
     }
 
     public int getCurrentFragmentIndex() {

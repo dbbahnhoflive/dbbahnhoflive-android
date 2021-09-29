@@ -96,12 +96,23 @@ public class HistoryFragment extends Fragment implements MapPresetProvider {
     public boolean pop() {
         final FragmentManager childFragmentManager = getChildFragmentManager();
 
-        if (childFragmentManager.isStateSaved() || childFragmentManager.getBackStackEntryCount() < 1) {
-            return false;
+        final Fragment currentFragment = childFragmentManager.findFragmentById(getId());
+        if (currentFragment != null) {
+            final FragmentManager currentFragmentChildFragmentManager = currentFragment.getChildFragmentManager();
+            if (canPop(currentFragmentChildFragmentManager)) {
+                currentFragmentChildFragmentManager.popBackStack();
+                return true;
+            }
         }
+
+        if (!canPop(childFragmentManager)) return false;
 
         childFragmentManager.popBackStack();
         return true;
+    }
+
+    private boolean canPop(FragmentManager fragmentManager) {
+        return !fragmentManager.isStateSaved() && fragmentManager.getBackStackEntryCount() > 0;
     }
 
     public void popEntireHistory() {

@@ -42,53 +42,38 @@ class RegularJourneyContentFragment : Fragment() {
         savedInstanceState: Bundle?
     ): View = FragmentJourneyRegularContentBinding.inflate(inflater).apply {
 
-        with(contentLayout) {
+        val issueBinder =
+            IssuesBinder(issueContainer, issueText, IssueIndicatorBinder(issueIcon))
 
-            refresher.setOnRefreshListener {
-                stationViewModel.dbTimetableResource.refresh()
-                journeyViewModel.onRefresh()
-            }
+        journeyViewModel.essentialParametersLiveData.observe(viewLifecycleOwner) { (station, trainInfo, trainEvent) ->
 
-            journeyViewModel.loadingProgressLiveData.observe(viewLifecycleOwner) { loading ->
-                if (loading != null) {
-                    if (!loading) {
-                        contentFlipper.displayedChild = 1
-                        refresher.isRefreshing = false
-                    }
-                }
-            }
+            issueBinder.bindIssues(
+                trainInfo,
+                trainEvent.movementRetriever.getTrainMovementInfo(trainInfo)
+            )
 
-            val issueBinder =
-                IssuesBinder(issueContainer, issueText, IssueIndicatorBinder(issueIcon))
-
-            journeyViewModel.essentialParametersLiveData.observe(viewLifecycleOwner) { (station, trainInfo, trainEvent) ->
-
-                issueBinder.bindIssues(
-                    trainInfo,
-                    trainEvent.movementRetriever.getTrainMovementInfo(trainInfo)
-                )
-
-                with(buttonWagonOrder) {
-                    if (trainInfo.shouldOfferWagenOrder()) {
-                        setOnClickListener {
-                            activity?.also {
-                                TrackingManager.fromActivity(it).track(
-                                    TrackingManager.TYPE_ACTION,
-                                    TrackingManager.Screen.H2,
-                                    TrackingManager.Action.TAP,
-                                    TrackingManager.UiElement.WAGENREIHUNG
-                                )
-                            }
-                            showWaggonOrder(trainInfo, trainEvent)
+            with(buttonWagonOrder) {
+                if (trainInfo.shouldOfferWagenOrder()) {
+                    setOnClickListener {
+                        activity?.also {
+                            TrackingManager.fromActivity(it).track(
+                                TrackingManager.TYPE_ACTION,
+                                TrackingManager.Screen.H2,
+                                TrackingManager.Action.TAP,
+                                TrackingManager.UiElement.WAGENREIHUNG
+                            )
                         }
-                        isGone = false
-                    } else {
-                        isGone = true
+                        showWaggonOrder(trainInfo, trainEvent)
                     }
+                    isGone = false
+                } else {
+                    isGone = true
                 }
             }
+        }
 
-            var filterClicked = false
+        with(contentLayout) {
+            prepareCommons(viewLifecycleOwner, stationViewModel, journeyViewModel)
 
             val journeyAdapter = JourneyAdapter()
             val filterAdapter = SimpleViewHolderAdapter { parent, _ ->
@@ -98,8 +83,7 @@ class RegularJourneyContentFragment : Fragment() {
                     false
                 ).apply {
                     root.setOnClickListener {
-                        filterClicked = true
-                        journeyViewModel.filterPastDepartures.value = false
+                        journeyViewModel.showFullDeparturesLiveData.value = true
                     }
                 }.root.toViewHolder()
             }
@@ -111,13 +95,7 @@ class RegularJourneyContentFragment : Fragment() {
                     }
 
                     filterAdapter.count = if (filtered) 1 else 0
-                    journeyAdapter.submitList(journeyStops) {
-                        if (filterClicked) {
-                            filterClicked = false
-
-                            recycler.scrollToPosition(0)
-                        }
-                    }
+                    journeyAdapter.submitList(journeyStops)
 
                 }, {
                     Log.d(JourneyFragment::class.java.simpleName, "Error: $it")
@@ -137,6 +115,7 @@ class RegularJourneyContentFragment : Fragment() {
                 }
             }
         }
+
     }.root
 
     private fun showWaggonOrder(trainInfo: TrainInfo, trainEvent: TrainEvent) {

@@ -23,6 +23,7 @@ class JourneyViewModel(app: Application, savedStateHandle: SavedStateHandle) :
     }
 
 
+    val showFullDeparturesLiveData = MutableLiveData<Boolean>()
     val trainFormationInputLiveData = MutableLiveData<TrainFormation?>()
 
     val timetableRepository = getApplication<BaseApplication>().repositories.timetableRepository
@@ -44,8 +45,6 @@ class JourneyViewModel(app: Application, savedStateHandle: SavedStateHandle) :
     }
 
     private val trainEventLiveData = savedStateHandle.getLiveData<TrainEvent>(ARG_TRAIN_EVENT)
-
-    val filterPastDepartures = savedStateHandle.getLiveData("filterPastDepartures", true)
 
     val essentialParametersLiveData = stationProxyLiveData.switchMap { station ->
         trainInfoLiveData.switchMap { trainInfo ->
@@ -94,16 +93,14 @@ class JourneyViewModel(app: Application, savedStateHandle: SavedStateHandle) :
 
 
     val eventuallyFilteredJourneysLiveData: LiveData<Result<Pair<Boolean, List<JourneyStop>>>> =
-        filterPastDepartures.switchMap { filterPastDepartures ->
-            essentialParametersLiveData.switchMap { (_, _, trainEvent) ->
-                journeysByRelationLiveData.map { journeyStopsResult ->
-                    journeyStopsResult.map { journeyStops ->
-                        (if (filterPastDepartures && trainEvent == TrainEvent.DEPARTURE) {
-                            journeyStops.indexOfFirst { it.current }.takeIf { it > 0 }?.let {
-                                true to journeyStops.subList(it, journeyStops.size)
-                            }
-                        } else null) ?: false to journeyStops
-                    }
+        essentialParametersLiveData.switchMap { (_, _, trainEvent) ->
+            journeysByRelationLiveData.map { journeyStopsResult ->
+                journeyStopsResult.map { journeyStops ->
+                    (if (trainEvent == TrainEvent.DEPARTURE) {
+                        journeyStops.indexOfFirst { it.current }.takeIf { it > 0 }?.let {
+                            true to journeyStops.subList(it, journeyStops.size)
+                        }
+                    } else null) ?: false to journeyStops
                 }
             }
         }

@@ -7,6 +7,7 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
+import androidx.fragment.app.findFragment
 import androidx.fragment.app.viewModels
 import de.deutschebahn.bahnhoflive.R
 import de.deutschebahn.bahnhoflive.backend.ris.model.TrainEvent
@@ -20,6 +21,7 @@ import de.deutschebahn.bahnhoflive.ui.station.HistoryFragment
 import de.deutschebahn.bahnhoflive.ui.station.StationViewModel
 import de.deutschebahn.bahnhoflive.ui.station.timetable.TimetableViewHelper
 import de.deutschebahn.bahnhoflive.ui.timetable.WagenstandFragment
+import kotlinx.android.synthetic.main.activity_consent.view.*
 
 class JourneyFragment() : Fragment(), MapPresetProvider {
 
@@ -66,6 +68,17 @@ class JourneyFragment() : Fragment(), MapPresetProvider {
                     .create("Wagenstand", trainFormation, null, null, trainInfo, trainEvent)
                 HistoryFragment.parentOf(this@JourneyFragment).push(wagenstandFragment)
                 journeyViewModel.trainFormationInputLiveData.value = null
+            }
+        }
+
+        journeyViewModel.showFullDeparturesLiveData.observe(viewLifecycleOwner) { showFullDepartures ->
+            if (showFullDepartures) {
+                if (contentFragment.findFragment<Fragment>() !is FullJourneyContentFragment) {
+                    childFragmentManager.beginTransaction()
+                        .addToBackStack("fullDepartures")
+                        .replace(contentFragment.id, FullJourneyContentFragment())
+                        .commit()
+                }
             }
         }
 
