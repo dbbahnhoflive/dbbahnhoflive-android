@@ -9,6 +9,7 @@ import de.deutschebahn.bahnhoflive.backend.ris.model.TrainEvent
 import de.deutschebahn.bahnhoflive.backend.ris.model.TrainInfo
 import de.deutschebahn.bahnhoflive.repository.Station
 import de.deutschebahn.bahnhoflive.repository.timetable.Timetable
+import de.deutschebahn.bahnhoflive.repository.trainformation.TrainFormation
 import de.deutschebahn.bahnhoflive.ui.timetable.routeStops
 import de.deutschebahn.bahnhoflive.util.ProxyLiveData
 import de.deutschebahn.bahnhoflive.util.emptyLiveData
@@ -21,6 +22,9 @@ class JourneyViewModel(app: Application, savedStateHandle: SavedStateHandle) :
         const val ARG_TRAIN_EVENT = "trainEvent"
     }
 
+
+    val showFullDeparturesLiveData = MutableLiveData<Boolean>()
+    val trainFormationInputLiveData = MutableLiveData<TrainFormation?>()
 
     val timetableRepository = getApplication<BaseApplication>().repositories.timetableRepository
 
@@ -42,15 +46,17 @@ class JourneyViewModel(app: Application, savedStateHandle: SavedStateHandle) :
 
     private val trainEventLiveData = savedStateHandle.getLiveData<TrainEvent>(ARG_TRAIN_EVENT)
 
-    val filterPastDepartures = savedStateHandle.getLiveData("filterPastDepartures", true)
-
     val essentialParametersLiveData = stationProxyLiveData.switchMap { station ->
-        station.evaIds.let { evaIds ->
-            trainInfoLiveData.switchMap { trainInfo ->
-                trainEventLiveData.map { trainEvent ->
-                    Triple(station, trainInfo, trainEvent)
-                }
+        trainInfoLiveData.switchMap { trainInfo ->
+            trainEventLiveData.map { trainEvent ->
+                Triple(station, trainInfo, trainEvent)
             }
+        }
+    }
+
+    val trainFormationOutputLiveData = trainFormationInputLiveData.switchMap { trainFormation ->
+        essentialParametersLiveData.map { (_, trainInfo, trainEvent) ->
+            Triple(trainFormation, trainInfo, trainEvent)
         }
     }
 
@@ -87,16 +93,14 @@ class JourneyViewModel(app: Application, savedStateHandle: SavedStateHandle) :
 
 
     val eventuallyFilteredJourneysLiveData: LiveData<Result<Pair<Boolean, List<JourneyStop>>>> =
-        filterPastDepartures.switchMap { filterPastDepartures ->
-            essentialParametersLiveData.switchMap { (_, _, trainEvent) ->
-                journeysByRelationLiveData.map { journeyStopsResult ->
-                    journeyStopsResult.map { journeyStops ->
-                        (if (filterPastDepartures && trainEvent == TrainEvent.DEPARTURE) {
-                            journeyStops.indexOfFirst { it.current }.takeIf { it > 0 }?.let {
-                                true to journeyStops.subList(it, journeyStops.size)
-                            }
-                        } else null) ?: false to journeyStops
-                    }
+        essentialParametersLiveData.switchMap { (_, _, trainEvent) ->
+            journeysByRelationLiveData.map { journeyStopsResult ->
+                journeyStopsResult.map { journeyStops ->
+                    (if (trainEvent == TrainEvent.DEPARTURE) {
+                        journeyStops.indexOfFirst { it.current }.takeIf { it > 0 }?.let {
+                            true to journeyStops.subList(it, journeyStops.size)
+                        }
+                    } else null) ?: false to journeyStops
                 }
             }
         }
