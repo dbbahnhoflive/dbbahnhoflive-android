@@ -491,20 +491,18 @@ public class StationActivity extends AppCompatActivity implements
             return;
         }
 
-        if (getOnBackPressedDispatcher().hasEnabledCallbacks()) {
-            super.onBackPressed();
-        } else {
-            final int currentFragmentIndex = getCurrentFragmentIndex();
-            final HistoryFragment historyFragment = historyFragments.get(currentFragmentIndex);
-            if (historyFragment != null && historyFragment.pop()) {
-                return;
-            }
-
-            if (currentFragmentIndex != 0) {
-                showTab(0);
-                return;
-            }
+        final int currentFragmentIndex = getCurrentFragmentIndex();
+        final HistoryFragment historyFragment = historyFragments.get(currentFragmentIndex);
+        if (historyFragment != null && historyFragment.pop()) {
+            return;
         }
+
+        if (currentFragmentIndex != 0) {
+            showTab(0);
+            return;
+        }
+
+        super.onBackPressed();
     }
 
     public int getCurrentFragmentIndex() {
