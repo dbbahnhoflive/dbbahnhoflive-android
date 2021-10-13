@@ -37,6 +37,17 @@ android {
         jvmTarget = JavaVersion.VERSION_1_8.toString()
     }
 
+    flavorDimensions "ecosystem"
+        productFlavors{
+        google {
+            dimension "ecosystem"
+        }
+
+        huawei {
+            dimension "ecosystem"
+        }
+    }
+
 }
 
 dependencies {
