@@ -51,10 +51,7 @@ class InfoCategorySelectionFragment : CategorySelectionFragment(
     private fun updateCategories() {
         if (isAdded) {
             val station = detailedStationLiveData.value
-            val staticInfoCollection = staticInfoLiveData.value
-            if (station == null || staticInfoCollection == null) {
-                return
-            }
+            val staticInfoCollection = staticInfoLiveData.value ?: return
 
             infoAndServicesCategory = addInfoAndServices(infoAndServicesLiveData.value)
             serviceNumbersCategory = addServiceNumbers(serviceNumbersLiveData.value)
