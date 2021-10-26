@@ -40,7 +40,7 @@ open class StopPlace {
     val isLocalTransportStation get() = availableTransports?.intersects(TransportType.LOCAL_TRANSPORT_TYPES) == true
             || (!isDbStation && availableTransports?.intersects(TransportType.DB_TYPES) == true)
 
-    val isDbStation get() = stationID != null
+    val isDbStation get() = stationID?.takeUnless { ExcludedStadaIds.ids.contains(it) } != null
 
     fun calculateDistance(distanceCalculator: DistanceCalculator) {
         position?.apply {
