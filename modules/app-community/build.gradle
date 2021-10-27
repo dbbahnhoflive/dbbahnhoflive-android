@@ -6,10 +6,10 @@ apply plugin: 'kotlin-kapt'
 group 'de.deutschebahn.bahnhoflive'
 
 android {
-    compileSdkVersion 29
+    compileSdkVersion 30
     defaultConfig {
         minSdkVersion 19
-        targetSdkVersion 29
+        targetSdkVersion 30
         versionCode 84
         versionName "3.6.1"
         applicationId "de.deutschebahn.bahnhoflive.community"
