@@ -1148,10 +1148,7 @@ class StationViewModel : HafasTimetableViewModel() {
         }
     }
 
-    val isShowChatbotLiveData = Transformations.distinctUntilChanged(
-        Transformations.map(stationResource.data) {
-            it.isChatbotAvailable && ChatbotStation.isInTeaserPeriod
-        })
+    val isShowChatbotLiveData = MutableLiveData(true)
 
     fun navigateToChatbot() {
         navigateToInfo(ServiceContentType.Local.CHATBOT)
@@ -1181,10 +1178,11 @@ class StationViewModel : HafasTimetableViewModel() {
             value = !infoAndServicesLiveData.value.isNullOrEmpty()
                     || !serviceNumbersLiveData.value.isNullOrEmpty()
                     || (staticInfoLiveData.value?.let { staticInfoCollection ->
-                detailedStopPlaceResource.data.value?.run {
-                    hasWifi && staticInfoCollection.typedStationInfos[ServiceContentType.WIFI] != null
-                            || hasSteplessAccess && staticInfoCollection.typedStationInfos[ServiceContentType.ACCESSIBLE] != null
-                }
+                staticInfoCollection.typedStationInfos.containsKey(ServiceContentType.DummyForCategory.FEEDBACK) ||
+                        detailedStopPlaceResource.data.value?.run {
+                            hasWifi && staticInfoCollection.typedStationInfos[ServiceContentType.WIFI] != null
+                                    || hasSteplessAccess && staticInfoCollection.typedStationInfos[ServiceContentType.ACCESSIBLE] != null
+                        } == true
             } == true)
                     || !parking.parkingsResource.data.value.isNullOrEmpty()
                     || !elevatorsResource.data.value.isNullOrEmpty()
@@ -1197,6 +1195,7 @@ class StationViewModel : HafasTimetableViewModel() {
         .addSource(parking.parkingsResource.data)
         .addSource(elevatorsResource.data)
         .addSource(detailedStopPlaceResource.data)
+        .distinctUntilChanged()
 
     val stationWhatsappFeedbackLiveData: LiveData<String?> =
         stationResource.data.map { station ->

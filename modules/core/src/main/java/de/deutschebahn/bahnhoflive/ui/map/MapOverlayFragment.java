@@ -566,18 +566,20 @@ public class MapOverlayFragment extends Fragment implements OnMapReadyCallback, 
             }
         };
 
-        final LatLng location = stationResource == null || stationResource.getData().getValue() == null ? null : stationResource.getData().getValue().getLocation();
+        mapViewModel.getStationLocationLiveData().observe(getViewLifecycleOwner(), location -> {
+            mapInterface = new GoogleMapsMapInterface(mapInterface, googleMap, getContext(),
+                    onMarkerClickListener,
+                    this,
+                    zoomChangeListener, location, zoom);
 
-        mapInterface = new GoogleMapsMapInterface(mapInterface, googleMap, getContext(),
-                onMarkerClickListener,
-                this,
-                zoomChangeListener, location, zoom);
+            content.onMapReady(googleMap);
 
-        content.onMapReady(googleMap);
+            if (location == null) {
+                onLocate();
+            }
 
-        if (location == null) {
-            onLocate();
-        }
+        });
+
     }
 
     public void selectMarker(MarkerBinder markerBinder) {
