@@ -289,6 +289,7 @@ class RimapPOI : Parcelable, MarkerFilterable {
         const val SUBCAT_ELEVATORS = "Aufzüge"
         const val SUBCAT_CAR_PARK = "Parkplatz"
         const val SUBCAT_PARKING_GARAGE = "Parkhaus"
+        const val SUBCAT_TICKETS = "Fahrkarten"
 
         val EXCLUDED_SUBCATS = setOf(SUBCAT_ELEVATORS, SUBCAT_CAR_PARK, SUBCAT_PARKING_GARAGE)
 
