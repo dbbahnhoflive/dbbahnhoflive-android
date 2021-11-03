@@ -6,6 +6,11 @@
 
 package de.deutschebahn.bahnhoflive.backend.ris.model;
 
+import static de.deutschebahn.bahnhoflive.backend.ris.model.TrainInfo.Category.EC;
+import static de.deutschebahn.bahnhoflive.backend.ris.model.TrainInfo.Category.IC;
+import static de.deutschebahn.bahnhoflive.backend.ris.model.TrainInfo.Category.ICE;
+import static de.deutschebahn.bahnhoflive.backend.ris.model.TrainInfo.Category.S;
+
 import android.os.Parcel;
 import android.os.Parcelable;
 import android.text.TextUtils;
@@ -27,11 +32,6 @@ import java.util.Collection;
 import java.util.List;
 import java.util.Map;
 
-import static de.deutschebahn.bahnhoflive.backend.ris.model.TrainInfo.Category.EC;
-import static de.deutschebahn.bahnhoflive.backend.ris.model.TrainInfo.Category.IC;
-import static de.deutschebahn.bahnhoflive.backend.ris.model.TrainInfo.Category.ICE;
-import static de.deutschebahn.bahnhoflive.backend.ris.model.TrainInfo.Category.S;
-
 public class TrainInfo implements Parcelable {
 
     private boolean replacement;
@@ -49,6 +49,8 @@ public class TrainInfo implements Parcelable {
         String IC = "IC";
         String EC = "EC";
         String S = "S";
+
+        String TRAM = "STB";
     }
 
     static final String _train_info_alternative_name = "l";
@@ -104,6 +106,13 @@ public class TrainInfo implements Parcelable {
         }
 
         info.setId(id);
+
+        if (Category.TRAM.equals(info.trainCategory) && (
+                referenceTrainInfo == null || Category.TRAM.equals(referenceTrainInfo.trainCategory)
+        )) {
+            return null;
+        }
+
         return info;
 
     }
