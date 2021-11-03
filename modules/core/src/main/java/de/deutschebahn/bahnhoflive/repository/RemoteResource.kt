@@ -60,7 +60,7 @@ abstract class RemoteResource<T> : Resource<T, VolleyError?>() {
         return loadData(false)
     }
 
-    inner class Listener : BaseRestListener<T>() {
+    open inner class Listener : BaseRestListener<T>() {
         override fun onSuccess(payload: T) {
             setResult(payload)
         }

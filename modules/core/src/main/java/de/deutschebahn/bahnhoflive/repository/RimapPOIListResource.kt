@@ -3,32 +3,26 @@
  *
  * SPDX-License-Identifier: Apache-2.0
  */
+package de.deutschebahn.bahnhoflive.repository
 
-package de.deutschebahn.bahnhoflive.repository;
+import de.deutschebahn.bahnhoflive.backend.rimap.model.RimapPOI
 
-import java.util.List;
+class RimapPOIListResource : RemoteResource<List<RimapPOI>>() {
+    private var stationId: Station? = null
+    override val isLoadingPreconditionsMet: Boolean
+        get() = stationId != null
 
-import de.deutschebahn.bahnhoflive.backend.rimap.model.RimapPOI;
-
-public class RimapPOIListResource extends RemoteResource<List<RimapPOI>> {
-
-    private Station stationId;
-
-    @Override
-    public boolean isLoadingPreconditionsMet() {
-        return stationId != null;
+    override fun onStartLoading(force: Boolean) {
+        stationId?.let { stationId ->
+            baseApplication.repositories.mapRepository.queryPois(stationId, Listener(), !force)
+        }
     }
 
-    @Override
-    protected void onStartLoading(boolean force) {
-        baseApplication.getRepositories().getMapRepository().queryPois(stationId, new Listener(), !force);
+    fun initialize(stationId: Station?) {
+        this.stationId = stationId
     }
 
-    public void initialize(Station stationId) {
-        this.stationId = stationId;
-    }
-
-    public void load() {
-        loadData(false);
+    fun load() {
+        loadData(false)
     }
 }
