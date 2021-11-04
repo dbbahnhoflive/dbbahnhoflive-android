@@ -17,7 +17,7 @@ import de.deutschebahn.bahnhoflive.view.SingleSelectionManager
 class StationComplaintServiceContentViewHolder(
     parent: ViewGroup,
     selectionManager: SingleSelectionManager,
-    stationLiveData: LiveData<Station>,
+    stationLiveData: LiveData<out Station>,
     whatsAppInstallationLiveData: WhatsAppInstallation,
     whatsAppContactliveData: LiveData<String?>,
     val lifecycleProvider: () -> LifecycleOwner,

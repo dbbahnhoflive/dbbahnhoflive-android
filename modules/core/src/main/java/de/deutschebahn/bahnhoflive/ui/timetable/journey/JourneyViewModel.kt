@@ -7,7 +7,7 @@ import de.deutschebahn.bahnhoflive.BaseApplication
 import de.deutschebahn.bahnhoflive.backend.VolleyRestListener
 import de.deutschebahn.bahnhoflive.backend.ris.model.TrainEvent
 import de.deutschebahn.bahnhoflive.backend.ris.model.TrainInfo
-import de.deutschebahn.bahnhoflive.repository.Station
+import de.deutschebahn.bahnhoflive.repository.MergedStation
 import de.deutschebahn.bahnhoflive.repository.timetable.Timetable
 import de.deutschebahn.bahnhoflive.repository.trainformation.TrainFormation
 import de.deutschebahn.bahnhoflive.ui.timetable.routeStops
@@ -28,7 +28,7 @@ class JourneyViewModel(app: Application, savedStateHandle: SavedStateHandle) :
 
     val timetableRepository = getApplication<BaseApplication>().repositories.timetableRepository
 
-    val stationProxyLiveData = ProxyLiveData<Station>()
+    val stationProxyLiveData = ProxyLiveData<MergedStation>()
     val timetableProxyLiveData = ProxyLiveData<Timetable?>()
 
     private val argumentTrainInfoLiveData = savedStateHandle.getLiveData<TrainInfo>(ARG_TRAIN_INFO)

@@ -31,7 +31,6 @@ import de.deutschebahn.bahnhoflive.backend.ris.model.TrainInfo;
 import de.deutschebahn.bahnhoflive.repository.DbTimetableResource;
 import de.deutschebahn.bahnhoflive.repository.LoadingStatus;
 import de.deutschebahn.bahnhoflive.repository.MergedStation;
-import de.deutschebahn.bahnhoflive.repository.Station;
 import de.deutschebahn.bahnhoflive.repository.timetable.Timetable;
 import de.deutschebahn.bahnhoflive.stream.rx.Optional;
 import de.deutschebahn.bahnhoflive.ui.map.Content;
@@ -65,7 +64,7 @@ public class DbTimetableFragment extends Fragment
         super.onCreate(savedInstanceState);
 
         final StationViewModel stationViewModel = new ViewModelProvider(getActivity()).get(StationViewModel.class);
-        LiveData<Station> stationLiveData = stationViewModel.getStationResource().getData();
+        LiveData<MergedStation> stationLiveData = stationViewModel.getStationResource().getData();
 
         dbTimetableResource = stationViewModel.getDbTimetableResource();
 
