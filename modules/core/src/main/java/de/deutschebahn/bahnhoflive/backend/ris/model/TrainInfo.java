@@ -49,8 +49,6 @@ public class TrainInfo implements Parcelable {
         String IC = "IC";
         String EC = "EC";
         String S = "S";
-
-        String TRAM = "STB";
     }
 
     static final String _train_info_alternative_name = "l";
@@ -106,13 +104,6 @@ public class TrainInfo implements Parcelable {
         }
 
         info.setId(id);
-
-        if (Category.TRAM.equals(info.trainCategory) && (
-                referenceTrainInfo == null || Category.TRAM.equals(referenceTrainInfo.trainCategory)
-        )) {
-            return null;
-        }
-
         return info;
 
     }
