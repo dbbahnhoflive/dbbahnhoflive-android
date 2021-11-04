@@ -11,7 +11,7 @@ import androidx.lifecycle.map
 import de.deutschebahn.bahnhoflive.backend.hafas.model.HafasStation
 import de.deutschebahn.bahnhoflive.repository.HafasStationsResource
 import de.deutschebahn.bahnhoflive.repository.MediatorResource
-import de.deutschebahn.bahnhoflive.repository.Station
+import de.deutschebahn.bahnhoflive.repository.MergedStation
 import de.deutschebahn.bahnhoflive.repository.StationResource
 import de.deutschebahn.bahnhoflive.util.ManagedObserver
 import de.deutschebahn.bahnhoflive.util.Token
@@ -33,7 +33,7 @@ class LocalTransportViewModel : ViewModel() {
     }
 
     private var hafasStationsObserver: ManagedObserver<List<HafasStation>>? = null
-    private var stationObserver: ManagedObserver<Station>? = null
+    private var stationObserver: ManagedObserver<MergedStation>? = null
     private var stationResource: StationResource? = null
 
     private val initializationPending = Token()
@@ -52,8 +52,8 @@ class LocalTransportViewModel : ViewModel() {
             mediatorResource.addErrorSource(stationResource)
             mediatorResource.addLoadingStatusSource(stationResource)
 
-            stationObserver = object : ManagedObserver<Station>(stationResource.data) {
-                override fun onChanged(station: Station?) {
+            stationObserver = object : ManagedObserver<MergedStation>(stationResource.data) {
+                override fun onChanged(station: MergedStation?) {
                     if (station != null) {
                         hafasStationsResource.initialize(station, ORIGIN_STATION)
 
