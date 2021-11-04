@@ -62,6 +62,7 @@ import de.deutschebahn.bahnhoflive.model.parking.ParkingFacility;
 import de.deutschebahn.bahnhoflive.repository.DbTimetableResource;
 import de.deutschebahn.bahnhoflive.repository.InternalStation;
 import de.deutschebahn.bahnhoflive.repository.LoadingStatus;
+import de.deutschebahn.bahnhoflive.repository.MergedStation;
 import de.deutschebahn.bahnhoflive.repository.RepositoryHolderKt;
 import de.deutschebahn.bahnhoflive.repository.Station;
 import de.deutschebahn.bahnhoflive.repository.StationResource;
@@ -726,7 +727,7 @@ public class MapOverlayFragment extends Fragment implements OnMapReadyCallback, 
         final CountDownLatch countDownLatch = new CountDownLatch(stationRequestArgumentsList.size());
 
         for (StadaStationRequestArguments stationRequestArguments : stationRequestArgumentsList) {
-            final LiveData<Station> stationResourceData = stationRequestArguments.stationResource.getData();
+            final LiveData<MergedStation> stationResourceData = stationRequestArguments.stationResource.getData();
             stationResourceData.observe(this, new Observer<Station>() {
                 @Override
                 public void onChanged(@Nullable Station station) {

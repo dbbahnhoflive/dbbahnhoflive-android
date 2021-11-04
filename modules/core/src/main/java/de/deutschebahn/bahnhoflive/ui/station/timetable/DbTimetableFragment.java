@@ -38,6 +38,7 @@ import de.deutschebahn.bahnhoflive.backend.ris.model.TrainMovementInfo;
 import de.deutschebahn.bahnhoflive.backend.wagenstand.WagenstandRequestManager;
 import de.deutschebahn.bahnhoflive.repository.DbTimetableResource;
 import de.deutschebahn.bahnhoflive.repository.LoadingStatus;
+import de.deutschebahn.bahnhoflive.repository.MergedStation;
 import de.deutschebahn.bahnhoflive.repository.Station;
 import de.deutschebahn.bahnhoflive.repository.timetable.Timetable;
 import de.deutschebahn.bahnhoflive.repository.trainformation.TrainFormation;
@@ -62,7 +63,7 @@ public class DbTimetableFragment extends Fragment
     private SwipeRefreshLayout swipeRefreshLayout;
     private DbTimetableResource dbTimetableResource;
     private CompositeDisposable disposable = new CompositeDisposable();
-    private LiveData<Station> stationLiveData;
+    private LiveData<MergedStation> stationLiveData;
     private MutableLiveData<TrainInfo> selectedTrainInfo;
 
     public DbTimetableFragment() {

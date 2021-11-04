@@ -47,6 +47,7 @@ import de.deutschebahn.bahnhoflive.backend.ris.model.TrainInfo;
 import de.deutschebahn.bahnhoflive.backend.wagenstand.WagenstandAlarm;
 import de.deutschebahn.bahnhoflive.backend.wagenstand.WagenstandAlarmManager;
 import de.deutschebahn.bahnhoflive.backend.wagenstand.WagenstandRequestManager;
+import de.deutschebahn.bahnhoflive.repository.MergedStation;
 import de.deutschebahn.bahnhoflive.repository.Station;
 import de.deutschebahn.bahnhoflive.repository.trainformation.Train;
 import de.deutschebahn.bahnhoflive.repository.trainformation.TrainFormation;
@@ -89,7 +90,7 @@ public class WagenstandFragment extends Fragment implements View.OnLayoutChangeL
     private WagenstandAlarmManager wagenstandAlarmManager;
 
     private ViewGroup headerLayout;
-    private LiveData<Station> stationLiveData;
+    private LiveData<MergedStation> stationLiveData;
     private StationViewModel stationViewModel;
     private String titleDescription;
 

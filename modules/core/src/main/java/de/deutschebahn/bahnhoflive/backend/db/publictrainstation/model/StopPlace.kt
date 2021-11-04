@@ -50,7 +50,10 @@ open class StopPlace {
 
     val evaIds by lazy {
         EvaIds(listOfNotNull(evaId, *(embeddings?.neighbours?.mapNotNull { neighbour ->
-            neighbour?.takeUnless { isDbStation && it.belongsToStation?.equals(stadaId) == false }?.evaId
+            neighbour
+                ?.takeUnless { isDbStation && it.belongsToStation?.equals(stadaId) == false }
+                ?.evaId
+                ?.takeIf { it.startsWith("8") }
         } ?: listOf()).toTypedArray()))
     }
 

@@ -40,6 +40,7 @@ import de.deutschebahn.bahnhoflive.backend.local.model.ServiceContent;
 import de.deutschebahn.bahnhoflive.repository.DbTimetableResource;
 import de.deutschebahn.bahnhoflive.repository.ElevatorsResource;
 import de.deutschebahn.bahnhoflive.repository.LoadingStatus;
+import de.deutschebahn.bahnhoflive.repository.MergedStation;
 import de.deutschebahn.bahnhoflive.repository.Resource;
 import de.deutschebahn.bahnhoflive.repository.ShopsResource;
 import de.deutschebahn.bahnhoflive.repository.Station;
@@ -96,7 +97,7 @@ public class StationFragment extends androidx.fragment.app.Fragment implements
     private ToolbarViewHolder toolbarViewHolder;
     private TextView largeTitleView;
 
-    private LiveData<Station> stationLiveData;
+    private LiveData<MergedStation> stationLiveData;
 
     private ShopsResource shopsResource;
     //    private ParkingsResource parkingsResource;
@@ -160,7 +161,7 @@ public class StationFragment extends androidx.fragment.app.Fragment implements
         final ViewModelProvider viewModelProvider = new ViewModelProvider(requireActivity());
         stationViewModel = viewModelProvider.get(StationViewModel.class);
 
-        Resource<Station, ? extends Throwable> stationResource = stationViewModel.getStationResource();
+        Resource<MergedStation, ? extends Throwable> stationResource = stationViewModel.getStationResource();
         stationLiveData = stationResource.getData();
         stationLiveData.observe(this, new Observer<Station>() {
             @Override
