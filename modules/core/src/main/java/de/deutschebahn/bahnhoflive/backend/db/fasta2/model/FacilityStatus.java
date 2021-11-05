@@ -83,7 +83,7 @@ public class FacilityStatus implements Parcelable, Comparable<FacilityStatus>, M
         if (description != null) {
             return description;
         } else {
-            return "";
+            return "Aufzugsanlage";
         }
     }
 
