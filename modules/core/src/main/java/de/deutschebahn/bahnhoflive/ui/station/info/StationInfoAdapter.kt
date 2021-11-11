@@ -22,7 +22,7 @@ class StationInfoAdapter(
     private val serviceContents: List<ServiceContent>,
     val trackingManager: TrackingManager,
     val dbActionButtonParser: DbActionButtonParser,
-    val stationLiveData: LiveData<Station>,
+    val stationLiveData: LiveData<out Station>,
     val whatsAppInstallationLiveData: WhatsAppInstallation,
     val whatsAppContactliveData: LiveData<String?>,
     val lifecycleProvider: () -> LifecycleOwner,

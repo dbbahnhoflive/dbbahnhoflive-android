@@ -1,7 +1,6 @@
 package de.deutschebahn.bahnhoflive.backend.db.ris.model
 
 import de.deutschebahn.bahnhoflive.repository.accessibility.AccessibilityFeature
-import de.deutschebahn.bahnhoflive.util.tryCatching
 import java.text.Collator
 import java.util.*
 
@@ -16,9 +15,9 @@ class Platform(
         val collator = Collator.getInstance(Locale.GERMAN)
     }
 
-    protected val number = tryCatching {
+    protected val number = runCatching {
         numberPattern.find(name)?.value?.toInt()
-    }
+    }.getOrNull()
 
     override fun compareTo(other: Platform): Int =
         if (number != null && other.number != null) {

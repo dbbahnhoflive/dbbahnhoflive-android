@@ -7,10 +7,9 @@
 package de.deutschebahn.bahnhoflive.ui.map
 
 import android.content.Context
-import androidx.lifecycle.LiveDataReactiveStreams
-import androidx.lifecycle.MutableLiveData
-import androidx.lifecycle.Observer
+import androidx.lifecycle.*
 import com.android.volley.VolleyError
+import com.google.android.gms.maps.model.LatLng
 import de.deutschebahn.bahnhoflive.BaseApplication
 import de.deutschebahn.bahnhoflive.backend.BaseRestListener
 import de.deutschebahn.bahnhoflive.backend.rimap.model.RimapPOI
@@ -59,8 +58,28 @@ class MapViewModel : StadaStationCacheViewModel() {
 
     val zoneIdLiveData = MutableLiveData<String>()
 
+    val originalStationLiveData = MutableLiveData<Station>()
+
+    val stationLocationLiveData: LiveData<LatLng?> = MediatorLiveData<LatLng?>().apply {
+
+        addSource(originalStationLiveData) { originalStation ->
+            if (value == null) {
+                value = originalStation.location
+            }
+        }
+
+        addSource(stationResource.data) { station ->
+            value = station?.location ?: originalStationLiveData.value?.location
+        }
+
+    }.distinctUntilChanged()
+
     fun setStation(station: Station?) {
         if (station != null) {
+            station?.let {
+                originalStationLiveData.value = it
+            }
+
             zoneIdLiveData.value = station.id
 
             detailedStopPlaceResource.initialize(station)

@@ -13,6 +13,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
@@ -28,7 +29,7 @@ public class HistoryFragment extends Fragment implements MapPresetProvider {
     private String defaultPreset;
 
     @Override
-    public boolean prepareMapIntent(Intent intent) {
+    public boolean prepareMapIntent(@NonNull Intent intent) {
         RimapFilter.putPreset(intent, defaultPreset);
 
         final FragmentManager childFragmentManager = getChildFragmentManager();
@@ -95,12 +96,23 @@ public class HistoryFragment extends Fragment implements MapPresetProvider {
     public boolean pop() {
         final FragmentManager childFragmentManager = getChildFragmentManager();
 
-        if (childFragmentManager.isStateSaved() || childFragmentManager.getBackStackEntryCount() < 1) {
-            return false;
+        final Fragment currentFragment = childFragmentManager.findFragmentById(getId());
+        if (currentFragment != null) {
+            final FragmentManager currentFragmentChildFragmentManager = currentFragment.getChildFragmentManager();
+            if (canPop(currentFragmentChildFragmentManager)) {
+                currentFragmentChildFragmentManager.popBackStack();
+                return true;
+            }
         }
+
+        if (!canPop(childFragmentManager)) return false;
 
         childFragmentManager.popBackStack();
         return true;
+    }
+
+    private boolean canPop(FragmentManager fragmentManager) {
+        return !fragmentManager.isStateSaved() && fragmentManager.getBackStackEntryCount() > 0;
     }
 
     public void popEntireHistory() {

@@ -6,46 +6,30 @@
 
 package de.deutschebahn.bahnhoflive.ui.station.timetable
 
-import android.view.View
 import android.view.ViewGroup
-import android.widget.ImageView
-import android.widget.TextView
 import de.deutschebahn.bahnhoflive.R
 import de.deutschebahn.bahnhoflive.backend.ris.model.TrainEvent
 import de.deutschebahn.bahnhoflive.backend.ris.model.TrainInfo
 import de.deutschebahn.bahnhoflive.backend.ris.model.TrainMovementInfo
 import de.deutschebahn.bahnhoflive.repository.Station
-import de.deutschebahn.bahnhoflive.ui.timetable.RouteStop
-import de.deutschebahn.bahnhoflive.ui.timetable.RouteStopsAdapter
+import de.deutschebahn.bahnhoflive.view.ItemClickListener
 import de.deutschebahn.bahnhoflive.view.SelectableItemViewHolder
 import de.deutschebahn.bahnhoflive.view.SingleSelectionManager
-import java.util.*
 
 class TrainInfoViewHolder internal constructor(
     parent: ViewGroup,
     private val timetableAdapter: DbTimetableAdapter,
     var station: Station?,
-    selectionManager: SingleSelectionManager
-) : SelectableItemViewHolder<TrainInfo>(
+    selectionManager: SingleSelectionManager,
+    clickListener: ItemClickListener<TrainInfo>
+) : SelectableItemViewHolder<TrainInfo>( // selection feature is currently unused
     parent,
     R.layout.card_expandable_timetable_db,
     selectionManager
-), View.OnClickListener, TrainInfo.ChangeListener {
+), TrainInfo.ChangeListener {
 
-    private val adapter: RouteStopsAdapter
-    private val wagonOrderRow: View
-    private val trainInfoOverviewViewHolder = TrainInfoOverviewViewHolder(itemView, timetableAdapter)
-    private val issuesBinder: IssuesBinder
-
-    override fun onClick(v: View) {
-        when (v.id) {
-            R.id.button_wagon_order -> showWagonOrder()
-        }
-    }
-
-    private fun showWagonOrder() {
-        timetableAdapter.onWagonOrderClick(item)
-    }
+    private val trainInfoOverviewViewHolder =
+        TrainInfoOverviewViewHolder(itemView, timetableAdapter)
 
     fun stopObservingItem() {
         val item = item
@@ -60,18 +44,11 @@ class TrainInfoViewHolder internal constructor(
 
     init {
 
-        val stopsRecycler = itemView.findViewById<androidx.recyclerview.widget.RecyclerView>(R.id.stops_recycler)
-        this.adapter = RouteStopsAdapter()
-        stopsRecycler.adapter = this.adapter
-
-        val issueRow = itemView.findViewById<View>(R.id.row_issue)
-        val issueIcon = issueRow.findViewById<ImageView>(R.id.issue_icon)
-        val issueIndicatorBinder = IssueIndicatorBinder(issueIcon)
-        val issueText = issueRow.findViewById<TextView>(R.id.issue_text)
-        issuesBinder = IssuesBinder(issueRow, issueText, issueIndicatorBinder)
-
-        wagonOrderRow = itemView.findViewById(R.id.row_wagon_order)
-        itemView.findViewById<View>(R.id.button_wagon_order).setOnClickListener(this)
+        itemView.setOnClickListener {
+            item?.also {
+                clickListener(it, bindingAdapterPosition)
+            }
+        }
     }
 
     private val trainEvent: TrainEvent
@@ -85,11 +62,7 @@ class TrainInfoViewHolder internal constructor(
         val trainMovementInfo =
             timetableAdapter.trainEvent.movementRetriever.getTrainMovementInfo(item)
 
-        issuesBinder.bindIssues(item, trainMovementInfo)
-
         itemView.contentDescription = renderContentDescription(item, trainMovementInfo)
-
-        bindRouteStops(item, trainMovementInfo)
 
         updateWagonOrderViews(item)
 
@@ -125,41 +98,10 @@ class TrainInfoViewHolder internal constructor(
     }
 
 
-    private fun bindRouteStops(trainInfo: TrainInfo?, trainMovementInfo: TrainMovementInfo?) {
 
-        if (trainInfo == null || trainMovementInfo == null) {
-            return
-        }
-
-        val routeStops = ArrayList<RouteStop>()
-        val stopNames = trainMovementInfo.correctedViaAsArray
-
-        for (stopName in stopNames) {
-            routeStops.add(RouteStop(stopName))
-        }
-
-        station?.title?.also { title ->
-            val departure = trainInfo.departure === trainMovementInfo
-            routeStops.add(
-                if (departure) 0 else routeStops.size,
-                RouteStop(title, true)
-            )
-        }
-
-        routeStops[0].isFirst = true
-        routeStops[routeStops.size - 1].isLast = true
-
-        adapter.setRouteStops(routeStops)
-    }
 
     private fun updateWagonOrderViews(item: TrainInfo?) {
         trainInfoOverviewViewHolder.bind(item)
-        if (item != null) {
-            wagonOrderRow.visibility = if (item.shouldOfferWagenOrder())
-                View.VISIBLE
-            else
-                View.GONE
-        }
     }
 
     companion object {

@@ -7,8 +7,6 @@
   -->
 
 <de.deutschebahn.bahnhoflive.view.DecoratedCard xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content">
 
@@ -36,78 +34,6 @@
             android:layout_height="wrap_content"
             android:orientation="vertical">
 
-            <androidx.recyclerview.widget.RecyclerView
-                android:contentDescription="@string/sr_container_stops"
-                android:id="@+id/stops_recycler"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="horizontal"
-                android:paddingBottom="@dimen/default_space"
-                android:paddingTop="@dimen/default_space"
-                app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
-                tools:listitem="@layout/item_route_stop" />
-
-            <androidx.constraintlayout.widget.ConstraintLayout
-                android:id="@+id/row_issue"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginBottom="26dp"
-                android:layout_marginLeft="@dimen/default_space"
-                android:layout_marginRight="@dimen/default_space"
-                android:layout_marginTop="0dp"
-                android:padding="@dimen/default_space_half">
-
-                <ImageView
-                    android:id="@+id/issue_icon"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:src="@drawable/app_warndreieck"
-                    app:layout_constraintBaseline_toBaselineOf="@+id/issue_text"
-                    android:baseline="17.5dp"
-                    app:layout_constraintLeft_toLeftOf="parent"
-                    android:importantForAccessibility="no" />
-
-                <TextView
-                    android:id="@+id/issue_text"
-                    android:textSize="@dimen/textsize_h3"
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_marginLeft="@dimen/default_space_half"
-                    android:textColor="?attr/colorAccent"
-                    app:layout_constraintBottom_toBottomOf="parent"
-                    app:layout_constraintLeft_toRightOf="@+id/issue_icon"
-                    app:layout_constraintRight_toRightOf="parent"
-                    app:layout_constraintTop_toTopOf="parent"
-                    tools:text="ICE 1630: At vero eos et accusam et justo duo dolores et a rebum, stet clita kasd." />
-            </androidx.constraintlayout.widget.ConstraintLayout>
-
-            <androidx.cardview.widget.CardView
-                android:id="@+id/row_wagon_order"
-                app:cardCornerRadius="0dp"
-                app:cardElevation="6dp"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content">
-
-                <androidx.cardview.widget.CardView
-                    android:id="@+id/button_wagon_order"
-                    android:layout_width="match_parent"
-                    android:layout_height="@dimen/round_button_size_large"
-                    android:layout_margin="@dimen/default_space"
-                    app:cardBackgroundColor="#646973"
-                    app:cardCornerRadius="@dimen/round_button_half_size_large">
-
-                    <TextView
-                        android:layout_gravity="center"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:gravity="center"
-                        android:minHeight="64dp"
-                        android:textColor="@color/white"
-                        android:drawableRight="@drawable/menuicon_wagenstandsanzeiger"
-                        android:text="@string/btn_wagon_order" />
-
-                </androidx.cardview.widget.CardView>
-            </androidx.cardview.widget.CardView>
         </LinearLayout>
     </LinearLayout>
 </de.deutschebahn.bahnhoflive.view.DecoratedCard>

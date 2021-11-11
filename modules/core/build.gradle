@@ -13,6 +13,7 @@ android {
         multiDexEnabled true
 
         buildConfigField "String", "BUSINESS_HUB_API_KEY", "\"TOL1jxXeqIW72s7vKPCcUuPNqFJTvPQx\"" // open source community API key
+        buildConfigField "String", "RIS_JOURNEYS_BASE_URL", "\"https://gateway.businesshub.deutschebahn.com/ris-journeys/v1/\""
 
     }
     buildTypes {
@@ -20,12 +21,17 @@ android {
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
             multiDexKeepProguard file('multidex-config.pro')
+
         }
         demo {
             initWith release
+
+            buildConfigField "String", "RIS_JOURNEYS_BASE_URL", "\"https://gateway.businesshub.deutschebahn.com/ris-journeys/trial/v1/\""
         }
         debug {
             minifyEnabled false
+
+//            buildConfigField "String", "RIS_JOURNEYS_BASE_URL", "\"https://gateway.businesshub.deutschebahn.com/ris-journeys/trial/v1/\""
         }
     }
 
@@ -69,7 +75,6 @@ dependencies {
     api 'androidx.multidex:multidex:2.0.1'
     api 'com.android.volley:volley:1.2.0'
     api 'com.google.android.gms:play-services-maps:17.0.1'
-    implementation 'com.google.firebase:firebase-messaging:22.0.0'
     api 'com.google.code.gson:gson:2.8.6'
     implementation 'com.google.android.flexbox:flexbox:3.0.0'
     implementation 'com.jakewharton:disklrucache:2.0.2'

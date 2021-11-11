@@ -6,9 +6,6 @@
 
 package de.deutschebahn.bahnhoflive.ui.station.timetable;
 
-import android.app.AlertDialog;
-import android.app.ProgressDialog;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.LayoutInflater;
@@ -19,7 +16,6 @@ import android.widget.ViewAnimator;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
-import androidx.fragment.app.FragmentActivity;
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.Observer;
@@ -31,16 +27,11 @@ import com.android.volley.VolleyError;
 
 import de.deutschebahn.bahnhoflive.R;
 import de.deutschebahn.bahnhoflive.analytics.TrackingManager;
-import de.deutschebahn.bahnhoflive.backend.BaseRestListener;
-import de.deutschebahn.bahnhoflive.backend.ris.model.TrainEvent;
 import de.deutschebahn.bahnhoflive.backend.ris.model.TrainInfo;
-import de.deutschebahn.bahnhoflive.backend.ris.model.TrainMovementInfo;
-import de.deutschebahn.bahnhoflive.backend.wagenstand.WagenstandRequestManager;
 import de.deutschebahn.bahnhoflive.repository.DbTimetableResource;
 import de.deutschebahn.bahnhoflive.repository.LoadingStatus;
-import de.deutschebahn.bahnhoflive.repository.Station;
+import de.deutschebahn.bahnhoflive.repository.MergedStation;
 import de.deutschebahn.bahnhoflive.repository.timetable.Timetable;
-import de.deutschebahn.bahnhoflive.repository.trainformation.TrainFormation;
 import de.deutschebahn.bahnhoflive.stream.rx.Optional;
 import de.deutschebahn.bahnhoflive.ui.map.Content;
 import de.deutschebahn.bahnhoflive.ui.map.InitialPoiManager;
@@ -48,9 +39,10 @@ import de.deutschebahn.bahnhoflive.ui.map.MapPresetProvider;
 import de.deutschebahn.bahnhoflive.ui.map.content.rimap.Track;
 import de.deutschebahn.bahnhoflive.ui.station.HistoryFragment;
 import de.deutschebahn.bahnhoflive.ui.station.StationViewModel;
-import de.deutschebahn.bahnhoflive.ui.timetable.WagenstandFragment;
+import de.deutschebahn.bahnhoflive.ui.timetable.journey.JourneyFragment;
 import io.reactivex.disposables.CompositeDisposable;
 import io.reactivex.functions.Consumer;
+import kotlin.Unit;
 
 public class DbTimetableFragment extends Fragment
         implements FilterDialogFragment.Consumer, MapPresetProvider {
@@ -62,7 +54,6 @@ public class DbTimetableFragment extends Fragment
     private SwipeRefreshLayout swipeRefreshLayout;
     private DbTimetableResource dbTimetableResource;
     private CompositeDisposable disposable = new CompositeDisposable();
-    private LiveData<Station> stationLiveData;
     private MutableLiveData<TrainInfo> selectedTrainInfo;
 
     public DbTimetableFragment() {
@@ -73,29 +64,21 @@ public class DbTimetableFragment extends Fragment
         super.onCreate(savedInstanceState);
 
         final StationViewModel stationViewModel = new ViewModelProvider(getActivity()).get(StationViewModel.class);
-        stationLiveData = stationViewModel.getStationResource().getData();
+        LiveData<MergedStation> stationLiveData = stationViewModel.getStationResource().getData();
 
         dbTimetableResource = stationViewModel.getDbTimetableResource();
 
         selectedTrainInfo = stationViewModel.getSelectedTrainInfo();
 
-        adapter = new DbTimetableAdapter(stationLiveData.getValue(), new DbTimetableAdapter.FilterUI() {
-            @Override
-            public void onShowFilter(String[] trainCategories, String trainCategory, String[] tracks, String track) {
-                final FilterDialogFragment filterDialogFragment = FilterDialogFragment.create(trainCategories, trainCategory, tracks, track);
-                filterDialogFragment.show(getChildFragmentManager(), "filterDialog");
-            }
-        }, new OnWagonOrderClickListener() {
-            @Override
-            public void onWagonOrderClick(final TrainInfo trainInfo, final TrainEvent trainEvent) {
-
-                getTrackingManager().track(TrackingManager.TYPE_ACTION, TrackingManager.Screen.H2, TrackingManager.Action.TAP, TrackingManager.UiElement.WAGENREIHUNG);
-
-                showWaggonOrder(trainInfo, trainEvent);
-            }
-
+        adapter = new DbTimetableAdapter(stationLiveData.getValue(), (trainCategories, trainCategory, tracks, track) -> {
+            final FilterDialogFragment filterDialogFragment = FilterDialogFragment.create(trainCategories, trainCategory, tracks, track);
+            filterDialogFragment.show(getChildFragmentManager(), "filterDialog");
         }, getTrackingManager(), view -> {
             dbTimetableResource.loadMore();
+        }, (trainInfo, trainEvent, integer) -> {
+            final HistoryFragment historyFragment = HistoryFragment.parentOf(this);
+            historyFragment.push(new JourneyFragment(trainInfo, trainEvent));
+            return Unit.INSTANCE;
         });
 
         stationLiveData.observe(this, station -> {
@@ -138,50 +121,6 @@ public class DbTimetableFragment extends Fragment
             }
         }));
 
-        disposable.add(stationViewModel.getWaggonOrderObservable().subscribe(new Consumer<TrainInfo>() {
-            @Override
-            public void accept(TrainInfo trainInfo) {
-                showWaggonOrder(trainInfo, TrainEvent.DEPARTURE);
-            }
-        }));
-    }
-
-    private void showWaggonOrder(final TrainInfo trainInfo, final TrainEvent trainEvent) {
-        final Station station = stationLiveData.getValue();
-
-        if (station != null && station.getEvaIds() != null) {
-
-            final ProgressDialog progressDialog = ProgressDialog.show(getActivity(),
-                    "Zug wird abgerufen",
-                    "Bitte warten ...", true, true);
-
-            final WagenstandRequestManager wagenstandRequestManager = new WagenstandRequestManager(new BaseRestListener<TrainFormation>() {
-                @Override
-                public void onSuccess(@NonNull TrainFormation payload) {
-                    progressDialog.dismiss();
-                    final WagenstandFragment wagenstandFragment = WagenstandFragment
-                            .create("Wagenstand", payload, null, null, trainInfo, trainEvent);
-                    HistoryFragment.parentOf(DbTimetableFragment.this).push(wagenstandFragment);
-                }
-
-                @Override
-                public void onFail(VolleyError reason) {
-                    progressDialog.dismiss();
-                    showNoResultDialog();
-                    super.onFail(reason);
-                }
-            });
-
-            final TrainMovementInfo trainMovementInfo = trainEvent.movementRetriever.getTrainMovementInfo(trainInfo);
-            wagenstandRequestManager.loadWagenstand(
-                    station.getEvaIds(), (String) TimetableViewHelper.
-                            buildQueryParameters(trainInfo, trainMovementInfo).get("trainNumber"), (String) TimetableViewHelper.
-                            buildQueryParameters(trainInfo, trainMovementInfo).get("time")
-            );
-
-        } else {
-            showNoResultDialog();
-        }
     }
 
 
@@ -230,24 +169,6 @@ public class DbTimetableFragment extends Fragment
         return view;
     }
 
-    private void showNoResultDialog() {
-        final FragmentActivity activity = getActivity();
-        if (activity != null) {
-            new AlertDialog.Builder(activity)
-                    .setTitle(activity.getString(R.string.wagenstand_no_result_headline))
-                    .setMessage(activity.getString(R.string.wagenstand_no_result_copy))
-                    .setPositiveButton("Okay", new DialogInterface.OnClickListener() {
-                        @Override
-                        public void onClick(DialogInterface dialog, int which) {
-                            dialog.dismiss();
-                        }
-                    })
-                    .setCancelable(true)
-                    .create()
-                    .show();
-        }
-    }
-
     @Override
     public void onDestroyView() {
         viewSwitcher = null;
@@ -276,7 +197,7 @@ public class DbTimetableFragment extends Fragment
     }
 
     @Override
-    public boolean prepareMapIntent(Intent intent) {
+    public boolean prepareMapIntent(@NonNull Intent intent) {
         final Track track = adapter.getCurrentTrack();
 
         if (track != null) {

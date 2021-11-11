@@ -17,7 +17,7 @@ import java.nio.charset.StandardCharsets
 
 class ComplaintUserInterface(
     private val includeComplaintBinding: IncludeComplaintBinding,
-    val stationLiveData: LiveData<Station>,
+    val stationLiveData: LiveData<out Station>,
     val whatsAppInstallationLiveData: WhatsAppInstallation,
     val whatsAppContactliveData: LiveData<String?>,
     val activityStarter: (Intent) -> Unit

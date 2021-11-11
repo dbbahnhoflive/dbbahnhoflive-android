@@ -45,12 +45,7 @@
 
                 <!-- <category android:name="android.intent.category.LAUNCHER" /> -->
             </intent-filter>
-        </activity> <!-- [START firebase_service] -->
-        <service android:name=".BahnFirebaseMessagingService">
-            <intent-filter>
-                <action android:name="com.google.firebase.MESSAGING_EVENT" />
-            </intent-filter>
-        </service> <!-- [END firebase_service] -->
+        </activity>
         <receiver android:name=".backend.wagenstand.receiver.WagenstandAlarmReceiver">
             <intent-filter>
                 <action android:name="android.intent.action.BOOT_COMPLETED" />

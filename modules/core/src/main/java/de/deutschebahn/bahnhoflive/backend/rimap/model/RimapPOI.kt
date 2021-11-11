@@ -74,7 +74,9 @@ class RimapPOI : Parcelable, MarkerFilterable {
 
         displname = when {
             type == MenuMapping.PLATFORM_SECTOR_CUBE && !name.startsWith(PREFIX_SECTOR_CUBE) -> "$PREFIX_SECTOR_CUBE$name"
-            type == MenuMapping.PLATFROM && !name.startsWith(PREFIX_PLATFORM) -> "$PREFIX_PLATFORM$name"
+            type in MenuMapping.PLATFORM_TYPES && !name.startsWith(
+                PREFIX_PLATFORM
+            ) -> "$PREFIX_PLATFORM$name"
             else -> name
         }
         displmap = displname
@@ -287,6 +289,7 @@ class RimapPOI : Parcelable, MarkerFilterable {
         const val SUBCAT_ELEVATORS = "Aufzüge"
         const val SUBCAT_CAR_PARK = "Parkplatz"
         const val SUBCAT_PARKING_GARAGE = "Parkhaus"
+        const val SUBCAT_TICKETS = "Fahrkarten"
 
         val EXCLUDED_SUBCATS = setOf(SUBCAT_ELEVATORS, SUBCAT_CAR_PARK, SUBCAT_PARKING_GARAGE)
 

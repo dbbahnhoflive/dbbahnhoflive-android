@@ -44,6 +44,9 @@
     <drawable name="tag_bicycle">@drawable/missing</drawable>
     <drawable name="tag_accessible">@drawable/missing</drawable>
     <drawable name="tag_accessible_toilet">@drawable/missing</drawable>
+    <drawable name="tag_familienbereich">@drawable/missing</drawable>
+    <drawable name="tag_bahncomfort">@drawable/missing</drawable>
+    <drawable name="tag_mobilitaetseingeschraenkt">@drawable/missing</drawable>
     <drawable name="rimap_bahnhofsmission_grau">@drawable/missing</drawable>
     <drawable name="app_fundservice">@drawable/missing</drawable>
     <drawable name="app_db_lounge">@drawable/missing</drawable>
