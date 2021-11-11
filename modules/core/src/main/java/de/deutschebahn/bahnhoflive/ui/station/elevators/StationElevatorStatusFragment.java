@@ -6,6 +6,8 @@
 
 package de.deutschebahn.bahnhoflive.ui.station.elevators;
 
+import static de.deutschebahn.bahnhoflive.ui.map.content.rimap.RimapFilter.PRESET_ELEVATORS;
+
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.LayoutInflater;
@@ -33,8 +35,6 @@ import de.deutschebahn.bahnhoflive.ui.map.MapPresetProvider;
 import de.deutschebahn.bahnhoflive.ui.map.content.rimap.RimapFilter;
 import de.deutschebahn.bahnhoflive.ui.station.StationViewModel;
 import de.deutschebahn.bahnhoflive.view.SingleSelectionManager;
-
-import static de.deutschebahn.bahnhoflive.ui.map.content.rimap.RimapFilter.PRESET_ELEVATORS;
 
 public class StationElevatorStatusFragment extends Fragment
         implements MapPresetProvider {
@@ -85,7 +85,7 @@ public class StationElevatorStatusFragment extends Fragment
     }
 
     @Override
-    public boolean prepareMapIntent(Intent intent) {
+    public boolean prepareMapIntent(@NonNull Intent intent) {
         InitialPoiManager.putInitialPoi(intent, Content.Source.FACILITY_STATUS, getAdapter().getSelectedItem());
         RimapFilter.putPreset(intent, PRESET_ELEVATORS);
 

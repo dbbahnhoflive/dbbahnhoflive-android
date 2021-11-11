@@ -17,7 +17,6 @@ import de.deutschebahn.bahnhoflive.stream.livedata.MergedLiveData
 import de.deutschebahn.bahnhoflive.ui.station.StaticInfoCollection
 import de.deutschebahn.bahnhoflive.util.then
 import java.util.regex.Pattern
-
 class ServiceNumbersLiveData(
     detailedStopPlaceResource: DetailedStopPlaceResource,
     val staticInfoCollectionSource: LiveData<StaticInfoCollection>
@@ -30,14 +29,10 @@ class ServiceNumbersLiveData(
     }
 
     override fun onSourceChanged(source: LiveData<*>) {
-        detailedStopPlaceLiveData.value?.also { detailedStopPlace ->
-            staticInfoCollectionSource.value?.also { staticInfoCollection ->
-                update(detailedStopPlace, staticInfoCollection)
-            }
-        }
+        update(detailedStopPlaceLiveData.value, staticInfoCollectionSource.value)
     }
 
-    fun update(detailedStopPlace: DetailedStopPlace, staticInfoCollection: StaticInfoCollection) {
+    fun update(detailedStopPlace: DetailedStopPlace?, staticInfoCollection: StaticInfoCollection?) {
         value = listOfNotNull(
             composeChatbotContent(
                 detailedStopPlace,
@@ -63,11 +58,13 @@ class ServiceNumbersLiveData(
 
     fun StaticInfo?.wrapServiceContent() = this?.let { ServiceContent(it) }
 
-    private fun composeRateAppContent(staticInfoCollection: StaticInfoCollection): ServiceContent? =
-        staticInfoCollection.typedStationInfos[ServiceContentType.Local.RATE_APP].wrapServiceContent()
+    private fun composeRateAppContent(staticInfoCollection: StaticInfoCollection?): ServiceContent? =
+        staticInfoCollection?.typedStationInfos?.get(ServiceContentType.Local.RATE_APP)
+            .wrapServiceContent()
 
-    private fun composeAppIssuesContent(staticInfoCollection: StaticInfoCollection): ServiceContent? =
-        staticInfoCollection.typedStationInfos[ServiceContentType.Local.APP_ISSUE].wrapServiceContent()
+    private fun composeAppIssuesContent(staticInfoCollection: StaticInfoCollection?): ServiceContent? =
+        staticInfoCollection?.typedStationInfos?.get(ServiceContentType.Local.APP_ISSUE)
+            .wrapServiceContent()
 
     private fun composeStationComplaintsContent(): ServiceContent? = ServiceContent(
         StaticInfo(
@@ -78,44 +75,58 @@ class ServiceNumbersLiveData(
     )
 
     private fun composeThreeSContent(
-        station: DetailedStopPlace,
-        staticInfoCollection: StaticInfoCollection
+        station: DetailedStopPlace?,
+        staticInfoCollection: StaticInfoCollection?
     ): ServiceContent? {
-        return station.tripleSCenter?.let { tripleSCenter ->
-            staticInfoCollection.typedStationInfos[ServiceContentType.THREE_S]?.let { staticInfo ->
-                ServiceContent(
-                    StaticInfo(
-                        staticInfo.type,
-                        staticInfo.title,
-                        staticInfo.descriptionText.replace(
-                            "[PHONENUMBER]",
-                            tripleSCenter.publicPhoneNumber ?: ""
-                        )
-                    ), null
-                )
-            }
+        return station?.tripleSCenter?.let { tripleSCenter ->
+            staticInfoCollection?.typedStationInfos?.get(ServiceContentType.THREE_S)
+                ?.let { staticInfo ->
+                    ServiceContent(
+                        StaticInfo(
+                            staticInfo.type,
+                            staticInfo.title,
+                            staticInfo.descriptionText.replace(
+                                "[PHONENUMBER]",
+                                tripleSCenter.publicPhoneNumber ?: ""
+                            )
+                        ), null
+                    )
+                }
         }
     }
 
-    private fun composeChatbotContent(detailedStopPlace: DetailedStopPlace, staticInfoCollection: StaticInfoCollection, chatbot: String) =
+    private fun composeChatbotContent(
+        detailedStopPlace: DetailedStopPlace?,
+        staticInfoCollection: StaticInfoCollection?,
+        chatbot: String
+    ) =
         if (detailedStopPlace.isChatbotAvailable) {
-            staticInfoCollection.typedStationInfos[ServiceContentType.Local.CHATBOT]?.let { staticInfo ->
-                ServiceContent(
-                    StaticInfo(
-                        staticInfo.type,
-                        staticInfo.title,
-                        staticInfo.descriptionText
-                    )
+            staticInfoCollection?.typedStationInfos?.get(ServiceContentType.Local.CHATBOT)
+                ?.let { staticInfo ->
+                    ServiceContent(
+                        StaticInfo(
+                            staticInfo.type,
+                            staticInfo.title,
+                            staticInfo.descriptionText
+                        )
 
-                )
-            }
+                    )
+                }
         } else null
 
-    fun composeServiceContent(detailedStopPlace: DetailedStopPlace, staticInfoCollection: StaticInfoCollection, type: String, additionalInfo: String? = null) =
-        PublicTrainStationService.predicates[type]?.invoke(detailedStopPlace)?.then {
-            staticInfoCollection.typedStationInfos[type]?.let {
-                ServiceContent(it, additionalInfo)
-            }}
+    fun composeServiceContent(
+        detailedStopPlace: DetailedStopPlace?,
+        staticInfoCollection: StaticInfoCollection?,
+        type: String,
+        additionalInfo: String? = null
+    ) =
+        if (detailedStopPlace != null && staticInfoCollection != null) {
+            PublicTrainStationService.predicates[type]?.invoke(detailedStopPlace)?.then {
+                staticInfoCollection.typedStationInfos[type]?.let {
+                    ServiceContent(it, additionalInfo)
+                }
+            }
+        } else null
 
     private fun getAdditionalMobilityServiceText(station: DetailedStopPlace): String? =
         station.mobilityServiceText?.let { mobilityServiceText ->
@@ -145,3 +156,4 @@ class ServiceNumbersLiveData(
     }
 
 }
+

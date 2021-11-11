@@ -6,7 +6,6 @@
 
 package de.deutschebahn.bahnhoflive.backend.wagenstand.models;
 
-import android.content.Context;
 import android.os.Parcel;
 import android.os.Parcelable;
 
@@ -31,17 +30,27 @@ public enum WaggonFeature implements Parcelable {
     ),
     KLIMA(
             R.string.wagon_feature_airconditioning,
-            new WaggonFeatureLabelTemplate() {
-                @Override
-                public CharSequence composeLabel(Context context, WaggonFeature waggonFeature, Status status) {
-                    if (status == Status.DEFEKT) {
-                        return context.getText(R.string.defective_airconditioning);
-                    }
-
-                    return null;
+            (context, waggonFeature, status) -> {
+                if (status == Status.DEFEKT) {
+                    return context.getText(R.string.defective_airconditioning);
                 }
+
+                return null;
             }
-    ),;
+    ),
+    PLAETZEBAHNCOMFORT(
+            R.string.wagon_feature_comfort,
+            R.drawable.tag_bahncomfort
+    ),
+    PLAETZESCHWERBEH(
+            R.string.wagon_feature_severely_disabled,
+            R.drawable.tag_mobilitaetseingeschraenkt
+    ),
+    FAMILIE(
+            R.string.wagon_feature_family,
+            R.drawable.tag_familienbereich
+    ),
+    ;
 
     @StringRes
     public final int label;

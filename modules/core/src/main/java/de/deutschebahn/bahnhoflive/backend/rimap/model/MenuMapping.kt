@@ -7,12 +7,19 @@ object MenuMapping {
     const val DB_TRAVEL_CENTER = "DB_TRAVEL_CENTER"
     const val TICKETS = "TICKETS"
     const val TOURIST_INFORMATION = "TOURIST_INFORMATION"
+
+    /**
+     * 2021-09-02: Finally replaced by [PLATFORM]. Keep it in code for a while just to make sure...
+     */
+    @Deprecated("Replaced by PLATFORM")
     const val PLATFROM = "PLATFROM"
 
     /**
      * Note that as of 2021-07-07 Rimap is still using the wrong spelling [PLATFROM]
      */
     const val PLATFORM = "PLATFORM"
+    val PLATFORM_TYPES = listOf(PLATFORM, PLATFROM)
+
     const val PLATFORM_SECTOR_CUBE = "PLATFORM_SECTOR_CUBE"
     const val AIRPORT = "AIRPORT"
     const val COACH = "COACH"

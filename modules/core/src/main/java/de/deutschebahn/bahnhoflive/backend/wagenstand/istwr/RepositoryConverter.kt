@@ -159,7 +159,10 @@ class RepositoryConverter {
                     val status = Status.valueOf(it.status)
                     FeatureStatus(waggonFeature, status)
                 } catch (e: Exception) {
-                    Log.i(TrainFormation::class.java.simpleName, "waggon feature unusable", e)
+                    Log.i(
+                        TrainFormation::class.java.simpleName,
+                        "waggon feature unusable: ${it.ausstattungsart}"
+                    )
                     null
                 }
             },

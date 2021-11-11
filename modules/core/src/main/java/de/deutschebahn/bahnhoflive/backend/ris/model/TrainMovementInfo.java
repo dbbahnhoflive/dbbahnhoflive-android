@@ -52,8 +52,11 @@ public class TrainMovementInfo implements Parcelable {
     private static final String _message = "m";
     private static final String TRAIN_INFO_ALTERNATIVE_NAME = TrainInfo._train_info_alternative_name;
     public static final Pattern TRACK_PATTERN = TrackKt.getTRACK_PATTERN();
-    private static Map<String,String> map = null;
-    private static Map<String,String[]> codesMap = null;
+
+    public static final String PLANNED_STATUS_ADDITIONAL = "a";
+
+    private static Map<String, String> map = null;
+    private static Map<String, String[]> codesMap = null;
 
     private String platform;
     private String via;
@@ -188,8 +191,11 @@ public class TrainMovementInfo implements Parcelable {
 
         ArrayList<String> displayMessages = new ArrayList<>();
         for (Message message : messages) {
-            if (!message.isRevoked() && !displayMessages.contains(message.getDisplayMessage())) {
-                displayMessages.add(message.getDisplayMessage());
+            if (!message.isRevoked()) {
+                final String displayMessage = message.getDisplayMessage();
+                if (displayMessage != null && !displayMessages.contains(displayMessage)) {
+                    displayMessages.add(displayMessage);
+                }
             }
         }
 
@@ -544,15 +550,19 @@ public class TrainMovementInfo implements Parcelable {
         }
     }
 
+    public boolean isAdditional() {
+        return PLANNED_STATUS_ADDITIONAL.equals(getPlannedStatus());
+    }
+
     public String getAdditionalTrainMessage() {
 
         String correctedStatus = getCorrectedStatus();
         String plannedStatus = getPlannedStatus();
-        if (correctedStatus  != null && correctedStatus.length() > 0) {
+        if (correctedStatus != null && correctedStatus.length() > 0) {
             plannedStatus = correctedStatus;
         }
-        if (plannedStatus != null && plannedStatus.equals("a")) {
-            return "Ersatzzug";
+        if (isAdditional()) {
+            return "Zusätzlicher Halt";
         }
 
         return null;
@@ -655,8 +665,16 @@ public class TrainMovementInfo implements Parcelable {
         return null;
     }
 
-    public boolean isTrainMovementCancelled(){
-        return getCorrectedStatus() != null && getCorrectedStatus().equals("c");
+    public boolean isTrainMovementCancelled() {
+        return isStatusCanceled(getCorrectedStatus());
+    }
+
+    private boolean isStatusCanceled(String correctedStatus) {
+        return correctedStatus != null && correctedStatus.equals("c");
+    }
+
+    public boolean isCompletelyCanceled() {
+        return isTrainMovementCancelled() || isStatusCanceled(getPlannedStatus());
     }
 
     public String getFormattedTime() {

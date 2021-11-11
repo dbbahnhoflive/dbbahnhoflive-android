@@ -146,7 +146,7 @@ public class RISTimetable implements Parcelable {
             TrainMovementInfo tmi = trainEvent.movementRetriever.getTrainMovementInfo(i);
 
             //dont show train if max(tmi.plannedDateTime, correctedDateTime) is longer ago than MAX_PAST
-            if (tmi != null && !isLongPast(tmi) && !tmi.getHidden().equals("1")) {
+            if (tmi != null && !isLongPast(tmi) && !tmi.getHidden().equals("1") && !(i.isSpecial() && tmi.isCompletelyCanceled())) {
                 filteredTrains.add(i);
             }
         }

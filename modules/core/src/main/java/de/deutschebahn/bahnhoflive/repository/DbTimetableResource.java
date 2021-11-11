@@ -30,7 +30,7 @@ public class DbTimetableResource extends RemoteResource<Timetable> {
     private String stationId;
     private String stationName;
 
-    private final TimetableCollector timetableCollector = BaseApplication.get().getRepositories().getTimetableRpository().createTimetableCollector();
+    private final TimetableCollector timetableCollector = BaseApplication.get().getRepositories().getTimetableRepository().createTimetableCollector();
 
     private final Disposable disposable = timetableCollector
             .getMergedTrainInfosObservable()
