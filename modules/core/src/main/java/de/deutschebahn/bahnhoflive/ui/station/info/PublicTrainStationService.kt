@@ -7,7 +7,6 @@
 package de.deutschebahn.bahnhoflive.ui.station.info
 
 import de.deutschebahn.bahnhoflive.backend.db.publictrainstation.model.DetailedStopPlace
-import de.deutschebahn.bahnhoflive.backend.local.model.ChatbotStation
 import de.deutschebahn.bahnhoflive.backend.local.model.ServiceContentType
 
 object PublicTrainStationService {
@@ -40,9 +39,7 @@ object PublicTrainStationService {
             detailedStopPlace.hasLostAndFound
         },
         ServiceContentType.Local.CHATBOT to { detailedStopPlace: DetailedStopPlace ->
-            ChatbotStation.isInTeaserPeriod && detailedStopPlace.stadaId.let {
-                ChatbotStation.ids.contains(it)
-            } == true
+            true
         }
     )
 }

@@ -141,7 +141,7 @@ public enum ShopCategory {
             case Menucat.DIENSTLEISTUNGEN:
                 return SERVICE; // use default only
             case Menucat.TICKETSREISEAUSKUNFT:
-                if (!"Fahrkartenautomat".equals(rimapPOI.displname)) {
+                if (!"Fahrkartenautomat".equals(rimapPOI.displname) && !RimapPOI.SUBCAT_TICKETS.equals(rimapPOI.menusubcat)) {
                     return SERVICE;
                 }
         }

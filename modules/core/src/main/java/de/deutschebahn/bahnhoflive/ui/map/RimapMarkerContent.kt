@@ -97,7 +97,7 @@ private val mapIcon: Int, @field:DrawableRes
             return true
         }
 
-        if (MenuMapping.PLATFROM == rimapPOI.type && item is Track) {
+        if (rimapPOI.type in MenuMapping.PLATFORM_TYPES && item is Track) {
             val platform = item.number
             if (!TextUtils.isEmpty(platform)) {
                 return platform == rimapPOI.name
@@ -112,10 +112,8 @@ private val mapIcon: Int, @field:DrawableRes
     }
 
     override fun getViewType(): MarkerContent.ViewType =
-        when (rimapPOI.type) {
-            MenuMapping.PLATFROM -> ViewType.TRACK
-            else -> super.getViewType()
-        }
+        if (rimapPOI.type in MenuMapping.PLATFORM_TYPES) ViewType.TRACK
+        else super.getViewType()
 
     /**
      * This method currently doesn't bother checking if this is actually a track / platform instance.

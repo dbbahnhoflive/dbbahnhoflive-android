@@ -26,6 +26,7 @@ import de.deutschebahn.bahnhoflive.backend.local.model.*
 import de.deutschebahn.bahnhoflive.backend.rimap.RimapConfig
 import de.deutschebahn.bahnhoflive.backend.rimap.model.RimapStationInfo
 import de.deutschebahn.bahnhoflive.backend.ris.model.RISTimetable
+import de.deutschebahn.bahnhoflive.backend.ris.model.TrainEvent
 import de.deutschebahn.bahnhoflive.backend.ris.model.TrainInfo
 import de.deutschebahn.bahnhoflive.persistence.RecentContentQueriesStore
 import de.deutschebahn.bahnhoflive.repository.*
@@ -923,36 +924,19 @@ class StationViewModel : HafasTimetableViewModel() {
                         })
 
                         .append(dbTimetable.value?.let { timetable ->
-                            timetable.departures.asSequence().plus(timetable.arrivals)
-                                .filter { trainInfo ->
-                                    val candidates = listOfNotNull<String>(trainInfo.trainCategory,
-                                        trainInfo.departure?.lineIdentifier?.takeUnless { it.isBlank() }
-                                            ?: trainInfo.trainName?.takeUnless { it.isBlank() }).toMutableList()
-                                    trainInfo.departure?.correctedVia?.split('|')
-                                        ?.also { candidates += it }
-                                    trainInfo.departure?.via?.split('|')?.also { candidates += it }
-                                    queryParts.all {
-                                        candidates.any(it.predicate)
-                                    }
-                                }.mapNotNull { trainInfo ->
-                                    trainInfo.departure?.let { departure ->
-                                        ContentSearchResult(
-                                            "Ab ${departure.formattedTime} / ${
-                                                TimetableViewHelper.composeName(
-                                                    trainInfo,
-                                                    departure
-                                                )
-                                            } ${departure.getDestinationStop(true)}",
-                                            R.drawable.app_abfahrt_ankunft,
-                                            currentRawQuery,
-                                            SearchResultClickListener(trainInfo.createOnClickListener()),
-                                            departure.plannedDateTime,
-                                            "DB-Tafel-Abfahrt"
-                                        )
-                                    }
-                                }.sortedBy {
-                                    it.timestamp
-                                }
+                            timetable.departures.extractSearchResults(
+                                TrainEvent.DEPARTURE,
+                                queryParts,
+                                currentRawQuery
+                            ).plus(
+                                timetable.arrivals.extractSearchResults(
+                                    TrainEvent.ARRIVAL,
+                                    queryParts,
+                                    currentRawQuery
+                                )
+                            ).sortedBy {
+                                it.timestamp
+                            }
                         })
 
                         .toList()
@@ -971,6 +955,44 @@ class StationViewModel : HafasTimetableViewModel() {
         addSource(stationFeatures, update)
         addSource(queryAndParts, update)
     }
+
+    private fun List<TrainInfo>.extractSearchResults(
+        trainEvent: TrainEvent,
+        queryParts: List<QueryPart>,
+        currentRawQuery: String?
+    ) = asSequence()
+        .filter { trainInfo ->
+            val trainMovementInfo = trainEvent.movementRetriever.getTrainMovementInfo(trainInfo)
+            val candidates = listOfNotNull<String>(trainInfo.trainCategory,
+                trainMovementInfo?.lineIdentifier?.takeUnless { it.isBlank() }
+                    ?: trainInfo.trainName?.takeUnless { it.isBlank() }).toMutableList()
+            trainMovementInfo?.correctedVia?.split('|')
+                ?.also { candidates += it }
+            trainMovementInfo?.via?.split('|')?.also { candidates += it }
+            queryParts.all {
+                candidates.any(it.predicate)
+            }
+        }.mapNotNull { trainInfo ->
+            trainEvent.movementRetriever.getTrainMovementInfo(trainInfo)?.let { trainMovementInfo ->
+                ContentSearchResult(
+                    "${trainEvent.timeLabel} ${trainMovementInfo.formattedTime} / ${
+                        TimetableViewHelper.composeName(
+                            trainInfo,
+                            trainMovementInfo
+                        )
+                    } ${trainMovementInfo.getDestinationStop(trainEvent.isDeparture)}",
+                    R.drawable.app_abfahrt_ankunft,
+                    currentRawQuery,
+                    SearchResultClickListener(
+                        trainInfo.createOnClickListener(
+                            !trainEvent.isDeparture
+                        )
+                    ),
+                    trainMovementInfo.plannedDateTime,
+                    if (trainEvent.isDeparture) "DB-Tafel-Abfahrt" else "DB-Tafel-Ankunft"
+                )
+            }
+        }
 
     val queryQuality = MediatorLiveData<Map<String, Any>>().apply {
         var resultsAvailableRecently = true
@@ -1064,8 +1086,8 @@ class StationViewModel : HafasTimetableViewModel() {
         }
     }
 
-    private fun TrainInfo.createOnClickListener() = View.OnClickListener {
-        stationNavigation?.showTimetablesFragment(false, false, null)
+    private fun TrainInfo.createOnClickListener(arrival: Boolean = false) = View.OnClickListener {
+        stationNavigation?.showTimetablesFragment(false, arrival, null)
         selectedTrainInfo.value = this
     }
 
@@ -1148,10 +1170,7 @@ class StationViewModel : HafasTimetableViewModel() {
         }
     }
 
-    val isShowChatbotLiveData = Transformations.distinctUntilChanged(
-        Transformations.map(stationResource.data) {
-            it.isChatbotAvailable && ChatbotStation.isInTeaserPeriod
-        })
+    val isShowChatbotLiveData = MutableLiveData(true)
 
     fun navigateToChatbot() {
         navigateToInfo(ServiceContentType.Local.CHATBOT)
@@ -1181,10 +1200,11 @@ class StationViewModel : HafasTimetableViewModel() {
             value = !infoAndServicesLiveData.value.isNullOrEmpty()
                     || !serviceNumbersLiveData.value.isNullOrEmpty()
                     || (staticInfoLiveData.value?.let { staticInfoCollection ->
-                detailedStopPlaceResource.data.value?.run {
-                    hasWifi && staticInfoCollection.typedStationInfos[ServiceContentType.WIFI] != null
-                            || hasSteplessAccess && staticInfoCollection.typedStationInfos[ServiceContentType.ACCESSIBLE] != null
-                }
+                staticInfoCollection.typedStationInfos.containsKey(ServiceContentType.DummyForCategory.FEEDBACK) ||
+                        detailedStopPlaceResource.data.value?.run {
+                            hasWifi && staticInfoCollection.typedStationInfos[ServiceContentType.WIFI] != null
+                                    || hasSteplessAccess && staticInfoCollection.typedStationInfos[ServiceContentType.ACCESSIBLE] != null
+                        } == true
             } == true)
                     || !parking.parkingsResource.data.value.isNullOrEmpty()
                     || !elevatorsResource.data.value.isNullOrEmpty()
@@ -1197,6 +1217,7 @@ class StationViewModel : HafasTimetableViewModel() {
         .addSource(parking.parkingsResource.data)
         .addSource(elevatorsResource.data)
         .addSource(detailedStopPlaceResource.data)
+        .distinctUntilChanged()
 
     val stationWhatsappFeedbackLiveData: LiveData<String?> =
         stationResource.data.map { station ->

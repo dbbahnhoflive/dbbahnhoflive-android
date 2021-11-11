@@ -32,8 +32,8 @@ public class RouteStopViewHolder extends ViewHolder<RouteStop> {
 
     @Override
     protected void onBind(RouteStop item) {
-        nameView.setText(item.name);
-        nameView.setTypeface(nameView.getTypeface(), item.isCurrent() ? Typeface.BOLD : 0);
+        nameView.setText(item.getName());
+        nameView.setTypeface(nameView.getTypeface(), item.isCurrent() ? Typeface.BOLD : Typeface.NORMAL);
 
         leftLine.setVisibility(item.isFirst() ? View.INVISIBLE : View.VISIBLE);
         rightLine.setVisibility(item.isLast() ? View.INVISIBLE : View.VISIBLE);

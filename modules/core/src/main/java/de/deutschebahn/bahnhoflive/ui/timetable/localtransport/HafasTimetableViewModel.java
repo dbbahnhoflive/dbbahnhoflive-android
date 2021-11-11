@@ -21,6 +21,7 @@ import de.deutschebahn.bahnhoflive.backend.hafas.model.HafasStationProduct;
 import de.deutschebahn.bahnhoflive.repository.HafasStationResource;
 import de.deutschebahn.bahnhoflive.repository.HafasTimetableResource;
 import de.deutschebahn.bahnhoflive.repository.MediatorResource;
+import de.deutschebahn.bahnhoflive.repository.MergedStation;
 import de.deutschebahn.bahnhoflive.repository.Resource;
 import de.deutschebahn.bahnhoflive.repository.Station;
 import de.deutschebahn.bahnhoflive.repository.StationResource;
@@ -46,7 +47,7 @@ public class HafasTimetableViewModel extends ViewModel {
 
     private ManagedObserver<HafasStation> hafasStationObserver;
     private ManagedObserver<VolleyError> hafasStationErrorObserver;
-    private ManagedObserver<Station> stationObserver;
+    private ManagedObserver<MergedStation> stationObserver;
     private StationResource stationResource;
 
     private final Token initializationPending = new Token();
@@ -105,9 +106,9 @@ public class HafasTimetableViewModel extends ViewModel {
             mediatorResource.addErrorSource(stationResource);
             mediatorResource.addLoadingStatusSource(stationResource);
 
-            stationObserver = new ManagedObserver<Station>(stationResource.getData()) {
+            stationObserver = new ManagedObserver<MergedStation>(stationResource.getData()) {
                 @Override
-                public void onChanged(@Nullable Station station) {
+                public void onChanged(@Nullable MergedStation station) {
                     hafasStationResource.initialize(station);
 
                     if (hafasStationResource.isLoadingPreconditionsMet()) {

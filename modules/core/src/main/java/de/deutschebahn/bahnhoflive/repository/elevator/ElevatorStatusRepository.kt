@@ -19,8 +19,8 @@ open class ElevatorStatusRepository {
     }
 
     open fun queryElevatorStatus(
-        equipmentNumber: String,
-        listener: VolleyRestListener<FacilityStatus>
+        sourceFacilityStatuses: List<FacilityStatus>,
+        listener: VolleyRestListener<List<FacilityStatus>>
     ) {
         listener.fail()
     }

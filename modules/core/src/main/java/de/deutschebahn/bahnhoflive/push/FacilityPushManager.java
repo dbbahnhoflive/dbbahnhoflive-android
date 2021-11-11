@@ -37,9 +37,9 @@ public class FacilityPushManager {
             for(FacilityStatus facility : facilities){
                 if(facility.isSubscribed()){
                     if(isChecked) {
-                        subscribeFirebase(facility);
+                        subscribe(facility);
                     } else {
-                        unsubscribeFirebase(facility);
+                        unsubscribe(facility);
                     }
                 }
             }
@@ -49,7 +49,7 @@ public class FacilityPushManager {
     public void removeFavorite(Context context, FacilityStatus facilityStatus){
         PrefUtil.removeSavedFacilityStatus(context, facilityStatus);
         if(isGlobalPushActive(context)){
-            unsubscribeFirebase(facilityStatus);
+            unsubscribe(facilityStatus);
         }
     }
 
@@ -66,14 +66,14 @@ public class FacilityPushManager {
         if (isChecked) {
             if(isGlobalPushActive(context)){
                 //just subscribe this
-                subscribeFirebase(facilityStatus);
+                subscribe(facilityStatus);
             } else {
                 //activating global push will subscribe all (including our new facility)
                 setGlobalPushActive(context, true);
             }
         } else {
             if(isGlobalPushActive(context)){
-                unsubscribeFirebase(facilityStatus);
+                unsubscribe(facilityStatus);
             }
 
             removeFavorite(context, facilityStatus);
@@ -81,16 +81,13 @@ public class FacilityPushManager {
     }
 
 
-    private void subscribeFirebase(FacilityStatus f) {
-        //FirebaseMessaging.getInstance().subscribeToTopic(TOPIC_PATH+f.getEquipmentNumber());
+    private void subscribe(FacilityStatus f) {
     }
 
-    private void unsubscribeFirebase(FacilityStatus f) {
-        //unsubscribeFirebase(f.getEquipmentNumber());
+    private void unsubscribe(FacilityStatus f) {
     }
 
-    public void unsubscribeFirebase(int equipmentNumber){
-        //FirebaseMessaging.getInstance().unsubscribeFromTopic(TOPIC_PATH+equipmentNumber);
+    public void unsubscribe(int equipmentNumber) {
     }
 
 }

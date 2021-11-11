@@ -1,0 +1,85 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:clipChildren="false"
+    android:orientation="vertical">
+
+    <LinearLayout
+        android:clipChildren="false"
+        android:divider="@drawable/shape_divider"
+        android:orientation="vertical"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:showDividers="beginning|end">
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/issue_container"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="@dimen/default_space_double"
+            android:layout_marginEnd="@dimen/default_space_double"
+            android:minHeight="34dp"
+            android:paddingStart="@dimen/default_space"
+            android:paddingEnd="@dimen/default_space"
+            android:visibility="gone"
+            tools:visibility="visible">
+
+            <ImageView
+                android:id="@+id/issue_icon"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:baseline="17.5dp"
+                android:importantForAccessibility="no"
+                android:src="@drawable/app_warndreieck"
+                app:layout_constraintBaseline_toBaselineOf="@+id/issue_text"
+                app:layout_constraintLeft_toLeftOf="parent" />
+
+            <TextView
+                android:id="@+id/issue_text"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="@dimen/default_space_half"
+                android:textColor="?attr/colorAccent"
+                android:textSize="@dimen/textsize_h3"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintLeft_toRightOf="@+id/issue_icon"
+                app:layout_constraintRight_toRightOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                tools:text="ICE 1630: At vero eos et accusam et justo duo dolores et a rebum, stet clita kasd." />
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+        <androidx.cardview.widget.CardView
+            android:id="@+id/button_wagon_order"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="@dimen/default_space_double"
+            android:layout_marginEnd="@dimen/default_space_double"
+            android:layout_marginTop="@dimen/default_space"
+            android:layout_marginBottom="@dimen/default_space"
+            app:cardBackgroundColor="#646973"
+            app:cardCornerRadius="@dimen/round_button_half_size_large"
+            tools:showIn="@layout/fragment_journey">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:drawableRight="@drawable/menuicon_wagenstandsanzeiger"
+                android:gravity="center"
+                android:minHeight="64dp"
+                android:text="@string/btn_wagon_order"
+                android:textColor="@color/white" />
+
+        </androidx.cardview.widget.CardView>
+
+    </LinearLayout>
+
+
+    <include
+        layout="@layout/include_journey_recycler"
+        android:id="@+id/content_layout" />
+</LinearLayout>

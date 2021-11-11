@@ -1,0 +1,180 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="@color/journey_item_background"
+    android:focusable="true"
+    android:focusableInTouchMode="true"
+    android:minHeight="64sp">
+
+    <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/track_guide"
+        android:layout_width="0dp"
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        app:layout_constraintGuide_begin="48dp" />
+
+    <View
+        android:id="@+id/track_anchor"
+        android:layout_width="1dp"
+        android:layout_height="1dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="@+id/track_guide"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <ImageView
+        android:id="@+id/upper_track"
+        android:layout_width="wrap_content"
+        android:layout_height="0dp"
+        android:importantForAccessibility="no"
+        android:scaleType="fitXY"
+        android:layout_marginBottom="@dimen/journey_stop_gap"
+        android:src="@drawable/shape_journey_track"
+        app:layout_constraintBottom_toTopOf="@+id/track_stop"
+        app:layout_constraintEnd_toEndOf="@+id/track_guide"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <ImageView
+        android:id="@+id/lower_track"
+        android:layout_width="wrap_content"
+        android:layout_height="0dp"
+        android:importantForAccessibility="no"
+        android:scaleType="fitXY"
+        android:layout_marginTop="@dimen/journey_stop_gap"
+        android:src="@drawable/shape_journey_track"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="@+id/track_guide"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/track_stop" />
+
+    <ImageView
+        android:id="@+id/upper_track_highlight"
+        android:layout_width="wrap_content"
+        android:layout_height="0dp"
+        android:importantForAccessibility="no"
+        android:scaleType="fitXY"
+        android:layout_marginBottom="@dimen/journey_stop_gap"
+        android:src="@drawable/shape_upper_journey_track"
+        app:layout_constraintBottom_toTopOf="@+id/track_stop"
+        app:layout_constraintEnd_toEndOf="@+id/track_guide"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <ImageView
+        android:id="@+id/lower_track_highlight"
+        android:layout_width="wrap_content"
+        android:layout_height="0dp"
+        android:importantForAccessibility="no"
+        android:scaleType="fitXY"
+        android:layout_marginTop="@dimen/journey_stop_gap"
+        android:src="@drawable/shape_upper_journey_track"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="@+id/track_guide"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/track_stop" />
+
+
+    <ImageView
+        android:id="@+id/track_stop"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:importantForAccessibility="no"
+        android:src="@drawable/shape_journey_stop"
+        app:layout_constraintBottom_toBottomOf="@+id/track_anchor"
+        app:layout_constraintEnd_toEndOf="@+id/track_guide"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="@+id/track_anchor" />
+
+    <TextView
+        android:id="@+id/platform"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="@dimen/default_space"
+        android:layout_marginEnd="@dimen/default_space"
+        android:textColor="@color/selectable_platform"
+        android:textSize="@dimen/textsize_h2"
+        app:layout_constraintBaseline_toBaselineOf="@+id/stop_name"
+        app:layout_constraintEnd_toEndOf="parent"
+        tools:text="Gl. 12" />
+
+    <TextView
+        android:id="@+id/scheduledArrival"
+        android:layout_width="@dimen/journey_time_width"
+        android:layout_height="wrap_content"
+        android:textSize="@dimen/textsize_h2"
+        app:layout_constraintBottom_toTopOf="@+id/scheduledDeparture"
+        app:layout_constraintStart_toEndOf="@+id/track_guide"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_chainStyle="packed"
+        tools:text="@tools:sample/date/hhmm" />
+
+    <TextView
+        android:id="@+id/scheduledDeparture"
+        android:layout_width="@dimen/journey_time_width"
+        android:layout_height="wrap_content"
+        android:textSize="@dimen/textsize_h2"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toEndOf="@+id/track_guide"
+        app:layout_constraintTop_toBottomOf="@+id/scheduledArrival"
+        tools:text="@tools:sample/date/hhmm" />
+
+    <TextView
+        android:id="@+id/expectedArrival"
+        android:layout_width="@dimen/journey_time_width"
+        android:layout_height="wrap_content"
+        android:textSize="@dimen/textsize_h2"
+        app:layout_constraintBaseline_toBaselineOf="@+id/scheduledArrival"
+        app:layout_constraintStart_toEndOf="@id/scheduledArrival"
+        tools:text="@tools:sample/date/hhmm" />
+
+    <TextView
+        android:id="@+id/expectedDeparture"
+        android:layout_width="@dimen/journey_time_width"
+        android:layout_height="wrap_content"
+        android:textSize="@dimen/textsize_h2"
+        app:layout_constraintBaseline_toBaselineOf="@id/scheduledDeparture"
+        app:layout_constraintStart_toEndOf="@id/scheduledDeparture"
+        tools:text="@tools:sample/date/hhmm" />
+
+    <androidx.constraintlayout.widget.Barrier
+        android:id="@+id/barrier_time"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:barrierDirection="end"
+        app:constraint_referenced_ids="expectedArrival,expectedDeparture" />
+
+    <TextView
+        android:id="@+id/stop_name"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:ellipsize="end"
+        android:lines="1"
+        android:textSize="@dimen/textsize_h2"
+        app:layout_constraintBottom_toTopOf="@+id/advice"
+        app:layout_constraintEnd_toStartOf="@+id/platform"
+        app:layout_constraintStart_toEndOf="@+id/barrier_time"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_chainStyle="packed"
+        tools:text="@tools:sample/cities" />
+
+    <TextView
+        android:id="@+id/advice"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:ellipsize="end"
+        android:gravity="fill_vertical"
+        android:lines="1"
+        android:textColor="@color/selectable_platform"
+        android:textSize="@dimen/textsize_h3"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="@+id/platform"
+        app:layout_constraintStart_toStartOf="@+id/stop_name"
+        app:layout_constraintTop_toBottomOf="@+id/stop_name"
+        app:drawableStartCompat="@drawable/app_warndreieck"
+        tools:text="@tools:sample/lorem" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>

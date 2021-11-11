@@ -11,7 +11,7 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 
 open class Resource<T, E : Throwable?> protected constructor(
-    protected val mutableData: MutableLiveData<T?>,
+    val mutableData: MutableLiveData<T?>,
     /**
      * Reflects ongoing loading operation that may be observed by loading indicators.
      */
@@ -19,7 +19,7 @@ open class Resource<T, E : Throwable?> protected constructor(
     /**
      * Latest loading error that might be observed by error indicators.
      */
-    protected val mutableError: MutableLiveData<E> = MutableLiveData()
+    val mutableError: MutableLiveData<E> = MutableLiveData()
 ) {
     constructor() : this(MutableLiveData<T?>()) {}
 

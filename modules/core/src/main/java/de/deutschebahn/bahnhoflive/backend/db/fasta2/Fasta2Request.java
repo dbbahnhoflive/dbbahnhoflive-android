@@ -17,7 +17,7 @@ import de.deutschebahn.bahnhoflive.backend.BaseJsonObjectRequest;
 import de.deutschebahn.bahnhoflive.backend.db.DbAuthorizationTool;
 
 class Fasta2Request extends BaseJsonObjectRequest {
-    final static String BASE_URL = "https://gateway.businesshub.deutschebahn.com/fasta/v2/";
+    final static String BASE_URL = FastaConstants.BASE_URL;
 
     private final DbAuthorizationTool authorizationTool;
 

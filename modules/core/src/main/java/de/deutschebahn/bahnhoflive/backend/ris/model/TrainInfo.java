@@ -6,12 +6,18 @@
 
 package de.deutschebahn.bahnhoflive.backend.ris.model;
 
+import static de.deutschebahn.bahnhoflive.backend.ris.model.TrainInfo.Category.EC;
+import static de.deutschebahn.bahnhoflive.backend.ris.model.TrainInfo.Category.IC;
+import static de.deutschebahn.bahnhoflive.backend.ris.model.TrainInfo.Category.ICE;
+import static de.deutschebahn.bahnhoflive.backend.ris.model.TrainInfo.Category.S;
+
 import android.os.Parcel;
 import android.os.Parcelable;
 import android.text.TextUtils;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.core.os.ParcelCompat;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -27,14 +33,12 @@ import java.util.Collection;
 import java.util.List;
 import java.util.Map;
 
-import static de.deutschebahn.bahnhoflive.backend.ris.model.TrainInfo.Category.EC;
-import static de.deutschebahn.bahnhoflive.backend.ris.model.TrainInfo.Category.IC;
-import static de.deutschebahn.bahnhoflive.backend.ris.model.TrainInfo.Category.ICE;
-import static de.deutschebahn.bahnhoflive.backend.ris.model.TrainInfo.Category.S;
-
 public class TrainInfo implements Parcelable {
 
-    private boolean replacement;
+    private boolean replacement = false;
+    private boolean special = false;
+    @NonNull
+    private String genuineName;
 
     public void setReplacement(boolean replacement) {
         this.replacement = replacement;
@@ -42,6 +46,26 @@ public class TrainInfo implements Parcelable {
 
     public boolean isReplacement() {
         return replacement || getReferenceTrainInfo() != null;
+    }
+
+    public void setGenuineName(String genuineName) {
+        this.genuineName = genuineName;
+    }
+
+    /**
+     * Must not be null but possibly is
+     */
+    @Nullable
+    public String getGenuineName() {
+        return genuineName;
+    }
+
+    public void setSpecial(boolean special) {
+        this.special = special;
+    }
+
+    public boolean isSpecial() {
+        return special;
     }
 
     public interface Category {
@@ -61,9 +85,10 @@ public class TrainInfo implements Parcelable {
     private static final String _train_info_name = "n";
     private static final String _ref = "ref";
 
+    @NonNull
     static TrainInfo readTrain(XmlPullParser parser) throws XmlPullParserException, IOException {
         parser.require(XmlPullParser.START_TAG, null, _train);
-        TrainInfo info = new TrainInfo();
+        final TrainInfo info = new TrainInfo();
         TrainMovementInfo arrival = null;
         TrainMovementInfo departure = null;
         TrainInfo referenceTrainInfo = null;
@@ -118,26 +143,35 @@ public class TrainInfo implements Parcelable {
             info.setTrainCategory(category);
         }
 
+        String genuineName = parser.getAttributeValue(null, _train_info_name);
+        String lineName = parser.getAttributeValue(null, _train_info_alternative_name);
+
+
         //name can have two sources: n (name) oder l (line) attribute. line is only used when category is "S"
         String name = null;
         if (S.equals(category)) {
-            name = parser.getAttributeValue(null, _train_info_alternative_name);
+            name = lineName;
         } else {
-            name = parser.getAttributeValue(null, _train_info_name);
+            name = genuineName;
         }
 
         final @Nullable String type = parser.getAttributeValue(null, _train_info_type);
         if ("e".equals(type)) {
             info.setReplacement(true);
         }
+        if ("s".equals(type)) {
+            info.setSpecial(true);
+        }
 
-        String genericName = parser.getAttributeValue(null, _train_info_alternative_name);
 
         if (name != null) {
             info.setTrainName(name);
         }
-        if (genericName != null) {
-            info.setTrainGenericName(genericName);
+        if (lineName != null) {
+            info.setTrainLineName(lineName);
+        }
+        if (genuineName != null) {
+            info.setGenuineName(genuineName);
         }
 
         parser.nextTag();
@@ -185,15 +219,17 @@ public class TrainInfo implements Parcelable {
             String name = parser.getName();
             // Starts by looking for the entry tag
             if (name.equals(_train)) {
-                TrainInfo train = readTrain(parser);
-                if (train != null) {
-                    target.put(train.getId(), train);
-                }
+                final TrainInfo train = readTrain(parser);
+                target.put(train.getId(), train);
             } else {
                 skip(parser);
             }
         }
         return target;
+    }
+
+    static boolean isAdditional(@Nullable final TrainMovementInfo trainMovementInfo) {
+        return trainMovementInfo != null && trainMovementInfo.isAdditional();
     }
 
     public static Map<String, TrainInfo> merge(@NonNull Map<String, TrainInfo> target, @NonNull Map<String, TrainInfo> source) {
@@ -215,7 +251,7 @@ public class TrainInfo implements Parcelable {
             final TrainInfo targetTrainInfo = target.get(sourceTrainInfo.getId());
 
             if (targetTrainInfo == null) {
-                if (sourceTrainInfo.isReplacement()) {
+                if (sourceTrainInfo.isReplacement() || sourceTrainInfo.isSpecial() || sourceTrainInfo.isAdditional()) {
                     target.put(sourceTrainInfo.getId(), sourceTrainInfo);
                 }
             } else {
@@ -224,6 +260,10 @@ public class TrainInfo implements Parcelable {
         }
 
         return target;
+    }
+
+    private boolean isAdditional() {
+        return isAdditional(departure) || isAdditional(arrival);
     }
 
     public interface ChangeListener {
@@ -253,6 +293,9 @@ public class TrainInfo implements Parcelable {
         hasMessage = in.readInt() == 1;
         referenceTrainInfo = in.readParcelable(TrainInfo.class.getClassLoader());
         hasWagenstand = in.readInt() == 1;
+        genuineName = in.readString();
+        replacement = ParcelCompat.readBoolean(in);
+        special = ParcelCompat.readBoolean(in);
     }
 
     public TrainInfo() {
@@ -275,6 +318,9 @@ public class TrainInfo implements Parcelable {
         dest.writeInt(hasMessage ? 1 : 0);
         dest.writeParcelable(referenceTrainInfo, 0);
         dest.writeInt(hasWagenstand ? 1 : 0);
+        dest.writeString(genuineName);
+        ParcelCompat.writeBoolean(dest, replacement);
+        ParcelCompat.writeBoolean(dest, special);
     }
 
     public static final Creator<TrainInfo> CREATOR = new Creator<TrainInfo>() {
@@ -297,6 +343,10 @@ public class TrainInfo implements Parcelable {
         this.hasMessage = hasMessage;
     }
 
+    /**
+     * Must not be null but possibly is
+     */
+    @Nullable
     public String getId() {
         return id;
     }
@@ -329,6 +379,10 @@ public class TrainInfo implements Parcelable {
         this.trainName = trainName;
     }
 
+    /**
+     * Must not be null but possibly is
+     */
+    @Nullable
     public String getTrainCategory() {
         return trainCategory;
     }
@@ -345,7 +399,7 @@ public class TrainInfo implements Parcelable {
         return trainGenericName;
     }
 
-    private void setTrainGenericName(String trainGenericName) {
+    private void setTrainLineName(String trainGenericName) {
         this.trainGenericName = trainGenericName;
     }
 
@@ -399,6 +453,10 @@ public class TrainInfo implements Parcelable {
             }
 
             return "Ersatzzug";
+        }
+
+        if (isSpecial()) {
+            return "Sonderzug";
         }
 
         return null;
@@ -483,7 +541,7 @@ public class TrainInfo implements Parcelable {
         try {
             result.setId(jsonObject.getString(ID));
             result.setTrainName(jsonObject.getString(NAME));
-            result.setTrainGenericName(jsonObject.getString(GENERIC_NAME));
+            result.setTrainLineName(jsonObject.getString(GENERIC_NAME));
             result.setTrainCategory(jsonObject.getString(CATEGORY));
 
             if (!jsonObject.isNull(HASMESSAGE)) {

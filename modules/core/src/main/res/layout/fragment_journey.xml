@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:clipChildren="false"
+    android:orientation="vertical">
+
+    <include
+        android:id="@+id/title_bar"
+        layout="@layout/titlebar_static" />
+
+    <androidx.fragment.app.FragmentContainerView
+        android:id="@+id/contentFragment"
+        android:name="de.deutschebahn.bahnhoflive.ui.timetable.journey.RegularJourneyContentFragment"
+        android:layout_weight="1"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        tools:layout="@layout/fragment_journey_regular_content" />
+
+</LinearLayout>

@@ -21,6 +21,7 @@
     <color name="inactive_gray">#D7DCE1</color>
 
     <color name="stops_line">#9a9fa9</color>
+    <color name="journey_track">#9ba0aa</color>
 
     <color name="green">#76c030</color>
     <color name="badge_ok">@color/green</color>
@@ -57,6 +58,8 @@
 
     <color name="flyout_track_divider">#e1e6eb</color>
     <color name="backgroundH1">#eff2f4</color>
+
+    <color name="journey_item_background">#f3f4f7</color>
 
     <color name="eco_green">#78BD14</color>
     <color name="page_indicator_unselected">@color/button_grey</color>
