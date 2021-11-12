@@ -30,10 +30,10 @@ import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.android.volley.VolleyError;
-import com.google.android.gms.maps.GoogleMap;
-import com.google.android.gms.maps.OnMapReadyCallback;
-import com.google.android.gms.maps.model.LatLng;
-import com.google.android.gms.maps.model.Marker;
+import com.huawei.hms.maps.HuaweiMap;
+import com.huawei.hms.maps.OnMapReadyCallback;
+import com.huawei.hms.maps.model.LatLng;
+import com.huawei.hms.maps.model.Marker;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -77,7 +77,7 @@ import de.deutschebahn.bahnhoflive.ui.station.ElevatorIssuesLoaderFragment;
 import de.deutschebahn.bahnhoflive.util.ArrayListFactory;
 import de.deutschebahn.bahnhoflive.util.MapContentPreserver;
 
-public class MapOverlayFragment extends Fragment implements OnMapReadyCallback, View.OnClickListener, ElevatorIssuesLoaderFragment.Listener, GoogleMap.OnMapClickListener, MapInterface.MapTypeListener {
+public class MapOverlayFragment extends Fragment implements OnMapReadyCallback, View.OnClickListener, ElevatorIssuesLoaderFragment.Listener, HuaweiMap.OnMapClickListener, MapInterface.MapTypeListener {
 
     private static final String TAG = MapOverlayFragment.class.getSimpleName();
     public static final float DEFAULT_ZOOM = MapConstants.minimumZoomForIndoorMarkers;
@@ -545,8 +545,8 @@ public class MapOverlayFragment extends Fragment implements OnMapReadyCallback, 
     }
 
     @Override
-    public void onMapReady(final GoogleMap googleMap) {
-        final GoogleMap.OnMarkerClickListener onMarkerClickListener = new GoogleMap.OnMarkerClickListener() {
+    public void onMapReady(final HuaweiMap googleMap) {
+        final HuaweiMap.OnMarkerClickListener onMarkerClickListener = new HuaweiMap.OnMarkerClickListener() {
             @Override
             public boolean onMarkerClick(Marker marker) {
 

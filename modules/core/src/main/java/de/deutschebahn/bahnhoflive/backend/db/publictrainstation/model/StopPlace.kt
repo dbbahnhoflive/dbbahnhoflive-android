@@ -6,8 +6,8 @@
 
 package de.deutschebahn.bahnhoflive.backend.db.publictrainstation.model
 
-import com.google.android.gms.maps.model.LatLng
 import com.google.gson.annotations.SerializedName
+import com.huawei.hms.maps.model.LatLng
 import de.deutschebahn.bahnhoflive.backend.db.publictrainstation.DistanceCalculator
 import de.deutschebahn.bahnhoflive.backend.local.model.EvaIds
 import de.deutschebahn.bahnhoflive.repository.InternalStation

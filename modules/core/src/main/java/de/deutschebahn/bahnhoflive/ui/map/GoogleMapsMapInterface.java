@@ -10,14 +10,14 @@ import android.content.Context;
 
 import androidx.annotation.NonNull;
 
-import com.google.android.gms.maps.CameraUpdate;
-import com.google.android.gms.maps.CameraUpdateFactory;
-import com.google.android.gms.maps.GoogleMap;
-import com.google.android.gms.maps.UiSettings;
-import com.google.android.gms.maps.model.LatLng;
-import com.google.android.gms.maps.model.LatLngBounds;
-import com.google.android.gms.maps.model.MapStyleOptions;
-import com.google.android.gms.maps.model.Marker;
+import com.huawei.hms.maps.CameraUpdate;
+import com.huawei.hms.maps.CameraUpdateFactory;
+import com.huawei.hms.maps.HuaweiMap;
+import com.huawei.hms.maps.UiSettings;
+import com.huawei.hms.maps.model.LatLng;
+import com.huawei.hms.maps.model.LatLngBounds;
+import com.huawei.hms.maps.model.MapStyleOptions;
+import com.huawei.hms.maps.model.Marker;
 
 import de.deutschebahn.bahnhoflive.R;
 import de.deutschebahn.bahnhoflive.ui.map.content.BackgroundLayer;
@@ -29,14 +29,14 @@ class GoogleMapsMapInterface extends MapInterface {
     public static final LatLngBounds BOUNDS_OF_GERMANY = new LatLngBounds(new LatLng(47.212363, 5.749376), new LatLng(55.072294, 14.890002));
 
     @NonNull
-    private final GoogleMap googleMap;
+    private final HuaweiMap googleMap;
 
     private final BackgroundLayer backgroundLayer = new BackgroundLayer();
     private final IndoorLayer indoorLayer = new IndoorLayer(zoneId);
 
     private Context context;
 
-    GoogleMapsMapInterface(MapInterface mapInterface, @NonNull final GoogleMap googleMap, Context context, GoogleMap.OnMarkerClickListener onMarkerClickListener, GoogleMap.OnMapClickListener onMapClickListener, ZoomChangeMonitor.Listener zoomChangeListener, LatLng location, float zoom) {
+    GoogleMapsMapInterface(MapInterface mapInterface, @NonNull final HuaweiMap googleMap, Context context, HuaweiMap.OnMarkerClickListener onMarkerClickListener, HuaweiMap.OnMapClickListener onMapClickListener, ZoomChangeMonitor.Listener zoomChangeListener, LatLng location, float zoom) {
         super(mapInterface);
 
         this.googleMap = googleMap;
@@ -85,11 +85,11 @@ class GoogleMapsMapInterface extends MapInterface {
         indoorLayer.reset();
 
         if (currentMapType == MapType.OSM) {
-            googleMap.setMapType(GoogleMap.MAP_TYPE_NONE);
+            googleMap.setMapType(HuaweiMap.MAP_TYPE_NONE);
 
             backgroundLayer.attach(this.googleMap);
         } else if (currentMapType == MapType.GOOGLE_MAPS) {
-            googleMap.setMapType(GoogleMap.MAP_TYPE_NORMAL);
+            googleMap.setMapType(HuaweiMap.MAP_TYPE_NORMAL);
             backgroundLayer.detach();
         }
         indoorLayer.attach(googleMap);
@@ -121,7 +121,7 @@ class GoogleMapsMapInterface extends MapInterface {
                     CameraUpdateFactory.newLatLngZoom(marker.getPosition(), markerBinder.getMarkerContent().getZoom(googleMap.getCameraPosition().zoom))
                     : CameraUpdateFactory.newLatLngBounds(bounds, 32);
 
-            googleMap.animateCamera(cameraUpdate, 100, new GoogleMap.CancelableCallback() {
+            googleMap.animateCamera(cameraUpdate, 100, new HuaweiMap.CancelableCallback() {
                 @Override
                 public void onFinish() {
 

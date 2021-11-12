@@ -1,6 +1,6 @@
 package de.deutschebahn.bahnhoflive.backend.db.ris.model
 
-import com.google.android.gms.maps.model.LatLng
+import com.huawei.hms.maps.model.LatLng
 
 class Coordinate2D {
 

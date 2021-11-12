@@ -8,10 +8,10 @@ package de.deutschebahn.bahnhoflive.ui.map;
 
 import androidx.annotation.NonNull;
 
-import com.google.android.gms.maps.GoogleMap;
-import com.google.android.gms.maps.model.LatLngBounds;
-import com.google.android.gms.maps.model.Marker;
-import com.google.android.gms.maps.model.MarkerOptions;
+import com.huawei.hms.maps.HuaweiMap;
+import com.huawei.hms.maps.model.LatLngBounds;
+import com.huawei.hms.maps.model.Marker;
+import com.huawei.hms.maps.model.MarkerOptions;
 
 import de.deutschebahn.bahnhoflive.ui.map.content.rimap.Filter;
 
@@ -97,7 +97,7 @@ public class MarkerBinder {
         return filterItem.getChecked();
     }
 
-    public void bind(GoogleMap googleMap) {
+    public void bind(HuaweiMap googleMap) {
         final MarkerOptions markerOptions = markerContent.createMarkerOptions();
         if (markerOptions != null) {
             marker = googleMap.addMarker(markerOptions);

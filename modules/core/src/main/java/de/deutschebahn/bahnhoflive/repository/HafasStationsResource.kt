@@ -7,7 +7,7 @@
 package de.deutschebahn.bahnhoflive.repository
 
 import com.android.volley.VolleyError
-import com.google.android.gms.maps.model.LatLng
+import com.huawei.hms.maps.model.LatLng
 import de.deutschebahn.bahnhoflive.BaseApplication
 import de.deutschebahn.bahnhoflive.backend.VolleyRestListener
 import de.deutschebahn.bahnhoflive.backend.hafas.Filter

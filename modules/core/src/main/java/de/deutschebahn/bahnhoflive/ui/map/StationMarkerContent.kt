@@ -10,7 +10,7 @@ import android.graphics.Paint
 import android.graphics.Typeface
 import android.os.Parcelable
 import androidx.core.content.ContextCompat
-import com.google.android.gms.maps.model.MarkerOptions
+import com.huawei.hms.maps.model.MarkerOptions
 import de.deutschebahn.bahnhoflive.R
 import de.deutschebahn.bahnhoflive.repository.DbTimetableResource
 import de.deutschebahn.bahnhoflive.repository.Station

@@ -6,10 +6,10 @@
 
 package de.deutschebahn.bahnhoflive.ui.map.content;
 
-import com.google.android.gms.maps.GoogleMap;
-import com.google.android.gms.maps.model.TileOverlay;
-import com.google.android.gms.maps.model.TileOverlayOptions;
-import com.google.android.gms.maps.model.TileProvider;
+import com.huawei.hms.maps.HuaweiMap;
+import com.huawei.hms.maps.model.TileOverlay;
+import com.huawei.hms.maps.model.TileOverlayOptions;
+import com.huawei.hms.maps.model.TileProvider;
 
 import de.deutschebahn.bahnhoflive.BaseApplication;
 
@@ -37,7 +37,7 @@ public class BackgroundLayer {
         return mTileOverlayOptions;
     }
 
-    public void attach(GoogleMap map) {
+    public void attach(HuaweiMap map) {
         if (mTileOverlay == null) {
             mTileOverlay = map.addTileOverlay(getOverlayOptions());
         }

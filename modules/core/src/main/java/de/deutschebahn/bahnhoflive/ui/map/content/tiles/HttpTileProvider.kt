@@ -1,7 +1,7 @@
 package de.deutschebahn.bahnhoflive.ui.map.content.tiles
 
-import com.google.android.gms.maps.model.Tile
-import com.google.android.gms.maps.model.TileProvider
+import com.huawei.hms.maps.model.Tile
+import com.huawei.hms.maps.model.TileProvider
 import java.net.URL
 import java.net.URLConnection
 

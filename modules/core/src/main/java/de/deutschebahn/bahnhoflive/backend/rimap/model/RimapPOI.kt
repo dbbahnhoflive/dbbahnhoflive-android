@@ -9,8 +9,8 @@ import android.content.Context
 import android.os.Parcel
 import android.os.Parcelable
 import android.util.Log
-import com.google.android.gms.maps.model.LatLng
-import com.google.android.gms.maps.model.LatLngBounds
+import com.huawei.hms.maps.model.LatLng
+import com.huawei.hms.maps.model.LatLngBounds
 import de.deutschebahn.bahnhoflive.MarkerFilterable
 import de.deutschebahn.bahnhoflive.R
 import de.deutschebahn.bahnhoflive.ui.map.content.rimap.RimapFilter

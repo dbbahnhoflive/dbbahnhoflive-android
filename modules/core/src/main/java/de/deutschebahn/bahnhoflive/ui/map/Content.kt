@@ -6,8 +6,8 @@
 
 package de.deutschebahn.bahnhoflive.ui.map
 
-import com.google.android.gms.maps.GoogleMap
-import com.google.android.gms.maps.OnMapReadyCallback
+import com.huawei.hms.maps.HuaweiMap
+import com.huawei.hms.maps.OnMapReadyCallback
 import de.deutschebahn.bahnhoflive.ui.map.content.rimap.Filter
 import de.deutschebahn.bahnhoflive.util.ArrayListFactory
 import de.deutschebahn.bahnhoflive.util.MapContentPreserver
@@ -17,7 +17,7 @@ import kotlin.math.abs
 
 class Content : OnMapReadyCallback, ZoomChangeMonitor.Listener {
 
-    private var googleMap: GoogleMap? = null
+    private var googleMap: HuaweiMap? = null
 
     private var visibilityChangeListener: VisibilityChangeListener? = null
 
@@ -110,7 +110,7 @@ class Content : OnMapReadyCallback, ZoomChangeMonitor.Listener {
         }
     }
 
-    override fun onMapReady(googleMap: GoogleMap) {
+    override fun onMapReady(googleMap: HuaweiMap) {
         if (this.googleMap != null) {
             for (boundMarkerBinder in allMarkerBinders) {
                 boundMarkerBinder.unbind()

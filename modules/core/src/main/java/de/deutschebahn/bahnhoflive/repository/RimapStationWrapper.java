@@ -8,7 +8,7 @@ package de.deutschebahn.bahnhoflive.repository;
 
 import androidx.annotation.NonNull;
 
-import com.google.android.gms.maps.model.LatLng;
+import com.huawei.hms.maps.model.LatLng;
 
 import de.deutschebahn.bahnhoflive.backend.local.model.EvaIds;
 import de.deutschebahn.bahnhoflive.backend.rimap.model.StationFeatureCollection;

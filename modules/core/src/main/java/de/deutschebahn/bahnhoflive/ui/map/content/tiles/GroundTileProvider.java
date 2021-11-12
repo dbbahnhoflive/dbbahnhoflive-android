@@ -6,7 +6,7 @@
 
 package de.deutschebahn.bahnhoflive.ui.map.content.tiles;
 
-import com.google.android.gms.maps.model.UrlTileProvider;
+import com.huawei.hms.maps.model.UrlTileProvider;
 
 import java.net.MalformedURLException;
 import java.net.URL;

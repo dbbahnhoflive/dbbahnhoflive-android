@@ -10,9 +10,9 @@ import android.content.Context
 import android.os.Parcelable
 import android.text.TextUtils
 import androidx.annotation.DrawableRes
-import com.google.android.gms.maps.model.LatLng
-import com.google.android.gms.maps.model.LatLngBounds
-import com.google.android.gms.maps.model.MarkerOptions
+import com.huawei.hms.maps.model.LatLng
+import com.huawei.hms.maps.model.LatLngBounds
+import com.huawei.hms.maps.model.MarkerOptions
 import de.deutschebahn.bahnhoflive.R
 import de.deutschebahn.bahnhoflive.backend.rimap.RimapConfig
 import de.deutschebahn.bahnhoflive.backend.rimap.model.LevelMapping

@@ -19,7 +19,7 @@ import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.lifecycle.ViewModelProvider;
 
-import com.google.android.gms.maps.MapFragment;
+import com.huawei.hms.maps.MapFragment;
 
 import java.util.ArrayList;
 

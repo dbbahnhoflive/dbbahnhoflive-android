@@ -8,7 +8,7 @@ package de.deutschebahn.bahnhoflive.ui.map;
 
 import androidx.annotation.Nullable;
 
-import com.google.android.gms.maps.model.LatLng;
+import com.huawei.hms.maps.model.LatLng;
 
 import de.deutschebahn.bahnhoflive.ui.map.content.MapType;
 

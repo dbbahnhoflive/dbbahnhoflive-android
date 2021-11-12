@@ -12,10 +12,10 @@ import android.os.Parcelable;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
-import com.google.android.gms.maps.model.LatLng;
 import com.google.gson.Gson;
 import com.google.gson.annotations.SerializedName;
 import com.google.gson.reflect.TypeToken;
+import com.huawei.hms.maps.model.LatLng;
 
 import java.lang.reflect.Type;
 import java.util.ArrayList;

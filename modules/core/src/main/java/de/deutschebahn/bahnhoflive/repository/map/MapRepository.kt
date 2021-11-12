@@ -6,7 +6,7 @@
 
 package de.deutschebahn.bahnhoflive.repository.map
 
-import com.google.android.gms.maps.model.TileProvider
+import com.huawei.hms.maps.model.TileProvider
 import de.deutschebahn.bahnhoflive.backend.BaseRestListener
 import de.deutschebahn.bahnhoflive.backend.VolleyRestListener
 import de.deutschebahn.bahnhoflive.backend.rimap.model.RimapPOI

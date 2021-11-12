@@ -8,7 +8,7 @@ package de.deutschebahn.bahnhoflive.ui.map
 
 import android.content.Context
 import android.os.Parcelable
-import com.google.android.gms.maps.model.MarkerOptions
+import com.huawei.hms.maps.model.MarkerOptions
 import de.deutschebahn.bahnhoflive.R
 import de.deutschebahn.bahnhoflive.model.parking.ParkingFacility
 import de.deutschebahn.bahnhoflive.model.parking.ParkingStatus

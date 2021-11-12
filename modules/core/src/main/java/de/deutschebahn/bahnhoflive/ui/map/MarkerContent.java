@@ -12,9 +12,9 @@ import android.os.Parcelable;
 import androidx.annotation.DrawableRes;
 import androidx.annotation.Nullable;
 
-import com.google.android.gms.maps.model.BitmapDescriptor;
-import com.google.android.gms.maps.model.LatLngBounds;
-import com.google.android.gms.maps.model.MarkerOptions;
+import com.huawei.hms.maps.model.BitmapDescriptor;
+import com.huawei.hms.maps.model.LatLngBounds;
+import com.huawei.hms.maps.model.MarkerOptions;
 
 import de.deutschebahn.bahnhoflive.ui.ViewHolder;
 import de.deutschebahn.bahnhoflive.ui.map.content.MapConstants;

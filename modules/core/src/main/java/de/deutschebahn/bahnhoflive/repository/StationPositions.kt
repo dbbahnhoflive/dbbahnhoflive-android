@@ -6,7 +6,7 @@
 
 package de.deutschebahn.bahnhoflive.repository
 
-import com.google.android.gms.maps.model.LatLng
+import com.huawei.hms.maps.model.LatLng
 
 object StationPositions {
 

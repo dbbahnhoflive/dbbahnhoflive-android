@@ -8,8 +8,8 @@ package de.deutschebahn.bahnhoflive.ui.map
 import android.graphics.Bitmap
 import android.graphics.Canvas
 import android.graphics.drawable.Drawable
-import com.google.android.gms.maps.model.BitmapDescriptor
-import com.google.android.gms.maps.model.BitmapDescriptorFactory
+import com.huawei.hms.maps.model.BitmapDescriptor
+import com.huawei.hms.maps.model.BitmapDescriptorFactory
 
 class DrawableBitmapDescriptorFactory(
     val drawableProvider: (highlighted: Boolean) -> Drawable

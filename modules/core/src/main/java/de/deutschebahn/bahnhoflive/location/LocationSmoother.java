@@ -10,7 +10,7 @@ import android.location.Location;
 
 import androidx.annotation.Nullable;
 
-import com.google.android.gms.maps.model.LatLng;
+import com.huawei.hms.maps.model.LatLng;
 
 public class LocationSmoother {
 

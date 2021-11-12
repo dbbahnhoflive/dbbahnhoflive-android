@@ -10,7 +10,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.Parcelable;
 
-import com.google.android.gms.maps.model.MarkerOptions;
+import com.huawei.hms.maps.model.MarkerOptions;
 
 import de.deutschebahn.bahnhoflive.R;
 import de.deutschebahn.bahnhoflive.backend.RestHelper;
