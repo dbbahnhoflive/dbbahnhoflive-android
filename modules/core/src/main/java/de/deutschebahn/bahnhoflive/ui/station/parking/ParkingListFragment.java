@@ -14,12 +14,11 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.lifecycle.ViewModelProvider;
 
-import com.huawei.hms.maps.model.LatLng;
-
 import java.util.List;
 
 import de.deutschebahn.bahnhoflive.R;
 import de.deutschebahn.bahnhoflive.analytics.TrackingManager;
+import de.deutschebahn.bahnhoflive.map.model.GeoPosition;
 import de.deutschebahn.bahnhoflive.model.parking.ParkingFacility;
 import de.deutschebahn.bahnhoflive.tutorial.TutorialManager;
 import de.deutschebahn.bahnhoflive.tutorial.TutorialView;
@@ -53,7 +52,7 @@ public class ParkingListFragment extends RecyclerFragment<ParkingLotAdapter>
 
         setAdapter(new ParkingLotAdapter(getContext(), getChildFragmentManager(), (context, parkingFacility) ->
         {
-            final LatLng location = parkingFacility.getLocation();
+            final GeoPosition location = parkingFacility.getLocation();
             if (location == null) {
                 Toast.makeText(context, R.string.notice_parking_lacks_location, Toast.LENGTH_SHORT).show();
             } else {

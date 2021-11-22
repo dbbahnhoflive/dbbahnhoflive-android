@@ -8,8 +8,7 @@ package de.deutschebahn.bahnhoflive.ui.map;
 
 import androidx.annotation.Nullable;
 
-import com.huawei.hms.maps.model.LatLng;
-
+import de.deutschebahn.bahnhoflive.map.model.GeoPosition;
 import de.deutschebahn.bahnhoflive.ui.map.content.MapType;
 
 class MapInterface {
@@ -60,7 +59,7 @@ class MapInterface {
         mapTypeListener.onMapTypeChanged(currentMapType);
     }
 
-    public void setLocation(LatLng loc, float zoom) {
+    public void setLocation(GeoPosition loc, float zoom) {
         pendingLocation = new PendingLocation(loc, zoom);
     }
 
@@ -114,11 +113,11 @@ class MapInterface {
     }
 
     protected static class PendingLocation {
-        protected final LatLng latLng;
+        protected final GeoPosition geoPosition;
         protected final float zoom;
 
-        public PendingLocation(LatLng latLng, float zoom) {
-            this.latLng = latLng;
+        public PendingLocation(GeoPosition geoPosition, float zoom) {
+            this.geoPosition = geoPosition;
             this.zoom = zoom;
         }
     }

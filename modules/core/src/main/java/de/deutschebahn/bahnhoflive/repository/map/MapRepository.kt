@@ -6,16 +6,16 @@
 
 package de.deutschebahn.bahnhoflive.repository.map
 
-import com.huawei.hms.maps.model.TileProvider
 import de.deutschebahn.bahnhoflive.backend.BaseRestListener
 import de.deutschebahn.bahnhoflive.backend.VolleyRestListener
 import de.deutschebahn.bahnhoflive.backend.rimap.model.RimapPOI
 import de.deutschebahn.bahnhoflive.backend.rimap.model.RimapStation
 import de.deutschebahn.bahnhoflive.backend.rimap.model.StationFeatureCollection
+import de.deutschebahn.bahnhoflive.map.model.AppTileProvider
 import de.deutschebahn.bahnhoflive.repository.Station
 import de.deutschebahn.bahnhoflive.repository.fail
 import de.deutschebahn.bahnhoflive.ui.map.content.tiles.GroundTileProvider
-import de.deutschebahn.bahnhoflive.ui.map.content.tiles.IndoorTileProvider
+import de.deutschebahn.bahnhoflive.ui.map.content.tiles.IndoorAppTileProvider
 import de.deutschebahn.bahnhoflive.util.Cancellable
 
 open class MapRepository {
@@ -39,10 +39,14 @@ open class MapRepository {
         listener.fail()
     }
 
-    open fun createIndoorTileProvider(width: Int, height: Int, zoneId: Int?): IndoorTileProvider =
-        IndoorTileProvider(width, height)
+    open fun createIndoorTileProvider(
+        width: Int,
+        height: Int,
+        zoneId: Int?
+    ): IndoorAppTileProvider =
+        IndoorAppTileProvider(width, height)
 
-    open fun createGroundTileProvider(width: Int, height: Int): TileProvider =
+    open fun createGroundTileProvider(width: Int, height: Int): AppTileProvider =
         GroundTileProvider("", width, height)
 
     open fun queryLevels(

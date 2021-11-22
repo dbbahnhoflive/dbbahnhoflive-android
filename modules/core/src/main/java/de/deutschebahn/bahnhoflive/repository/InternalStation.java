@@ -12,12 +12,11 @@ import android.os.Parcelable;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
-import com.huawei.hms.maps.model.LatLng;
-
 import java.util.Collections;
 import java.util.Objects;
 
 import de.deutschebahn.bahnhoflive.backend.local.model.EvaIds;
+import de.deutschebahn.bahnhoflive.map.model.GeoPosition;
 
 /**
  * Key station class that is agnostic to any backend model. Warning: instances may be persisted
@@ -29,7 +28,7 @@ public class InternalStation implements Parcelable, Station {
     private final String id;
     private final String title;
     @Nullable
-    private LatLng location;
+    private GeoPosition location;
     @NonNull
     private final EvaIds evaIds;
 
@@ -47,7 +46,7 @@ public class InternalStation implements Parcelable, Station {
         this(station.getId(), station.getTitle(), station.getLocation(), station.getEvaIds());
     }
 
-    public InternalStation(@NonNull String id, String title, LatLng location, @NonNull EvaIds evaIds) {
+    public InternalStation(@NonNull String id, String title, GeoPosition location, @NonNull EvaIds evaIds) {
         this.id = id;
         this.title = title;
         if (location != null && (location.latitude != 0 || location.longitude != 0)) {
@@ -58,11 +57,11 @@ public class InternalStation implements Parcelable, Station {
         this.evaIds = evaIds;
     }
 
-    public InternalStation(@NonNull String id, String name, LatLng location) {
+    public InternalStation(@NonNull String id, String name, GeoPosition location) {
         this(id, name, location, new EvaIds(Collections.emptyList()));
     }
 
-    public InternalStation(@NonNull String id, String name, LatLng location, String evaId) {
+    public InternalStation(@NonNull String id, String name, GeoPosition location, String evaId) {
         this(id, name, location, new EvaIds(Collections.singletonList(evaId)));
     }
 
@@ -102,7 +101,7 @@ public class InternalStation implements Parcelable, Station {
     }
 
     @Override
-    public LatLng getLocation() {
+    public GeoPosition getLocation() {
         if (location == null || (location.latitude == 0.0 && location.longitude == 0.0)) {
             location = StationPositions.INSTANCE.getData().get(id);
         }

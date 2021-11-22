@@ -1,7 +1,7 @@
 package de.deutschebahn.bahnhoflive.repository
 
-import com.huawei.hms.maps.model.LatLng
 import de.deutschebahn.bahnhoflive.backend.local.model.EvaIds
+import de.deutschebahn.bahnhoflive.map.model.GeoPosition
 
 data class MergedStation(
     val fallbackStation: Station,
@@ -18,7 +18,7 @@ data class MergedStation(
 
     override fun getTitle() = fallbackStation.title
 
-    override fun getLocation(): LatLng? =
+    override fun getLocation(): GeoPosition? =
         fallbackStation.location ?: rimapStationWrapper?.location
         ?: detailedStopPlaceStationWrapper?.location
 

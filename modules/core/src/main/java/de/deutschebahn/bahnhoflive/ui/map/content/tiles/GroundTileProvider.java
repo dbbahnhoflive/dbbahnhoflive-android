@@ -6,14 +6,12 @@
 
 package de.deutschebahn.bahnhoflive.ui.map.content.tiles;
 
-import com.huawei.hms.maps.model.UrlTileProvider;
-
 import java.net.MalformedURLException;
 import java.net.URL;
 
-public class GroundTileProvider extends UrlTileProvider {
+public class GroundTileProvider extends HttpAppTileProvider {
 
-    private String mUrl;
+    private final String mUrl;
 
     public GroundTileProvider(String url, int tileWidth, int tileHeight) {
         super(tileWidth, tileHeight);

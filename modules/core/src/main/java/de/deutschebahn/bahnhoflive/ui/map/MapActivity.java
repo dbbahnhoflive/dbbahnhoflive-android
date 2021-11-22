@@ -19,14 +19,14 @@ import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.lifecycle.ViewModelProvider;
 
-import com.huawei.hms.maps.MapFragment;
-
 import java.util.ArrayList;
 
 import de.deutschebahn.bahnhoflive.R;
 import de.deutschebahn.bahnhoflive.analytics.StationTrackingManager;
 import de.deutschebahn.bahnhoflive.analytics.TrackingManager;
 import de.deutschebahn.bahnhoflive.backend.hafas.model.HafasTimetable;
+import de.deutschebahn.bahnhoflive.map.ApiMapFragment;
+import de.deutschebahn.bahnhoflive.map.MapFragmentBridge;
 import de.deutschebahn.bahnhoflive.repository.InternalStation;
 import de.deutschebahn.bahnhoflive.repository.Station;
 import de.deutschebahn.bahnhoflive.ui.FragmentArgs;
@@ -42,7 +42,7 @@ public class MapActivity extends AppCompatActivity implements
     private static final String ARG_LOADER_STATES = LoaderFragment.ARG_LOADER_STATES;
     private static final String ARG_STATION_DEPARTURES = "stationDepartures";
 
-    private MapFragment mapFragment;
+    private MapFragmentBridge mapFragment;
     private MapOverlayFragment overlayFragment;
 
     private Station station;
@@ -74,7 +74,7 @@ public class MapActivity extends AppCompatActivity implements
 
         setContentView(R.layout.activity_map);
 
-        mapFragment = (MapFragment) getFragmentManager().findFragmentById(R.id.map_fragment);
+        mapFragment = (ApiMapFragment) getFragmentManager().findFragmentById(R.id.map_fragment);
         overlayFragment = (MapOverlayFragment) getSupportFragmentManager().findFragmentById(R.id.map_overlay_fragment);
 
         if (intent.hasExtra(ARG_STATION_DEPARTURES)) {

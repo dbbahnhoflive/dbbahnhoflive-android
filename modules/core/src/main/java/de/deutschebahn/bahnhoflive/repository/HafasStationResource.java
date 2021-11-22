@@ -9,7 +9,6 @@ package de.deutschebahn.bahnhoflive.repository;
 import androidx.annotation.NonNull;
 
 import com.android.volley.VolleyError;
-import com.huawei.hms.maps.model.LatLng;
 
 import java.util.List;
 
@@ -18,6 +17,7 @@ import de.deutschebahn.bahnhoflive.backend.VolleyRestListener;
 import de.deutschebahn.bahnhoflive.backend.hafas.LocalTransportFilter;
 import de.deutschebahn.bahnhoflive.backend.hafas.model.HafasStation;
 import de.deutschebahn.bahnhoflive.backend.hafas.model.ProductCategory;
+import de.deutschebahn.bahnhoflive.map.model.GeoPosition;
 import de.deutschebahn.bahnhoflive.util.Collections;
 
 public class HafasStationResource extends RemoteResource<HafasStation> {
@@ -41,7 +41,7 @@ public class HafasStationResource extends RemoteResource<HafasStation> {
 
     @Override
     protected void onStartLoading(boolean force) {
-        final LatLng location = station.getLocation();
+        final GeoPosition location = station.getLocation();
         if (location == null) {
             setError(new VolleyError("Missing location"));
             return;

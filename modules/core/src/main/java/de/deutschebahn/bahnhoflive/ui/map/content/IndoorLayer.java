@@ -6,14 +6,13 @@
 
 package de.deutschebahn.bahnhoflive.ui.map.content;
 
-import com.huawei.hms.maps.HuaweiMap;
-import com.huawei.hms.maps.model.TileOverlay;
-import com.huawei.hms.maps.model.TileOverlayOptions;
-
 import org.jetbrains.annotations.Nullable;
 
 import de.deutschebahn.bahnhoflive.BaseApplication;
-import de.deutschebahn.bahnhoflive.ui.map.content.tiles.IndoorTileProvider;
+import de.deutschebahn.bahnhoflive.map.MapApi;
+import de.deutschebahn.bahnhoflive.map.model.ApiTileOverlay;
+import de.deutschebahn.bahnhoflive.map.model.ApiTileOverlayOptions;
+import de.deutschebahn.bahnhoflive.ui.map.content.tiles.IndoorAppTileProvider;
 
 public class IndoorLayer {
     private static final int TILE_SIZE = 256;
@@ -21,51 +20,51 @@ public class IndoorLayer {
     @Nullable
     private final Integer zoneId;
 
-    private TileOverlay tileOverlay;
-    private IndoorTileProvider tileProvider;
-    private TileOverlayOptions tileOverlayOptions;
+    private ApiTileOverlay apiTileOverlay;
+    private IndoorAppTileProvider tileProvider;
+    private ApiTileOverlayOptions apiTileOverlayOptions;
 
     public IndoorLayer(@androidx.annotation.Nullable Integer zoneId) {
         this.zoneId = zoneId;
     }
 
-    private IndoorTileProvider getTileProvider() {
+    private IndoorAppTileProvider getTileProvider() {
         if (tileProvider == null) {
             tileProvider = BaseApplication.get().getRepositories().getMapRepository().createIndoorTileProvider(TILE_SIZE, TILE_SIZE, zoneId);
         }
         return tileProvider;
     }
 
-    private TileOverlayOptions getOverlayOptions() {
-        if (tileOverlayOptions == null) {
-            tileOverlayOptions = new TileOverlayOptions()
+    private ApiTileOverlayOptions getOverlayOptions() {
+        if (apiTileOverlayOptions == null) {
+            apiTileOverlayOptions = new ApiTileOverlayOptions()
                     .tileProvider(getTileProvider())
                     .zIndex(100);
         }
-        return tileOverlayOptions;
+        return apiTileOverlayOptions;
     }
 
-    public void attach(HuaweiMap map) {
-        if (tileOverlay == null) {
-            tileOverlay = map.addTileOverlay(getOverlayOptions());
+    public void attach(MapApi map) {
+        if (apiTileOverlay == null) {
+            apiTileOverlay = map.addTileOverlay(getOverlayOptions());
         }
     }
 
     private void detach() {
-        if (tileOverlay != null) {
-            tileOverlay.clearTileCache();
-            tileOverlay.remove();
-            tileOverlay = null;
+        if (apiTileOverlay != null) {
+            apiTileOverlay.clearTileCache();
+            apiTileOverlay.remove();
+            apiTileOverlay = null;
         }
     }
 
     public void reset() {
         detach();
         tileProvider = null;
-        tileOverlayOptions = null;
+        apiTileOverlayOptions = null;
     }
 
-    public void setLevel(int level, HuaweiMap googleMap) {
+    public void setLevel(int level, MapApi googleMap) {
         getTileProvider().setLevel(level);
         detach();
         attach(googleMap);

@@ -10,8 +10,8 @@ import android.graphics.Paint
 import android.graphics.Typeface
 import android.os.Parcelable
 import androidx.core.content.ContextCompat
-import com.huawei.hms.maps.model.MarkerOptions
 import de.deutschebahn.bahnhoflive.R
+import de.deutschebahn.bahnhoflive.map.model.ApiMarkerOptions
 import de.deutschebahn.bahnhoflive.repository.DbTimetableResource
 import de.deutschebahn.bahnhoflive.repository.Station
 import de.deutschebahn.bahnhoflive.repository.appRepositories
@@ -44,7 +44,7 @@ internal class StationMarkerContent(private val station: Station, context: Conte
         return R.drawable.legacy_dbmappinicon
     }
 
-    override fun createMarkerOptions(): MarkerOptions? = super.createMarkerOptions()?.apply {
+    override fun createMarkerOptions(): ApiMarkerOptions? = super.createMarkerOptions()?.apply {
         val location = station.location
         if (location != null) {
             position(location)

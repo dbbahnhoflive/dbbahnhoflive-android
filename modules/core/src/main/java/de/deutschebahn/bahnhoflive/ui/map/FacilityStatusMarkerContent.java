@@ -10,9 +10,8 @@ import android.content.Context;
 import android.os.Parcelable;
 import android.text.Html;
 
-import com.huawei.hms.maps.model.MarkerOptions;
-
 import de.deutschebahn.bahnhoflive.backend.db.fasta2.model.FacilityStatus;
+import de.deutschebahn.bahnhoflive.map.model.ApiMarkerOptions;
 import de.deutschebahn.bahnhoflive.ui.Status;
 
 public class FacilityStatusMarkerContent extends MarkerContent {
@@ -29,7 +28,7 @@ public class FacilityStatusMarkerContent extends MarkerContent {
     }
 
     @Override
-    public MarkerOptions createMarkerOptions() {
+    public ApiMarkerOptions createMarkerOptions() {
         return super.createMarkerOptions()
                 .position(facilityStatus.getPosition())
                 .visible(false);

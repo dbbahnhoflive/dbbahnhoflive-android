@@ -9,10 +9,11 @@ import android.content.Context
 import android.os.Parcel
 import android.os.Parcelable
 import android.util.Log
-import com.huawei.hms.maps.model.LatLng
-import com.huawei.hms.maps.model.LatLngBounds
 import de.deutschebahn.bahnhoflive.MarkerFilterable
 import de.deutschebahn.bahnhoflive.R
+import de.deutschebahn.bahnhoflive.map.model.GeoPosition
+import de.deutschebahn.bahnhoflive.map.model.GeoPositionBounds
+import de.deutschebahn.bahnhoflive.map.model.center
 import de.deutschebahn.bahnhoflive.ui.map.content.rimap.RimapFilter
 import de.deutschebahn.bahnhoflive.util.JSONHelper
 import de.deutschebahn.bahnhoflive.util.json.asJSONObjectSequence
@@ -43,7 +44,7 @@ class RimapPOI : Parcelable, MarkerFilterable {
     val menusubcat: String?
     val displayX: Double
     val displayY: Double
-    val bbox: LatLngBounds?
+    val bbox: GeoPositionBounds?
     val phone: String?
     val email: String?
     val website: String?
@@ -103,7 +104,7 @@ class RimapPOI : Parcelable, MarkerFilterable {
             if (topRight == null || bottomLeft == null) {
                 null
             } else {
-                LatLngBounds(bottomLeft, topRight)
+                GeoPositionBounds(bottomLeft, topRight)
             }
         }?.apply {
             with(center) {
@@ -151,14 +152,14 @@ class RimapPOI : Parcelable, MarkerFilterable {
         showLabelAtZoom = 0
     }
 
-    private fun JSONObject.toLatLng(): LatLng? {
+    private fun JSONObject.toLatLng(): GeoPosition? {
         val lat = optDouble("lat")
         val lon = optDouble("lon")
 
         return if (lat.isNaN() || lon.isNaN()) {
             null
         } else {
-            LatLng(lat, lon)
+            GeoPosition(lat, lon)
         }
     }
 
@@ -174,7 +175,7 @@ class RimapPOI : Parcelable, MarkerFilterable {
         menusubcat = `in`.readString()
         displayX = `in`.readDouble()
         displayY = `in`.readDouble()
-        bbox = `in`.readParcelable(LatLngBounds::class.java.classLoader)
+        bbox = `in`.readParcelable(GeoPositionBounds::class.java.classLoader)
         phone = `in`.readString()
         email = `in`.readString()
         website = `in`.readString()

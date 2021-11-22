@@ -7,9 +7,9 @@
 package de.deutschebahn.bahnhoflive.backend.db.publictrainstation.model
 
 import com.google.gson.annotations.SerializedName
-import com.huawei.hms.maps.model.LatLng
 import de.deutschebahn.bahnhoflive.backend.db.publictrainstation.DistanceCalculator
 import de.deutschebahn.bahnhoflive.backend.local.model.EvaIds
+import de.deutschebahn.bahnhoflive.map.model.GeoPosition
 import de.deutschebahn.bahnhoflive.repository.InternalStation
 
 open class StopPlace {
@@ -61,4 +61,4 @@ open class StopPlace {
 
 }
 
-fun Location.toLatLng() = LatLng(latitude, longitude)
+fun Location.toLatLng() = GeoPosition(latitude, longitude)

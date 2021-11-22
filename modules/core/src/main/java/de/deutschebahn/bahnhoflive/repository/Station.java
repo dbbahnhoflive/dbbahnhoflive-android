@@ -10,9 +10,8 @@ package de.deutschebahn.bahnhoflive.repository;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
-import com.huawei.hms.maps.model.LatLng;
-
 import de.deutschebahn.bahnhoflive.backend.local.model.EvaIds;
+import de.deutschebahn.bahnhoflive.map.model.GeoPosition;
 
 
 public interface Station {
@@ -21,7 +20,7 @@ public interface Station {
     String getTitle();
 
     @Nullable
-    LatLng getLocation();
+    GeoPosition getLocation();
 
     @NonNull
     EvaIds getEvaIds();

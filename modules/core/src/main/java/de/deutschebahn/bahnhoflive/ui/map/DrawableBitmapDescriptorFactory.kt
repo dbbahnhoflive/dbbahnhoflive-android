@@ -8,14 +8,14 @@ package de.deutschebahn.bahnhoflive.ui.map
 import android.graphics.Bitmap
 import android.graphics.Canvas
 import android.graphics.drawable.Drawable
-import com.huawei.hms.maps.model.BitmapDescriptor
-import com.huawei.hms.maps.model.BitmapDescriptorFactory
+import de.deutschebahn.bahnhoflive.map.model.ApiBitmapDescriptor
+import de.deutschebahn.bahnhoflive.map.model.ApiBitmapDescriptorFactory
 
 class DrawableBitmapDescriptorFactory(
     val drawableProvider: (highlighted: Boolean) -> Drawable
 ) : MarkerContent.BitmapDescriptorFactory {
 
-    override fun createBitmapDescriptor(highlighted: Boolean): BitmapDescriptor {
+    override fun createBitmapDescriptor(highlighted: Boolean): ApiBitmapDescriptor {
         val drawable = drawableProvider(highlighted)
         val width = (drawable.getIntrinsicWidth() * highlighted.scale).toInt()
         val height = (drawable.getIntrinsicHeight() * highlighted.scale).toInt()
@@ -23,7 +23,7 @@ class DrawableBitmapDescriptorFactory(
         drawable.setBounds(0, 0, width, height)
         val canvas = Canvas(bitmap)
         drawable.draw(canvas)
-        return BitmapDescriptorFactory.fromBitmap(bitmap)
+        return ApiBitmapDescriptorFactory.fromBitmap(bitmap)
     }
 
     val Boolean.scale get() = if (this) 1.2f else 1f

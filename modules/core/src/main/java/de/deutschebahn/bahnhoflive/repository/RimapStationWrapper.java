@@ -8,11 +8,10 @@ package de.deutschebahn.bahnhoflive.repository;
 
 import androidx.annotation.NonNull;
 
-import com.huawei.hms.maps.model.LatLng;
-
 import de.deutschebahn.bahnhoflive.backend.local.model.EvaIds;
 import de.deutschebahn.bahnhoflive.backend.rimap.model.StationFeatureCollection;
 import de.deutschebahn.bahnhoflive.backend.rimap.model.StationProperties;
+import de.deutschebahn.bahnhoflive.map.model.GeoPosition;
 import de.deutschebahn.bahnhoflive.util.Collections;
 
 public class RimapStationWrapper implements Station {
@@ -22,7 +21,7 @@ public class RimapStationWrapper implements Station {
 
     private final StationProperties stationProperties;
 
-    private final LatLng location;
+    private final GeoPosition location;
 
     private RimapStationWrapper(StationFeatureCollection stationFeatureCollection) {
         stationProperties = stationFeatureCollection.features.get(0).properties;
@@ -30,7 +29,7 @@ public class RimapStationWrapper implements Station {
         location = stationProperties.lat == null || stationProperties.lon == null || (
                 stationProperties.lat == 0 && stationProperties.lon == 0
         ) ? null :
-                new LatLng(stationProperties.lat, stationProperties.lon);
+                new GeoPosition(stationProperties.lat, stationProperties.lon);
 
         evaIds = new EvaIds(stationFeatureCollection);
     }
@@ -55,7 +54,7 @@ public class RimapStationWrapper implements Station {
     }
 
     @Override
-    public LatLng getLocation() {
+    public GeoPosition getLocation() {
         return location;
     }
 

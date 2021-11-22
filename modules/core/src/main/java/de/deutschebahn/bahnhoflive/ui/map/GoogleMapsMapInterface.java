@@ -9,63 +9,61 @@ package de.deutschebahn.bahnhoflive.ui.map;
 import android.content.Context;
 
 import androidx.annotation.NonNull;
-
-import com.huawei.hms.maps.CameraUpdate;
-import com.huawei.hms.maps.CameraUpdateFactory;
-import com.huawei.hms.maps.HuaweiMap;
-import com.huawei.hms.maps.UiSettings;
-import com.huawei.hms.maps.model.LatLng;
-import com.huawei.hms.maps.model.LatLngBounds;
-import com.huawei.hms.maps.model.MapStyleOptions;
-import com.huawei.hms.maps.model.Marker;
+import androidx.annotation.RawRes;
 
 import de.deutschebahn.bahnhoflive.R;
+import de.deutschebahn.bahnhoflive.map.ApiUiSettings;
+import de.deutschebahn.bahnhoflive.map.CameraUpdateJob;
+import de.deutschebahn.bahnhoflive.map.MapApi;
+import de.deutschebahn.bahnhoflive.map.model.ApiMarker;
+import de.deutschebahn.bahnhoflive.map.model.GeoPosition;
+import de.deutschebahn.bahnhoflive.map.model.GeoPositionBounds;
 import de.deutschebahn.bahnhoflive.ui.map.content.BackgroundLayer;
 import de.deutschebahn.bahnhoflive.ui.map.content.IndoorLayer;
 import de.deutschebahn.bahnhoflive.ui.map.content.MapType;
 
 class GoogleMapsMapInterface extends MapInterface {
 
-    public static final LatLngBounds BOUNDS_OF_GERMANY = new LatLngBounds(new LatLng(47.212363, 5.749376), new LatLng(55.072294, 14.890002));
+    public static final GeoPositionBounds BOUNDS_OF_GERMANY = new GeoPositionBounds(new GeoPosition(47.212363, 5.749376), new GeoPosition(55.072294, 14.890002));
 
     @NonNull
-    private final HuaweiMap googleMap;
+    private final MapApi mapApi;
 
     private final BackgroundLayer backgroundLayer = new BackgroundLayer();
     private final IndoorLayer indoorLayer = new IndoorLayer(zoneId);
 
     private Context context;
 
-    GoogleMapsMapInterface(MapInterface mapInterface, @NonNull final HuaweiMap googleMap, Context context, HuaweiMap.OnMarkerClickListener onMarkerClickListener, HuaweiMap.OnMapClickListener onMapClickListener, ZoomChangeMonitor.Listener zoomChangeListener, LatLng location, float zoom) {
+    GoogleMapsMapInterface(MapInterface mapInterface, @NonNull final MapApi mapApi, Context context, MapApi.OnMarkerClickListener onMarkerClickListener, MapApi.OnMapClickListener onMapClickListener, ZoomChangeMonitor.Listener zoomChangeListener, GeoPosition location, float zoom) {
         super(mapInterface);
 
-        this.googleMap = googleMap;
+        this.mapApi = mapApi;
         this.context = context;
 
-        ZoomChangeMonitor zoomChangeMonitor = new ZoomChangeMonitor(googleMap, zoomChangeListener);
+        ZoomChangeMonitor zoomChangeMonitor = new ZoomChangeMonitor(mapApi, zoomChangeListener);
 
-        googleMap.clear();
+        mapApi.clear();
 
-        final UiSettings uiSettings = googleMap.getUiSettings();
+        final ApiUiSettings apiUiSettings = mapApi.getApiUiSettings();
 
-        uiSettings.setIndoorLevelPickerEnabled(false);
-        uiSettings.setZoomControlsEnabled(false);
-        uiSettings.setCompassEnabled(false);
-        uiSettings.setMapToolbarEnabled(false);
-        uiSettings.setMyLocationButtonEnabled(false);
-        uiSettings.setRotateGesturesEnabled(false);
-        uiSettings.setTiltGesturesEnabled(false);
+        apiUiSettings.setIndoorLevelPickerEnabled(false);
+        apiUiSettings.setZoomControlsEnabled(false);
+        apiUiSettings.setCompassEnabled(false);
+        apiUiSettings.setMapToolbarEnabled(false);
+        apiUiSettings.setMyLocationButtonEnabled(false);
+        apiUiSettings.setRotateGesturesEnabled(false);
+        apiUiSettings.setTiltGesturesEnabled(false);
 
-        uiSettings.setZoomGesturesEnabled(true);
-        uiSettings.setScrollGesturesEnabled(true);
+        apiUiSettings.setZoomGesturesEnabled(true);
+        apiUiSettings.setScrollGesturesEnabled(true);
 
-        googleMap.setBuildingsEnabled(false);
-        googleMap.setIndoorEnabled(false);
+        mapApi.setBuildingsEnabled(false);
+        mapApi.setIndoorEnabled(false);
 
-        googleMap.setOnMarkerClickListener(onMarkerClickListener);
+        mapApi.setOnMarkerClickListener(onMarkerClickListener);
 
-        googleMap.setOnCameraIdleListener(zoomChangeMonitor);
-        googleMap.setOnMapClickListener(onMapClickListener);
+        mapApi.setOnCameraIdleListener(zoomChangeMonitor);
+        mapApi.setOnMapClickListener(onMapClickListener);
         updateMapStyle();
         updateViews();
 
@@ -75,7 +73,7 @@ class GoogleMapsMapInterface extends MapInterface {
 
     @Override
     public void setIndoorLevel(int level) {
-        indoorLayer.setLevel(level, googleMap);
+        indoorLayer.setLevel(level, mapApi);
     }
 
     public void updateMapType() {
@@ -85,27 +83,27 @@ class GoogleMapsMapInterface extends MapInterface {
         indoorLayer.reset();
 
         if (currentMapType == MapType.OSM) {
-            googleMap.setMapType(HuaweiMap.MAP_TYPE_NONE);
+            mapApi.setMapType(MapType.OSM);
 
-            backgroundLayer.attach(this.googleMap);
+            backgroundLayer.attach(this.mapApi);
         } else if (currentMapType == MapType.GOOGLE_MAPS) {
-            googleMap.setMapType(HuaweiMap.MAP_TYPE_NORMAL);
+            mapApi.setMapType(MapType.GOOGLE_MAPS);
             backgroundLayer.detach();
         }
-        indoorLayer.attach(googleMap);
+        indoorLayer.attach(mapApi);
 
         updateMaxZoom();
     }
 
     @Override
     public void updateMapStyle() {
-        int mapStyle = levelCount > 0 ? R.raw.mapstyle_indoor : R.raw.mapstyle;
-        googleMap.setMapStyle(MapStyleOptions.loadRawResourceStyle(context, mapStyle));
+        @RawRes int mapStyle = levelCount > 0 ? R.raw.mapstyle_indoor : R.raw.mapstyle;
+        mapApi.setMapStyle(context, mapStyle);
         updateMaxZoom();
     }
 
     public void updateMaxZoom() {
-        googleMap.setMaxZoomPreference(levelCount > 0 || currentMapType == MapType.GOOGLE_MAPS ? 20 : 17);
+        mapApi.setMaxZoomPreference(levelCount > 0 || currentMapType == MapType.GOOGLE_MAPS ? 20 : 17);
     }
 
     @Override
@@ -114,30 +112,20 @@ class GoogleMapsMapInterface extends MapInterface {
             return;
         }
 
-        final Marker marker = markerBinder.getMarker();
-        if (marker != null) {
-            final LatLngBounds bounds = null; // markerBinder.getBounds();
-            final CameraUpdate cameraUpdate = bounds == null ?
-                    CameraUpdateFactory.newLatLngZoom(marker.getPosition(), markerBinder.getMarkerContent().getZoom(googleMap.getCameraPosition().zoom))
-                    : CameraUpdateFactory.newLatLngBounds(bounds, 32);
+        final ApiMarker apiMarker = markerBinder.getMarker();
+        if (apiMarker != null) {
+            final GeoPositionBounds bounds = null; // markerBinder.getBounds();
+            final CameraUpdateJob cameraUpdateJob = bounds == null ?
+                    mapApi.animateCamera(apiMarker.getPosition(), markerBinder.getMarkerContent().getZoom(mapApi.getCameraZoom()))
+                    : mapApi.animateCamera(bounds, 32);
 
-            googleMap.animateCamera(cameraUpdate, 100, new HuaweiMap.CancelableCallback() {
-                @Override
-                public void onFinish() {
-
-                }
-
-                @Override
-                public void onCancel() {
-
-                }
-            });
+            cameraUpdateJob.run(100, null);
         }
     }
 
     @Override
-    public void setLocation(LatLng latLng, float zoom) {
-        pendingLocation = new PendingLocation(latLng, zoom);
+    public void setLocation(GeoPosition geoPosition, float zoom) {
+        pendingLocation = new PendingLocation(geoPosition, zoom);
         takePendingLocation();
     }
 
@@ -147,15 +135,15 @@ class GoogleMapsMapInterface extends MapInterface {
             return;
         }
 
-        final LatLng latLng = pendingLocation.latLng;
+        final GeoPosition geoPosition = pendingLocation.geoPosition;
         final float zoom = pendingLocation.zoom;
 
         this.pendingLocation = null;
 
-        if (latLng == null) {
-            googleMap.animateCamera(CameraUpdateFactory.newLatLngBounds(BOUNDS_OF_GERMANY, 0), 400, null);
+        if (geoPosition == null) {
+            mapApi.animateCamera(BOUNDS_OF_GERMANY, 0).run(400, null);
         } else {
-            googleMap.animateCamera(CameraUpdateFactory.newLatLngZoom(latLng, zoom), 400, null);
+            mapApi.animateCamera(geoPosition, zoom).run(400, null);
         }
     }
 

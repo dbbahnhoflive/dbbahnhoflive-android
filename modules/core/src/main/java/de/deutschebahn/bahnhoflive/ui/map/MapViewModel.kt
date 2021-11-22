@@ -9,12 +9,12 @@ package de.deutschebahn.bahnhoflive.ui.map
 import android.content.Context
 import androidx.lifecycle.*
 import com.android.volley.VolleyError
-import com.huawei.hms.maps.model.LatLng
 import de.deutschebahn.bahnhoflive.BaseApplication
 import de.deutschebahn.bahnhoflive.backend.BaseRestListener
 import de.deutschebahn.bahnhoflive.backend.rimap.model.RimapPOI
 import de.deutschebahn.bahnhoflive.backend.rimap.model.RimapStation
 import de.deutschebahn.bahnhoflive.backend.ris.model.TrainInfo
+import de.deutschebahn.bahnhoflive.map.model.GeoPosition
 import de.deutschebahn.bahnhoflive.repository.*
 import de.deutschebahn.bahnhoflive.repository.parking.ViewModelParking
 import de.deutschebahn.bahnhoflive.stream.livedata.OneShotLiveData
@@ -60,7 +60,7 @@ class MapViewModel : StadaStationCacheViewModel() {
 
     val originalStationLiveData = MutableLiveData<Station>()
 
-    val stationLocationLiveData: LiveData<LatLng?> = MediatorLiveData<LatLng?>().apply {
+    val stationLocationLiveData: LiveData<GeoPosition?> = MediatorLiveData<GeoPosition?>().apply {
 
         addSource(originalStationLiveData) { originalStation ->
             if (value == null) {

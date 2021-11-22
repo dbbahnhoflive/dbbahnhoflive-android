@@ -14,8 +14,6 @@ import android.os.Parcelable;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
-import com.huawei.hms.maps.model.LatLng;
-
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -24,6 +22,7 @@ import java.util.Comparator;
 import java.util.List;
 import java.util.Map;
 
+import de.deutschebahn.bahnhoflive.map.model.GeoPosition;
 import de.deutschebahn.bahnhoflive.ui.station.info.StaticInfo;
 
 public class ServiceContent implements Parcelable {
@@ -36,7 +35,7 @@ public class ServiceContent implements Parcelable {
     private String address;
 
     @Nullable
-    private LatLng location;
+    private GeoPosition location;
 
     private Map table;
     private int position = -1;
@@ -49,7 +48,7 @@ public class ServiceContent implements Parcelable {
         this(staticInfo, additionalText, null, null);
     }
 
-    public ServiceContent(@NonNull StaticInfo staticInfo, @Nullable String additionalText, @Nullable String address, @Nullable LatLng location) {
+    public ServiceContent(@NonNull StaticInfo staticInfo, @Nullable String additionalText, @Nullable String address, @Nullable GeoPosition location) {
         this.title = address == null ? staticInfo.title : "Reisezentrum";
         this.descriptionText = staticInfo.descriptionText;
         this.additionalText = additionalText;
@@ -221,7 +220,7 @@ public class ServiceContent implements Parcelable {
     }
 
     @Nullable
-    public LatLng getLocation() {
+    public GeoPosition getLocation() {
         return location;
     }
 

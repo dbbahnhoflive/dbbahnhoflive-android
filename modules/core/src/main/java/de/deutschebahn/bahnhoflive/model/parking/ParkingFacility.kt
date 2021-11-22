@@ -7,7 +7,7 @@
 package de.deutschebahn.bahnhoflive.model.parking
 
 import android.os.Parcelable
-import com.huawei.hms.maps.model.LatLng
+import de.deutschebahn.bahnhoflive.map.model.GeoPosition
 import kotlinx.android.parcel.Parcelize
 
 @Parcelize
@@ -37,6 +37,6 @@ data class ParkingFacility(
     val distanceToStation: String?,
     val operator: String?,
     val featureTags: Set<FeatureTag>,
-    val location: LatLng?,
+    val location: GeoPosition?,
     val liveCapacity: LiveCapacity? = null
 ) : Parcelable

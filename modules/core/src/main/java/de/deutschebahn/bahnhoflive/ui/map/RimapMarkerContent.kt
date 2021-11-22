@@ -10,14 +10,14 @@ import android.content.Context
 import android.os.Parcelable
 import android.text.TextUtils
 import androidx.annotation.DrawableRes
-import com.huawei.hms.maps.model.LatLng
-import com.huawei.hms.maps.model.LatLngBounds
-import com.huawei.hms.maps.model.MarkerOptions
 import de.deutschebahn.bahnhoflive.R
 import de.deutschebahn.bahnhoflive.backend.rimap.RimapConfig
 import de.deutschebahn.bahnhoflive.backend.rimap.model.LevelMapping
 import de.deutschebahn.bahnhoflive.backend.rimap.model.MenuMapping
 import de.deutschebahn.bahnhoflive.backend.rimap.model.RimapPOI
+import de.deutschebahn.bahnhoflive.map.model.ApiMarkerOptions
+import de.deutschebahn.bahnhoflive.map.model.GeoPosition
+import de.deutschebahn.bahnhoflive.map.model.GeoPositionBounds
 import de.deutschebahn.bahnhoflive.ui.map.content.rimap.Track
 import de.deutschebahn.bahnhoflive.ui.station.shop.OpenStatusResolver
 import de.deutschebahn.bahnhoflive.ui.station.shop.RimapShop
@@ -30,9 +30,9 @@ private val mapIcon: Int, @field:DrawableRes
         LevelMapping.codeToLevel(rimapPOI.level)
     }
 
-    override fun createMarkerOptions(): MarkerOptions? {
+    override fun createMarkerOptions(): ApiMarkerOptions? {
         return super.createMarkerOptions()
-            ?.position(LatLng(rimapPOI.displayY, rimapPOI.displayX))
+            ?.position(GeoPosition(rimapPOI.displayY, rimapPOI.displayX))
             ?.visible(false)
     }
 
@@ -52,7 +52,7 @@ private val mapIcon: Int, @field:DrawableRes
         return this.level ?: 0
     }
 
-    override fun getBounds(): LatLngBounds? {
+    override fun getBounds(): GeoPositionBounds? {
         return rimapPOI.bbox
     }
 

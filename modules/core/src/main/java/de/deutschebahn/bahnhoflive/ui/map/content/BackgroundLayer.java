@@ -6,54 +6,53 @@
 
 package de.deutschebahn.bahnhoflive.ui.map.content;
 
-import com.huawei.hms.maps.HuaweiMap;
-import com.huawei.hms.maps.model.TileOverlay;
-import com.huawei.hms.maps.model.TileOverlayOptions;
-import com.huawei.hms.maps.model.TileProvider;
-
 import de.deutschebahn.bahnhoflive.BaseApplication;
+import de.deutschebahn.bahnhoflive.map.MapApi;
+import de.deutschebahn.bahnhoflive.map.model.ApiTileOverlay;
+import de.deutschebahn.bahnhoflive.map.model.ApiTileOverlayOptions;
+import de.deutschebahn.bahnhoflive.map.model.AppTileProvider;
 
 public class BackgroundLayer {
     private static final int TILE_SIZE = 512;
 
-    private TileOverlay mTileOverlay;
-    private TileProvider mTileProvider;
-    private TileOverlayOptions mTileOverlayOptions;
+    private ApiTileOverlay mApiTileOverlay;
+    private AppTileProvider mTileProvider;
+    private ApiTileOverlayOptions mApiTileOverlayOptions;
 
 
-    private TileProvider getTileProvider() {
+    private AppTileProvider getTileProvider() {
         if (mTileProvider == null) {
             mTileProvider = BaseApplication.get().getRepositories().getMapRepository().createGroundTileProvider(TILE_SIZE, TILE_SIZE);
         }
         return mTileProvider;
     }
 
-    private TileOverlayOptions getOverlayOptions() {
-        if (mTileOverlayOptions == null) {
-            mTileOverlayOptions = new TileOverlayOptions()
+    private ApiTileOverlayOptions getOverlayOptions() {
+        if (mApiTileOverlayOptions == null) {
+            mApiTileOverlayOptions = new ApiTileOverlayOptions()
                     .tileProvider(getTileProvider())
                     .zIndex(1);
         }
-        return mTileOverlayOptions;
+        return mApiTileOverlayOptions;
     }
 
-    public void attach(HuaweiMap map) {
-        if (mTileOverlay == null) {
-            mTileOverlay = map.addTileOverlay(getOverlayOptions());
+    public void attach(MapApi map) {
+        if (mApiTileOverlay == null) {
+            mApiTileOverlay = map.addTileOverlay(getOverlayOptions());
         }
     }
 
     public void detach() {
-        if (mTileOverlay != null) {
-            mTileOverlay.clearTileCache();
-            mTileOverlay.remove();
-            mTileOverlay = null;
+        if (mApiTileOverlay != null) {
+            mApiTileOverlay.clearTileCache();
+            mApiTileOverlay.remove();
+            mApiTileOverlay = null;
         }
     }
 
     public void reset() {
         this.detach();
         mTileProvider = null;
-        mTileOverlayOptions = null;
+        mApiTileOverlayOptions = null;
     }
 }

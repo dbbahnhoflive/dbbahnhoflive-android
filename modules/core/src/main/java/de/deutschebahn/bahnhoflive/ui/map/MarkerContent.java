@@ -7,15 +7,20 @@
 package de.deutschebahn.bahnhoflive.ui.map;
 
 import android.content.Context;
+import android.graphics.Bitmap;
+import android.graphics.Canvas;
+import android.graphics.drawable.BitmapDrawable;
+import android.graphics.drawable.Drawable;
 import android.os.Parcelable;
 
 import androidx.annotation.DrawableRes;
 import androidx.annotation.Nullable;
 
-import com.huawei.hms.maps.model.BitmapDescriptor;
-import com.huawei.hms.maps.model.LatLngBounds;
-import com.huawei.hms.maps.model.MarkerOptions;
-
+import de.deutschebahn.bahnhoflive.BaseApplication;
+import de.deutschebahn.bahnhoflive.map.model.ApiBitmapDescriptor;
+import de.deutschebahn.bahnhoflive.map.model.ApiBitmapDescriptorFactory;
+import de.deutschebahn.bahnhoflive.map.model.ApiMarkerOptions;
+import de.deutschebahn.bahnhoflive.map.model.GeoPositionBounds;
 import de.deutschebahn.bahnhoflive.ui.ViewHolder;
 import de.deutschebahn.bahnhoflive.ui.map.content.MapConstants;
 
@@ -37,7 +42,7 @@ public abstract class MarkerContent {
 
     private final BitmapDescriptorFactory bitmapDescriptorFactory;
 
-    public LatLngBounds getBounds() {
+    public GeoPositionBounds getBounds() {
         return null;
     }
 
@@ -90,7 +95,7 @@ public abstract class MarkerContent {
     }
 
     public interface BitmapDescriptorFactory {
-        BitmapDescriptor createBitmapDescriptor(boolean highlighted);
+        ApiBitmapDescriptor createBitmapDescriptor(boolean highlighted);
     }
 
     protected MarkerContent(BitmapDescriptorFactory bitmapDescriptorFactory) {
@@ -102,8 +107,8 @@ public abstract class MarkerContent {
     }
 
     @Nullable
-    public MarkerOptions createMarkerOptions() {
-        return new MarkerOptions()
+    public ApiMarkerOptions createMarkerOptions() {
+        return new ApiMarkerOptions()
                 .anchor(0.5f, 1f)
                 .icon(getBitmapDescriptorFactory().createBitmapDescriptor(false));
     }
@@ -130,8 +135,24 @@ public abstract class MarkerContent {
         }
 
         @Override
-        public BitmapDescriptor createBitmapDescriptor(boolean highlighted) {
-            return VectorBitmapDescriptorFactory.createBitmapDescriptor(iconResId, highlighted ? 2f : 1f);
+        public ApiBitmapDescriptor createBitmapDescriptor(boolean highlighted) {
+            float scale = highlighted ? 2f : 1f;
+            final BaseApplication context = BaseApplication.get();
+
+            final Drawable drawable = context.getResources().getDrawable(iconResId);
+
+            if (scale == 1.0f && drawable instanceof BitmapDrawable) {
+                return ApiBitmapDescriptorFactory.fromResource(iconResId);
+            }
+
+            final int width = (int) (drawable.getIntrinsicWidth() * scale);
+            final int height = (int) (drawable.getIntrinsicHeight() * scale);
+            final Bitmap bitmap = Bitmap.createBitmap(width, height, Bitmap.Config.ARGB_8888);
+            drawable.setBounds(0, 0, width, height);
+            final Canvas canvas = new Canvas(bitmap);
+            drawable.draw(canvas);
+
+            return ApiBitmapDescriptorFactory.fromBitmap(bitmap);
         }
     }
 

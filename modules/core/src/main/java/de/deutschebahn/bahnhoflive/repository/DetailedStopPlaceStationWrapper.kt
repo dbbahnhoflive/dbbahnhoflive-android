@@ -6,14 +6,14 @@
 
 package de.deutschebahn.bahnhoflive.repository
 
-import com.huawei.hms.maps.model.LatLng
 import de.deutschebahn.bahnhoflive.backend.db.publictrainstation.model.DetailedStopPlace
 import de.deutschebahn.bahnhoflive.backend.local.model.EvaIds
+import de.deutschebahn.bahnhoflive.map.model.GeoPosition
 
 class DetailedStopPlaceStationWrapper private constructor(val detailedStopPlace: DetailedStopPlace) :
     Station {
 
-    private val location: LatLng?
+    private val location: GeoPosition?
 
     override fun getId(): String {
         return detailedStopPlace.stadaId
@@ -23,7 +23,7 @@ class DetailedStopPlaceStationWrapper private constructor(val detailedStopPlace:
         return detailedStopPlace.name ?: id
     }
 
-    override fun getLocation(): LatLng? {
+    override fun getLocation(): GeoPosition? {
         return location
     }
 
@@ -35,7 +35,7 @@ class DetailedStopPlaceStationWrapper private constructor(val detailedStopPlace:
         this.location = detailedStopPlace.location?.takeUnless {
             it.latitude == 0.0 && it.longitude == 0.0
         }?.let {
-            LatLng(it.latitude, it.longitude)
+            GeoPosition(it.latitude, it.longitude)
         } ?: StationPositions.data[id]
     }
 

@@ -8,11 +8,10 @@ package de.deutschebahn.bahnhoflive.ui.map;
 
 import androidx.annotation.NonNull;
 
-import com.huawei.hms.maps.HuaweiMap;
-import com.huawei.hms.maps.model.LatLngBounds;
-import com.huawei.hms.maps.model.Marker;
-import com.huawei.hms.maps.model.MarkerOptions;
-
+import de.deutschebahn.bahnhoflive.map.MapApi;
+import de.deutschebahn.bahnhoflive.map.model.ApiMarker;
+import de.deutschebahn.bahnhoflive.map.model.ApiMarkerOptions;
+import de.deutschebahn.bahnhoflive.map.model.GeoPositionBounds;
 import de.deutschebahn.bahnhoflive.ui.map.content.rimap.Filter;
 
 public class MarkerBinder {
@@ -20,7 +19,7 @@ public class MarkerBinder {
     @NonNull
     private final MarkerContent markerContent;
 
-    private Marker marker;
+    private ApiMarker apiMarker;
 
     private boolean highlighted;
     private float zoom;
@@ -36,8 +35,8 @@ public class MarkerBinder {
         updateVisibility();
     }
 
-    public static MarkerBinder of(Marker marker) {
-        return (MarkerBinder) marker.getTag();
+    public static MarkerBinder of(ApiMarker apiMarker) {
+        return (MarkerBinder) apiMarker.getTag();
     }
 
     @NonNull
@@ -45,8 +44,8 @@ public class MarkerBinder {
         return markerContent;
     }
 
-    public Marker getMarker() {
-        return marker;
+    public ApiMarker getMarker() {
+        return apiMarker;
     }
 
     public void setHighlighted(boolean highlighted) {
@@ -56,8 +55,8 @@ public class MarkerBinder {
     }
 
     private void updateMarker() {
-        if (marker != null) {
-            marker.setIcon(markerContent.getBitmapDescriptorFactory().createBitmapDescriptor(highlighted));
+        if (apiMarker != null) {
+            apiMarker.setIcon(markerContent.getBitmapDescriptorFactory().createBitmapDescriptor(highlighted));
             updateVisibility();
         }
     }
@@ -65,27 +64,27 @@ public class MarkerBinder {
     public void setZoom(float zoom) {
         this.zoom = zoom;
 
-        if (marker != null && markerContent.acceptsZoom(zoom) != marker.isVisible()) {
+        if (apiMarker != null && markerContent.acceptsZoom(zoom) != apiMarker.isVisible()) {
             updateVisibility();
         }
     }
 
     public void updateVisibility() {
-        if (marker != null) {
-            marker.setVisible(isVisible());
+        if (apiMarker != null) {
+            apiMarker.setVisible(isVisible());
         }
     }
 
     public void setLevel(int level) {
         this.level = level;
 
-        final Marker marker = this.marker;
-        if (marker != null && markerContent.acceptsLevel(level) != marker.isVisible()) {
+        final ApiMarker apiMarker = this.apiMarker;
+        if (apiMarker != null && markerContent.acceptsLevel(level) != apiMarker.isVisible()) {
             updateVisibility();
         }
     }
 
-    public LatLngBounds getBounds() {
+    public GeoPositionBounds getBounds() {
         return markerContent.getBounds();
     }
 
@@ -97,19 +96,22 @@ public class MarkerBinder {
         return filterItem.getChecked();
     }
 
-    public void bind(HuaweiMap googleMap) {
-        final MarkerOptions markerOptions = markerContent.createMarkerOptions();
-        if (markerOptions != null) {
-            marker = googleMap.addMarker(markerOptions);
-            marker.setTag(this);
-            updateVisibility();
+    public void bind(MapApi googleMap) {
+        final ApiMarkerOptions apiMarkerOptions = markerContent.createMarkerOptions();
+        if (apiMarkerOptions != null) {
+            final ApiMarker marker = googleMap.addMarker(apiMarkerOptions);
+            if (marker != null) {
+                apiMarker = marker;
+                apiMarker.setTag(this);
+                updateVisibility();
+            }
         }
     }
 
     public void unbind() {
-        if (marker != null) {
-            marker.remove();
-            marker = null;
+        if (apiMarker != null) {
+            apiMarker.remove();
+            apiMarker = null;
         }
     }
 

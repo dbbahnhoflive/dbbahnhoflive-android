@@ -15,7 +15,6 @@ import androidx.annotation.Nullable;
 import com.google.gson.Gson;
 import com.google.gson.annotations.SerializedName;
 import com.google.gson.reflect.TypeToken;
-import com.huawei.hms.maps.model.LatLng;
 
 import java.lang.reflect.Type;
 import java.util.ArrayList;
@@ -23,6 +22,7 @@ import java.util.List;
 
 import de.deutschebahn.bahnhoflive.MarkerFilterable;
 import de.deutschebahn.bahnhoflive.R;
+import de.deutschebahn.bahnhoflive.map.model.GeoPosition;
 import de.deutschebahn.bahnhoflive.ui.map.FacilityStatusMarkerContent;
 import de.deutschebahn.bahnhoflive.ui.map.content.rimap.RimapFilter;
 
@@ -87,11 +87,11 @@ public class FacilityStatus implements Parcelable, Comparable<FacilityStatus>, M
         }
     }
 
-    public LatLng getPosition() {
+    public GeoPosition getPosition() {
         try {
-            return new LatLng(Double.parseDouble(latitude), Double.parseDouble(longitude));
+            return new GeoPosition(Double.parseDouble(latitude), Double.parseDouble(longitude));
         } catch (Exception nfe) {
-            return new LatLng(0, 0);
+            return new GeoPosition(0, 0);
         }
     }
 

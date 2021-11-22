@@ -5,11 +5,11 @@
  */
 package de.deutschebahn.bahnhoflive.ui.map.content.tiles
 
-open class IndoorTileProvider(
+open class IndoorAppTileProvider(
     protected val tileWidth: Int,
     protected val tileHeight: Int
 ) :
-    HttpTileProvider(
+    HttpAppTileProvider(
         tileWidth, tileHeight
     ) {
 

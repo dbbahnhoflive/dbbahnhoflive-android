@@ -13,7 +13,7 @@
 
     <fragment
         android:id="@+id/map_fragment"
-        class="com.huawei.hms.maps.MapFragment"
+        class="de.deutschebahn.bahnhoflive.map.ApiMapFragment"
 
         android:layout_width="match_parent"
         android:layout_height="match_parent"

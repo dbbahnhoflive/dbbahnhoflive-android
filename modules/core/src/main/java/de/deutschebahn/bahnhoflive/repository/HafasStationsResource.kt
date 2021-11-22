@@ -7,19 +7,19 @@
 package de.deutschebahn.bahnhoflive.repository
 
 import com.android.volley.VolleyError
-import com.huawei.hms.maps.model.LatLng
 import de.deutschebahn.bahnhoflive.BaseApplication
 import de.deutschebahn.bahnhoflive.backend.VolleyRestListener
 import de.deutschebahn.bahnhoflive.backend.hafas.Filter
 import de.deutschebahn.bahnhoflive.backend.hafas.model.HafasStation
 import de.deutschebahn.bahnhoflive.backend.hafas.model.ProductCategory
+import de.deutschebahn.bahnhoflive.map.model.GeoPosition
 import de.deutschebahn.bahnhoflive.util.Collections
 
 class HafasStationsResource(val maxStationDistance: Int) : RemoteResource<List<HafasStation>>() {
 
     lateinit var origin: String
     lateinit var station: Station
-    lateinit var location: LatLng
+    lateinit var location: GeoPosition
 
     fun initialize(station: Station, origin: String) {
         if (!isLoadingPreconditionsMet) {

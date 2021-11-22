@@ -10,7 +10,7 @@ import android.location.Location;
 
 import androidx.annotation.Nullable;
 
-import com.huawei.hms.maps.model.LatLng;
+import de.deutschebahn.bahnhoflive.map.model.GeoPosition;
 
 public class LocationSmoother {
 
@@ -35,19 +35,19 @@ public class LocationSmoother {
     }
 
     @Nullable
-    public synchronized LatLng smooth(LatLng latLng) {
-        if (latLng == null) {
+    public synchronized GeoPosition smooth(GeoPosition geoPosition) {
+        if (geoPosition == null) {
             return null;
         }
 
-        if (latestLocationNeedsUpdate(latLng.latitude, latLng.longitude)) {
-            latestLatitude = latLng.latitude;
-            latestLongitude = latLng.longitude;
+        if (latestLocationNeedsUpdate(geoPosition.latitude, geoPosition.longitude)) {
+            latestLatitude = geoPosition.latitude;
+            latestLongitude = geoPosition.longitude;
 
-            return latLng;
+            return geoPosition;
         }
 
-        return new LatLng(latestLatitude, latestLongitude);
+        return new GeoPosition(latestLatitude, latestLongitude);
     }
 
     @Nullable

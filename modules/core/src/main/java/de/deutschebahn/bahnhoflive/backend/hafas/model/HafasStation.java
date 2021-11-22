@@ -13,12 +13,12 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
 import com.google.gson.annotations.SerializedName;
-import com.huawei.hms.maps.model.LatLng;
 
 import java.util.ArrayList;
 
 import de.deutschebahn.bahnhoflive.BaseApplication;
 import de.deutschebahn.bahnhoflive.backend.local.model.EvaIds;
+import de.deutschebahn.bahnhoflive.map.model.GeoPosition;
 
 /**
  * Warning! Might be persisted by {@link de.deutschebahn.bahnhoflive.persistence.FavoriteStationsStore}
@@ -148,10 +148,11 @@ public class HafasStation implements Parcelable {
 
     /**
      * Assembles the position as LatLng.
+     *
      * @return LatLng - The position of the station.
      */
-    public LatLng getPosition() {
-        return new LatLng(latitude, longitude);
+    public GeoPosition getPosition() {
+        return new GeoPosition(latitude, longitude);
     }
 
     @Override

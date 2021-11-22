@@ -6,32 +6,31 @@
 
 package de.deutschebahn.bahnhoflive.ui.map;
 
-import com.huawei.hms.maps.HuaweiMap;
-import com.huawei.hms.maps.model.CameraPosition;
+import de.deutschebahn.bahnhoflive.map.MapApi;
 
-class ZoomChangeMonitor implements HuaweiMap.OnCameraIdleListener {
+public class ZoomChangeMonitor implements MapApi.OnCameraIdleListener {
 
     public interface Listener {
         void onZoomChanged(float zoom);
     }
 
-    private final HuaweiMap googleMap;
+    private final MapApi mapApi;
     private final Listener listener;
 
     private float zoom;
 
-    public ZoomChangeMonitor(HuaweiMap googleMap, Listener listener) {
-        this.googleMap = googleMap;
+    public ZoomChangeMonitor(MapApi mapApi, Listener listener) {
+        this.mapApi = mapApi;
 
-        zoom = googleMap.getCameraPosition().zoom;
+        zoom = mapApi.getCameraZoom();
         this.listener = listener;
     }
 
     @Override
     public void onCameraIdle() {
-        final CameraPosition cameraPosition = googleMap.getCameraPosition();
-        if (cameraPosition.zoom != zoom) {
-            zoom = cameraPosition.zoom;
+        final float cameraZoom = mapApi.getCameraZoom();
+        if (cameraZoom != zoom) {
+            zoom = cameraZoom;
 
             listener.onZoomChanged(zoom);
         }

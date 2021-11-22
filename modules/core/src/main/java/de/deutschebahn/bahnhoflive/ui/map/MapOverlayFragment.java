@@ -30,10 +30,6 @@ import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.android.volley.VolleyError;
-import com.huawei.hms.maps.HuaweiMap;
-import com.huawei.hms.maps.OnMapReadyCallback;
-import com.huawei.hms.maps.model.LatLng;
-import com.huawei.hms.maps.model.Marker;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -58,6 +54,10 @@ import de.deutschebahn.bahnhoflive.backend.rimap.RimapConfig;
 import de.deutschebahn.bahnhoflive.backend.rimap.model.RimapPOI;
 import de.deutschebahn.bahnhoflive.backend.rimap.model.RimapStation;
 import de.deutschebahn.bahnhoflive.location.GPSLocationManager;
+import de.deutschebahn.bahnhoflive.map.MapApi;
+import de.deutschebahn.bahnhoflive.map.OnMapReadyCallback;
+import de.deutschebahn.bahnhoflive.map.model.ApiMarker;
+import de.deutschebahn.bahnhoflive.map.model.GeoPosition;
 import de.deutschebahn.bahnhoflive.model.parking.ParkingFacility;
 import de.deutschebahn.bahnhoflive.repository.DbTimetableResource;
 import de.deutschebahn.bahnhoflive.repository.InternalStation;
@@ -77,7 +77,7 @@ import de.deutschebahn.bahnhoflive.ui.station.ElevatorIssuesLoaderFragment;
 import de.deutschebahn.bahnhoflive.util.ArrayListFactory;
 import de.deutschebahn.bahnhoflive.util.MapContentPreserver;
 
-public class MapOverlayFragment extends Fragment implements OnMapReadyCallback, View.OnClickListener, ElevatorIssuesLoaderFragment.Listener, HuaweiMap.OnMapClickListener, MapInterface.MapTypeListener {
+public class MapOverlayFragment extends Fragment implements OnMapReadyCallback, View.OnClickListener, ElevatorIssuesLoaderFragment.Listener, MapApi.OnMapClickListener, MapInterface.MapTypeListener {
 
     private static final String TAG = MapOverlayFragment.class.getSimpleName();
     public static final float DEFAULT_ZOOM = MapConstants.minimumZoomForIndoorMarkers;
@@ -393,7 +393,7 @@ public class MapOverlayFragment extends Fragment implements OnMapReadyCallback, 
     }
 
     @Override
-    public void onMapClick(LatLng latLng) {
+    public void onMapClick(GeoPosition geoPosition) {
         hideFlyouts();
     }
 
@@ -545,14 +545,14 @@ public class MapOverlayFragment extends Fragment implements OnMapReadyCallback, 
     }
 
     @Override
-    public void onMapReady(final HuaweiMap googleMap) {
-        final HuaweiMap.OnMarkerClickListener onMarkerClickListener = new HuaweiMap.OnMarkerClickListener() {
+    public void onMapReady(@NonNull final MapApi mapApi) {
+        final MapApi.OnMarkerClickListener onMarkerClickListener = new MapApi.OnMarkerClickListener() {
             @Override
-            public boolean onMarkerClick(Marker marker) {
+            public boolean onMarkerClick(@NonNull ApiMarker apiMarker) {
 
                 getTrackingManager().track(TrackingManager.TYPE_ACTION, TrackingManager.Screen.F1, TrackingManager.Action.TAP, TrackingManager.UiElement.PIN);
 
-                final MarkerBinder markerBinder = MarkerBinder.of(marker);
+                final MarkerBinder markerBinder = MarkerBinder.of(apiMarker);
 
                 selectMarker(markerBinder);
 
@@ -568,12 +568,12 @@ public class MapOverlayFragment extends Fragment implements OnMapReadyCallback, 
         };
 
         mapViewModel.getStationLocationLiveData().observe(getViewLifecycleOwner(), location -> {
-            mapInterface = new GoogleMapsMapInterface(mapInterface, googleMap, getContext(),
+            mapInterface = new GoogleMapsMapInterface(mapInterface, mapApi, getContext(),
                     onMarkerClickListener,
                     this,
                     zoomChangeListener, location, zoom);
 
-            content.onMapReady(googleMap);
+            content.onMapReady(mapApi);
 
             if (location == null) {
                 onLocate();
@@ -654,7 +654,7 @@ public class MapOverlayFragment extends Fragment implements OnMapReadyCallback, 
                         if (location != null && mapInterface != null
                                 && (lastLocation == null || lastLocation.distanceTo(location) > 500)) {
                             lastLocation = location;
-                            mapInterface.setLocation(new LatLng(location.getLatitude(), location.getLongitude()), DEFAULT_ZOOM);
+                            mapInterface.setLocation(new GeoPosition(location.getLatitude(), location.getLongitude()), DEFAULT_ZOOM);
 
                             mapViewModel.getLocationLiveData().postValue(location);
                         }

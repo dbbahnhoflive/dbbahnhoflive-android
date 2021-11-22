@@ -10,12 +10,11 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.Parcelable;
 
-import com.huawei.hms.maps.model.MarkerOptions;
-
 import de.deutschebahn.bahnhoflive.R;
 import de.deutschebahn.bahnhoflive.backend.RestHelper;
 import de.deutschebahn.bahnhoflive.backend.hafas.model.HafasStation;
 import de.deutschebahn.bahnhoflive.backend.hafas.model.HafasTimetable;
+import de.deutschebahn.bahnhoflive.map.model.ApiMarkerOptions;
 import de.deutschebahn.bahnhoflive.ui.ViewHolder;
 import de.deutschebahn.bahnhoflive.ui.timetable.localtransport.DeparturesActivity;
 
@@ -36,12 +35,12 @@ class HafasMarkerContent extends MarkerContent {
     }
 
     @Override
-    public MarkerOptions createMarkerOptions() {
-        final MarkerOptions markerOptions = super.createMarkerOptions();
+    public ApiMarkerOptions createMarkerOptions() {
+        final ApiMarkerOptions apiMarkerOptions = super.createMarkerOptions();
 
-        markerOptions.position(getStation().getPosition());
+        apiMarkerOptions.position(getStation().getPosition());
 
-        return markerOptions;
+        return apiMarkerOptions;
     }
 
     protected HafasStation getStation() {

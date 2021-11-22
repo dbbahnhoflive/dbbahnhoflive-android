@@ -7,7 +7,7 @@
 package de.deutschebahn.bahnhoflive.ui.map.content;
 
 public enum MapType {
-    UNDEFINED(), OSM(),
+    OSM(),
     @Deprecated GOOGLE_MAPS();
 
     public int getValue() {

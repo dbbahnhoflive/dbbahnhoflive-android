@@ -6,8 +6,8 @@
 
 package de.deutschebahn.bahnhoflive.ui.map
 
-import com.huawei.hms.maps.HuaweiMap
-import com.huawei.hms.maps.OnMapReadyCallback
+import de.deutschebahn.bahnhoflive.map.MapApi
+import de.deutschebahn.bahnhoflive.map.OnMapReadyCallback
 import de.deutschebahn.bahnhoflive.ui.map.content.rimap.Filter
 import de.deutschebahn.bahnhoflive.util.ArrayListFactory
 import de.deutschebahn.bahnhoflive.util.MapContentPreserver
@@ -17,7 +17,7 @@ import kotlin.math.abs
 
 class Content : OnMapReadyCallback, ZoomChangeMonitor.Listener {
 
-    private var googleMap: HuaweiMap? = null
+    private var googleMapApi: MapApi? = null
 
     private var visibilityChangeListener: VisibilityChangeListener? = null
 
@@ -74,9 +74,9 @@ class Content : OnMapReadyCallback, ZoomChangeMonitor.Listener {
     }
 
     private fun bind(unboundMarkerBinders: List<MarkerBinder>) {
-        if (googleMap != null) {
+        if (googleMapApi != null) {
             for (unboundMarkerBinder in unboundMarkerBinders) {
-                unboundMarkerBinder.bind(googleMap)
+                unboundMarkerBinder.bind(googleMapApi)
             }
         }
     }
@@ -102,7 +102,7 @@ class Content : OnMapReadyCallback, ZoomChangeMonitor.Listener {
                 categoryMarkerBinders.removeAll(sourceMarkerBinders)
             }
 
-            if (googleMap != null) {
+            if (googleMapApi != null) {
                 for (sourceMarkerBinder in sourceMarkerBinders) {
                     sourceMarkerBinder.unbind()
                 }
@@ -110,14 +110,14 @@ class Content : OnMapReadyCallback, ZoomChangeMonitor.Listener {
         }
     }
 
-    override fun onMapReady(googleMap: HuaweiMap) {
-        if (this.googleMap != null) {
+    override fun onMapReady(mapApi: MapApi) {
+        if (this.googleMapApi != null) {
             for (boundMarkerBinder in allMarkerBinders) {
                 boundMarkerBinder.unbind()
             }
         }
 
-        this.googleMap = googleMap
+        this.googleMapApi = mapApi
 
         bind(allMarkerBinders)
     }
