@@ -11,8 +11,8 @@ import de.deutschebahn.bahnhoflive.ui.map.content.MapType
 
 class GoogleMapApi(private val googleMap: GoogleMap) : MapApi {
 
-    override fun addTileOverlay(overlayOptionsApi: ApiTileOverlayOptions): ApiTileOverlay? =
-        googleMap.addTileOverlay(overlayOptionsApi.tileOverlayOptions)?.let {
+    override fun addTileOverlay(apiTileOverlayOptions: ApiTileOverlayOptions): ApiTileOverlay? =
+        googleMap.addTileOverlay(apiTileOverlayOptions.tileOverlayOptions)?.let {
             GoogleTileOverlay(it)
         }
 

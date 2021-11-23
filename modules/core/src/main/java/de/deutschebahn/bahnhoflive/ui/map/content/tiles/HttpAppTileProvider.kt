@@ -14,7 +14,7 @@ abstract class HttpAppTileProvider(
 
     protected open fun openConnection(url: URL): URLConnection = url.openConnection()
 
-    override fun getTile(x: Int, y: Int, zoom: Int): AppTile =
+    override fun getTile(x: Int, y: Int, zoom: Int): AppTile? =
         try {
             getTileUrl(x, y, zoom)?.let { url ->
                 AppTile(
@@ -27,5 +27,5 @@ abstract class HttpAppTileProvider(
         } catch (e: Exception) {
             e.printStackTrace()
             null
-        } ?: AppTileProvider.NO_TILE
+        }
 }

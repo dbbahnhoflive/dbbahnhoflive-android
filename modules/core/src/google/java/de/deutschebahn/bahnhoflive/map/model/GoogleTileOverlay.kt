@@ -4,6 +4,7 @@ import com.google.android.gms.maps.model.TileOverlay
 
 class GoogleTileOverlay(private val tileOverlay: TileOverlay) :
     ApiTileOverlay {
+
     override fun clearTileCache() {
         tileOverlay.clearTileCache()
     }
@@ -11,4 +12,5 @@ class GoogleTileOverlay(private val tileOverlay: TileOverlay) :
     override fun remove() {
         tileOverlay.remove()
     }
+
 }

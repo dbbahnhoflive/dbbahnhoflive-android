@@ -7,7 +7,7 @@ import de.deutschebahn.bahnhoflive.ui.map.ZoomChangeMonitor
 import de.deutschebahn.bahnhoflive.ui.map.content.MapType
 
 interface MapApi {
-    fun addTileOverlay(overlayOptionsApi: ApiTileOverlayOptions): ApiTileOverlay?
+    fun addTileOverlay(apiTileOverlayOptions: ApiTileOverlayOptions): ApiTileOverlay?
 
     fun clear()
 
