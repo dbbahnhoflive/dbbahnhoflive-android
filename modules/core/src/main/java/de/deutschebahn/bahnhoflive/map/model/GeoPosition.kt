@@ -5,6 +5,6 @@ import kotlinx.android.parcel.Parcelize
 
 @Parcelize
 class GeoPosition(
-    @JvmField val longitude: Double,
-    @JvmField val latitude: Double
+    @JvmField val latitude: Double,
+    @JvmField val longitude: Double
 ) : Parcelable
