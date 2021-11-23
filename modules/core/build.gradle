@@ -76,7 +76,7 @@ dependencies {
     api 'androidx.multidex:multidex:2.0.1'
     api 'com.android.volley:volley:1.2.0'
     googleApi 'com.google.android.gms:play-services-maps:17.0.1'
-//    huaweiApi 'com.huawei.hms:maps:6.2.0.301'
+    huaweiApi 'com.huawei.hms:maps:6.2.0.301'
     api 'com.google.code.gson:gson:2.8.6'
     implementation 'com.google.android.flexbox:flexbox:3.0.0'
     implementation 'com.jakewharton:disklrucache:2.0.2'
