@@ -60,7 +60,8 @@ class News {
 
     val isLinkNotBroke get() = link.isNullOrBlank() || linkUri != null
 
-    fun isActiveAt(timestamp: Date) = startTimestamp.before(timestamp) && endTimestamp.after(timestamp)
+    fun isActiveAt(timestamp: Date) =
+        startTimestamp.before(timestamp) && endTimestamp.after(timestamp)
 
     val groupSortKey
         get() = when (group.id) {
@@ -69,4 +70,6 @@ class News {
             1 -> 3
             else -> group.id
         }
+
+    val summary: String? = subtitle?.takeUnless { it.isBlank() } ?: content
 }

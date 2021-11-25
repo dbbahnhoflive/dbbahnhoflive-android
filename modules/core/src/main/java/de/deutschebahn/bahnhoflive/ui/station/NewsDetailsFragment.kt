@@ -46,12 +46,6 @@ class NewsDetailsFragment : FullBottomSheetDialogFragment() {
         newsEntry.observe(viewLifecycleOwner, Observer { news ->
             view.headline.text = news?.title
 
-            with(view.subtitle) {
-                val subtitle = news?.subtitle
-                text = subtitle
-                visibility = if (subtitle == null) View.GONE else View.VISIBLE
-            }
-
             view.copy.text = news?.content
 
             image.visibility = if (news?.decodedImage?.let { imageByteArray ->
