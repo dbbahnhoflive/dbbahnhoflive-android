@@ -1,5 +1,6 @@
 package de.deutschebahn.bahnhoflive.ui.map.content.tiles
 
+import android.util.Log
 import de.deutschebahn.bahnhoflive.map.model.AppTile
 import de.deutschebahn.bahnhoflive.map.model.AppTileProvider
 import java.net.URL
@@ -15,17 +16,21 @@ abstract class HttpAppTileProvider(
     protected open fun openConnection(url: URL): URLConnection = url.openConnection()
 
     override fun getTile(x: Int, y: Int, zoom: Int): AppTile? =
-        try {
             getTileUrl(x, y, zoom)?.let { url ->
-                AppTile(
-                    width,
-                    height,
-                    openConnection(url).getInputStream().buffered().use { stream ->
-                        stream.readBytes()
-                    })
+                try {
+                    AppTile(
+                        width,
+                        height,
+                        openConnection(url).getInputStream().buffered().use { stream ->
+                            stream.readBytes()
+                        }).also {
+                        Log.d(HttpAppTileProvider::class.java.simpleName, "Created tile $url")
+                    }
+                } catch (e: Exception) {
+                    Log.i(
+                        HttpAppTileProvider::class.java.simpleName, "Error loading tile $url", e
+                    )
+                    null
+                }
             }
-        } catch (e: Exception) {
-            e.printStackTrace()
-            null
-        }
 }
