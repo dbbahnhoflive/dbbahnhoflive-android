@@ -71,5 +71,5 @@ class News {
             else -> group.id
         }
 
-    val summary: String? = subtitle?.takeUnless { it.isBlank() } ?: content
+    val summary: String? get() = subtitle?.takeUnless { it.isBlank() } ?: content
 }
