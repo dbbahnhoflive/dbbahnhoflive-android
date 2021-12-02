@@ -17,6 +17,7 @@ import androidx.fragment.app.Fragment;
 import java.util.Timer;
 import java.util.TimerTask;
 
+import de.deutschebahn.bahnhoflive.BaseApplication;
 import de.deutschebahn.bahnhoflive.R;
 
 public class SplashFragment extends Fragment implements TransitionViewProvider {
@@ -43,6 +44,7 @@ public class SplashFragment extends Fragment implements TransitionViewProvider {
 
     @Override
     public void onResume() {
+        BaseApplication.get().getApplicationServices().getMapConsentRepository().setConsented(false);
         super.onResume();
 
         timer = new Timer();

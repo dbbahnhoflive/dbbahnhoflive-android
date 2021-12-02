@@ -14,6 +14,7 @@ import android.view.View;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
@@ -21,13 +22,14 @@ import androidx.lifecycle.ViewModelProvider;
 
 import java.util.ArrayList;
 
+import de.deutschebahn.bahnhoflive.BaseApplication;
 import de.deutschebahn.bahnhoflive.R;
 import de.deutschebahn.bahnhoflive.analytics.StationTrackingManager;
 import de.deutschebahn.bahnhoflive.analytics.TrackingManager;
 import de.deutschebahn.bahnhoflive.backend.hafas.model.HafasTimetable;
 import de.deutschebahn.bahnhoflive.map.ApiMapFragment;
-import de.deutschebahn.bahnhoflive.map.MapFragmentBridge;
 import de.deutschebahn.bahnhoflive.repository.InternalStation;
+import de.deutschebahn.bahnhoflive.repository.MapConsentRepository;
 import de.deutschebahn.bahnhoflive.repository.Station;
 import de.deutschebahn.bahnhoflive.ui.FragmentArgs;
 import de.deutschebahn.bahnhoflive.ui.map.content.rimap.RimapFilter;
@@ -42,7 +44,6 @@ public class MapActivity extends AppCompatActivity implements
     private static final String ARG_LOADER_STATES = LoaderFragment.ARG_LOADER_STATES;
     private static final String ARG_STATION_DEPARTURES = "stationDepartures";
 
-    private MapFragmentBridge mapFragment;
     private MapOverlayFragment overlayFragment;
 
     private Station station;
@@ -74,12 +75,21 @@ public class MapActivity extends AppCompatActivity implements
 
         setContentView(R.layout.activity_map);
 
-        mapFragment = (ApiMapFragment) getFragmentManager().findFragmentById(R.id.map_fragment);
         overlayFragment = (MapOverlayFragment) getSupportFragmentManager().findFragmentById(R.id.map_overlay_fragment);
 
         if (intent.hasExtra(ARG_STATION_DEPARTURES)) {
             overlayFragment.setStationDepartures(intent.getParcelableArrayListExtra(ARG_STATION_DEPARTURES));
         }
+
+        if (getMapConsentRepository().getConsented()) {
+            initializeMap();
+        }
+    }
+
+    private void initializeMap() {
+        final ApiMapFragment mapFragment = new ApiMapFragment();
+        getFragmentManager().beginTransaction()
+                .add(R.id.map_fragment, mapFragment).commit();
 
         final View contentView = findViewById(android.R.id.content);
         if (contentView != null) {
@@ -90,6 +100,7 @@ public class MapActivity extends AppCompatActivity implements
                 }
             });
         }
+
         mapFragment.getMapAsync(overlayFragment);
     }
 
@@ -98,6 +109,30 @@ public class MapActivity extends AppCompatActivity implements
         super.onStart();
 
         trackingManager.track(TrackingManager.TYPE_STATE, TrackingManager.Screen.F1);
+
+        final MapConsentRepository mapConsentRepository = getMapConsentRepository();
+
+        if (!mapConsentRepository.getConsented()) {
+            new AlertDialog.Builder(this)
+                    .setTitle("Kartendienst erlauben?")
+                    .setMessage("Möchten Sie die Verwendung des Kartendienstes Ihres Geräts erlauben? Hierbei werden Daten an den entsprechenden Dienstanbieter übermittelt.")
+                    .setCancelable(true)
+                    .setPositiveButton("Erlauben", (dialog, which) -> {
+                        initializeMap();
+                        mapConsentRepository.setConsented(true);
+                    })
+                    .setNegativeButton("Abbrechen", (dialog, which) -> {
+                        finish();
+                    })
+                    .setOnCancelListener(dialog -> {
+                        finish();
+                    }).create().show();
+        }
+    }
+
+    private MapConsentRepository getMapConsentRepository() {
+        final MapConsentRepository mapConsentRepository = BaseApplication.get().getApplicationServices().getMapConsentRepository();
+        return mapConsentRepository;
     }
 
     public static Intent createIntent(Context context, Station station) {
