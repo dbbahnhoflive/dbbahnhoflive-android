@@ -24,7 +24,7 @@ class MapInterface {
 
     protected Integer zoneId;
     protected int levelCount;
-    public MapType currentMapType = MapType.OSM;
+    protected MapType currentMapType = MapType.OSM;
 
     private boolean laidOut = false;
 
@@ -75,15 +75,6 @@ class MapInterface {
 
     public int getLevelCount() {
         return levelCount;
-    }
-
-    /**
-     * @deprecated We don't use Google map content any more.
-     */
-    @Deprecated
-    public void setMapTypeGoogle() {
-        currentMapType = MapType.GOOGLE_MAPS;
-        updateMapType();
     }
 
     public void setMapTypeOsm() {

@@ -22,7 +22,7 @@ import de.deutschebahn.bahnhoflive.ui.map.content.BackgroundLayer;
 import de.deutschebahn.bahnhoflive.ui.map.content.IndoorLayer;
 import de.deutschebahn.bahnhoflive.ui.map.content.MapType;
 
-class GoogleMapsMapInterface extends MapInterface {
+class ApiMapInterface extends MapInterface {
 
     public static final GeoPositionBounds BOUNDS_OF_GERMANY = new GeoPositionBounds(new GeoPosition(47.212363, 5.749376), new GeoPosition(55.072294, 14.890002));
 
@@ -34,7 +34,7 @@ class GoogleMapsMapInterface extends MapInterface {
 
     private Context context;
 
-    GoogleMapsMapInterface(MapInterface mapInterface, @NonNull final MapApi mapApi, Context context, MapApi.OnMarkerClickListener onMarkerClickListener, MapApi.OnMapClickListener onMapClickListener, ZoomChangeMonitor.Listener zoomChangeListener, GeoPosition location, float zoom) {
+    ApiMapInterface(MapInterface mapInterface, @NonNull final MapApi mapApi, Context context, MapApi.OnMarkerClickListener onMarkerClickListener, MapApi.OnMapClickListener onMapClickListener, ZoomChangeMonitor.Listener zoomChangeListener, GeoPosition location, float zoom) {
         super(mapInterface);
 
         this.mapApi = mapApi;
@@ -82,14 +82,9 @@ class GoogleMapsMapInterface extends MapInterface {
         backgroundLayer.reset();
         indoorLayer.reset();
 
-        if (currentMapType == MapType.OSM) {
-            mapApi.setMapType(MapType.OSM);
+        mapApi.setMapType(MapType.OSM);
+        backgroundLayer.attach(this.mapApi);
 
-            backgroundLayer.attach(this.mapApi);
-        } else if (currentMapType == MapType.GOOGLE_MAPS) {
-            mapApi.setMapType(MapType.GOOGLE_MAPS);
-            backgroundLayer.detach();
-        }
         indoorLayer.attach(mapApi);
 
         updateMaxZoom();
@@ -103,7 +98,7 @@ class GoogleMapsMapInterface extends MapInterface {
     }
 
     public void updateMaxZoom() {
-        mapApi.setMaxZoomPreference(levelCount > 0 || currentMapType == MapType.GOOGLE_MAPS ? 20 : 17);
+        mapApi.setMaxZoomPreference(levelCount > 0 ? 20 : 17);
     }
 
     @Override

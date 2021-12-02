@@ -568,7 +568,7 @@ public class MapOverlayFragment extends Fragment implements OnMapReadyCallback, 
         };
 
         mapViewModel.getStationLocationLiveData().observe(getViewLifecycleOwner(), location -> {
-            mapInterface = new GoogleMapsMapInterface(mapInterface, mapApi, getContext(),
+            mapInterface = new ApiMapInterface(mapInterface, mapApi, getContext(),
                     onMarkerClickListener,
                     this,
                     zoomChangeListener, location, zoom);

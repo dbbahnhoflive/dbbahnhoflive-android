@@ -49,10 +49,7 @@ class GoogleMapApi(private val googleMap: GoogleMap) : MapApi {
     }
 
     override fun setMapType(mapType: MapType) {
-        googleMap.mapType = when (mapType) {
-            MapType.OSM -> GoogleMap.MAP_TYPE_NONE
-            MapType.GOOGLE_MAPS -> GoogleMap.MAP_TYPE_NORMAL
-        }
+        googleMap.mapType = GoogleMap.MAP_TYPE_NONE
     }
 
     override fun setOnMapClickListener(onMapClickListener: MapApi.OnMapClickListener) {

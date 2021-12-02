@@ -49,10 +49,7 @@ class HuaweiMapApi(private val huaweiMap: HuaweiMap) : MapApi {
     }
 
     override fun setMapType(mapType: MapType) {
-        huaweiMap.mapType = when (mapType) {
-            MapType.OSM -> HuaweiMap.MAP_TYPE_NONE
-            MapType.GOOGLE_MAPS -> HuaweiMap.MAP_TYPE_NORMAL
-        }
+        huaweiMap.mapType = HuaweiMap.MAP_TYPE_NONE
     }
 
     override fun setOnMapClickListener(onMapClickListener: MapApi.OnMapClickListener) {
