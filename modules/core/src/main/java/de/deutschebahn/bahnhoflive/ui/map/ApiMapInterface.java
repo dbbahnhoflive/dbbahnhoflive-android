@@ -34,7 +34,13 @@ class ApiMapInterface extends MapInterface {
 
     private Context context;
 
-    ApiMapInterface(MapInterface mapInterface, @NonNull final MapApi mapApi, Context context, MapApi.OnMarkerClickListener onMarkerClickListener, MapApi.OnMapClickListener onMapClickListener, ZoomChangeMonitor.Listener zoomChangeListener, GeoPosition location, float zoom) {
+    ApiMapInterface(MapInterface mapInterface,
+                    @NonNull final MapApi mapApi,
+                    Context context,
+                    MapApi.OnMarkerClickListener onMarkerClickListener,
+                    MapApi.OnMapClickListener onMapClickListener,
+                    ZoomChangeMonitor.Listener zoomChangeListener,
+                    float zoom) {
         super(mapInterface);
 
         this.mapApi = mapApi;
@@ -66,8 +72,6 @@ class ApiMapInterface extends MapInterface {
         mapApi.setOnMapClickListener(onMapClickListener);
         updateMapStyle();
         updateViews();
-
-        setLocation(location, zoom);
     }
 
 

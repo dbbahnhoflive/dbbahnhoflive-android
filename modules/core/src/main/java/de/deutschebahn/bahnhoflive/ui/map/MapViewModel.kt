@@ -58,13 +58,13 @@ class MapViewModel : StadaStationCacheViewModel() {
 
     val zoneIdLiveData = MutableLiveData<String>()
 
-    val originalStationLiveData = MutableLiveData<Station>()
+    val originalStationLiveData = MutableLiveData<Station?>()
 
     val stationLocationLiveData: LiveData<GeoPosition?> = MediatorLiveData<GeoPosition?>().apply {
 
         addSource(originalStationLiveData) { originalStation ->
             if (value == null) {
-                value = originalStation.location
+                value = originalStation?.location
             }
         }
 
@@ -75,10 +75,9 @@ class MapViewModel : StadaStationCacheViewModel() {
     }.distinctUntilChanged()
 
     fun setStation(station: Station?) {
+        originalStationLiveData.value = station
+
         if (station != null) {
-            station?.let {
-                originalStationLiveData.value = it
-            }
 
             zoneIdLiveData.value = station.id
 

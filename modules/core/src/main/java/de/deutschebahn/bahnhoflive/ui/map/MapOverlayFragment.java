@@ -567,16 +567,19 @@ public class MapOverlayFragment extends Fragment implements OnMapReadyCallback, 
             }
         };
 
-        mapViewModel.getStationLocationLiveData().observe(getViewLifecycleOwner(), location -> {
-            mapInterface = new ApiMapInterface(mapInterface, mapApi, getContext(),
-                    onMarkerClickListener,
-                    this,
-                    zoomChangeListener, location, zoom);
+        mapInterface = new ApiMapInterface(mapInterface, mapApi, getContext(),
+                onMarkerClickListener,
+                this,
+                zoomChangeListener, zoom);
 
-            content.onMapReady(mapApi);
+        content.onMapReady(mapApi);
+
+        mapViewModel.getStationLocationLiveData().observe(getViewLifecycleOwner(), location -> {
 
             if (location == null) {
                 onLocate();
+            } else {
+                mapInterface.setLocation(location, zoom);
             }
 
         });
