@@ -1,9 +1,10 @@
 package de.deutschebahn.bahnhoflive.repository
 
 import android.content.Context
+import androidx.lifecycle.MutableLiveData
 
 class MapConsentRepository(context: Context) {
 
-    var consented = false
+    val consented = MutableLiveData(false)
 
 }

@@ -187,7 +187,7 @@ public class StationActivity extends AppCompatActivity implements
             @Override
             public void onClick(View v) {
                 trackingManager.track(TrackingManager.TYPE_ACTION, TrackingManager.Source.TAB_NAVI, TrackingManager.Action.TAP, TrackingManager.UiElement.MAP_BUTTON);
-                final Intent intent = MapActivity.createIntent(StationActivity.this, station);
+                final Intent intent = MapActivity.Companion.createIntent(StationActivity.this, station);
                 Fragment currentContentFragment = getCurrentContentFragment();
                 if (currentContentFragment instanceof MapPresetProvider) {
                     ((MapPresetProvider) currentContentFragment).prepareMapIntent(intent);

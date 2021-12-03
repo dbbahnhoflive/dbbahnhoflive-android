@@ -44,7 +44,7 @@ public class SplashFragment extends Fragment implements TransitionViewProvider {
 
     @Override
     public void onResume() {
-        BaseApplication.get().getApplicationServices().getMapConsentRepository().setConsented(false);
+        BaseApplication.get().getApplicationServices().getMapConsentRepository().getConsented().setValue(false);
         super.onResume();
 
         timer = new Timer();

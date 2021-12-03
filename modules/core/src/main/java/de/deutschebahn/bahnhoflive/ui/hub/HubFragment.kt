@@ -129,7 +129,7 @@ class HubFragment : androidx.fragment.app.Fragment() {
         view.findViewById<View>(R.id.btn_map).setOnClickListener {
             trackingManager.track(TrackingManager.TYPE_ACTION, TrackingManager.Screen.H0, TrackingManager.Action.TAP, TrackingManager.UiElement.MAP_BUTTON)
 
-            val intent = MapActivity.createIntent(activity, hubViewModel!!.hafasData)
+            val intent = MapActivity.createIntent(requireContext(), hubViewModel.hafasData)
             startActivity(intent)
         }
 

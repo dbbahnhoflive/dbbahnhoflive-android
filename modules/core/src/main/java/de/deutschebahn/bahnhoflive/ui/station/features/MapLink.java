@@ -52,7 +52,7 @@ public class MapLink extends Link {
             return null;
         }
 
-        final Intent intent = MapActivity.createIntent(context, stationWrapper);
+        final Intent intent = MapActivity.Companion.createIntent(context, stationWrapper);
 
         final VenueFeature venueFeature = stationFeature.getStationFeatureTemplate().getDefinition().getVenueFeature();
         if (venueFeature != null) {

@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="map_provider_name">Huawei</string>
+    <string name="map_privacy_policy_url">https://www.huawei.com/de/privacy-policy</string>
+    <string name="map_consent_description">Mit Aktivierung der Karte wird von Ihnen eine Verbindung zu den Servern von Huawei hergestellt. Dabei übermitteln Sie personenbezogene Daten (mindestens Ihre IP-Adresse) an Huawei.</string>
+    <string name="map_provider_privacy_policy"><a href="https://www.huawei.com/de/privacy-policy">Datenschutzhinweise von Huawei</a></string>
+</resources>

@@ -3,209 +3,158 @@
  *
  * SPDX-License-Identifier: Apache-2.0
  */
+package de.deutschebahn.bahnhoflive.ui.map
 
-package de.deutschebahn.bahnhoflive.ui.map;
+import android.content.Context
+import android.content.Intent
+import android.os.Bundle
+import android.os.Parcelable
+import android.view.View
+import androidx.activity.viewModels
+import androidx.appcompat.app.AppCompatActivity
+import androidx.fragment.app.FragmentManager
+import androidx.lifecycle.distinctUntilChanged
+import de.deutschebahn.bahnhoflive.R
+import de.deutschebahn.bahnhoflive.analytics.StationTrackingManager
+import de.deutschebahn.bahnhoflive.analytics.TrackingManager
+import de.deutschebahn.bahnhoflive.backend.hafas.model.HafasTimetable
+import de.deutschebahn.bahnhoflive.map.ApiMapFragment
+import de.deutschebahn.bahnhoflive.repository.InternalStation
+import de.deutschebahn.bahnhoflive.repository.Station
+import de.deutschebahn.bahnhoflive.ui.FragmentArgs
+import de.deutschebahn.bahnhoflive.ui.map.MapActivity
+import de.deutschebahn.bahnhoflive.ui.map.content.rimap.RimapFilter
+import de.deutschebahn.bahnhoflive.ui.station.ElevatorIssuesLoaderFragment
+import de.deutschebahn.bahnhoflive.ui.station.LoaderFragment
+import de.deutschebahn.bahnhoflive.view.BackHandlingFragment
+import java.util.*
 
-import android.content.Context;
-import android.content.Intent;
-import android.os.Bundle;
-import android.os.Parcelable;
-import android.view.View;
+class MapActivity : AppCompatActivity(), FilterFragment.Host, MapOverlayFragment.Host,
+    TrackingManager.Provider {
 
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
-import androidx.appcompat.app.AlertDialog;
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.fragment.app.Fragment;
-import androidx.fragment.app.FragmentManager;
-import androidx.lifecycle.ViewModelProvider;
+    private var overlayFragment: MapOverlayFragment? = null
+    private var station: Station? = null
 
-import java.util.ArrayList;
+    override lateinit var stationTrackingManager: TrackingManager
+        private set
 
-import de.deutschebahn.bahnhoflive.BaseApplication;
-import de.deutschebahn.bahnhoflive.R;
-import de.deutschebahn.bahnhoflive.analytics.StationTrackingManager;
-import de.deutschebahn.bahnhoflive.analytics.TrackingManager;
-import de.deutschebahn.bahnhoflive.backend.hafas.model.HafasTimetable;
-import de.deutschebahn.bahnhoflive.map.ApiMapFragment;
-import de.deutschebahn.bahnhoflive.repository.InternalStation;
-import de.deutschebahn.bahnhoflive.repository.MapConsentRepository;
-import de.deutschebahn.bahnhoflive.repository.Station;
-import de.deutschebahn.bahnhoflive.ui.FragmentArgs;
-import de.deutschebahn.bahnhoflive.ui.map.content.rimap.RimapFilter;
-import de.deutschebahn.bahnhoflive.ui.station.ElevatorIssuesLoaderFragment;
-import de.deutschebahn.bahnhoflive.ui.station.LoaderFragment;
-import de.deutschebahn.bahnhoflive.view.BackHandlingFragment;
+    private val mapViewModel: MapViewModel by viewModels()
 
-public class MapActivity extends AppCompatActivity implements
-        FilterFragment.Host, MapOverlayFragment.Host, TrackingManager.Provider {
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
 
-    private final static String ARG_STATION = FragmentArgs.STATION;
-    private static final String ARG_LOADER_STATES = LoaderFragment.ARG_LOADER_STATES;
-    private static final String ARG_STATION_DEPARTURES = "stationDepartures";
-
-    private MapOverlayFragment overlayFragment;
-
-    private Station station;
-
-    @NonNull
-    private TrackingManager trackingManager;
-
-    private MapViewModel mapViewModel;
-
-    @Override
-    protected void onCreate(@Nullable Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-
-        final Intent intent = getIntent();
+        val intent = intent
         if (intent.hasExtra(ARG_STATION)) {
-            station = intent.getParcelableExtra(ARG_STATION);
+            station = intent.getParcelableExtra(ARG_STATION)
         }
+        mapViewModel.setStation(station)
 
-        mapViewModel = new ViewModelProvider(this).get(MapViewModel.class);
-        mapViewModel.setStation(station);
-
-        trackingManager = station == null ? new TrackingManager(this) : new StationTrackingManager(this, station);
-
-        final ElevatorIssuesLoaderFragment elevatorIssuesLoaderFragment = ElevatorIssuesLoaderFragment.of(this);
-
+        stationTrackingManager =
+            if (station == null) TrackingManager(this) else StationTrackingManager(this, station)
+        val elevatorIssuesLoaderFragment = ElevatorIssuesLoaderFragment.of(this)
         if (station != null) {
-            elevatorIssuesLoaderFragment.setStation(station);
+            elevatorIssuesLoaderFragment.setStation(station)
         }
-
-        setContentView(R.layout.activity_map);
-
-        overlayFragment = (MapOverlayFragment) getSupportFragmentManager().findFragmentById(R.id.map_overlay_fragment);
-
+        setContentView(R.layout.activity_map)
+        overlayFragment =
+            supportFragmentManager.findFragmentById(R.id.map_overlay_fragment) as MapOverlayFragment?
         if (intent.hasExtra(ARG_STATION_DEPARTURES)) {
-            overlayFragment.setStationDepartures(intent.getParcelableArrayListExtra(ARG_STATION_DEPARTURES));
+            overlayFragment!!.setStationDepartures(
+                intent.getParcelableArrayListExtra(
+                    ARG_STATION_DEPARTURES
+                )
+            )
         }
-
-        if (getMapConsentRepository().getConsented()) {
-            initializeMap();
-        }
-    }
-
-    private void initializeMap() {
-        final ApiMapFragment mapFragment = new ApiMapFragment();
-        getFragmentManager().beginTransaction()
-                .add(R.id.map_fragment, mapFragment).commit();
-
-        final View contentView = findViewById(android.R.id.content);
-        if (contentView != null) {
-            contentView.getViewTreeObserver().addOnGlobalLayoutListener(() -> {
-                final View mapFragmentView = mapFragment.getView();
-                if (mapFragmentView != null) {
-                    mapViewModel.mapLaidOut(mapFragmentView.isLaidOut());
+        mapViewModel.mapConsentedLiveData.distinctUntilChanged()
+            .observe(this) { consented: Boolean ->
+                if (consented) {
+                    initializeMap()
+                } else {
+                    MapConsentDialogFragment().show(supportFragmentManager, null)
                 }
-            });
-        }
-
-        mapFragment.getMapAsync(overlayFragment);
+            }
     }
 
-    @Override
-    protected void onStart() {
-        super.onStart();
-
-        trackingManager.track(TrackingManager.TYPE_STATE, TrackingManager.Screen.F1);
-
-        final MapConsentRepository mapConsentRepository = getMapConsentRepository();
-
-        if (!mapConsentRepository.getConsented()) {
-            new AlertDialog.Builder(this)
-                    .setTitle("Kartendienst erlauben?")
-                    .setMessage("Möchten Sie die Verwendung des Kartendienstes Ihres Geräts erlauben? Hierbei werden Daten an den entsprechenden Dienstanbieter übermittelt.")
-                    .setCancelable(true)
-                    .setPositiveButton("Erlauben", (dialog, which) -> {
-                        initializeMap();
-                        mapConsentRepository.setConsented(true);
-                    })
-                    .setNegativeButton("Abbrechen", (dialog, which) -> {
-                        finish();
-                    })
-                    .setOnCancelListener(dialog -> {
-                        finish();
-                    }).create().show();
-        }
-    }
-
-    private MapConsentRepository getMapConsentRepository() {
-        final MapConsentRepository mapConsentRepository = BaseApplication.get().getApplicationServices().getMapConsentRepository();
-        return mapConsentRepository;
-    }
-
-    public static Intent createIntent(Context context, Station station) {
-        final Intent intent = createIntent(context);
-
-        intent.putExtra(ARG_STATION, station instanceof Parcelable ?
-                (Parcelable) station : new InternalStation(station));
-
-        return intent;
-    }
-
-    private static Intent createIntent(Context context) {
-        return new Intent(context, MapActivity.class);
-    }
-
-    @NonNull
-    public static Intent createIntent(Context context, ArrayList<HafasTimetable> stationDepartures) {
-        final Intent intent = createIntent(context);
-
-        intent.putExtra(ARG_STATION_DEPARTURES, stationDepartures);
-
-        return intent;
-    }
-
-    @NonNull
-    public static Intent createIntent(Context context, Station station, ArrayList<HafasTimetable> stationDepartures) {
-        final Intent intent = createIntent(context, station);
-
-        intent.putExtra(ARG_STATION_DEPARTURES, stationDepartures);
-
-        return intent;
-    }
-
-    @Override
-    public void onFilterClick() {
-        getSupportFragmentManager().beginTransaction()
-                .addToBackStack("filter")
-                .add(R.id.filter_fragment_container, new FilterFragment())
-                .commit();
-
-        trackingManager.track(TrackingManager.TYPE_ACTION, TrackingManager.Screen.F3);
-    }
-
-    @Override
-    public void onDismissFilterFragment(FilterFragment filterFragment) {
-        getSupportFragmentManager().popBackStack("filter", FragmentManager.POP_BACK_STACK_INCLUSIVE);
-    }
-
-    @Override
-    public RimapFilter getFilter() {
-        return overlayFragment.getFilter();
-    }
-
-    @Override
-    public void onFilterChanged() {
-        overlayFragment.onFilterChanged();
-    }
-
-    @Override
-    public void onBackPressed() {
-        final Fragment fragment = getSupportFragmentManager().findFragmentById(R.id.filter_fragment_container);
-        if (fragment instanceof BackHandlingFragment) {
-            if (((BackHandlingFragment) fragment).onBackPressed()) {
-                return;
+    private fun initializeMap() {
+        val mapFragment = ApiMapFragment()
+        fragmentManager.beginTransaction()
+            .add(R.id.map_fragment, mapFragment).commit()
+        val contentView = findViewById<View>(android.R.id.content)
+        contentView?.viewTreeObserver?.addOnGlobalLayoutListener {
+            val mapFragmentView = mapFragment.view
+            if (mapFragmentView != null) {
+                mapViewModel!!.mapLaidOut(mapFragmentView.isLaidOut)
             }
         }
-
-        super.onBackPressed();
+        mapFragment.getMapAsync(overlayFragment!!)
     }
 
-    @NonNull
-    @Override
-    public TrackingManager getStationTrackingManager() {
-        return trackingManager;
+    override fun onStart() {
+        super.onStart()
+        stationTrackingManager.track(TrackingManager.TYPE_STATE, TrackingManager.Screen.F1)
+    }
+
+    override fun onFilterClick() {
+        supportFragmentManager.beginTransaction()
+            .addToBackStack("filter")
+            .add(R.id.filter_fragment_container, FilterFragment())
+            .commit()
+        stationTrackingManager.track(TrackingManager.TYPE_ACTION, TrackingManager.Screen.F3)
+    }
+
+    override fun onDismissFilterFragment(filterFragment: FilterFragment) {
+        supportFragmentManager.popBackStack("filter", FragmentManager.POP_BACK_STACK_INCLUSIVE)
+    }
+
+    override fun getFilter(): RimapFilter {
+        return overlayFragment!!.filter
+    }
+
+    override fun onFilterChanged() {
+        overlayFragment?.onFilterChanged()
+    }
+
+    override fun onBackPressed() {
+        val fragment = supportFragmentManager.findFragmentById(R.id.filter_fragment_container)
+        if (fragment is BackHandlingFragment) {
+            if ((fragment as BackHandlingFragment).onBackPressed()) {
+                return
+            }
+        }
+        super.onBackPressed()
+    }
+
+    companion object {
+        private const val ARG_STATION = FragmentArgs.STATION
+        private const val ARG_LOADER_STATES = LoaderFragment.ARG_LOADER_STATES
+        private const val ARG_STATION_DEPARTURES = "stationDepartures"
+        fun createIntent(context: Context, station: Station?): Intent {
+            val intent = createIntent(context)
+            intent.putExtra(
+                ARG_STATION,
+                if (station is Parcelable) station else InternalStation(station)
+            )
+            return intent
+        }
+
+        private fun createIntent(context: Context): Intent {
+            return Intent(context, MapActivity::class.java)
+        }
+
+        fun createIntent(context: Context, stationDepartures: ArrayList<HafasTimetable>): Intent {
+            val intent = createIntent(context)
+            intent.putExtra(ARG_STATION_DEPARTURES, stationDepartures)
+            return intent
+        }
+
+        fun createIntent(
+            context: Context,
+            station: Station?,
+            stationDepartures: ArrayList<HafasTimetable?>?
+        ): Intent {
+            val intent = createIntent(context, station)
+            intent.putExtra(ARG_STATION_DEPARTURES, stationDepartures)
+            return intent
+        }
     }
 }

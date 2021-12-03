@@ -223,4 +223,6 @@ class MapViewModel : StadaStationCacheViewModel() {
         }
     }
 
+    val mapConsentedLiveData = baseApplication.applicationServices.mapConsentRepository.consented
+
 }

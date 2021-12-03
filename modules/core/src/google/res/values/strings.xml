@@ -1,0 +1,5 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="map_provider_name">Google</string>
+    <string name="map_privacy_policy_url">https://www.google.com/</string>
+</resources>
