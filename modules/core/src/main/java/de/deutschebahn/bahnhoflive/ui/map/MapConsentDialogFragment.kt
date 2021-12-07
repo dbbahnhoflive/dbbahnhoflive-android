@@ -1,15 +1,18 @@
 package de.deutschebahn.bahnhoflive.ui.map
 
 import android.content.DialogInterface
+import android.content.Intent
 import android.os.Bundle
-import android.text.method.LinkMovementMethod
 import android.view.LayoutInflater
+import android.view.View
 import android.view.ViewGroup
+import androidx.core.net.toUri
+import androidx.fragment.app.DialogFragment
 import androidx.fragment.app.activityViewModels
-import com.google.android.material.bottomsheet.BottomSheetDialogFragment
+import de.deutschebahn.bahnhoflive.R
 import de.deutschebahn.bahnhoflive.databinding.DialogMapConsentBinding
 
-class MapConsentDialogFragment : BottomSheetDialogFragment() {
+class MapConsentDialogFragment : DialogFragment() {
 
     val mapViewModel: MapViewModel by activityViewModels()
 
@@ -19,18 +22,40 @@ class MapConsentDialogFragment : BottomSheetDialogFragment() {
         savedInstanceState: Bundle?
     ) = DialogMapConsentBinding.inflate(inflater, container, false).apply {
 
-        providerPrivacyPolicyLink.movementMethod = LinkMovementMethod.getInstance()
-        privacyPolicyLink.movementMethod = LinkMovementMethod.getInstance()
+        providerPrivacyPolicyLink.setOnClickListener(getString(R.string.map_privacy_policy_url).createOnClickListener())
+        privacyPolicyLink.setOnClickListener("https://www.bahnhof.de/bahnhof-de/datenschutzhinweis_db_bahnhof_live-2887724".createOnClickListener())
 
-        btnAccept.setOnClickListener {
-            mapViewModel.mapConsentedLiveData.value = true
-            dismiss()
+        acceptButton.setOnClickListener {
+            onAccept()
         }
+
+        cancelButton.setOnClickListener {
+            dialog?.cancel()
+        }
+
     }.root
+
+//    override fun onCreateDialog(savedInstanceState: Bundle?): Dialog =
+//        AlertDialog.Builder(requireContext(), theme)
+//            .setPositiveButton(R.string.map_accept) { dialog, which ->
+//                onAccept()
+//            }.setNegativeButton(R.string.dlg_cancel) { dialog, which ->
+//                dialog.cancel()
+//            }
+//            .create()
+
+    private fun String.createOnClickListener(): View.OnClickListener = View.OnClickListener {
+        startActivity(Intent(Intent.ACTION_VIEW, toUri()))
+    }
 
     override fun onCancel(dialog: DialogInterface) {
         super.onCancel(dialog)
 
         activity?.finish()
+    }
+
+    private fun onAccept() {
+        mapViewModel.mapConsentedLiveData.value = true
+        dismiss()
     }
 }

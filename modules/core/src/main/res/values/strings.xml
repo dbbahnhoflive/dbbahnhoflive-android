@@ -343,6 +343,6 @@
     <string name="wagon_feature_family">Familienbereich</string>
 
     <string name="map_accept">Karte anzeigen</string>
-    <string name="map_privacy_policy">Mehr dazu in unserem <a href="https://www.bahnhof.de/bahnhof-de/datenschutzhinweis_db_bahnhof_live-2887724">Datenschutzhinweis</a></string>
+    <string name="map_privacy_policy">Mehr dazu in unserem Datenschutzhinweis</string>
 
 </resources>
