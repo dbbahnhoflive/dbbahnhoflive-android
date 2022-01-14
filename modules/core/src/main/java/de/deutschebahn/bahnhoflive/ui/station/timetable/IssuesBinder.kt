@@ -20,26 +20,24 @@ class IssuesBinder(
     private val issueIndicatorBinder: IssueIndicatorBinder? = null
 ) {
 
-    fun bindIssues(trainInfo: TrainInfo?, trainMovementInfo: TrainMovementInfo) {
+    fun bindIssues(trainInfo: TrainInfo, trainMovementInfo: TrainMovementInfo) {
         val trainName = TimetableViewHelper.composeName(trainInfo, trainMovementInfo)
 
-        val trainMessages = trainInfo?.let { TrainMessages(trainInfo, trainMovementInfo) }
+        val trainMessages = TrainMessages(trainInfo, trainMovementInfo)
 
-        issueRow?.visibility = if (trainMessages?.hasMessages() == true) View.VISIBLE else View.GONE
+        issueRow?.visibility = if (trainMessages.hasMessages()) View.VISIBLE else View.GONE
 
-        trainMessages?.let {
-            val issueSeverity = trainMessages.getIssueSeverity()
+        val issueSeverity = trainMessages.getIssueSeverity()
 
-            issueText?.apply {
-                val joinedMessages =
-                    trainMessages.messages.joinToString(separator = " +++ ") { it.message }
+        issueText?.apply {
+            val joinedMessages =
+                trainMessages.messages.joinToString(separator = " +++ ") { it.message }
 
-                text = Html.fromHtml("<b>$trainName:</b> $joinedMessages")
-                setTextColor(context.resolveColor(issueSeverity))
-            }
-
-            issueIndicatorBinder?.bind(issueSeverity)
+            text = Html.fromHtml("<b>$trainName:</b> $joinedMessages")
+            setTextColor(context.resolveColor(issueSeverity))
         }
+
+        issueIndicatorBinder?.bind(issueSeverity)
     }
 
     @ColorInt

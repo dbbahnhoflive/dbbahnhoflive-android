@@ -3,76 +3,56 @@
  *
  * SPDX-License-Identifier: Apache-2.0
  */
+package de.deutschebahn.bahnhoflive.ui.station.timetable
 
-package de.deutschebahn.bahnhoflive.ui.station.timetable;
+import de.deutschebahn.bahnhoflive.backend.ris.model.TrainInfo
+import de.deutschebahn.bahnhoflive.backend.ris.model.TrainMovementInfo
+import java.util.*
 
-import android.text.TextUtils;
-
-import androidx.annotation.NonNull;
-
-import java.util.HashMap;
-import java.util.Locale;
-import java.util.Map;
-
-import de.deutschebahn.bahnhoflive.backend.ris.model.TrainInfo;
-import de.deutschebahn.bahnhoflive.backend.ris.model.TrainMovementInfo;
-
-public class TimetableViewHelper {
-
-    @NonNull
-    public static String composeName(TrainInfo trainInfo, TrainMovementInfo trainMovementInfo){
-        if (trainMovementInfo != null && !TextUtils.isEmpty(trainMovementInfo.getLineIdentifier())) {
-            return (String.format(Locale.GERMAN, "%s %s",
-                    trainInfo.getTrainCategory(),
-                    trainMovementInfo.getLineIdentifier()));
-        } else {
-            String trainName = trainInfo.getTrainName();
-            if(trainName == null){
-                trainName = "";
-            }
-            return (String.format(Locale.GERMAN, "%s %s",
-                    trainInfo.getTrainCategory(),
-                    trainName));
+object TimetableViewHelper {
+    fun composeName(trainInfo: TrainInfo, trainMovementInfo: TrainMovementInfo?): String =
+        trainMovementInfo?.takeUnless { it.lineIdentifier.isNullOrEmpty() || "FLX" == trainInfo.trainCategory?.uppercase() }
+            ?.let {
+                String.format(
+                    Locale.GERMAN, "%s %s",
+                    trainInfo.trainCategory,
+                    it.lineIdentifier
+                )
+            } ?: kotlin.run {
+            String.format(
+                Locale.GERMAN, "%s %s",
+                trainInfo.trainCategory,
+                trainInfo.trainName.orEmpty()
+            )
         }
-    }
-
 
     /**
      * @return Might return null if the train doesn't support Wagenstand Requests.
      */
-    public static @NonNull
-    Map<String, Object> buildQueryParameters(final TrainInfo trainInfo, final TrainMovementInfo event) {
-
-        Map<String,Object> parameters = new HashMap<>();
-
+    fun buildQueryParameters(trainInfo: TrainInfo, event: TrainMovementInfo): Map<String, Any?> {
+        val parameters: MutableMap<String, Any?> = HashMap()
         try {
-            final String trainType = trainInfo.getTrainCategory();
-
-            parameters.put("platform", event.getPlatform().replaceAll("\\D+", ""));
-
-            if (trainType.equals("RE") || trainType.equals("RB")) {
-                if (trainInfo.getTrainGenericName() != null) {
-                    parameters.put("trainNumber", trainInfo.getTrainGenericName());
+            val trainType = trainInfo.trainCategory
+            parameters["platform"] = event.platform.replace("\\D+".toRegex(), "")
+            if (trainType == "RE" || trainType == "RB") {
+                if (trainInfo.trainGenericName != null) {
+                    parameters["trainNumber"] = trainInfo.trainGenericName
                 } else {
-                    parameters.put("trainNumber", trainInfo.getTrainName());
+                    parameters["trainNumber"] = trainInfo.trainName
                 }
             } else {
-                parameters.put("time", event.getFormattedTime());
-                parameters.put("trainNumber", trainInfo.getTrainName());
+                parameters["time"] = event.formattedTime
+                parameters["trainNumber"] = trainInfo.trainName
             }
-
-            Map<String, String> timeOffset = new HashMap<>();
-            timeOffset.put("before", "10");
-            timeOffset.put("after", "10");
-            parameters.put("timeOffset", timeOffset);
-
-            parameters.put("trainType", trainInfo.getTrainCategory());
-
-            parameters.put("trainId", trainInfo.getId());
-        } catch (NullPointerException npe) {
-            npe.printStackTrace();
+            val timeOffset: MutableMap<String, String> = HashMap()
+            timeOffset["before"] = "10"
+            timeOffset["after"] = "10"
+            parameters["timeOffset"] = timeOffset
+            parameters["trainType"] = trainInfo.trainCategory
+            parameters["trainId"] = trainInfo.id
+        } catch (npe: NullPointerException) {
+            npe.printStackTrace()
         }
-
-        return parameters;
+        return parameters
     }
 }
