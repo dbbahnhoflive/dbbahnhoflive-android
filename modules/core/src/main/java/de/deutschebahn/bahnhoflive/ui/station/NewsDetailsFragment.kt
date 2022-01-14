@@ -47,7 +47,7 @@ class NewsDetailsFragment : FullBottomSheetDialogFragment() {
             view.headline.text = news?.title
 
             with(view.subtitle) {
-                val subtitle = news?.subtitle
+                val subtitle = news?.subtitle?.takeUnless { it.isBlank() }
                 text = subtitle
                 visibility = if (subtitle == null) View.GONE else View.VISIBLE
             }

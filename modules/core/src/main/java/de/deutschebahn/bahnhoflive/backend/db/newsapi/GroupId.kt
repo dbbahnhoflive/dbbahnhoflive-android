@@ -12,7 +12,8 @@ enum class GroupId {
     COUPON,
     STATION_ISSUE,
     SURVEY,
-    PRODUCTS_AND_SERVICES;
+    PRODUCTS_AND_SERVICES,
+    MAJOR_DISRUPTION;
 
     fun appliesTo(news: News): Boolean = news.group.id == id
 
