@@ -12,7 +12,7 @@ android {
         targetSdkVersion 30
         multiDexEnabled true
 
-        buildConfigField "String", "BUSINESS_HUB_API_KEY", "\"TOL1jxXeqIW72s7vKPCcUuPNqFJTvPQx\"" // open source community API key
+        buildConfigField "String", "BUSINESS_HUB_API_KEY", "\"a5d3c62e032912922ed46cdacdb47940\"" // open source community API key
         buildConfigField "String", "RIS_JOURNEYS_BASE_URL", "\"https://gateway.businesshub.deutschebahn.com/ris-journeys/v1/\""
 
     }
