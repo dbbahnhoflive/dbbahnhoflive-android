@@ -9,6 +9,7 @@ package de.deutschebahn.bahnhoflive.ui.station.info
 import android.util.Patterns
 import androidx.lifecycle.LiveData
 import de.deutschebahn.bahnhoflive.backend.db.publictrainstation.model.DetailedStopPlace
+import de.deutschebahn.bahnhoflive.backend.local.model.ComplaintableStation
 import de.deutschebahn.bahnhoflive.backend.local.model.ServiceContent
 import de.deutschebahn.bahnhoflive.backend.local.model.ServiceContentType
 import de.deutschebahn.bahnhoflive.backend.local.model.isChatbotAvailable
@@ -50,7 +51,7 @@ class ServiceNumbersLiveData(
                 staticInfoCollection,
                 ServiceContentType.Local.LOST_AND_FOUND
             ),
-            composeStationComplaintsContent(),
+            composeStationComplaintsContent(detailedStopPlace),
             composeAppIssuesContent(staticInfoCollection),
             composeRateAppContent(staticInfoCollection)
         )
@@ -66,13 +67,16 @@ class ServiceNumbersLiveData(
         staticInfoCollection?.typedStationInfos?.get(ServiceContentType.Local.APP_ISSUE)
             .wrapServiceContent()
 
-    private fun composeStationComplaintsContent(): ServiceContent? = ServiceContent(
-        StaticInfo(
-            ServiceContentType.Local.STATION_COMPLAINT,
-            "Verschmutzung melden" /* dummy */,
-            "Verschmutzung melden" /* dummy */
-        )
-    )
+    private fun composeStationComplaintsContent(detailedStopPlace: DetailedStopPlace?): ServiceContent? =
+        detailedStopPlace?.takeIf { it.stadaId in ComplaintableStation.ids }?.let {
+            ServiceContent(
+                StaticInfo(
+                    ServiceContentType.Local.STATION_COMPLAINT,
+                    "Verschmutzung melden" /* dummy */,
+                    "Verschmutzung melden" /* dummy */
+                )
+            )
+        }
 
     private fun composeThreeSContent(
         station: DetailedStopPlace?,
