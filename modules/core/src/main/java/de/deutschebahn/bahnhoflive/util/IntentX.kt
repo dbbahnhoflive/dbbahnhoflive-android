@@ -10,7 +10,9 @@ import android.content.Context
 import android.content.Intent
 
 fun Intent.startSafely(context: Context) =
-    resolveActivity(context.packageManager)?.let {
+    kotlin.runCatching {
         context.startActivity(this)
         true
-    } ?: false
+    }.getOrElse {
+        false
+    }
