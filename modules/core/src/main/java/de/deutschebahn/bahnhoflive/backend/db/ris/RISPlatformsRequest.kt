@@ -30,7 +30,8 @@ class RISPlatformsRequest(
     "https://gateway.businesshub.deutschebahn.com/ris-stations/v1/platforms/$evaId" +
             "?includeAccessibility=true",
     dbAuthorizationTool,
-    listener
+    listener,
+    "db-api-key"
 ) {
 
     init {
@@ -39,11 +40,11 @@ class RISPlatformsRequest(
 
     override fun getCountKey() = "RIS/stations"
 
-    override fun parseNetworkResponse(response: NetworkResponse?): Response<List<Platform>> {
+    override fun parseNetworkResponse(response: NetworkResponse): Response<List<Platform>> {
         super.parseNetworkResponse(response)
 
         return try {
-            val platforms = response?.data?.decodeToString()?.let { responseString ->
+            val platforms = response.data?.decodeToString()?.let { responseString ->
                 JSONObject(responseString).optJSONArray("platforms")
                     ?.asJSONObjectSequence()
                     ?.filterNotNull()
@@ -85,7 +86,5 @@ class RISPlatformsRequest(
             Response.error(VolleyError(e))
         }
     }
-
-    override fun getAuthorizationHeaderKey() = "db-api-key"
 
 }

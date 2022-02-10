@@ -13,9 +13,9 @@ open class RISJourneysRequest<T>(
     Method.GET,
     "${BuildConfig.RIS_JOURNEYS_BASE_URL}$urlSuffix",
     dbAuthorizationTool,
-    restListener
+    restListener,
+    "db-api-key"
 ) {
-    override fun getAuthorizationHeaderKey(): String = "db-api-key"
 
     override fun getCountKey(): String = "ris-journeys"
 }

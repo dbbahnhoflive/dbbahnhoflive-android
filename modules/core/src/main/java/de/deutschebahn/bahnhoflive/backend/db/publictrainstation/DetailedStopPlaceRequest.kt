@@ -32,7 +32,7 @@ class DetailedStopPlaceRequest(
 
     override fun getCountKey() = "PTS/stop-places"
 
-    override fun parseNetworkResponse(response: NetworkResponse?): Response<DetailedStopPlace> {
+    override fun parseNetworkResponse(response: NetworkResponse): Response<DetailedStopPlace> {
         super.parseNetworkResponse(response)
 
         return try {

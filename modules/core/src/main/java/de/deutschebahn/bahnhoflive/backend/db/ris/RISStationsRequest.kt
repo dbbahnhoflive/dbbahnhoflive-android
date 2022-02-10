@@ -54,7 +54,8 @@ class RISStationsRequest(
         "${it.first}=${it.second}"
     },
     dbAuthorizationTool,
-    listener
+    listener,
+    "db-api-key"
 ) {
 
     init {
@@ -63,7 +64,7 @@ class RISStationsRequest(
 
     override fun getCountKey() = "RIS/stations"
 
-    override fun parseNetworkResponse(response: NetworkResponse?): Response<List<StopPlace>> {
+    override fun parseNetworkResponse(response: NetworkResponse): Response<List<StopPlace>> {
         super.parseNetworkResponse(response)
 
         return try {
@@ -137,8 +138,6 @@ class RISStationsRequest(
             Response.error(VolleyError(e))
         }
     }
-
-    override fun getAuthorizationHeaderKey() = "db-api-key"
 
     companion object {
         fun Double.obfuscate() = (this * 1000).roundToInt() / 1000.0
