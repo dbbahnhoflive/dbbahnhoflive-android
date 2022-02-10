@@ -34,7 +34,7 @@ class RISStationsRequest(
     private val pullUpFirstDbStation: Boolean
 ) : DbRequest<List<StopPlace>>(
     Method.GET,
-    "https://gateway.businesshub.deutschebahn.com/ris-stations/v1/stop-places/" +
+    "https://apis.deutschebahn.com/db/apis/ris-stations/v1/stop-places/" +
             (query?.trim()?.takeUnless { it.isEmpty() }
                 ?.let { "by-name/" + URLEncoder.encode(it, "UTF-8") }
                 ?: "by-position") + sequenceOf(
