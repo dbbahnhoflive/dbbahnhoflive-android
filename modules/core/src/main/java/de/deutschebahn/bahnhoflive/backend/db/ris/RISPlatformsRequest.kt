@@ -12,7 +12,6 @@ import com.android.volley.VolleyError
 import de.deutschebahn.bahnhoflive.backend.ForcedCacheEntryFactory
 import de.deutschebahn.bahnhoflive.backend.VolleyRestListener
 import de.deutschebahn.bahnhoflive.backend.db.DbAuthorizationTool
-import de.deutschebahn.bahnhoflive.backend.db.DbRequest
 import de.deutschebahn.bahnhoflive.backend.db.ris.model.AccessibilityStatus
 import de.deutschebahn.bahnhoflive.backend.db.ris.model.Platform
 import de.deutschebahn.bahnhoflive.repository.accessibility.AccessibilityFeature
@@ -25,13 +24,11 @@ class RISPlatformsRequest(
     dbAuthorizationTool: DbAuthorizationTool,
     evaId: String,
     force: Boolean = false,
-) : DbRequest<List<Platform>>(
-    Method.GET,
-    "https://apis.deutschebahn.com/db/apis/ris-stations/v1/platforms/$evaId" +
+) : RISStationsRequest<List<Platform>>(
+    "platforms/$evaId" +
             "?includeAccessibility=true",
     dbAuthorizationTool,
-    listener,
-    "db-api-key"
+    listener
 ) {
 
     init {

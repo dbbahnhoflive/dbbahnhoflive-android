@@ -8,8 +8,9 @@ package de.deutschebahn.bahnhoflive.repository.station
 
 import android.location.Location
 import de.deutschebahn.bahnhoflive.backend.VolleyRestListener
-import de.deutschebahn.bahnhoflive.backend.db.publictrainstation.model.DetailedStopPlace
+import de.deutschebahn.bahnhoflive.backend.db.ris.model.LocalServices
 import de.deutschebahn.bahnhoflive.backend.db.ris.model.Platform
+import de.deutschebahn.bahnhoflive.backend.db.ris.model.RISStation
 import de.deutschebahn.bahnhoflive.backend.db.ris.model.StopPlace
 import de.deutschebahn.bahnhoflive.repository.fail
 import de.deutschebahn.bahnhoflive.util.Cancellable
@@ -31,21 +32,32 @@ open class StationRepository {
         return null
     }
 
-    open fun queryStationDetails(
-        listener: VolleyRestListener<DetailedStopPlace>,
+    open fun queryAccessibilityDetails(
+        listener: VolleyRestListener<List<Platform>>,
+        evaId: String,
+        force: Boolean
+    ): VolleyRequestCancellable<List<Platform>>? {
+        listener.fail()
+        return null
+    }
+
+    open fun queryLocalServices(
+        listener: VolleyRestListener<LocalServices>,
         stadaId: String,
         force: Boolean,
-        currentPosition: Location? = null
+        currentPosition: Location?
     ): Cancellable? {
         listener.fail()
         return null
     }
 
-    open fun queryAccessibilityDetails(
-        listener: VolleyRestListener<List<Platform>>,
-        evaId: String,
-        force: Boolean
-    ): VolleyRequestCancellable<List<Platform>> {
-        TODO("Not yet implemented")
+    open fun queryStation(
+        listener: VolleyRestListener<RISStation>,
+        stadaId: String,
+        force: Boolean,
+        currentPosition: Location?
+    ): Cancellable? {
+        listener.fail()
+        return null
     }
 }

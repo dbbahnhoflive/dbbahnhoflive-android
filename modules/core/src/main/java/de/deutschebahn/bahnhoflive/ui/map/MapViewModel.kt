@@ -45,14 +45,15 @@ class MapViewModel : StadaStationCacheViewModel() {
         }
     }
 
-    private val detailedStopPlaceResource = DetailedStopPlaceResource()
+    private val risServiceAndCategoryResource =
+        RisServiceAndCategoryResource()
 
     private val rimapStationFeatureCollectionResource = RimapStationFeatureCollectionResource()
 
     val parking = ViewModelParking()
 
     val stationResource =
-        StationResource(detailedStopPlaceResource, rimapStationFeatureCollectionResource)
+        StationResource(risServiceAndCategoryResource, rimapStationFeatureCollectionResource)
 
     val isMapLayedOut = MutableLiveData<Boolean?>()
 
@@ -82,7 +83,7 @@ class MapViewModel : StadaStationCacheViewModel() {
 
             zoneIdLiveData.value = station.id
 
-            detailedStopPlaceResource.initialize(station)
+            risServiceAndCategoryResource.initialize(station)
             rimapStationFeatureCollectionResource.initialize(station)
 
             dbTimetableResource.initialize(station)

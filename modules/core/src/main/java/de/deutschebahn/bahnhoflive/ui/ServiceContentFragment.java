@@ -45,7 +45,7 @@ import de.deutschebahn.bahnhoflive.IconMapper;
 import de.deutschebahn.bahnhoflive.R;
 import de.deutschebahn.bahnhoflive.analytics.TrackingManager;
 import de.deutschebahn.bahnhoflive.backend.db.publictrainstation.model.Availability;
-import de.deutschebahn.bahnhoflive.backend.db.publictrainstation.model.Details;
+import de.deutschebahn.bahnhoflive.backend.db.ris.model.LocalService;
 import de.deutschebahn.bahnhoflive.backend.local.model.ServiceContent;
 import de.deutschebahn.bahnhoflive.backend.local.model.ServiceContentType;
 import de.deutschebahn.bahnhoflive.ui.station.HistoryFragment;
@@ -112,17 +112,16 @@ public class ServiceContentFragment extends Fragment {
 
         if (ServiceContentType.DB_INFORMATION.equals(serviceContent.getType()) && serviceContent.getAdditionalText() == null) {
             final AvailabilityRenderer availabilityRenderer = new AvailabilityRenderer();
-            stationViewModel.getDetailedStopPlaceResource().getData().observe(this, detailedStopPlace -> {
-                if (detailedStopPlace == null) {
+            stationViewModel.getRisServiceAndCategoryResource().getData().observe(this, risServicesAndCategory -> {
+                if (risServicesAndCategory == null) {
+                    return;
+                }
+                final LocalService informationCounterService = risServicesAndCategory.getLocalServices().get(LocalService.Type.INFORMATION_COUNTER);
+                if (informationCounterService == null) {
                     return;
                 }
 
-                final Details details = detailedStopPlace.getDetails();
-                if (details == null) {
-                    return;
-                }
-
-                final Availability availability = details.getDbInformation();
+                final Availability availability = null; // TODO 2116: informationCounterService.getOpeningHours();
                 if (availability == null) {
                     return;
                 }

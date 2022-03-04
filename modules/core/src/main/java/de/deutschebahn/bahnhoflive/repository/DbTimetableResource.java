@@ -14,11 +14,11 @@ import com.android.volley.VolleyError;
 import java.util.List;
 
 import de.deutschebahn.bahnhoflive.BaseApplication;
-import de.deutschebahn.bahnhoflive.backend.db.publictrainstation.model.DetailedStopPlace;
 import de.deutschebahn.bahnhoflive.backend.db.ris.model.StopPlace;
 import de.deutschebahn.bahnhoflive.backend.local.model.EvaIds;
 import de.deutschebahn.bahnhoflive.repository.timetable.Timetable;
 import de.deutschebahn.bahnhoflive.repository.timetable.TimetableCollector;
+import de.deutschebahn.bahnhoflive.ui.station.features.RISServicesAndCategory;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.disposables.Disposable;
 
@@ -70,16 +70,13 @@ public class DbTimetableResource extends RemoteResource<Timetable> {
     protected void onStartLoading(final boolean force) {
         final List<String> evaIds = getEvaIds();
         if (evaIds == null) {
-            final DetailedStopPlaceResource detailedStopPlaceResource = new DetailedStopPlaceResource();
-            detailedStopPlaceResource.initialize(getStation());
-            final ResourceClient<DetailedStopPlace, VolleyError> resourceClient = new ResourceClient<>(new Observer<DetailedStopPlace>() {
-                @Override
-                public void onChanged(@Nullable DetailedStopPlace detailedStopPlace) {
-                    if (detailedStopPlace != null) {
-                        setEvaIds(detailedStopPlace.getEvaIds());
+            final RisServiceAndCategoryResource risServiceAndCategoryResource = new RisServiceAndCategoryResource();
+            risServiceAndCategoryResource.initialize(getStation());
+            final ResourceClient<RISServicesAndCategory, VolleyError> resourceClient = new ResourceClient<>(risServicesAndCategory -> {
+                if (risServicesAndCategory != null) {
+//                    setEvaIdsMissing();
 
-                        DbTimetableResource.this.loadData(force);
-                    }
+                    DbTimetableResource.this.loadData(force);
                 }
             }, new Observer<LoadingStatus>() {
                 @Override
@@ -94,7 +91,7 @@ public class DbTimetableResource extends RemoteResource<Timetable> {
                     setError(volleyError);
                 }
             });
-            resourceClient.observe(detailedStopPlaceResource);
+            resourceClient.observe(risServiceAndCategoryResource);
         } else {
             timetableCollector.getRefreshTrigger().onNext(force);
         }

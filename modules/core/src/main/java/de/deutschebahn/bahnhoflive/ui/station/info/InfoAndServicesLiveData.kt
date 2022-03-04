@@ -8,24 +8,28 @@ package de.deutschebahn.bahnhoflive.ui.station.info
 
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.Transformations
-import de.deutschebahn.bahnhoflive.backend.db.publictrainstation.model.*
+import de.deutschebahn.bahnhoflive.backend.db.publictrainstation.model.Availability
+import de.deutschebahn.bahnhoflive.backend.db.publictrainstation.model.AvailabilityEntry
+import de.deutschebahn.bahnhoflive.backend.db.ris.model.AddressWithWeb
+import de.deutschebahn.bahnhoflive.backend.db.ris.model.LocalService
 import de.deutschebahn.bahnhoflive.backend.local.model.ServiceContent
 import de.deutschebahn.bahnhoflive.backend.local.model.ServiceContentType
-import de.deutschebahn.bahnhoflive.repository.DetailedStopPlaceResource
+import de.deutschebahn.bahnhoflive.repository.RisServiceAndCategoryResource
 import de.deutschebahn.bahnhoflive.repository.ShopsResource
 import de.deutschebahn.bahnhoflive.stream.livedata.MergedLiveData
 import de.deutschebahn.bahnhoflive.ui.AvailabilityRenderer
 import de.deutschebahn.bahnhoflive.ui.station.StaticInfoCollection
+import de.deutschebahn.bahnhoflive.ui.station.features.RISServicesAndCategory
 import de.deutschebahn.bahnhoflive.ui.station.shop.Shop
 import de.deutschebahn.bahnhoflive.util.then
 
 class InfoAndServicesLiveData(
-    detailedStopPlaceResource: DetailedStopPlaceResource,
+    risServiceAndCategoryResource: RisServiceAndCategoryResource,
     val staticInfoCollectionSource: LiveData<StaticInfoCollection>,
-    val travelCenter: LiveData<EmbeddedTravelCenter?>,
+    val travelCenter: LiveData<LocalService?>,
     shopsResource: ShopsResource
 ) : MergedLiveData<List<ServiceContent>?>(null) {
-    val detailedStopPlaceLiveData = detailedStopPlaceResource.data
+    val detailedStopPlaceLiveData = risServiceAndCategoryResource.data
     val travelCenterOpenHours = Transformations.map(shopsResource.data) {
         getTravelCenterOpenHours(it?.travelCenter)
     }
@@ -40,41 +44,44 @@ class InfoAndServicesLiveData(
     }
 
     override fun onSourceChanged(source: LiveData<*>) {
-        detailedStopPlaceLiveData.value?.also { detailedStopPlace ->
+        detailedStopPlaceLiveData.value?.also { risServicesAndCategory ->
             staticInfoCollectionSource.value?.also { staticInfoCollection ->
-                update(detailedStopPlace, staticInfoCollection, travelCenterOpenHours.value, travelCenter.value)
+                update(
+                    risServicesAndCategory,
+                    staticInfoCollection,
+                    travelCenterOpenHours.value,
+                    travelCenter.value
+                )
             }
         }
     }
 
     fun update(
-        detailedStopPlace: DetailedStopPlace,
+        risServicesAndCategory: RISServicesAndCategory,
         staticInfoCollection: StaticInfoCollection,
         travelCenterOpenHours: String?,
-        travelCenter: EmbeddedTravelCenter?
+        travelCenter: LocalService?
     ) {
         value = listOfNotNull(
             composeServiceContent(
-                detailedStopPlace,
+                risServicesAndCategory,
                 staticInfoCollection,
-                ServiceContentType.DB_INFORMATION,
-                renderSchedule(detailedStopPlace.details?.dbInformation)
+                LocalService.Type.INFORMATION_COUNTER,
+// TODO 2116      renderSchedule(risServicesAndCategory.details?.dbInformation)
             ),
             composeServiceContent(
-                detailedStopPlace,
+                risServicesAndCategory,
                 staticInfoCollection,
-                ServiceContentType.MOBILE_SERVICE,
-                renderSchedule(detailedStopPlace.details?.localServiceStaff)
+                LocalService.Type.MOBILE_TRAVEL_SERVICE,
+// TODO 2116                renderSchedule(risServicesAndCategory.details?.localServiceStaff)
             ),
             composeServiceContent(
-                detailedStopPlace,
+                risServicesAndCategory,
                 staticInfoCollection,
-                ServiceContentType.BAHNHOFSMISSION
+                LocalService.Type.RAILWAY_MISSION
             ),
             staticInfoCollection.typedStationInfos[ServiceContentType.Local.TRAVEL_CENTER]?.let { staticInfo ->
-                (PublicTrainStationService.predicates[ServiceContentType.Local.TRAVEL_CENTER]?.invoke(
-                    detailedStopPlace
-                ) == true).then {
+                risServicesAndCategory.hasTravelCenter.then {
                     ServiceContent(
                         staticInfo, renderSchedule(travelCenter?.openingHours)
                             ?: travelCenterOpenHours
@@ -83,33 +90,36 @@ class InfoAndServicesLiveData(
                     ServiceContent(
                         staticInfo,
                         renderSchedule(travelCenter.openingHours),
-                        travelCenter.composedAddress,
-                        travelCenter.location?.toLatLng()
+                        travelCenter.address?.format(),
+                        travelCenter.location
                     )
                 }
             },
             composeServiceContent(
-                detailedStopPlace,
+                risServicesAndCategory,
                 staticInfoCollection,
-                ServiceContentType.Local.DB_LOUNGE
+                LocalService.Type.TRAVEL_LOUNGE
             )
         )
+    }
+
+    private fun renderSchedule(openingHours: String?): String? {
+        return null
     }
 
     private fun renderSchedule(schedule: List<AvailabilityEntry?>?): String? =
         availabilityRenderer.renderSchedule(schedule)
 
     fun composeServiceContent(
-        detailedStopPlace: DetailedStopPlace,
+        detailedStopPlace: RISServicesAndCategory,
         staticInfoCollection: StaticInfoCollection,
-        type: String,
+        type: LocalService.Type,
         additionalInfo: String? = null
-    ) =
-        PublicTrainStationService.predicates[type]?.invoke(detailedStopPlace)?.then {
-            staticInfoCollection.typedStationInfos[type]?.let {
-                ServiceContent(it, additionalInfo)
-            }
+    ) = detailedStopPlace.has(type).then {
+        staticInfoCollection.typedStationInfos[type.serviceContentTypeKey]?.let {
+            ServiceContent(it, additionalInfo)
         }
+    }
 
     companion object {
         val dayLabels = mapOf(
@@ -143,4 +153,5 @@ class InfoAndServicesLiveData(
         return openHoursInfo.replace("\n".toRegex(), "<br/>")
     }
 
+    private fun AddressWithWeb.format(): String = "$street $houseNumber, $postalCode $city"
 }

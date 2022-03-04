@@ -8,10 +8,9 @@ package de.deutschebahn.bahnhoflive.repository
 import androidx.lifecycle.Observer
 import com.android.volley.VolleyError
 import de.deutschebahn.bahnhoflive.backend.rimap.model.StationFeatureCollection
-import de.deutschebahn.bahnhoflive.repository.DetailedStopPlaceStationWrapper.Companion.of
 
 class StationResource @JvmOverloads constructor(
-    private val detailedStopPlaceResource: DetailedStopPlaceResource = DetailedStopPlaceResource(),
+    private val risServiceAndCategoryResource: RisServiceAndCategoryResource = RisServiceAndCategoryResource(),
     private val rimapStationFeatureCollectionResource: RimapStationFeatureCollectionResource = RimapStationFeatureCollectionResource()
 ) : MediatorResource<MergedStation>() {
     private val rimapErrorObserver = Observer<VolleyError?> { volleyError ->
@@ -29,7 +28,7 @@ class StationResource @JvmOverloads constructor(
         }
 
     constructor(id: String?) : this() {
-        detailedStopPlaceResource.initialize(id)
+        risServiceAndCategoryResource.initialize(id)
         rimapStationFeatureCollectionResource.initialize(id)
     }
 
@@ -45,7 +44,7 @@ class StationResource @JvmOverloads constructor(
     }
 
     override fun onRefresh(): Boolean {
-        val loading = detailedStopPlaceResource.loadIfNecessary()
+        val loading = risServiceAndCategoryResource.loadIfNecessary()
         if (loading) {
             loadingStatus.value = LoadingStatus.BUSY
         }
@@ -55,7 +54,7 @@ class StationResource @JvmOverloads constructor(
     fun initialize(station: Station?) {
         if (station != null) {
             data.value = station.orCurrent().copy(fallbackStation = station)
-            detailedStopPlaceResource.initialize(station)
+            risServiceAndCategoryResource.initialize(station)
             rimapStationFeatureCollectionResource.initialize(station)
         }
     }
@@ -63,14 +62,14 @@ class StationResource @JvmOverloads constructor(
     private fun Station.orCurrent() = data.value ?: MergedStation(this)
 
     init {
-        data.addSource(detailedStopPlaceResource.data) { detailedStopPlace ->
-            of(detailedStopPlace)?.run {
-                data.value = orCurrent().copy(detailedStopPlaceStationWrapper = this)
+        data.addSource(risServiceAndCategoryResource.data) { risServicesAndCategory ->
+            risServicesAndCategory?.station?.let {
+                data.value = data.value?.copy(risStation = it)
             }
             loadingStatus.value = LoadingStatus.IDLE
 
         }
-        data.addSource(detailedStopPlaceResource.error) { volleyError ->
+        data.addSource(risServiceAndCategoryResource.error) { volleyError ->
             if (volleyError == null) {
                 clearStadaError()
             } else {

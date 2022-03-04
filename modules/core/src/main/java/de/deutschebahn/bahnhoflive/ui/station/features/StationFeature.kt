@@ -7,15 +7,16 @@
 package de.deutschebahn.bahnhoflive.ui.station.features
 
 import de.deutschebahn.bahnhoflive.backend.db.fasta2.model.FacilityStatus
-import de.deutschebahn.bahnhoflive.backend.db.publictrainstation.model.DetailedStopPlace
 import de.deutschebahn.bahnhoflive.model.parking.ParkingFacility
+import de.deutschebahn.bahnhoflive.repository.Station
 import de.deutschebahn.bahnhoflive.ui.station.StaticInfoCollection
 import de.deutschebahn.bahnhoflive.ui.station.shop.CategorizedShops
 import de.deutschebahn.bahnhoflive.ui.station.shop.Shop
 
 class StationFeature(
+    val station: Station,
     val stationFeatureTemplate: StationFeatureTemplate,
-    val detailedStopPlace: DetailedStopPlace,
+    val risServicesAndCategory: RISServicesAndCategory,
     val staticInfoCollection: StaticInfoCollection?,
     categorizedShops: CategorizedShops?,
     val parkingFacilities: List<ParkingFacility>?,
@@ -24,10 +25,16 @@ class StationFeature(
     val venues: List<Shop>?
 
     val isFeatured: Boolean?
-        get() = stationFeatureTemplate.definition.availability.isAvailable(detailedStopPlace, this)
+        get() = stationFeatureTemplate.definition.availability.isAvailable(
+            risServicesAndCategory,
+            this
+        )
 
     val isVisible: Boolean
-        get() = stationFeatureTemplate.definition.availability.isVisible(detailedStopPlace, this)
+        get() = stationFeatureTemplate.definition.availability.isVisible(
+            risServicesAndCategory,
+            this
+        )
 
     val isLinkVisible: Boolean
         get() = (isFeatured != false
