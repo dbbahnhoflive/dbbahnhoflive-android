@@ -6,10 +6,12 @@
 
 package de.deutschebahn.bahnhoflive.ui.timetable.localtransport;
 
+import android.app.Application;
+
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.lifecycle.AndroidViewModel;
 import androidx.lifecycle.MutableLiveData;
-import androidx.lifecycle.ViewModel;
 
 import com.android.volley.VolleyError;
 
@@ -28,7 +30,7 @@ import de.deutschebahn.bahnhoflive.repository.StationResource;
 import de.deutschebahn.bahnhoflive.util.ManagedObserver;
 import de.deutschebahn.bahnhoflive.util.Token;
 
-public class HafasTimetableViewModel extends ViewModel {
+public class HafasTimetableViewModel extends AndroidViewModel {
 
     public static final String ORIGIN_STATION = "station";
     public final HafasTimetableResource hafasTimetableResource = new HafasTimetableResource();
@@ -54,7 +56,8 @@ public class HafasTimetableViewModel extends ViewModel {
     private Station station;
     private List<HafasStation> hafasStations;
 
-    public HafasTimetableViewModel() {
+    public HafasTimetableViewModel(Application application) {
+        super(application);
         mediatorResource.addSource(hafasTimetableResource);
     }
 

@@ -8,9 +8,13 @@ package de.deutschebahn.bahnhoflive.repository
 import androidx.lifecycle.Observer
 import com.android.volley.VolleyError
 import de.deutschebahn.bahnhoflive.backend.rimap.model.StationFeatureCollection
+import de.deutschebahn.bahnhoflive.util.openhours.OpenHoursParser
 
 class StationResource @JvmOverloads constructor(
-    private val risServiceAndCategoryResource: RisServiceAndCategoryResource = RisServiceAndCategoryResource(),
+    openHoursParser: OpenHoursParser,
+    private val risServiceAndCategoryResource: RisServiceAndCategoryResource = RisServiceAndCategoryResource(
+        openHoursParser
+    ),
     private val rimapStationFeatureCollectionResource: RimapStationFeatureCollectionResource = RimapStationFeatureCollectionResource()
 ) : MediatorResource<MergedStation>() {
     private val rimapErrorObserver = Observer<VolleyError?> { volleyError ->
@@ -27,7 +31,7 @@ class StationResource @JvmOverloads constructor(
             loadingStatus.value = LoadingStatus.IDLE
         }
 
-    constructor(id: String?) : this() {
+    constructor(openHoursParser: OpenHoursParser, id: String?) : this(openHoursParser) {
         risServiceAndCategoryResource.initialize(id)
         rimapStationFeatureCollectionResource.initialize(id)
     }

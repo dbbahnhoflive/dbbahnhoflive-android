@@ -1,0 +1,52 @@
+<!--<!DOCTYPE html>-->
+<html lang="en">
+<head>
+    <title>Simple page using opening_hours.js</title>
+    <meta charset="utf-8">
+    <script type="text/javascript" src="opening_hours+deps.min.js"></script>
+
+    <!--
+    Included js file from https://openingh.openstreetmap.de/opening_hours.js/opening_hours+deps.min.js
+    Source: https://github.com/opening-hours/opening_hours.js#web-developer
+    -->
+
+    <script type="text/javascript">
+            function parseOSMhours(input_value,from_string,lat,lon,country,state)
+            {
+                try {
+                //second parameter is nominatim object, see example at https://nominatim.openstreetmap.org/reverse?format=json&lat=49.5487429714954&lon=9.81602098644987&zoom=5&addressdetails=1
+                let oh = new opening_hours(input_value, { 'lat' : lat, 'lon' : lon, 'address':{'country_code': country, 'state': state}}, { 'locale': 'de' });
+
+                var result = '';
+                for(var d = 0; d < 7; d++){
+                    var fromDate = new Date(from_string);
+                    fromDate.setDate(fromDate.getDate() + d);
+                    var toDate = new Date(from_string);
+                    toDate.setDate(toDate.getDate() + (d+1));
+                    var intervals = oh.getOpenIntervals(fromDate, toDate);
+                    for (var i in intervals){
+                        if( intervals[i][2] ){
+                            //"maybe" open?... ignore this
+                        } else {
+                            if (result.length > 0) {
+                                result += "#;#";
+                            }
+                            result +=
+                            (intervals[i][0].getTime()/1000.0)+"#;#"+
+                            (intervals[i][1].getTime()/1000.0)+"#;#"+
+                            (intervals[i][3] ? '("' + intervals[i][3] + '") ' : "")
+                            ;
+                        }
+                    }
+                }
+                return result;
+                } catch(error) {
+                return "Error " + error;
+                }
+            }
+
+    </script>
+</head>
+<body>
+</body>
+</html>

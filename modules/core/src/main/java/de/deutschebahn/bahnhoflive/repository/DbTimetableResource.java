@@ -6,9 +6,6 @@
 
 package de.deutschebahn.bahnhoflive.repository;
 
-import androidx.annotation.Nullable;
-import androidx.lifecycle.Observer;
-
 import com.android.volley.VolleyError;
 
 import java.util.List;
@@ -18,7 +15,6 @@ import de.deutschebahn.bahnhoflive.backend.db.ris.model.StopPlace;
 import de.deutschebahn.bahnhoflive.backend.local.model.EvaIds;
 import de.deutschebahn.bahnhoflive.repository.timetable.Timetable;
 import de.deutschebahn.bahnhoflive.repository.timetable.TimetableCollector;
-import de.deutschebahn.bahnhoflive.ui.station.features.RISServicesAndCategory;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.disposables.Disposable;
 
@@ -70,28 +66,7 @@ public class DbTimetableResource extends RemoteResource<Timetable> {
     protected void onStartLoading(final boolean force) {
         final List<String> evaIds = getEvaIds();
         if (evaIds == null) {
-            final RisServiceAndCategoryResource risServiceAndCategoryResource = new RisServiceAndCategoryResource();
-            risServiceAndCategoryResource.initialize(getStation());
-            final ResourceClient<RISServicesAndCategory, VolleyError> resourceClient = new ResourceClient<>(risServicesAndCategory -> {
-                if (risServicesAndCategory != null) {
-//                    setEvaIdsMissing();
-
-                    DbTimetableResource.this.loadData(force);
-                }
-            }, new Observer<LoadingStatus>() {
-                @Override
-                public void onChanged(@Nullable LoadingStatus loadingStatus) {
-                    if (loadingStatus != null && loadingStatus == LoadingStatus.BUSY) {
-                        DbTimetableResource.this.getMutableLoadingStatus().setValue(LoadingStatus.BUSY);
-                    }
-                }
-            }, new Observer<VolleyError>() {
-                @Override
-                public void onChanged(@Nullable VolleyError volleyError) {
-                    setError(volleyError);
-                }
-            });
-            resourceClient.observe(risServiceAndCategoryResource);
+            setEvaIdsMissing();
         } else {
             timetableCollector.getRefreshTrigger().onNext(force);
         }

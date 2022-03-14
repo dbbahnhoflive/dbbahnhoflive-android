@@ -6,6 +6,7 @@
 
 package de.deutschebahn.bahnhoflive.ui.station
 
+import android.app.Application
 import android.util.Log
 import android.view.View
 import androidx.lifecycle.*
@@ -52,6 +53,7 @@ import de.deutschebahn.bahnhoflive.ui.timetable.localtransport.HafasTimetableVie
 import de.deutschebahn.bahnhoflive.util.Token
 import de.deutschebahn.bahnhoflive.util.append
 import de.deutschebahn.bahnhoflive.util.asLiveData
+import de.deutschebahn.bahnhoflive.util.openhours.OpenHoursParser
 import de.deutschebahn.bahnhoflive.util.then
 import io.reactivex.Observable
 import io.reactivex.subjects.BehaviorSubject
@@ -60,7 +62,7 @@ import java.text.Collator
 import java.util.*
 import java.util.concurrent.Executors
 
-class StationViewModel : HafasTimetableViewModel() {
+class StationViewModel(application: Application) : HafasTimetableViewModel(application) {
 
     companion object {
         private val stationFeatureTemplates = listOf(
@@ -181,7 +183,7 @@ class StationViewModel : HafasTimetableViewModel() {
 
     }
 
-    val recentContentQueriesStore = RecentContentQueriesStore(application)
+    val recentContentQueriesStore = RecentContentQueriesStore(this.application)
 
     val staticInfoLiveData = object : MutableLiveData<StaticInfoCollection>() {
         private val token = Token()
@@ -192,7 +194,11 @@ class StationViewModel : HafasTimetableViewModel() {
                     try {
                         val gson = GsonBuilder().create()
                         val staticInfoJsonFormat = gson.fromJson(
-                            InputStreamReader(application.resources.openRawResource(R.raw.static_info)),
+                            InputStreamReader(
+                                this@StationViewModel.application.resources.openRawResource(
+                                    R.raw.static_info
+                                )
+                            ),
                             StaticInfoJsonFormat::class.java
                         )
                         this.postValue(StaticInfoCollection(staticInfoJsonFormat))
@@ -211,7 +217,7 @@ class StationViewModel : HafasTimetableViewModel() {
             super.onActive()
 
             if (token.take()) {
-                application.repositories.einkaufsbahnhofRepository.queryStations(
+                this@StationViewModel.application.repositories.einkaufsbahnhofRepository.queryStations(
                     true,
                     object : VolleyRestListener<StationList?> {
                         override fun onSuccess(payload: StationList?) {
@@ -243,8 +249,10 @@ class StationViewModel : HafasTimetableViewModel() {
         }
     }
 
+    private val openHoursParser = OpenHoursParser(this.application, viewModelScope)
+
     val risServiceAndCategoryResource =
-        RisServiceAndCategoryResource()
+        RisServiceAndCategoryResource(openHoursParser)
 
     val infoAvailability = Transformations.switchMap(risServiceAndCategoryResource.data) {
         it?.let { detailedStopPlace ->
@@ -298,7 +306,11 @@ class StationViewModel : HafasTimetableViewModel() {
     private val rimapStationFeatureCollectionResource = RimapStationFeatureCollectionResource()
 
     val stationResource =
-        StationResource(risServiceAndCategoryResource, rimapStationFeatureCollectionResource)
+        StationResource(
+            openHoursParser,
+            risServiceAndCategoryResource,
+            rimapStationFeatureCollectionResource
+        )
 
     val rimapStationInfoLiveData =
         Transformations.map(rimapStationFeatureCollectionResource.data) { input ->
@@ -383,7 +395,6 @@ class StationViewModel : HafasTimetableViewModel() {
         staticInfoLiveData,
         travelCenterLiveData,
         shopsResource
-
     )
     val serviceNumbersLiveData =
         ServiceNumbersLiveData(risServiceAndCategoryResource, staticInfoLiveData)
@@ -448,7 +459,8 @@ class StationViewModel : HafasTimetableViewModel() {
 
     val genuineContentSearchResults: LiveData<Pair<Pair<String?, Boolean>, List<ContentSearchResult>?>> = MediatorLiveData<Pair<Pair<String?, Boolean>, List<ContentSearchResult>?>>().apply {
 
-        val poiSearchConfiguration = application.poiSearchConfigurationProvider.configuration
+        val poiSearchConfiguration =
+            this@StationViewModel.application.poiSearchConfigurationProvider.configuration
         val shops = shopsResource.data
         val dbTimetable = dbTimetableResource.data
         val hafasStations = hafasStationResource.data
@@ -571,7 +583,7 @@ class StationViewModel : HafasTimetableViewModel() {
                                             })
                                     )
                                 }.append(
-                                    application.getString(categorizedShops.key.label)
+                                    this@StationViewModel.application.getString(categorizedShops.key.label)
                                         .takeIf { categoryLabel ->
                                             queryParts.all { queryPart ->
                                                 queryPart.predicate(categoryLabel)
@@ -856,7 +868,7 @@ class StationViewModel : HafasTimetableViewModel() {
                                             ContentSearchResult(
                                                 "Gleis $track",
                                                 RimapConfig.getTrackIconIdentifier(
-                                                    application,
+                                                    this@StationViewModel.application,
                                                     track,
                                                     ""
                                                 ),
@@ -1139,7 +1151,7 @@ class StationViewModel : HafasTimetableViewModel() {
     val newsLiveData = Transformations.switchMap(refreshLiveData) { force ->
         Transformations.switchMap(stationIdLiveData) { stationId ->
             MutableLiveData<List<News>>().apply {
-                application.repositories.newsRepository.queryNews(
+                application.appRepositories.newsRepository.queryNews(
                     stationId,
                     object : VolleyRestListener<List<News>> {
                         override fun onSuccess(payload: List<News>?) {
@@ -1233,5 +1245,5 @@ class StationViewModel : HafasTimetableViewModel() {
 
 
     val accessibilityFeaturesResource =
-        AccessibilityFeaturesResource(application.repositories.stationRepository)
+        AccessibilityFeaturesResource(this.application.repositories.stationRepository)
 }

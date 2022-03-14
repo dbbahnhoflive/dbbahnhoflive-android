@@ -39,7 +39,7 @@ public class MapOrInfoLink extends MapLink {
         if (ServiceContentType.Local.TRAVEL_CENTER.equals(staticInfo.type)) {
             final LocalService travelCenter = stationFeature.getRisServicesAndCategory().getClosestTravelCenter();
             if (travelCenter != null) {
-                additionalText = travelCenter.getOpeningHours(); // TODO 2116: new AvailabilityRenderer().renderSchedule(travelCenter.getOpeningHours());
+                additionalText = String.valueOf(travelCenter.getParsedOpeningHours());
             }
         }
 

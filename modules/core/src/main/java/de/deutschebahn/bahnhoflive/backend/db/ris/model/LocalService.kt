@@ -1,5 +1,6 @@
 package de.deutschebahn.bahnhoflive.backend.db.ris.model
 
+import de.deutschebahn.bahnhoflive.backend.local.model.OpeningHour
 import de.deutschebahn.bahnhoflive.backend.local.model.ServiceContentType
 
 class LocalService {
@@ -15,6 +16,8 @@ class LocalService {
     var address: AddressWithWeb? = null
 
     var openingHours: String? = null
+
+    var parsedOpeningHours: Map<Int, List<OpeningHour>>? = null
 
     var contact: Contact? = null
 

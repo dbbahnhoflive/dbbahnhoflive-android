@@ -15,6 +15,8 @@ class LocalServices {
         }
     }
 
+    var openHoursProcessingPending = true
+
     val hasPublicFacilities: Boolean get() = localServicesByType.contains(PUBLIC_RESTROOM.tag)
 
     val hasWifi: Boolean get() = localServicesByType.contains(WIFI.tag)

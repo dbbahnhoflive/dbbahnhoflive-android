@@ -5,10 +5,12 @@ import de.deutschebahn.bahnhoflive.backend.db.ris.model.Coordinate2D
 import de.deutschebahn.bahnhoflive.backend.db.ris.model.LocalService
 import de.deutschebahn.bahnhoflive.backend.db.ris.model.LocalServices
 import de.deutschebahn.bahnhoflive.backend.db.ris.model.RISStation
+import de.deutschebahn.bahnhoflive.util.openhours.OpenHoursParser
 
 class RISServicesAndCategory(
     val station: RISStation?,
-    val localServices: LocalServices?
+    val localServices: LocalServices?,
+    val openHoursParser: OpenHoursParser
 ) : ServicesAndCategory {
     fun has(type: LocalService.Type): Boolean = localServices?.get(type) != null
 
@@ -71,4 +73,11 @@ class RISServicesAndCategory(
                 this
             }.firstOrNull()
         }
+
+    fun prepareOpenHours(doneListener: () -> Unit) {
+        if (localServices?.openHoursProcessingPending == true) {
+            localServices.openHoursProcessingPending = false
+            openHoursParser.visitAll(localServices, doneListener)
+        }
+    }
 }

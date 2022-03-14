@@ -36,6 +36,9 @@ public class ServiceContent implements Parcelable {
     private String address;
 
     @Nullable
+    private List<DailyOpeningHours> dailyOpeningHours;
+
+    @Nullable
     private LatLng location;
 
     private Map table;

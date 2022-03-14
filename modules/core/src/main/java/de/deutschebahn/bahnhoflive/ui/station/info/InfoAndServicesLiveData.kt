@@ -67,7 +67,7 @@ class InfoAndServicesLiveData(
                 risServicesAndCategory,
                 staticInfoCollection,
                 LocalService.Type.INFORMATION_COUNTER,
-// TODO 2116      renderSchedule(risServicesAndCategory.details?.dbInformation)
+// TODO 2116               renderSchedule(risServicesAndCategory.details?.dbInformation)
             ),
             composeServiceContent(
                 risServicesAndCategory,
@@ -83,13 +83,13 @@ class InfoAndServicesLiveData(
             staticInfoCollection.typedStationInfos[ServiceContentType.Local.TRAVEL_CENTER]?.let { staticInfo ->
                 risServicesAndCategory.hasTravelCenter.then {
                     ServiceContent(
-                        staticInfo, renderSchedule(travelCenter?.openingHours)
+                        staticInfo, renderSchedule(travelCenter?.parsedOpeningHours.toString())
                             ?: travelCenterOpenHours
                     )
                 } ?: travelCenter?.let { travelCenter ->
                     ServiceContent(
                         staticInfo,
-                        renderSchedule(travelCenter.openingHours),
+                        renderSchedule(travelCenter.parsedOpeningHours.toString()),
                         travelCenter.address?.format(),
                         travelCenter.location
                     )
@@ -104,7 +104,7 @@ class InfoAndServicesLiveData(
     }
 
     private fun renderSchedule(openingHours: String?): String? {
-        return null
+        return openingHours
     }
 
     private fun renderSchedule(schedule: List<AvailabilityEntry?>?): String? =

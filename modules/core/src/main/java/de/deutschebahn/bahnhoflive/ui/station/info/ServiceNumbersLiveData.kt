@@ -8,7 +8,6 @@ package de.deutschebahn.bahnhoflive.ui.station.info
 
 import android.util.Patterns
 import androidx.lifecycle.LiveData
-import de.deutschebahn.bahnhoflive.backend.db.publictrainstation.model.DetailedStopPlace
 import de.deutschebahn.bahnhoflive.backend.db.ris.model.LocalService
 import de.deutschebahn.bahnhoflive.backend.db.ris.model.PhoneNumberType
 import de.deutschebahn.bahnhoflive.backend.local.model.ServiceContent
@@ -17,7 +16,6 @@ import de.deutschebahn.bahnhoflive.repository.RisServiceAndCategoryResource
 import de.deutschebahn.bahnhoflive.stream.livedata.MergedLiveData
 import de.deutschebahn.bahnhoflive.ui.station.StaticInfoCollection
 import de.deutschebahn.bahnhoflive.ui.station.features.RISServicesAndCategory
-import java.util.regex.Pattern
 
 class ServiceNumbersLiveData(
     risServiceAndCategoryResource: RisServiceAndCategoryResource,
@@ -127,14 +125,15 @@ class ServiceNumbersLiveData(
             }
         } else null
 
-    private fun getAdditionalMobilityServiceText(station: DetailedStopPlace): String? =
-        station.mobilityServiceText?.let { mobilityServiceText ->
-            val pattern = Pattern.compile("\\w+,(.+)")
-            val matcher = pattern.matcher(mobilityServiceText)
-            return if (!matcher.matches()) {
-                null
-            } else linkify(StringBuilder("Hinweis:"), matcher.group(1))
-        }
+// TODO 2116
+//    private fun getAdditionalMobilityServiceText(station: DetailedStopPlace): String? =
+//        station.mobilityServiceText?.let { mobilityServiceText ->
+//            val pattern = Pattern.compile("\\w+,(.+)")
+//            val matcher = pattern.matcher(mobilityServiceText)
+//            return if (!matcher.matches()) {
+//                null
+//            } else linkify(StringBuilder("Hinweis:"), matcher.group(1))
+//        }
 
     private fun linkify(stringBuilder: StringBuilder, source: String): String {
         val matcher = Patterns.PHONE.matcher(source)

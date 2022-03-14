@@ -13,10 +13,17 @@ import de.deutschebahn.bahnhoflive.backend.db.ris.model.LocalServices;
 import de.deutschebahn.bahnhoflive.backend.db.ris.model.RISStation;
 import de.deutschebahn.bahnhoflive.repository.station.StationRepository;
 import de.deutschebahn.bahnhoflive.ui.station.features.RISServicesAndCategory;
+import de.deutschebahn.bahnhoflive.util.openhours.OpenHoursParser;
+import kotlin.Unit;
 
 public class RisServiceAndCategoryResource extends RemoteResource<RISServicesAndCategory> {
 
+    private final OpenHoursParser openHoursParser;
     private String stadaId;
+
+    public RisServiceAndCategoryResource(OpenHoursParser openHoursParser) {
+        this.openHoursParser = openHoursParser;
+    }
 
     public void initialize(String id) {
         this.stadaId = id;
@@ -59,7 +66,11 @@ public class RisServiceAndCategoryResource extends RemoteResource<RISServicesAnd
         synchronized private void testDone() {
             countDownLatch.countDown();
             if (countDownLatch.getCount() < 1L) {
-                listener.onSuccess(new RISServicesAndCategory(risStation, localServices));
+                final RISServicesAndCategory risServicesAndCategory = new RISServicesAndCategory(risStation, localServices, openHoursParser);
+                risServicesAndCategory.prepareOpenHours(() -> {
+                    listener.onSuccess(risServicesAndCategory);
+                    return Unit.INSTANCE;
+                });
             }
         }
     }
