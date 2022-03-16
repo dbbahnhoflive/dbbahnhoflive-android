@@ -17,6 +17,7 @@ import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
+import androidx.lifecycle.Transformations;
 import androidx.lifecycle.ViewModelProvider;
 
 import com.google.android.gms.maps.MapFragment;
@@ -42,7 +43,6 @@ public class MapActivity extends AppCompatActivity implements
     private static final String ARG_LOADER_STATES = LoaderFragment.ARG_LOADER_STATES;
     private static final String ARG_STATION_DEPARTURES = "stationDepartures";
 
-    private MapFragment mapFragment;
     private MapOverlayFragment overlayFragment;
 
     private Station station;
@@ -74,12 +74,26 @@ public class MapActivity extends AppCompatActivity implements
 
         setContentView(R.layout.activity_map);
 
-        mapFragment = (MapFragment) getFragmentManager().findFragmentById(R.id.map_fragment);
         overlayFragment = (MapOverlayFragment) getSupportFragmentManager().findFragmentById(R.id.map_overlay_fragment);
 
         if (intent.hasExtra(ARG_STATION_DEPARTURES)) {
             overlayFragment.setStationDepartures(intent.getParcelableArrayListExtra(ARG_STATION_DEPARTURES));
         }
+
+
+        Transformations.distinctUntilChanged(mapViewModel.getMapConsentedLiveData()).observe(this, aBoolean -> {
+            if (aBoolean) {
+                initializeMap();
+            } else {
+                new MapConsentDialogFragment().show(getSupportFragmentManager(), null);
+            }
+        });
+    }
+
+    private void initializeMap() {
+        final MapFragment mapFragment = new MapFragment();
+        getFragmentManager().beginTransaction()
+                .add(R.id.map_fragment, mapFragment).commit();
 
         final View contentView = findViewById(android.R.id.content);
         if (contentView != null) {
@@ -90,6 +104,7 @@ public class MapActivity extends AppCompatActivity implements
                 }
             });
         }
+
         mapFragment.getMapAsync(overlayFragment);
     }
 
