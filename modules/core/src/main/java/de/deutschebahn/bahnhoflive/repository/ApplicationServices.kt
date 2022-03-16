@@ -52,4 +52,9 @@ class ApplicationServices(context: Context) {
     val favoriteStationStoreVersions: SharedPreferences by lazy {
         context.getSharedPreferences("favorite_station_store_versions.pref", Context.MODE_PRIVATE)
     }
+
+    val mapConsentRepository by lazy {
+        MapConsentRepository(context)
+    }
+
 }
