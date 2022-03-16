@@ -21,7 +21,7 @@ class MapConsentDialogFragment : DialogFragment() {
         savedInstanceState: Bundle?
     ) = DialogMapConsentBinding.inflate(inflater, container, false).apply {
 
-        providerPrivacyPolicyLink.setOnClickListener(": https://policies.google.com/privacy?hl=de".createOnClickListener())
+        providerPrivacyPolicyLink.setOnClickListener("https://policies.google.com/privacy?hl=de".createOnClickListener())
         privacyPolicyLink.setOnClickListener("https://www.bahnhof.de/bahnhof-de/datenschutzhinweis_db_bahnhof_live-2887724".createOnClickListener())
 
         acceptButton.setOnClickListener {
