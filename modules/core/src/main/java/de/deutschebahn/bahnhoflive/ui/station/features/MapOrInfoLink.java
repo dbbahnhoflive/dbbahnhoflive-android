@@ -11,7 +11,10 @@ import android.os.Bundle;
 
 import androidx.annotation.NonNull;
 
+import java.util.List;
+
 import de.deutschebahn.bahnhoflive.backend.db.ris.model.LocalService;
+import de.deutschebahn.bahnhoflive.backend.local.model.DailyOpeningHours;
 import de.deutschebahn.bahnhoflive.backend.local.model.ServiceContent;
 import de.deutschebahn.bahnhoflive.backend.local.model.ServiceContentType;
 import de.deutschebahn.bahnhoflive.ui.ServiceContentFragment;
@@ -35,17 +38,17 @@ public class MapOrInfoLink extends MapLink {
             return null;
         }
 
-        String additionalText = null;
+        List<DailyOpeningHours> openingHours = null;
         if (ServiceContentType.Local.TRAVEL_CENTER.equals(staticInfo.type)) {
             final LocalService travelCenter = stationFeature.getRisServicesAndCategory().getClosestTravelCenter();
             if (travelCenter != null) {
-                additionalText = String.valueOf(travelCenter.getParsedOpeningHours());
+                openingHours = travelCenter.getParsedOpeningHours();
             }
         }
 
         final String title = context.getString(stationFeature.getStationFeatureTemplate().getDefinition().getLabel());
         final Bundle args = ServiceContentFragment.createArgs(
-                title, new ServiceContent(staticInfo, additionalText), trackingTag);
+                title, new ServiceContent(staticInfo, null, null, null, openingHours), trackingTag); //TODO 2116
         return ServiceContentFragment.create(args);
     }
 

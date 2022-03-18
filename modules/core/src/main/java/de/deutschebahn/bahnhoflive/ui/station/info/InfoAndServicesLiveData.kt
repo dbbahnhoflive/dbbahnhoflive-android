@@ -66,14 +66,12 @@ class InfoAndServicesLiveData(
             composeServiceContent(
                 risServicesAndCategory,
                 staticInfoCollection,
-                LocalService.Type.INFORMATION_COUNTER,
-// TODO 2116               renderSchedule(risServicesAndCategory.details?.dbInformation)
+                LocalService.Type.INFORMATION_COUNTER
             ),
             composeServiceContent(
                 risServicesAndCategory,
                 staticInfoCollection,
                 LocalService.Type.MOBILE_TRAVEL_SERVICE,
-// TODO 2116                renderSchedule(risServicesAndCategory.details?.localServiceStaff)
             ),
             composeServiceContent(
                 risServicesAndCategory,
@@ -83,15 +81,14 @@ class InfoAndServicesLiveData(
             staticInfoCollection.typedStationInfos[ServiceContentType.Local.TRAVEL_CENTER]?.let { staticInfo ->
                 risServicesAndCategory.hasTravelCenter.then {
                     ServiceContent(
-                        staticInfo, renderSchedule(travelCenter?.parsedOpeningHours.toString())
-                            ?: travelCenterOpenHours
+                        staticInfo, dailyOpeningHours = travelCenter?.parsedOpeningHours
                     )
                 } ?: travelCenter?.let { travelCenter ->
                     ServiceContent(
                         staticInfo,
-                        renderSchedule(travelCenter.parsedOpeningHours.toString()),
-                        travelCenter.address?.format(),
-                        travelCenter.location
+                        address = travelCenter.address?.format(),
+                        location = travelCenter.location,
+                        dailyOpeningHours = travelCenter.parsedOpeningHours
                     )
                 }
             },
@@ -110,14 +107,14 @@ class InfoAndServicesLiveData(
     private fun renderSchedule(schedule: List<AvailabilityEntry?>?): String? =
         availabilityRenderer.renderSchedule(schedule)
 
-    fun composeServiceContent(
-        detailedStopPlace: RISServicesAndCategory,
+    private fun composeServiceContent(
+        risServicesAndCategory: RISServicesAndCategory,
         staticInfoCollection: StaticInfoCollection,
         type: LocalService.Type,
         additionalInfo: String? = null
-    ) = detailedStopPlace.has(type).then {
-        staticInfoCollection.typedStationInfos[type.serviceContentTypeKey]?.let {
-            ServiceContent(it, additionalInfo)
+    ) = risServicesAndCategory.localServices?.get(type)?.let {
+        staticInfoCollection.typedStationInfos[type.serviceContentTypeKey]?.let { staticInfo ->
+            ServiceContent(staticInfo, additionalInfo, dailyOpeningHours = it.parsedOpeningHours)
         }
     }
 

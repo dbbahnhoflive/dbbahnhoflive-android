@@ -5,7 +5,8 @@ import kotlinx.android.parcel.Parcelize
 
 @Parcelize
 data class OpeningHour(
-    val from: Long,
-    val to: Long,
-    val note: String?
+    val dayOfWeek: Int,
+    val fromMinuteOfDay: Int,
+    val toMinuteOfDay: Int,
+    val note: String? = null
 ) : Parcelable

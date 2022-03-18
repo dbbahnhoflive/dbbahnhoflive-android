@@ -1,0 +1,189 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:clipChildren="false"
+    android:clipToPadding="false">
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_marginStart="@dimen/default_space_reverse"
+        android:layout_marginEnd="@dimen/default_space_reverse"
+        android:background="@color/header_background"
+        app:layout_constraintBottom_toBottomOf="@id/day1_hours"
+        app:layout_constraintTop_toTopOf="@id/day1_hours">
+
+    </View>
+
+    <TextView
+        android:id="@+id/title"
+        style="@style/App.LayoutElement.OpeningHours"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:paddingBottom="0dp"
+        android:text="@string/openHours"
+        android:textAppearance="@style/App.TextAppearance.OpeningHours.Label"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <TextView
+        android:id="@+id/labelPeriod"
+        style="@style/App.LayoutElement.OpeningHours"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:paddingTop="0dp"
+        android:textAppearance="@style/App.TextAppearance.OpeningHours.Special"
+        app:layout_constraintTop_toBottomOf="@+id/title"
+        tools:text="@tools:sample/date/ddmmyy" />
+
+    <TextView
+        android:id="@+id/day1_label"
+        style="@style/App.LayoutElement.OpeningHours.DayLabel"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+
+        android:text="@string/today"
+        app:layout_constraintBaseline_toBaselineOf="@+id/day1_hours"
+        app:layout_constraintStart_toStartOf="parent" />
+
+    <TextView
+        android:id="@+id/day1_hours"
+        style="@style/App.LayoutElement.OpeningHours"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@id/labelBarrier"
+        app:layout_constraintTop_toBottomOf="@id/labelPeriod"
+        tools:text="@tools:sample/lorem" />
+
+    <TextView
+        android:id="@+id/day2_label"
+        style="@style/App.LayoutElement.OpeningHours.DayLabel"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:textAppearance="@style/App.TextAppearance.OpeningHours.Label"
+
+        app:layout_constraintBaseline_toBaselineOf="@+id/day2_hours"
+        app:layout_constraintStart_toStartOf="parent"
+        tools:text="Donnerstag" />
+
+    <TextView
+        android:id="@+id/day2_hours"
+        style="@style/App.LayoutElement.OpeningHours"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@id/labelBarrier"
+        app:layout_constraintTop_toBottomOf="@id/day1_hours"
+        tools:text="@tools:sample/lorem" />
+
+    <TextView
+        android:id="@+id/day3_label"
+        style="@style/App.LayoutElement.OpeningHours.DayLabel"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+
+        app:layout_constraintBaseline_toBaselineOf="@+id/day3_hours"
+        app:layout_constraintStart_toStartOf="parent"
+        tools:text="Freitag" />
+
+    <TextView
+        android:id="@+id/day3_hours"
+        style="@style/App.LayoutElement.OpeningHours"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@id/labelBarrier"
+        app:layout_constraintTop_toBottomOf="@id/day2_hours"
+        tools:text="@tools:sample/lorem" />
+
+    <TextView
+        android:id="@+id/day4_label"
+        style="@style/App.LayoutElement.OpeningHours.DayLabel"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+
+        app:layout_constraintBaseline_toBaselineOf="@+id/day4_hours"
+        app:layout_constraintStart_toStartOf="parent"
+        tools:text="Samstag" />
+
+    <TextView
+        android:id="@+id/day4_hours"
+        style="@style/App.LayoutElement.OpeningHours"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@id/labelBarrier"
+        app:layout_constraintTop_toBottomOf="@id/day3_hours"
+        tools:text="@tools:sample/lorem" />
+
+    <TextView
+        android:id="@+id/day5_label"
+        style="@style/App.LayoutElement.OpeningHours.DayLabel"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+
+        app:layout_constraintBaseline_toBaselineOf="@+id/day5_hours"
+        app:layout_constraintStart_toStartOf="parent"
+        tools:text="Sonntag" />
+
+    <TextView
+        android:id="@+id/day5_hours"
+        style="@style/App.LayoutElement.OpeningHours"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@id/labelBarrier"
+        app:layout_constraintTop_toBottomOf="@id/day4_hours"
+        tools:text="@tools:sample/lorem" />
+
+    <TextView
+        android:id="@+id/day6_label"
+        style="@style/App.LayoutElement.OpeningHours.DayLabel"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+
+        app:layout_constraintBaseline_toBaselineOf="@+id/day6_hours"
+        app:layout_constraintStart_toStartOf="parent"
+        tools:text="Montag" />
+
+    <TextView
+        android:id="@+id/day6_hours"
+        style="@style/App.LayoutElement.OpeningHours"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@id/labelBarrier"
+        app:layout_constraintTop_toBottomOf="@id/day5_hours"
+        tools:text="@tools:sample/lorem" />
+
+    <TextView
+        android:id="@+id/day7_label"
+        style="@style/App.LayoutElement.OpeningHours.DayLabel"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+
+        app:layout_constraintBaseline_toBaselineOf="@+id/day7_hours"
+        app:layout_constraintStart_toStartOf="parent"
+        tools:text="Dienstag" />
+
+    <TextView
+        android:id="@+id/day7_hours"
+        style="@style/App.LayoutElement.OpeningHours"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@id/labelBarrier"
+        app:layout_constraintTop_toBottomOf="@id/day6_hours"
+        tools:text="@tools:sample/lorem" />
+
+    <androidx.constraintlayout.widget.Barrier
+        android:id="@+id/labelBarrier"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:barrierDirection="end"
+        app:constraint_referenced_ids="day1_label,day2_label, day3_label,day4_label,day5_label,day6_label,day7_label" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>

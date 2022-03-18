@@ -57,7 +57,7 @@ class ServiceNumbersLiveData(
         )
     }
 
-    fun StaticInfo?.wrapServiceContent() = this?.let { ServiceContent(it) }
+    private fun StaticInfo?.wrapServiceContent() = this?.let { ServiceContent(it) }
 
     private fun composeRateAppContent(staticInfoCollection: StaticInfoCollection?): ServiceContent? =
         staticInfoCollection?.typedStationInfos?.get(ServiceContentType.Local.RATE_APP)

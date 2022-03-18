@@ -5,6 +5,7 @@
   -->
 
 <resources>
+    <style name="App" />
 
     <style name="App.TextAppearance" parent="Base.TextAppearance.AppCompat">
         <item name="android:textSize">@dimen/textsize_default</item>
@@ -68,4 +69,34 @@
         <item name="android:gravity">center</item>
         <item name="android:lines">1</item>
     </style>
+
+    <style name="App.TextAppearance.OpeningHours">
+        <item name="android:lineSpacingMultiplier">1.2</item>
+    </style>
+
+    <style name="App.TextAppearance.OpeningHours.Label">
+        <item name="android:textStyle">bold</item>
+    </style>
+
+    <style name="App.TextAppearance.OpeningHours.Special">
+        <item name="android:textStyle">italic</item>
+    </style>
+
+    <style name="App.LayoutElement">
+        <item name="android:paddingTop">@dimen/default_space</item>
+        <item name="android:paddingBottom">@dimen/default_space</item>
+        <item name="android:paddingStart">@dimen/default_space</item>
+        <item name="android:paddingEnd">@dimen/default_space</item>
+    </style>
+
+    <style name="App.LayoutElement.OpeningHours">
+        <item name="android:textAppearance">@style/App.TextAppearance.OpeningHours</item>
+    </style>
+
+    <style name="App.LayoutElement.OpeningHours.DayLabel">
+        <item name="android:textAppearance">@style/App.TextAppearance.OpeningHours.Label</item>
+        <item name="layout_constraintWidth_min">@dimen/indent</item>
+    </style>
+
+
 </resources>
