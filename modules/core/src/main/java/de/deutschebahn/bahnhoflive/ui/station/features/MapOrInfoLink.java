@@ -48,7 +48,7 @@ public class MapOrInfoLink extends MapLink {
 
         final String title = context.getString(stationFeature.getStationFeatureTemplate().getDefinition().getLabel());
         final Bundle args = ServiceContentFragment.createArgs(
-                title, new ServiceContent(staticInfo, null, null, null, openingHours), trackingTag); //TODO 2116
+                title, new ServiceContent(staticInfo, null, null, null, openingHours), trackingTag);
         return ServiceContentFragment.create(args);
     }
 

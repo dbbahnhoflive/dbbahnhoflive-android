@@ -44,7 +44,6 @@ import de.deutschebahn.bahnhoflive.BaseApplication;
 import de.deutschebahn.bahnhoflive.IconMapper;
 import de.deutschebahn.bahnhoflive.R;
 import de.deutschebahn.bahnhoflive.analytics.TrackingManager;
-import de.deutschebahn.bahnhoflive.backend.db.publictrainstation.model.Availability;
 import de.deutschebahn.bahnhoflive.backend.db.ris.model.LocalService;
 import de.deutschebahn.bahnhoflive.backend.local.model.ServiceContent;
 import de.deutschebahn.bahnhoflive.backend.local.model.ServiceContentType;
@@ -111,7 +110,6 @@ public class ServiceContentFragment extends Fragment {
         });
 
         if (ServiceContentType.DB_INFORMATION.equals(serviceContent.getType()) && serviceContent.getAdditionalText() == null) {
-            final AvailabilityRenderer availabilityRenderer = new AvailabilityRenderer();
             stationViewModel.getRisServiceAndCategoryResource().getData().observe(this, risServicesAndCategory -> {
                 if (risServicesAndCategory == null) {
                     return;
@@ -120,13 +118,6 @@ public class ServiceContentFragment extends Fragment {
                 if (informationCounterService == null) {
                     return;
                 }
-
-                final Availability availability = null; // TODO 2116: informationCounterService.getOpeningHours();
-                if (availability == null) {
-                    return;
-                }
-
-                serviceContent.setAdditionalText(availabilityRenderer.renderSchedule(availability.getAvailability()));
 
                 bindViews();
             });
