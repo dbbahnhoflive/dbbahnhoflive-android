@@ -125,16 +125,6 @@ class ServiceNumbersLiveData(
             }
         } else null
 
-// TODO 2116
-//    private fun getAdditionalMobilityServiceText(station: DetailedStopPlace): String? =
-//        station.mobilityServiceText?.let { mobilityServiceText ->
-//            val pattern = Pattern.compile("\\w+,(.+)")
-//            val matcher = pattern.matcher(mobilityServiceText)
-//            return if (!matcher.matches()) {
-//                null
-//            } else linkify(StringBuilder("Hinweis:"), matcher.group(1))
-//        }
-
     private fun linkify(stringBuilder: StringBuilder, source: String): String {
         val matcher = Patterns.PHONE.matcher(source)
         var cursor = 0
