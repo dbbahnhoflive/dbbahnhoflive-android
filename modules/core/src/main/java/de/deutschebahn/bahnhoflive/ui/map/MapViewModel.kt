@@ -6,6 +6,7 @@
 
 package de.deutschebahn.bahnhoflive.ui.map
 
+import android.app.Application
 import android.content.Context
 import androidx.lifecycle.*
 import com.android.volley.VolleyError
@@ -30,7 +31,7 @@ import io.reactivex.functions.Consumer
 import io.reactivex.schedulers.Schedulers
 import io.reactivex.subjects.BehaviorSubject
 
-class MapViewModel : StadaStationCacheViewModel() {
+class MapViewModel(application: Application) : StadaStationCacheViewModel(application) {
 
     private val dbTimetableResource = DbTimetableResource()
     private val evaIdsErrorObserver = Observer<VolleyError> { volleyError ->
@@ -45,14 +46,19 @@ class MapViewModel : StadaStationCacheViewModel() {
         }
     }
 
-    private val detailedStopPlaceResource = DetailedStopPlaceResource()
+    private val risServiceAndCategoryResource =
+        RisServiceAndCategoryResource(openHoursParser)
 
     private val rimapStationFeatureCollectionResource = RimapStationFeatureCollectionResource()
 
     val parking = ViewModelParking()
 
     val stationResource =
-        StationResource(detailedStopPlaceResource, rimapStationFeatureCollectionResource)
+        StationResource(
+            openHoursParser,
+            risServiceAndCategoryResource,
+            rimapStationFeatureCollectionResource
+        )
 
     val isMapLayedOut = MutableLiveData<Boolean?>()
 
@@ -82,8 +88,10 @@ class MapViewModel : StadaStationCacheViewModel() {
 
             zoneIdLiveData.value = station.id
 
-            detailedStopPlaceResource.initialize(station)
+            risServiceAndCategoryResource.initialize(station)
             rimapStationFeatureCollectionResource.initialize(station)
+
+            stationResource.initialize(station)
 
             dbTimetableResource.initialize(station)
 

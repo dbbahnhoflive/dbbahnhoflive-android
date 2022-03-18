@@ -15,7 +15,6 @@ import androidx.lifecycle.Observer
 import de.deutschebahn.bahnhoflive.R
 import de.deutschebahn.bahnhoflive.analytics.TrackingManager
 import de.deutschebahn.bahnhoflive.backend.db.fasta2.model.FacilityStatus
-import de.deutschebahn.bahnhoflive.backend.db.publictrainstation.model.DetailedStopPlace
 import de.deutschebahn.bahnhoflive.backend.local.model.ServiceContent
 import de.deutschebahn.bahnhoflive.backend.local.model.ServiceContentType
 import de.deutschebahn.bahnhoflive.repository.parking.ParkingsResource
@@ -23,6 +22,7 @@ import de.deutschebahn.bahnhoflive.ui.ServiceContentFragment
 import de.deutschebahn.bahnhoflive.ui.station.*
 import de.deutschebahn.bahnhoflive.ui.station.accessibility.AccessibilityFragment
 import de.deutschebahn.bahnhoflive.ui.station.elevators.ElevatorStatusListsFragment
+import de.deutschebahn.bahnhoflive.ui.station.features.RISServicesAndCategory
 import de.deutschebahn.bahnhoflive.ui.station.parking.ParkingListFragment
 import de.deutschebahn.bahnhoflive.util.Collections
 
@@ -35,7 +35,7 @@ class InfoCategorySelectionFragment : CategorySelectionFragment(
 
     private lateinit var infoAndServicesLiveData: InfoAndServicesLiveData
     private lateinit var serviceNumbersLiveData: ServiceNumbersLiveData
-    private lateinit var detailedStationLiveData: LiveData<DetailedStopPlace?>
+    private lateinit var detailedStationLiveData: LiveData<RISServicesAndCategory?>
     private lateinit var staticInfoLiveData: LiveData<StaticInfoCollection?>
     private lateinit var parkingsResource: ParkingsResource
 
@@ -154,7 +154,7 @@ class InfoCategorySelectionFragment : CategorySelectionFragment(
     }
 
     private fun addWifi(
-        station: DetailedStopPlace?,
+        station: RISServicesAndCategory?,
         staticInfoCollection: StaticInfoCollection
     ): SimpleDynamicCategory? {
         if (station == null || !station.hasWifi) {
@@ -180,7 +180,7 @@ class InfoCategorySelectionFragment : CategorySelectionFragment(
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        detailedStationLiveData = stationViewModel.detailedStopPlaceResource.data
+        detailedStationLiveData = stationViewModel.risServiceAndCategoryResource.data
         elevatorsDataResource = stationViewModel.elevatorsResource.data
         infoAndServicesLiveData = stationViewModel.infoAndServicesLiveData
         serviceNumbersLiveData = stationViewModel.serviceNumbersLiveData

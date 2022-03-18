@@ -16,7 +16,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 import de.deutschebahn.bahnhoflive.backend.rimap.model.RimapPOI;
-import de.deutschebahn.bahnhoflive.repository.DetailedStopPlaceStationWrapper;
 import de.deutschebahn.bahnhoflive.repository.VenueFeature;
 import de.deutschebahn.bahnhoflive.ui.map.Content;
 import de.deutschebahn.bahnhoflive.ui.map.InitialPoiManager;
@@ -47,12 +46,7 @@ public class MapLink extends Link {
             return null;
         }
 
-        final DetailedStopPlaceStationWrapper stationWrapper = DetailedStopPlaceStationWrapper.Companion.of(stationFeature.getDetailedStopPlace());
-        if (stationWrapper == null) {
-            return null;
-        }
-
-        final Intent intent = MapActivity.createIntent(context, stationWrapper);
+        final Intent intent = MapActivity.createIntent(context, stationFeature.getStation());
 
         final VenueFeature venueFeature = stationFeature.getStationFeatureTemplate().getDefinition().getVenueFeature();
         if (venueFeature != null) {

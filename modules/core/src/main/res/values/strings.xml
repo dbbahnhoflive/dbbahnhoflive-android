@@ -32,7 +32,7 @@
     <string name="venue_open">Geöffnet</string>
     <string name="venue_closed">Geschlossen</string>
     <string name="venue_notAvailable">Keine Angabe</string>
-    <string name="venue_openHours">Öffnungszeiten</string>
+    <string name="venue_openHours">@string/openHours</string>
     <string name="venue_payment">Zahlungsmöglichkeiten</string>
 
     <!-- Wagenstand -->
@@ -265,6 +265,13 @@
     <string name="fridays">Freitags</string>
     <string name="saturdays">Samstags</string>
     <string name="sundays">Sonntags</string>
+    <string name="monday">Montag</string>
+    <string name="tuesday">Dienstag</string>
+    <string name="wednesday">Mittwoch</string>
+    <string name="thursday">Donnerstag</string>
+    <string name="friday">Freitag</string>
+    <string name="saturday">Samstag</string>
+    <string name="sunday">Sonntag</string>
     <string name="title_occupancy_explanation">Besucheraufkommen</string>
     <string name="occupancy_level_unknown">Es liegt keine aktuelle Information vor.</string>
     <string name="occupancy_level_low">Weniger Besucher als üblich</string>
@@ -346,4 +353,5 @@
     <string name="map_privacy_policy">Mehr dazu in unserem Datenschutzhinweis</string>
     <string name="map_accept">Karte anzeigen</string>
 
+    <string name="openHours">Öffnungszeiten</string>
 </resources>

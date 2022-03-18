@@ -6,15 +6,11 @@
 
 package de.deutschebahn.bahnhoflive.repository;
 
-import androidx.annotation.Nullable;
-import androidx.lifecycle.Observer;
-
 import com.android.volley.VolleyError;
 
 import java.util.List;
 
 import de.deutschebahn.bahnhoflive.BaseApplication;
-import de.deutschebahn.bahnhoflive.backend.db.publictrainstation.model.DetailedStopPlace;
 import de.deutschebahn.bahnhoflive.backend.db.ris.model.StopPlace;
 import de.deutschebahn.bahnhoflive.backend.local.model.EvaIds;
 import de.deutschebahn.bahnhoflive.repository.timetable.Timetable;
@@ -70,31 +66,7 @@ public class DbTimetableResource extends RemoteResource<Timetable> {
     protected void onStartLoading(final boolean force) {
         final List<String> evaIds = getEvaIds();
         if (evaIds == null) {
-            final DetailedStopPlaceResource detailedStopPlaceResource = new DetailedStopPlaceResource();
-            detailedStopPlaceResource.initialize(getStation());
-            final ResourceClient<DetailedStopPlace, VolleyError> resourceClient = new ResourceClient<>(new Observer<DetailedStopPlace>() {
-                @Override
-                public void onChanged(@Nullable DetailedStopPlace detailedStopPlace) {
-                    if (detailedStopPlace != null) {
-                        setEvaIds(detailedStopPlace.getEvaIds());
-
-                        DbTimetableResource.this.loadData(force);
-                    }
-                }
-            }, new Observer<LoadingStatus>() {
-                @Override
-                public void onChanged(@Nullable LoadingStatus loadingStatus) {
-                    if (loadingStatus != null && loadingStatus == LoadingStatus.BUSY) {
-                        DbTimetableResource.this.getMutableLoadingStatus().setValue(LoadingStatus.BUSY);
-                    }
-                }
-            }, new Observer<VolleyError>() {
-                @Override
-                public void onChanged(@Nullable VolleyError volleyError) {
-                    setError(volleyError);
-                }
-            });
-            resourceClient.observe(detailedStopPlaceResource);
+            setEvaIdsMissing();
         } else {
             timetableCollector.getRefreshTrigger().onNext(force);
         }

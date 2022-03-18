@@ -9,7 +9,6 @@ package de.deutschebahn.bahnhoflive.ui.station.features
 import androidx.annotation.DrawableRes
 import androidx.annotation.StringRes
 import de.deutschebahn.bahnhoflive.R
-import de.deutschebahn.bahnhoflive.backend.db.publictrainstation.model.DetailedStopPlace
 import de.deutschebahn.bahnhoflive.backend.local.model.ServiceContentType
 import de.deutschebahn.bahnhoflive.repository.VenueFeature
 import de.deutschebahn.bahnhoflive.util.Collections
@@ -24,16 +23,22 @@ class StationFeatureDefinition(
 
     private abstract class BasicAvailability : Availability {
 
-        override fun isVisible(detailedStopPlace: DetailedStopPlace, stationFeature: StationFeature): Boolean {
+        override fun isVisible(
+            servicesAndCategory: ServicesAndCategory,
+            stationFeature: StationFeature
+        ): Boolean {
             return true
         }
     }
 
     abstract class CategoryAvailability protected constructor(private val hideFromCategory: Int) : Availability {
 
-        override fun isVisible(detailedStopPlace: DetailedStopPlace, stationFeature: StationFeature): Boolean {
-            return hideFromCategory > detailedStopPlace.category || isAvailable(
-                detailedStopPlace,
+        override fun isVisible(
+            servicesAndCategory: ServicesAndCategory,
+            stationFeature: StationFeature
+        ): Boolean {
+            return hideFromCategory > servicesAndCategory.category || isAvailable(
+                servicesAndCategory,
                 stationFeature
             ) != false
         }
@@ -47,7 +52,7 @@ class StationFeatureDefinition(
             null,
             object : BasicAvailability() {
                 override fun isAvailable(
-                    detailedStopPlace: DetailedStopPlace,
+                    servicesAndCategory: ServicesAndCategory,
                     stationFeature: StationFeature
                 ) = null
             })
@@ -57,10 +62,10 @@ class StationFeatureDefinition(
             VenueFeature.WC,
             object : BasicAvailability() {
                 override fun isAvailable(
-                    detailedStopPlace: DetailedStopPlace,
+                    servicesAndCategory: ServicesAndCategory,
                     stationFeature: StationFeature
                 ): Boolean {
-                    return detailedStopPlace.hasPublicFacilities
+                    return servicesAndCategory.hasPublicFacilities
                 }
             })
         val WIFI = StationFeatureDefinition(R.string.feature_wifi,
@@ -69,10 +74,10 @@ class StationFeatureDefinition(
             VenueFeature.WIFI,
             object : CategoryAvailability(4) {
                 override fun isAvailable(
-                    detailedStopPlace: DetailedStopPlace,
+                    servicesAndCategory: ServicesAndCategory,
                     stationFeature: StationFeature
                 ): Boolean {
-                    return detailedStopPlace.hasWifi
+                    return servicesAndCategory.hasWifi
                 }
             })
         val ELEVATORS = StationFeatureDefinition(
@@ -82,14 +87,14 @@ class StationFeatureDefinition(
             VenueFeature.ELEVATION_AIDS,
             object : Availability {
                 override fun isAvailable(
-                    detailedStopPlace: DetailedStopPlace,
+                    servicesAndCategory: ServicesAndCategory,
                     stationFeature: StationFeature
                 ): Boolean {
-                    return isVisible(detailedStopPlace, stationFeature)
+                    return isVisible(servicesAndCategory, stationFeature)
                 }
 
                 override fun isVisible(
-                    detailedStopPlace: DetailedStopPlace,
+                    servicesAndCategory: ServicesAndCategory,
                     stationFeature: StationFeature
                 ): Boolean {
                     return Collections.hasContent(stationFeature.facilityStatuses)
@@ -101,10 +106,10 @@ class StationFeatureDefinition(
             VenueFeature.LOCKERS,
             object : BasicAvailability() {
                 override fun isAvailable(
-                    detailedStopPlace: DetailedStopPlace,
+                    servicesAndCategory: ServicesAndCategory,
                     stationFeature: StationFeature
                 ): Boolean {
-                    return detailedStopPlace.hasLockerSystem
+                    return servicesAndCategory.hasLockerSystem
                 }
             })
         val DB_INFO = StationFeatureDefinition(R.string.feature_db_info,
@@ -113,10 +118,10 @@ class StationFeatureDefinition(
             VenueFeature.DB_INFORMATION,
             object : CategoryAvailability(4) {
                 override fun isAvailable(
-                    detailedStopPlace: DetailedStopPlace,
+                    servicesAndCategory: ServicesAndCategory,
                     stationFeature: StationFeature
                 ): Boolean {
-                    return detailedStopPlace.hasDbInformation
+                    return servicesAndCategory.hasDbInformation
                 }
             })
         val TRAVEL_CENTER = StationFeatureDefinition(R.string.feature_db_reisezentrum,
@@ -125,10 +130,10 @@ class StationFeatureDefinition(
             VenueFeature.TRAVEL_CENTER,
             object : BasicAvailability() {
                 override fun isAvailable(
-                    detailedStopPlace: DetailedStopPlace,
+                    servicesAndCategory: ServicesAndCategory,
                     stationFeature: StationFeature
                 ): Boolean {
-                    return detailedStopPlace.hasTravelCenter
+                    return servicesAndCategory.hasTravelCenter
                 }
             })
         val DB_LOUNGE = StationFeatureDefinition(
@@ -138,10 +143,10 @@ class StationFeatureDefinition(
             VenueFeature.DB_LOUNGE,
             object : CategoryAvailability(4) {
                 override fun isAvailable(
-                    detailedStopPlace: DetailedStopPlace,
+                    servicesAndCategory: ServicesAndCategory,
                     stationFeature: StationFeature
                 ): Boolean {
-                    return detailedStopPlace.hasDbLounge
+                    return servicesAndCategory.hasDbLounge
                 }
             })
         val TRAVELER_SUPPLIES = StationFeatureDefinition(R.string.feature_traveler_supplies,
@@ -150,10 +155,10 @@ class StationFeatureDefinition(
             null,
             object : BasicAvailability() {
                 override fun isAvailable(
-                    detailedStopPlace: DetailedStopPlace,
+                    servicesAndCategory: ServicesAndCategory,
                     stationFeature: StationFeature
                 ): Boolean {
-                    return detailedStopPlace.hasTravelNecessities
+                    return servicesAndCategory.hasTravelNecessities
                 }
             })
         val PARKING = StationFeatureDefinition(R.string.feature_parkings,
@@ -162,10 +167,10 @@ class StationFeatureDefinition(
             VenueFeature.PARKING,
             object : CategoryAvailability(4) {
                 override fun isAvailable(
-                    detailedStopPlace: DetailedStopPlace,
+                    servicesAndCategory: ServicesAndCategory,
                     stationFeature: StationFeature
                 ): Boolean {
-                    return detailedStopPlace.hasParking
+                    return servicesAndCategory.hasParking
                 }
             })
         val BICYCLE_PARKING = StationFeatureDefinition(R.string.feature_bicycle,
@@ -174,10 +179,10 @@ class StationFeatureDefinition(
             VenueFeature.BYCICLE_PARKING,
             object : CategoryAvailability(4) {
                 override fun isAvailable(
-                    detailedStopPlace: DetailedStopPlace,
+                    servicesAndCategory: ServicesAndCategory,
                     stationFeature: StationFeature
                 ): Boolean {
-                    return detailedStopPlace.hasBicycleParking
+                    return servicesAndCategory.hasBicycleParking
                 }
             })
         val CAR_RENTAL = StationFeatureDefinition(R.string.feature_rental,
@@ -186,10 +191,10 @@ class StationFeatureDefinition(
             VenueFeature.CAR_RENTAL,
             object : CategoryAvailability(4) {
                 override fun isAvailable(
-                    detailedStopPlace: DetailedStopPlace,
+                    servicesAndCategory: ServicesAndCategory,
                     stationFeature: StationFeature
                 ): Boolean {
-                    return detailedStopPlace.hasCarRental
+                    return servicesAndCategory.hasCarRental
                 }
             })
         val LOST_AND_FOUND = StationFeatureDefinition(R.string.feature_lost_and_found,
@@ -198,10 +203,10 @@ class StationFeatureDefinition(
             VenueFeature.LOST_AND_FOUND,
             object : CategoryAvailability(4) {
                 override fun isAvailable(
-                    detailedStopPlace: DetailedStopPlace,
+                    servicesAndCategory: ServicesAndCategory,
                     stationFeature: StationFeature
                 ): Boolean {
-                    return detailedStopPlace.hasLostAndFound
+                    return servicesAndCategory.hasLostAndFound
                 }
             })
         val TAXI = StationFeatureDefinition(R.string.feature_taxi,
@@ -210,10 +215,10 @@ class StationFeatureDefinition(
             VenueFeature.TAXI,
             object : CategoryAvailability(4) {
                 override fun isAvailable(
-                    detailedStopPlace: DetailedStopPlace,
+                    servicesAndCategory: ServicesAndCategory,
                     stationFeature: StationFeature
                 ): Boolean {
-                    return detailedStopPlace.hasTaxiRank
+                    return servicesAndCategory.hasTaxiRank
                 }
             })
     }

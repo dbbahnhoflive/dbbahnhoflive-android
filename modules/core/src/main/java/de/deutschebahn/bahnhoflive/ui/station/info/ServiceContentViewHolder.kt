@@ -3,7 +3,6 @@ package de.deutschebahn.bahnhoflive.ui.station.info
 import android.content.Intent
 import android.net.Uri
 import android.text.Html
-import android.text.TextUtils
 import android.text.method.LinkMovementMethod
 import android.util.Patterns
 import android.view.LayoutInflater
@@ -16,8 +15,10 @@ import de.deutschebahn.bahnhoflive.BaseApplication
 import de.deutschebahn.bahnhoflive.IconMapper
 import de.deutschebahn.bahnhoflive.R
 import de.deutschebahn.bahnhoflive.analytics.TrackingManager
+import de.deutschebahn.bahnhoflive.backend.local.model.DailyOpeningHours
 import de.deutschebahn.bahnhoflive.backend.local.model.ServiceContent
 import de.deutschebahn.bahnhoflive.backend.local.model.ServiceContentType
+import de.deutschebahn.bahnhoflive.databinding.IncludeDescriptionOpeningHoursBinding
 import de.deutschebahn.bahnhoflive.ui.map.content.MapIntent
 import de.deutschebahn.bahnhoflive.ui.station.CommonDetailsCardViewHolder
 import de.deutschebahn.bahnhoflive.ui.station.ServiceContents
@@ -25,6 +26,7 @@ import de.deutschebahn.bahnhoflive.util.PhoneIntent
 import de.deutschebahn.bahnhoflive.view.SingleSelectionManager
 import kotlinx.android.synthetic.main.card_expandable_station_info.view.*
 import kotlinx.android.synthetic.main.include_description_link_part.view.*
+import java.text.SimpleDateFormat
 import java.util.*
 
 open class ServiceContentViewHolder(
@@ -58,6 +60,11 @@ open class ServiceContentViewHolder(
         statusView.visibility = View.GONE
         titleView.setLines(2)
     }
+
+    val timeFormat = SimpleDateFormat("HH:mm", Locale.GERMANY)
+    val fromDateFormat = SimpleDateFormat("dd.MM", Locale.GERMANY)
+    val toDateFormat = SimpleDateFormat("dd.MM.yy", Locale.GERMANY)
+
 
     override fun onBind(item: ServiceContent) {
         super.onBind(item)
@@ -106,8 +113,8 @@ open class ServiceContentViewHolder(
                     }
 
                     val additionalText = item.additionalText
-                    if (!TextUtils.isEmpty(additionalText)) {
-                        addHtmlPart(additionalText)
+                    additionalText.takeUnless { it.isNullOrEmpty() }?.let {
+                        addHtmlPart(it)
                     }
                 }
             }
@@ -183,7 +190,61 @@ open class ServiceContentViewHolder(
     private fun defaultRender(item: ServiceContent) {
         renderDescriptionText(item)
         renderAdditionalText(item)
+        item.dailyOpeningHours?.render()
     }
+
+    private fun List<DailyOpeningHours>.render() {
+        val dayOfWeekLabelResources = listOf(
+            R.string.sunday,
+            R.string.monday,
+            R.string.tuesday,
+            R.string.wednesday,
+            R.string.thursday,
+            R.string.friday,
+            R.string.saturday,
+        )
+        IncludeDescriptionOpeningHoursBinding.inflate(layoutInflater, descriptionLayout, true)
+            .apply {
+
+                labelPeriod.text =
+                    "${fromDateFormat.format(first().timestamp)} - ${toDateFormat.format(last().timestamp)}"
+
+                asSequence().zip(
+                    sequenceOf(
+                        null to day1Hours,
+                        day2Label to day2Hours,
+                        day3Label to day3Hours,
+                        day4Label to day4Hours,
+                        day5Label to day5Hours,
+                        day6Label to day6Hours,
+                        day7Label to day7Hours,
+                    )
+                ).forEach { (dailyOpeningHours, views) ->
+                    val (labelView, contentView) = views
+                    dayOfWeekLabelResources.getOrNull(dailyOpeningHours.dayOfWeek)
+                        ?.let { dayLabelResourceId ->
+                            labelView?.setText(dayLabelResourceId)
+                        }
+                    contentView.text = dailyOpeningHours.list.joinToString("\n") { openingHour ->
+                        listOfNotNull(
+                            "${openingHour.fromMinuteOfDay.renderMinuteAsTimeOfDay()} - ${openingHour.toMinuteOfDay.renderMinuteAsTimeOfDay()} Uhr",
+                            openingHour.note
+                        ).joinToString("\n")
+                    }.takeUnless { it.isBlank() }
+                        ?: layoutInflater.context.getText(R.string.status_closed)
+
+                }
+
+            }
+    }
+
+    private fun Int.renderMinuteAsTimeOfDay(): String {
+        val hours = div(60).withLeadingZeroes()
+        val minutes = mod(60).withLeadingZeroes()
+        return "$hours:$minutes"
+    }
+
+    private fun Int.withLeadingZeroes() = toString().padStart(2, '0')
 
     private fun renderAdditionalText(item: ServiceContent) {
         item.additionalText

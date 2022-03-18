@@ -6,15 +6,16 @@
 
 package de.deutschebahn.bahnhoflive.ui.hub
 
+import android.app.Application
 import de.deutschebahn.bahnhoflive.backend.hafas.model.HafasStation
 import de.deutschebahn.bahnhoflive.backend.hafas.model.HafasTimetable
 import de.deutschebahn.bahnhoflive.ui.StadaStationCacheViewModel
 
-class HubViewModel : StadaStationCacheViewModel() {
+class HubViewModel(application: Application) : StadaStationCacheViewModel(application) {
 
     val hafasData: ArrayList<HafasTimetable> = ArrayList()
 
-    fun buildhafasData(hafasStations : List<HafasStation>) {
+    fun buildhafasData(hafasStations: List<HafasStation>) {
         wrapTimetables(hafasStations)
     }
 
