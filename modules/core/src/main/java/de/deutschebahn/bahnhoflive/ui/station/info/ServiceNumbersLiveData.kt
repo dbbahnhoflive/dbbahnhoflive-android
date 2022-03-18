@@ -8,10 +8,9 @@ package de.deutschebahn.bahnhoflive.ui.station.info
 
 import android.util.Patterns
 import androidx.lifecycle.LiveData
-import de.deutschebahn.bahnhoflive.backend.db.publictrainstation.model.DetailedStopPlace
-import de.deutschebahn.bahnhoflive.backend.local.model.ComplaintableStation
 import de.deutschebahn.bahnhoflive.backend.db.ris.model.LocalService
 import de.deutschebahn.bahnhoflive.backend.db.ris.model.PhoneNumberType
+import de.deutschebahn.bahnhoflive.backend.local.model.ComplaintableStation
 import de.deutschebahn.bahnhoflive.backend.local.model.ServiceContent
 import de.deutschebahn.bahnhoflive.backend.local.model.ServiceContentType
 import de.deutschebahn.bahnhoflive.repository.RisServiceAndCategoryResource
@@ -53,7 +52,7 @@ class ServiceNumbersLiveData(
                 staticInfoCollection,
                 LocalService.Type.LOST_PROPERTY_OFFICE
             ),
-            composeStationComplaintsContent(detailedStopPlace),
+            composeStationComplaintsContent(risServicesAndCategory),
             composeAppIssuesContent(staticInfoCollection),
             composeRateAppContent(staticInfoCollection)
         )
@@ -69,8 +68,8 @@ class ServiceNumbersLiveData(
         staticInfoCollection?.typedStationInfos?.get(ServiceContentType.Local.APP_ISSUE)
             .wrapServiceContent()
 
-    private fun composeStationComplaintsContent(detailedStopPlace: DetailedStopPlace?): ServiceContent? =
-        detailedStopPlace?.takeIf { it.stadaId in ComplaintableStation.ids }?.let {
+    private fun composeStationComplaintsContent(detailedStopPlace: RISServicesAndCategory?): ServiceContent? =
+        detailedStopPlace?.station?.takeIf { it.stationID in ComplaintableStation.ids }?.let {
             ServiceContent(
                 StaticInfo(
                     ServiceContentType.Local.STATION_COMPLAINT,
