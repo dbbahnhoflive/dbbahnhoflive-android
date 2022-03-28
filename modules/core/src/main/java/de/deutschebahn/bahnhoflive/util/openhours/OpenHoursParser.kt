@@ -163,7 +163,7 @@ class OpenHoursParser(
                             val dayOfWeek = day.mod(7)
                             DailyOpeningHours(
                                 dayOfWeek,
-                                currentTimeMillis + DAYS.toMillis(day.toLong()),
+                                currentTimeMillis + DAYS.toMillis(day.toLong() - currentDayOfWeek),
                                 map.getOrElse(dayOfWeek) { emptyList() })
                         }
                     }
