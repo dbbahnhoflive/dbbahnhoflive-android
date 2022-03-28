@@ -16,7 +16,7 @@
 			"type": "bahnhofsmission"
 		},
 		{
-			"descriptionText": "<p>Die Mobilitätsservice-Zentrale organisiert alles Notwendige, wenn Sie Hilfe beim Ein-, Um- oder Aussteigen benötigen. Damit wir Sie optimal betreuen können bitten wir Sie, sich bis spätestens bis <b>20:00 Uhr des Vortages</b> Ihrer Reise anzumelden. Bei Internationalen Reisen <b>spätestens 48 Stunden</b> im Voraus.</p><dbactionbutton href=\"https://msz-hilfe.specials-bahn.de/\">Online-Formular</dbactionbutton><p><b><br>Weitere Kontaktmöglichkeiten</b></p><dbactionbutton href=\"tel:03065212888\">030 6521 2888</dbactionbutton><dbactionbutton href=\"mailto:msz@deutschebahn.com\">E-Mail</dbactionbutton>",
+			"descriptionText": "<p>Die Mobilitätsservice-Zentrale organisiert alles Notwendige, wenn Sie Hilfe beim Ein-, Um- oder Aussteigen benötigen. Damit wir Sie optimal betreuen können bitten wir Sie, sich bis spätestens bis <b>20:00 Uhr des Vortages</b> Ihrer Reise anzumelden. Bei Internationalen Reisen <b>spätestens 48 Stunden</b> im Voraus.</p><dbactionbutton href=\"https://msz-bahn.de/\">Online-Formular</dbactionbutton><p><b><br>Weitere Kontaktmöglichkeiten</b></p><dbactionbutton href=\"tel:03065212888\">030 6521 2888</dbactionbutton><dbactionbutton href=\"mailto:msz@deutschebahn.com\">E-Mail</dbactionbutton>",
 			"title": "Mobilitätsservice",
 			"type": "mobilitaetsservice"
 		},
