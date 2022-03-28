@@ -10,10 +10,11 @@ import androidx.core.net.toUri
 import androidx.fragment.app.DialogFragment
 import androidx.fragment.app.activityViewModels
 import de.deutschebahn.bahnhoflive.databinding.DialogMapConsentBinding
+import de.deutschebahn.bahnhoflive.repository.AssetDocumentBroker
 
 class MapConsentDialogFragment : DialogFragment() {
 
-    val mapViewModel: MapViewModel by activityViewModels()
+    private val mapViewModel: MapViewModel by activityViewModels()
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -22,7 +23,14 @@ class MapConsentDialogFragment : DialogFragment() {
     ) = DialogMapConsentBinding.inflate(inflater, container, false).apply {
 
         providerPrivacyPolicyLink.setOnClickListener("https://policies.google.com/privacy?hl=de".createOnClickListener())
-        privacyPolicyLink.setOnClickListener("https://www.bahnhof.de/bahnhof-de/datenschutzhinweis_db_bahnhof_live-2887724".createOnClickListener())
+        privacyPolicyLink.setOnClickListener(activity?.let { activity ->
+            AssetDocumentBroker(activity).takeIf { it.hasLegalNotice }?.run {
+                View.OnClickListener {
+                    showDocument(AssetDocumentBroker.Document.PRIVACY_POLICY)
+                }
+            }
+        }
+            ?: "https://www.bahnhof.de/bahnhof-de/datenschutzhinweis_db_bahnhof_live-2887724".createOnClickListener())
 
         acceptButton.setOnClickListener {
             onAccept()

@@ -20,7 +20,6 @@ import de.deutschebahn.bahnhoflive.analytics.TrackingManager
 import de.deutschebahn.bahnhoflive.repository.AssetDocumentBroker
 import de.deutschebahn.bahnhoflive.tutorial.TutorialManager
 import de.deutschebahn.bahnhoflive.tutorial.TutorialView
-import de.deutschebahn.bahnhoflive.ui.WebViewActivity
 import de.deutschebahn.bahnhoflive.ui.map.MapActivity
 import kotlinx.android.synthetic.main.fragment_hub.*
 import kotlinx.android.synthetic.main.fragment_hub.view.*
@@ -109,19 +108,17 @@ class HubFragment : androidx.fragment.app.Fragment() {
             }
         }
 
-        with(AssetDocumentBroker(requireContext())) {
+        with(AssetDocumentBroker(requireContext(), trackingManager)) {
             view.legal_notice?.prepareLegalButton(
                 hasLegalNotice,
-                TrackingManager.Entity.IMPRESSUM,
-                AssetDocumentBroker.FILE_NAME_LEGAL_NOTICE,
-                "Impressum"
+                AssetDocumentBroker.Document.LEGAL_NOTICE,
+                this
             )
 
             view.privacy_policy?.prepareLegalButton(
                 hasPrivacyPolicy,
-                TrackingManager.Entity.DATENSCHUTZ,
-                AssetDocumentBroker.FILE_NAME_PRIVACY_POLICY,
-                "Datenschutz"
+                AssetDocumentBroker.Document.PRIVACY_POLICY,
+                this
             )
         }
 
@@ -129,7 +126,7 @@ class HubFragment : androidx.fragment.app.Fragment() {
         view.findViewById<View>(R.id.btn_map).setOnClickListener {
             trackingManager.track(TrackingManager.TYPE_ACTION, TrackingManager.Screen.H0, TrackingManager.Action.TAP, TrackingManager.UiElement.MAP_BUTTON)
 
-            val intent = MapActivity.createIntent(activity, hubViewModel!!.hafasData)
+            val intent = MapActivity.createIntent(activity, hubViewModel.hafasData)
             startActivity(intent)
         }
 
@@ -140,18 +137,12 @@ class HubFragment : androidx.fragment.app.Fragment() {
 
     private fun TextView.prepareLegalButton(
         available: Boolean,
-        entityTag: String,
-        contentUrl: String,
-        contentTitle: String
+        document: AssetDocumentBroker.Document,
+        assetDocumentBroker: AssetDocumentBroker
     ) {
         if (available) {
             setOnClickListener {
-                trackingManager.track(
-                    TrackingManager.TYPE_STATE,
-                    TrackingManager.Screen.D2,
-                    entityTag
-                )
-                startWebViewActivity(contentUrl, contentTitle)
+                assetDocumentBroker.showDocument(document)
             }
         } else {
             visibility = View.GONE
@@ -164,10 +155,6 @@ class HubFragment : androidx.fragment.app.Fragment() {
         pager.setCurrentItem(latestTab, false)
     }
 
-    fun startWebViewActivity(url: String, title: String) {
-        val intent = WebViewActivity.createIntent(activity, url, title)
-        startActivity(intent)
-    }
 
 
     override fun onStop() {
