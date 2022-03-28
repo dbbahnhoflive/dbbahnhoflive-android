@@ -43,7 +43,7 @@ class ServiceNumbersLiveData(
             composeServiceContent(
                 risServicesAndCategory,
                 staticInfoCollection,
-                LocalService.Type.MOBILE_TRAVEL_SERVICE
+                LocalService.Type.HANDICAPPED_TRAVELLER_SERVICE
             ),
             composeThreeSContent(risServicesAndCategory, staticInfoCollection),
             composeServiceContent(

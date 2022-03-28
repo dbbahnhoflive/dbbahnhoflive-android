@@ -78,7 +78,10 @@ class LocalService {
         /**
          * Service für mobilitätseingeschränkte Reisende
          **/
-        HANDICAPPED_TRAVELLER_SERVICE("HANDICAPPED_TRAVELLER_SERVICE"),
+        HANDICAPPED_TRAVELLER_SERVICE(
+            "HANDICAPPED_TRAVELLER_SERVICE",
+            ServiceContentType.MOBILITY_SERVICE
+        ),
 
         /**
          * Schließfächer
