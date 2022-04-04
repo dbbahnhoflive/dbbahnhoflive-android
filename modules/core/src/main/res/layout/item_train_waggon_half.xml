@@ -54,7 +54,7 @@
                     android:layout_height="wrap_content"
                     android:layout_gravity="center_horizontal"
                     android:layout_marginTop="5dp"
-                    android:textSize="@dimen/wagenstand_12sp_textSize"
+                    android:textSize="@dimen/wagenstand_17sp_textSize"
                     tools:text="29"
                     android:contentDescription=""
                     android:importantForAccessibility="no" />
