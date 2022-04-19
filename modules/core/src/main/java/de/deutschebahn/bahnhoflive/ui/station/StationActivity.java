@@ -195,17 +195,9 @@ public class StationActivity extends AppCompatActivity implements
                 startActivity(intent);
             }
         });
-        updateMapButton();
 
         final StationResource stationResource = stationViewModel.getStationResource();
-        stationResource.getData().observe(this, new Observer<Station>() {
-            @Override
-            public void onChanged(@Nullable Station station) {
-                if (station != null) {
-                    mapButton.setVisibility(station.getLocation() != null ? View.VISIBLE : View.GONE);
-                }
-            }
-        });
+        stationViewModel.getMapAvailableLiveData().observe(this, aBoolean -> mapButton.setVisibility(aBoolean ? View.VISIBLE : View.GONE));
 
         hafasTimetableViewModel.initialize(stationResource);
 

@@ -37,6 +37,7 @@ import de.deutschebahn.bahnhoflive.repository.feedback.WhatsAppFeeback
 import de.deutschebahn.bahnhoflive.repository.parking.ViewModelParking
 import de.deutschebahn.bahnhoflive.stream.livedata.MergedLiveData
 import de.deutschebahn.bahnhoflive.stream.rx.Optional
+import de.deutschebahn.bahnhoflive.ui.accessibility.SpokenFeedbackAccessibilityLiveData
 import de.deutschebahn.bahnhoflive.ui.map.Content
 import de.deutschebahn.bahnhoflive.ui.map.MapActivity
 import de.deutschebahn.bahnhoflive.ui.station.features.*
@@ -1246,4 +1247,11 @@ class StationViewModel(application: Application) : HafasTimetableViewModel(appli
 
     val accessibilityFeaturesResource =
         AccessibilityFeaturesResource(this.application.repositories.stationRepository)
+
+    val mapAvailableLiveData =
+        SpokenFeedbackAccessibilityLiveData(application).switchMap { spokenFeedbackAccessibilityEnabled ->
+            stationResource.data.map { mergedStation ->
+                !(spokenFeedbackAccessibilityEnabled || mergedStation.location == null)
+            }
+        }
 }

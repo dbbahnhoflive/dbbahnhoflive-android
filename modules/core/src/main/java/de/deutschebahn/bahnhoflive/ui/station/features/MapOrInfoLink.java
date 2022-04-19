@@ -7,9 +7,11 @@
 package de.deutschebahn.bahnhoflive.ui.station.features;
 
 import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 
 import java.util.List;
 
@@ -18,6 +20,7 @@ import de.deutschebahn.bahnhoflive.backend.local.model.DailyOpeningHours;
 import de.deutschebahn.bahnhoflive.backend.local.model.ServiceContent;
 import de.deutschebahn.bahnhoflive.backend.local.model.ServiceContentType;
 import de.deutschebahn.bahnhoflive.ui.ServiceContentFragment;
+import de.deutschebahn.bahnhoflive.ui.accessibility.ContextXKt;
 import de.deutschebahn.bahnhoflive.ui.station.StaticInfoCollection;
 import de.deutschebahn.bahnhoflive.ui.station.info.StaticInfo;
 
@@ -52,9 +55,19 @@ public class MapOrInfoLink extends MapLink {
         return ServiceContentFragment.create(args);
     }
 
+    @Nullable
     @Override
-    public boolean isAvailable(StationFeature stationFeature) {
-        return super.isAvailable(stationFeature) || getStaticInfo(stationFeature) != null;
+    public Intent createMapActivityIntent(Context context, StationFeature stationFeature) {
+        if (ContextXKt.isSpokenFeedbackAccessibilityEnabled(context)) {
+            return null;
+        }
+
+        return super.createMapActivityIntent(context, stationFeature);
+    }
+
+    @Override
+    public boolean isAvailable(Context context, StationFeature stationFeature) {
+        return super.isAvailable(context, stationFeature) || getStaticInfo(stationFeature) != null;
 
     }
 

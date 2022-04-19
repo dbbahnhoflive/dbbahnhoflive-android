@@ -354,4 +354,5 @@
     <string name="map_accept">Karte anzeigen</string>
 
     <string name="openHours">Öffnungszeiten</string>
+    <string name="map_lacks_support_for_spoken_feedback_accessibility">Die Kartenansicht unterstützt keine Eingabehilfe mit gesprochener Rückmeldung und ist daher im Moment nicht verfügbar.</string>
 </resources>

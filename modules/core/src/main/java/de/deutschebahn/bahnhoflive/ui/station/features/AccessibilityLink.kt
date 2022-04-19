@@ -16,7 +16,10 @@ class AccessibilityLink(trackingTag: String) :
         stationFeature: StationFeature
     ) = AccessibilityFragment()
 
-    override fun isAvailable(stationFeature: StationFeature): Boolean {
+    override fun isAvailable(
+        context: Context,
+        stationFeature: StationFeature
+    ): Boolean {
         return true
     }
 
