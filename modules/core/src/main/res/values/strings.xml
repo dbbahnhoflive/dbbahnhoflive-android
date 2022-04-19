@@ -354,4 +354,8 @@
     <string name="map_accept">Karte anzeigen</string>
 
     <string name="openHours">Öffnungszeiten</string>
+
+    <string name="template_filter_content_hint">%1$s bis %2$s Uhr%3$s</string>
+    <string name="filter_content_hint_train_categories">Verkehrende Zugtypen</string>
+    <string name="filter_content_hint_tracks">Bediente Gleise</string>
 </resources>
