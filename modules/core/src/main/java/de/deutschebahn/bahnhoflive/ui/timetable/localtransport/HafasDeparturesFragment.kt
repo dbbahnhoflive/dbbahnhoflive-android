@@ -44,9 +44,18 @@ class HafasDeparturesFragment : RecyclerFragment<HafasDeparturesAdapter>(R.layou
         super.onCreate(savedInstanceState)
 
         adapter = HafasDeparturesAdapter(View.OnClickListener {
-            trackingManager.track(TrackingManager.TYPE_ACTION, TrackingManager.Screen.H2, TrackingManager.Action.TAP, TrackingManager.UiElement.FILTER_BUTTON)
+            trackingManager.track(
+                TrackingManager.TYPE_ACTION,
+                TrackingManager.Screen.H2,
+                TrackingManager.Action.TAP,
+                TrackingManager.UiElement.FILTER_BUTTON
+            )
             val filter = adapter?.filter
-            val hafasFilterDialogFragment = HafasFilterDialogFragment.create(if (filter == null) null else filter.label, adapter?.getFilterOptions())
+            val hafasFilterDialogFragment = HafasFilterDialogFragment.create(
+                hafasTimetableViewModel.hafasTimetableResource.data?.value?.intervalEnd?.time ?: -1,
+                if (filter == null) null else filter.label,
+                adapter?.getFilterOptions()
+            )
             hafasFilterDialogFragment.show(childFragmentManager, "filter")
         }, trackingManager, View.OnClickListener {
             hafasTimetableViewModel.loadMore()
