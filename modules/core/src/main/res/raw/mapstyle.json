@@ -20,7 +20,7 @@
     "featureType": "transit",
     "stylers": [
       {
-        "visibility": "on"
+        "visibility": "off"
       }
     ]
   }
