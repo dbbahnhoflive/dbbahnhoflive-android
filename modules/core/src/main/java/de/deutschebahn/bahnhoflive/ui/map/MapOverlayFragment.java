@@ -733,32 +733,34 @@ public class MapOverlayFragment extends Fragment implements OnMapReadyCallback, 
             stationResourceData.observe(this, new Observer<Station>() {
                 @Override
                 public void onChanged(@Nullable Station station) {
-                    final StationMarkerContent stationMarkerContent = new StationMarkerContent(station, requireContext());
-                    final MarkerBinder markerBinder = new MarkerBinder(stationMarkerContent, zoom, level, stationRequestArguments.filterItem);
-                    stationRequestArguments.categoryMarkerBinders.add(markerBinder);
-                    markerBinders.add(markerBinder);
-                    final DbTimetableResource dbTimetableResource = new DbTimetableResource(station, stationRequestArguments.stopPlace);
-                    dbTimetableResource.loadIfNecessary();
-                    stationMarkerContent.setTimetable(dbTimetableResource);
-                    final MapOverlayFragment owner = MapOverlayFragment.this;
-                    dbTimetableResource.getData().observe(owner, new Observer<Timetable>() {
-                        @Override
-                        public void onChanged(@Nullable Timetable timetable) {
-                            flyoutsAdapter.notifyDataSetChanged();
-                        }
-                    });
-                    dbTimetableResource.getError().observe(owner, new Observer<VolleyError>() {
-                        @Override
-                        public void onChanged(@Nullable VolleyError volleyError) {
-                            flyoutsAdapter.notifyDataSetChanged();
-                        }
-                    });
-                    dbTimetableResource.getLoadingStatus().observe(owner, new Observer<LoadingStatus>() {
-                        @Override
-                        public void onChanged(@Nullable LoadingStatus loadingStatus) {
-                            flyoutsAdapter.notifyDataSetChanged();
-                        }
-                    });
+                    if (station != null) {
+                        final StationMarkerContent stationMarkerContent = new StationMarkerContent(station, requireContext());
+                        final MarkerBinder markerBinder = new MarkerBinder(stationMarkerContent, zoom, level, stationRequestArguments.filterItem);
+                        stationRequestArguments.categoryMarkerBinders.add(markerBinder);
+                        markerBinders.add(markerBinder);
+                        final DbTimetableResource dbTimetableResource = new DbTimetableResource(station, stationRequestArguments.stopPlace);
+                        dbTimetableResource.loadIfNecessary();
+                        stationMarkerContent.setTimetable(dbTimetableResource);
+                        final MapOverlayFragment owner = MapOverlayFragment.this;
+                        dbTimetableResource.getData().observe(owner, new Observer<Timetable>() {
+                            @Override
+                            public void onChanged(@Nullable Timetable timetable) {
+                                flyoutsAdapter.notifyDataSetChanged();
+                            }
+                        });
+                        dbTimetableResource.getError().observe(owner, new Observer<VolleyError>() {
+                            @Override
+                            public void onChanged(@Nullable VolleyError volleyError) {
+                                flyoutsAdapter.notifyDataSetChanged();
+                            }
+                        });
+                        dbTimetableResource.getLoadingStatus().observe(owner, new Observer<LoadingStatus>() {
+                            @Override
+                            public void onChanged(@Nullable LoadingStatus loadingStatus) {
+                                flyoutsAdapter.notifyDataSetChanged();
+                            }
+                        });
+                    }
 
                     stationResourceData.removeObserver(this);
 
