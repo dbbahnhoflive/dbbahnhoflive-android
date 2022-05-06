@@ -18,8 +18,8 @@ import de.deutschebahn.bahnhoflive.backend.hafas.model.HafasStation
 import de.deutschebahn.bahnhoflive.persistence.FavoriteStationsStore
 import de.deutschebahn.bahnhoflive.repository.InternalStation
 import de.deutschebahn.bahnhoflive.ui.DbStationWrapper
-import de.deutschebahn.bahnhoflive.ui.search.DBStationSearchResult
 import de.deutschebahn.bahnhoflive.ui.search.HafasStationSearchResult
+import de.deutschebahn.bahnhoflive.ui.search.StoredStationSearchResult
 import kotlinx.android.synthetic.main.fragment_favorites.*
 
 class FavoritesFragment : androidx.fragment.app.Fragment() {
@@ -114,7 +114,7 @@ class FavoritesFragment : androidx.fragment.app.Fragment() {
                             recentSearchesStore,
                             favoriteHafasStationsStore
                         )
-                        is DbStationWrapper -> DBStationSearchResult(
+                        is DbStationWrapper -> StoredStationSearchResult(
                             it.wrappedStation,
                             recentSearchesStore,
                             favoriteDbStationsStore

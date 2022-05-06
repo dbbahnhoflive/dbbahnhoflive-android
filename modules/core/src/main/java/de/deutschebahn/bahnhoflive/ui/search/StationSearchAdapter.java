@@ -63,8 +63,10 @@ class StationSearchAdapter extends RecyclerView.Adapter<ViewHolder> {
             @Override
             public void onSelectionChanged(SingleSelectionManager selectionManager) {
                 final SearchResult selectedItem = selectionManager.getSelectedItem(searchResults);
-                if (selectedItem instanceof DBStationSearchResult) {
-                    ((DBStationSearchResult) selectedItem).getTimetable().loadIfNecessary();
+                if (selectedItem instanceof StoredStationSearchResult) {
+                    ((StoredStationSearchResult) selectedItem).getTimetable().loadIfNecessary();
+                } else if (selectedItem instanceof StopPlaceSearchResult) {
+                    ((StopPlaceSearchResult) selectedItem).getTimetable().loadIfNecessary();
                 } else if (selectedItem instanceof HafasStationSearchResult) {
                     ((HafasStationSearchResult) selectedItem).getTimetable().requestTimetable(true, "search");
                 }
@@ -77,6 +79,7 @@ class StationSearchAdapter extends RecyclerView.Adapter<ViewHolder> {
     public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         switch (viewType) {
             case 0:
+            case 2:
                 return new DbDeparturesViewHolder(parent, singleSelectionManager, owner, trackingManager, searchItemPickedListener, TrackingManager.UiElement.ABFAHRT_SUCHE_BHF);
             case 1:
                 return new DeparturesViewHolder(parent, owner, singleSelectionManager, trackingManager, searchItemPickedListener, TrackingManager.UiElement.ABFAHRT_SUCHE_OPNV);
@@ -89,14 +92,18 @@ class StationSearchAdapter extends RecyclerView.Adapter<ViewHolder> {
     public int getItemViewType(int position) {
         final SearchResult searchResult = searchResults.get(position);
 
-        if (searchResult instanceof DBStationSearchResult) {
+        if (searchResult instanceof StoredStationSearchResult) {
             return 0;
         }
 
         if (searchResult instanceof HafasStationSearchResult) {
             return 1;
         }
-        return 2;
+
+        if (searchResult instanceof StopPlaceSearchResult) {
+            return 2;
+        }
+        return 3;
     }
 
     @Override

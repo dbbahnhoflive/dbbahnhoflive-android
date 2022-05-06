@@ -8,9 +8,14 @@ package de.deutschebahn.bahnhoflive.repository
 
 import android.content.Context
 import android.content.SharedPreferences
+import de.deutschebahn.bahnhoflive.backend.local.model.EvaIds
 import de.deutschebahn.bahnhoflive.persistence.*
+import de.deutschebahn.bahnhoflive.repository.station.UpdatedStationRepository
 
-class ApplicationServices(context: Context) {
+class ApplicationServices(
+    context: Context,
+    val repositories: RepositoryHolder
+) {
 
     val recentSearchesStore by lazy { RecentSearchesStore(context) }
 
@@ -57,4 +62,12 @@ class ApplicationServices(context: Context) {
         MapConsentRepository(context)
     }
 
+    val updatedStationRepository by lazy {
+        UpdatedStationRepository(
+            repositories.stationRepository
+        )
+    }
+
 }
+
+typealias BlaBla = (evaIds: EvaIds?) -> Unit

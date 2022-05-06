@@ -18,9 +18,9 @@ import de.deutschebahn.bahnhoflive.repository.ApplicationServices;
 import de.deutschebahn.bahnhoflive.repository.InternalStation;
 import de.deutschebahn.bahnhoflive.repository.Station;
 import de.deutschebahn.bahnhoflive.ui.StationWrapper;
-import de.deutschebahn.bahnhoflive.ui.search.DBStationSearchResult;
 import de.deutschebahn.bahnhoflive.ui.search.HafasStationSearchResult;
 import de.deutschebahn.bahnhoflive.ui.search.SearchResult;
+import de.deutschebahn.bahnhoflive.ui.search.StoredStationSearchResult;
 
 public class RecentSearchesStore {
 
@@ -65,7 +65,8 @@ public class RecentSearchesStore {
         final ArrayList<SearchResult> searchResults = new ArrayList<>();
 
         for (StationWrapper<InternalStation> stationWrapper : all) {
-            searchResults.add(new DBStationSearchResult(stationWrapper.getWrappedStation(), this, favoriteStationsStore));
+            searchResults.add(new StoredStationSearchResult(stationWrapper.getWrappedStation(), this, favoriteStationsStore) {
+            });
         }
         for (StationWrapper<HafasStation> hafasStationWrapper : allHafas) {
             searchResults.add(new HafasStationSearchResult(hafasStationWrapper.getWrappedStation(), this, favoriteHafasStationsStore));

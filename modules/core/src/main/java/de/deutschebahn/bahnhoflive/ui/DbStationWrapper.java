@@ -9,9 +9,9 @@ package de.deutschebahn.bahnhoflive.ui;
 import de.deutschebahn.bahnhoflive.persistence.FavoriteStationsStore;
 import de.deutschebahn.bahnhoflive.repository.DbTimetableResource;
 import de.deutschebahn.bahnhoflive.repository.InternalStation;
-import de.deutschebahn.bahnhoflive.ui.search.DBStationSearchResult;
+import de.deutschebahn.bahnhoflive.ui.search.StoredStationSearchResult;
 
-public class DbStationWrapper extends DBStationSearchResult implements StationWrapper<InternalStation> {
+public class DbStationWrapper extends StoredStationSearchResult implements StationWrapper<InternalStation> {
 
     private final DbTimetableResource dbTimetableResource;
     private final long timestamp;

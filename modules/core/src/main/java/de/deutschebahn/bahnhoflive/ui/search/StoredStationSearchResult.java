@@ -16,16 +16,12 @@ import de.deutschebahn.bahnhoflive.repository.DbTimetableResource;
 import de.deutschebahn.bahnhoflive.repository.InternalStation;
 import de.deutschebahn.bahnhoflive.ui.station.StationActivity;
 
-public class DBStationSearchResult extends StationSearchResult<InternalStation, DbTimetableResource> {
+public class StoredStationSearchResult extends StationSearchResult<InternalStation, DbTimetableResource> {
     private final DbTimetableResource dbTimetableResource;
 
-    public DBStationSearchResult(InternalStation dbStation, RecentSearchesStore recentSearchesStore, FavoriteStationsStore<InternalStation> favoriteStationsStore) {
-        this(new DbTimetableResource(dbStation), recentSearchesStore, favoriteStationsStore);
-    }
-
-    public DBStationSearchResult(DbTimetableResource dbTimetableResource, RecentSearchesStore recentSearchesStore, FavoriteStationsStore<InternalStation> favoriteStationsStore) {
+    public StoredStationSearchResult(InternalStation dbStation, RecentSearchesStore recentSearchesStore, FavoriteStationsStore<InternalStation> favoriteStationsStore) {
         super(R.drawable.legacy_dbmappinicon, recentSearchesStore, favoriteStationsStore);
-        this.dbTimetableResource = dbTimetableResource;
+        this.dbTimetableResource = new DbTimetableResource(dbStation);
     }
 
     @Override

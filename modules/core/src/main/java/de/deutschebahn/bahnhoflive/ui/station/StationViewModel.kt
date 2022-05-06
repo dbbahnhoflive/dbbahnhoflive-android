@@ -278,7 +278,9 @@ class StationViewModel(application: Application) : HafasTimetableViewModel(appli
         }
     }
 
-    val dbTimetableResource = DbTimetableResource()
+    val dbTimetableResource =
+        DbTimetableResource(SimpleEvaIdsProvider { stationResource.data.value?.evaIds })
+
     private val evaIdsErrorObserver = Observer<VolleyError> { volleyError ->
         if (volleyError != null) {
             dbTimetableResource.setEvaIdsMissing()
@@ -286,7 +288,6 @@ class StationViewModel(application: Application) : HafasTimetableViewModel(appli
     }
     private val evaIdsDataObserver = Observer<Station> { station ->
         if (station != null) {
-            dbTimetableResource.setEvaIds(station.evaIds)
             dbTimetableResource.loadIfNecessary()
 
             accessibilityFeaturesResource.evaIds = station.evaIds

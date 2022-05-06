@@ -10,9 +10,9 @@ import android.view.ViewGroup
 import androidx.lifecycle.LifecycleOwner
 import de.deutschebahn.bahnhoflive.analytics.TrackingManager
 import de.deutschebahn.bahnhoflive.ui.ViewHolder
-import de.deutschebahn.bahnhoflive.ui.search.DBStationSearchResult
 import de.deutschebahn.bahnhoflive.ui.search.HafasStationSearchResult
 import de.deutschebahn.bahnhoflive.ui.search.SearchResult
+import de.deutschebahn.bahnhoflive.ui.search.StoredStationSearchResult
 import de.deutschebahn.bahnhoflive.view.SingleSelectionManager
 
 class FavoritesAdapter(val owner: LifecycleOwner, private val trackingManager: TrackingManager) : androidx.recyclerview.widget.RecyclerView.Adapter<ViewHolder<out Any>>() {
@@ -25,7 +25,7 @@ class FavoritesAdapter(val owner: LifecycleOwner, private val trackingManager: T
 
             val searchResult = favorites?.get(it.selection)
             when (searchResult) {
-                is DBStationSearchResult -> searchResult.timetable.loadIfNecessary()
+                is StoredStationSearchResult -> searchResult.timetable.loadIfNecessary()
                 is HafasStationSearchResult -> searchResult.timetable.requestTimetable(true, "hub")
             }
         }
@@ -65,7 +65,7 @@ class FavoritesAdapter(val owner: LifecycleOwner, private val trackingManager: T
     override fun onBindViewHolder(holder: ViewHolder<out Any>, position: Int) {
         val searchResult = favorites?.get(position)
         when (getItemViewType(position)) {
-            0 -> (holder as DbDeparturesViewHolder).bind(searchResult as DBStationSearchResult?)
+            0 -> (holder as DbDeparturesViewHolder).bind(searchResult as StoredStationSearchResult?)
             1 -> (holder as DeparturesViewHolder).bind(searchResult as HafasStationSearchResult?)
         }
     }
