@@ -100,7 +100,7 @@ class FavoritesFragment : androidx.fragment.app.Fragment() {
         super.onPause()
     }
 
-    fun refreshFavorites() {
+    private fun refreshFavorites() {
         BaseApplication.get().applicationServices.let { applicationServices ->
             val favoriteHafasStationsStore = applicationServices.favoriteHafasStationsStore
             val favoriteDbStationsStore = applicationServices.favoriteDbStationStore
@@ -117,7 +117,8 @@ class FavoritesFragment : androidx.fragment.app.Fragment() {
                         is DbStationWrapper -> StoredStationSearchResult(
                             it.wrappedStation,
                             recentSearchesStore,
-                            favoriteDbStationsStore
+                            favoriteDbStationsStore,
+                            applicationServices.evaIdsProvider
                         )
                         else -> it
                     }

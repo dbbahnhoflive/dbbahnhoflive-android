@@ -15,6 +15,7 @@ import java.util.List;
 import de.deutschebahn.bahnhoflive.BaseApplication;
 import de.deutschebahn.bahnhoflive.backend.hafas.model.HafasStation;
 import de.deutschebahn.bahnhoflive.repository.ApplicationServices;
+import de.deutschebahn.bahnhoflive.repository.EvaIdsProvider;
 import de.deutschebahn.bahnhoflive.repository.InternalStation;
 import de.deutschebahn.bahnhoflive.repository.Station;
 import de.deutschebahn.bahnhoflive.ui.StationWrapper;
@@ -30,12 +31,12 @@ public class RecentSearchesStore {
     private final FavoriteStationsStore<HafasStation> favoriteHafasStationsStore;
     private final FavoriteStationsStore<HafasStation> recentHafasStationsStore;
 
-    public RecentSearchesStore(Context context) {
+    public RecentSearchesStore(Context context, EvaIdsProvider evaIdsProvider) {
 
         final ApplicationServices applicationServices = BaseApplication.get().getApplicationServices();
 
         favoriteStationsStore = applicationServices.getFavoriteDbStationStore();
-        recentDbStationsStore = new FavoriteStationsStore<>(context, "recent_dbstations", new InternalStationItemAdapter());
+        recentDbStationsStore = new FavoriteStationsStore<>(context, "recent_dbstations", new InternalStationItemAdapter(evaIdsProvider));
 
         favoriteHafasStationsStore = applicationServices.getFavoriteHafasStationsStore();
 
@@ -58,15 +59,14 @@ public class RecentSearchesStore {
         recentHafasStationsStore.adopt(legacyRecentHafasStations);
     }
 
-    public List<SearchResult> loadRecentStations() {
+    public List<SearchResult> loadRecentStations(EvaIdsProvider evaIdsProvider) {
         final List<StationWrapper<InternalStation>> all = recentDbStationsStore.getAll();
         final List<StationWrapper<HafasStation>> allHafas = recentHafasStationsStore.getAll();
 
         final ArrayList<SearchResult> searchResults = new ArrayList<>();
 
         for (StationWrapper<InternalStation> stationWrapper : all) {
-            searchResults.add(new StoredStationSearchResult(stationWrapper.getWrappedStation(), this, favoriteStationsStore) {
-            });
+            searchResults.add(new StoredStationSearchResult(stationWrapper.getWrappedStation(), this, favoriteStationsStore, evaIdsProvider));
         }
         for (StationWrapper<HafasStation> hafasStationWrapper : allHafas) {
             searchResults.add(new HafasStationSearchResult(hafasStationWrapper.getWrappedStation(), this, favoriteHafasStationsStore));

@@ -88,7 +88,7 @@ public class StationSearchFragment extends Fragment {
         locationFragment = LocationFragment.get(fragmentManager);
         locationFragment.addLocationListener(locationListener);
 
-        adapter = new StationSearchAdapter(getActivity(), recentSearchesStore, queryRecorder::clear, this, new TrackingManager());
+        adapter = new StationSearchAdapter(getActivity(), recentSearchesStore, queryRecorder::clear, this, new TrackingManager(), BaseApplication.get().getApplicationServices().getEvaIdsProvider());
     }
 
     @Override

@@ -4,7 +4,9 @@ import com.android.volley.VolleyError
 import de.deutschebahn.bahnhoflive.backend.VolleyRestListener
 import de.deutschebahn.bahnhoflive.backend.db.ris.model.StopPlace
 import de.deutschebahn.bahnhoflive.repository.InternalStation
+import de.deutschebahn.bahnhoflive.repository.Station
 import kotlinx.coroutines.*
+import kotlinx.coroutines.channels.awaitClose
 import kotlinx.coroutines.channels.sendBlocking
 import kotlinx.coroutines.flow.*
 
@@ -17,29 +19,28 @@ class UpdatedStationRepository(
 
     private val cache = mutableMapOf<String, Flow<Result<InternalStation>>>()
 
-    suspend fun getUpdatedStation(station: InternalStation) =
+    @OptIn(ExperimentalCoroutinesApi::class)
+    suspend fun getUpdatedStation(station: Station) =
         cache.getOrPut(station.id) {
             callbackFlow<Result<InternalStation>> {
-                stationRepository.queryStations(
+                val queryStationsCancellable = stationRepository.queryStations(
                     object : VolleyRestListener<List<StopPlace>?> {
                         override fun onSuccess(payload: List<StopPlace>?) {
-                            launch {
-                                payload?.firstOrNull {
-                                    it.stationID == station.id
-                                }?.let {
-                                    sendBlocking(
-                                        Result.success(
-                                            InternalStation(
-                                                station.id,
-                                                station.title,
-                                                station.location,
-                                                it.evaIds
-                                            )
+                            payload?.firstOrNull {
+                                it.stationID == station.id
+                            }?.also {
+                                sendBlocking(
+                                    Result.success(
+                                        InternalStation(
+                                            station.id,
+                                            station.title,
+                                            station.location,
+                                            it.evaIds
                                         )
                                     )
-                                } ?: kotlin.run {
-                                    sendBlocking(Result.failure(Exception("Not found")))
-                                }
+                                )
+                            } ?: kotlin.run {
+                                sendBlocking(Result.failure(Exception("Not found")))
                             }
                         }
 
@@ -54,11 +55,13 @@ class UpdatedStationRepository(
                     collapseNeighbours = true,
                     pullUpFirstDbStation = false
                 )
+
+                awaitClose { queryStationsCancellable?.cancel() }
             }.onEach {
                 if (it.isFailure) {
                     cache.remove(station.id)
                 }
-            }.shareIn(scope, SharingStarted.Eagerly, 1)
+            }.shareIn(scope, SharingStarted.Lazily, 1)
         }.firstOrNull()
 
 }

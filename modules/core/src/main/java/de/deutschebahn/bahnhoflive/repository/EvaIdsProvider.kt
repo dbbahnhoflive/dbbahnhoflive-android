@@ -3,13 +3,13 @@ package de.deutschebahn.bahnhoflive.repository
 import de.deutschebahn.bahnhoflive.backend.local.model.EvaIds
 
 interface EvaIdsProvider {
-    fun withEvaIds(action: (evaIds: EvaIds?) -> Unit)
+    fun withEvaIds(station: Station, action: (evaIds: EvaIds?) -> Unit)
 }
 
-class SimpleEvaIdsProvider(
-    val deliver: () -> EvaIds?
+open class SimpleEvaIdsProvider(
+    val getEvaIds: () -> EvaIds?
 ) : EvaIdsProvider {
-    override fun withEvaIds(action: (evaIds: EvaIds?) -> Unit) {
-        action(deliver())
+    override fun withEvaIds(station: Station, action: (evaIds: EvaIds?) -> Unit) {
+        action(getEvaIds())
     }
 }

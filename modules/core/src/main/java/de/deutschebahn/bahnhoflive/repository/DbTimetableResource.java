@@ -68,7 +68,7 @@ public class DbTimetableResource extends RemoteResource<Timetable> {
 
     @Override
     protected void onStartLoading(final boolean force) {
-        evaIdsProvider.withEvaIds(evaIds -> {
+        evaIdsProvider.withEvaIds(station, evaIds -> {
             if (evaIds == null) {
                 setEvaIdsMissing();
             } else {

@@ -11,19 +11,23 @@ import android.content.SharedPreferences
 import de.deutschebahn.bahnhoflive.backend.local.model.EvaIds
 import de.deutschebahn.bahnhoflive.persistence.*
 import de.deutschebahn.bahnhoflive.repository.station.UpdatedStationRepository
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 
 class ApplicationServices(
     context: Context,
     val repositories: RepositoryHolder
 ) {
 
-    val recentSearchesStore by lazy { RecentSearchesStore(context) }
+    val recentSearchesStore by lazy { RecentSearchesStore(context, evaIdsProvider) }
 
     val favoriteDbStationStore by lazy {
         FavoriteStationsStore(
             context,
             "dbstations",
-            InternalStationItemAdapter()
+            InternalStationItemAdapter(evaIdsProvider)
         )
     }
 
@@ -68,6 +72,18 @@ class ApplicationServices(
         )
     }
 
-}
+    val evaIdsProvider: EvaIdsProvider by lazy {
+        object : EvaIdsProvider {
+            override fun withEvaIds(station: Station, action: (evaIds: EvaIds?) -> Unit) {
+                GlobalScope.launch {
+                    val updatedStation = updatedStationRepository.getUpdatedStation(station)
 
-typealias BlaBla = (evaIds: EvaIds?) -> Unit
+                    withContext(Dispatchers.Main) {
+                        action(updatedStation?.getOrNull()?.evaIds)
+                    }
+
+                }
+            }
+        }
+    }
+}

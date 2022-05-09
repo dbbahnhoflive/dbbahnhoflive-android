@@ -8,6 +8,7 @@ package de.deutschebahn.bahnhoflive.ui;
 
 import de.deutschebahn.bahnhoflive.persistence.FavoriteStationsStore;
 import de.deutschebahn.bahnhoflive.repository.DbTimetableResource;
+import de.deutschebahn.bahnhoflive.repository.EvaIdsProvider;
 import de.deutschebahn.bahnhoflive.repository.InternalStation;
 import de.deutschebahn.bahnhoflive.ui.search.StoredStationSearchResult;
 
@@ -16,8 +17,8 @@ public class DbStationWrapper extends StoredStationSearchResult implements Stati
     private final DbTimetableResource dbTimetableResource;
     private final long timestamp;
 
-    public DbStationWrapper(InternalStation station, FavoriteStationsStore<InternalStation> favoriteStationsStore, long timestamp) {
-        super(station, null, favoriteStationsStore);
+    public DbStationWrapper(InternalStation station, FavoriteStationsStore<InternalStation> favoriteStationsStore, long timestamp, EvaIdsProvider evaIdsProvider) {
+        super(station, null, favoriteStationsStore, evaIdsProvider);
         this.dbTimetableResource = new DbTimetableResource(station);
         this.timestamp = timestamp;
     }
