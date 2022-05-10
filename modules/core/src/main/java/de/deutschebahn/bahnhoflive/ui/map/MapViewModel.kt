@@ -34,7 +34,7 @@ import io.reactivex.subjects.BehaviorSubject
 class MapViewModel(application: Application) : StadaStationCacheViewModel(application) {
 
     private val dbTimetableResource =
-        DbTimetableResource(SimpleEvaIdsProvider { stationResource.data.value?.evaIds })
+        DbTimetableResource(getApplication<BaseApplication>().applicationServices.evaIdsProvider)
 
     private val evaIdsErrorObserver = Observer<VolleyError> { volleyError ->
         if (volleyError != null) {
