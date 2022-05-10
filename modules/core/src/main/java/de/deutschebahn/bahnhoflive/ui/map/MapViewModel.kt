@@ -176,7 +176,7 @@ class MapViewModel(application: Application) : StadaStationCacheViewModel(applic
         it?.takeUnless { it.location == null }?.let { station ->
             OneShotLiveData<Pair<Station, RimapStation?>> { receiver ->
                 val evaIds = station.evaIds
-                val mainEvaId = evaIds.main
+                val mainEvaId = evaIds?.main
                 baseApplication.repositories.mapRepository.queryLevels(
                     station.id,
                     object : BaseRestListener<RimapStation?>() {
