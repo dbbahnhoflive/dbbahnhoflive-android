@@ -16,10 +16,8 @@ import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.UiSettings;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.LatLngBounds;
-import com.google.android.gms.maps.model.MapStyleOptions;
 import com.google.android.gms.maps.model.Marker;
 
-import de.deutschebahn.bahnhoflive.R;
 import de.deutschebahn.bahnhoflive.ui.map.content.BackgroundLayer;
 import de.deutschebahn.bahnhoflive.ui.map.content.IndoorLayer;
 import de.deutschebahn.bahnhoflive.ui.map.content.MapType;
@@ -99,8 +97,6 @@ class GoogleMapsMapInterface extends MapInterface {
 
     @Override
     public void updateMapStyle() {
-        int mapStyle = levelCount > 0 ? R.raw.mapstyle_indoor : R.raw.mapstyle;
-        googleMap.setMapStyle(MapStyleOptions.loadRawResourceStyle(context, mapStyle));
         updateMaxZoom();
     }
 
