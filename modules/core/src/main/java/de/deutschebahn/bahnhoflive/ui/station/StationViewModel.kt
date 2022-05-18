@@ -34,6 +34,7 @@ import de.deutschebahn.bahnhoflive.persistence.RecentContentQueriesStore
 import de.deutschebahn.bahnhoflive.repository.*
 import de.deutschebahn.bahnhoflive.repository.accessibility.AccessibilityFeaturesResource
 import de.deutschebahn.bahnhoflive.repository.feedback.WhatsAppFeeback
+import de.deutschebahn.bahnhoflive.repository.map.RrtRequestResult
 import de.deutschebahn.bahnhoflive.repository.parking.ViewModelParking
 import de.deutschebahn.bahnhoflive.stream.livedata.MergedLiveData
 import de.deutschebahn.bahnhoflive.stream.rx.Optional
@@ -57,6 +58,9 @@ import de.deutschebahn.bahnhoflive.util.openhours.OpenHoursParser
 import de.deutschebahn.bahnhoflive.util.then
 import io.reactivex.Observable
 import io.reactivex.subjects.BehaviorSubject
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.flow.flowOn
+import kotlinx.coroutines.flow.mapLatest
 import java.io.InputStreamReader
 import java.text.Collator
 import java.util.*
@@ -151,6 +155,8 @@ class StationViewModel(application: Application) : HafasTimetableViewModel(appli
 
     private val selectedAccessibilityPlatformMutableLiveData = MutableLiveData<Platform?>(null)
 
+    val railReplacementResource = RimapRRTResource()
+
     val accessibilityPlatformsAndSelectedLiveData =
         selectedAccessibilityPlatformMutableLiveData.switchMap { selectedPlatform ->
             accessibilityFeaturesResource.data.map { platforms ->
@@ -224,7 +230,7 @@ class StationViewModel(application: Application) : HafasTimetableViewModel(appli
                             value = payload
                         }
 
-                        override fun onFail(reason: VolleyError?) {
+                        override fun onFail(reason: VolleyError) {
                             reason?.run {
                                 Log.w(StationViewModel::class.java.simpleName, message, this)
                             }
@@ -347,10 +353,30 @@ class StationViewModel(application: Application) : HafasTimetableViewModel(appli
             rimapStationFeatureCollectionResource.loadIfNecessary()
 
             occupancyResource.initialize(station)
+
+            railReplacementResource.initialize(station)
         }
 
         stationResource.refresh()
     }
+
+    val railReplacementSummaryLiveData = railReplacementResource.data.asFlow()
+        .mapLatest { rrtRequestResult: RrtRequestResult? ->
+            rrtRequestResult?.fold(mutableMapOf<String, MutableList<String>>()) { map, rrtPoint ->
+                map.apply {
+                    val walkDescriptionEntry = getOrPut(rrtPoint.walkDescription) {
+                        mutableListOf()
+                    }
+
+                    rrtPoint.text?.let {
+                        walkDescriptionEntry.add(it)
+                    }
+                }
+            }
+
+        }
+        .flowOn(Dispatchers.Default)
+        .asLiveData(viewModelScope.coroutineContext)
 
     var stationNavigation: StationNavigation? = null
 
@@ -467,6 +493,7 @@ class StationViewModel(application: Application) : HafasTimetableViewModel(appli
         val detailedStopPlace = risServiceAndCategoryResource.data
         val elevators = elevatorsResource.data
         val parkings = parking.parkingsResource.data
+        val railReplacement = railReplacementSummaryLiveData
 
         val update = fun(_: Any?) {
             value = queryAndParts.value?.let { queryAndParts ->
@@ -855,6 +882,19 @@ class StationViewModel(application: Application) : HafasTimetableViewModel(appli
                         } else null
                         )
 
+                        .append(if (railReplacement.value?.takeUnless { it.isEmpty() } != null && matchingKeys.contains(
+                                "Schienenersatzverkehr"
+                            )) {
+                            ContentSearchResult(
+                                "Schienenersatzverkehr",
+                                R.drawable.bahnhofsausstattung_parkplatz,
+                                currentRawQuery,
+                                {
+//TODO
+                                })
+                        } else null
+                        )
+
                         .append(dbTimetable.value?.let { timetable ->
                             emptySequence<ContentSearchResult>()
                                 .append(
@@ -967,6 +1007,7 @@ class StationViewModel(application: Application) : HafasTimetableViewModel(appli
         addSource(infoAvailability, update)
         addSource(elevators, update)
         addSource(parkings, update)
+        addSource(railReplacement, update)
         addSource(stationFeatures, update)
         addSource(queryAndParts, update)
     }
@@ -1158,7 +1199,7 @@ class StationViewModel(application: Application) : HafasTimetableViewModel(appli
                             value = payload
                         }
 
-                        override fun onFail(reason: VolleyError?) {
+                        override fun onFail(reason: VolleyError) {
 
                         }
                     })
@@ -1223,7 +1264,7 @@ class StationViewModel(application: Application) : HafasTimetableViewModel(appli
             } == true)
                     || !parking.parkingsResource.data.value.isNullOrEmpty()
                     || !elevatorsResource.data.value.isNullOrEmpty()
-
+                    || !railReplacementSummaryLiveData.value.isNullOrEmpty()
         }
 
     }.addSource(infoAndServicesLiveData)
@@ -1232,6 +1273,7 @@ class StationViewModel(application: Application) : HafasTimetableViewModel(appli
         .addSource(parking.parkingsResource.data)
         .addSource(elevatorsResource.data)
         .addSource(risServiceAndCategoryResource.data)
+        .addSource(railReplacementSummaryLiveData)
         .distinctUntilChanged()
 
     val stationWhatsappFeedbackLiveData: LiveData<String?> =
@@ -1246,4 +1288,5 @@ class StationViewModel(application: Application) : HafasTimetableViewModel(appli
 
     val accessibilityFeaturesResource =
         AccessibilityFeaturesResource(this.application.repositories.stationRepository)
+
 }

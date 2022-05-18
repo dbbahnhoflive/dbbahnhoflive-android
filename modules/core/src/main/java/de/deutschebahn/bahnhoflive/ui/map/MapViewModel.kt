@@ -185,7 +185,7 @@ class MapViewModel(application: Application) : StadaStationCacheViewModel(applic
                             receiver(station to payload)
                         }
 
-                        override fun onFail(reason: VolleyError?) {
+                        override fun onFail(reason: VolleyError) {
                             super.onFail(reason)
 
                             receiver(station to null)
@@ -213,7 +213,7 @@ class MapViewModel(application: Application) : StadaStationCacheViewModel(applic
                                     it(payload)
                                 }
 
-                                override fun onFail(reason: VolleyError?) {
+                                override fun onFail(reason: VolleyError) {
                                     super.onFail(reason)
 
                                     it(null)

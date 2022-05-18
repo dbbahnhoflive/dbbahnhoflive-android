@@ -3,10 +3,10 @@
  *
  * SPDX-License-Identifier: Apache-2.0
  */
+package de.deutschebahn.bahnhoflive.backend
 
-package de.deutschebahn.bahnhoflive.backend;
+import com.android.volley.VolleyError
 
-import com.android.volley.VolleyError;
+interface VolleyRestListener<T> : RestListener<T, VolleyError>
 
-public interface VolleyRestListener<T> extends RestListener<T, VolleyError> {
-}
+fun <T> VolleyRestListener<T>.errorListener() = RestErrorListener(this)

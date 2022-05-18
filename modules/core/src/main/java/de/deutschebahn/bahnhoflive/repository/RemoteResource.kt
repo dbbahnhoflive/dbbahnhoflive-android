@@ -43,7 +43,7 @@ abstract class RemoteResource<T> : Resource<T, VolleyError?>() {
     }
 
     @MainThread
-    protected fun setResult(payload: T) {
+    protected fun setResult(payload: T?) {
         mutableData.value = payload
         setError(null)
     }
@@ -61,7 +61,7 @@ abstract class RemoteResource<T> : Resource<T, VolleyError?>() {
     }
 
     open inner class Listener : BaseRestListener<T>() {
-        override fun onSuccess(payload: T) {
+        override fun onSuccess(payload: T?) {
             setResult(payload)
         }
 
