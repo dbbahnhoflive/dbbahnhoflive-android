@@ -6,9 +6,12 @@
 
 package de.deutschebahn.bahnhoflive.ui.hub
 
-import de.deutschebahn.bahnhoflive.ui.search.DBStationSearchResult
+import de.deutschebahn.bahnhoflive.repository.DbTimetableResource
+import de.deutschebahn.bahnhoflive.repository.InternalStation
+import de.deutschebahn.bahnhoflive.ui.search.StationSearchResult
 
-class NearbyDbStationItem(val dbStationSearchResult: DBStationSearchResult) : NearbyStationItem {
+class NearbyDbStationItem(val dbStationSearchResult: StationSearchResult<InternalStation, DbTimetableResource>) :
+    NearbyStationItem {
 
     override fun onLoadDetails() {
         dbStationSearchResult.timetable.loadIfNecessary()

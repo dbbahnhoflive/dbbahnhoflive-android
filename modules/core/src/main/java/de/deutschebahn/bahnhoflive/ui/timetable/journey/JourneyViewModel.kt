@@ -70,23 +70,26 @@ class JourneyViewModel(app: Application, savedStateHandle: SavedStateHandle) :
                     trainEvent.movementRetriever.getTrainMovementInfo(trainInfo)
 
                 MutableLiveData<Result<List<JourneyStop>>>().apply {
-                    timetableRepository.queryJourneys(
-                        station.evaIds,
-                        trainMovementInfo.plannedDateTime,
-                        trainEvent,
-                        trainInfo.genuineName,
-                        trainInfo.trainCategory,
-                        trainInfo.trainGenericName,
-                        object : VolleyRestListener<List<JourneyStop>> {
-                            override fun onSuccess(payload: List<JourneyStop>) {
-                                value = Result.success(payload)
-                            }
+                    val evaIds = station.evaIds
+                    if (evaIds != null) {
+                        timetableRepository.queryJourneys(
+                            evaIds,
+                            trainMovementInfo.plannedDateTime,
+                            trainEvent,
+                            trainInfo.genuineName,
+                            trainInfo.trainCategory,
+                            trainInfo.trainGenericName,
+                            object : VolleyRestListener<List<JourneyStop>> {
+                                override fun onSuccess(payload: List<JourneyStop>) {
+                                    value = Result.success(payload)
+                                }
 
-                            override fun onFail(reason: VolleyError) {
-                                value = Result.failure(reason)
+                                override fun onFail(reason: VolleyError) {
+                                    value = Result.failure(reason)
+                                }
                             }
-                        }
-                    )
+                        )
+                    }
                 }
             }
         }

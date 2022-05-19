@@ -7,7 +7,6 @@
 package de.deutschebahn.bahnhoflive.repository;
 
 
-import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
 import com.google.android.gms.maps.model.LatLng;
@@ -23,6 +22,6 @@ public interface Station {
     @Nullable
     LatLng getLocation();
 
-    @NonNull
+    @Nullable
     EvaIds getEvaIds();
 }
