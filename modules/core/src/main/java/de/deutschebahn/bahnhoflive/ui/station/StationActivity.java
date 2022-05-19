@@ -432,6 +432,11 @@ public class StationActivity extends AppCompatActivity implements
     }
 
     @Override
+    public void showRailReplacement() {
+        stationViewModel.navigateToInfo(ServiceContentType.Local.RAIL_REPLACEMENT);
+    }
+
+    @Override
     public Station getStation() {
         return station;
     }

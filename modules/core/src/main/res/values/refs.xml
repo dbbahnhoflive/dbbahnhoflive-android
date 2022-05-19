@@ -23,6 +23,7 @@
     <drawable name="rimap_wlan_grau">@drawable/missing</drawable>
     <drawable name="bahnhofsausstattung_parkplatz">@drawable/missing</drawable>
     <drawable name="bahnhofsausstattung_fundservice">@drawable/missing</drawable>
+    <drawable name="app_rail_replacement">@drawable/missing</drawable>
     <drawable name="app_zugang_wege">@drawable/missing</drawable>
     <drawable name="chatbot_card">@drawable/missing</drawable>
     <drawable name="app_news_coupon">@drawable/missing</drawable>

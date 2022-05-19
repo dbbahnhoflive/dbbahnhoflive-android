@@ -887,10 +887,10 @@ class StationViewModel(application: Application) : HafasTimetableViewModel(appli
                             )) {
                             ContentSearchResult(
                                 "Schienenersatzverkehr",
-                                R.drawable.bahnhofsausstattung_parkplatz,
+                                R.drawable.app_rail_replacement,
                                 currentRawQuery,
                                 {
-//TODO
+                                    stationNavigation?.showRailReplacement()
                                 })
                         } else null
                         )
