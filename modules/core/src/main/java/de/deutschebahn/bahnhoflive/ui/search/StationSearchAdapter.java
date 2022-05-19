@@ -23,6 +23,7 @@ import de.deutschebahn.bahnhoflive.backend.db.ris.model.StopPlace;
 import de.deutschebahn.bahnhoflive.backend.hafas.model.HafasStation;
 import de.deutschebahn.bahnhoflive.persistence.FavoriteStationsStore;
 import de.deutschebahn.bahnhoflive.persistence.RecentSearchesStore;
+import de.deutschebahn.bahnhoflive.repository.EvaIdsProvider;
 import de.deutschebahn.bahnhoflive.repository.InternalStation;
 import de.deutschebahn.bahnhoflive.ui.ViewHolder;
 import de.deutschebahn.bahnhoflive.ui.hub.DbDeparturesViewHolder;
@@ -49,9 +50,11 @@ class StationSearchAdapter extends RecyclerView.Adapter<ViewHolder> {
     private boolean dbError;
     private final LifecycleOwner owner;
     private final TrackingManager trackingManager;
+    private EvaIdsProvider evaIdsProvider;
 
-    StationSearchAdapter(FragmentActivity context, RecentSearchesStore recentSearchesStore, SearchItemPickedListener searchItemPickedListener, LifecycleOwner owner, TrackingManager trackingManager) {
+    StationSearchAdapter(FragmentActivity context, RecentSearchesStore recentSearchesStore, SearchItemPickedListener searchItemPickedListener, LifecycleOwner owner, TrackingManager trackingManager, EvaIdsProvider evaIdsProvider) {
         hubViewModel = new ViewModelProvider(context).get(HubViewModel.class);
+        this.evaIdsProvider = evaIdsProvider;
 
         this.favoriteDbStationsStore = BaseApplication.get().getApplicationServices().getFavoriteDbStationStore();
         this.favoriteHafasStationsStore = BaseApplication.get().getApplicationServices().getFavoriteHafasStationsStore();
@@ -63,8 +66,10 @@ class StationSearchAdapter extends RecyclerView.Adapter<ViewHolder> {
             @Override
             public void onSelectionChanged(SingleSelectionManager selectionManager) {
                 final SearchResult selectedItem = selectionManager.getSelectedItem(searchResults);
-                if (selectedItem instanceof DBStationSearchResult) {
-                    ((DBStationSearchResult) selectedItem).getTimetable().loadIfNecessary();
+                if (selectedItem instanceof StoredStationSearchResult) {
+                    ((StoredStationSearchResult) selectedItem).getTimetable().loadIfNecessary();
+                } else if (selectedItem instanceof StopPlaceSearchResult) {
+                    ((StopPlaceSearchResult) selectedItem).getTimetable().loadIfNecessary();
                 } else if (selectedItem instanceof HafasStationSearchResult) {
                     ((HafasStationSearchResult) selectedItem).getTimetable().requestTimetable(true, "search");
                 }
@@ -77,6 +82,7 @@ class StationSearchAdapter extends RecyclerView.Adapter<ViewHolder> {
     public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         switch (viewType) {
             case 0:
+            case 2:
                 return new DbDeparturesViewHolder(parent, singleSelectionManager, owner, trackingManager, searchItemPickedListener, TrackingManager.UiElement.ABFAHRT_SUCHE_BHF);
             case 1:
                 return new DeparturesViewHolder(parent, owner, singleSelectionManager, trackingManager, searchItemPickedListener, TrackingManager.UiElement.ABFAHRT_SUCHE_OPNV);
@@ -89,14 +95,18 @@ class StationSearchAdapter extends RecyclerView.Adapter<ViewHolder> {
     public int getItemViewType(int position) {
         final SearchResult searchResult = searchResults.get(position);
 
-        if (searchResult instanceof DBStationSearchResult) {
+        if (searchResult instanceof StoredStationSearchResult) {
             return 0;
         }
 
         if (searchResult instanceof HafasStationSearchResult) {
             return 1;
         }
-        return 2;
+
+        if (searchResult instanceof StopPlaceSearchResult) {
+            return 2;
+        }
+        return 3;
     }
 
     @Override
@@ -153,7 +163,7 @@ class StationSearchAdapter extends RecyclerView.Adapter<ViewHolder> {
     public void showRecents() {
         singleSelectionManager.clearSelection();
 
-        searchResults = recentSearchesStore.loadRecentStations();
+        searchResults = recentSearchesStore.loadRecentStations(evaIdsProvider);
 
         notifyDataSetChanged();
     }

@@ -2,9 +2,9 @@ package de.deutschebahn.bahnhoflive.backend.db.ris
 
 import com.android.volley.NetworkResponse
 import com.android.volley.Response
-import com.android.volley.toolbox.HttpHeaderParser
 import com.google.gson.Gson
 import de.deutschebahn.bahnhoflive.backend.DetailedVolleyError
+import de.deutschebahn.bahnhoflive.backend.ForcedCacheEntryFactory
 import de.deutschebahn.bahnhoflive.backend.VolleyRestListener
 import de.deutschebahn.bahnhoflive.backend.db.DbAuthorizationTool
 import de.deutschebahn.bahnhoflive.backend.db.ris.model.DepartureMatches
@@ -12,6 +12,7 @@ import java.io.ByteArrayInputStream
 import java.net.URLEncoder
 import java.text.SimpleDateFormat
 import java.util.*
+import java.util.concurrent.TimeUnit
 
 class RISJourneysByRelationRequest(
     parameters: Parameters,
@@ -47,10 +48,11 @@ class RISJourneysByRelationRequest(
                 ByteArrayInputStream(networkResponse.data).reader(),
                 DepartureMatches::class.java
             )
-
             Response.success(
                 departureMatches,
-                HttpHeaderParser.parseCacheHeaders(networkResponse)
+                ForcedCacheEntryFactory(TimeUnit.HOURS.toMillis(2).toInt()).createCacheEntry(
+                    networkResponse
+                )
             )
         }.getOrElse {
             Response.error(DetailedVolleyError(this, it))
