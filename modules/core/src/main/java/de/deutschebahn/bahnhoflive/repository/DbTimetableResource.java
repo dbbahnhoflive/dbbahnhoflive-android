@@ -6,17 +6,17 @@
 
 package de.deutschebahn.bahnhoflive.repository;
 
-import com.android.volley.VolleyError;
+import androidx.annotation.NonNull;
 
-import java.util.List;
+import com.android.volley.VolleyError;
 
 import de.deutschebahn.bahnhoflive.BaseApplication;
 import de.deutschebahn.bahnhoflive.backend.db.ris.model.StopPlace;
-import de.deutschebahn.bahnhoflive.backend.local.model.EvaIds;
 import de.deutschebahn.bahnhoflive.repository.timetable.Timetable;
 import de.deutschebahn.bahnhoflive.repository.timetable.TimetableCollector;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.disposables.Disposable;
+import kotlin.Unit;
 
 public class DbTimetableResource extends RemoteResource<Timetable> {
 
@@ -26,50 +26,60 @@ public class DbTimetableResource extends RemoteResource<Timetable> {
     private String stationId;
     private String stationName;
 
+    @NonNull
+    private EvaIdsProvider evaIdsProvider;
+
     private final TimetableCollector timetableCollector = BaseApplication.get().getRepositories().getTimetableRepository().createTimetableCollector();
 
     private final Disposable disposable = timetableCollector
             .getMergedTrainInfosObservable()
             .observeOn(AndroidSchedulers.mainThread())
-            .subscribe(this::setResult, throwable -> {
-                setError(new VolleyError(throwable));
-            });
+            .subscribe(this::setResult, throwable -> setError(new VolleyError(throwable)));
 
-    public DbTimetableResource(Station station, StopPlace stopPlace) {
-        distanceInKm = stopPlace.getDistanceInKm();
+    public DbTimetableResource(Station station, @NonNull StopPlace stopPlace) {
+        final Float distanceInKm = stopPlace.getDistanceInKm();
+        if (distanceInKm != null) {
+            this.distanceInKm = distanceInKm;
+        }
         stationId = stopPlace.getStationID();
         stationName = stopPlace.getName();
-
-        if (station == null) {
-            setEvaIds(new EvaIds(stopPlace.getEvaNumber()));
-        } else {
-            setEvaIds(station.getEvaIds());
-            initialize(station);
-        }
+        this.station = station;
+        evaIdsProvider = new SimpleEvaIdsProvider(stopPlace::getEvaIds);
     }
 
-    public DbTimetableResource(InternalStation internalStation) {
-        station = internalStation;
-        stationId = internalStation.getId();
-        stationName = internalStation.getTitle();
-        setEvaIds(internalStation.getEvaIds());
+    public DbTimetableResource(Station sourceStation) {
+        this(sourceStation, new SimpleEvaIdsProvider(sourceStation::getEvaIds));
+    }
+
+    public DbTimetableResource(Station sourceStation, @NonNull EvaIdsProvider evaIdsProvider) {
+        station = sourceStation;
+        stationId = sourceStation.getId();
+        stationName = sourceStation.getTitle();
+        this.evaIdsProvider = evaIdsProvider;
     }
 
     public void setEvaIdsMissing() {
         setError(new VolleyError("Eva IDs unavailable"));
     }
 
-    public DbTimetableResource() {
+    public DbTimetableResource(@NonNull EvaIdsProvider evaIdsProvider) {
+        this.evaIdsProvider = evaIdsProvider;
     }
 
     @Override
     protected void onStartLoading(final boolean force) {
-        final List<String> evaIds = getEvaIds();
-        if (evaIds == null) {
-            setEvaIdsMissing();
-        } else {
-            timetableCollector.getRefreshTrigger().onNext(force);
-        }
+        evaIdsProvider.withEvaIds(station, evaIds -> {
+            if (evaIds == null) {
+                setEvaIdsMissing();
+            } else {
+                timetableCollector.getEvaIdsInput().onNext(evaIds.getIds());
+                getMutableError().setValue(null);
+
+                timetableCollector.getRefreshTrigger().onNext(force);
+            }
+
+            return Unit.INSTANCE;
+        });
     }
 
     @Override
@@ -79,13 +89,6 @@ public class DbTimetableResource extends RemoteResource<Timetable> {
 
     public void initialize(Station station) {
         this.station = station;
-    }
-
-    public void setEvaIds(EvaIds evaIds) {
-        if (evaIds != null) {
-            timetableCollector.getEvaIdsInput().onNext(evaIds.getIds());
-            getMutableError().setValue(null);
-        }
     }
 
     public float getDistanceInKm() {
@@ -108,10 +111,6 @@ public class DbTimetableResource extends RemoteResource<Timetable> {
         return station == null ? stationName : station.getTitle();
     }
 
-    public List<String> getEvaIds() {
-        return timetableCollector.getEvaIdsInput().getValue();
-    }
-
     public String getStationId() {
         return stationId;
     }
@@ -125,4 +124,5 @@ public class DbTimetableResource extends RemoteResource<Timetable> {
     public void loadMore() {
         timetableCollector.getNextHourTrigger().onNext(true);
     }
+
 }

@@ -30,7 +30,7 @@ public class InternalStation implements Parcelable, Station {
     private final String title;
     @Nullable
     private LatLng location;
-    @NonNull
+
     private final EvaIds evaIds;
 
     protected InternalStation(Parcel in) {
@@ -47,7 +47,7 @@ public class InternalStation implements Parcelable, Station {
         this(station.getId(), station.getTitle(), station.getLocation(), station.getEvaIds());
     }
 
-    public InternalStation(@NonNull String id, String title, LatLng location, @NonNull EvaIds evaIds) {
+    public InternalStation(@NonNull String id, String title, LatLng location, @Nullable EvaIds evaIds) {
         this.id = id;
         this.title = title;
         if (location != null && (location.latitude != 0 || location.longitude != 0)) {
@@ -59,11 +59,7 @@ public class InternalStation implements Parcelable, Station {
     }
 
     public InternalStation(@NonNull String id, String name, LatLng location) {
-        this(id, name, location, new EvaIds(Collections.emptyList()));
-    }
-
-    public InternalStation(@NonNull String id, String name, LatLng location, String evaId) {
-        this(id, name, location, new EvaIds(Collections.singletonList(evaId)));
+        this(id, name, location, null);
     }
 
     @Override
@@ -109,7 +105,7 @@ public class InternalStation implements Parcelable, Station {
         return location;
     }
 
-    @NonNull
+    @Nullable
     @Override
     public EvaIds getEvaIds() {
         return evaIds;

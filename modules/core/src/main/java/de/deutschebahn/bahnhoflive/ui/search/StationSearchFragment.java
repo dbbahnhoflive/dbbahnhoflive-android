@@ -6,6 +6,8 @@
 
 package de.deutschebahn.bahnhoflive.ui.search;
 
+import static de.deutschebahn.bahnhoflive.util.ImeCloserKt.closeIme;
+
 import android.location.Location;
 import android.os.Bundle;
 import android.os.Handler;
@@ -40,8 +42,6 @@ import de.deutschebahn.bahnhoflive.ui.hub.LocationFragment;
 import de.deutschebahn.bahnhoflive.view.BaseTextWatcher;
 import de.deutschebahn.bahnhoflive.view.ConfirmationDialog;
 
-import static de.deutschebahn.bahnhoflive.util.ImeCloserKt.closeIme;
-
 public class StationSearchFragment extends Fragment {
 
     public static final int AUTO_SEARCH_DELAY = 750;
@@ -69,7 +69,7 @@ public class StationSearchFragment extends Fragment {
         }
     };
     private View clearHistoryView;
-    private RecentSearchesStore recentSearchesStore;
+    private final RecentSearchesStore recentSearchesStore = BaseApplication.get().getApplicationServices().getRecentSearchesStore();
     private View coordinatorLayout;
 
     private final QueryRecorder queryRecorder = new QueryRecorder();
@@ -88,8 +88,7 @@ public class StationSearchFragment extends Fragment {
         locationFragment = LocationFragment.get(fragmentManager);
         locationFragment.addLocationListener(locationListener);
 
-        recentSearchesStore = new RecentSearchesStore(getActivity());
-        adapter = new StationSearchAdapter(getActivity(), recentSearchesStore, queryRecorder::clear, this, new TrackingManager());
+        adapter = new StationSearchAdapter(getActivity(), recentSearchesStore, queryRecorder::clear, this, new TrackingManager(), BaseApplication.get().getApplicationServices().getEvaIdsProvider());
     }
 
     @Override

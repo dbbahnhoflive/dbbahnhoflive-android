@@ -60,7 +60,6 @@ abstract class BaseApplication(
 
         FontUtil.init(this)
 
-        applicationServices = ApplicationServices(this)
 
         issueTracker = onInitializeIssueTracker()
 
@@ -72,6 +71,7 @@ abstract class BaseApplication(
         TutorialManager.getInstance(this).seedTutorials()
 
         repositories = onCreateRepositories(restHelper)
+        applicationServices = ApplicationServices(this, repositories)
 
         createNotificationChannels()
     }

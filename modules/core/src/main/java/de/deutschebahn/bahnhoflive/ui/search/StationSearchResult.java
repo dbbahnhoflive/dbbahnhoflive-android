@@ -6,16 +6,20 @@
 
 package de.deutschebahn.bahnhoflive.ui.search;
 
+import androidx.annotation.NonNull;
+
 import de.deutschebahn.bahnhoflive.persistence.FavoriteStationsStore;
 import de.deutschebahn.bahnhoflive.persistence.RecentSearchesStore;
 
-abstract class StationSearchResult<T, U> implements SearchResult {
+public abstract class StationSearchResult<T, U> implements SearchResult {
+    @NonNull
     protected final RecentSearchesStore recentSearchesStore;
+    @NonNull
     protected final FavoriteStationsStore<T> favoriteStationsStore;
 
     private final int icon;
 
-    StationSearchResult(int icon, RecentSearchesStore recentSearchesStore, FavoriteStationsStore<T> favoriteStationsStore) {
+    public StationSearchResult(int icon, @NonNull RecentSearchesStore recentSearchesStore, @NonNull FavoriteStationsStore<T> favoriteStationsStore) {
         this.icon = icon;
         this.recentSearchesStore = recentSearchesStore;
         this.favoriteStationsStore = favoriteStationsStore;
