@@ -33,7 +33,9 @@ import io.reactivex.subjects.BehaviorSubject
 
 class MapViewModel(application: Application) : StadaStationCacheViewModel(application) {
 
-    private val dbTimetableResource = DbTimetableResource()
+    private val dbTimetableResource =
+        DbTimetableResource(getApplication<BaseApplication>().applicationServices.evaIdsProvider)
+
     private val evaIdsErrorObserver = Observer<VolleyError> { volleyError ->
         if (volleyError != null) {
             dbTimetableResource.setEvaIdsMissing()
@@ -41,7 +43,6 @@ class MapViewModel(application: Application) : StadaStationCacheViewModel(applic
     }
     private val evaIdsDataObserver = Observer<Station> { evaIds ->
         if (evaIds != null) {
-            dbTimetableResource.setEvaIds(evaIds.evaIds)
             dbTimetableResource.loadIfNecessary()
         }
     }
@@ -175,7 +176,7 @@ class MapViewModel(application: Application) : StadaStationCacheViewModel(applic
         it?.takeUnless { it.location == null }?.let { station ->
             OneShotLiveData<Pair<Station, RimapStation?>> { receiver ->
                 val evaIds = station.evaIds
-                val mainEvaId = evaIds.main
+                val mainEvaId = evaIds?.main
                 baseApplication.repositories.mapRepository.queryLevels(
                     station.id,
                     object : BaseRestListener<RimapStation?>() {

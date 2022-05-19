@@ -23,6 +23,7 @@ import de.deutschebahn.bahnhoflive.backend.db.newsapi.model.News
 import de.deutschebahn.bahnhoflive.backend.db.ris.model.Platform
 import de.deutschebahn.bahnhoflive.backend.einkaufsbahnhof.model.StationList
 import de.deutschebahn.bahnhoflive.backend.hafas.model.ProductCategory
+import de.deutschebahn.bahnhoflive.backend.local.model.EvaIds
 import de.deutschebahn.bahnhoflive.backend.local.model.ServiceContentType
 import de.deutschebahn.bahnhoflive.backend.local.model.isEco
 import de.deutschebahn.bahnhoflive.backend.rimap.RimapConfig
@@ -61,6 +62,12 @@ import io.reactivex.subjects.BehaviorSubject
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.flowOn
 import kotlinx.coroutines.flow.mapLatest
+import kotlinx.coroutines.ExperimentalCoroutinesApi
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.collect
+import kotlinx.coroutines.flow.filterNotNull
+import kotlinx.coroutines.flow.mapLatest
+import kotlinx.coroutines.launch
 import java.io.InputStreamReader
 import java.text.Collator
 import java.util.*
@@ -284,7 +291,17 @@ class StationViewModel(application: Application) : HafasTimetableViewModel(appli
         }
     }
 
-    val dbTimetableResource = DbTimetableResource()
+    val dbTimetableResource =
+        DbTimetableResource(object : EvaIdsProvider {
+            override fun withEvaIds(station: Station, action: (evaIds: EvaIds?) -> Unit) {
+                getApplication<BaseApplication>().applicationServices.evaIdsProvider.withEvaIds(
+                    station
+                ) {
+                    action(it ?: stationResource.data.value?.evaIds)
+                }
+            }
+        })
+
     private val evaIdsErrorObserver = Observer<VolleyError> { volleyError ->
         if (volleyError != null) {
             dbTimetableResource.setEvaIdsMissing()
@@ -292,7 +309,6 @@ class StationViewModel(application: Application) : HafasTimetableViewModel(appli
     }
     private val evaIdsDataObserver = Observer<Station> { station ->
         if (station != null) {
-            dbTimetableResource.setEvaIds(station.evaIds)
             dbTimetableResource.loadIfNecessary()
 
             accessibilityFeaturesResource.evaIds = station.evaIds
@@ -336,6 +352,27 @@ class StationViewModel(application: Application) : HafasTimetableViewModel(appli
         Log.d(StationViewModel::class.java.simpleName, msg)
     }
 
+    private val stationStateFlow = MutableStateFlow<Station?>(null)
+
+    @OptIn(ExperimentalCoroutinesApi::class)
+    private val updatedStationFlow = stationStateFlow.filterNotNull().mapLatest { station ->
+        getApplication<BaseApplication>().applicationServices.updatedStationRepository.getUpdatedStation(
+            station
+        )
+    }.apply {
+        viewModelScope.launch {
+            collect {
+                if (it?.isSuccess == true) {
+                    dbTimetableResource.loadIfNecessary()
+
+                    accessibilityFeaturesResource.evaIds = it.getOrNull()?.evaIds
+                } else {
+                    dbTimetableResource.setEvaIdsMissing()
+                }
+            }
+        }
+    }
+
     fun initialize(station: Station?) {
         if (station != null && initializationPending.take()) {
             stationResource.initialize(station)
@@ -344,8 +381,9 @@ class StationViewModel(application: Application) : HafasTimetableViewModel(appli
             parking.parkingsResource.initialize(station)
             dbTimetableResource.initialize(station)
 
-            stationResource.data.observeForever(evaIdsDataObserver)
-            stationResource.error.observeForever(evaIdsErrorObserver)
+            viewModelScope.launch {
+                stationStateFlow.emit(station)
+            }
 
             localTransportViewModel.initialize(stationResource)
 
