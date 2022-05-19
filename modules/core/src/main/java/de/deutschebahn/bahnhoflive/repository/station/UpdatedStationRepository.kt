@@ -44,8 +44,8 @@ class UpdatedStationRepository(
                             }
                         }
 
-                        override fun onFail(reason: VolleyError?) {
-                            sendBlocking(Result.failure(Exception("Unknown error")))
+                        override fun onFail(reason: VolleyError) {
+                            sendBlocking(Result.failure(reason))
                         }
                     },
                     station.title,
