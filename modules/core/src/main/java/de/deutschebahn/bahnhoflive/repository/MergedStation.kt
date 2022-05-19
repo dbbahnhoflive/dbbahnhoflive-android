@@ -10,7 +10,7 @@ data class MergedStation(
     val rimapStationWrapper: RimapStationWrapper? = null
 ) : Station {
 
-    private val resolvedEvaIds: EvaIds =
+    private val resolvedEvaIds: EvaIds? =
         rimapStationWrapper?.evaIds?.takeUnless { it.ids.isEmpty() }
             ?: fallbackStation.evaIds
 
@@ -21,7 +21,6 @@ data class MergedStation(
     override fun getLocation(): LatLng? =
         fallbackStation.location ?: risStation?.location ?: rimapStationWrapper?.location
 
-
-    override fun getEvaIds(): EvaIds = resolvedEvaIds
+    override fun getEvaIds(): EvaIds? = resolvedEvaIds
 
 }

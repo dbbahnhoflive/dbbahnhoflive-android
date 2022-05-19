@@ -484,7 +484,7 @@ public class WagenstandFragment extends Fragment implements View.OnLayoutChangeL
             return;
         }
         final EvaIds evaIds = station.getEvaIds();
-        if (!de.deutschebahn.bahnhoflive.util.Collections.hasContent(evaIds.getIds())) {
+        if (evaIds == null || !de.deutschebahn.bahnhoflive.util.Collections.hasContent(evaIds.getIds())) {
             return;
         }
 

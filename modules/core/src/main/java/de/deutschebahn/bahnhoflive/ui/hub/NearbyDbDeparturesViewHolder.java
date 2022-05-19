@@ -12,7 +12,9 @@ import androidx.lifecycle.LifecycleOwner;
 
 import de.deutschebahn.bahnhoflive.R;
 import de.deutschebahn.bahnhoflive.analytics.TrackingManager;
-import de.deutschebahn.bahnhoflive.ui.search.DBStationSearchResult;
+import de.deutschebahn.bahnhoflive.repository.DbTimetableResource;
+import de.deutschebahn.bahnhoflive.repository.InternalStation;
+import de.deutschebahn.bahnhoflive.ui.search.StationSearchResult;
 import de.deutschebahn.bahnhoflive.view.SingleSelectionManager;
 
 class NearbyDbDeparturesViewHolder extends DbDeparturesViewHolder {
@@ -24,7 +26,7 @@ class NearbyDbDeparturesViewHolder extends DbDeparturesViewHolder {
     }
 
     @Override
-    protected void onBind(DBStationSearchResult item) {
+    protected void onBind(StationSearchResult<InternalStation, DbTimetableResource> item) {
         super.onBind(item);
 
         distanceViewHolder.bind(item.getTimetable().getDistanceInKm());
