@@ -62,6 +62,7 @@ import de.deutschebahn.bahnhoflive.ui.station.localtransport.LocalTransportFragm
 import de.deutschebahn.bahnhoflive.ui.station.localtransport.LocalTransportViewModel;
 import de.deutschebahn.bahnhoflive.ui.station.occupancy.OccupancyExplanationFragment;
 import de.deutschebahn.bahnhoflive.ui.station.parking.ParkingListFragment;
+import de.deutschebahn.bahnhoflive.ui.station.railreplacement.RailReplacementFragment;
 import de.deutschebahn.bahnhoflive.ui.station.search.ContentSearchFragment;
 import de.deutschebahn.bahnhoflive.ui.station.shop.ShopCategorySelectionFragment;
 import de.deutschebahn.bahnhoflive.ui.station.timetable.TimetablesFragment;
@@ -433,7 +434,11 @@ public class StationActivity extends AppCompatActivity implements
 
     @Override
     public void showRailReplacement() {
-        stationViewModel.navigateToInfo(ServiceContentType.Local.RAIL_REPLACEMENT);
+        showInfoFragment(false);
+
+        if (!RailReplacementFragment.Companion.getTAG().equals(stationViewModel.getTopInfoFragmentTag())) {
+            infoFragment.push(new RailReplacementFragment());
+        }
     }
 
     @Override

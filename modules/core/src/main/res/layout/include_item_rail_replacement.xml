@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+
+<androidx.appcompat.widget.LinearLayoutCompat xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:focusable="true"
+    android:orientation="vertical"
+    android:paddingLeft="@dimen/default_space_double"
+    android:paddingRight="@dimen/default_space_double"
+    tools:showIn="@layout/fragment_rail_replacement"
+    android:layout_marginBottom="@dimen/default_space_double">
+
+    <TextView
+        android:id="@+id/rail_replacement_texts"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="@dimen/default_space_double"
+        android:textSize="@dimen/textsize_28"
+        android:textStyle="bold"
+        tools:text="Richtung Ostbahnhof/Gesundbrunnen\nErsatzhaltestelle Fernverkehr" />
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="@string/rail_replacement_directions"
+        android:textSize="@dimen/textsize_28" />
+
+    <TextView
+        android:id="@+id/rail_replacement_directions"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:textSize="@dimen/textsize_28"
+        tools:text="@tools:sample/lorem" />
+</androidx.appcompat.widget.LinearLayoutCompat>
+            

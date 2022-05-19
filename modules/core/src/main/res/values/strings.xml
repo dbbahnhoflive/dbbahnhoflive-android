@@ -354,4 +354,7 @@
     <string name="map_accept">Karte anzeigen</string>
 
     <string name="openHours">Öffnungszeiten</string>
+    <string name="rail_replacement">Schienenersatzverkehr</string>
+    <string name="rail_replacement_directions">Lagebeschreibung:</string>
+    <string name="rail_replacement_additional">Weitere Ersatzhaltestelle</string>
 </resources>

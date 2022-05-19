@@ -193,7 +193,9 @@ class AccessibilityFragment : Fragment(R.layout.fragment_accessibility) {
     }
 
     override fun onStop() {
-        viewModel.topInfoFragmentTag = null
+        if (viewModel.topInfoFragmentTag == TAG) {
+            viewModel.topInfoFragmentTag = null
+        }
 
         super.onStop()
     }

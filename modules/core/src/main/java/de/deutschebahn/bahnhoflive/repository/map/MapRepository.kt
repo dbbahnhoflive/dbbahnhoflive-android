@@ -55,6 +55,7 @@ open class MapRepository {
 
     open fun queryRailReplacement(
         id: String,
+        force: Boolean,
         listener: VolleyRestListener<RrtRequestResult>
     ): Cancellable? = listener.fail()
 }

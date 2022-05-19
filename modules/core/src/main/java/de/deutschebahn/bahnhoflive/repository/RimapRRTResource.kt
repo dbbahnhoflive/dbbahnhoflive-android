@@ -15,7 +15,11 @@ class RimapRRTResource : RemoteResource<RrtRequestResult>() {
 
     override fun onStartLoading(force: Boolean) {
         station?.id?.let { stationId ->
-            baseApplication.repositories.mapRepository.queryRailReplacement(stationId, Listener())
+            baseApplication.repositories.mapRepository.queryRailReplacement(
+                stationId,
+                force,
+                Listener()
+            )
         }
     }
 
@@ -25,6 +29,6 @@ class RimapRRTResource : RemoteResource<RrtRequestResult>() {
     }
 
     fun load() {
-        loadData(false)
+        loadData(true)
     }
 }

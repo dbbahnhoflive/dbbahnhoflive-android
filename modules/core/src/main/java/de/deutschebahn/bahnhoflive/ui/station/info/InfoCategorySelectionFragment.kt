@@ -24,6 +24,7 @@ import de.deutschebahn.bahnhoflive.ui.station.accessibility.AccessibilityFragmen
 import de.deutschebahn.bahnhoflive.ui.station.elevators.ElevatorStatusListsFragment
 import de.deutschebahn.bahnhoflive.ui.station.features.RISServicesAndCategory
 import de.deutschebahn.bahnhoflive.ui.station.parking.ParkingListFragment
+import de.deutschebahn.bahnhoflive.ui.station.railreplacement.RailReplacementFragment
 import de.deutschebahn.bahnhoflive.util.Collections
 
 class InfoCategorySelectionFragment : CategorySelectionFragment(
@@ -40,6 +41,7 @@ class InfoCategorySelectionFragment : CategorySelectionFragment(
     private lateinit var parkingsResource: ParkingsResource
 
     private lateinit var elevatorsDataResource: LiveData<List<FacilityStatus>?>
+    private lateinit var railReplacementSummaryLiveData: LiveData<MutableMap<String, MutableList<String>>?>
 
     private var infoAndServicesCategory: Category? = null
     private var serviceNumbersCategory: Category? = null
@@ -47,6 +49,7 @@ class InfoCategorySelectionFragment : CategorySelectionFragment(
     private var accessibilityCategory: Category? = null
     private var parkingsCategory: Category? = null
     private var elevatorsCategory: Category? = null
+    private var railReplacementCategory: Category? = null
 
     private fun updateCategories() {
         if (isAdded) {
@@ -59,6 +62,10 @@ class InfoCategorySelectionFragment : CategorySelectionFragment(
             accessibilityCategory = addAccessibility()
             parkingsCategory = addParkings()
 
+            if (!railReplacementSummaryLiveData.value.isNullOrEmpty()) {
+                railReplacementCategory = addRailReplacement()
+            }
+
             if (Collections.hasContent(elevatorsDataResource.value)) {
                 elevatorsCategory = addElevators()
             }
@@ -70,7 +77,8 @@ class InfoCategorySelectionFragment : CategorySelectionFragment(
                     wifiCategory,
                     accessibilityCategory,
                     parkingsCategory,
-                    elevatorsCategory
+                    elevatorsCategory,
+                    railReplacementCategory
                 )
             )
         }
@@ -153,6 +161,16 @@ class InfoCategorySelectionFragment : CategorySelectionFragment(
         }
     }
 
+    private fun addRailReplacement(): SimpleDynamicCategory? {
+        return SimpleDynamicCategory(
+            getText(R.string.rail_replacement), R.drawable.app_rail_replacement,
+            TrackingManager.Category.ZUGANG_WEGE
+        ) { category ->
+            trackCategoryTap(category)
+            startFragment(RailReplacementFragment())
+        }
+    }
+
     private fun addWifi(
         station: RISServicesAndCategory?,
         staticInfoCollection: StaticInfoCollection
@@ -186,6 +204,7 @@ class InfoCategorySelectionFragment : CategorySelectionFragment(
         serviceNumbersLiveData = stationViewModel.serviceNumbersLiveData
         parkingsResource = stationViewModel.parking.parkingsResource
         staticInfoLiveData = stationViewModel.staticInfoLiveData
+        railReplacementSummaryLiveData = stationViewModel.railReplacementSummaryLiveData
 
         staticInfoLiveData.observe(this, Observer {
             updateCategories()
