@@ -9,7 +9,7 @@ class ArrivalDepartureEvent(
     /**
      * Best known time information of stop as fully qualified date (for instance '2019-08-19T12:56:14+02:00' or '2019-08-19T10:56:14Z').
      */
-//    val timeType: TimeType,
+    val timeType: TimeType?,
     val time: String,
     /**
      * Scheduled platform [Gleis, Bahnsteig, Plattform] the transport arrives / departs at.
