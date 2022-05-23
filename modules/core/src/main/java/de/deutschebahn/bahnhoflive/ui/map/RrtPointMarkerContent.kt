@@ -12,7 +12,7 @@ import de.deutschebahn.bahnhoflive.ui.station.StationProvider
 class RrtPointMarkerContent(
     val rrtPoint: RrtPoint,
     val stationProvider: StationProvider
-) : MarkerContent(R.drawable.app_rail_replacement) {
+) : MarkerContent(R.drawable.rimap_sev_new) {
 
     override fun createMarkerOptions(): MarkerOptions? = super.createMarkerOptions()?.run {
         rrtPoint.coordinates?.let {
@@ -22,7 +22,7 @@ class RrtPointMarkerContent(
 
     override fun getTitle(): String = rrtPoint.text ?: "Schienenersatzverkehr"
 
-    override fun getMapIcon(): Int = R.drawable.app_rail_replacement
+    override fun getMapIcon(): Int = R.drawable.rimap_sev_new
 
     override fun getDescription(context: Context?): CharSequence =
         rrtPoint.walkDescription ?: "Wegbeschreibung nicht vorhanden."
