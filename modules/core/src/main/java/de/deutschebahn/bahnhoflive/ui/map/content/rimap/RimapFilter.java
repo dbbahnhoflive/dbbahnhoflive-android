@@ -116,7 +116,7 @@ public class RimapFilter {
     public static final String PRESET_LOCAL_TIMETABLE = "local timetable";
     public static final String PRESET_ELEVATORS = "elevators";
     public static final String PRESET_PARKING = "parking";
-    public static final String PRESET_RAIL_REPLACEMENT = "rail replacement";
+    public static final String PRESET_RAIL_REPLACEMENT = "local_timetable SEV";
 
     public static final String PRESET_TOILET = "toilet";
     public static final String PRESET_WIFI = "wifi";
