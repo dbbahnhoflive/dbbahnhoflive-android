@@ -1,18 +1,20 @@
 package de.deutschebahn.bahnhoflive.ui.station.railreplacement
 
+import android.content.Intent
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.core.view.isGone
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import de.deutschebahn.bahnhoflive.R
 import de.deutschebahn.bahnhoflive.databinding.FragmentRailReplacementBinding
 import de.deutschebahn.bahnhoflive.databinding.IncludeItemRailReplacementBinding
+import de.deutschebahn.bahnhoflive.ui.map.MapPresetProvider
+import de.deutschebahn.bahnhoflive.ui.map.content.rimap.RimapFilter
 import de.deutschebahn.bahnhoflive.ui.station.StationViewModel
 
-class RailReplacementFragment : Fragment() {
+class RailReplacementFragment : Fragment(), MapPresetProvider {
 
     val stationViewModel by activityViewModels<StationViewModel>()
 
@@ -40,18 +42,23 @@ class RailReplacementFragment : Fragment() {
                         railReplacementDirections.text = directions
 
                         railReplacementTexts.text =
-                            texts.joinToString("\n").takeUnless { it.isBlank() }
-                                ?: getString(R.string.rail_replacement_additional).also {
-                                    if (railReplacements.size == 1) {
-                                        railReplacementTexts.isGone = true
-                                    }
-                                }
+                            texts.mapNotNull {
+                                "• " + (it.takeUnless { it.isNullOrBlank() }
+                                    ?: getString(R.string.rail_replacement_additional))
+                            }.joinToString("\n")
                     }
                 }
 
             }
 
             refresher.isRefreshing = false
+        }
+
+        stationViewModel.pendingRailReplacementPointLiveData.observe(viewLifecycleOwner) { rrtPoint ->
+            if (rrtPoint != null) {
+                stationViewModel.pendingRailReplacementPointLiveData.value =
+                    null // just clear for now
+            }
         }
 
     }.root
@@ -72,5 +79,11 @@ class RailReplacementFragment : Fragment() {
         }
 
         super.onStop()
+    }
+
+    override fun prepareMapIntent(intent: Intent): Boolean {
+        RimapFilter.putPreset(intent, RimapFilter.PRESET_RAIL_REPLACEMENT)
+
+        return true
     }
 }

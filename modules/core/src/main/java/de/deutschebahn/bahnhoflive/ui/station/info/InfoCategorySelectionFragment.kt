@@ -41,7 +41,7 @@ class InfoCategorySelectionFragment : CategorySelectionFragment(
     private lateinit var parkingsResource: ParkingsResource
 
     private lateinit var elevatorsDataResource: LiveData<List<FacilityStatus>?>
-    private lateinit var railReplacementSummaryLiveData: LiveData<MutableMap<String, MutableList<String>>?>
+    private lateinit var railReplacementSummaryLiveData: LiveData<MutableMap<String, MutableList<String?>>?>
 
     private var infoAndServicesCategory: Category? = null
     private var serviceNumbersCategory: Category? = null

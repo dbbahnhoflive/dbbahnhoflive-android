@@ -38,6 +38,7 @@ import de.deutschebahn.bahnhoflive.repository.feedback.WhatsAppFeeback
 import de.deutschebahn.bahnhoflive.repository.map.RrtRequestResult
 import de.deutschebahn.bahnhoflive.repository.parking.ViewModelParking
 import de.deutschebahn.bahnhoflive.stream.livedata.MergedLiveData
+import de.deutschebahn.bahnhoflive.stream.livedata.switchMap
 import de.deutschebahn.bahnhoflive.stream.rx.Optional
 import de.deutschebahn.bahnhoflive.ui.map.Content
 import de.deutschebahn.bahnhoflive.ui.map.MapActivity
@@ -59,21 +60,22 @@ import de.deutschebahn.bahnhoflive.util.openhours.OpenHoursParser
 import de.deutschebahn.bahnhoflive.util.then
 import io.reactivex.Observable
 import io.reactivex.subjects.BehaviorSubject
+import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.flow.flowOn
-import kotlinx.coroutines.flow.mapLatest
 import kotlinx.coroutines.ExperimentalCoroutinesApi
-import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.collect
-import kotlinx.coroutines.flow.filterNotNull
-import kotlinx.coroutines.flow.mapLatest
+import kotlinx.coroutines.flow.*
 import kotlinx.coroutines.launch
 import java.io.InputStreamReader
 import java.text.Collator
 import java.util.*
 import java.util.concurrent.Executors
 
-class StationViewModel(application: Application) : HafasTimetableViewModel(application) {
+class StationViewModel(
+    application: Application,
+) : HafasTimetableViewModel(application) {
+
+    // TODO: Inject
+    private val defaultDispatcher: CoroutineDispatcher = Dispatchers.Default
 
     companion object {
         private val stationFeatureTemplates = listOf(
@@ -400,23 +402,30 @@ class StationViewModel(application: Application) : HafasTimetableViewModel(appli
 
     val railReplacementSummaryLiveData = railReplacementResource.data.asFlow()
         .mapLatest { rrtRequestResult: RrtRequestResult? ->
-            rrtRequestResult?.fold(mutableMapOf<String, MutableList<String>>()) { map, rrtPoint ->
+            rrtRequestResult?.fold(mutableMapOf<String, MutableList<String?>>()) { map, rrtPoint ->
                 map.apply {
-                    val walkDescriptionEntry = getOrPut(rrtPoint.walkDescription) {
-                        mutableListOf()
-                    }
 
-                    rrtPoint.text?.let {
-                        walkDescriptionEntry.add(it)
+                    val key = rrtPoint.walkDescription.takeUnless { it.isNullOrBlank() }
+
+                    if (key != null) {
+                        val walkDescriptionEntry = getOrPut(key) {
+                            mutableListOf()
+                        }
+
+                        walkDescriptionEntry.add(rrtPoint.text)
                     }
                 }
             }
 
         }
-        .flowOn(Dispatchers.Default)
+        .flowOn(defaultDispatcher)
         .asLiveData(viewModelScope.coroutineContext)
 
-    var stationNavigation: StationNavigation? = null
+    val stationNavigationLiveData = MutableLiveData<StationNavigation?>()
+
+    var stationNavigation: StationNavigation?
+        get() = stationNavigationLiveData.value
+        set(value) = stationNavigationLiveData.setValue(value)
 
     override fun onCleared() {
         super.onCleared()
@@ -1327,4 +1336,11 @@ class StationViewModel(application: Application) : HafasTimetableViewModel(appli
     val accessibilityFeaturesResource =
         AccessibilityFeaturesResource(this.application.repositories.stationRepository)
 
+    val pendingRrtPointAndStationNavigationLiveData = stationNavigationLiveData.switchMap { it ->
+        it?.let { stationNavigation ->
+            pendingRailReplacementPointLiveData.map { rrtPoint ->
+                stationNavigation to rrtPoint
+            }
+        }
+    }
 }

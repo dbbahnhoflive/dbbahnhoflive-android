@@ -31,7 +31,10 @@ import io.reactivex.functions.Consumer
 import io.reactivex.schedulers.Schedulers
 import io.reactivex.subjects.BehaviorSubject
 
-class MapViewModel(application: Application) : StadaStationCacheViewModel(application) {
+class MapViewModel(
+    application: Application,
+    private val savedStateHandle: SavedStateHandle,
+) : StadaStationCacheViewModel(application) {
 
     private val dbTimetableResource =
         DbTimetableResource(getApplication<BaseApplication>().applicationServices.evaIdsProvider)
@@ -46,6 +49,19 @@ class MapViewModel(application: Application) : StadaStationCacheViewModel(applic
             dbTimetableResource.loadIfNecessary()
         }
     }
+
+    var zoom: Float
+        get() = savedStateHandle["zoom"] ?: MapOverlayFragment.DEFAULT_ZOOM
+        set(value) {
+            savedStateHandle["zoom"] = value
+        }
+
+    var level: Int
+        get() = savedStateHandle["level"] ?: 0
+        set(value) {
+            savedStateHandle["level"] = value
+        }
+
 
     private val risServiceAndCategoryResource =
         RisServiceAndCategoryResource(openHoursParser)
@@ -66,6 +82,8 @@ class MapViewModel(application: Application) : StadaStationCacheViewModel(applic
     val zoneIdLiveData = MutableLiveData<String>()
 
     val originalStationLiveData = MutableLiveData<Station?>()
+
+    val railReplacementResource = RimapRRTResource()
 
     val stationLocationLiveData: LiveData<LatLng?> = MediatorLiveData<LatLng?>().apply {
 
@@ -97,6 +115,8 @@ class MapViewModel(application: Application) : StadaStationCacheViewModel(applic
             stationResource.error.observeForever(evaIdsErrorObserver)
 
             parking.parkingsResource.initialize(station)
+
+            railReplacementResource.initialize(station)
         }
     }
 

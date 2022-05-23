@@ -10,6 +10,7 @@ import android.content.Context;
 import android.os.Parcelable;
 
 import androidx.annotation.DrawableRes;
+import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
 import com.google.android.gms.maps.model.BitmapDescriptor;
@@ -66,7 +67,7 @@ public abstract class MarkerContent {
         return false;
     }
 
-    public void openLink(Context context) {
+    public void openLink(@NonNull Context context) {
     }
 
     public float getZoom(float zoom) {
