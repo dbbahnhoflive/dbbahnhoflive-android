@@ -81,7 +81,7 @@ class StationViewModel(
         private val stationFeatureTemplates = listOf(
             StationFeatureTemplate(
                 StationFeatureDefinition.ACCESSIBILITY,
-                AccessibilityLink(TrackingManager.Category.ZUGANG_WEGE)
+                AccessibilityLink(TrackingManager.Category.BARRIEREFREIHEIT)
             ),
             StationFeatureTemplate(
                 StationFeatureDefinition.TOILET,

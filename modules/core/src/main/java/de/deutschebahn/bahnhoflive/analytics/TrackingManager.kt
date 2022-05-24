@@ -16,7 +16,6 @@ import androidx.lifecycle.DefaultLifecycleObserver
 import androidx.lifecycle.LifecycleOwner
 import de.deutschebahn.bahnhoflive.BaseApplication.Companion.get
 import de.deutschebahn.bahnhoflive.ui.consent.ConsentActivity
-import java.util.*
 
 open class TrackingManager(activity: ComponentActivity? = null) {
     private val trackingDelegate: TrackingDelegate = get().trackingDelegate
@@ -156,6 +155,8 @@ open class TrackingManager(activity: ComponentActivity? = null) {
             const val SERVICE_UND_RUFNUMMERN = "service_und_rufnummern"
             const val WLAN = "wlan"
             const val ZUGANG_WEGE = "zugang_wege"
+            const val BARRIEREFREIHEIT = ZUGANG_WEGE // TODO: "barrierefreiheit"
+            const val SCHIENENERSATZVERKEHR = "schienenersatzverkehr"
             const val BAECKEREIEN = "baeckereien"
             const val DIENSTLEISTUNGEN = "dienstleistungen"
             const val GASTRONOMIE = "gastronomie"

@@ -8,6 +8,8 @@ import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import de.deutschebahn.bahnhoflive.R
+import de.deutschebahn.bahnhoflive.analytics.TrackingManager
+import de.deutschebahn.bahnhoflive.analytics.TrackingManager.Companion.fromActivity
 import de.deutschebahn.bahnhoflive.databinding.FragmentRailReplacementBinding
 import de.deutschebahn.bahnhoflive.databinding.IncludeItemRailReplacementBinding
 import de.deutschebahn.bahnhoflive.ui.map.MapPresetProvider
@@ -71,6 +73,12 @@ class RailReplacementFragment : Fragment(), MapPresetProvider {
         super.onStart()
 
         stationViewModel.topInfoFragmentTag = TAG
+
+        fromActivity(activity).track(
+            TrackingManager.TYPE_STATE,
+            TrackingManager.Screen.D1,
+            TrackingManager.Category.SCHIENENERSATZVERKEHR
+        )
     }
 
     override fun onStop() {

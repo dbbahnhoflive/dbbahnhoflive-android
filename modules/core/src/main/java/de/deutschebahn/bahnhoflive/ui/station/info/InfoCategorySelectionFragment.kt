@@ -154,7 +154,7 @@ class InfoCategorySelectionFragment : CategorySelectionFragment(
     private fun addAccessibility(): SimpleDynamicCategory? {
         return SimpleDynamicCategory(
             "Barrierefreiheit", R.drawable.app_zugang_wege,
-            TrackingManager.Category.ZUGANG_WEGE
+            TrackingManager.Category.BARRIEREFREIHEIT
         ) { category ->
             trackCategoryTap(category)
             startFragment(AccessibilityFragment())
@@ -164,7 +164,7 @@ class InfoCategorySelectionFragment : CategorySelectionFragment(
     private fun addRailReplacement(): SimpleDynamicCategory? {
         return SimpleDynamicCategory(
             getText(R.string.rail_replacement), R.drawable.app_rail_replacement,
-            TrackingManager.Category.ZUGANG_WEGE
+            TrackingManager.Category.SCHIENENERSATZVERKEHR
         ) { category ->
             trackCategoryTap(category)
             startFragment(RailReplacementFragment())
