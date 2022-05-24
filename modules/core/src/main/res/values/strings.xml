@@ -357,4 +357,5 @@
     <string name="rail_replacement">Schienenersatzverkehr</string>
     <string name="rail_replacement_directions">Lagebeschreibung:</string>
     <string name="rail_replacement_additional">Weitere Ersatzhaltestelle</string>
+    <string name="rail_replacement_map_link">Eine Wegbeschreibung finden Sie unter Bahnhofsinformationen.</string>
 </resources>

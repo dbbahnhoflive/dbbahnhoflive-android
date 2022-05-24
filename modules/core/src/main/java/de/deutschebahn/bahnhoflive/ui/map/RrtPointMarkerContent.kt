@@ -20,12 +20,12 @@ class RrtPointMarkerContent(
         }
     }
 
-    override fun getTitle(): String = rrtPoint.text ?: "Schienenersatzverkehr"
+    override fun getTitle(): String = "Schienenersatzverkehr"
 
     override fun getMapIcon(): Int = R.drawable.rimap_sev_new
 
-    override fun getDescription(context: Context?): CharSequence =
-        rrtPoint.walkDescription ?: "Wegbeschreibung nicht vorhanden."
+    override fun getDescription(context: Context): CharSequence =
+        rrtPoint.text ?: context.getText(R.string.rail_replacement_additional)
 
     override fun wraps(item: Parcelable?) = rrtPoint == item
 
@@ -38,4 +38,6 @@ class RrtPointMarkerContent(
             })
         }
     }
+
+    override fun getViewType(): ViewType = ViewType.RAIL_REPLACEMENT
 }

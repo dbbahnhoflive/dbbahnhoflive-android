@@ -27,7 +27,7 @@ public abstract class MarkerContent {
     }
 
     public enum ViewType {
-        COMMON, STATION, BOOKMARKABLE, DB_STATION, TRACK;
+        COMMON, STATION, BOOKMARKABLE, DB_STATION, TRACK, RAIL_REPLACEMENT;
 
         /**
          * Avoid multiple calls to values() because it creates a new array each time.
