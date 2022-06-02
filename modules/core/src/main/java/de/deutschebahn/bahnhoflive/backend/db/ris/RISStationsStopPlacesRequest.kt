@@ -30,7 +30,8 @@ class RISStationsStopPlacesRequest(
     radius: Int = 2000,
     private val mixedResults: Boolean,
     private val collapseNeighbours: Boolean,
-    private val pullUpFirstDbStation: Boolean
+    private val pullUpFirstDbStation: Boolean,
+    clientIdDbAuthorizationTool: DbAuthorizationTool?
 ) : RISStationsRequest<List<StopPlace>>("stop-places/" +
         (query?.trim()?.takeUnless { it.isEmpty() }
             ?.let { "by-name/" + URLEncoder.encode(it, "UTF-8") }
@@ -51,7 +52,8 @@ class RISStationsStopPlacesRequest(
     "${it.first}=${it.second}"
 },
     dbAuthorizationTool,
-    listener
+    listener,
+    clientIdDbAuthorizationTool
 ) {
 
     init {

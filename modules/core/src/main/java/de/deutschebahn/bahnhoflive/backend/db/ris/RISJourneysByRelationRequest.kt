@@ -17,11 +17,13 @@ import java.util.concurrent.TimeUnit
 class RISJourneysByRelationRequest(
     parameters: Parameters,
     dbAuthorizationTool: DbAuthorizationTool,
-    restListener: VolleyRestListener<DepartureMatches>
+    restListener: VolleyRestListener<DepartureMatches>,
+    secondaryDbAuthorizationTool: DbAuthorizationTool?
 ) : RISJourneysRequest<DepartureMatches>(
     "byrelation?${parameters.toUrlParameters()}",
     dbAuthorizationTool,
-    restListener
+    restListener,
+    secondaryDbAuthorizationTool
 ) {
 
     class Parameters(

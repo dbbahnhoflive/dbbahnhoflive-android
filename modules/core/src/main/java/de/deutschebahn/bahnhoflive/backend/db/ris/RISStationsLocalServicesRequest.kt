@@ -11,12 +11,14 @@ import de.deutschebahn.bahnhoflive.backend.parse
 class RISStationsLocalServicesRequest(
     val stadaId: String,
     restListener: VolleyRestListener<LocalServices>,
-    dbAuthorizationTool: DbAuthorizationTool
+    dbAuthorizationTool: DbAuthorizationTool,
+    clientIdDbAuthorizationTool: DbAuthorizationTool?
 ) :
     RISStationsRequest<LocalServices>(
         "local-services/by-key?keyType=STATION_ID&key=$stadaId",
         dbAuthorizationTool,
-        restListener
+        restListener,
+        clientIdDbAuthorizationTool
     ) {
 
     override fun parseNetworkResponse(response: NetworkResponse): Response<LocalServices>? {

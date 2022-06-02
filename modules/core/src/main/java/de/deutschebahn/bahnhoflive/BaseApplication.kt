@@ -84,7 +84,8 @@ abstract class BaseApplication(
         return RepositoryHolder(
             stationRepository = OfficialStationRepository(
                 restHelper,
-                dbAuthorizationTool
+                dbAuthorizationTool,
+                null
             ),
             elevatorStatusRepository = Fasta2ElevatorStatusRepository(
                 restHelper,
@@ -92,7 +93,7 @@ abstract class BaseApplication(
             ),
             occupancyRepository = OccupancyRepository(),
             timetableRepository = RisTimetableRepository(
-                restHelper, dbAuthorizationTool
+                restHelper, dbAuthorizationTool, null
             )
         )
     }

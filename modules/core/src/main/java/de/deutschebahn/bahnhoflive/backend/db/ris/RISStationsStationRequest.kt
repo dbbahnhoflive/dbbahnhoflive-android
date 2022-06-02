@@ -11,13 +11,14 @@ import de.deutschebahn.bahnhoflive.backend.parse
 class RISStationsStationRequest(
     val stadaId: String,
     restListener: VolleyRestListener<RISStation>,
-    dbAuthorizationTool: DbAuthorizationTool
+    dbAuthorizationTool: DbAuthorizationTool,
+    clientIdDbAuthorizationTool: DbAuthorizationTool?
 ) :
     RISStationsRequest<RISStation>(
         "/stations/$stadaId",
         dbAuthorizationTool,
-        restListener
-
+        restListener,
+        clientIdDbAuthorizationTool
     ) {
 
     override fun parseNetworkResponse(response: NetworkResponse): Response<RISStation>? {
