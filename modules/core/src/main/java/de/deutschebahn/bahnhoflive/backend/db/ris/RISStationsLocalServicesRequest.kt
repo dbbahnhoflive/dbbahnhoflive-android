@@ -17,8 +17,7 @@ class RISStationsLocalServicesRequest(
     RISStationsRequest<LocalServices>(
         "local-services/by-key?keyType=STATION_ID&key=$stadaId",
         dbAuthorizationTool,
-        restListener,
-        clientIdDbAuthorizationTool
+        restListener
     ) {
 
     override fun parseNetworkResponse(response: NetworkResponse): Response<LocalServices>? {

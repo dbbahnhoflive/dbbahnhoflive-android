@@ -17,8 +17,7 @@ class RISStationsStationRequest(
     RISStationsRequest<RISStation>(
         "/stations/$stadaId",
         dbAuthorizationTool,
-        restListener,
-        clientIdDbAuthorizationTool
+        restListener
     ) {
 
     override fun parseNetworkResponse(response: NetworkResponse): Response<RISStation>? {

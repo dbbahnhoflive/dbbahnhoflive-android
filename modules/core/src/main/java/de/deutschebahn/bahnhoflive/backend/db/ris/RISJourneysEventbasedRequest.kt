@@ -13,13 +13,11 @@ import java.io.ByteArrayInputStream
 class RISJourneysEventbasedRequest(
     journeyID: String,
     dbAuthorizationTool: DbAuthorizationTool,
-    restListener: VolleyRestListener<JourneyEventBased>,
-    secondaryDbAuthorizationTool: DbAuthorizationTool?
+    restListener: VolleyRestListener<JourneyEventBased>
 ) : RISJourneysRequest<JourneyEventBased>(
     "eventbased/$journeyID",
     dbAuthorizationTool,
-    restListener,
-    secondaryDbAuthorizationTool
+    restListener
 ) {
 
 

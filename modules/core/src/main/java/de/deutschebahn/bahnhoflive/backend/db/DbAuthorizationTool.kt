@@ -14,10 +14,10 @@ open class DbAuthorizationTool(
 
     open val key get() = apiKey
 
-    fun putAuthorizationHeader(headers: MutableMap<String, String>?) =
+    open fun putAuthorizationHeader(headers: MutableMap<String, String>?) =
         putAuthorizationHeader(headers, "key")
 
-    fun putAuthorizationHeader(
+    open fun putAuthorizationHeader(
         headers: Map<String, String>?,
         keyName: String = "key"
     ): Map<String, String> {

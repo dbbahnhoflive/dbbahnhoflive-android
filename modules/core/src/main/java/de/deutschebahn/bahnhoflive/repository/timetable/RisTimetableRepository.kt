@@ -18,8 +18,7 @@ import java.util.*
 
 open class RisTimetableRepository(
     protected val restHelper: RestHelper,
-    protected val dbAuthorizationTool: DbAuthorizationTool,
-    protected val clientIdDbAuthorizationTool: DbAuthorizationTool?
+    protected val dbAuthorizationTool: DbAuthorizationTool
 ) : TimetableRepository() {
     override fun queryJourneys(
         evaIds: EvaIds,
@@ -88,8 +87,7 @@ open class RisTimetableRepository(
                     override fun onFail(reason: VolleyError?) {
                         listener.onFail(reason)
                     }
-                },
-                clientIdDbAuthorizationTool
+                }
             )
         )
     }
@@ -163,8 +161,7 @@ open class RisTimetableRepository(
                             override fun onFail(reason: VolleyError?) {
                                 listener.onFail(reason)
                             }
-                        },
-                        clientIdDbAuthorizationTool
+                        }
                     )
                 )
 

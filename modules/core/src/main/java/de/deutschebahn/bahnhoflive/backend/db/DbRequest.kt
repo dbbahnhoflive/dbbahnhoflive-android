@@ -22,19 +22,13 @@ abstract class DbRequest<T>(
     url: String?,
     private val dbAuthorizationTool: DbAuthorizationTool?,
     restListener: VolleyRestListener<T>,
-    private val authorizationHeaderKey: String = "key",
-    private val secondaryDbAuthorizationTool: DbAuthorizationTool? = null,
-    private val secondaryAuthorizationHeaderKey: String? = secondaryDbAuthorizationTool?.let { "db-client-id" }
+    private val authorizationHeaderKey: String = "key"
 ) : BaseRequest<T>(method, url, restListener), Countable {
     @Throws(AuthFailureError::class)
     override fun getHeaders(): Map<String, String> {
         return putTraceHeader(
             dbAuthorizationTool?.putAuthorizationHeader(
-                super.getHeaders().let { headers ->
-                    secondaryAuthorizationHeaderKey?.let { key ->
-                        secondaryDbAuthorizationTool?.putAuthorizationHeader(headers, key)
-                    } ?: headers
-                }, authorizationHeaderKey
+                super.getHeaders(), authorizationHeaderKey
             ).asMutable()
         )
     }

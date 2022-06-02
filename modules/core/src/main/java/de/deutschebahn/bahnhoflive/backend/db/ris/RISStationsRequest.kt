@@ -7,17 +7,14 @@ import de.deutschebahn.bahnhoflive.backend.db.DbRequest
 abstract class RISStationsRequest<T>(
     urlSuffix: String,
     apiKeyDbAuthorizationTool: DbAuthorizationTool,
-    restListener: VolleyRestListener<T>,
-    clientIdDbAuthorizationTool: DbAuthorizationTool?
+    restListener: VolleyRestListener<T>
 ) :
     DbRequest<T>(
         Method.GET,
         "https://apis.deutschebahn.com/db/apis/ris-stations/v1/$urlSuffix",
         apiKeyDbAuthorizationTool,
         restListener,
-        "db-api-key",
-        clientIdDbAuthorizationTool,
-        clientIdDbAuthorizationTool?.let { "db-client-id" }
+        "db-api-key"
     ) {
 
     override fun getCountKey(): String? = null

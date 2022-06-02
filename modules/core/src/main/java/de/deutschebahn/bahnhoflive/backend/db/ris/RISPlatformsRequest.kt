@@ -29,8 +29,7 @@ class RISPlatformsRequest(
     "platforms/$evaId" +
             "?includeAccessibility=true",
     dbAuthorizationTool,
-    listener,
-    clientIdDbAuthorizationTool
+    listener
 ) {
 
     init {

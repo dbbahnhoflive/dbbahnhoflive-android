@@ -32,28 +32,28 @@ class RISStationsStopPlacesRequest(
     private val collapseNeighbours: Boolean,
     private val pullUpFirstDbStation: Boolean,
     clientIdDbAuthorizationTool: DbAuthorizationTool?
-) : RISStationsRequest<List<StopPlace>>("stop-places/" +
-        (query?.trim()?.takeUnless { it.isEmpty() }
-            ?.let { "by-name/" + URLEncoder.encode(it, "UTF-8") }
-            ?: "by-position") + sequenceOf(
-    "size" to (limit).toString()
-).let { sequence ->
-    location?.let { location ->
-        sequence.plus(
-            sequenceOf(
-                "latitude" to location.latitude.obfuscate().toString(),
-                "longitude" to location.longitude.obfuscate().toString(),
-                "radius" to radius.toString()
+) : RISStationsRequest<List<StopPlace>>(
+    "stop-places/" +
+            (query?.trim()?.takeUnless { it.isEmpty() }
+                ?.let { "by-name/" + URLEncoder.encode(it, "UTF-8") }
+                ?: "by-position") + sequenceOf(
+        "size" to (limit).toString()
+    ).let { sequence ->
+        location?.let { location ->
+            sequence.plus(
+                sequenceOf(
+                    "latitude" to location.latitude.obfuscate().toString(),
+                    "longitude" to location.longitude.obfuscate().toString(),
+                    "radius" to radius.toString()
+                )
             )
-        )
-    }
-        ?: sequence
-}.filterNotNull().joinToString("&", "?") {
-    "${it.first}=${it.second}"
-},
+        }
+            ?: sequence
+    }.filterNotNull().joinToString("&", "?") {
+        "${it.first}=${it.second}"
+    },
     dbAuthorizationTool,
-    listener,
-    clientIdDbAuthorizationTool
+    listener
 ) {
 
     init {
