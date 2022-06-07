@@ -40,6 +40,7 @@ public interface ServiceContentType {
         String STATION_COMPLAINT = "station_complaint";
         String APP_ISSUE = "app_issue";
         String RATE_APP = "rate_app";
+        String RAIL_REPLACEMENT = "rail_replacement";
     }
 
     interface DummyForCategory {

@@ -15,7 +15,6 @@ import de.deutschebahn.bahnhoflive.backend.ris.model.TrainEvent
 import de.deutschebahn.bahnhoflive.ui.timetable.journey.JourneyStop
 import de.deutschebahn.bahnhoflive.ui.timetable.journey.toJourneyStopEvent
 import java.util.*
-import kotlin.collections.ArrayList
 
 open class RisTimetableRepository(
     protected val restHelper: RestHelper,
@@ -83,7 +82,7 @@ open class RisTimetableRepository(
                         }
                     }
 
-                    override fun onFail(reason: VolleyError?) {
+                    override fun onFail(reason: VolleyError) {
                         listener.onFail(reason)
                     }
                 }
@@ -157,7 +156,7 @@ open class RisTimetableRepository(
                                 } ?: processPendingJourney()
                             }
 
-                            override fun onFail(reason: VolleyError?) {
+                            override fun onFail(reason: VolleyError) {
                                 listener.onFail(reason)
                             }
                         })

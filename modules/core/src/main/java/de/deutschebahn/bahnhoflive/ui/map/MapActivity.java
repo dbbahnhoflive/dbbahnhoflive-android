@@ -134,7 +134,9 @@ public class MapActivity extends AppCompatActivity implements
     }
 
     private static Intent createIntent(Context context) {
-        return new Intent(context, MapActivity.class);
+        final Intent intent = new Intent(context, MapActivity.class);
+        intent.addFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT);
+        return intent;
     }
 
     @NonNull

@@ -8,7 +8,7 @@ package de.deutschebahn.bahnhoflive.backend
 import com.android.volley.Response
 
 interface RestListener<T, E> {
-    fun onSuccess(payload: T)
+    fun onSuccess(payload: T?)
     fun onFail(reason: E)
 }
 

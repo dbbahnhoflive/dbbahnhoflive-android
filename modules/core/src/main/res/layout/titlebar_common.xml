@@ -11,10 +11,13 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
+    android:id="@+id/title_app_bar_layout"
     tools:showIn="@layout/fragment_recycler_grid"
     android:background="#fdfdfe">
 
-    <include layout="@layout/titlebar_static" />
+    <include
+        android:id="@+id/static_title_bar"
+        layout="@layout/titlebar_static" />
 </com.google.android.material.appbar.AppBarLayout>
 
     

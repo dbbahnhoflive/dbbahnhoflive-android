@@ -43,6 +43,7 @@ import de.deutschebahn.bahnhoflive.analytics.IssueTracker;
 import de.deutschebahn.bahnhoflive.analytics.IssueTrackerKt;
 import de.deutschebahn.bahnhoflive.analytics.StationTrackingManager;
 import de.deutschebahn.bahnhoflive.analytics.TrackingManager;
+import de.deutschebahn.bahnhoflive.backend.local.model.RrtPoint;
 import de.deutschebahn.bahnhoflive.backend.local.model.ServiceContentType;
 import de.deutschebahn.bahnhoflive.backend.ris.model.TrainInfo;
 import de.deutschebahn.bahnhoflive.repository.InternalStation;
@@ -62,10 +63,12 @@ import de.deutschebahn.bahnhoflive.ui.station.localtransport.LocalTransportFragm
 import de.deutschebahn.bahnhoflive.ui.station.localtransport.LocalTransportViewModel;
 import de.deutschebahn.bahnhoflive.ui.station.occupancy.OccupancyExplanationFragment;
 import de.deutschebahn.bahnhoflive.ui.station.parking.ParkingListFragment;
+import de.deutschebahn.bahnhoflive.ui.station.railreplacement.RailReplacementFragment;
 import de.deutschebahn.bahnhoflive.ui.station.search.ContentSearchFragment;
 import de.deutschebahn.bahnhoflive.ui.station.shop.ShopCategorySelectionFragment;
 import de.deutschebahn.bahnhoflive.ui.station.timetable.TimetablesFragment;
 import de.deutschebahn.bahnhoflive.ui.timetable.localtransport.HafasTimetableViewModel;
+import kotlin.Pair;
 
 public class StationActivity extends AppCompatActivity implements
         StationProvider, HistoryFragment.RootProvider,
@@ -76,6 +79,7 @@ public class StationActivity extends AppCompatActivity implements
     private static final String ARG_SHOW_DEPARTURES = "showDepartures";
     private static final String ARG_TRACK_FILTER = "trackFilter";
     private static final String ARG_TRAIN_INFO = "trainInfo";
+    private static final String ARG_RRT_POINT = "rrtPoint";
 
     private HistoryFragment infoFragment;
 
@@ -94,6 +98,14 @@ public class StationActivity extends AppCompatActivity implements
     private StationTrackingManager trackingManager;
     private boolean initializeShowingDepartures;
     private StationViewModel stationViewModel;
+
+    private final Observer<Pair<StationNavigation, RrtPoint>> pendingRrtPointAndStationNavigationObserver = pair -> {
+        final StationNavigation stationNavigation = pair.getFirst();
+        final RrtPoint rrtPoint = pair.getSecond();
+        if (stationNavigation != null && rrtPoint != null) {
+            stationNavigation.showRailReplacement();
+        }
+    };
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -115,7 +127,7 @@ public class StationActivity extends AppCompatActivity implements
         stationViewModel = viewModelProvider.get(StationViewModel.class);
         stationViewModel.setStationNavigation(this);
 
-        if (exploitIntent()) return;
+        if (exploitIntent(getIntent())) return;
         if (savedInstanceState != null) {
             initializeShowingDepartures = savedInstanceState.getBoolean(ARG_SHOW_DEPARTURES);
         } else {
@@ -220,6 +232,13 @@ public class StationActivity extends AppCompatActivity implements
     }
 
     @Override
+    protected void onStop() {
+        stationViewModel.getPendingRrtPointAndStationNavigationLiveData().removeObserver(pendingRrtPointAndStationNavigationObserver);
+
+        super.onStop();
+    }
+
+    @Override
     protected void onStart() {
         super.onStart();
 
@@ -228,6 +247,8 @@ public class StationActivity extends AppCompatActivity implements
 
             showTimetablesFragment(false, false, null);
         }
+
+        stationViewModel.getPendingRrtPointAndStationNavigationLiveData().observe(this, pendingRrtPointAndStationNavigationObserver);
     }
 
     @Override
@@ -424,6 +445,15 @@ public class StationActivity extends AppCompatActivity implements
     }
 
     @Override
+    public void showRailReplacement() {
+        showInfoFragment(false);
+
+        if (!RailReplacementFragment.Companion.getTAG().equals(stationViewModel.getTopInfoFragmentTag())) {
+            infoFragment.push(new RailReplacementFragment());
+        }
+    }
+
+    @Override
     public Station getStation() {
         return station;
     }
@@ -449,9 +479,7 @@ public class StationActivity extends AppCompatActivity implements
         throw new IllegalStateException();
     }
 
-    private boolean exploitIntent() {
-        final Intent intent = getIntent();
-
+    private boolean exploitIntent(Intent intent) {
         station = intent.getParcelableExtra(ARG_STATION);
         if (station == null) {
             finish();
@@ -465,6 +493,10 @@ public class StationActivity extends AppCompatActivity implements
         }
         if (intent.hasExtra(ARG_TRAIN_INFO)) {
             stationViewModel.showWaggonOrder(intent.getParcelableExtra(ARG_TRAIN_INFO));
+        }
+
+        if (intent.hasExtra(ARG_RRT_POINT)) {
+            stationViewModel.pendingRailReplacementPointLiveData.setValue(intent.getParcelableExtra(ARG_RRT_POINT));
         }
 
         return false;
@@ -550,11 +582,17 @@ public class StationActivity extends AppCompatActivity implements
         return intent;
     }
 
+    public static Intent createIntent(Context context, Station station, RrtPoint rrtPoint) {
+        final Intent intent = createIntent(context, station);
+        intent.putExtra(ARG_RRT_POINT, rrtPoint);
+        return intent;
+    }
+
     @Override
     protected void onNewIntent(Intent intent) {
         super.onNewIntent(intent);
 
-        exploitIntent();
+        exploitIntent(intent);
     }
 
 
