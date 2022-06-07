@@ -12,8 +12,13 @@ android {
         targetSdkVersion 30
         multiDexEnabled true
 
-        buildConfigField "String", "BUSINESS_HUB_API_KEY", "\"a5d3c62e032912922ed46cdacdb47940\"" // open source community API key
-        buildConfigField "String", "RIS_JOURNEYS_BASE_URL", "\"https://gateway.businesshub.deutschebahn.com/ris-journeys/v1/\""
+        buildConfigField "String", "RIS_JOURNEYS_BASE_URL", "\"https://apis.deutschebahn.com/db/apis/ris-journeys/v1/\""
+
+        buildConfigField "String", "RIS_STATIONS_API_KEY", "\"ae429e8b34b1366eb37ca466260f92f8\""
+        buildConfigField "String", "RIS_STATIONS_CLIENT_ID", "\"be998c9dd20ae7b9440839580644fc47\""
+
+        buildConfigField "String", "FASTA_API_KEY", "\"15d020725ecb768ea41a5925a26bf50e\""
+        buildConfigField "String", "FASTA_CLIENT_ID", "\"1c5f5114b79924f8d34d50cb601d4dd6\""
 
     }
     buildTypes {

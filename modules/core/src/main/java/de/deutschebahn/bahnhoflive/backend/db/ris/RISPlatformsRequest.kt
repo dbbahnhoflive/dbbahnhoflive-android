@@ -24,6 +24,7 @@ class RISPlatformsRequest(
     dbAuthorizationTool: DbAuthorizationTool,
     evaId: String,
     force: Boolean = false,
+    clientIdDbAuthorizationTool: DbAuthorizationTool?,
 ) : RISStationsRequest<List<Platform>>(
     "platforms/$evaId" +
             "?includeAccessibility=true",

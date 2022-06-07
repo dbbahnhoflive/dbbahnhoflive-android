@@ -68,7 +68,9 @@ open class RisTimetableRepository(
             RISJourneysByRelationRequest(
                 RISJourneysByRelationRequest.Parameters(
                     number, category, line, date
-                ), dbAuthorizationTool, object : VolleyRestListener<DepartureMatches> {
+                ),
+                dbAuthorizationTool,
+                object : VolleyRestListener<DepartureMatches> {
                     override fun onSuccess(payload: DepartureMatches?) {
                         payload?.journeys?.also {
                             JourneyDetailsFetcher(
@@ -159,7 +161,8 @@ open class RisTimetableRepository(
                             override fun onFail(reason: VolleyError) {
                                 listener.onFail(reason)
                             }
-                        })
+                        }
+                    )
                 )
 
             } ?: kotlin.run {

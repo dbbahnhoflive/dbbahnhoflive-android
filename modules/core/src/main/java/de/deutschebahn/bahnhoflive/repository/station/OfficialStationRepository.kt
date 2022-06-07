@@ -19,19 +19,21 @@ import de.deutschebahn.bahnhoflive.backend.db.ris.RISStationsStopPlacesRequest
 import de.deutschebahn.bahnhoflive.backend.db.ris.model.LocalServices
 import de.deutschebahn.bahnhoflive.backend.db.ris.model.Platform
 import de.deutschebahn.bahnhoflive.backend.db.ris.model.RISStation
+import de.deutschebahn.bahnhoflive.backend.db.ris.model.StopPlace
 import de.deutschebahn.bahnhoflive.util.Cancellable
 import de.deutschebahn.bahnhoflive.util.volley.VolleyRequestCancellable
 import de.deutschebahn.bahnhoflive.util.volley.cancellable
 
 class OfficialStationRepository(
     private val restHelper: RestHelper,
-    private val dbAuthorizationTool: DbAuthorizationTool
+    private val dbAuthorizationTool: DbAuthorizationTool,
+    private val clientIdDbAuthorizationTool: DbAuthorizationTool? = null
 ) : StationRepository() {
 
     private val trackingManager = TrackingManager()
 
     override fun queryStations(
-        listener: VolleyRestListener<List<de.deutschebahn.bahnhoflive.backend.db.ris.model.StopPlace>?>,
+        listener: VolleyRestListener<List<StopPlace>?>,
         query: String?,
         location: Location?,
         force: Boolean,
@@ -77,7 +79,8 @@ class OfficialStationRepository(
                 radius,
                 mixedResults,
                 collapseNeighbours,
-                pullUpFirstDbStation
+                pullUpFirstDbStation,
+                clientIdDbAuthorizationTool
             )
         )
         .cancellable()
@@ -89,7 +92,12 @@ class OfficialStationRepository(
         currentPosition: Location?
     ): Cancellable =
         restHelper.add(
-            RISStationsLocalServicesRequest(stadaId, listener, dbAuthorizationTool)
+            RISStationsLocalServicesRequest(
+                stadaId,
+                listener,
+                dbAuthorizationTool,
+                clientIdDbAuthorizationTool
+            )
         ).cancellable()
 
     override fun queryStation(
@@ -99,7 +107,9 @@ class OfficialStationRepository(
         currentPosition: Location?
     ) =
         restHelper.add(
-            RISStationsStationRequest(stadaId, listener, dbAuthorizationTool)
+            RISStationsStationRequest(
+                stadaId, listener, dbAuthorizationTool, clientIdDbAuthorizationTool
+            )
         ).cancellable()
 
 
@@ -109,7 +119,9 @@ class OfficialStationRepository(
         force: Boolean
     ): VolleyRequestCancellable<List<Platform>> = restHelper
         .add(
-            RISPlatformsRequest(listener, dbAuthorizationTool, evaId, force)
+            RISPlatformsRequest(
+                listener, dbAuthorizationTool, evaId, force, clientIdDbAuthorizationTool
+            )
         )
         .cancellable()
 
