@@ -9,18 +9,22 @@ package de.deutschebahn.bahnhoflive.ui.timetable.localtransport;
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
+import android.text.format.DateUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.NumberPicker;
+import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 
+import java.text.DateFormat;
 import java.util.Arrays;
 
 import de.deutschebahn.bahnhoflive.R;
+import de.deutschebahn.bahnhoflive.ui.station.timetable.TimetableTrailingItemViewHolder;
 import de.deutschebahn.bahnhoflive.view.FullBottomSheetDialogFragment;
 
 public class HafasFilterDialogFragment extends FullBottomSheetDialogFragment {
@@ -32,12 +36,15 @@ public class HafasFilterDialogFragment extends FullBottomSheetDialogFragment {
 
     private static final String ARG_CURRENT = "current";
     private static final String ARG_OPTIONS = "options";
+    private static final String ARG_END_TIME = "endTime";
 
     private String[] options;
 
     private NumberPicker picker;
 
     private String current;
+
+    private long endTime;
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
@@ -47,6 +54,7 @@ public class HafasFilterDialogFragment extends FullBottomSheetDialogFragment {
         assert arguments != null;
         options = arguments.getStringArray(ARG_OPTIONS);
         current = arguments.getString(ARG_CURRENT);
+        endTime = arguments.getLong(ARG_END_TIME);
     }
 
     @Nullable
@@ -98,6 +106,19 @@ public class HafasFilterDialogFragment extends FullBottomSheetDialogFragment {
             }
         });
 
+        final TextView contentHintTextView = view.findViewById(R.id.contentHint);
+        if (endTime > 0) {
+            final DateFormat timeFormat = TimetableTrailingItemViewHolder.Companion.getTimeFormat();
+            final String formattedEndTime = timeFormat.format(endTime);
+            final String tomorrowSuffix = DateUtils.isToday(endTime) ? "" : getString(R.string.timetable_trailer_tomorrow);
+
+            contentHintTextView.setText(getString(R.string.template_filter_content_hint,
+                    getString(R.string.filter_content_hint_local_transport),
+                    formattedEndTime,
+                    tomorrowSuffix));
+        }
+
+
         return view;
     }
 
@@ -121,8 +142,8 @@ public class HafasFilterDialogFragment extends FullBottomSheetDialogFragment {
         }
     }
 
-    public static HafasFilterDialogFragment create(String trainCategory, String[] trainCategories) {
-        final Bundle args = createArguments(trainCategory, trainCategories);
+    public static HafasFilterDialogFragment create(long endTime, String trainCategory, String[] trainCategories) {
+        final Bundle args = createArguments(endTime, trainCategory, trainCategories);
 
         return create(args);
     }
@@ -135,10 +156,11 @@ public class HafasFilterDialogFragment extends FullBottomSheetDialogFragment {
     }
 
     @NonNull
-    public static Bundle createArguments(String currentSelection, String... options) {
+    public static Bundle createArguments(long endTime, String currentSelection, String... options) {
         final Bundle args = new Bundle();
         args.putStringArray(ARG_OPTIONS, options);
         args.putString(ARG_CURRENT, currentSelection);
+        args.putLong(ARG_END_TIME, endTime);
         return args;
     }
 

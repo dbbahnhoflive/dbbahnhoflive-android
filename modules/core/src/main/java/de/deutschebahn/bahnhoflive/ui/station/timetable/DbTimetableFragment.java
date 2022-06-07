@@ -71,7 +71,10 @@ public class DbTimetableFragment extends Fragment
         selectedTrainInfo = stationViewModel.getSelectedTrainInfo();
 
         adapter = new DbTimetableAdapter(stationLiveData.getValue(), (trainCategories, trainCategory, tracks, track) -> {
-            final FilterDialogFragment filterDialogFragment = FilterDialogFragment.create(trainCategories, trainCategory, tracks, track);
+            final LiveData<Timetable> dbTimetableResourceData = dbTimetableResource.getData();
+            final Timetable timetable = dbTimetableResourceData.getValue();
+            final long endTime = timetable != null ? timetable.getEndTime() : 0;
+            final FilterDialogFragment filterDialogFragment = FilterDialogFragment.create(trainCategories, trainCategory, tracks, track, endTime);
             filterDialogFragment.show(getChildFragmentManager(), "filterDialog");
         }, getTrackingManager(), view -> {
             dbTimetableResource.loadMore();

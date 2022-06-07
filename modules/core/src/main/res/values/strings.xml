@@ -354,5 +354,11 @@
     <string name="map_accept">Karte anzeigen</string>
 
     <string name="openHours">Öffnungszeiten</string>
+
     <string name="map_lacks_support_for_spoken_feedback_accessibility">Die Kartenansicht unterstützt keine Eingabehilfe mit gesprochener Rückmeldung und ist daher im Moment nicht verfügbar.</string>
+
+    <string name="template_filter_content_hint">%1$s bis %2$s Uhr%3$s</string>
+    <string name="filter_content_hint_train_categories">Verkehrende Zugtypen</string>
+    <string name="filter_content_hint_tracks">Bediente Gleise</string>
+    <string name="filter_content_hint_local_transport">Verkehrsmittel</string>
 </resources>

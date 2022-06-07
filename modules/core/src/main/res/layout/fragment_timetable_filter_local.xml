@@ -10,6 +10,7 @@
 <ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_gravity="bottom"
     android:background="@color/white">
 
@@ -46,6 +47,15 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:descendantFocusability="blocksDescendants" />
+
+        <TextView
+            android:id="@+id/contentHint"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:textColor="@color/text_color_secondary"
+            android:textSize="@dimen/textsize_h4"
+            tools:text="Verkehrsmittel bis 12:00 Uhr" />
 
         <FrameLayout
             android:layout_width="match_parent"

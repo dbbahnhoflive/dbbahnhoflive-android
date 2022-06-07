@@ -7,20 +7,24 @@
 package de.deutschebahn.bahnhoflive.ui.station.timetable;
 
 import android.os.Bundle;
+import android.text.format.DateUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.NumberPicker;
+import android.widget.TextView;
 
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 
+import java.text.DateFormat;
 import java.util.Arrays;
 
 import de.deutschebahn.bahnhoflive.R;
 import de.deutschebahn.bahnhoflive.view.FullBottomSheetDialogFragment;
 
 public class FilterDialogFragment extends FullBottomSheetDialogFragment {
+
 
     public interface Consumer {
         void setFilter(String trainCategory, String track);
@@ -30,9 +34,11 @@ public class FilterDialogFragment extends FullBottomSheetDialogFragment {
     private static final String ARG_TRACK = "track";
     private static final String ARG_TRAIN_CATEGORIES = "trainCategories";
     private static final String ARG_TRACKS = "tracks";
+    private static final String ARG_END_TIME = "endTime";
 
     private String[] trainCategories;
     private String[] tracks;
+    private long endTime;
 
     private NumberPicker picker;
     private boolean tracksMode = false;
@@ -49,6 +55,7 @@ public class FilterDialogFragment extends FullBottomSheetDialogFragment {
         trainCategoryFilter = arguments.getString(ARG_TRAIN_CATEGORY);
         tracks = arguments.getStringArray(ARG_TRACKS);
         trackFilter = arguments.getString(ARG_TRACK);
+        endTime = arguments.getLong(ARG_END_TIME);
     }
 
     @Nullable
@@ -123,11 +130,30 @@ public class FilterDialogFragment extends FullBottomSheetDialogFragment {
     private void showTracks() {
         tracksMode = true;
         setPickerContent(tracks, trackFilter);
+        updateContentHintView();
+    }
+
+    private void updateContentHintView() {
+        final View view = getView();
+        if (view == null) return;
+
+        final TextView contentHintView = view.findViewById(R.id.contentHint);
+        if (contentHintView == null) return;
+
+        final DateFormat timeFormat = TimetableTrailingItemViewHolder.Companion.getTimeFormat();
+        final String formattedEndTime = timeFormat.format(endTime);
+        final String tomorrowSuffix = DateUtils.isToday(endTime) ? "" : getString(R.string.timetable_trailer_tomorrow);
+
+        contentHintView.setText(getString(R.string.template_filter_content_hint,
+                getString(tracksMode ? R.string.filter_content_hint_tracks : R.string.filter_content_hint_train_categories),
+                formattedEndTime,
+                tomorrowSuffix));
     }
 
     private void showTrainCategories() {
         tracksMode = false;
         setPickerContent(trainCategories, trainCategoryFilter);
+        updateContentHintView();
     }
 
     private void setPickerContent(String[] contents, String currentFilter) {
@@ -143,13 +169,14 @@ public class FilterDialogFragment extends FullBottomSheetDialogFragment {
         }
     }
 
-    public static FilterDialogFragment create(String[] trainCategories, String trainCategory, String[] tracks, String track) {
+    public static FilterDialogFragment create(String[] trainCategories, String trainCategory, String[] tracks, String track, long endTime) {
         final FilterDialogFragment filterDialogFragment = new FilterDialogFragment();
         final Bundle args = new Bundle();
         args.putStringArray(ARG_TRAIN_CATEGORIES, trainCategories);
         args.putString(ARG_TRAIN_CATEGORY, trainCategory);
         args.putStringArray(ARG_TRACKS, tracks);
         args.putString(ARG_TRACK, track);
+        args.putLong(ARG_END_TIME, endTime);
         filterDialogFragment.setArguments(args);
         return filterDialogFragment;
     }
