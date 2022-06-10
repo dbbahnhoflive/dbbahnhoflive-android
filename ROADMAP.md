@@ -3,8 +3,8 @@
 ### Aktuelle (Umsetzungs-)Themen
 Diese Inhalte (Funktionen, Anpassungen, Erweiterungen) befinden sich derzeit in der Umsetzung oder sind bereits für die nächsten Release-Zyklen eingeplant.
 
-##### Release 3.16.0 (Inhalte ohne Gewähr)
-• Darstellung des Zugverlaufs für Fernverkehrs-Verbindungen  
+##### Release 3.18.0 (Inhalte ohne Gewähr)
+• Erweiterung von Schienenersatzverkehr-Informationen
 
 ##### Entwicklungsfelder
 Folgenden Themen werden als Entwicklungsfelder betrachtet und befinden sich entweder in der Ideenphase und unterliegen aktuell einer rechtlichen und/oder technischen Evaluation. Eine kurz- bis mittelfristige Umsetzung kann derzeit nicht garantiert werden.
