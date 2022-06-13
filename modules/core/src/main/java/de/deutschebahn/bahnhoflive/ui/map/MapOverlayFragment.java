@@ -193,14 +193,12 @@ public class MapOverlayFragment extends Fragment implements OnMapReadyCallback, 
         final FragmentActivity context = getActivity();
         final RimapConfig rimapConfig = RimapConfig.getInstance(context);
 
+        mapInterface.setMapTypeOsm();
+
         mapViewModel.getRimapPoisLiveData().observe(this, payload -> {
             if (payload == null || payload.size() == 0) {
                 zoom = MapConstants.minimumZoomForIndoorMarkers;
-                mapInterface.setMapTypeOsm();
             } else {
-
-                mapInterface.setMapTypeOsm();
-
                 final HashMap<Filter, List<MarkerBinder>> categorizedMarkerBinders = new HashMap<>(payload.size());
                 final MapContentPreserver<Filter, List<MarkerBinder>> categoryListMapContentPreserver = new MapContentPreserver<>(categorizedMarkerBinders, new ArrayListFactory<>());
 

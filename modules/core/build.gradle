@@ -23,11 +23,7 @@ android {
             multiDexKeepProguard file('multidex-config.pro')
 
         }
-        demo {
-            initWith release
 
-//            buildConfigField "String", "RIS_JOURNEYS_BASE_URL", "\"https://gateway.businesshub.deutschebahn.com/ris-journeys/trial/v1/\""
-        }
         debug {
             minifyEnabled false
 
