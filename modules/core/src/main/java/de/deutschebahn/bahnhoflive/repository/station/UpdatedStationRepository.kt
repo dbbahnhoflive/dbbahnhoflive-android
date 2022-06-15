@@ -53,7 +53,7 @@ class UpdatedStationRepository(
                     true,
                     mixedResults = false,
                     collapseNeighbours = true,
-                    pullUpFirstDbStation = false
+                    pullUpFirstDbStation = false,
                 )
 
                 awaitClose { queryStationsCancellable?.cancel() }

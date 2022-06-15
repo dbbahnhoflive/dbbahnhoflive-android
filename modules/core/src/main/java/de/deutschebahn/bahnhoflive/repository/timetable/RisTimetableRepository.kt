@@ -15,7 +15,6 @@ import de.deutschebahn.bahnhoflive.backend.ris.model.TrainEvent
 import de.deutschebahn.bahnhoflive.ui.timetable.journey.JourneyStop
 import de.deutschebahn.bahnhoflive.ui.timetable.journey.toJourneyStopEvent
 import java.util.*
-import kotlin.collections.ArrayList
 
 open class RisTimetableRepository(
     protected val restHelper: RestHelper,
@@ -69,7 +68,9 @@ open class RisTimetableRepository(
             RISJourneysByRelationRequest(
                 RISJourneysByRelationRequest.Parameters(
                     number, category, line, date
-                ), dbAuthorizationTool, object : VolleyRestListener<DepartureMatches> {
+                ),
+                dbAuthorizationTool,
+                object : VolleyRestListener<DepartureMatches> {
                     override fun onSuccess(payload: DepartureMatches?) {
                         payload?.journeys?.also {
                             JourneyDetailsFetcher(
@@ -160,7 +161,8 @@ open class RisTimetableRepository(
                             override fun onFail(reason: VolleyError?) {
                                 listener.onFail(reason)
                             }
-                        })
+                        }
+                    )
                 )
 
             } ?: kotlin.run {
