@@ -931,7 +931,7 @@ class StationViewModel(
                         )
 
                         .append(if (railReplacement.value?.takeUnless { it.isEmpty() } != null && matchingKeys.contains(
-                                "Schienenersatzverkehr"
+                                "Bahnhofsinformation Schienenersatzverkehr"
                             )) {
                             ContentSearchResult(
                                 "Schienenersatzverkehr",
