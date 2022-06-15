@@ -200,6 +200,9 @@ class DbTimetableAdapter extends RecyclerView.Adapter<ViewHolder<?>> implements 
             trainInfoViewHolder.setStation(station);
             trainInfoViewHolder.bind(filteredTrainInfos.get(position - 1));
         } else if (holder instanceof TimetableTrailingItemViewHolder) {
+            if (timetable == null) {
+                return;
+            }
             final long endTime = timetable.getEndTime();
             final boolean isMayLoadMore = timetable.getDuration() <= Constants.HOUR_LIMIT;
             ((TimetableTrailingItemViewHolder) holder)
