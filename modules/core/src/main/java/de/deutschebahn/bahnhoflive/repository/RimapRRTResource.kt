@@ -5,7 +5,10 @@
  */
 package de.deutschebahn.bahnhoflive.repository
 
+import android.util.Log
+import com.android.volley.VolleyError
 import de.deutschebahn.bahnhoflive.repository.map.RrtRequestResult
+import java.net.HttpURLConnection
 
 class RimapRRTResource : RemoteResource<RrtRequestResult>() {
     private var station: Station? = null
@@ -15,13 +18,29 @@ class RimapRRTResource : RemoteResource<RrtRequestResult>() {
 
     override fun onStartLoading(force: Boolean) {
         station?.id?.let { stationId ->
-            baseApplication.repositories.mapRepository.queryRailReplacement(
-                stationId,
-                force,
-                Listener()
-            )
+            val listener = object : Listener() {
+                override fun onFail(reason: VolleyError) {
+                    if (reason.networkResponse.statusCode == HttpURLConnection.HTTP_NO_CONTENT) {
+                        Log.d(TAG, "Retrying after no content")
+                        performRequest(stationId, force, Listener())
+                    } else {
+                        super.onFail(reason)
+                    }
+                }
+            }
+            performRequest(stationId, force, listener)
         }
     }
+
+    private fun performRequest(
+        stationId: String,
+        force: Boolean,
+        listener: Listener
+    ) = baseApplication.repositories.mapRepository.queryRailReplacement(
+        stationId,
+        force,
+        listener
+    )
 
     fun initialize(station: Station) {
         this.station = station

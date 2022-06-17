@@ -206,17 +206,18 @@ class InfoCategorySelectionFragment : CategorySelectionFragment(
         staticInfoLiveData = stationViewModel.staticInfoLiveData
         railReplacementSummaryLiveData = stationViewModel.railReplacementSummaryLiveData
 
-        staticInfoLiveData.observe(this, Observer {
+        staticInfoLiveData.observe(this) {
             updateCategories()
-        })
-        parkingsResource.data.observe(this, Observer {
+        }
+        parkingsResource.data.observe(this) {
             updateCategories()
-        })
+        }
 
-        elevatorsDataResource.observe(this, Observer { updateCategories() })
-        detailedStationLiveData.observe(this, Observer { updateCategories() })
-        infoAndServicesLiveData.observe(this, Observer { updateCategories() })
-        serviceNumbersLiveData.observe(this, Observer { updateCategories() })
+        elevatorsDataResource.observe(this) { updateCategories() }
+        detailedStationLiveData.observe(this) { updateCategories() }
+        infoAndServicesLiveData.observe(this) { updateCategories() }
+        serviceNumbersLiveData.observe(this) { updateCategories() }
+        railReplacementSummaryLiveData.observe(this) { updateCategories() }
 
         stationViewModel.selectedServiceContentType.observe(this, Observer {
             if (it != null) {
