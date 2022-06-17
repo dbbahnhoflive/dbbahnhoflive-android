@@ -354,8 +354,18 @@
     <string name="map_accept">Karte anzeigen</string>
 
     <string name="openHours">Öffnungszeiten</string>
+
+    <string name="map_lacks_support_for_spoken_feedback_accessibility">Die Kartenansicht unterstützt keine Eingabehilfe mit gesprochener Rückmeldung und ist daher im Moment nicht verfügbar.</string>
+
+    <string name="template_filter_content_hint">%1$s bis %2$s Uhr%3$s</string>
+    <string name="filter_content_hint_train_categories">Verkehrende Zugtypen</string>
+    <string name="filter_content_hint_tracks">Bediente Gleise</string>
+    <string name="filter_content_hint_local_transport">Verkehrsmittel</string>
+
     <string name="rail_replacement">Schienenersatzverkehr</string>
     <string name="rail_replacement_directions">Lagebeschreibung:</string>
     <string name="rail_replacement_additional">Weitere Ersatzhaltestelle</string>
     <string name="rail_replacement_map_link">Eine Wegbeschreibung finden Sie unter Bahnhofsinformationen.</string>
+    <string name="rail_replacement_entry_label_plural">An diesem Bahnhof finden Sie folgende Ersatzhaltestellen:</string>
+    <string name="rail_replacement_entry_label_singular">An diesem Bahnhof finden Sie folgende Ersatzhaltestelle:</string>
 </resources>

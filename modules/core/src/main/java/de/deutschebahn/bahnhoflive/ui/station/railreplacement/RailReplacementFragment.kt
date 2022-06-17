@@ -37,6 +37,13 @@ class RailReplacementFragment : Fragment(), MapPresetProvider {
         stationViewModel.railReplacementSummaryLiveData.observe(viewLifecycleOwner) {
             contentList.removeAllViews()
 
+            railReplacementEntryLabel.setText(
+                if (it?.run {
+                        entries.fold(0) { count, mutableEntry ->
+                            count + mutableEntry.value.size
+                        } == 1
+                    } == false) R.string.rail_replacement_entry_label_plural else R.string.rail_replacement_entry_label_singular)
+
             it?.let { railReplacements ->
 
                 railReplacements.forEach { (directions, texts) ->
