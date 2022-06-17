@@ -366,4 +366,6 @@
     <string name="rail_replacement_directions">Lagebeschreibung:</string>
     <string name="rail_replacement_additional">Weitere Ersatzhaltestelle</string>
     <string name="rail_replacement_map_link">Eine Wegbeschreibung finden Sie unter Bahnhofsinformationen.</string>
+    <string name="rail_replacement_entry_label_plural">An diesem Bahnhof finden Sie folgende Ersatzhaltestellen:</string>
+    <string name="rail_replacement_entry_label_singular">An diesem Bahnhof finden Sie folgende Ersatzhaltestelle:</string>
 </resources>

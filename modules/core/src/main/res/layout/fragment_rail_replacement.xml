@@ -54,10 +54,11 @@
                 </FrameLayout>
 
                 <TextView
+                    android:id="@+id/rail_replacement_entry_label"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_margin="@dimen/default_space_double"
-                    android:text="An diesem Bahnhof finden Sie folgende Ersatzhaltestelle(n):"
+                    android:text="@string/rail_replacement_entry_label_plural"
                     android:textSize="@dimen/textsize_28" />
 
                 <LinearLayout
