@@ -16,7 +16,6 @@ import androidx.lifecycle.DefaultLifecycleObserver
 import androidx.lifecycle.LifecycleOwner
 import de.deutschebahn.bahnhoflive.BaseApplication.Companion.get
 import de.deutschebahn.bahnhoflive.ui.consent.ConsentActivity
-import java.util.*
 
 open class TrackingManager(activity: ComponentActivity? = null) {
     private val trackingDelegate: TrackingDelegate = get().trackingDelegate
@@ -156,6 +155,8 @@ open class TrackingManager(activity: ComponentActivity? = null) {
             const val SERVICE_UND_RUFNUMMERN = "service_und_rufnummern"
             const val WLAN = "wlan"
             const val ZUGANG_WEGE = "zugang_wege"
+            const val BARRIEREFREIHEIT = "barrierefreiheit"
+            const val SCHIENENERSATZVERKEHR = "schienenersatzverkehr"
             const val BAECKEREIEN = "baeckereien"
             const val DIENSTLEISTUNGEN = "dienstleistungen"
             const val GASTRONOMIE = "gastronomie"
@@ -219,8 +220,8 @@ open class TrackingManager(activity: ComponentActivity? = null) {
     protected open fun composeContextVariables(
         additionalVariables: Map<String, Any?>?,
         vararg pages: Array<out String?>
-    ): Map<String, Any> {
-        val contextVariables: MutableMap<String, Any> =
+    ): Map<String, Any?> {
+        val contextVariables: MutableMap<String, Any?> =
             if (additionalVariables == null) HashMap() else HashMap(additionalVariables)
         putPageVariables(pages, contextVariables)
         return contextVariables
@@ -239,7 +240,7 @@ open class TrackingManager(activity: ComponentActivity? = null) {
         track(type, pageName, contextVariables)
     }
 
-    fun track(@Type type: Int, tag: String, contextVariables: Map<String, Any>) {
+    fun track(@Type type: Int, tag: String, contextVariables: Map<String, Any?>) {
         when (type) {
             TYPE_ACTION -> {
                 Log.i(TAG, "ADBMobile.trackAction: $tag, $contextVariables")
@@ -280,10 +281,7 @@ open class TrackingManager(activity: ComponentActivity? = null) {
         @JvmStatic
         fun fromActivity(activity: ComponentActivity?): TrackingManager {
             if (activity is Provider) {
-                val stationTrackingManager = (activity as Provider).stationTrackingManager
-                if (stationTrackingManager != null) {
-                    return stationTrackingManager
-                }
+                return (activity as Provider).stationTrackingManager
             }
             return object : TrackingManager(activity) {
                 override fun track(type: Int, vararg pages: String?) {
@@ -297,7 +295,7 @@ open class TrackingManager(activity: ComponentActivity? = null) {
         const val TYPE_ACTION = 2
         private fun putPageVariables(
             states: Array<out Array<out String?>>,
-            contextVariables: MutableMap<String, Any>
+            contextVariables: MutableMap<String, Any?>
         ) {
             var pageCount = 1
             for (s in states) {

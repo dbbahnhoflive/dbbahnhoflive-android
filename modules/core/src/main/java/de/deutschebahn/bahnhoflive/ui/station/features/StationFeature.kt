@@ -6,6 +6,7 @@
 
 package de.deutschebahn.bahnhoflive.ui.station.features
 
+import android.content.Context
 import de.deutschebahn.bahnhoflive.backend.db.fasta2.model.FacilityStatus
 import de.deutschebahn.bahnhoflive.model.parking.ParkingFacility
 import de.deutschebahn.bahnhoflive.repository.Station
@@ -36,9 +37,8 @@ class StationFeature(
             this
         )
 
-    val isLinkVisible: Boolean
-        get() = (isFeatured != false
-                && (stationFeatureTemplate.link?.isAvailable(this)) == true)
+    fun isLinkVisible(context: Context): Boolean = (isFeatured != false
+            && (stationFeatureTemplate.link?.isAvailable(context, this)) == true)
 
     init {
 

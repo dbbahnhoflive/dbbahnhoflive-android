@@ -11,6 +11,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.os.Parcelable;
 import android.view.View;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -31,6 +32,7 @@ import de.deutschebahn.bahnhoflive.backend.hafas.model.HafasTimetable;
 import de.deutschebahn.bahnhoflive.repository.InternalStation;
 import de.deutschebahn.bahnhoflive.repository.Station;
 import de.deutschebahn.bahnhoflive.ui.FragmentArgs;
+import de.deutschebahn.bahnhoflive.ui.accessibility.SpokenFeedbackAccessibilityLiveData;
 import de.deutschebahn.bahnhoflive.ui.map.content.rimap.RimapFilter;
 import de.deutschebahn.bahnhoflive.ui.station.ElevatorIssuesLoaderFragment;
 import de.deutschebahn.bahnhoflive.ui.station.LoaderFragment;
@@ -60,6 +62,13 @@ public class MapActivity extends AppCompatActivity implements
         if (intent.hasExtra(ARG_STATION)) {
             station = intent.getParcelableExtra(ARG_STATION);
         }
+
+        new SpokenFeedbackAccessibilityLiveData(this).observe(this, aBoolean -> {
+            if (aBoolean) {
+                Toast.makeText(this, R.string.map_lacks_support_for_spoken_feedback_accessibility, Toast.LENGTH_LONG).show();
+                finish();
+            }
+        });
 
         mapViewModel = new ViewModelProvider(this).get(MapViewModel.class);
         mapViewModel.setStation(station);
@@ -125,7 +134,9 @@ public class MapActivity extends AppCompatActivity implements
     }
 
     private static Intent createIntent(Context context) {
-        return new Intent(context, MapActivity.class);
+        final Intent intent = new Intent(context, MapActivity.class);
+        intent.addFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT);
+        return intent;
     }
 
     @NonNull

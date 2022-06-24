@@ -17,6 +17,7 @@ import java.util.List;
 
 import de.deutschebahn.bahnhoflive.backend.rimap.model.RimapPOI;
 import de.deutschebahn.bahnhoflive.repository.VenueFeature;
+import de.deutschebahn.bahnhoflive.ui.accessibility.ContextXKt;
 import de.deutschebahn.bahnhoflive.ui.map.Content;
 import de.deutschebahn.bahnhoflive.ui.map.InitialPoiManager;
 import de.deutschebahn.bahnhoflive.ui.map.MapActivity;
@@ -76,7 +77,8 @@ public class MapLink extends Link {
     }
 
     @Override
-    public boolean isAvailable(StationFeature stationFeature) {
-        return Collections.hasContent(getPois(stationFeature));
+    public boolean isAvailable(Context context, StationFeature stationFeature) {
+        return !ContextXKt.isSpokenFeedbackAccessibilityEnabled(context) &&
+                Collections.hasContent(getPois(stationFeature));
     }
 }

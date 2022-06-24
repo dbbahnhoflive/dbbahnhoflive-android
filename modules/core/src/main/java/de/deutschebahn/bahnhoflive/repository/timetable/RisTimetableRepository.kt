@@ -84,7 +84,7 @@ open class RisTimetableRepository(
                         }
                     }
 
-                    override fun onFail(reason: VolleyError?) {
+                    override fun onFail(reason: VolleyError) {
                         listener.onFail(reason)
                     }
                 }
@@ -158,7 +158,7 @@ open class RisTimetableRepository(
                                 } ?: processPendingJourney()
                             }
 
-                            override fun onFail(reason: VolleyError?) {
+                            override fun onFail(reason: VolleyError) {
                                 listener.onFail(reason)
                             }
                         }

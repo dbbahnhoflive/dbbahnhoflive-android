@@ -12,6 +12,7 @@ import androidx.lifecycle.map
 import androidx.lifecycle.switchMap
 import androidx.recyclerview.widget.ConcatAdapter
 import de.deutschebahn.bahnhoflive.R
+import de.deutschebahn.bahnhoflive.analytics.TrackingManager
 import de.deutschebahn.bahnhoflive.backend.db.ris.model.AccessibilityStatus
 import de.deutschebahn.bahnhoflive.repository.LoadingStatus
 import de.deutschebahn.bahnhoflive.repository.accessibility.AccessibilityFeature
@@ -190,10 +191,19 @@ class AccessibilityFragment : Fragment(R.layout.fragment_accessibility) {
         super.onStart()
 
         viewModel.topInfoFragmentTag = TAG
+
+        TrackingManager.fromActivity(activity).track(
+            TrackingManager.TYPE_STATE,
+            TrackingManager.Screen.D1,
+            TrackingManager.Category.BARRIEREFREIHEIT
+        )
+
     }
 
     override fun onStop() {
-        viewModel.topInfoFragmentTag = null
+        if (viewModel.topInfoFragmentTag == TAG) {
+            viewModel.topInfoFragmentTag = null
+        }
 
         super.onStop()
     }

@@ -54,6 +54,7 @@ import de.deutschebahn.bahnhoflive.backend.hafas.LocalTransportFilter;
 import de.deutschebahn.bahnhoflive.backend.hafas.model.HafasStation;
 import de.deutschebahn.bahnhoflive.backend.hafas.model.HafasTimetable;
 import de.deutschebahn.bahnhoflive.backend.hafas.model.ProductCategory;
+import de.deutschebahn.bahnhoflive.backend.local.model.RrtPoint;
 import de.deutschebahn.bahnhoflive.backend.rimap.RimapConfig;
 import de.deutschebahn.bahnhoflive.backend.rimap.model.RimapPOI;
 import de.deutschebahn.bahnhoflive.backend.rimap.model.RimapStation;
@@ -74,6 +75,7 @@ import de.deutschebahn.bahnhoflive.ui.map.content.MapType;
 import de.deutschebahn.bahnhoflive.ui.map.content.rimap.Filter;
 import de.deutschebahn.bahnhoflive.ui.map.content.rimap.RimapFilter;
 import de.deutschebahn.bahnhoflive.ui.station.ElevatorIssuesLoaderFragment;
+import de.deutschebahn.bahnhoflive.ui.station.StationProvider;
 import de.deutschebahn.bahnhoflive.util.ArrayListFactory;
 import de.deutschebahn.bahnhoflive.util.MapContentPreserver;
 
@@ -134,9 +136,6 @@ public class MapOverlayFragment extends Fragment implements OnMapReadyCallback, 
     private RecyclerView flyoutsRecycler;
     private MarkerBinder highlightedMarkerBinder;
 
-    private int level = 0;
-    private float zoom = DEFAULT_ZOOM;
-
     private FlyoutsAdapter flyoutsAdapter;
     private FlyoutLinearSnapHelper linearSnapHelper;
 
@@ -193,14 +192,12 @@ public class MapOverlayFragment extends Fragment implements OnMapReadyCallback, 
         final FragmentActivity context = getActivity();
         final RimapConfig rimapConfig = RimapConfig.getInstance(context);
 
+        mapInterface.setMapTypeOsm();
+
         mapViewModel.getRimapPoisLiveData().observe(this, payload -> {
             if (payload == null || payload.size() == 0) {
-                zoom = MapConstants.minimumZoomForIndoorMarkers;
-                mapInterface.setMapTypeOsm();
+                mapViewModel.setZoom(MapConstants.minimumZoomForIndoorMarkers);
             } else {
-
-                mapInterface.setMapTypeOsm();
-
                 final HashMap<Filter, List<MarkerBinder>> categorizedMarkerBinders = new HashMap<>(payload.size());
                 final MapContentPreserver<Filter, List<MarkerBinder>> categoryListMapContentPreserver = new MapContentPreserver<>(categorizedMarkerBinders, new ArrayListFactory<>());
 
@@ -235,7 +232,7 @@ public class MapOverlayFragment extends Fragment implements OnMapReadyCallback, 
                         mapViewModel.setTracksAvailable();
                     }
 
-                    final MarkerBinder markerBinder = new MarkerBinder(markerContent, zoom, level, filterItem);
+                    final MarkerBinder markerBinder = new MarkerBinder(markerContent, mapViewModel.getZoom(), mapViewModel.getLevel(), filterItem);
                     updateInitialMarkerBinder(markerBinder);
 
                     allMarkerBinders.add(markerBinder);
@@ -248,6 +245,49 @@ public class MapOverlayFragment extends Fragment implements OnMapReadyCallback, 
 
             rimapDone = true;
             applyInitialMarkerBinder();
+
+        });
+
+        mapViewModel.getRailReplacementResource().getData().observe(this, rrtPoints -> {
+            if (rrtPoints == null) {
+                return;
+            }
+
+            final RimapFilter.Item railReplacementFilterItem = rimapFilter.findRailReplacementFilterItem();
+            if (railReplacementFilterItem == null) {
+                return;
+            }
+
+            final HashMap<Filter, List<MarkerBinder>> categorizedMarkerBinders = new HashMap<>(rrtPoints.size());
+            final MapContentPreserver<Filter, List<MarkerBinder>> categoryListMapContentPreserver = new MapContentPreserver<>(categorizedMarkerBinders, new ArrayListFactory<>());
+
+            final List<MarkerBinder> allMarkerBinders = new ArrayList<>();
+
+            final StationProvider stationProvider = () -> stationResource.getData().getValue();
+
+            for (RrtPoint item : rrtPoints) {
+                if (item == null) {
+                    continue;
+                }
+
+                final LatLng coordinates = item.getCoordinates();
+                if (coordinates == null) {
+                    continue;
+                }
+
+                final List<MarkerBinder> categoryPins = categoryListMapContentPreserver.get(railReplacementFilterItem);
+
+                final RrtPointMarkerContent markerContent = new RrtPointMarkerContent(item, stationProvider);
+
+                final MarkerBinder markerBinder = new MarkerBinder(markerContent, mapViewModel.getZoom(), mapViewModel.getLevel(), railReplacementFilterItem);
+                updateInitialMarkerBinder(markerBinder);
+
+                allMarkerBinders.add(markerBinder);
+                categoryPins.add(markerBinder);
+            }
+
+            content.setMarkerBinders(Content.Source.RIMAPS_RRT, allMarkerBinders, categorizedMarkerBinders);
+            content.updateVisibilities();
 
         });
 
@@ -306,7 +346,7 @@ public class MapOverlayFragment extends Fragment implements OnMapReadyCallback, 
         final DbTimetableResource timetable = new DbTimetableResource(InternalStation.of(station));
         timetable.loadIfNecessary();
         markerContent.setTimetable(timetable);
-        final MarkerBinder markerBinder = new MarkerBinder(markerContent, zoom, level, stationFilterItem);
+        final MarkerBinder markerBinder = new MarkerBinder(markerContent, mapViewModel.getZoom(), mapViewModel.getLevel(), stationFilterItem);
         final List<MarkerBinder> markerBinders = Collections.singletonList(markerBinder);
         final Map<Filter, List<MarkerBinder>> categorizedMarkerBinders = Collections.singletonMap(stationFilterItem, markerBinders);
 
@@ -338,7 +378,7 @@ public class MapOverlayFragment extends Fragment implements OnMapReadyCallback, 
 
                 final List<MarkerBinder> categoryMarkerBinders = categoryListMapContentPreserver.get(filterItem);
 
-                final MarkerBinder markerBinder = new MarkerBinder(markerContent, zoom, level, filterItem);
+                final MarkerBinder markerBinder = new MarkerBinder(markerContent, mapViewModel.getZoom(), mapViewModel.getLevel(), filterItem);
                 updateInitialMarkerBinder(markerBinder);
                 allMarkerBinders.add(markerBinder);
                 categoryMarkerBinders.add(markerBinder);
@@ -539,7 +579,7 @@ public class MapOverlayFragment extends Fragment implements OnMapReadyCallback, 
     }
 
     private void setIndoorLevel(int level) {
-        this.level = level;
+        mapViewModel.setLevel(level);
         mapInterface.setIndoorLevel(level);
         content.setIndoorLevel(level);
     }
@@ -562,7 +602,7 @@ public class MapOverlayFragment extends Fragment implements OnMapReadyCallback, 
         final ZoomChangeMonitor.Listener zoomChangeListener = new ZoomChangeMonitor.Listener() {
             @Override
             public void onZoomChanged(float zoom) {
-                MapOverlayFragment.this.zoom = zoom;
+                mapViewModel.setZoom(zoom);
                 content.onZoomChanged(zoom);
             }
         };
@@ -571,7 +611,7 @@ public class MapOverlayFragment extends Fragment implements OnMapReadyCallback, 
             mapInterface = new GoogleMapsMapInterface(mapInterface, googleMap, getContext(),
                     onMarkerClickListener,
                     this,
-                    zoomChangeListener, location, zoom);
+                    zoomChangeListener, location, mapViewModel.getZoom());
 
             content.onMapReady(googleMap);
 
@@ -591,12 +631,12 @@ public class MapOverlayFragment extends Fragment implements OnMapReadyCallback, 
     }
 
     private void setIndoorLevel(MarkerBinder markerBinder) {
-        final int level = markerBinder.getMarkerContent().suggestLevel(this.level);
+        final int level = markerBinder.getMarkerContent().suggestLevel(mapViewModel.getLevel());
         updateLevel(level);
     }
 
     private void updateLevel(int level) {
-        if (level != this.level) {
+        if (level != mapViewModel.getLevel()) {
             mapLevelPicker.setValue(level);
             setIndoorLevel(level);
         }
@@ -735,7 +775,7 @@ public class MapOverlayFragment extends Fragment implements OnMapReadyCallback, 
                 public void onChanged(@Nullable Station station) {
                     if (station != null) {
                         final StationMarkerContent stationMarkerContent = new StationMarkerContent(station, requireContext());
-                        final MarkerBinder markerBinder = new MarkerBinder(stationMarkerContent, zoom, level, stationRequestArguments.filterItem);
+                        final MarkerBinder markerBinder = new MarkerBinder(stationMarkerContent, mapViewModel.getZoom(), mapViewModel.getLevel(), stationRequestArguments.filterItem);
                         stationRequestArguments.categoryMarkerBinders.add(markerBinder);
                         markerBinders.add(markerBinder);
                         final DbTimetableResource dbTimetableResource = new DbTimetableResource(station, stationRequestArguments.stopPlace);
@@ -788,7 +828,7 @@ public class MapOverlayFragment extends Fragment implements OnMapReadyCallback, 
             }
 
             final List<MarkerBinder> categoryMarkerBinders = contentPreserver.get(filterItem);
-            final MarkerBinder markerBinder = new MarkerBinder(new HafasMarkerContent(hafasTimetable, restHelper), zoom, level, filterItem);
+            final MarkerBinder markerBinder = new MarkerBinder(new HafasMarkerContent(hafasTimetable, restHelper), mapViewModel.getZoom(), mapViewModel.getLevel(), filterItem);
             categoryMarkerBinders.add(markerBinder);
             markerBinders.add(markerBinder);
             updateInitialMarkerBinder(markerBinder);
@@ -824,7 +864,7 @@ public class MapOverlayFragment extends Fragment implements OnMapReadyCallback, 
         content.updateVisibilities();
         updateFilterButton();
 
-        final Integer levelWithContent = content.findNearbyLevelWithContent(level);
+        final Integer levelWithContent = content.findNearbyLevelWithContent(mapViewModel.getLevel());
         if (levelWithContent != null) {
             updateLevel(levelWithContent);
         }
@@ -851,7 +891,7 @@ public class MapOverlayFragment extends Fragment implements OnMapReadyCallback, 
                 }
 
                 final FacilityStatusMarkerContent facilityStatusMarkerContent = new FacilityStatusMarkerContent(facilityStatus);
-                final MarkerBinder markerBinder = new MarkerBinder(facilityStatusMarkerContent, zoom, level, filterItem);
+                final MarkerBinder markerBinder = new MarkerBinder(facilityStatusMarkerContent, mapViewModel.getZoom(), mapViewModel.getLevel(), filterItem);
                 updateInitialMarkerBinder(markerBinder);
                 final List<MarkerBinder> categoryMarkerBinders = mapContentPreserver.get(filterItem);
                 categoryMarkerBinders.add(markerBinder);

@@ -25,6 +25,9 @@
       },
       {
         "title": "Schienenersatzverkehr",
+        "presets": [
+          "local_timetable SEV"
+        ],
         "menucat": "Öffentlicher Nahverkehr",
         "menusubcat": "SEV"
       }
@@ -35,7 +38,10 @@
     "items": [
       {
         "title": "Gleisnummer",
-        "presets": ["timetable", "db timetable"],
+        "presets": [
+          "timetable",
+          "db timetable"
+        ],
         "menucat": "Bahngleise & Fernverkehr",
         "menusubcat": "Bahngleise"
       },

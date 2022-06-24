@@ -52,7 +52,7 @@ class Content : OnMapReadyCallback, ZoomChangeMonitor.Listener {
     }
 
     enum class Source {
-        RIMAP, FAVENDO, FACILITY_STATUS, MOBILITY, SERVICE_STORES, PARKING, DB, HAFAS
+        RIMAP, FACILITY_STATUS, PARKING, DB, HAFAS, RIMAPS_RRT
     }
 
     fun setMarkerBinders(source: Source, markerBinders: List<MarkerBinder>, categorizedMarkerBinders: Map<Filter, List<MarkerBinder>>) {

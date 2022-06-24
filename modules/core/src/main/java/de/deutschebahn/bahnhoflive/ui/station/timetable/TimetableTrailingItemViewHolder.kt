@@ -15,12 +15,13 @@ import de.deutschebahn.bahnhoflive.R
 import de.deutschebahn.bahnhoflive.backend.ris.model.TrainEvent
 import de.deutschebahn.bahnhoflive.ui.ViewHolder
 import kotlinx.android.synthetic.main.item_message.view.*
+import java.text.DateFormat
 import java.text.SimpleDateFormat
 
 class TimetableTrailingItemViewHolder(parent: ViewGroup, loadMoreCallback: View.OnClickListener? = null) : ViewHolder<FilterSummary>(parent, R.layout.item_message) {
 
     companion object {
-        val timeFormat = SimpleDateFormat.getTimeInstance(SimpleDateFormat.SHORT)
+        val timeFormat: DateFormat = SimpleDateFormat.getTimeInstance(SimpleDateFormat.SHORT)
     }
 
     init {

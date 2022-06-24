@@ -53,7 +53,7 @@ class OfficialStationRepository(
                         track("success")
                     }
 
-                    override fun onFail(reason: VolleyError?) {
+                    override fun onFail(reason: VolleyError) {
                         listener.onFail(reason)
 
                         track("failure")

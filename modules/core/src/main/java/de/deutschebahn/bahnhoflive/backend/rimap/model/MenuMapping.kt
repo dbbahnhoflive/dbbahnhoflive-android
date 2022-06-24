@@ -28,6 +28,8 @@ object MenuMapping {
     const val SUBWAY = "SUBWAY"
     const val BUS = "BUS"
     const val TRAM = "TRAM"
+
+    @Deprecated("Use ris rrt API instead")
     const val RAIL_REPLACEMENT_TRANSPORT = "RAIL_REPLACEMENT_TRANSPORT"
     const val TAXI = "TAXI"
     const val FLINKSTER = "FLINKSTER"

@@ -20,6 +20,7 @@ import java.util.List;
 import de.deutschebahn.bahnhoflive.backend.hafas.HafasDepartures;
 import de.deutschebahn.bahnhoflive.backend.hafas.model.HafasStation;
 import de.deutschebahn.bahnhoflive.backend.hafas.model.HafasStationProduct;
+import de.deutschebahn.bahnhoflive.backend.local.model.RrtPoint;
 import de.deutschebahn.bahnhoflive.repository.HafasStationResource;
 import de.deutschebahn.bahnhoflive.repository.HafasTimetableResource;
 import de.deutschebahn.bahnhoflive.repository.MediatorResource;
@@ -46,6 +47,7 @@ public class HafasTimetableViewModel extends AndroidViewModel {
     };
 
     private final HafasStationResource hafasStationResource = new HafasStationResource();
+    public final MutableLiveData<RrtPoint> pendingRailReplacementPointLiveData = new MutableLiveData(null);
 
     private ManagedObserver<HafasStation> hafasStationObserver;
     private ManagedObserver<VolleyError> hafasStationErrorObserver;
@@ -165,4 +167,5 @@ public class HafasTimetableViewModel extends AndroidViewModel {
     public List<HafasStation> getHafasStations() {
         return hafasStations;
     }
+
 }

@@ -80,9 +80,13 @@ class JourneyViewModel(app: Application, savedStateHandle: SavedStateHandle) :
                             trainInfo.trainCategory,
                             trainInfo.trainGenericName,
                             object : VolleyRestListener<List<JourneyStop>> {
-                                override fun onSuccess(payload: List<JourneyStop>) {
-                                    value = Result.success(payload)
+                                override fun onSuccess(payload: List<JourneyStop>?) {
+                                    value = if (payload == null) {
+                                    Result.failure(Exception("Result was empty"))
+                                } else {
+                                    Result.success(payload)
                                 }
+                            }
 
                                 override fun onFail(reason: VolleyError) {
                                     value = Result.failure(reason)
@@ -103,7 +107,7 @@ class JourneyViewModel(app: Application, savedStateHandle: SavedStateHandle) :
                         journeyStops.indexOfFirst { it.current }.takeIf { it > 0 }?.let {
                             true to journeyStops.subList(it, journeyStops.size)
                         }
-                    } else null) ?: false to journeyStops
+                    } else null) ?: (false to journeyStops)
                 }
             }
         }

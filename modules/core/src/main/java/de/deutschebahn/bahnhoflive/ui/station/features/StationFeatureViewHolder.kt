@@ -44,7 +44,8 @@ internal class StationFeatureViewHolder(
             else -> bindStatusView(0, Status.NONE)
         }
 
-        button.visibility = if (stationFeature.isLinkVisible) View.VISIBLE else View.GONE
+        button.visibility =
+            if (stationFeature.isLinkVisible(button.context)) View.VISIBLE else View.GONE
 
         val context = button.context
         button.contentDescription = context.getString(

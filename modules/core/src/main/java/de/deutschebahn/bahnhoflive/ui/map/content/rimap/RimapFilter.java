@@ -60,6 +60,10 @@ public class RimapFilter {
         return findFilterItem("Öffentlicher Nahverkehr", "S-Bahn"); // this "hack" should be improved
     }
 
+    public Item findRailReplacementFilterItem() {
+        return findFilterItem("Öffentlicher Nahverkehr", "SEV");
+    }
+
     public void checkOnlyHafas(boolean check) {
         checkAllItems(false);
 
@@ -78,6 +82,7 @@ public class RimapFilter {
             PRESET_LOCAL_TIMETABLE,
             PRESET_ELEVATORS,
             PRESET_PARKING,
+            PRESET_RAIL_REPLACEMENT,
 
             PRESET_TOILET,
             PRESET_WIFI,
@@ -111,6 +116,7 @@ public class RimapFilter {
     public static final String PRESET_LOCAL_TIMETABLE = "local timetable";
     public static final String PRESET_ELEVATORS = "elevators";
     public static final String PRESET_PARKING = "parking";
+    public static final String PRESET_RAIL_REPLACEMENT = "local_timetable SEV";
 
     public static final String PRESET_TOILET = "toilet";
     public static final String PRESET_WIFI = "wifi";

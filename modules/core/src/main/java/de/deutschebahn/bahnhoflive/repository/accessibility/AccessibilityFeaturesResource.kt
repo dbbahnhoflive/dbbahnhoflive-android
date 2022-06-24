@@ -35,7 +35,7 @@ class AccessibilityFeaturesResource(
                 }
 
                 @Synchronized
-                override fun onFail(reason: VolleyError?) {
+                override fun onFail(reason: VolleyError) {
                     errors.add(reason)
                     eventuallyDeliver()
                 }
