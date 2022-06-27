@@ -99,14 +99,17 @@ internal class LocalTransportViewHolder(parent: ViewGroup, itemClickListener: It
 
     private fun getCategoryLabel(category: ProductCategory, productCount: Int): CharSequence {
         val resources = itemView.context.resources
-        when (category) {
-            ProductCategory.S -> return resources.getQuantityString(R.plurals.sr_s, productCount)
-            ProductCategory.BUS -> return resources.getQuantityString(R.plurals.sr_bus, productCount)
-            ProductCategory.SUBWAY -> return resources.getQuantityString(R.plurals.sr_subway, productCount)
-            ProductCategory.TRAM -> return resources.getQuantityString(R.plurals.sr_tram, productCount)
-            ProductCategory.SHIP -> return resources.getQuantityString(R.plurals.sr_tram, productCount)
+        return when (category) {
+            ProductCategory.S -> resources.getQuantityString(R.plurals.sr_s, productCount)
+            ProductCategory.BUS -> resources.getQuantityString(R.plurals.sr_bus, productCount)
+            ProductCategory.SUBWAY -> resources.getQuantityString(R.plurals.sr_subway, productCount)
+            ProductCategory.TRAM -> resources.getQuantityString(R.plurals.sr_tram, productCount)
+            ProductCategory.SHIP -> resources.getQuantityString(
+                R.plurals.sr_tram,
+                productCount
+            )
+            else -> ""
         }
-        return ""
     }
 
     private fun isEmpty(s: String?): Boolean {
@@ -119,14 +122,23 @@ internal class LocalTransportViewHolder(parent: ViewGroup, itemClickListener: It
 
     private fun getIconDrawable(category: ProductCategory): Drawable? {
         val context = itemView.context
-        when (category) {
-            ProductCategory.S -> return AppCompatResources.getDrawable(context, R.drawable.app_sbahn_klein)
-            ProductCategory.BUS -> return AppCompatResources.getDrawable(context, R.drawable.app_bus_klein)
-            ProductCategory.SUBWAY -> return AppCompatResources.getDrawable(context, R.drawable.app_ubahn_klein)
-            ProductCategory.TRAM -> return AppCompatResources.getDrawable(context, R.drawable.app_tram_klein)
-            ProductCategory.SHIP -> return AppCompatResources.getDrawable(context, R.drawable.app_faehre_klein)
+        return when (category) {
+            ProductCategory.S -> AppCompatResources.getDrawable(context, R.drawable.app_sbahn_klein)
+            ProductCategory.BUS -> AppCompatResources.getDrawable(context, R.drawable.app_bus_klein)
+            ProductCategory.SUBWAY -> AppCompatResources.getDrawable(
+                context,
+                R.drawable.app_ubahn_klein
+            )
+            ProductCategory.TRAM -> AppCompatResources.getDrawable(
+                context,
+                R.drawable.app_tram_klein
+            )
+            ProductCategory.SHIP -> AppCompatResources.getDrawable(
+                context,
+                R.drawable.app_faehre_klein
+            )
+            else -> AppCompatResources.getDrawable(context, R.drawable.app_haltestelle)
         }
-        return AppCompatResources.getDrawable(context, R.drawable.app_haltestelle)
     }
 
 

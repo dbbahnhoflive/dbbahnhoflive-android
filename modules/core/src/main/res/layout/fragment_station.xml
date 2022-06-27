@@ -38,7 +38,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content">
 
-                    <Space
+                    <androidx.legacy.widget.Space
                         android:id="@+id/bottomSpace"
                         app:layout_constraintTop_toTopOf="parent"
                         app:layout_constraintDimensionRatio="1000:48"
@@ -219,7 +219,7 @@
                 </androidx.cardview.widget.CardView>
 
 
-                <Space
+                <androidx.legacy.widget.Space
                     android:id="@+id/interSpace"
                     app:layout_constraintBaseline_creator="1"
                     app:layout_constraintBottom_toTopOf="@+id/searchCard"

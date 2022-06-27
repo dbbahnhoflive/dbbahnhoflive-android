@@ -91,12 +91,17 @@ public class WagenstandAlarmManager {
 
         alarmIntent.putExtra(WagenstandAlarm.DEFAULT_BUNDLE_NAME, wagenstandAlarm.toBundle());
 
+        int flags = PendingIntent.FLAG_ONE_SHOT;
+        if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.M) {
+            flags |= PendingIntent.FLAG_IMMUTABLE;
+        }
+
         // Retrieve a PendingIntent that will perform a broadcast
         PendingIntent pendingIntent = PendingIntent.getBroadcast(
                 context,
                 wagenstandAlarms.size(),
                 alarmIntent,
-                PendingIntent.FLAG_ONE_SHOT);
+                flags);
 
         final AlarmManager manager = (AlarmManager) context.getSystemService(Context.ALARM_SERVICE);
 

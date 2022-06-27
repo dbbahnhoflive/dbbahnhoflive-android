@@ -13,6 +13,7 @@ import android.graphics.drawable.Drawable;
 
 import androidx.annotation.DrawableRes;
 import androidx.annotation.NonNull;
+import androidx.core.content.res.ResourcesCompat;
 
 import com.google.android.gms.maps.model.BitmapDescriptor;
 import com.google.android.gms.maps.model.BitmapDescriptorFactory;
@@ -29,7 +30,7 @@ public class VectorBitmapDescriptorFactory {
     public static BitmapDescriptor createBitmapDescriptor(@DrawableRes int drawableId, float scale) {
         final BaseApplication context = BaseApplication.get();
 
-        final Drawable drawable = context.getResources().getDrawable(drawableId);
+        final Drawable drawable = ResourcesCompat.getDrawable(context.getResources(), drawableId, null);
 
         if (scale == 1.0f && drawable instanceof BitmapDrawable) {
             return BitmapDescriptorFactory.fromResource(drawableId);

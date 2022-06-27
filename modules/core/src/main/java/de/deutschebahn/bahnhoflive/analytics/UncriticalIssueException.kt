@@ -6,10 +6,15 @@
 
 package de.deutschebahn.bahnhoflive.analytics
 
+import android.os.Build
+import androidx.annotation.RequiresApi
+
 class UncriticalIssueException : Exception {
     constructor(message: String?) : super(message)
     constructor(message: String?, cause: Throwable?) : super(message, cause)
     constructor(cause: Throwable?) : super(cause)
+
+    @RequiresApi(Build.VERSION_CODES.N)
     constructor(
         message: String?,
         cause: Throwable?,

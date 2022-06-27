@@ -11,6 +11,8 @@ import android.graphics.drawable.LevelListDrawable;
 import android.text.Html.ImageGetter;
 import android.widget.TextView;
 
+import androidx.core.content.res.ResourcesCompat;
+
 import de.deutschebahn.bahnhoflive.R;
 
 public class TextViewImageGetter implements ImageGetter {
@@ -23,14 +25,17 @@ public class TextViewImageGetter implements ImageGetter {
     }
 
     @Override
-    public Drawable getDrawable(String source){
-        LevelListDrawable d = new LevelListDrawable();
-        Drawable empty = tv.getResources().getDrawable(R.drawable.placeholder);
-        d.addLevel(0, 0, empty);
-        d.setBounds(0, 0, empty.getIntrinsicWidth(), empty.getIntrinsicHeight());
+    public Drawable getDrawable(String source) {
+        LevelListDrawable levelListDrawable = new LevelListDrawable();
 
-        new LoadImage().execute(source, d, tv, width);
+        final Drawable empty = ResourcesCompat.getDrawable(tv.getResources(), R.drawable.placeholder, null);
+        if (empty != null) {
+            levelListDrawable.addLevel(0, 0, empty);
+            levelListDrawable.setBounds(0, 0, empty.getIntrinsicWidth(), empty.getIntrinsicHeight());
+        }
 
-        return d;
+        new LoadImage().execute(source, levelListDrawable, tv, width);
+
+        return levelListDrawable;
     }
 }
