@@ -89,8 +89,9 @@ dependencies {
 
     implementation 'io.sentry:sentry-android:3.1.0'
 
-    testImplementation "junit:junit:4.13.2"
-
+    testApi "junit:junit:4.13.2"
+    testApi "org.jetbrains.kotlinx:kotlinx-coroutines-test:1.6.1"
+    testApi "io.mockk:mockk:1.12.4"
 
 }
 
