@@ -52,6 +52,8 @@ class CoroutineTimetableCollector(
         ((firstHour / hourInMillis) + hourCount + 1) * hourInMillis
     }.shareDistincts(SharingStarted.WhileSubscribed())
 
+    val lastHourEnd get() = runBlocking { lastHourEndFlow.first() }
+
     private fun <T> Flow<T>.shareDistincts(started: SharingStarted) =
         distinctUntilChanged().share(started)
 
@@ -115,6 +117,10 @@ class CoroutineTimetableCollector(
         list.mapNotNull { result ->
             result.exceptionOrNull()
         }.size
+    }
+
+    fun loadMore() {
+        TODO("Not yet implemented")
     }
 
 

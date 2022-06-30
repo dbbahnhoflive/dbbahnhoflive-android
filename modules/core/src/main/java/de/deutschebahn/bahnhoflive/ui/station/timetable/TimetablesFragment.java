@@ -34,6 +34,14 @@ import de.deutschebahn.bahnhoflive.ui.timetable.localtransport.HafasDeparturesFr
 public class TimetablesFragment extends TwoTabsFragment {
 
     private boolean tabsInitialized = false;
+    private StationViewModel stationViewModel;
+
+    @Override
+    public void onCreate(@Nullable Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+
+        stationViewModel = new ViewModelProvider(requireActivity()).get(StationViewModel.class);
+    }
 
     @Override
     protected void showFragment(int position) {
@@ -72,11 +80,8 @@ public class TimetablesFragment extends TwoTabsFragment {
         if (localTransport) {
             setTab(1);
         } else {
-            final Fragment dbTimeableFragmentCandidate = getChildFragmentManager().findFragmentByTag(DbTimetableFragment.TAG);
-            if (dbTimeableFragmentCandidate instanceof DbTimetableFragment) {
-                final DbTimetableFragment dbTimetableFragment = (DbTimetableFragment) dbTimeableFragmentCandidate;
-                dbTimetableFragment.setModeAndFilter(arrivals, trackFilter);
-            }
+            stationViewModel.setTrackFilter(trackFilter);
+            stationViewModel.setShowArrivals(arrivals);
             setTab(0);
         }
     }

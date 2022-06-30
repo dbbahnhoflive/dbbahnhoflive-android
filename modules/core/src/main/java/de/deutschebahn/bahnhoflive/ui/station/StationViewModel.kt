@@ -311,9 +311,6 @@ class StationViewModel(
         }
     }
 
-    val dbTimetableResource =
-        DbTimetableResource(evaIdsProvider)
-
     private val refreshLiveData = false.toLiveData()
 
     val timetableCollector = CoroutineTimetableCollector(
@@ -340,6 +337,7 @@ class StationViewModel(
         }
     }
 
+    val newTimetableLiveData = timetableCollector.timetableFlow.asLiveData()
 
     private val timetableRepository: TimetableRepository
         get() = application.repositories.timetableRepository
@@ -350,15 +348,8 @@ class StationViewModel(
     private suspend fun getTimetableChanges(evaId: String) =
         timetableRepository.fetchTimetableCahnges(evaId)
 
-    private val evaIdsErrorObserver = Observer<VolleyError> { volleyError ->
-        if (volleyError != null) {
-            dbTimetableResource.setEvaIdsMissing()
-        }
-    }
     private val evaIdsDataObserver = Observer<Station> { station ->
         if (station != null) {
-            dbTimetableResource.loadIfNecessary()
-
             accessibilityFeaturesResource.evaIds = station.evaIds
         }
     }
@@ -392,6 +383,10 @@ class StationViewModel(
     val trackFilterObservable: Observable<Optional<String>>
         get() = trackFilter
 
+    val trackFilterFlow = MutableStateFlow<String?>(null)
+    val trainCategoryFilterFlow = MutableStateFlow<String?>(null)
+    val showArrivalsStateFlow = MutableStateFlow<Boolean>(false)
+
     private val waggonOrderSubject = BehaviorSubject.create<TrainInfo>()
 
     val waggonOrderObservable = waggonOrderSubject.distinctUntilChanged()
@@ -410,11 +405,7 @@ class StationViewModel(
         viewModelScope.launch {
             collect {
                 if (it?.isSuccess == true) {
-                    dbTimetableResource.loadIfNecessary()
-
                     accessibilityFeaturesResource.evaIds = it.getOrNull()?.evaIds
-                } else {
-                    dbTimetableResource.setEvaIdsMissing()
                 }
             }
         }
@@ -426,7 +417,6 @@ class StationViewModel(
             elevatorsResource.initialize(station)
             shopsResource.initialize(station)
             parking.parkingsResource.initialize(station)
-            dbTimetableResource.initialize(station)
 
             viewModelScope.launch {
                 stationStateFlow.emit(station)
@@ -474,15 +464,15 @@ class StationViewModel(
 
     override fun onCleared() {
         super.onCleared()
-
         stationResource.data.removeObserver(evaIdsDataObserver)
-        stationResource.error.removeObserver(evaIdsErrorObserver)
-
         initializationPending.enable()
     }
 
-    fun setTrackFilter(track: String) {
+    fun setTrackFilter(track: String?) {
         trackFilter.onNext(Optional(track))
+        viewModelScope.launch {
+            trackFilterFlow.emit(track)
+        }
     }
 
     fun showWaggonOrder(trainInfo: TrainInfo) {
@@ -575,534 +565,544 @@ class StationViewModel(
 
     }
 
-    val genuineContentSearchResults: LiveData<Pair<Pair<String?, Boolean>, List<ContentSearchResult>?>> = MediatorLiveData<Pair<Pair<String?, Boolean>, List<ContentSearchResult>?>>().apply {
+    val genuineContentSearchResults: LiveData<Pair<Pair<String?, Boolean>, List<ContentSearchResult>?>> =
+        MediatorLiveData<Pair<Pair<String?, Boolean>, List<ContentSearchResult>?>>().apply {
 
-        val poiSearchConfiguration =
-            this@StationViewModel.application.poiSearchConfigurationProvider.configuration
-        val shops = shopsResource.data
-        val dbTimetable = dbTimetableResource.data
-        val hafasStations = hafasStationResource.data
-        val detailedStopPlace = risServiceAndCategoryResource.data
-        val elevators = elevatorsResource.data
-        val parkings = parking.parkingsResource.data
-        val railReplacement = railReplacementSummaryLiveData
+            val poiSearchConfiguration =
+                this@StationViewModel.application.poiSearchConfigurationProvider.configuration
+            val shops = shopsResource.data
+            val dbTimetable = newTimetableLiveData
+            val hafasStations = hafasStationResource.data
+            val detailedStopPlace = risServiceAndCategoryResource.data
+            val elevators = elevatorsResource.data
+            val parkings = parking.parkingsResource.data
+            val railReplacement = railReplacementSummaryLiveData
 
-        val update = fun(_: Any?) {
-            value = queryAndParts.value?.let { queryAndParts ->
-                queryAndParts.first to queryAndParts.second?.let { queryParts ->
-                    val currentRawQuery = queryAndParts.first.first
-                    val matchingKeys = poiSearchConfiguration.value?.let { poiSearchConfiguration ->
-                        poiSearchConfiguration.configuration.asSequence().filter {
-                            queryParts.all { query ->
-                                it.value.any(query.predicate)
-                            }
-                        }.map {
-                            it.key
-                        }
-                    }?.toList() ?: emptyList()
-
-                    val findCurrentlyOpen = matchingKeys.contains("Geöffnet")
-                    val findWagonOrder = matchingKeys.contains("Wagenreihung")
-                    val stationFeaturesOnClickListener = SearchResultClickListener(View.OnClickListener { stationNavigation?.showStationFeatures() })
-
-                    val contentSearchResultComparator = Collator.getInstance(Locale.GERMAN).let {
-                        Comparator<ContentSearchResult> { o1, o2 ->
-                            it.compare(o1.text, o2.text)
-                        }
-                    }
-
-
-                    emptySequence<ContentSearchResult>()
-                        .append(matchingKeys.asSequence().mapNotNull { matchingKey ->
-                            when (matchingKey) {
-                                "Abfahrtstafel" -> ContentSearchResult(
-                                    "Abfahrtstafel",
-                                    R.drawable.app_abfahrt_ankunft,
-                                    currentRawQuery,
-                                    SearchResultClickListener(
-                                        View.OnClickListener {
-                                            stationNavigation?.showTimetablesFragment(
-                                                false,
-                                                false,
-                                                null
-                                            )
-                                        })
-                                )
-                                "Ankunftstafel" -> ContentSearchResult(
-                                    "Ankunftstafel",
-                                    R.drawable.app_abfahrt_ankunft,
-                                    currentRawQuery,
-                                    SearchResultClickListener(
-                                        View.OnClickListener {
-                                            stationNavigation?.showTimetablesFragment(
-                                                false,
-                                                true,
-                                                null
-                                            )
-                                        })
-                                )
-                                "Karte" -> ContentSearchResult(
-                                    "Karte",
-                                    R.drawable.app_karte_liste,
-                                    currentRawQuery,
-                                    SearchResultClickListener(
-                                        View.OnClickListener {
-                                            stationResource.data.value?.let { station ->
-                                                val context = it.context
-                                                val intent =
-                                                    MapActivity.createIntent(context, station)
-                                                context.startActivity(intent)
-                                            }
-                                        })
-                                )
-                                "ÖPNV Anschluss" -> ContentSearchResult(
-                                    "ÖPNV Anschluss",
-                                    R.drawable.app_haltestelle,
-                                    currentRawQuery,
-                                    SearchResultClickListener(
-                                        View.OnClickListener { stationNavigation?.showLocalTransport() })
-                                )
-                                "Einstellungen" -> ContentSearchResult(
-                                    "Einstellungen",
-                                    R.drawable.app_einstellung,
-                                    currentRawQuery,
-                                    SearchResultClickListener(
-                                        View.OnClickListener { stationNavigation?.showSettingsFragment() })
-                                )
-                                "Feedback" -> ContentSearchResult(
-                                    "Feedback",
-                                    R.drawable.app_dialog,
-                                    currentRawQuery,
-                                    SearchResultClickListener(
-                                        View.OnClickListener { stationNavigation?.showFeedbackFragment() })
-                                )
-                                else -> null
-                            }
-                        })
-
-                        .append(shops.value?.shops?.let { shops ->
-                            shops.asSequence().flatMap { categorizedShops ->
-
-                                categorizedShops.value.asSequence().filter {
-                                    val candidates =
-                                        sequenceOf(it.name).append(it.tags?.asSequence())
-                                    queryParts.all {
-                                        candidates.any(it.predicate)
-                                    } || (findCurrentlyOpen && it.isOpen ?: false)
-                                }.map { shop ->
-                                    ContentSearchResult(
-                                        shop.name,
-                                        shop.icon,
-                                        currentRawQuery,
-                                        SearchResultClickListener(
-                                            View.OnClickListener {
-                                                selectedShopCategory.value = categorizedShops.key
-                                                selectedShop.value = shop
-                                                stationNavigation?.showShopsFragment()
-                                            })
-                                    )
-                                }.append(
-                                    this@StationViewModel.application.getString(categorizedShops.key.label)
-                                        .takeIf { categoryLabel ->
-                                            queryParts.all { queryPart ->
-                                                queryPart.predicate(categoryLabel)
-                                            }
-                                        }?.let {
-                                            ContentSearchResult(
-                                                it,
-                                                categorizedShops.key.icon,
-                                                currentRawQuery,
-                                                SearchResultClickListener(
-                                                    View.OnClickListener {
-                                                        selectedShopCategory.value =
-                                                            categorizedShops.key
-                                                        stationNavigation?.showShopsFragment()
-                                                    })
-                                            )
-                                        }
-                                )
-                            }.append(
-                                if (matchingKeys.contains("Shoppen & Schlemmen")) ContentSearchResult(
-                                    "Shoppen & Schlemmen",
-                                    R.drawable.app_shop,
-                                    currentRawQuery,
-                                    SearchResultClickListener(
-                                        View.OnClickListener { stationNavigation?.showShopsFragment() })
-                                ) else null
-                            )
-                        })
-
-
-                        .append(stationFeatures.value?.let { stationFeatures ->
-                            fun hasInfo(type: String) = infoAvailability.value?.get(type) != null
-
-                            fun eventuallyGenerateInfoResult(type: String) =
-                                infoAvailability.value?.get(
-                                    type
-                                )?.let { staticInfo ->
-                                    ContentSearchResult(
-                                        staticInfo.title,
-                                        IconMapper.contentIconForType(
-                                            type
-                                        ),
-                                        currentRawQuery,
-                                        SearchResultClickListener(View.OnClickListener {
-                                            selectedServiceContentType.value = type
-                                            stationNavigation?.showInfoFragment(false)
-                                        })
-                                    )
+            val update = fun(_: Any?) {
+                value = queryAndParts.value?.let { queryAndParts ->
+                    queryAndParts.first to queryAndParts.second?.let { queryParts ->
+                        val currentRawQuery = queryAndParts.first.first
+                        val matchingKeys =
+                            poiSearchConfiguration.value?.let { poiSearchConfiguration ->
+                                poiSearchConfiguration.configuration.asSequence().filter {
+                                    queryParts.all { query ->
+                                        it.value.any(query.predicate)
+                                    }
+                                }.map {
+                                    it.key
                                 }
+                            }?.toList() ?: emptyList()
 
-                            fun featureVisible(stationFeatureDefinition: StationFeatureDefinition) =
-                                stationFeatures.any {
-                                    it.isVisible && it.stationFeatureTemplate.definition == stationFeatureDefinition
+                        val findCurrentlyOpen = matchingKeys.contains("Geöffnet")
+                        val findWagonOrder = matchingKeys.contains("Wagenreihung")
+                        val stationFeaturesOnClickListener =
+                            SearchResultClickListener(View.OnClickListener { stationNavigation?.showStationFeatures() })
+
+                        val contentSearchResultComparator =
+                            Collator.getInstance(Locale.GERMAN).let {
+                                Comparator<ContentSearchResult> { o1, o2 ->
+                                    it.compare(o1.text, o2.text)
                                 }
+                            }
 
-                            matchingKeys.asSequence().mapNotNull { matchingKey ->
+
+                        emptySequence<ContentSearchResult>()
+                            .append(matchingKeys.asSequence().mapNotNull { matchingKey ->
                                 when (matchingKey) {
-                                    "Bahnhofsausstattung" -> ContentSearchResult(
-                                        "Bahnhofsausstattung",
-                                        R.drawable.app_bahnhofinfo,
-                                        currentRawQuery,
-                                        stationFeaturesOnClickListener
-                                    )
-                                    "Barrierefreiheit" -> ContentSearchResult(
-                                        "Barrierefreiheit",
-                                        R.drawable.bahnhofsausstattung_stufenfreier_zugang,
-                                        currentRawQuery,
-                                        { stationNavigation?.showAccessibility() }
-                                    )
-                                    "Bahnhofsausstattung WC" -> featureVisible(
-                                        StationFeatureDefinition.TOILET
-                                    ) then {
-                                        ContentSearchResult(
-                                            "WC",
-                                            R.drawable.bahnhofsausstattung_wc,
-                                            currentRawQuery,
-                                            stationFeaturesOnClickListener
-                                        )
-                                    }
-                                    "Bahnhofsausstattung DB Lounge" -> (!hasInfo(ServiceContentType.Local.DB_LOUNGE) && featureVisible(
-                                        StationFeatureDefinition.DB_LOUNGE
-                                    )) then {
-                                        ContentSearchResult(
-                                            "DB Lounge",
-                                            R.drawable.bahnhofsausstattung_db_lounge,
-                                            currentRawQuery,
-                                            stationFeaturesOnClickListener
-                                        )
-                                    }
-                                    "Bahnhofsausstattung Schließfächer" -> featureVisible(
-                                        StationFeatureDefinition.LOCKERS
-                                    ) then {
-                                        ContentSearchResult(
-                                            "Schließfächer",
-                                            R.drawable.bahnhofsausstattung_schlie_faecher,
-                                            currentRawQuery,
-                                            stationFeaturesOnClickListener
-                                        )
-                                    }
-                                    "Bahnhofsausstattung DB Info" -> (!hasInfo(ServiceContentType.DB_INFORMATION) && featureVisible(
-                                        StationFeatureDefinition.DB_INFO
-                                    )) then {
-                                        ContentSearchResult(
-                                            "DB Info",
-                                            R.drawable.bahnhofsausstattung_db_info,
-                                            currentRawQuery,
-                                            stationFeaturesOnClickListener
-                                        )
-                                    }
-                                    "Bahnhofsausstattung DB Reisezentrum" -> (!hasInfo(
-                                        ServiceContentType.Local.TRAVEL_CENTER
-                                    ) && featureVisible(StationFeatureDefinition.TRAVEL_CENTER)) then {
-                                        ContentSearchResult(
-                                            "DB Reisezentrum",
-                                            R.drawable.bahnhofsausstattung_db_reisezentrum,
-                                            currentRawQuery,
-                                            stationFeaturesOnClickListener
-                                        )
-                                    }
-                                    "Bahnhofsausstattung Reisebedarf" -> featureVisible(
-                                        StationFeatureDefinition.TRAVELER_SUPPLIES
-                                    ) then {
-                                        ContentSearchResult(
-                                            "Reisebedarf",
-                                            R.drawable.bahnhofsausstattung_reisebedarf,
-                                            currentRawQuery,
-                                            stationFeaturesOnClickListener
-                                        )
-                                    }
-                                    "Bahnhofsausstattung Fahrradstellplatz" -> featureVisible(
-                                        StationFeatureDefinition.BICYCLE_PARKING
-                                    ) then {
-                                        ContentSearchResult(
-                                            "Fahrradstellplatz",
-                                            R.drawable.bahnhofsausstattung_fahrradstellplatz,
-                                            currentRawQuery,
-                                            stationFeaturesOnClickListener
-                                        )
-                                    }
-                                    "Bahnhofsausstattung Taxistand" -> featureVisible(
-                                        StationFeatureDefinition.TAXI
-                                    ) then {
-                                        ContentSearchResult(
-                                            "Taxistand",
-                                            R.drawable.bahnhofsausstattung_taxi,
-                                            currentRawQuery,
-                                            stationFeaturesOnClickListener
-                                        )
-                                    }
-                                    "Bahnhofsausstattung Mietwagen" -> featureVisible(
-                                        StationFeatureDefinition.CAR_RENTAL
-                                    ) then {
-                                        ContentSearchResult(
-                                            "Mietwagen",
-                                            R.drawable.bahnhofsausstattung_mietwagen,
-                                            currentRawQuery,
-                                            stationFeaturesOnClickListener
-                                        )
-                                    }
-                                    "Bahnhofsausstattung WLAN" -> (!hasInfo(ServiceContentType.WIFI) && featureVisible(
-                                        StationFeatureDefinition.ACCESSIBILITY
-                                    )) then {
-                                        ContentSearchResult(
-                                            "WLAN",
-                                            R.drawable.rimap_wlan_grau,
-                                            currentRawQuery,
-                                            stationFeaturesOnClickListener
-                                        )
-                                    }
-
-                                    "Bahnhofsinformation" -> ContentSearchResult(
-                                        "Bahnhofsinformation",
-                                        R.drawable.app_info,
+                                    "Abfahrtstafel" -> ContentSearchResult(
+                                        "Abfahrtstafel",
+                                        R.drawable.app_abfahrt_ankunft,
                                         currentRawQuery,
                                         SearchResultClickListener(
                                             View.OnClickListener {
-                                                stationNavigation?.showInfoFragment(
-                                                    true
+                                                stationNavigation?.showTimetablesFragment(
+                                                    false,
+                                                    false,
+                                                    null
                                                 )
                                             })
                                     )
-                                    "Bahnhofsinformation Info & Services" -> infoAvailability.value?.let { availableInfos ->
-                                        sequenceOf(
-                                            ServiceContentType.DB_INFORMATION,
-                                            ServiceContentType.MOBILE_SERVICE,
-                                            ServiceContentType.BAHNHOFSMISSION,
-                                            ServiceContentType.Local.TRAVEL_CENTER,
-                                            ServiceContentType.Local.DB_LOUNGE,
-                                            ServiceContentType.MOBILITY_SERVICE,
-                                            ServiceContentType.THREE_S,
-                                            ServiceContentType.Local.LOST_AND_FOUND
-                                        ).any { availableInfos.containsKey(it) } then {
-                                            ContentSearchResult(
-                                                "Info & Services",
-                                                R.drawable.app_info,
-                                                currentRawQuery,
-                                                SearchResultClickListener(
-                                                    View.OnClickListener {
-                                                        stationNavigation?.showInfoFragment(
-                                                            true
-                                                        )
-                                                    })
-                                            )
-                                        }
-                                    }
-                                    "Bahnhofsinformation Info & Services DB Information" -> eventuallyGenerateInfoResult(
-                                        ServiceContentType.DB_INFORMATION
-                                    )
-                                    "Bahnhofsinformation Info & Services Mobiler Service" -> eventuallyGenerateInfoResult(
-                                        ServiceContentType.MOBILE_SERVICE
-                                    )
-                                    "Bahnhofsinformation Info & Services Bahnhofsmission" -> eventuallyGenerateInfoResult(
-                                        ServiceContentType.BAHNHOFSMISSION
-                                    )
-                                    "Bahnhofsinformation Info & Services DB Reisezentrum" -> eventuallyGenerateInfoResult(
-                                        ServiceContentType.Local.TRAVEL_CENTER
-                                    )
-                                    "Bahnhofsinformation Info & Services DB Lounge" -> eventuallyGenerateInfoResult(
-                                        ServiceContentType.Local.DB_LOUNGE
-                                    )
-                                    "Bahnhofsinformation Info & Services Mobilitätsservice" -> eventuallyGenerateInfoResult(
-                                        ServiceContentType.MOBILITY_SERVICE
-                                    )
-                                    "Bahnhofsinformation Info & Services 3-S-Zentrale" -> eventuallyGenerateInfoResult(
-                                        ServiceContentType.THREE_S
-                                    )
-                                    "Bahnhofsinformation Info & Services Fundservice" -> eventuallyGenerateInfoResult(
-                                        ServiceContentType.Local.LOST_AND_FOUND
-                                    )
-                                    "Bahnhofsinformation WLAN" -> eventuallyGenerateInfoResult(
-                                        ServiceContentType.WIFI
-                                    )
-                                    "Bahnhofsinformation Zugang & Wege" -> eventuallyGenerateInfoResult(
-                                        ServiceContentType.ACCESSIBLE
-                                    )
-
-                                    else -> null
-                                }
-                            }
-                        })
-
-                        .append(if (elevators.value?.takeUnless { it.isEmpty() } != null && matchingKeys.contains(
-                                "Bahnhofsinformation Aufzüge"
-                            )) {
-                            ContentSearchResult(
-                                "Aufzüge",
-                                R.drawable.bahnhofsausstattung_aufzug,
-                                currentRawQuery,
-                                SearchResultClickListener(
-                                    View.OnClickListener {
-                                        stationNavigation?.showElevators()
-                                    })
-                            )
-                        } else null
-                        )
-
-                        .append(if (parkings.value?.takeUnless { it.isEmpty() } != null && matchingKeys.contains(
-                                "Bahnhofsinformation Parkplätze"
-                            )) {
-                            ContentSearchResult(
-                                "Parkplätze",
-                                R.drawable.bahnhofsausstattung_parkplatz,
-                                currentRawQuery,
-                                SearchResultClickListener(
-                                    View.OnClickListener {
-                                        stationNavigation?.showParkings()
-                                    })
-                            )
-                        } else null
-                        )
-
-                        .append(if (railReplacement.value?.takeUnless { it.isEmpty() } != null && matchingKeys.contains(
-                                "Bahnhofsinformation Schienenersatzverkehr"
-                            )) {
-                            ContentSearchResult(
-                                "Schienenersatzverkehr",
-                                R.drawable.app_rail_replacement,
-                                currentRawQuery,
-                                {
-                                    stationNavigation?.showRailReplacement()
-                                })
-                        } else null
-                        )
-
-                        .append(dbTimetable.value?.let { timetable ->
-                            emptySequence<ContentSearchResult>()
-                                .append(
-                                    RISTimetable.getTracks(timetable.departures).asSequence()
-                                        .filter { track ->
-                                            val candidates = listOf(track, "Gleis")
-                                            queryParts.all {
-                                                candidates.any(it.predicate)
-                                            }
-                                        }.distinct().map { track ->
-                                            ContentSearchResult(
-                                                "Gleis $track",
-                                                RimapConfig.getTrackIconIdentifier(
-                                                    this@StationViewModel.application,
-                                                    track,
-                                                    ""
-                                                ),
-                                                currentRawQuery,
-                                                SearchResultClickListener(View.OnClickListener {
-                                                    stationNavigation?.showTimetablesFragment(
-                                                        false,
-                                                        false,
-                                                        track
-                                                    )
-                                                })
-                                            )
-                                        }
-                                )
-
-                                .append(if (findWagonOrder) timetable.departures.find {
-                                    it.shouldOfferWagenOrder()
-                                }?.let { trainInfo ->
-                                    ContentSearchResult(
-                                        "Wagenreihung",
-                                        R.drawable.app_wagenreihung_grau,
+                                    "Ankunftstafel" -> ContentSearchResult(
+                                        "Ankunftstafel",
+                                        R.drawable.app_abfahrt_ankunft,
                                         currentRawQuery,
                                         SearchResultClickListener(
-                                            trainInfo.createOnClickListener()
-                                        )
+                                            View.OnClickListener {
+                                                stationNavigation?.showTimetablesFragment(
+                                                    false,
+                                                    true,
+                                                    null
+                                                )
+                                            })
                                     )
-                                } else null)
-                        })
-
-                        .sortedWith(contentSearchResultComparator)
-
-                        .append(hafasStations.value?.products?.let { products ->
-                            val acceptedProducts = matchingKeys.asSequence().mapNotNull {
-                                when (it) {
-                                    "Verkehrsmittel Ubahn" -> ProductCategory.SUBWAY
-                                    "Verkehrsmittel S-Bahn" -> ProductCategory.S
-                                    "Verkehrsmittel Tram" -> ProductCategory.TRAM
-                                    "Verkehrsmittel Bus" -> ProductCategory.BUS
-                                    "Verkehrsmittel Fähre" -> ProductCategory.SHIP
+                                    "Karte" -> ContentSearchResult(
+                                        "Karte",
+                                        R.drawable.app_karte_liste,
+                                        currentRawQuery,
+                                        SearchResultClickListener(
+                                            View.OnClickListener {
+                                                stationResource.data.value?.let { station ->
+                                                    val context = it.context
+                                                    val intent =
+                                                        MapActivity.createIntent(context, station)
+                                                    context.startActivity(intent)
+                                                }
+                                            })
+                                    )
+                                    "ÖPNV Anschluss" -> ContentSearchResult(
+                                        "ÖPNV Anschluss",
+                                        R.drawable.app_haltestelle,
+                                        currentRawQuery,
+                                        SearchResultClickListener(
+                                            View.OnClickListener { stationNavigation?.showLocalTransport() })
+                                    )
+                                    "Einstellungen" -> ContentSearchResult(
+                                        "Einstellungen",
+                                        R.drawable.app_einstellung,
+                                        currentRawQuery,
+                                        SearchResultClickListener(
+                                            View.OnClickListener { stationNavigation?.showSettingsFragment() })
+                                    )
+                                    "Feedback" -> ContentSearchResult(
+                                        "Feedback",
+                                        R.drawable.app_dialog,
+                                        currentRawQuery,
+                                        SearchResultClickListener(
+                                            View.OnClickListener { stationNavigation?.showFeedbackFragment() })
+                                    )
                                     else -> null
                                 }
-                            }.toSet()
-                            products.asSequence().filter { product ->
-                                ProductCategory.of(product)?.isExtendedLocal ?: false && (
-                                        acceptedProducts.any {
-                                            it.bitMask() and product.catCode != 0
-                                        } ||
-                                                listOfNotNull(product.name).let { candidates ->
-                                                    queryParts.all { queryPart ->
-                                                        candidates.any(queryPart.predicate)
-                                                    }
+                            })
+
+                            .append(shops.value?.shops?.let { shops ->
+                                shops.asSequence().flatMap { categorizedShops ->
+
+                                    categorizedShops.value.asSequence().filter {
+                                        val candidates =
+                                            sequenceOf(it.name).append(it.tags?.asSequence())
+                                        queryParts.all {
+                                            candidates.any(it.predicate)
+                                        } || (findCurrentlyOpen && it.isOpen ?: false)
+                                    }.map { shop ->
+                                        ContentSearchResult(
+                                            shop.name,
+                                            shop.icon,
+                                            currentRawQuery,
+                                            SearchResultClickListener(
+                                                View.OnClickListener {
+                                                    selectedShopCategory.value =
+                                                        categorizedShops.key
+                                                    selectedShop.value = shop
+                                                    stationNavigation?.showShopsFragment()
                                                 })
-                            }.map { hafasStationProduct ->
-                                val productCategory = ProductCategory.of(hafasStationProduct)
-                                ContentSearchResult(
-                                    hafasStationProduct.name ?: "",
-                                    productCategory?.icon
-                                        ?: R.drawable.app_haltestelle,
-                                    currentRawQuery,
-                                    SearchResultClickListener(View.OnClickListener {
-                                        hafasTimetableViewModel.selectedHafasStationProduct.value =
-                                            hafasStationProduct
-                                        stationNavigation?.showLocalTransportTimetableFragment()
-                                    })
-
+                                        )
+                                    }.append(
+                                        this@StationViewModel.application.getString(categorizedShops.key.label)
+                                            .takeIf { categoryLabel ->
+                                                queryParts.all { queryPart ->
+                                                    queryPart.predicate(categoryLabel)
+                                                }
+                                            }?.let {
+                                                ContentSearchResult(
+                                                    it,
+                                                    categorizedShops.key.icon,
+                                                    currentRawQuery,
+                                                    SearchResultClickListener(
+                                                        View.OnClickListener {
+                                                            selectedShopCategory.value =
+                                                                categorizedShops.key
+                                                            stationNavigation?.showShopsFragment()
+                                                        })
+                                                )
+                                            }
+                                    )
+                                }.append(
+                                    if (matchingKeys.contains("Shoppen & Schlemmen")) ContentSearchResult(
+                                        "Shoppen & Schlemmen",
+                                        R.drawable.app_shop,
+                                        currentRawQuery,
+                                        SearchResultClickListener(
+                                            View.OnClickListener { stationNavigation?.showShopsFragment() })
+                                    ) else null
                                 )
-                            }.sortedWith(contentSearchResultComparator)
-                        })
+                            })
 
-                        .append(dbTimetable.value?.let { timetable ->
-                            timetable.departures.extractSearchResults(
-                                TrainEvent.DEPARTURE,
-                                queryParts,
-                                currentRawQuery
-                            ).plus(
-                                timetable.arrivals.extractSearchResults(
-                                    TrainEvent.ARRIVAL,
+
+                            .append(stationFeatures.value?.let { stationFeatures ->
+                                fun hasInfo(type: String) =
+                                    infoAvailability.value?.get(type) != null
+
+                                fun eventuallyGenerateInfoResult(type: String) =
+                                    infoAvailability.value?.get(
+                                        type
+                                    )?.let { staticInfo ->
+                                        ContentSearchResult(
+                                            staticInfo.title,
+                                            IconMapper.contentIconForType(
+                                                type
+                                            ),
+                                            currentRawQuery,
+                                            SearchResultClickListener(View.OnClickListener {
+                                                selectedServiceContentType.value = type
+                                                stationNavigation?.showInfoFragment(false)
+                                            })
+                                        )
+                                    }
+
+                                fun featureVisible(stationFeatureDefinition: StationFeatureDefinition) =
+                                    stationFeatures.any {
+                                        it.isVisible && it.stationFeatureTemplate.definition == stationFeatureDefinition
+                                    }
+
+                                matchingKeys.asSequence().mapNotNull { matchingKey ->
+                                    when (matchingKey) {
+                                        "Bahnhofsausstattung" -> ContentSearchResult(
+                                            "Bahnhofsausstattung",
+                                            R.drawable.app_bahnhofinfo,
+                                            currentRawQuery,
+                                            stationFeaturesOnClickListener
+                                        )
+                                        "Barrierefreiheit" -> ContentSearchResult(
+                                            "Barrierefreiheit",
+                                            R.drawable.bahnhofsausstattung_stufenfreier_zugang,
+                                            currentRawQuery,
+                                            { stationNavigation?.showAccessibility() }
+                                        )
+                                        "Bahnhofsausstattung WC" -> featureVisible(
+                                            StationFeatureDefinition.TOILET
+                                        ) then {
+                                            ContentSearchResult(
+                                                "WC",
+                                                R.drawable.bahnhofsausstattung_wc,
+                                                currentRawQuery,
+                                                stationFeaturesOnClickListener
+                                            )
+                                        }
+                                        "Bahnhofsausstattung DB Lounge" -> (!hasInfo(
+                                            ServiceContentType.Local.DB_LOUNGE
+                                        ) && featureVisible(
+                                            StationFeatureDefinition.DB_LOUNGE
+                                        )) then {
+                                            ContentSearchResult(
+                                                "DB Lounge",
+                                                R.drawable.bahnhofsausstattung_db_lounge,
+                                                currentRawQuery,
+                                                stationFeaturesOnClickListener
+                                            )
+                                        }
+                                        "Bahnhofsausstattung Schließfächer" -> featureVisible(
+                                            StationFeatureDefinition.LOCKERS
+                                        ) then {
+                                            ContentSearchResult(
+                                                "Schließfächer",
+                                                R.drawable.bahnhofsausstattung_schlie_faecher,
+                                                currentRawQuery,
+                                                stationFeaturesOnClickListener
+                                            )
+                                        }
+                                        "Bahnhofsausstattung DB Info" -> (!hasInfo(
+                                            ServiceContentType.DB_INFORMATION
+                                        ) && featureVisible(
+                                            StationFeatureDefinition.DB_INFO
+                                        )) then {
+                                            ContentSearchResult(
+                                                "DB Info",
+                                                R.drawable.bahnhofsausstattung_db_info,
+                                                currentRawQuery,
+                                                stationFeaturesOnClickListener
+                                            )
+                                        }
+                                        "Bahnhofsausstattung DB Reisezentrum" -> (!hasInfo(
+                                            ServiceContentType.Local.TRAVEL_CENTER
+                                        ) && featureVisible(StationFeatureDefinition.TRAVEL_CENTER)) then {
+                                            ContentSearchResult(
+                                                "DB Reisezentrum",
+                                                R.drawable.bahnhofsausstattung_db_reisezentrum,
+                                                currentRawQuery,
+                                                stationFeaturesOnClickListener
+                                            )
+                                        }
+                                        "Bahnhofsausstattung Reisebedarf" -> featureVisible(
+                                            StationFeatureDefinition.TRAVELER_SUPPLIES
+                                        ) then {
+                                            ContentSearchResult(
+                                                "Reisebedarf",
+                                                R.drawable.bahnhofsausstattung_reisebedarf,
+                                                currentRawQuery,
+                                                stationFeaturesOnClickListener
+                                            )
+                                        }
+                                        "Bahnhofsausstattung Fahrradstellplatz" -> featureVisible(
+                                            StationFeatureDefinition.BICYCLE_PARKING
+                                        ) then {
+                                            ContentSearchResult(
+                                                "Fahrradstellplatz",
+                                                R.drawable.bahnhofsausstattung_fahrradstellplatz,
+                                                currentRawQuery,
+                                                stationFeaturesOnClickListener
+                                            )
+                                        }
+                                        "Bahnhofsausstattung Taxistand" -> featureVisible(
+                                            StationFeatureDefinition.TAXI
+                                        ) then {
+                                            ContentSearchResult(
+                                                "Taxistand",
+                                                R.drawable.bahnhofsausstattung_taxi,
+                                                currentRawQuery,
+                                                stationFeaturesOnClickListener
+                                            )
+                                        }
+                                        "Bahnhofsausstattung Mietwagen" -> featureVisible(
+                                            StationFeatureDefinition.CAR_RENTAL
+                                        ) then {
+                                            ContentSearchResult(
+                                                "Mietwagen",
+                                                R.drawable.bahnhofsausstattung_mietwagen,
+                                                currentRawQuery,
+                                                stationFeaturesOnClickListener
+                                            )
+                                        }
+                                        "Bahnhofsausstattung WLAN" -> (!hasInfo(ServiceContentType.WIFI) && featureVisible(
+                                            StationFeatureDefinition.ACCESSIBILITY
+                                        )) then {
+                                            ContentSearchResult(
+                                                "WLAN",
+                                                R.drawable.rimap_wlan_grau,
+                                                currentRawQuery,
+                                                stationFeaturesOnClickListener
+                                            )
+                                        }
+
+                                        "Bahnhofsinformation" -> ContentSearchResult(
+                                            "Bahnhofsinformation",
+                                            R.drawable.app_info,
+                                            currentRawQuery,
+                                            SearchResultClickListener(
+                                                View.OnClickListener {
+                                                    stationNavigation?.showInfoFragment(
+                                                        true
+                                                    )
+                                                })
+                                        )
+                                        "Bahnhofsinformation Info & Services" -> infoAvailability.value?.let { availableInfos ->
+                                            sequenceOf(
+                                                ServiceContentType.DB_INFORMATION,
+                                                ServiceContentType.MOBILE_SERVICE,
+                                                ServiceContentType.BAHNHOFSMISSION,
+                                                ServiceContentType.Local.TRAVEL_CENTER,
+                                                ServiceContentType.Local.DB_LOUNGE,
+                                                ServiceContentType.MOBILITY_SERVICE,
+                                                ServiceContentType.THREE_S,
+                                                ServiceContentType.Local.LOST_AND_FOUND
+                                            ).any { availableInfos.containsKey(it) } then {
+                                                ContentSearchResult(
+                                                    "Info & Services",
+                                                    R.drawable.app_info,
+                                                    currentRawQuery,
+                                                    SearchResultClickListener(
+                                                        View.OnClickListener {
+                                                            stationNavigation?.showInfoFragment(
+                                                                true
+                                                            )
+                                                        })
+                                                )
+                                            }
+                                        }
+                                        "Bahnhofsinformation Info & Services DB Information" -> eventuallyGenerateInfoResult(
+                                            ServiceContentType.DB_INFORMATION
+                                        )
+                                        "Bahnhofsinformation Info & Services Mobiler Service" -> eventuallyGenerateInfoResult(
+                                            ServiceContentType.MOBILE_SERVICE
+                                        )
+                                        "Bahnhofsinformation Info & Services Bahnhofsmission" -> eventuallyGenerateInfoResult(
+                                            ServiceContentType.BAHNHOFSMISSION
+                                        )
+                                        "Bahnhofsinformation Info & Services DB Reisezentrum" -> eventuallyGenerateInfoResult(
+                                            ServiceContentType.Local.TRAVEL_CENTER
+                                        )
+                                        "Bahnhofsinformation Info & Services DB Lounge" -> eventuallyGenerateInfoResult(
+                                            ServiceContentType.Local.DB_LOUNGE
+                                        )
+                                        "Bahnhofsinformation Info & Services Mobilitätsservice" -> eventuallyGenerateInfoResult(
+                                            ServiceContentType.MOBILITY_SERVICE
+                                        )
+                                        "Bahnhofsinformation Info & Services 3-S-Zentrale" -> eventuallyGenerateInfoResult(
+                                            ServiceContentType.THREE_S
+                                        )
+                                        "Bahnhofsinformation Info & Services Fundservice" -> eventuallyGenerateInfoResult(
+                                            ServiceContentType.Local.LOST_AND_FOUND
+                                        )
+                                        "Bahnhofsinformation WLAN" -> eventuallyGenerateInfoResult(
+                                            ServiceContentType.WIFI
+                                        )
+                                        "Bahnhofsinformation Zugang & Wege" -> eventuallyGenerateInfoResult(
+                                            ServiceContentType.ACCESSIBLE
+                                        )
+
+                                        else -> null
+                                    }
+                                }
+                            })
+
+                            .append(if (elevators.value?.takeUnless { it.isEmpty() } != null && matchingKeys.contains(
+                                    "Bahnhofsinformation Aufzüge"
+                                )) {
+                                ContentSearchResult(
+                                    "Aufzüge",
+                                    R.drawable.bahnhofsausstattung_aufzug,
+                                    currentRawQuery,
+                                    SearchResultClickListener(
+                                        View.OnClickListener {
+                                            stationNavigation?.showElevators()
+                                        })
+                                )
+                            } else null
+                            )
+
+                            .append(if (parkings.value?.takeUnless { it.isEmpty() } != null && matchingKeys.contains(
+                                    "Bahnhofsinformation Parkplätze"
+                                )) {
+                                ContentSearchResult(
+                                    "Parkplätze",
+                                    R.drawable.bahnhofsausstattung_parkplatz,
+                                    currentRawQuery,
+                                    SearchResultClickListener(
+                                        View.OnClickListener {
+                                            stationNavigation?.showParkings()
+                                        })
+                                )
+                            } else null
+                            )
+
+                            .append(if (railReplacement.value?.takeUnless { it.isEmpty() } != null && matchingKeys.contains(
+                                    "Bahnhofsinformation Schienenersatzverkehr"
+                                )) {
+                                ContentSearchResult(
+                                    "Schienenersatzverkehr",
+                                    R.drawable.app_rail_replacement,
+                                    currentRawQuery,
+                                    {
+                                        stationNavigation?.showRailReplacement()
+                                    })
+                            } else null
+                            )
+
+                            .append(dbTimetable.value?.let { timetable ->
+                                emptySequence<ContentSearchResult>()
+                                    .append(
+                                        RISTimetable.getTracks(timetable.departures).asSequence()
+                                            .filter { track ->
+                                                val candidates = listOf(track, "Gleis")
+                                                queryParts.all {
+                                                    candidates.any(it.predicate)
+                                                }
+                                            }.distinct().map { track ->
+                                                ContentSearchResult(
+                                                    "Gleis $track",
+                                                    RimapConfig.getTrackIconIdentifier(
+                                                        this@StationViewModel.application,
+                                                        track,
+                                                        ""
+                                                    ),
+                                                    currentRawQuery,
+                                                    SearchResultClickListener(View.OnClickListener {
+                                                        stationNavigation?.showTimetablesFragment(
+                                                            false,
+                                                            false,
+                                                            track
+                                                        )
+                                                    })
+                                                )
+                                            }
+                                    )
+
+                                    .append(if (findWagonOrder) timetable.departures.find {
+                                        it.shouldOfferWagenOrder()
+                                    }?.let { trainInfo ->
+                                        ContentSearchResult(
+                                            "Wagenreihung",
+                                            R.drawable.app_wagenreihung_grau,
+                                            currentRawQuery,
+                                            SearchResultClickListener(
+                                                trainInfo.createOnClickListener()
+                                            )
+                                        )
+                                    } else null)
+                            })
+
+                            .sortedWith(contentSearchResultComparator)
+
+                            .append(hafasStations.value?.products?.let { products ->
+                                val acceptedProducts = matchingKeys.asSequence().mapNotNull {
+                                    when (it) {
+                                        "Verkehrsmittel Ubahn" -> ProductCategory.SUBWAY
+                                        "Verkehrsmittel S-Bahn" -> ProductCategory.S
+                                        "Verkehrsmittel Tram" -> ProductCategory.TRAM
+                                        "Verkehrsmittel Bus" -> ProductCategory.BUS
+                                        "Verkehrsmittel Fähre" -> ProductCategory.SHIP
+                                        else -> null
+                                    }
+                                }.toSet()
+                                products.asSequence().filter { product ->
+                                    ProductCategory.of(product)?.isExtendedLocal ?: false && (
+                                            acceptedProducts.any {
+                                                it.bitMask() and product.catCode != 0
+                                            } ||
+                                                    listOfNotNull(product.name).let { candidates ->
+                                                        queryParts.all { queryPart ->
+                                                            candidates.any(queryPart.predicate)
+                                                        }
+                                                    })
+                                }.map { hafasStationProduct ->
+                                    val productCategory = ProductCategory.of(hafasStationProduct)
+                                    ContentSearchResult(
+                                        hafasStationProduct.name ?: "",
+                                        productCategory?.icon
+                                            ?: R.drawable.app_haltestelle,
+                                        currentRawQuery,
+                                        SearchResultClickListener(View.OnClickListener {
+                                            hafasTimetableViewModel.selectedHafasStationProduct.value =
+                                                hafasStationProduct
+                                            stationNavigation?.showLocalTransportTimetableFragment()
+                                        })
+
+                                    )
+                                }.sortedWith(contentSearchResultComparator)
+                            })
+
+                            .append(dbTimetable.value?.let { timetable ->
+                                timetable.departures.extractSearchResults(
+                                    TrainEvent.DEPARTURE,
                                     queryParts,
                                     currentRawQuery
-                                )
-                            ).sortedBy {
-                                it.timestamp
-                            }
-                        })
+                                ).plus(
+                                    timetable.arrivals.extractSearchResults(
+                                        TrainEvent.ARRIVAL,
+                                        queryParts,
+                                        currentRawQuery
+                                    )
+                                ).sortedBy {
+                                    it.timestamp
+                                }
+                            })
 
-                        .toList()
+                            .toList()
+                    }
                 }
             }
-        }
 
-        addSource(poiSearchConfiguration, update)
-        addSource(shops, update)
-        addSource(dbTimetable, update)
-        addSource(detailedStopPlace, update)
-        addSource(hafasStations, update)
-        addSource(infoAvailability, update)
-        addSource(elevators, update)
-        addSource(parkings, update)
-        addSource(railReplacement, update)
-        addSource(stationFeatures, update)
-        addSource(queryAndParts, update)
-    }
+            addSource(poiSearchConfiguration, update)
+            addSource(shops, update)
+            addSource(dbTimetable, update)
+            addSource(detailedStopPlace, update)
+            addSource(hafasStations, update)
+            addSource(infoAvailability, update)
+            addSource(elevators, update)
+            addSource(parkings, update)
+            addSource(railReplacement, update)
+            addSource(stationFeatures, update)
+            addSource(queryAndParts, update)
+        }
 
     private fun List<TrainInfo>.extractSearchResults(
         trainEvent: TrainEvent,
@@ -1165,11 +1165,12 @@ class StationViewModel(
         }
     }
 
-    val recentContentSearchesAsResults = Transformations.map(recentContentQueriesStore.recentQueries) { recentQueries ->
-        recentQueries.map { query ->
-            ContentSearchResult(query, 0, query, UpdateQueryOnClickListener(query))
+    val recentContentSearchesAsResults =
+        Transformations.map(recentContentQueriesStore.recentQueries) { recentQueries ->
+            recentQueries.map { query ->
+                ContentSearchResult(query, 0, query, UpdateQueryOnClickListener(query))
+            }
         }
-    }
 
     val contentSearchSuggestionsAsResults = MediatorLiveData<List<ContentSearchResult>>().apply {
 
@@ -1242,14 +1243,15 @@ class StationViewModel(
 
     fun refresh() {
         refreshLiveData.value = true
-        dbTimetableResource.refresh()
+        timetableCollector.refresh(true)
         shopsResource.refresh()
         occupancyResource.refresh()
     }
 
     val selectedTrainInfo = MutableLiveData<TrainInfo>()
 
-    inner class SearchResultClickListener(val onClickListener: View.OnClickListener) : View.OnClickListener {
+    inner class SearchResultClickListener(val onClickListener: View.OnClickListener) :
+        View.OnClickListener {
         override fun onClick(v: View?) {
             storeContentQuery()
             onClickListener.onClick(v)
@@ -1311,11 +1313,12 @@ class StationViewModel(
         !it.isNullOrEmpty()
     }
 
-    val hasCouponsAndShopsLiveData = Transformations.switchMap(shopsResource.data) { categorizedShops ->
-        categorizedShops?.takeUnless { it.shops.isNullOrEmpty() }?.let {
-            hasCouponsLiveData
+    val hasCouponsAndShopsLiveData =
+        Transformations.switchMap(shopsResource.data) { categorizedShops ->
+            categorizedShops?.takeUnless { it.shops.isNullOrEmpty() }?.let {
+                hasCouponsLiveData
+            }
         }
-    }
 
     val isShowChatbotLiveData = MutableLiveData(true)
 
@@ -1395,8 +1398,6 @@ class StationViewModel(
         }
     }
 
-    val newTimetableLiveData = timetableCollector.timetableFlow.asLiveData()
-
     val isLoadingLiveData = shopsResource.loadingStatus.asFlow().combine(
         elevatorsResource.loadingStatus.asFlow().combine(
             timetableCollector.isLoadingFlow
@@ -1406,5 +1407,18 @@ class StationViewModel(
     ) { shopsLoadingStatus, otherStatuses ->
         otherStatuses || shopsLoadingStatus == LoadingStatus.BUSY
     }.asLiveData()
+
+    fun setShowArrivals(arrivals: Boolean) {
+        viewModelScope.launch {
+            showArrivalsStateFlow.emit(arrivals)
+        }
+    }
+
+    fun setDbTimetableFilter(trainCategoryFilter: String?, trackFilter: String?) {
+        viewModelScope.launch(Dispatchers.Main) {
+            trainCategoryFilterFlow.emit(trainCategoryFilter)
+            trackFilterFlow.emit(trackFilter)
+        }
+    }
 
 }

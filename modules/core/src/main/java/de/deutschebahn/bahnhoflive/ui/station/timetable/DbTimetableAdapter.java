@@ -51,6 +51,7 @@ class DbTimetableAdapter extends RecyclerView.Adapter<ViewHolder<?>> implements 
     private Station station;
     private final FilterUI filterUI;
     private String trainCategory;
+    @Nullable
     private String track;
 
     private TrackingManager trackingManager;
@@ -117,13 +118,15 @@ class DbTimetableAdapter extends RecyclerView.Adapter<ViewHolder<?>> implements 
         filterUI.onShowFilter(trainCategories.toArray(new String[0]), trainCategory, tracks.toArray(new String[0]), track);
     }
 
-    public void setFilter(String trainCategory, String track) {
+    public void setTrainCategoryFilter(String trainCategory) {
         this.trainCategory = trainCategory;
 
-        setFilter(track);
+        notifyItemChanged(0);
+
+        applyFilters();
     }
 
-    public void setFilter(String track) {
+    public void setFilter(@Nullable String track) {
         this.track = track;
 
         notifyItemChanged(0);
@@ -168,7 +171,7 @@ class DbTimetableAdapter extends RecyclerView.Adapter<ViewHolder<?>> implements 
     }
 
     public int setSelectedItem(TrainInfo trainInfo) {
-        setFilter(null, null);
+        setTrainCategoryFilter(null);
 
         final int targetIndex = filteredTrainInfos.indexOf(trainInfo) + 1;
 

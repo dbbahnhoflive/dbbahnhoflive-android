@@ -29,7 +29,7 @@ class AccessibilityFeaturesResource(
             val listener = object : VolleyRestListener<List<Platform>> {
 
                 @Synchronized
-                override fun onSuccess(payload: List<Platform>?) {
+                override fun onSuccess(payload: List<Platform>) {
                     results.add(payload)
                     eventuallyDeliver()
                 }

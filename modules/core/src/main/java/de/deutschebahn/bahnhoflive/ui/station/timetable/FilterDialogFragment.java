@@ -15,20 +15,16 @@ import android.widget.NumberPicker;
 import android.widget.TextView;
 
 import androidx.annotation.Nullable;
-import androidx.fragment.app.Fragment;
+import androidx.lifecycle.ViewModelProvider;
 
 import java.text.DateFormat;
 import java.util.Arrays;
 
 import de.deutschebahn.bahnhoflive.R;
+import de.deutschebahn.bahnhoflive.ui.station.StationViewModel;
 import de.deutschebahn.bahnhoflive.view.FullBottomSheetDialogFragment;
 
 public class FilterDialogFragment extends FullBottomSheetDialogFragment {
-
-
-    public interface Consumer {
-        void setFilter(String trainCategory, String track);
-    }
 
     private static final String ARG_TRAIN_CATEGORY = "trainCategory";
     private static final String ARG_TRACK = "track";
@@ -43,12 +39,18 @@ public class FilterDialogFragment extends FullBottomSheetDialogFragment {
     private NumberPicker picker;
     private boolean tracksMode = false;
 
-    private String trackFilter;
-    private String trainCategoryFilter;
+    private @Nullable
+    String trackFilter;
+    private @Nullable
+    String trainCategoryFilter;
+
+    private StationViewModel stationViewModel;
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        stationViewModel = new ViewModelProvider(requireActivity()).get(StationViewModel.class);
 
         final Bundle arguments = getArguments();
         trainCategories = arguments.getStringArray(ARG_TRAIN_CATEGORIES);
@@ -73,10 +75,7 @@ public class FilterDialogFragment extends FullBottomSheetDialogFragment {
         view.findViewById(R.id.button_apply).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                final Fragment fragment = getParentFragment();
-                if (fragment instanceof Consumer) {
-                    ((Consumer) fragment).setFilter(trainCategoryFilter, trackFilter);
-                }
+                stationViewModel.setDbTimetableFilter(trainCategoryFilter, trackFilter);
 
                 dismiss();
             }
