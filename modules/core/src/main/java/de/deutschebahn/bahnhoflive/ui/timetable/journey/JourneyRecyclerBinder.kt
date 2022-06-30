@@ -10,7 +10,7 @@ fun IncludeJourneyRecyclerBinding.prepareCommons(
     journeyViewModel: JourneyViewModel
 ) {
     refresher.setOnRefreshListener {
-        stationViewModel.dbTimetableResource.refresh()
+        stationViewModel.timetableCollector.refresh(true)
         journeyViewModel.onRefresh()
     }
 

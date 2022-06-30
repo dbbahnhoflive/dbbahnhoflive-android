@@ -89,7 +89,7 @@ class HafasStationsResource(val maxStationDistance: Int) : RemoteResource<List<H
             object : VolleyRestListener<List<HafasStation>> {
                 val listener = Listener()
 
-                override fun onSuccess(payload: List<HafasStation>?) {
+                override fun onSuccess(payload: List<HafasStation>) {
                     if (Collections.hasContent(payload)) {
                         listener.onSuccess(payload)
                     } else {

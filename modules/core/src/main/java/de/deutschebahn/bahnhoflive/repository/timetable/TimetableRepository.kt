@@ -26,4 +26,10 @@ open class TimetableRepository {
     ) {
         listener.fail()
     }
+
+    open suspend fun fetchTimetableHour(evaId: String, hour: Long): TimetableHour =
+        throw NotImplementedError()
+
+    open suspend fun fetchTimetableCahnges(evaId: String): TimetableChanges =
+        throw NotImplementedError()
 }

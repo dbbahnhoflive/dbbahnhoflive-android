@@ -29,7 +29,7 @@ class JourneyViewModel(app: Application, savedStateHandle: SavedStateHandle) :
     val timetableRepository = getApplication<BaseApplication>().repositories.timetableRepository
 
     val stationProxyLiveData = ProxyLiveData<MergedStation>()
-    val timetableProxyLiveData = ProxyLiveData<Timetable?>()
+    val timetableProxyLiveData = ProxyLiveData<Timetable>()
 
     private val argumentTrainInfoLiveData = savedStateHandle.getLiveData<TrainInfo>(ARG_TRAIN_INFO)
 
@@ -80,13 +80,9 @@ class JourneyViewModel(app: Application, savedStateHandle: SavedStateHandle) :
                             trainInfo.trainCategory,
                             trainInfo.trainGenericName,
                             object : VolleyRestListener<List<JourneyStop>> {
-                                override fun onSuccess(payload: List<JourneyStop>?) {
-                                    value = if (payload == null) {
-                                    Result.failure(Exception("Result was empty"))
-                                } else {
-                                    Result.success(payload)
+                                override fun onSuccess(payload: List<JourneyStop>) {
+                                    value = Result.success(payload)
                                 }
-                            }
 
                                 override fun onFail(reason: VolleyError) {
                                     value = Result.failure(reason)

@@ -25,4 +25,8 @@ public class RestHelper {
         return queue.add(request);
     }
 
+    public <T> void cancel(Request<T> request) {
+        queue.cancelAll(candidateRequest -> candidateRequest == request);
+    }
+
 }

@@ -37,6 +37,9 @@ import de.deutschebahn.bahnhoflive.repository.accessibility.AccessibilityFeature
 import de.deutschebahn.bahnhoflive.repository.feedback.WhatsAppFeeback
 import de.deutschebahn.bahnhoflive.repository.map.RrtRequestResult
 import de.deutschebahn.bahnhoflive.repository.parking.ViewModelParking
+import de.deutschebahn.bahnhoflive.repository.timetable.CoroutineTimetableCollector
+import de.deutschebahn.bahnhoflive.repository.timetable.TimetableHour
+import de.deutschebahn.bahnhoflive.repository.timetable.TimetableRepository
 import de.deutschebahn.bahnhoflive.stream.livedata.MergedLiveData
 import de.deutschebahn.bahnhoflive.stream.livedata.switchMap
 import de.deutschebahn.bahnhoflive.stream.rx.Optional
@@ -56,14 +59,16 @@ import de.deutschebahn.bahnhoflive.ui.station.timetable.TimetableViewHelper
 import de.deutschebahn.bahnhoflive.ui.timetable.localtransport.HafasTimetableViewModel
 import de.deutschebahn.bahnhoflive.util.Token
 import de.deutschebahn.bahnhoflive.util.append
-import de.deutschebahn.bahnhoflive.util.asLiveData
 import de.deutschebahn.bahnhoflive.util.openhours.OpenHoursParser
 import de.deutschebahn.bahnhoflive.util.then
+import de.deutschebahn.bahnhoflive.util.toLiveData
 import io.reactivex.Observable
 import io.reactivex.subjects.BehaviorSubject
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
+import kotlinx.coroutines.channels.awaitClose
+import kotlinx.coroutines.channels.sendBlocking
 import kotlinx.coroutines.flow.*
 import kotlinx.coroutines.launch
 import java.io.InputStreamReader
@@ -267,6 +272,8 @@ class StationViewModel(
 
     private val openHoursParser = OpenHoursParser(this.application, viewModelScope)
 
+    private val stationStateFlow = MutableStateFlow<Station?>(null)
+
     val risServiceAndCategoryResource =
         RisServiceAndCategoryResource(openHoursParser)
 
@@ -294,16 +301,54 @@ class StationViewModel(
         }
     }
 
+    private val evaIdsProvider = object : EvaIdsProvider {
+        override fun withEvaIds(station: Station, action: (evaIds: EvaIds?) -> Unit) {
+            getApplication<BaseApplication>().applicationServices.evaIdsProvider.withEvaIds(
+                station
+            ) {
+                action(it ?: stationResource.data.value?.evaIds)
+            }
+        }
+    }
+
     val dbTimetableResource =
-        DbTimetableResource(object : EvaIdsProvider {
-            override fun withEvaIds(station: Station, action: (evaIds: EvaIds?) -> Unit) {
+        DbTimetableResource(evaIdsProvider)
+
+    private val refreshLiveData = false.toLiveData()
+
+    val timetableCollector = CoroutineTimetableCollector(
+        stationStateFlow.filterNotNull().flatMapLatest { station ->
+            callbackFlow {
                 getApplication<BaseApplication>().applicationServices.evaIdsProvider.withEvaIds(
                     station
-                ) {
-                    action(it ?: stationResource.data.value?.evaIds)
+                ) { evaIds ->
+                    sendBlocking(evaIds ?: stationResource.data.value?.evaIds)
                 }
+
+                awaitClose()
             }
-        })
+        }.filterNotNull(),
+        emptyFlow(),
+        viewModelScope,
+        ::getTimetableHour,
+        ::getTimetableChanges
+    ).apply {
+        viewModelScope.launch {
+            refreshLiveData.asFlow().collect { force ->
+                refresh(force)
+            }
+        }
+    }
+
+
+    private val timetableRepository: TimetableRepository
+        get() = application.repositories.timetableRepository
+
+    private suspend fun getTimetableHour(evaId: String, hour: Long): TimetableHour =
+        timetableRepository.fetchTimetableHour(evaId, hour)
+
+    private suspend fun getTimetableChanges(evaId: String) =
+        timetableRepository.fetchTimetableCahnges(evaId)
 
     private val evaIdsErrorObserver = Observer<VolleyError> { volleyError ->
         if (volleyError != null) {
@@ -355,7 +400,6 @@ class StationViewModel(
         Log.d(StationViewModel::class.java.simpleName, msg)
     }
 
-    private val stationStateFlow = MutableStateFlow<Station?>(null)
 
     @OptIn(ExperimentalCoroutinesApi::class)
     private val updatedStationFlow = stationStateFlow.filterNotNull().mapLatest { station ->
@@ -1160,7 +1204,7 @@ class StationViewModel(
         }
     }
 
-    private val contentQueryGenuineResultsType = ResultSetType.GENUINE.asLiveData()
+    private val contentQueryGenuineResultsType = ResultSetType.GENUINE.toLiveData()
 
     val resultSetType = Transformations.switchMap(contentQuery) { query ->
         if (query?.first.isNullOrBlank()) {
@@ -1195,7 +1239,6 @@ class StationViewModel(
         selectedTrainInfo.value = this
     }
 
-    private val refreshLiveData = false.asLiveData()
 
     fun refresh() {
         refreshLiveData.value = true
@@ -1243,7 +1286,7 @@ class StationViewModel(
                 application.appRepositories.newsRepository.queryNews(
                     stationId,
                     object : VolleyRestListener<List<News>> {
-                        override fun onSuccess(payload: List<News>?) {
+                        override fun onSuccess(payload: List<News>) {
                             value = payload
                         }
 
@@ -1351,4 +1394,17 @@ class StationViewModel(
             }
         }
     }
+
+    val newTimetableLiveData = timetableCollector.timetableFlow.asLiveData()
+
+    val isLoadingLiveData = shopsResource.loadingStatus.asFlow().combine(
+        elevatorsResource.loadingStatus.asFlow().combine(
+            timetableCollector.isLoadingFlow
+        ) { elevatorsLoadingStatus, timetableIsLoading ->
+            timetableIsLoading || elevatorsLoadingStatus == LoadingStatus.BUSY
+        }
+    ) { shopsLoadingStatus, otherStatuses ->
+        otherStatuses || shopsLoadingStatus == LoadingStatus.BUSY
+    }.asLiveData()
+
 }

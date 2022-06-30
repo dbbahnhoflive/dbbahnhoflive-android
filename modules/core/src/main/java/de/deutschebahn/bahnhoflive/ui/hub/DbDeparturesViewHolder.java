@@ -64,7 +64,7 @@ public class DbDeparturesViewHolder extends LongClickSelectableItemViewHolder<St
         super.onBind(item);
         stationSearchViewHolder.bind(item);
 
-        reducedDbDeparturesViewHolder.bind(item.getTimetable());
+        reducedDbDeparturesViewHolder.bind(item.getTimetable().getData().getValue() /* FIXME */);
     }
 
 

@@ -37,15 +37,11 @@ import de.deutschebahn.bahnhoflive.backend.db.fasta2.model.FacilityStatus;
 import de.deutschebahn.bahnhoflive.backend.db.newsapi.GroupId;
 import de.deutschebahn.bahnhoflive.backend.db.newsapi.model.Group;
 import de.deutschebahn.bahnhoflive.backend.local.model.ServiceContent;
-import de.deutschebahn.bahnhoflive.repository.DbTimetableResource;
 import de.deutschebahn.bahnhoflive.repository.ElevatorsResource;
-import de.deutschebahn.bahnhoflive.repository.LoadingStatus;
 import de.deutschebahn.bahnhoflive.repository.MergedStation;
 import de.deutschebahn.bahnhoflive.repository.Resource;
 import de.deutschebahn.bahnhoflive.repository.ShopsResource;
 import de.deutschebahn.bahnhoflive.repository.Station;
-import de.deutschebahn.bahnhoflive.repository.timetable.Constants;
-import de.deutschebahn.bahnhoflive.repository.timetable.Timetable;
 import de.deutschebahn.bahnhoflive.tutorial.TutorialManager;
 import de.deutschebahn.bahnhoflive.tutorial.TutorialView;
 import de.deutschebahn.bahnhoflive.ui.ServiceContentFragment;
@@ -102,7 +98,6 @@ public class StationFragment extends androidx.fragment.app.Fragment implements
     private ShopsResource shopsResource;
     //    private ParkingsResource parkingsResource;
     private ElevatorsResource elevatorsResource;
-    private DbTimetableResource dbTimetableResource;
     private View stationFeaturesButton;
     private StationDetailCardCoordinator stationDetailCardCoordinator;
 
@@ -127,28 +122,12 @@ public class StationFragment extends androidx.fragment.app.Fragment implements
         }
     }
 
-    private void updateProgressViews() {
-        final LoadingStatus shopsResourceLoadingStatus = shopsResource.getLoadingStatus().getValue();
-
-        if (swipeRefreshLayout != null) {
-            if (!(dbTimetableResource.getLoadingStatus().getValue() == LoadingStatus.BUSY ||
-                    elevatorsResource.getLoadingStatus().getValue() == LoadingStatus.BUSY ||
-                    shopsResourceLoadingStatus == LoadingStatus.BUSY
-            )) {
-                swipeRefreshLayout.setRefreshing(false);
-            }
-        }
-    }
 
     @Override
     public void onStop() {
         TutorialManager.getInstance(getActivity()).markTutorialAsIgnored(mTutorialView);
 
         super.onStop();
-    }
-
-    private void updateDeparturesView() {
-        reducedDbDeparturesViewHolder.bind(dbTimetableResource);
     }
 
     public StationFragment() {
@@ -198,15 +177,7 @@ public class StationFragment extends androidx.fragment.app.Fragment implements
             summaries = new SummaryBadge[]{shopsSummary, /*parkingsSummary, */ elevatorsSummary, localTransportSummary};
         }
 
-        final Observer<LoadingStatus> loadingStatusObserver = new Observer<LoadingStatus>() {
-            @Override
-            public void onChanged(@Nullable LoadingStatus loadingStatus) {
-                updateProgressViews();
-            }
-        };
-
         elevatorsResource = stationViewModel.getElevatorsResource();
-        elevatorsResource.getLoadingStatus().observe(this, loadingStatusObserver);
         elevatorsResource.getData().observe(this, new Observer<List<FacilityStatus>>() {
             @Override
             public void onChanged(@Nullable List<FacilityStatus> facilityStatuses) {
@@ -223,7 +194,6 @@ public class StationFragment extends androidx.fragment.app.Fragment implements
         });
 
         shopsResource = stationViewModel.getShopsResource();
-        shopsResource.getLoadingStatus().observe(this, loadingStatusObserver);
         shopsResource.getData().observe(this, new Observer<CategorizedShops>() {
             @Override
             public void onChanged(@Nullable CategorizedShops categorizedShops) {
@@ -236,30 +206,6 @@ public class StationFragment extends androidx.fragment.app.Fragment implements
                 if (volleyError != null) {
                     shopsSummary.setError();
                 }
-            }
-        });
-
-        dbTimetableResource = stationViewModel.getDbTimetableResource();
-        dbTimetableResource.getData().observe(this, new Observer<Timetable>() {
-            @Override
-            public void onChanged(@Nullable Timetable timetable) {
-                if (timetable != null && timetable.getDuration() <= Constants.HOUR_LIMIT && timetable.getDepartures().size() < 3) {
-                    dbTimetableResource.loadMore();
-                }
-                updateDeparturesView();
-            }
-        });
-        dbTimetableResource.getLoadingStatus().observe(this, new Observer<LoadingStatus>() {
-            @Override
-            public void onChanged(@Nullable LoadingStatus loadingStatus) {
-                updateProgressViews();
-                updateDeparturesView();
-            }
-        });
-        dbTimetableResource.getError().observe(this, new Observer<VolleyError>() {
-            @Override
-            public void onChanged(@Nullable VolleyError volleyError) {
-                updateDeparturesView();
             }
         });
 
@@ -375,6 +321,11 @@ public class StationFragment extends androidx.fragment.app.Fragment implements
 
         swipeRefreshLayout = view.findViewById(R.id.refresher);
         swipeRefreshLayout.setOnRefreshListener(this);
+        stationViewModel.isLoadingLiveData().observe(getViewLifecycleOwner(), isLoading -> {
+            if (!isLoading) {
+                swipeRefreshLayout.setRefreshing(false);
+            }
+        });
 
         stationFeaturesButton = view.findViewById(R.id.features);
         stationFeaturesButton.setOnClickListener(v -> {
@@ -439,6 +390,19 @@ public class StationFragment extends androidx.fragment.app.Fragment implements
             }
         });
         reducedDbDeparturesViewHolder = new ReducedDbDeparturesViewHolder(dbDeparturesView, R.id.view_flipper, this);
+        stationViewModel.getNewTimetableLiveData().observe(getViewLifecycleOwner(), timetable -> reducedDbDeparturesViewHolder.bind(timetable));
+
+        stationViewModel.getTimetableCollector().getErrorsLiveData().observe(getViewLifecycleOwner(), errors -> {
+            if (errors) {
+                reducedDbDeparturesViewHolder.showError();
+            }
+        });
+
+        stationViewModel.getTimetableCollector().isLoadingLiveData().observe(getViewLifecycleOwner(), isLoading -> {
+            if (isLoading) {
+                reducedDbDeparturesViewHolder.showProgress();
+            }
+        });
 
         view.findViewById(R.id.feedback).setOnClickListener(v -> {
             getTrackingManager().track(TrackingManager.TYPE_ACTION, TrackingManager.Screen.H1, TrackingManager.Action.TAP, TrackingManager.UiElement.FEEDBACK);
@@ -460,7 +424,6 @@ public class StationFragment extends androidx.fragment.app.Fragment implements
         if (station != null) {
             setStationName(station.getTitle());
         }
-        updateDeparturesView();
         stationDetailCardCoordinator = new StationDetailCardCoordinator(view,
                 localTransportSummary, shopsSummary, elevatorsSummary);
         stationViewModel.getRimapStationInfoLiveData().observe(getViewLifecycleOwner(), stationDetailCardCoordinator.getRimapStationInfoObserver());
