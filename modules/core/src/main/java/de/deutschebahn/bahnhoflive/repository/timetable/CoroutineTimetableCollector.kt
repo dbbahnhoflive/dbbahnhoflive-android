@@ -7,8 +7,7 @@ import de.deutschebahn.bahnhoflive.backend.ris.model.TrainInfo
 import kotlinx.coroutines.*
 import kotlinx.coroutines.flow.*
 import java.util.concurrent.TimeUnit
-import kotlin.reflect.KSuspendFunction1
-import kotlin.reflect.KSuspendFunction2
+import kotlin.coroutines.CoroutineContext
 
 
 @OptIn(ExperimentalCoroutinesApi::class)
@@ -16,10 +15,10 @@ class CoroutineTimetableCollector(
     val evaIdsFlow: Flow<EvaIds>,
     nextHourFlow: Flow<Unit>,
     val coroutineScope: CoroutineScope,
-    val timetableHourProvider: KSuspendFunction2<String, Long, TimetableHour>,
-    val timetableChangesProvider: KSuspendFunction1<String, TimetableChanges>,
+    val timetableHourProvider: suspend (evaId: String, hour: Long) -> TimetableHour,
+    val timetableChangesProvider: suspend (evaId: String) -> TimetableChanges,
     val currentHourProvider: suspend () -> Long = { getCurrentHour() },
-    private val defaultDispatcher: CoroutineDispatcher = Dispatchers.Default
+    private val defaultDispatcher: CoroutineContext = Dispatchers.Default
 ) {
 
     val hourInMillis = TimeUnit.HOURS.toMillis(1)
