@@ -13,7 +13,6 @@ import kotlin.coroutines.CoroutineContext
 @OptIn(ExperimentalCoroutinesApi::class)
 class CoroutineTimetableCollector(
     val evaIdsFlow: Flow<EvaIds>,
-    nextHourFlow: Flow<Unit>,
     val coroutineScope: CoroutineScope,
     val timetableHourProvider: suspend (evaId: String, hour: Long) -> TimetableHour,
     val timetableChangesProvider: suspend (evaId: String) -> TimetableChanges,
@@ -39,12 +38,16 @@ class CoroutineTimetableCollector(
         currentHourProvider()
     }.shareDistincts(SharingStarted.Lazily)
 
-    val hourCountFlow = nextHourFlow.scan(Constants.PRELOAD_HOURS) { count: Int, unit: Unit ->
-        (count + 1).coerceAtMost(Constants.HOUR_LIMIT)
-    }.shareDistincts(SharingStarted.Eagerly)
+    val hourCountStateFlow = MutableStateFlow(Constants.PRELOAD_HOURS)
+
+    private val hourLimit get() = Constants.HOUR_LIMIT
+
+    val hourCountFlow = hourCountStateFlow
+        .filter { it < hourLimit }
+        .shareDistincts(SharingStarted.Eagerly)
 
     val maxHoursReachedFlow = hourCountFlow.map {
-        it >= Constants.HOUR_LIMIT
+        it >= hourLimit
     }.shareDistincts(SharingStarted.WhileSubscribed())
 
     val lastHourEndFlow = firstHourFlow.combine(hourCountFlow) { firstHour, hourCount ->
@@ -69,10 +72,12 @@ class CoroutineTimetableCollector(
         }
     }.flowOn(defaultDispatcher).shareDistincts(SharingStarted.Lazily)
 
+    private fun <T> List<Result<T>>.unwrapSuccessful() = mapNotNull {
+        it.getOrNull()
+    }
+
     private fun <T> Flow<List<Result<T>>>.unwrapSuccessful() = map {
-        it.mapNotNull {
-            it.getOrNull()
-        }
+        it.unwrapSuccessful()
     }.flowOn(defaultDispatcher)
 
     private val changesFlow = changesResultsFlow.unwrapSuccessful().map { changesList ->
@@ -84,7 +89,7 @@ class CoroutineTimetableCollector(
     val initialTimetableResultsFlow = evaIdsFlow.flatMapLatest { evaIds ->
         firstHourFlow.flatMapLatest { firstHour ->
             hourCountFlow.map { hourCount ->
-                evaIds.ids.flatMap { evaId ->
+                Triple(evaIds.ids.flatMap { evaId ->
                     (-1 until hourCount).map { hour ->
                         kotlin.runCatching {
                             timetableHourProvider(
@@ -93,37 +98,48 @@ class CoroutineTimetableCollector(
                             )
                         }
                     }
-                }
+                }, firstHour, hourCount)
             }
         }
     }.flowOn(defaultDispatcher).shareDistincts(SharingStarted.Lazily)
 
     private val mergedInitialTrainInfosFlow =
-        initialTimetableResultsFlow.unwrapSuccessful().map { timetableHours ->
-            timetableHours
-                .flatMap { it.trainInfos }
-                .groupBy { it.id }
-                .mapValues { (id, trainInfos) ->
-                    trainInfos.reduce { mergedTrainInfo, nextTrainInfo ->
-                        mergedTrainInfo.merge(
-                            nextTrainInfo
-                        )
-                    }
-                } to timetableHours.maxOf { it.hour }
+        initialTimetableResultsFlow.map { (timetableHoursResults, firstHour, hourCount) ->
+            Triple(
+                timetableHoursResults.unwrapSuccessful()
+                    .flatMap { it.trainInfos }
+                    .groupBy { it.id }
+                    .mapValues { (id, trainInfos) ->
+                        trainInfos.reduce { mergedTrainInfo, nextTrainInfo ->
+                            mergedTrainInfo.merge(
+                                nextTrainInfo
+                            )
+                        }
+                    },
+                firstHour,
+                hourCount
+            )
         }.flowOn(defaultDispatcher)
 
+    private fun <T> List<Result<T>>.errorCount() = mapNotNull { result ->
+        result.exceptionOrNull()
+    }.size
+
     private fun <T> Flow<List<Result<T>>>.errorCount() = map { list ->
-        list.mapNotNull { result ->
-            result.exceptionOrNull()
-        }.size
+        list.errorCount()
     }
 
     fun loadMore() {
-        TODO("Not yet implemented")
+        coroutineScope.launch {
+            val currentHourCount = hourCountStateFlow.value
+            if (currentHourCount < hourLimit) {
+                hourCountStateFlow.emit(currentHourCount + 1)
+            }
+        }
     }
 
 
-    val errorsFlow = initialTimetableResultsFlow.errorCount()
+    val errorsFlow = initialTimetableResultsFlow.map { it.first.errorCount() }
         .combine(changesResultsFlow.errorCount()) { a, b ->
             a + b > 0
         }
@@ -131,10 +147,14 @@ class CoroutineTimetableCollector(
     val errorsLiveData get() = errorsFlow.asLiveData()
 
     val timetableFlow =
-        mergedInitialTrainInfosFlow.combine(changesFlow) { (initials, maxHour), changes ->
+        mergedInitialTrainInfosFlow.combine(changesFlow) { (initials, firstHour, hourCount), changes ->
             val mergedTrainInfos = TrainInfo.mergeChanges(initials.toMutableMap(), changes)
 
-            Timetable(mergedTrainInfos.values.toList(), maxHour)
+            Timetable(
+                mergedTrainInfos.values.toList(),
+                (firstHour / hourInMillis + hourCount) * hourInMillis,
+                hourCount
+            )
         }.flowOn(defaultDispatcher).onEach {
             isLoadingMutableFlow.emit(false)
         }.share(SharingStarted.WhileSubscribed())

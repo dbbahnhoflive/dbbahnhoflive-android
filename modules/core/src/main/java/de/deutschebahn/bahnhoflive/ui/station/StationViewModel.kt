@@ -325,7 +325,6 @@ class StationViewModel(
                 awaitClose()
             }
         }.filterNotNull(),
-        emptyFlow(),
         viewModelScope,
         ::getTimetableHour,
         ::getTimetableChanges
@@ -342,8 +341,12 @@ class StationViewModel(
     private val timetableRepository: TimetableRepository
         get() = application.repositories.timetableRepository
 
+    private val timetableHourCache = mutableMapOf<Pair<String, Long>, TimetableHour>()
+
     private suspend fun getTimetableHour(evaId: String, hour: Long): TimetableHour =
-        timetableRepository.fetchTimetableHour(evaId, hour)
+        timetableHourCache.getOrPut(evaId to hour) {
+            timetableRepository.fetchTimetableHour(evaId, hour)
+        }
 
     private suspend fun getTimetableChanges(evaId: String) =
         timetableRepository.fetchTimetableCahnges(evaId)

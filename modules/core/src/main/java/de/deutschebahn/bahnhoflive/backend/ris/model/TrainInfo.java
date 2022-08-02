@@ -351,7 +351,7 @@ public class TrainInfo implements Parcelable {
         return id;
     }
 
-    private void setId(String id) {
+    public void setId(String id) {
         this.id = id;
     }
 
