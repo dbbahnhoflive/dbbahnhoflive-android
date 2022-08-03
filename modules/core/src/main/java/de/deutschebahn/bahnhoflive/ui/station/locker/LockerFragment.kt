@@ -10,14 +10,14 @@ import android.view.ViewGroup
 import androidx.core.view.forEach
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
-import androidx.lifecycle.Observer
 import de.deutschebahn.bahnhoflive.R
 import de.deutschebahn.bahnhoflive.analytics.TrackingManager
-import de.deutschebahn.bahnhoflive.backend.db.ris.model.Locker
 import de.deutschebahn.bahnhoflive.databinding.FragmentLockerBinding
+import de.deutschebahn.bahnhoflive.databinding.IncludeItemLockerBinding
 import de.deutschebahn.bahnhoflive.ui.map.MapPresetProvider
 import de.deutschebahn.bahnhoflive.ui.map.content.rimap.RimapFilter
 import de.deutschebahn.bahnhoflive.ui.station.StationViewModel
+
 
 class LockerFragment : Fragment(), MapPresetProvider {
 
@@ -37,26 +37,32 @@ class LockerFragment : Fragment(), MapPresetProvider {
             it.visibility = INVISIBLE
         }
 
-        stationViewModel.lockers.lockerWithLiveCapacity.observe(viewLifecycleOwner,
-            Observer<List<Locker?>> { lockers: List<Locker?>? ->
+        stationViewModel.lockers.categorizedLockersLiveData.observe(
+            viewLifecycleOwner
+        ) { uiLockers ->
 
-                if (lockers != null) {
-                    Log.d("cr", lockers.size.toString())
+            if (uiLockers != null) {
+                Log.d("cr", uiLockers.size.toString())
 
-                    for (i in 0..lockers.size - 1) {
+                contentList.removeAllViews()
 
-//                        (contentList.get(i) as IncludeItemLockerBinding).apply {
-//
-//                            this.lockerAmount.text = lockers[i]?.amount.toString()
-//
-//                            root.visibility = VISIBLE
-//                        }
+                uiLockers.forEach {
 
-                    }
+                    contentList.addView(IncludeItemLockerBinding.inflate(inflater).apply {
 
+                        lockerSize.text = it.sizeAsString
+                        lockerAmount.text = it.amountAsString
+                        lockerDimensions.text = it.dimensionAsString
+                        lockerMaxLeaseDuration.text = it.maxLeaseDurationAsString
+                        lockerFee.text = it.feePeriodAsString
+                        lockerPaymentTypes.text = it.paymentTypesAsString
+
+                    }.root)
                 }
 
-            })
+            }
+
+        }
 
 
     }.root

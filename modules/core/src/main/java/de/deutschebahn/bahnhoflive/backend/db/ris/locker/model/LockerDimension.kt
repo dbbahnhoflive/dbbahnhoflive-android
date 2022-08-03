@@ -1,4 +1,4 @@
-package de.deutschebahn.bahnhoflive.backend.db.ris.model
+package de.deutschebahn.bahnhoflive.backend.db.ris.locker.model
 
 class LockerDimension {
     var depth: Int? = null

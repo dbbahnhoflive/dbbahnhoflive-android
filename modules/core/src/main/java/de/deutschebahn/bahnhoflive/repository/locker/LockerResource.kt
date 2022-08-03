@@ -3,7 +3,7 @@ package de.deutschebahn.bahnhoflive.repository.locker
 import android.os.Handler
 import android.os.Looper
 import de.deutschebahn.bahnhoflive.BaseApplication.Companion.get
-import de.deutschebahn.bahnhoflive.backend.db.ris.model.Locker
+import de.deutschebahn.bahnhoflive.backend.db.ris.locker.model.Locker
 import de.deutschebahn.bahnhoflive.repository.RemoteResource
 import de.deutschebahn.bahnhoflive.repository.Station
 

@@ -13,7 +13,7 @@
     android:layout_marginBottom="@dimen/default_space_double">
 
     <TextView
-        android:id="@+id/locker_type"
+        android:id="@+id/locker_size"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:textSize="@dimen/textsize_28"
@@ -26,6 +26,14 @@
         android:layout_height="wrap_content"
         android:textSize="@dimen/textsize_28"
         android:text="Insgesamt xxx Schliessfächer" />
+
+    <TextView
+        android:id="@+id/locker_max_lease_duration"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:textSize="@dimen/textsize_28"
+        android:text="Max. Mietdauer" />
+
 
     <TextView
         android:id="@+id/locker_dimensions"
@@ -42,7 +50,7 @@
         android:text="2,50 € / 24h" />
 
     <TextView
-        android:id="@+id/locker_payment"
+        android:id="@+id/locker_payment_types"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:textSize="@dimen/textsize_28"

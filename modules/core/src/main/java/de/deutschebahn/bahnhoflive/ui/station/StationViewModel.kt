@@ -35,7 +35,7 @@ import de.deutschebahn.bahnhoflive.persistence.RecentContentQueriesStore
 import de.deutschebahn.bahnhoflive.repository.*
 import de.deutschebahn.bahnhoflive.repository.accessibility.AccessibilityFeaturesResource
 import de.deutschebahn.bahnhoflive.repository.feedback.WhatsAppFeeback
-import de.deutschebahn.bahnhoflive.repository.locker.ViewModelLockers
+import de.deutschebahn.bahnhoflive.repository.locker.LockersViewModel
 import de.deutschebahn.bahnhoflive.repository.map.RrtRequestResult
 import de.deutschebahn.bahnhoflive.repository.parking.ViewModelParking
 import de.deutschebahn.bahnhoflive.stream.livedata.MergedLiveData
@@ -323,7 +323,7 @@ class StationViewModel(
 
     val parking = ViewModelParking()
 
-    val lockers = ViewModelLockers()
+    val lockers = LockersViewModel()
 
     val elevatorsResource = ElevatorsResource()
 

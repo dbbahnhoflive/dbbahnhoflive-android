@@ -8,7 +8,7 @@ package de.deutschebahn.bahnhoflive.ui.station.features
 
 import android.content.Context
 import de.deutschebahn.bahnhoflive.backend.db.fasta2.model.FacilityStatus
-import de.deutschebahn.bahnhoflive.backend.db.ris.model.Locker
+import de.deutschebahn.bahnhoflive.backend.db.ris.locker.model.Locker
 import de.deutschebahn.bahnhoflive.model.parking.ParkingFacility
 import de.deutschebahn.bahnhoflive.repository.Station
 import de.deutschebahn.bahnhoflive.ui.station.StaticInfoCollection
