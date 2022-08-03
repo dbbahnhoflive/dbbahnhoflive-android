@@ -165,6 +165,8 @@ open class TrackingManager(activity: ComponentActivity? = null) {
             const val PRESSE_UND_BUCH = "presse_und_buch"
             const val SHOPS = Entity.SHOPS
             const val COUPONS = "rabatt_coupons"
+            const val SCHLIESSFAECHER = "schliessfaecher"
+
         }
     }
 

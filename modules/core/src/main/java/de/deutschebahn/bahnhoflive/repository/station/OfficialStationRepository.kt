@@ -12,10 +12,7 @@ import de.deutschebahn.bahnhoflive.analytics.TrackingManager
 import de.deutschebahn.bahnhoflive.backend.RestHelper
 import de.deutschebahn.bahnhoflive.backend.VolleyRestListener
 import de.deutschebahn.bahnhoflive.backend.db.DbAuthorizationTool
-import de.deutschebahn.bahnhoflive.backend.db.ris.RISPlatformsRequest
-import de.deutschebahn.bahnhoflive.backend.db.ris.RISStationsLocalServicesRequest
-import de.deutschebahn.bahnhoflive.backend.db.ris.RISStationsStationRequest
-import de.deutschebahn.bahnhoflive.backend.db.ris.RISStationsStopPlacesRequest
+import de.deutschebahn.bahnhoflive.backend.db.ris.*
 import de.deutschebahn.bahnhoflive.backend.db.ris.model.LocalServices
 import de.deutschebahn.bahnhoflive.backend.db.ris.model.Platform
 import de.deutschebahn.bahnhoflive.backend.db.ris.model.RISStation
@@ -125,4 +122,16 @@ class OfficialStationRepository(
         )
         .cancellable()
 
+    override fun queryLockers(
+        listener: VolleyRestListener<List<de.deutschebahn.bahnhoflive.backend.db.ris.model.Locker>>,
+        stadaId: String,
+        force: Boolean
+    ): VolleyRequestCancellable<List<de.deutschebahn.bahnhoflive.backend.db.ris.model.Locker>> =
+        restHelper
+            .add(
+                RISStationsStationEquipmentsRequest(
+                    stadaId, listener, dbAuthorizationTool
+                )
+            )
+            .cancellable()
 }

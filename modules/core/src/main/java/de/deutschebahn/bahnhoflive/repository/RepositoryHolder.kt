@@ -10,6 +10,7 @@ import android.content.Context
 import de.deutschebahn.bahnhoflive.BaseApplication
 import de.deutschebahn.bahnhoflive.repository.elevator.ElevatorStatusRepository
 import de.deutschebahn.bahnhoflive.repository.localtransport.LocalTransportRepository
+import de.deutschebahn.bahnhoflive.repository.locker.LockerRepository
 import de.deutschebahn.bahnhoflive.repository.map.MapRepository
 import de.deutschebahn.bahnhoflive.repository.misc.EinkaufsbahnhofRepository
 import de.deutschebahn.bahnhoflive.repository.news.NewsRepository
@@ -30,7 +31,8 @@ data class RepositoryHolder(
     val mapRepository: MapRepository = MapRepository(),
     val parkingRepository: ParkingRepository = ParkingRepository(),
     val occupancyRepository: OccupancyRepository = OccupancyRepository(),
-    val fontRepository: FontRepository = FontRepository()
+    val fontRepository: FontRepository = FontRepository(),
+    val lockerRepository: LockerRepository = LockerRepository()
 )
 
 val Context.appRepositories get(): RepositoryHolder = (applicationContext as BaseApplication).repositories

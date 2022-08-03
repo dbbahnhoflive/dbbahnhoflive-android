@@ -129,6 +129,7 @@
     <string name="stationinfo_infos_and_services">Info &amp; Services vor Ort</string>
     <string name="stationinfo_service_phone_numbers">Rufnummern &amp; Services</string>
     <string name="stationinfo_parkings">Parkplätze</string>
+    <string name="stationinfo_lockers">Schließfächer</string>
     <string name="title_stationinfo_categories">Bahnhofsinformationen</string>
     <string name="title_shopping_categories"><![CDATA[Shoppen & Schlemmen]]></string>
 
@@ -368,4 +369,6 @@
     <string name="rail_replacement_map_link">Eine Wegbeschreibung finden Sie unter Bahnhofsinformationen.</string>
     <string name="rail_replacement_entry_label_plural">An diesem Bahnhof finden Sie folgende Ersatzhaltestellen:</string>
     <string name="rail_replacement_entry_label_singular">An diesem Bahnhof finden Sie folgende Ersatzhaltestelle:</string>
+
+    <string name="locker_entry_label">An diesem Bahnhof können Sie Ihr Gepäck sicher aufbewahren. Alle Größenangaben zu den Schließfächern sind Länge, Breite und Höhe in Zentimeter. Bitte beachten Sie auch die Nutzungsbedingungen vor Ort.</string>
 </resources>

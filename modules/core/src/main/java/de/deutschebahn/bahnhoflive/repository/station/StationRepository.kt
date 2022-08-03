@@ -60,4 +60,13 @@ open class StationRepository {
         listener.fail()
         return null
     }
+
+    open fun queryLockers(
+        listener: VolleyRestListener<List<de.deutschebahn.bahnhoflive.backend.db.ris.model.Locker>>,
+        stadaId: String,
+        force: Boolean
+    ): Cancellable? {
+        listener.fail()
+        return null
+    }
 }
