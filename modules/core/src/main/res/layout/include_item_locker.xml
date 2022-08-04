@@ -28,19 +28,18 @@
         android:text="Insgesamt xxx Schliessfächer" />
 
     <TextView
-        android:id="@+id/locker_max_lease_duration"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:textSize="@dimen/textsize_28"
-        android:text="Max. Mietdauer" />
-
-
-    <TextView
         android:id="@+id/locker_dimensions"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:textSize="@dimen/textsize_28"
         android:text="42 x 24 x 76" />
+
+    <TextView
+        android:id="@+id/locker_max_lease_duration"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:textSize="@dimen/textsize_28"
+        android:text="Max. Mietdauer" />
 
     <TextView
         android:id="@+id/locker_fee"

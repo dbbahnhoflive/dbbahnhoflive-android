@@ -8,10 +8,5 @@ class Locker {
     var maxLeaseDuration: String? = null
     var paymentTypes: MutableList<String?>? = null
     var size: String = ""
-
-    fun maxLeaseDurationAsMinutes(): Int {
-        // todo
-        return 60
-    }
 }
 

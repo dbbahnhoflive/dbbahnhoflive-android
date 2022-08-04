@@ -96,6 +96,7 @@ abstract class BaseApplication(
             timetableRepository = RisTimetableRepository(
                 restHelper, risAndParkingAuthorizationTool
             )
+
         )
     }
 

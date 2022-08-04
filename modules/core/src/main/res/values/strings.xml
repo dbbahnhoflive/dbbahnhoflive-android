@@ -371,4 +371,38 @@
     <string name="rail_replacement_entry_label_singular">An diesem Bahnhof finden Sie folgende Ersatzhaltestelle:</string>
 
     <string name="locker_entry_label">An diesem Bahnhof können Sie Ihr Gepäck sicher aufbewahren. Alle Größenangaben zu den Schließfächern sind Länge, Breite und Höhe in Zentimeter. Bitte beachten Sie auch die Nutzungsbedingungen vor Ort.</string>
+    <string name="locker_amount_lockers">Insgesamt %d Schliessfächer</string>
+
+    <string-array name="locker_types">
+        <item>Unbekanntes Schließfach</item>
+        <item>Kleines Schliessfach</item>
+        <item>Mittleres Schließfach</item>
+        <item>Großes Schließfach</item>
+        <item>Jumbo-Schließfach</item>
+    </string-array>
+    <string name="locker_short_term">"Kurzzeit"</string>
+    <string name="locker_payment">"Zahlungsmittel: %s"</string>
+    <string name="locker_payment_type_cash">"bar"</string>
+    <string name="locker_payment_type_card">"Karte"</string>
+    <string name="locker_payment_type_unknown">"unbekannt"</string>
+    <string name="locker_dimensions">"%d x %d x %d"</string>
+    <string name="locker_max_lease_duration">"Max. Mietdauer:\u0020%s"</string>
+    <string name="locker_max_lease_duration_VO">"Maximale Mietdauer :\u0020%s"</string>
+
+    <string-array name="locker_fee_periods">
+        <item>%s / Unbekannt</item>
+        <item>%s / h</item>
+        <item>%s / 24h</item>
+        <item>%s /\u0020</item>
+    </string-array>
+
+    <string name="date_years">"\u0020Jahre"</string>
+    <string name="date_months">"\u0020Monate"</string>
+    <string name="date_weeks">"\u0020Wochen"</string>
+    <string name="date_days">"\u0020Tage"</string>
+    <string name="date_hours">"\u0020Stunden"</string>
+    <string name="date_minutes">"\u0020Minuten"</string>
+    <string name="date_seconds">"\u0020Sekunden"</string>
+
 </resources>
+

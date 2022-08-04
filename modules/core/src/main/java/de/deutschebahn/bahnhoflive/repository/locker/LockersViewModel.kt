@@ -17,7 +17,8 @@ class LockersViewModel {
             itLockerList?.forEach { itLocker ->
 
                 val uiLocker = UiLocker(itLocker)
-                var fieldfound = l.find { it.sizeAsString == uiLocker.sizeAsString }
+                var fieldfound =
+                    l.find { (it.lockerType == uiLocker.lockerType) && (it.isShortTimeLocker == uiLocker.isShortTimeLocker) }
 
                 if (fieldfound != null)
                     fieldfound.amount += uiLocker.amount

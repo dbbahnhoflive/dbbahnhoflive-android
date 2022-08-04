@@ -69,36 +69,8 @@
                     android:showDividers="middle">
 
                     <include
-                        android:id="@+id/locker_01"
                         layout="@layout/include_item_locker" />
 
-                    <include
-                        android:id="@+id/locker_02"
-                        layout="@layout/include_item_locker" />
-
-                    <include
-                        android:id="@+id/locker_03"
-                        layout="@layout/include_item_locker" />
-
-                    <include
-                        android:id="@+id/locker_04"
-                        layout="@layout/include_item_locker" />
-
-                    <include
-                        android:id="@+id/locker_05"
-                        layout="@layout/include_item_locker" />
-
-                    <include
-                        android:id="@+id/locker_06"
-                        layout="@layout/include_item_locker" />
-
-                    <include
-                        android:id="@+id/locker_07"
-                        layout="@layout/include_item_locker" />
-
-                    <include
-                        android:id="@+id/locker_08"
-                        layout="@layout/include_item_locker" />
 
                 </LinearLayout>
 

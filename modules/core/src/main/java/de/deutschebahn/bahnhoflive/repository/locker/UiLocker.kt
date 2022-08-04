@@ -2,24 +2,49 @@ package de.deutschebahn.bahnhoflive.repository.locker
 
 import de.deutschebahn.bahnhoflive.backend.db.ris.locker.model.Locker
 
+enum class LockerType {
+    UNKNOWN,
+    SMALL,
+    MEDIUM,
+    LARGE,
+    JUMBO
+}
+
+enum class PaymentType {
+    UNKNOWN,
+    CASH,
+    CARD
+}
+
+enum class FeePeriod {
+    UNKNOWN,
+    PER_DAY,
+    PER_HOUR,
+    PER_MAX_LEASE_DURATION
+}
+
 
 class UiLocker() {
 
-    var sizeAsString: String = ""
-
-    var amountAsString: String = ""
     var amount: Int = 0
-        set(value) {
-            field = value
-            amountAsString = "Insgesamt " + value.toString() + " Schliessfächer"
-        }
     var isShortTimeLocker: Boolean = false
-    var maxLeaseDurationAsString: String = ""
-    var maxLeaseDurationDateTimePart: String = ""
-    var dimensionAsString: String = ""
-    var paymentTypesAsString: String = ""
+
+//    var maxLeaseDurationAsString: String = ""
+//    var maxLeaseDurationDateTimePart: String = ""
+
+    var dimWidth: Int = 0
+    var dimHeight: Int = 0
+    var dimDepth: Int = 0
+
+    var paymentTypes: MutableSet<PaymentType> = mutableSetOf()
+
     var feeAsString: String = ""
-    var feePeriodAsString: String = ""
+
+    var lockerType: LockerType = LockerType.UNKNOWN
+    var feePeriod: FeePeriod = FeePeriod.UNKNOWN
+
+    var datePart: String = ""
+    var timePart: String = ""
 
     constructor(locker: Locker) : this() {
 
@@ -31,8 +56,6 @@ class UiLocker() {
         var maxLeaseDuration1 = locker.maxLeaseDuration
         if (maxLeaseDuration1 != null) {
 
-            var datePart: String = ""
-            var timePart: String = ""
 
             if (maxLeaseDuration1.contains("T")) {
                 var durationDateTime = maxLeaseDuration1.split("T")
@@ -43,31 +66,30 @@ class UiLocker() {
             }
 
 
-            datePart = datePart
-                .replace("P", "")
-                .replace("Y", " Jahre, ")
-                .replace("M", " Monate, ")
-                .replace("W", " Wochen, ")
-                .replace("D", " Tage, ")
+            datePart = datePart.lowercase()
+                .replace("p", "")
+                .replace("y", "y, ")
+                .replace("m", "m, ")
+                .replace("w", "w, ")
+                .replace("d", "d, ")
 
-            timePart = timePart
-                .replace("S", " Sekunden, ")
-                .replace("H", " Stunden, ")
-                .replace("M", " Minuten, ")
+            timePart = timePart.lowercase()
+                .replace("s", "s, ")
+                .replace("h", "h, ")
+                .replace("m", "m, ")
 
 
-            maxLeaseDurationAsString = (datePart + timePart)
+//            maxLeaseDurationAsString = (datePart + timePart)
+//
+//            if (maxLeaseDurationAsString.length > 2)
+//                maxLeaseDurationAsString = maxLeaseDurationAsString.dropLast(2)
+//
+//            maxLeaseDurationDateTimePart = maxLeaseDurationAsString
 
-            if (maxLeaseDurationAsString.length > 2)
-                maxLeaseDurationAsString = maxLeaseDurationAsString.dropLast(2)
-
-            maxLeaseDurationDateTimePart = maxLeaseDurationAsString
-            maxLeaseDurationAsString = "Max. Mietdauer " + maxLeaseDurationAsString
-
-            if (!datePart.isEmpty())
+            if (datePart.isNotEmpty())
                 isShortTimeLocker = false
-            else { // 4 Stunden
-                val hourIndex = ("0" + timePart).indexOf(" Stunden")
+            else {
+                val hourIndex = ("0" + timePart).indexOf("h")
                 if (hourIndex >= 2) {
                     val hours = ("0" + timePart).substring(hourIndex - 2, hourIndex).toInt()
                     isShortTimeLocker = hours < 24
@@ -77,74 +99,72 @@ class UiLocker() {
 
         }
 
-        val size1 = locker.size
-        when (size1) {
-            "SMALL" -> sizeAsString = "Kleines Schließfach"
-            "MEDIUM" -> sizeAsString = "Mittleres Schließfach"
-            "LARGE" -> sizeAsString = "Großes Schließfach"
-            "JUMBO" -> sizeAsString = "Jumbo-Schließfach"
+        lockerType = when (locker.size) {
+            "SMALL" -> LockerType.SMALL
+            "MEDIUM" -> LockerType.MEDIUM
+            "LARGE" -> LockerType.LARGE
+            "JUMBO" -> LockerType.JUMBO
             else ->
-                sizeAsString = "Unbekanntes Schließfach"
+                LockerType.UNKNOWN
         }
 
 
-        if (isShortTimeLocker)
-            sizeAsString += " (Kurzzeit)"
-
         val dimension1 = locker.dimension
-        if ((dimension1?.depth != null) &&
-            (dimension1.width != null) &&
-            (dimension1.height != null)
-        )
-            dimensionAsString = String.format(
-                "%d x %d x %d",
-                dimension1.depth!! / 10,
-                dimension1.width!! / 10,
-                dimension1.height!! / 10
-            )
+        var int: Int?
 
-        var paymentTypes1 = locker.paymentTypes
+        if (dimension1 != null) {
+            int = dimension1.width
+            if (int != null)
+                dimWidth = int / 10
+            int = dimension1.depth
+            if (int != null)
+                dimDepth = int / 10
+            int = dimension1.height
+            if (int != null)
+                dimHeight = int / 10
+        }
+
+        val paymentTypes1 = locker.paymentTypes
         if (paymentTypes1 != null) {
-            var tmpPaymentType = ""
             for (i in 0..paymentTypes1.size - 1) {
                 if (paymentTypes1[i] != null) {
-                    if (i > 0)
-                        tmpPaymentType += ", "
+
                     when (paymentTypes1[i]) {
-                        "CASH" -> tmpPaymentType += "bar"
-                        "CASHLESS" -> tmpPaymentType += "Karte"
-                        else -> tmpPaymentType += "unbekannt"
+                        "CASH" -> paymentTypes.add(PaymentType.CASH)
+                        "CASHLESS" -> paymentTypes.add(PaymentType.CARD)
+                        else -> paymentTypes.add(PaymentType.UNKNOWN)
                     }
                 }
             }
-            paymentTypesAsString = "Zahlungsmittel: " + tmpPaymentType
-        }
+        } else
+            paymentTypes.add(PaymentType.UNKNOWN)
 
         var fee1 = locker.fee
         if (fee1 != null) {
             if (fee1.fee != null) {
-                val fee2 = fee1.fee?.toFloat()
-                if (fee2 != null)
-                    feeAsString = String.format("%.1f €", fee2 / 100.0f)
+                var fee2 = fee1.fee?.toFloat()
+                if (fee2 != null) {
+                    fee2 /= 100.0f
+
+                    if (fee2 - fee2.toBigDecimal().intValueExact() > 0)
+                        feeAsString = String.format("%.1f €", fee2)
+                    else
+                        feeAsString = String.format("%.0f €", fee2)
+
+                }
             }
 
             if (fee1.feePeriod != null) {
                 when (fee1.feePeriod) {
-                    "PER_MAX_LEASE_DURATION" -> feePeriodAsString =
-                        feeAsString + " / " + maxLeaseDurationDateTimePart
-                    "PER_HOUR" -> feePeriodAsString = feeAsString + " / h"
-                    "PER_DAY" -> feePeriodAsString = feeAsString + " / 24h"
-                    else -> feePeriodAsString = ""
+                    "PER_MAX_LEASE_DURATION" -> feePeriod = FeePeriod.PER_MAX_LEASE_DURATION
+                    "PER_HOUR" -> feePeriod = FeePeriod.PER_HOUR
+                    "PER_DAY" -> feePeriod = FeePeriod.PER_DAY
+                    else -> feePeriod = FeePeriod.UNKNOWN
 
                 }
             }
 
         }
-
-        // todo : fee.feePeriod
-//        - PER_MAX_LEASE_DURATION (fee must be payed per max lease duration)
-//        - PER_HOUR (fee must be payed per hour)
-//        - PER_DAY (fee must be payed per day)
 
 
     }
