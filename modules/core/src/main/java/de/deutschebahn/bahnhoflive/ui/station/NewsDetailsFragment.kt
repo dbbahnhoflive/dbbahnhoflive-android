@@ -8,6 +8,7 @@ package de.deutschebahn.bahnhoflive.ui.station
 
 import android.content.Intent
 import android.graphics.BitmapFactory
+import android.net.Uri
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -47,7 +48,7 @@ class NewsDetailsFragment : FullBottomSheetDialogFragment() {
             view.headline.text = news?.title
 
             with(view.subtitle) {
-                val subtitle = news?.subtitle
+                val subtitle = news?.subtitle?.takeUnless { it.isBlank() }
                 text = subtitle
                 visibility = if (subtitle == null) View.GONE else View.VISIBLE
             }
@@ -95,15 +96,13 @@ class NewsDetailsFragment : FullBottomSheetDialogFragment() {
                         if (!Intent(Intent.ACTION_VIEW, linkUri).startSafely(context)) {
                             val issueTracker = IssueTracker.instance
                             issueTracker.log("Could not handle original news link url $linkUri")
-                            if (linkUri.takeIf { linkUri.scheme == null }?.buildUpon()
-                                    ?.scheme("http")?.build().let { fixedUri ->
-                                        Intent(
-                                            Intent.ACTION_VIEW,
-                                            fixedUri
-                                        ).startSafely(context)
-                                    }
-                            ) {
-                                issueTracker.dispatchThrowable(UncriticalIssueException("News link url was lacking scheme"))
+                            if (linkUri.scheme == null) {
+                                issueTracker.dispatchThrowable(UncriticalIssueException("News link url was lacking scheme, trying to prepend http://"))
+
+                                Intent(
+                                    Intent.ACTION_VIEW,
+                                    Uri.parse("http://$linkUri")
+                                ).startSafely(context)
                             } else {
                                 issueTracker.dispatchThrowable(UncriticalIssueException("Could not handle news link url"))
                             }

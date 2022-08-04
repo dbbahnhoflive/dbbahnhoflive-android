@@ -27,10 +27,10 @@ class NearbyStopPlacesResource(
             null,
             location,
             force,
+            limit = 100,
             mixedResults = true,
             collapseNeighbours = listMode,
             pullUpFirstDbStation = listMode,
-            limit = 100
         )
     }
 

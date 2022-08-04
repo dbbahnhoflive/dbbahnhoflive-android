@@ -41,6 +41,8 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="vertical"
+                android:clipChildren="false"
+                android:clipToPadding="false"
                 android:padding="@dimen/default_space">
 
                 <include layout="@layout/include_description_text_part" />
@@ -48,6 +50,9 @@
                 <include layout="@layout/include_description_button_part" />
 
                 <include layout="@layout/include_description_text_part" />
+
+                <include layout="@layout/include_description_opening_hours" />
+
             </LinearLayout>
 
             <androidx.cardview.widget.CardView

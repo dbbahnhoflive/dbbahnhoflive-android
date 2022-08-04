@@ -6,10 +6,12 @@
 
 package de.deutschebahn.bahnhoflive.ui.timetable.localtransport;
 
+import android.app.Application;
+
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.lifecycle.AndroidViewModel;
 import androidx.lifecycle.MutableLiveData;
-import androidx.lifecycle.ViewModel;
 
 import com.android.volley.VolleyError;
 
@@ -18,6 +20,7 @@ import java.util.List;
 import de.deutschebahn.bahnhoflive.backend.hafas.HafasDepartures;
 import de.deutschebahn.bahnhoflive.backend.hafas.model.HafasStation;
 import de.deutschebahn.bahnhoflive.backend.hafas.model.HafasStationProduct;
+import de.deutschebahn.bahnhoflive.backend.local.model.RrtPoint;
 import de.deutschebahn.bahnhoflive.repository.HafasStationResource;
 import de.deutschebahn.bahnhoflive.repository.HafasTimetableResource;
 import de.deutschebahn.bahnhoflive.repository.MediatorResource;
@@ -28,7 +31,7 @@ import de.deutschebahn.bahnhoflive.repository.StationResource;
 import de.deutschebahn.bahnhoflive.util.ManagedObserver;
 import de.deutschebahn.bahnhoflive.util.Token;
 
-public class HafasTimetableViewModel extends ViewModel {
+public class HafasTimetableViewModel extends AndroidViewModel {
 
     public static final String ORIGIN_STATION = "station";
     public final HafasTimetableResource hafasTimetableResource = new HafasTimetableResource();
@@ -44,6 +47,7 @@ public class HafasTimetableViewModel extends ViewModel {
     };
 
     private final HafasStationResource hafasStationResource = new HafasStationResource();
+    public final MutableLiveData<RrtPoint> pendingRailReplacementPointLiveData = new MutableLiveData(null);
 
     private ManagedObserver<HafasStation> hafasStationObserver;
     private ManagedObserver<VolleyError> hafasStationErrorObserver;
@@ -54,7 +58,8 @@ public class HafasTimetableViewModel extends ViewModel {
     private Station station;
     private List<HafasStation> hafasStations;
 
-    public HafasTimetableViewModel() {
+    public HafasTimetableViewModel(Application application) {
+        super(application);
         mediatorResource.addSource(hafasTimetableResource);
     }
 
@@ -162,4 +167,5 @@ public class HafasTimetableViewModel extends ViewModel {
     public List<HafasStation> getHafasStations() {
         return hafasStations;
     }
+
 }

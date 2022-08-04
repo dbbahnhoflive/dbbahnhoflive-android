@@ -8,7 +8,6 @@ package de.deutschebahn.bahnhoflive.ui.station
 
 import android.animation.ObjectAnimator
 import android.animation.ValueAnimator
-import android.text.TextUtils
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -108,7 +107,7 @@ class NewsViewHolder(parent: ViewGroup, itemClickListener: ItemClickListener<New
 
         newsHeadline?.text = item?.title
 
-        newsCopy?.text = item?.subtitle ?: item?.content
+        newsCopy?.text = item?.summary
 
         iconView?.setImageResource(item?.groupIcon()?.icon ?: 0)
     }

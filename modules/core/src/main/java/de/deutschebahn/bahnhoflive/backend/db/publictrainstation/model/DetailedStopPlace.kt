@@ -33,14 +33,6 @@ class DetailedStopPlace : StopPlace() {
     val category get() = details?.ratingCategory ?: -1
 
 
-    val steplessAccessInfo: String?
-        get() = details?.hasSteplessAccess?.let {
-            when (it.toLowerCase(Locale.ENGLISH)) {
-                "yes", "no", "ja", "nein" -> null
-                else -> it
-            }
-        }
-
     val hasSteplessAccess
         get() =
             details?.hasSteplessAccess?.let {

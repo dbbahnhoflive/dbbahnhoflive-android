@@ -60,7 +60,12 @@ open class StopPlace {
         }
 
     val evaIds by lazy {
-        EvaIds(listOfNotNull(evaNumber, *(groupMembers?.toTypedArray() ?: emptyArray())))
+        EvaIds(
+            listOfNotNull(
+                evaNumber,
+                *(groupMembers?.filter { it != evaNumber }?.toTypedArray() ?: emptyArray())
+            )
+        )
     }
 
 }

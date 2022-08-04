@@ -263,7 +263,7 @@ public class StationFragment extends androidx.fragment.app.Fragment implements
             }
         });
 
-        stationViewModel.getDetailedStopPlaceResource().getError().observe(this, new Observer<VolleyError>() {
+        stationViewModel.getRisServiceAndCategoryResource().getError().observe(this, new Observer<VolleyError>() {
             @Override
             public void onChanged(@Nullable VolleyError volleyError) {
                 stationFeaturesButton.setEnabled(volleyError == null);

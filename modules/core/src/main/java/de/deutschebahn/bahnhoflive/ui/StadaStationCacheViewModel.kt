@@ -6,14 +6,16 @@
 
 package de.deutschebahn.bahnhoflive.ui
 
+import android.app.Application
 import android.location.Location
 import androidx.lifecycle.*
 import de.deutschebahn.bahnhoflive.repository.StationResource
 import de.deutschebahn.bahnhoflive.repository.StationResourceProvider
 import de.deutschebahn.bahnhoflive.repository.stationsearch.NearbyStopPlacesResource
-import java.util.*
+import de.deutschebahn.bahnhoflive.util.openhours.OpenHoursParser
 
-open class StadaStationCacheViewModel : ViewModel(), StationResourceProvider {
+open class StadaStationCacheViewModel(application: Application) : AndroidViewModel(application),
+    StationResourceProvider {
     private val cache: MutableMap<String, StationResource> = HashMap()
     val locationLiveData = MutableLiveData<Location>()
     val smoothedLocationLiveData = MediatorLiveData<Location>().apply {
@@ -41,8 +43,12 @@ open class StadaStationCacheViewModel : ViewModel(), StationResourceProvider {
         it?.data
     }
 
+    val openHoursParser by lazy {
+        OpenHoursParser(application, viewModelScope)
+    }
+
     override fun getStationResource(id: String): StationResource {
-        return cache.getOrPut(id) { StationResource(id) }
+        return cache.getOrPut(id) { StationResource(openHoursParser, id) }
     }
 
 }

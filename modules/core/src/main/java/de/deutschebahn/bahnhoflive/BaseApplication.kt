@@ -18,12 +18,11 @@ import de.deutschebahn.bahnhoflive.analytics.IssueTracker
 import de.deutschebahn.bahnhoflive.analytics.TrackingDelegate
 import de.deutschebahn.bahnhoflive.analytics.TrackingHttpStack
 import de.deutschebahn.bahnhoflive.backend.*
-import de.deutschebahn.bahnhoflive.backend.db.DbAuthorizationTool
+import de.deutschebahn.bahnhoflive.backend.db.MultiHeaderDbAuthorizationTool
 import de.deutschebahn.bahnhoflive.push.createNotificationChannels
 import de.deutschebahn.bahnhoflive.repository.ApplicationServices
 import de.deutschebahn.bahnhoflive.repository.RepositoryHolder
 import de.deutschebahn.bahnhoflive.repository.elevator.Fasta2ElevatorStatusRepository
-import de.deutschebahn.bahnhoflive.repository.occupancy.OccupancyRepository
 import de.deutschebahn.bahnhoflive.repository.poisearch.PoiSearchConfigurationProvider
 import de.deutschebahn.bahnhoflive.repository.station.OfficialStationRepository
 import de.deutschebahn.bahnhoflive.repository.timetable.RisTimetableRepository
@@ -60,7 +59,6 @@ abstract class BaseApplication(
 
         FontUtil.init(this)
 
-        applicationServices = ApplicationServices(this)
 
         issueTracker = onInitializeIssueTracker()
 
@@ -72,6 +70,7 @@ abstract class BaseApplication(
         TutorialManager.getInstance(this).seedTutorials()
 
         repositories = onCreateRepositories(restHelper)
+        applicationServices = ApplicationServices(this, repositories)
 
         createNotificationChannels()
     }
@@ -79,20 +78,23 @@ abstract class BaseApplication(
     protected open fun onInitializeIssueTracker(): IssueTracker = IssueTracker(this)
 
     protected open fun onCreateRepositories(restHelper: RestHelper): RepositoryHolder {
-        val dbAuthorizationTool = DbAuthorizationTool(BuildConfig.BUSINESS_HUB_API_KEY)
+        val risAndParkingAuthorizationTool = MultiHeaderDbAuthorizationTool(
+            BuildConfig.RIS_STATIONS_API_KEY, BuildConfig.RIS_STATIONS_CLIENT_ID
+        )
 
         return RepositoryHolder(
             stationRepository = OfficialStationRepository(
                 restHelper,
-                dbAuthorizationTool
+                risAndParkingAuthorizationTool
             ),
             elevatorStatusRepository = Fasta2ElevatorStatusRepository(
                 restHelper,
-                dbAuthorizationTool
+                MultiHeaderDbAuthorizationTool(
+                    BuildConfig.FASTA_API_KEY, BuildConfig.FASTA_CLIENT_ID
+                )
             ),
-            occupancyRepository = OccupancyRepository(),
             timetableRepository = RisTimetableRepository(
-                restHelper, dbAuthorizationTool
+                restHelper, risAndParkingAuthorizationTool
             )
         )
     }

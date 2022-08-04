@@ -44,8 +44,7 @@ import de.deutschebahn.bahnhoflive.BaseApplication;
 import de.deutschebahn.bahnhoflive.IconMapper;
 import de.deutschebahn.bahnhoflive.R;
 import de.deutschebahn.bahnhoflive.analytics.TrackingManager;
-import de.deutschebahn.bahnhoflive.backend.db.publictrainstation.model.Availability;
-import de.deutschebahn.bahnhoflive.backend.db.publictrainstation.model.Details;
+import de.deutschebahn.bahnhoflive.backend.db.ris.model.LocalService;
 import de.deutschebahn.bahnhoflive.backend.local.model.ServiceContent;
 import de.deutschebahn.bahnhoflive.backend.local.model.ServiceContentType;
 import de.deutschebahn.bahnhoflive.ui.station.HistoryFragment;
@@ -111,23 +110,14 @@ public class ServiceContentFragment extends Fragment {
         });
 
         if (ServiceContentType.DB_INFORMATION.equals(serviceContent.getType()) && serviceContent.getAdditionalText() == null) {
-            final AvailabilityRenderer availabilityRenderer = new AvailabilityRenderer();
-            stationViewModel.getDetailedStopPlaceResource().getData().observe(this, detailedStopPlace -> {
-                if (detailedStopPlace == null) {
+            stationViewModel.getRisServiceAndCategoryResource().getData().observe(this, risServicesAndCategory -> {
+                if (risServicesAndCategory == null) {
                     return;
                 }
-
-                final Details details = detailedStopPlace.getDetails();
-                if (details == null) {
+                final LocalService informationCounterService = risServicesAndCategory.getLocalServices().get(LocalService.Type.INFORMATION_COUNTER);
+                if (informationCounterService == null) {
                     return;
                 }
-
-                final Availability availability = details.getDbInformation();
-                if (availability == null) {
-                    return;
-                }
-
-                serviceContent.setAdditionalText(availabilityRenderer.renderSchedule(availability.getAvailability()));
 
                 bindViews();
             });
@@ -319,12 +309,12 @@ public class ServiceContentFragment extends Fragment {
         }
 
         tableView.removeAllViews();
-        if (serviceContent.getTable() != null) {
-            buildTable(serviceContent, tableView);
-            tableView.setVisibility(View.VISIBLE);
-        } else {
-            tableView.setVisibility(View.GONE);
-        }
+//        if (serviceContent.getTable() != null) {
+//            buildTable(serviceContent, tableView);
+//            tableView.setVisibility(View.VISIBLE);
+//        } else {
+        tableView.setVisibility(View.GONE);
+//        }
     }
 
     private TextView makeSettingsButton(final String buttonTitle, LinearLayout container) {
@@ -392,60 +382,60 @@ public class ServiceContentFragment extends Fragment {
     private final static String _title = "headline"; //breaking api naming convention to avoid confusion re headline/headlines
     private final static String _content = "content";
 
-    private void buildTablePhone(ServiceContent item, LinearLayout table) {
-        try {
-            JSONArray columns = item.getTable().getJSONArray(_headlines);
-            JSONArray rows = item.getTable().getJSONArray(_rows);
-            if (rows != null && columns != null && activity != null) {
-                //each row is a block of content
-                for (int row = 0; row < rows.length(); row++) {
-                    JSONObject rowItems = rows.getJSONObject(row);
-                    if (rowItems != null) {
-                        JSONArray rowItemArray = rowItems.getJSONArray(_rowItems);
-                        if (rowItemArray != null) {
-                            buildTableEntry(rowItemArray, columns, table, row != 0);
-                        }
-                    }
-                }
-            }
-        } catch (JSONException e) {
-            e.printStackTrace();
-        }
-    }
+//    private void buildTablePhone(ServiceContent item, LinearLayout table) {
+//        try {
+//            JSONArray columns = item.getTable().getJSONArray(_headlines);
+//            JSONArray rows = item.getTable().getJSONArray(_rows);
+//            if (rows != null && columns != null && activity != null) {
+//                //each row is a block of content
+//                for (int row = 0; row < rows.length(); row++) {
+//                    JSONObject rowItems = rows.getJSONObject(row);
+//                    if (rowItems != null) {
+//                        JSONArray rowItemArray = rowItems.getJSONArray(_rowItems);
+//                        if (rowItemArray != null) {
+//                            buildTableEntry(rowItemArray, columns, table, row != 0);
+//                        }
+//                    }
+//                }
+//            }
+//        } catch (JSONException e) {
+//            e.printStackTrace();
+//        }
+//    }
 
-    private void buildTable(ServiceContent item, LinearLayout table) {
-        if (getResources().getBoolean(R.bool.isTablet)) {
-            buildTableTablet(item, table);
-        } else {
-            buildTablePhone(item, table);
-        }
-    }
+//    private void buildTable(ServiceContent item, LinearLayout table) {
+//        if (getResources().getBoolean(R.bool.isTablet)) {
+//            buildTableTablet(item, table);
+//        } else {
+//            buildTablePhone(item, table);
+//        }
+//    }
 
-    private void buildTableTablet(ServiceContent item, LinearLayout table) {
-        try {
-            JSONArray columns = item.getTable().getJSONArray(_headlines);
-            JSONArray rows = item.getTable().getJSONArray(_rows);
-            if (rows != null && columns != null && activity != null) {
-
-                //each row is a block of content. three blocks are grouped horizontally
-
-                for (int row = 0; row < rows.length(); row++) {
-                    JSONObject rowItems = rows.getJSONObject(row);
-                    if (rowItems != null) {
-                        if (row != 0) {
-                            drawDivider(table);
-                        }
-                        JSONArray rowItemArray = rowItems.getJSONArray(_rowItems);
-                        if (rowItemArray != null) {
-                            buildTableEntryTablet(rowItemArray, columns, table);
-                        }
-                    }
-                }
-            }
-        } catch (JSONException e) {
-            e.printStackTrace();
-        }
-    }
+//    private void buildTableTablet(ServiceContent item, LinearLayout table) {
+//        try {
+//            JSONArray columns = item.getTable().getJSONArray(_headlines);
+//            JSONArray rows = item.getTable().getJSONArray(_rows);
+//            if (rows != null && columns != null && activity != null) {
+//
+//                //each row is a block of content. three blocks are grouped horizontally
+//
+//                for (int row = 0; row < rows.length(); row++) {
+//                    JSONObject rowItems = rows.getJSONObject(row);
+//                    if (rowItems != null) {
+//                        if (row != 0) {
+//                            drawDivider(table);
+//                        }
+//                        JSONArray rowItemArray = rowItems.getJSONArray(_rowItems);
+//                        if (rowItemArray != null) {
+//                            buildTableEntryTablet(rowItemArray, columns, table);
+//                        }
+//                    }
+//                }
+//            }
+//        } catch (JSONException e) {
+//            e.printStackTrace();
+//        }
+//    }
 
     private void drawDivider(LinearLayout table) {
         ImageView divider = new ImageView(activity);

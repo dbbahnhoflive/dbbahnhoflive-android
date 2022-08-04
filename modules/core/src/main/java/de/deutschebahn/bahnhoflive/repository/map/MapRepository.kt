@@ -9,6 +9,7 @@ package de.deutschebahn.bahnhoflive.repository.map
 import com.google.android.gms.maps.model.TileProvider
 import de.deutschebahn.bahnhoflive.backend.BaseRestListener
 import de.deutschebahn.bahnhoflive.backend.VolleyRestListener
+import de.deutschebahn.bahnhoflive.backend.local.model.RrtPoint
 import de.deutschebahn.bahnhoflive.backend.rimap.model.RimapPOI
 import de.deutschebahn.bahnhoflive.backend.rimap.model.RimapStation
 import de.deutschebahn.bahnhoflive.backend.rimap.model.StationFeatureCollection
@@ -51,4 +52,12 @@ open class MapRepository {
         useCache: Boolean,
         evaId: String?
     ): Cancellable? = listener.fail()
+
+    open fun queryRailReplacement(
+        id: String,
+        force: Boolean,
+        listener: VolleyRestListener<RrtRequestResult>
+    ): Cancellable? = listener.fail()
 }
+
+typealias RrtRequestResult = List<RrtPoint>

@@ -34,7 +34,6 @@ object DbTileProviderStations {
         "6323",
         "3898",
         "187",
-        "6077",
         "1343",
         "1856",
         "2498",

@@ -202,16 +202,14 @@ class OccupancyViewBinder(
 
         val currentHourlyOccupancy = occupancy.getCurrentHourlyOccupancy()
 
-        val level = currentHourlyOccupancy?.level?.let {
-            it - 1
-        }?.takeIf { it >= 0 && it < Level.values().size }
+        val level = currentHourlyOccupancy?.level
 
         if (level == null) {
             currentStatusLabelView.visibility = View.GONE
             currentStatusView.setText(R.string.occupancy_level_unknown)
         } else {
             currentStatusLabelView.visibility = View.VISIBLE
-            currentStatusView.setText(Level.values()[level].stringRes)
+            currentStatusView.setText(level.stringRes)
         }
 
         dailyOccupancyAdapter.occupancy = this.occupancy

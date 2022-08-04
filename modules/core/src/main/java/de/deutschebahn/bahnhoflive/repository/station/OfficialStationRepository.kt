@@ -12,23 +12,28 @@ import de.deutschebahn.bahnhoflive.analytics.TrackingManager
 import de.deutschebahn.bahnhoflive.backend.RestHelper
 import de.deutschebahn.bahnhoflive.backend.VolleyRestListener
 import de.deutschebahn.bahnhoflive.backend.db.DbAuthorizationTool
-import de.deutschebahn.bahnhoflive.backend.db.publictrainstation.DetailedStopPlaceRequest
-import de.deutschebahn.bahnhoflive.backend.db.publictrainstation.model.DetailedStopPlace
 import de.deutschebahn.bahnhoflive.backend.db.ris.RISPlatformsRequest
-import de.deutschebahn.bahnhoflive.backend.db.ris.RISStationsRequest
+import de.deutschebahn.bahnhoflive.backend.db.ris.RISStationsLocalServicesRequest
+import de.deutschebahn.bahnhoflive.backend.db.ris.RISStationsStationRequest
+import de.deutschebahn.bahnhoflive.backend.db.ris.RISStationsStopPlacesRequest
+import de.deutschebahn.bahnhoflive.backend.db.ris.model.LocalServices
 import de.deutschebahn.bahnhoflive.backend.db.ris.model.Platform
+import de.deutschebahn.bahnhoflive.backend.db.ris.model.RISStation
+import de.deutschebahn.bahnhoflive.backend.db.ris.model.StopPlace
+import de.deutschebahn.bahnhoflive.util.Cancellable
 import de.deutschebahn.bahnhoflive.util.volley.VolleyRequestCancellable
 import de.deutschebahn.bahnhoflive.util.volley.cancellable
 
 class OfficialStationRepository(
     private val restHelper: RestHelper,
-    private val dbAuthorizationTool: DbAuthorizationTool
+    private val dbAuthorizationTool: DbAuthorizationTool,
+    private val clientIdDbAuthorizationTool: DbAuthorizationTool? = null
 ) : StationRepository() {
 
     private val trackingManager = TrackingManager()
 
     override fun queryStations(
-        listener: VolleyRestListener<List<de.deutschebahn.bahnhoflive.backend.db.ris.model.StopPlace>?>,
+        listener: VolleyRestListener<List<StopPlace>?>,
         query: String?,
         location: Location?,
         force: Boolean,
@@ -39,7 +44,7 @@ class OfficialStationRepository(
         pullUpFirstDbStation: Boolean
     ) = restHelper
         .add(
-            RISStationsRequest(
+            RISStationsStopPlacesRequest(
                 object :
                     VolleyRestListener<List<de.deutschebahn.bahnhoflive.backend.db.ris.model.StopPlace>> {
                     override fun onSuccess(payload: List<de.deutschebahn.bahnhoflive.backend.db.ris.model.StopPlace>?) {
@@ -48,7 +53,7 @@ class OfficialStationRepository(
                         track("success")
                     }
 
-                    override fun onFail(reason: VolleyError?) {
+                    override fun onFail(reason: VolleyError) {
                         listener.onFail(reason)
 
                         track("failure")
@@ -74,27 +79,39 @@ class OfficialStationRepository(
                 radius,
                 mixedResults,
                 collapseNeighbours,
-                pullUpFirstDbStation
+                pullUpFirstDbStation,
+                clientIdDbAuthorizationTool
             )
         )
         .cancellable()
 
-    override fun queryStationDetails(
-        listener: VolleyRestListener<DetailedStopPlace>,
+    override fun queryLocalServices(
+        listener: VolleyRestListener<LocalServices>,
         stadaId: String,
         force: Boolean,
         currentPosition: Location?
-    ) = restHelper
-        .add(
-            DetailedStopPlaceRequest(
-                listener,
+    ): Cancellable =
+        restHelper.add(
+            RISStationsLocalServicesRequest(
                 stadaId,
+                listener,
                 dbAuthorizationTool,
-                force,
-                currentPosition
+                clientIdDbAuthorizationTool
             )
-        )
-        .cancellable()
+        ).cancellable()
+
+    override fun queryStation(
+        listener: VolleyRestListener<RISStation>,
+        stadaId: String,
+        force: Boolean,
+        currentPosition: Location?
+    ) =
+        restHelper.add(
+            RISStationsStationRequest(
+                stadaId, listener, dbAuthorizationTool, clientIdDbAuthorizationTool
+            )
+        ).cancellable()
+
 
     override fun queryAccessibilityDetails(
         listener: VolleyRestListener<List<Platform>>,
@@ -102,7 +119,9 @@ class OfficialStationRepository(
         force: Boolean
     ): VolleyRequestCancellable<List<Platform>> = restHelper
         .add(
-            RISPlatformsRequest(listener, dbAuthorizationTool, evaId, force)
+            RISPlatformsRequest(
+                listener, dbAuthorizationTool, evaId, force, clientIdDbAuthorizationTool
+            )
         )
         .cancellable()
 

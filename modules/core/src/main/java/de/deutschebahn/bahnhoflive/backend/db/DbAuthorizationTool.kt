@@ -6,26 +6,26 @@
 
 package de.deutschebahn.bahnhoflive.backend.db
 
+import de.deutschebahn.bahnhoflive.util.asMutable
+
 open class DbAuthorizationTool(
     protected val apiKey: String
 ) {
 
     open val key get() = apiKey
 
-    fun putAuthorizationHeader(headers: MutableMap<String, String>?) =
+    open fun putAuthorizationHeader(headers: MutableMap<String, String>?) =
         putAuthorizationHeader(headers, "key")
 
-    fun putAuthorizationHeader(
-        headers: MutableMap<String, String>?,
+    open fun putAuthorizationHeader(
+        headers: Map<String, String>?,
         keyName: String = "key"
     ): Map<String, String> {
-        var headers = headers
-        if (headers == null || headers == emptyMap<Any, Any>()) {
-            headers = HashMap()
-        }
-        headers[keyName] = key
+        val mutableHeaders =
+            headers.asMutable()
+        mutableHeaders[keyName] = key
 
-        return headers
+        return mutableHeaders
     }
 
 }

@@ -2,6 +2,7 @@ package de.deutschebahn.bahnhoflive.ui.timetable.journey
 
 import de.deutschebahn.bahnhoflive.backend.db.ris.model.ArrivalDepartureEvent
 import de.deutschebahn.bahnhoflive.backend.db.ris.model.EventType
+import de.deutschebahn.bahnhoflive.backend.db.ris.model.TimeType
 import de.deutschebahn.bahnhoflive.backend.local.model.EvaIds
 import de.deutschebahn.bahnhoflive.util.time.EpochParser
 
@@ -11,7 +12,7 @@ data class JourneyStopEvent(
     val platform: String,
     val scheduledPlatform: String?,
     val scheduledTime: String,
-    val estimatedTime: String,
+    val estimatedTime: String?,
     val eventType: EventType,
     val additional: Boolean
 ) {
@@ -27,7 +28,7 @@ data class JourneyStopEvent(
     )
 
     val parsedScheduledTime by lazy { TIME_PARSER.parse(scheduledTime) }
-    val parsedEstimatedTime by lazy { TIME_PARSER.parse(estimatedTime) }
+    val parsedEstimatedTime by lazy { estimatedTime?.let { TIME_PARSER.parse(it) } }
     val bestEffortTime get() = parsedEstimatedTime ?: parsedScheduledTime
 
     val isPlatformChange = scheduledPlatform?.let { it != platform } == true
@@ -40,7 +41,7 @@ fun ArrivalDepartureEvent.toJourneyStopEvent() = eventType?.let { eventType ->
         platform,
         platformSchedule,
         timeSchedule,
-        time,
+        time.takeUnless { timeType == TimeType.SCHEDULE },
         eventType,
         additional
     )

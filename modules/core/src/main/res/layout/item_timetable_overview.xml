@@ -81,7 +81,7 @@
         android:layout_marginLeft="@dimen/default_space_half"
         android:layout_marginStart="@dimen/default_space_half"
         android:src="@drawable/app_wagenreihung_grau"
-        android:tint="?android:attr/textColor"
+        app:tint="?android:attr/textColor"
         android:visibility="gone"
         app:layout_constraintBottom_toBottomOf="@+id/transportationName"
         app:layout_constraintRight_toLeftOf="@+id/issue_indicator"

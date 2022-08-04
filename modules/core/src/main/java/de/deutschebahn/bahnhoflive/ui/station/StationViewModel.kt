@@ -6,6 +6,7 @@
 
 package de.deutschebahn.bahnhoflive.ui.station
 
+import android.app.Application
 import android.util.Log
 import android.view.View
 import androidx.lifecycle.*
@@ -22,7 +23,9 @@ import de.deutschebahn.bahnhoflive.backend.db.newsapi.model.News
 import de.deutschebahn.bahnhoflive.backend.db.ris.model.Platform
 import de.deutschebahn.bahnhoflive.backend.einkaufsbahnhof.model.StationList
 import de.deutschebahn.bahnhoflive.backend.hafas.model.ProductCategory
-import de.deutschebahn.bahnhoflive.backend.local.model.*
+import de.deutschebahn.bahnhoflive.backend.local.model.EvaIds
+import de.deutschebahn.bahnhoflive.backend.local.model.ServiceContentType
+import de.deutschebahn.bahnhoflive.backend.local.model.isEco
 import de.deutschebahn.bahnhoflive.backend.rimap.RimapConfig
 import de.deutschebahn.bahnhoflive.backend.rimap.model.RimapStationInfo
 import de.deutschebahn.bahnhoflive.backend.ris.model.RISTimetable
@@ -32,9 +35,12 @@ import de.deutschebahn.bahnhoflive.persistence.RecentContentQueriesStore
 import de.deutschebahn.bahnhoflive.repository.*
 import de.deutschebahn.bahnhoflive.repository.accessibility.AccessibilityFeaturesResource
 import de.deutschebahn.bahnhoflive.repository.feedback.WhatsAppFeeback
+import de.deutschebahn.bahnhoflive.repository.map.RrtRequestResult
 import de.deutschebahn.bahnhoflive.repository.parking.ViewModelParking
 import de.deutschebahn.bahnhoflive.stream.livedata.MergedLiveData
+import de.deutschebahn.bahnhoflive.stream.livedata.switchMap
 import de.deutschebahn.bahnhoflive.stream.rx.Optional
+import de.deutschebahn.bahnhoflive.ui.accessibility.SpokenFeedbackAccessibilityLiveData
 import de.deutschebahn.bahnhoflive.ui.map.Content
 import de.deutschebahn.bahnhoflive.ui.map.MapActivity
 import de.deutschebahn.bahnhoflive.ui.station.features.*
@@ -51,22 +57,32 @@ import de.deutschebahn.bahnhoflive.ui.timetable.localtransport.HafasTimetableVie
 import de.deutschebahn.bahnhoflive.util.Token
 import de.deutschebahn.bahnhoflive.util.append
 import de.deutschebahn.bahnhoflive.util.asLiveData
+import de.deutschebahn.bahnhoflive.util.openhours.OpenHoursParser
 import de.deutschebahn.bahnhoflive.util.then
 import io.reactivex.Observable
 import io.reactivex.subjects.BehaviorSubject
+import kotlinx.coroutines.CoroutineDispatcher
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.ExperimentalCoroutinesApi
+import kotlinx.coroutines.flow.*
+import kotlinx.coroutines.launch
 import java.io.InputStreamReader
 import java.text.Collator
 import java.util.*
 import java.util.concurrent.Executors
-import kotlin.Comparator
 
-class StationViewModel : HafasTimetableViewModel() {
+class StationViewModel(
+    application: Application,
+) : HafasTimetableViewModel(application) {
+
+    // TODO: Inject
+    private val defaultDispatcher: CoroutineDispatcher = Dispatchers.Default
 
     companion object {
         private val stationFeatureTemplates = listOf(
             StationFeatureTemplate(
                 StationFeatureDefinition.ACCESSIBILITY,
-                AccessibilityLink(TrackingManager.Category.ZUGANG_WEGE)
+                AccessibilityLink(TrackingManager.Category.BARRIEREFREIHEIT)
             ),
             StationFeatureTemplate(
                 StationFeatureDefinition.TOILET,
@@ -149,6 +165,8 @@ class StationViewModel : HafasTimetableViewModel() {
 
     private val selectedAccessibilityPlatformMutableLiveData = MutableLiveData<Platform?>(null)
 
+    val railReplacementResource = RimapRRTResource()
+
     val accessibilityPlatformsAndSelectedLiveData =
         selectedAccessibilityPlatformMutableLiveData.switchMap { selectedPlatform ->
             accessibilityFeaturesResource.data.map { platforms ->
@@ -181,7 +199,7 @@ class StationViewModel : HafasTimetableViewModel() {
 
     }
 
-    val recentContentQueriesStore = RecentContentQueriesStore(application)
+    val recentContentQueriesStore = RecentContentQueriesStore(this.application)
 
     val staticInfoLiveData = object : MutableLiveData<StaticInfoCollection>() {
         private val token = Token()
@@ -192,7 +210,11 @@ class StationViewModel : HafasTimetableViewModel() {
                     try {
                         val gson = GsonBuilder().create()
                         val staticInfoJsonFormat = gson.fromJson(
-                            InputStreamReader(application.resources.openRawResource(R.raw.static_info)),
+                            InputStreamReader(
+                                this@StationViewModel.application.resources.openRawResource(
+                                    R.raw.static_info
+                                )
+                            ),
                             StaticInfoJsonFormat::class.java
                         )
                         this.postValue(StaticInfoCollection(staticInfoJsonFormat))
@@ -211,14 +233,14 @@ class StationViewModel : HafasTimetableViewModel() {
             super.onActive()
 
             if (token.take()) {
-                application.repositories.einkaufsbahnhofRepository.queryStations(
+                this@StationViewModel.application.repositories.einkaufsbahnhofRepository.queryStations(
                     true,
                     object : VolleyRestListener<StationList?> {
                         override fun onSuccess(payload: StationList?) {
                             value = payload
                         }
 
-                        override fun onFail(reason: VolleyError?) {
+                        override fun onFail(reason: VolleyError) {
                             reason?.run {
                                 Log.w(StationViewModel::class.java.simpleName, message, this)
                             }
@@ -243,9 +265,12 @@ class StationViewModel : HafasTimetableViewModel() {
         }
     }
 
-    val detailedStopPlaceResource = DetailedStopPlaceResource()
+    private val openHoursParser = OpenHoursParser(this.application, viewModelScope)
 
-    val infoAvailability = Transformations.switchMap(detailedStopPlaceResource.data) {
+    val risServiceAndCategoryResource =
+        RisServiceAndCategoryResource(openHoursParser)
+
+    val infoAvailability = Transformations.switchMap(risServiceAndCategoryResource.data) {
         it?.let { detailedStopPlace ->
             Transformations.map(staticInfoLiveData) {
                 it?.let { staticInfoCollection ->
@@ -258,8 +283,7 @@ class StationViewModel : HafasTimetableViewModel() {
                         detailedStopPlace.hasMobilityService then { ServiceContentType.MOBILITY_SERVICE },
                         detailedStopPlace.hasSzentrale then { ServiceContentType.THREE_S },
                         detailedStopPlace.hasLostAndFound then { ServiceContentType.Local.LOST_AND_FOUND },
-                        detailedStopPlace.hasWifi then { ServiceContentType.WIFI },
-                        detailedStopPlace.hasSteplessAccess then { ServiceContentType.ACCESSIBLE }
+                        detailedStopPlace.hasWifi then { ServiceContentType.WIFI }
                     ).filterNotNull().mapNotNull {
                         staticInfoCollection.typedStationInfos[it]
                     }.associate {
@@ -270,7 +294,17 @@ class StationViewModel : HafasTimetableViewModel() {
         }
     }
 
-    val dbTimetableResource = DbTimetableResource()
+    val dbTimetableResource =
+        DbTimetableResource(object : EvaIdsProvider {
+            override fun withEvaIds(station: Station, action: (evaIds: EvaIds?) -> Unit) {
+                getApplication<BaseApplication>().applicationServices.evaIdsProvider.withEvaIds(
+                    station
+                ) {
+                    action(it ?: stationResource.data.value?.evaIds)
+                }
+            }
+        })
+
     private val evaIdsErrorObserver = Observer<VolleyError> { volleyError ->
         if (volleyError != null) {
             dbTimetableResource.setEvaIdsMissing()
@@ -278,7 +312,6 @@ class StationViewModel : HafasTimetableViewModel() {
     }
     private val evaIdsDataObserver = Observer<Station> { station ->
         if (station != null) {
-            dbTimetableResource.setEvaIds(station.evaIds)
             dbTimetableResource.loadIfNecessary()
 
             accessibilityFeaturesResource.evaIds = station.evaIds
@@ -298,7 +331,11 @@ class StationViewModel : HafasTimetableViewModel() {
     private val rimapStationFeatureCollectionResource = RimapStationFeatureCollectionResource()
 
     val stationResource =
-        StationResource(detailedStopPlaceResource, rimapStationFeatureCollectionResource)
+        StationResource(
+            openHoursParser,
+            risServiceAndCategoryResource,
+            rimapStationFeatureCollectionResource
+        )
 
     val rimapStationInfoLiveData =
         Transformations.map(rimapStationFeatureCollectionResource.data) { input ->
@@ -318,6 +355,27 @@ class StationViewModel : HafasTimetableViewModel() {
         Log.d(StationViewModel::class.java.simpleName, msg)
     }
 
+    private val stationStateFlow = MutableStateFlow<Station?>(null)
+
+    @OptIn(ExperimentalCoroutinesApi::class)
+    private val updatedStationFlow = stationStateFlow.filterNotNull().mapLatest { station ->
+        getApplication<BaseApplication>().applicationServices.updatedStationRepository.getUpdatedStation(
+            station
+        )
+    }.apply {
+        viewModelScope.launch {
+            collect {
+                if (it?.isSuccess == true) {
+                    dbTimetableResource.loadIfNecessary()
+
+                    accessibilityFeaturesResource.evaIds = it.getOrNull()?.evaIds
+                } else {
+                    dbTimetableResource.setEvaIdsMissing()
+                }
+            }
+        }
+    }
+
     fun initialize(station: Station?) {
         if (station != null && initializationPending.take()) {
             stationResource.initialize(station)
@@ -326,8 +384,9 @@ class StationViewModel : HafasTimetableViewModel() {
             parking.parkingsResource.initialize(station)
             dbTimetableResource.initialize(station)
 
-            stationResource.data.observeForever(evaIdsDataObserver)
-            stationResource.error.observeForever(evaIdsErrorObserver)
+            viewModelScope.launch {
+                stationStateFlow.emit(station)
+            }
 
             localTransportViewModel.initialize(stationResource)
 
@@ -335,12 +394,39 @@ class StationViewModel : HafasTimetableViewModel() {
             rimapStationFeatureCollectionResource.loadIfNecessary()
 
             occupancyResource.initialize(station)
+
+            railReplacementResource.initialize(station)
         }
 
         stationResource.refresh()
     }
 
-    var stationNavigation: StationNavigation? = null
+    val railReplacementSummaryLiveData = railReplacementResource.data.asFlow()
+        .mapLatest { rrtRequestResult: RrtRequestResult? ->
+            rrtRequestResult?.fold(mutableMapOf<String, MutableList<String?>>()) { map, rrtPoint ->
+                map.apply {
+
+                    val key = rrtPoint.walkDescription.takeUnless { it.isNullOrBlank() }
+
+                    if (key != null) {
+                        val walkDescriptionEntry = getOrPut(key) {
+                            mutableListOf()
+                        }
+
+                        walkDescriptionEntry.add(rrtPoint.text)
+                    }
+                }
+            }
+
+        }
+        .flowOn(defaultDispatcher)
+        .asLiveData(viewModelScope.coroutineContext)
+
+    val stationNavigationLiveData = MutableLiveData<StationNavigation?>()
+
+    var stationNavigation: StationNavigation?
+        get() = stationNavigationLiveData.value
+        set(value) = stationNavigationLiveData.setValue(value)
 
     override fun onCleared() {
         super.onCleared()
@@ -373,19 +459,19 @@ class StationViewModel : HafasTimetableViewModel() {
         stationNavigation?.showLocalTransport()
     }
 
-    val travelCenterLiveData = Transformations.map(detailedStopPlaceResource.data) {
-        it?.travelCenter
-    }
+    val travelCenterLiveData =
+        Transformations.map(risServiceAndCategoryResource.data) { risServicesAndCategory ->
+            risServicesAndCategory?.closestTravelCenter
+        }
 
     val infoAndServicesLiveData = InfoAndServicesLiveData(
-        detailedStopPlaceResource,
+        risServiceAndCategoryResource,
         staticInfoLiveData,
         travelCenterLiveData,
         shopsResource
-
     )
     val serviceNumbersLiveData =
-        ServiceNumbersLiveData(detailedStopPlaceResource, staticInfoLiveData)
+        ServiceNumbersLiveData(risServiceAndCategoryResource, staticInfoLiveData)
 
     private val application: BaseApplication
         get() = BaseApplication.get()
@@ -397,7 +483,7 @@ class StationViewModel : HafasTimetableViewModel() {
 
     val stationFeatures = MediatorLiveData<List<StationFeature>>().apply {
         val observer = Observer<Any?> {
-            val detailedStopPlace = detailedStopPlaceResource.data.value ?: return@Observer
+            val risServicesAndCategory = risServiceAndCategoryResource.data.value ?: return@Observer
 
             val orderedFeatures = ArrayList<StationFeature>()
 
@@ -405,8 +491,9 @@ class StationViewModel : HafasTimetableViewModel() {
 
             for (stationFeatureTemplate in stationFeatureTemplates) {
                 val stationFeature = StationFeature(
+                    stationResource.data.value!!,
                     stationFeatureTemplate,
-                    detailedStopPlace,
+                    risServicesAndCategory,
                     staticInfoLiveData.value,
                     shopsResource.data.value,
                     parking.parkingsResource.data.value,
@@ -425,8 +512,9 @@ class StationViewModel : HafasTimetableViewModel() {
 
             value = stationFeatureTemplates.map { stationFeatureTemplate ->
                 StationFeature(
+                    stationResource.data.value!!,
                     stationFeatureTemplate,
-                    detailedStopPlace,
+                    risServicesAndCategory,
                     staticInfoLiveData.value,
                     shopsResource.data.value,
                     parking.parkingsResource.data.value,
@@ -439,19 +527,21 @@ class StationViewModel : HafasTimetableViewModel() {
         addSource(elevatorsResource.data, observer)
         addSource(shopsResource.data, observer)
         addSource(parking.parkingsResource.data, observer)
-        addSource(detailedStopPlaceResource.data, observer)
+        addSource(risServiceAndCategoryResource.data, observer)
 
     }
 
     val genuineContentSearchResults: LiveData<Pair<Pair<String?, Boolean>, List<ContentSearchResult>?>> = MediatorLiveData<Pair<Pair<String?, Boolean>, List<ContentSearchResult>?>>().apply {
 
-        val poiSearchConfiguration = application.poiSearchConfigurationProvider.configuration
+        val poiSearchConfiguration =
+            this@StationViewModel.application.poiSearchConfigurationProvider.configuration
         val shops = shopsResource.data
         val dbTimetable = dbTimetableResource.data
         val hafasStations = hafasStationResource.data
-        val detailedStopPlace = detailedStopPlaceResource.data
+        val detailedStopPlace = risServiceAndCategoryResource.data
         val elevators = elevatorsResource.data
         val parkings = parking.parkingsResource.data
+        val railReplacement = railReplacementSummaryLiveData
 
         val update = fun(_: Any?) {
             value = queryAndParts.value?.let { queryAndParts ->
@@ -568,7 +658,7 @@ class StationViewModel : HafasTimetableViewModel() {
                                             })
                                     )
                                 }.append(
-                                    application.getString(categorizedShops.key.label)
+                                    this@StationViewModel.application.getString(categorizedShops.key.label)
                                         .takeIf { categoryLabel ->
                                             queryParts.all { queryPart ->
                                                 queryPart.predicate(categoryLabel)
@@ -840,6 +930,19 @@ class StationViewModel : HafasTimetableViewModel() {
                         } else null
                         )
 
+                        .append(if (railReplacement.value?.takeUnless { it.isEmpty() } != null && matchingKeys.contains(
+                                "Bahnhofsinformation Schienenersatzverkehr"
+                            )) {
+                            ContentSearchResult(
+                                "Schienenersatzverkehr",
+                                R.drawable.app_rail_replacement,
+                                currentRawQuery,
+                                {
+                                    stationNavigation?.showRailReplacement()
+                                })
+                        } else null
+                        )
+
                         .append(dbTimetable.value?.let { timetable ->
                             emptySequence<ContentSearchResult>()
                                 .append(
@@ -853,7 +956,7 @@ class StationViewModel : HafasTimetableViewModel() {
                                             ContentSearchResult(
                                                 "Gleis $track",
                                                 RimapConfig.getTrackIconIdentifier(
-                                                    application,
+                                                    this@StationViewModel.application,
                                                     track,
                                                     ""
                                                 ),
@@ -952,6 +1055,7 @@ class StationViewModel : HafasTimetableViewModel() {
         addSource(infoAvailability, update)
         addSource(elevators, update)
         addSource(parkings, update)
+        addSource(railReplacement, update)
         addSource(stationFeatures, update)
         addSource(queryAndParts, update)
     }
@@ -1136,14 +1240,14 @@ class StationViewModel : HafasTimetableViewModel() {
     val newsLiveData = Transformations.switchMap(refreshLiveData) { force ->
         Transformations.switchMap(stationIdLiveData) { stationId ->
             MutableLiveData<List<News>>().apply {
-                application.repositories.newsRepository.queryNews(
+                application.appRepositories.newsRepository.queryNews(
                     stationId,
                     object : VolleyRestListener<List<News>> {
                         override fun onSuccess(payload: List<News>?) {
                             value = payload
                         }
 
-                        override fun onFail(reason: VolleyError?) {
+                        override fun onFail(reason: VolleyError) {
 
                         }
                     })
@@ -1201,14 +1305,14 @@ class StationViewModel : HafasTimetableViewModel() {
                     || !serviceNumbersLiveData.value.isNullOrEmpty()
                     || (staticInfoLiveData.value?.let { staticInfoCollection ->
                 staticInfoCollection.typedStationInfos.containsKey(ServiceContentType.DummyForCategory.FEEDBACK) ||
-                        detailedStopPlaceResource.data.value?.run {
+                        risServiceAndCategoryResource.data.value?.run {
                             hasWifi && staticInfoCollection.typedStationInfos[ServiceContentType.WIFI] != null
-                                    || hasSteplessAccess && staticInfoCollection.typedStationInfos[ServiceContentType.ACCESSIBLE] != null
+
                         } == true
             } == true)
                     || !parking.parkingsResource.data.value.isNullOrEmpty()
                     || !elevatorsResource.data.value.isNullOrEmpty()
-
+                    || !railReplacementSummaryLiveData.value.isNullOrEmpty()
         }
 
     }.addSource(infoAndServicesLiveData)
@@ -1216,7 +1320,8 @@ class StationViewModel : HafasTimetableViewModel() {
         .addSource(staticInfoLiveData)
         .addSource(parking.parkingsResource.data)
         .addSource(elevatorsResource.data)
-        .addSource(detailedStopPlaceResource.data)
+        .addSource(risServiceAndCategoryResource.data)
+        .addSource(railReplacementSummaryLiveData)
         .distinctUntilChanged()
 
     val stationWhatsappFeedbackLiveData: LiveData<String?> =
@@ -1230,5 +1335,20 @@ class StationViewModel : HafasTimetableViewModel() {
 
 
     val accessibilityFeaturesResource =
-        AccessibilityFeaturesResource(application.repositories.stationRepository)
+        AccessibilityFeaturesResource(this.application.repositories.stationRepository)
+
+    val mapAvailableLiveData =
+        SpokenFeedbackAccessibilityLiveData(application).switchMap { spokenFeedbackAccessibilityEnabled ->
+            stationResource.data.map { mergedStation ->
+                !(spokenFeedbackAccessibilityEnabled || mergedStation.location == null)
+            }
+        }
+
+    val pendingRrtPointAndStationNavigationLiveData = stationNavigationLiveData.switchMap { it ->
+        it?.let { stationNavigation ->
+            pendingRailReplacementPointLiveData.map { rrtPoint ->
+                stationNavigation to rrtPoint
+            }
+        }
+    }
 }

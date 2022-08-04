@@ -98,20 +98,23 @@ public class TutorialManager {
 
     /**
      * Shows tutorial for view
+     *
      * @param tutorialView The reference View which holds the layout
-     * @param identifier The identifier of the tutorial which should be shown
+     * @param identifier   The identifier of the tutorial which should be shown
      */
-    public boolean showTutorialIfNecessary(TutorialView tutorialView, String identifier) {
-        Tutorial tutorial = getTutorialForView(identifier);
-        if (tutorial != null) {
-            tutorialView.show(new TutorialView.TutorialViewDelegate() {
-                @Override
-                public void didCloseTutorialView(TutorialView view, Tutorial tutorial) {
-                    // Update tutorial's state
-                    markTutorialAsSeen(tutorial);
-                }
-            }, tutorial);
-            return true;
+    public boolean showTutorialIfNecessary(final TutorialView tutorialView, final String identifier) {
+        if (tutorialView != null) {
+            Tutorial tutorial = getTutorialForView(identifier);
+            if (tutorial != null) {
+                tutorialView.show(new TutorialView.TutorialViewDelegate() {
+                    @Override
+                    public void didCloseTutorialView(TutorialView view, Tutorial tutorial) {
+                        // Update tutorial's state
+                        markTutorialAsSeen(tutorial);
+                    }
+                }, tutorial);
+                return true;
+            }
         }
 
         return false;

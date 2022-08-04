@@ -62,7 +62,7 @@ class TrainInfoViewHolder internal constructor(
         val trainMovementInfo =
             timetableAdapter.trainEvent.movementRetriever.getTrainMovementInfo(item)
 
-        itemView.contentDescription = renderContentDescription(item, trainMovementInfo)
+        itemView.contentDescription = item?.let { renderContentDescription(it, trainMovementInfo) }
 
         updateWagonOrderViews(item)
 
@@ -75,7 +75,7 @@ class TrainInfoViewHolder internal constructor(
     }
 
     private fun renderContentDescription(
-        trainInfo: TrainInfo?,
+        trainInfo: TrainInfo,
         trainMovementInfo: TrainMovementInfo
     ) = with(itemView.resources) {
         val trainEvent = trainEvent
@@ -92,8 +92,8 @@ class TrainInfoViewHolder internal constructor(
                 )
             }
                 ?: "",
-            trainInfo?.let { TrainMessages(trainInfo, trainMovementInfo) }
-                ?.renderContentDescription(this)
+            TrainMessages(trainInfo, trainMovementInfo)
+                .renderContentDescription(this)
         )
     }
 

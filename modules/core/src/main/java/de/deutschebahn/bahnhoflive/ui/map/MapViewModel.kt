@@ -6,6 +6,7 @@
 
 package de.deutschebahn.bahnhoflive.ui.map
 
+import android.app.Application
 import android.content.Context
 import androidx.lifecycle.*
 import com.android.volley.VolleyError
@@ -30,9 +31,14 @@ import io.reactivex.functions.Consumer
 import io.reactivex.schedulers.Schedulers
 import io.reactivex.subjects.BehaviorSubject
 
-class MapViewModel : StadaStationCacheViewModel() {
+class MapViewModel(
+    application: Application,
+    private val savedStateHandle: SavedStateHandle,
+) : StadaStationCacheViewModel(application) {
 
-    private val dbTimetableResource = DbTimetableResource()
+    private val dbTimetableResource =
+        DbTimetableResource(getApplication<BaseApplication>().applicationServices.evaIdsProvider)
+
     private val evaIdsErrorObserver = Observer<VolleyError> { volleyError ->
         if (volleyError != null) {
             dbTimetableResource.setEvaIdsMissing()
@@ -40,31 +46,50 @@ class MapViewModel : StadaStationCacheViewModel() {
     }
     private val evaIdsDataObserver = Observer<Station> { evaIds ->
         if (evaIds != null) {
-            dbTimetableResource.setEvaIds(evaIds.evaIds)
             dbTimetableResource.loadIfNecessary()
         }
     }
 
-    private val detailedStopPlaceResource = DetailedStopPlaceResource()
+    var zoom: Float
+        get() = savedStateHandle["zoom"] ?: MapOverlayFragment.DEFAULT_ZOOM
+        set(value) {
+            savedStateHandle["zoom"] = value
+        }
+
+    var level: Int
+        get() = savedStateHandle["level"] ?: 0
+        set(value) {
+            savedStateHandle["level"] = value
+        }
+
+
+    private val risServiceAndCategoryResource =
+        RisServiceAndCategoryResource(openHoursParser)
 
     private val rimapStationFeatureCollectionResource = RimapStationFeatureCollectionResource()
 
     val parking = ViewModelParking()
 
     val stationResource =
-        StationResource(detailedStopPlaceResource, rimapStationFeatureCollectionResource)
+        StationResource(
+            openHoursParser,
+            risServiceAndCategoryResource,
+            rimapStationFeatureCollectionResource
+        )
 
     val isMapLayedOut = MutableLiveData<Boolean?>()
 
     val zoneIdLiveData = MutableLiveData<String>()
 
-    val originalStationLiveData = MutableLiveData<Station>()
+    val originalStationLiveData = MutableLiveData<Station?>()
+
+    val railReplacementResource = RimapRRTResource()
 
     val stationLocationLiveData: LiveData<LatLng?> = MediatorLiveData<LatLng?>().apply {
 
         addSource(originalStationLiveData) { originalStation ->
             if (value == null) {
-                value = originalStation.location
+                value = originalStation?.location
             }
         }
 
@@ -75,15 +100,14 @@ class MapViewModel : StadaStationCacheViewModel() {
     }.distinctUntilChanged()
 
     fun setStation(station: Station?) {
+        originalStationLiveData.value = station
         if (station != null) {
-            station?.let {
-                originalStationLiveData.value = it
-            }
-
             zoneIdLiveData.value = station.id
 
-            detailedStopPlaceResource.initialize(station)
+            risServiceAndCategoryResource.initialize(station)
             rimapStationFeatureCollectionResource.initialize(station)
+
+            stationResource.initialize(station)
 
             dbTimetableResource.initialize(station)
 
@@ -91,6 +115,8 @@ class MapViewModel : StadaStationCacheViewModel() {
             stationResource.error.observeForever(evaIdsErrorObserver)
 
             parking.parkingsResource.initialize(station)
+
+            railReplacementResource.initialize(station)
         }
     }
 
@@ -170,7 +196,7 @@ class MapViewModel : StadaStationCacheViewModel() {
         it?.takeUnless { it.location == null }?.let { station ->
             OneShotLiveData<Pair<Station, RimapStation?>> { receiver ->
                 val evaIds = station.evaIds
-                val mainEvaId = evaIds.main
+                val mainEvaId = evaIds?.main
                 baseApplication.repositories.mapRepository.queryLevels(
                     station.id,
                     object : BaseRestListener<RimapStation?>() {
@@ -180,7 +206,7 @@ class MapViewModel : StadaStationCacheViewModel() {
                             receiver(station to payload)
                         }
 
-                        override fun onFail(reason: VolleyError?) {
+                        override fun onFail(reason: VolleyError) {
                             super.onFail(reason)
 
                             receiver(station to null)
@@ -208,7 +234,7 @@ class MapViewModel : StadaStationCacheViewModel() {
                                     it(payload)
                                 }
 
-                                override fun onFail(reason: VolleyError?) {
+                                override fun onFail(reason: VolleyError) {
                                     super.onFail(reason)
 
                                     it(null)
@@ -223,5 +249,7 @@ class MapViewModel : StadaStationCacheViewModel() {
             value = null
         }
     }
+
+    val mapConsentedLiveData = baseApplication.applicationServices.mapConsentRepository.consented
 
 }

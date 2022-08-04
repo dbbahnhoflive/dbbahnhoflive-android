@@ -21,7 +21,7 @@
     <string name="sr_container_stops">Zwischenhalte</string>
     <string name="sr_indicator_issue">Bitte Hinweise beachten!</string>
     <string name="sr_stop_type_db"></string>
-    <string name="sr_stop_type_local">Haltestelle</string>
+    <string name="sr_stop_type_local">ÖPNV-Haltestelle</string>
     <string name="sr_close">Schließen</string>
     <string name="sr_hub_search">Suche</string>
     <string name="sr_hub_favorites">Favoriten</string>

@@ -10,6 +10,7 @@ import android.content.Context;
 import android.os.Parcelable;
 
 import androidx.annotation.DrawableRes;
+import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
 import com.google.android.gms.maps.model.BitmapDescriptor;
@@ -26,7 +27,7 @@ public abstract class MarkerContent {
     }
 
     public enum ViewType {
-        COMMON, STATION, BOOKMARKABLE, DB_STATION, TRACK;
+        COMMON, STATION, BOOKMARKABLE, DB_STATION, TRACK, RAIL_REPLACEMENT;
 
         /**
          * Avoid multiple calls to values() because it creates a new array each time.
@@ -66,7 +67,7 @@ public abstract class MarkerContent {
         return false;
     }
 
-    public void openLink(Context context) {
+    public void openLink(@NonNull Context context) {
     }
 
     public float getZoom(float zoom) {

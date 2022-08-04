@@ -13,19 +13,19 @@ class StationOccupancyResource(
     private val occupancyRepository: OccupancyRepository
 ) : RemoteResource<Occupancy>() {
 
-    var stationId: String? = null
+    var stadaId: String? = null
 
     override fun onStartLoading(force: Boolean) {
-        stationId?.let {
+        stadaId?.let {
             occupancyRepository.queryOccupancy(it, Listener())
         }
     }
 
     fun initialize(station: Station) {
-        stationId = station.id
+        stadaId = station.id
         loadIfNecessary()
     }
 
     override val isLoadingPreconditionsMet: Boolean
-        get() = !stationId.isNullOrBlank()
+        get() = !stadaId.isNullOrBlank()
 }

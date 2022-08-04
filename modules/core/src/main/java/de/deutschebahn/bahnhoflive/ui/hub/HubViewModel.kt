@@ -6,15 +6,20 @@
 
 package de.deutschebahn.bahnhoflive.ui.hub
 
+import android.app.Application
+import androidx.lifecycle.liveData
+import androidx.lifecycle.viewModelScope
+import de.deutschebahn.bahnhoflive.BaseApplication
 import de.deutschebahn.bahnhoflive.backend.hafas.model.HafasStation
 import de.deutschebahn.bahnhoflive.backend.hafas.model.HafasTimetable
+import de.deutschebahn.bahnhoflive.repository.InternalStation
 import de.deutschebahn.bahnhoflive.ui.StadaStationCacheViewModel
 
-class HubViewModel : StadaStationCacheViewModel() {
+class HubViewModel(application: Application) : StadaStationCacheViewModel(application) {
 
     val hafasData: ArrayList<HafasTimetable> = ArrayList()
 
-    fun buildhafasData(hafasStations : List<HafasStation>) {
+    fun buildhafasData(hafasStations: List<HafasStation>) {
         wrapTimetables(hafasStations)
     }
 
@@ -28,5 +33,10 @@ class HubViewModel : StadaStationCacheViewModel() {
 
     }
 
+    val updatedStationRepository get() = BaseApplication.INSTANCE.applicationServices.updatedStationRepository
 
+    fun getUpdatedStationLiveData(station: InternalStation) =
+        liveData(viewModelScope.coroutineContext) {
+            emit(updatedStationRepository.getUpdatedStation(station))
+        }
 }

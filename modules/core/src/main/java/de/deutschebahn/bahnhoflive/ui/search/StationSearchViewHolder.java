@@ -47,7 +47,7 @@ public class StationSearchViewHolder extends ViewHolder<SearchResult>
     protected void onBind(SearchResult item) {
         nameView.setText(item.getTitle());
         iconView.setImageResource(item.getIcon());
-        iconView.setContentDescription(iconView.getResources().getText(
+        nameView.setContentDescription(item.getTitle() + ", " + nameView.getResources().getText(
                 item.isLocal() ? R.string.sr_stop_type_local : R.string.sr_stop_type_db));
         favoriteView.setChecked(item.isFavorite());
     }

@@ -31,7 +31,7 @@ public abstract class Link {
         return null;
     }
 
-    public boolean isAvailable(StationFeature stationFeature) {
+    public boolean isAvailable(Context context, StationFeature stationFeature) {
         return true;
     }
 }

@@ -11,12 +11,14 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.os.Parcelable;
 import android.view.View;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
+import androidx.lifecycle.Transformations;
 import androidx.lifecycle.ViewModelProvider;
 
 import com.google.android.gms.maps.MapFragment;
@@ -30,6 +32,7 @@ import de.deutschebahn.bahnhoflive.backend.hafas.model.HafasTimetable;
 import de.deutschebahn.bahnhoflive.repository.InternalStation;
 import de.deutschebahn.bahnhoflive.repository.Station;
 import de.deutschebahn.bahnhoflive.ui.FragmentArgs;
+import de.deutschebahn.bahnhoflive.ui.accessibility.SpokenFeedbackAccessibilityLiveData;
 import de.deutschebahn.bahnhoflive.ui.map.content.rimap.RimapFilter;
 import de.deutschebahn.bahnhoflive.ui.station.ElevatorIssuesLoaderFragment;
 import de.deutschebahn.bahnhoflive.ui.station.LoaderFragment;
@@ -42,7 +45,6 @@ public class MapActivity extends AppCompatActivity implements
     private static final String ARG_LOADER_STATES = LoaderFragment.ARG_LOADER_STATES;
     private static final String ARG_STATION_DEPARTURES = "stationDepartures";
 
-    private MapFragment mapFragment;
     private MapOverlayFragment overlayFragment;
 
     private Station station;
@@ -61,6 +63,13 @@ public class MapActivity extends AppCompatActivity implements
             station = intent.getParcelableExtra(ARG_STATION);
         }
 
+        new SpokenFeedbackAccessibilityLiveData(this).observe(this, aBoolean -> {
+            if (aBoolean) {
+                Toast.makeText(this, R.string.map_lacks_support_for_spoken_feedback_accessibility, Toast.LENGTH_LONG).show();
+                finish();
+            }
+        });
+
         mapViewModel = new ViewModelProvider(this).get(MapViewModel.class);
         mapViewModel.setStation(station);
 
@@ -74,12 +83,26 @@ public class MapActivity extends AppCompatActivity implements
 
         setContentView(R.layout.activity_map);
 
-        mapFragment = (MapFragment) getFragmentManager().findFragmentById(R.id.map_fragment);
         overlayFragment = (MapOverlayFragment) getSupportFragmentManager().findFragmentById(R.id.map_overlay_fragment);
 
         if (intent.hasExtra(ARG_STATION_DEPARTURES)) {
             overlayFragment.setStationDepartures(intent.getParcelableArrayListExtra(ARG_STATION_DEPARTURES));
         }
+
+
+        Transformations.distinctUntilChanged(mapViewModel.getMapConsentedLiveData()).observe(this, aBoolean -> {
+            if (aBoolean) {
+                initializeMap();
+            } else {
+                new MapConsentDialogFragment().show(getSupportFragmentManager(), null);
+            }
+        });
+    }
+
+    private void initializeMap() {
+        final MapFragment mapFragment = new MapFragment();
+        getFragmentManager().beginTransaction()
+                .add(R.id.map_fragment, mapFragment).commit();
 
         final View contentView = findViewById(android.R.id.content);
         if (contentView != null) {
@@ -90,6 +113,7 @@ public class MapActivity extends AppCompatActivity implements
                 }
             });
         }
+
         mapFragment.getMapAsync(overlayFragment);
     }
 
@@ -110,7 +134,9 @@ public class MapActivity extends AppCompatActivity implements
     }
 
     private static Intent createIntent(Context context) {
-        return new Intent(context, MapActivity.class);
+        final Intent intent = new Intent(context, MapActivity.class);
+        intent.addFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT);
+        return intent;
     }
 
     @NonNull

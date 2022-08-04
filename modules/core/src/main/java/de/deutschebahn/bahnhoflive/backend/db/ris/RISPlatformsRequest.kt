@@ -12,7 +12,6 @@ import com.android.volley.VolleyError
 import de.deutschebahn.bahnhoflive.backend.ForcedCacheEntryFactory
 import de.deutschebahn.bahnhoflive.backend.VolleyRestListener
 import de.deutschebahn.bahnhoflive.backend.db.DbAuthorizationTool
-import de.deutschebahn.bahnhoflive.backend.db.DbRequest
 import de.deutschebahn.bahnhoflive.backend.db.ris.model.AccessibilityStatus
 import de.deutschebahn.bahnhoflive.backend.db.ris.model.Platform
 import de.deutschebahn.bahnhoflive.repository.accessibility.AccessibilityFeature
@@ -25,9 +24,9 @@ class RISPlatformsRequest(
     dbAuthorizationTool: DbAuthorizationTool,
     evaId: String,
     force: Boolean = false,
-) : DbRequest<List<Platform>>(
-    Method.GET,
-    "https://gateway.businesshub.deutschebahn.com/ris-stations/v1/platforms/$evaId" +
+    clientIdDbAuthorizationTool: DbAuthorizationTool?,
+) : RISStationsRequest<List<Platform>>(
+    "platforms/$evaId" +
             "?includeAccessibility=true",
     dbAuthorizationTool,
     listener
@@ -39,11 +38,11 @@ class RISPlatformsRequest(
 
     override fun getCountKey() = "RIS/stations"
 
-    override fun parseNetworkResponse(response: NetworkResponse?): Response<List<Platform>> {
+    override fun parseNetworkResponse(response: NetworkResponse): Response<List<Platform>> {
         super.parseNetworkResponse(response)
 
         return try {
-            val platforms = response?.data?.decodeToString()?.let { responseString ->
+            val platforms = response.data?.decodeToString()?.let { responseString ->
                 JSONObject(responseString).optJSONArray("platforms")
                     ?.asJSONObjectSequence()
                     ?.filterNotNull()
@@ -85,7 +84,5 @@ class RISPlatformsRequest(
             Response.error(VolleyError(e))
         }
     }
-
-    override fun getAuthorizationHeaderKey() = "db-api-key"
 
 }

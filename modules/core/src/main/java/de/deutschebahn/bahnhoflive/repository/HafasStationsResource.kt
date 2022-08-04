@@ -50,13 +50,13 @@ class HafasStationsResource(val maxStationDistance: Int) : RemoteResource<List<H
                     val (dbStations, nearbyStations) = input.asSequence().filter {
                         it.dist <= maxStationDistance
                     }.partition {
-                        station.evaIds.ids.contains(it.extId)
+                        station.evaIds?.ids?.contains(it.extId) == true
                     }
 
                     val (mainDbStation, nonMainDbStations) = dbStations.takeIf { it.size == 1 }
                         ?.let {
                             Pair(it.first(), emptyList<HafasStation>())
-                        } ?: station.evaIds.main?.let { mainStationId ->
+                        } ?: station.evaIds?.main?.let { mainStationId ->
                         dbStations.partition {
                             it.extId == mainStationId
                         }.let {
@@ -89,7 +89,7 @@ class HafasStationsResource(val maxStationDistance: Int) : RemoteResource<List<H
             object : VolleyRestListener<List<HafasStation>> {
                 val listener = Listener()
 
-                override fun onSuccess(payload: List<HafasStation>) {
+                override fun onSuccess(payload: List<HafasStation>?) {
                     if (Collections.hasContent(payload)) {
                         listener.onSuccess(payload)
                     } else {

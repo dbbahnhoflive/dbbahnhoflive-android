@@ -15,7 +15,6 @@ import androidx.lifecycle.Observer
 import de.deutschebahn.bahnhoflive.R
 import de.deutschebahn.bahnhoflive.analytics.TrackingManager
 import de.deutschebahn.bahnhoflive.backend.db.fasta2.model.FacilityStatus
-import de.deutschebahn.bahnhoflive.backend.db.publictrainstation.model.DetailedStopPlace
 import de.deutschebahn.bahnhoflive.backend.local.model.ServiceContent
 import de.deutschebahn.bahnhoflive.backend.local.model.ServiceContentType
 import de.deutschebahn.bahnhoflive.repository.parking.ParkingsResource
@@ -23,7 +22,9 @@ import de.deutschebahn.bahnhoflive.ui.ServiceContentFragment
 import de.deutschebahn.bahnhoflive.ui.station.*
 import de.deutschebahn.bahnhoflive.ui.station.accessibility.AccessibilityFragment
 import de.deutschebahn.bahnhoflive.ui.station.elevators.ElevatorStatusListsFragment
+import de.deutschebahn.bahnhoflive.ui.station.features.RISServicesAndCategory
 import de.deutschebahn.bahnhoflive.ui.station.parking.ParkingListFragment
+import de.deutschebahn.bahnhoflive.ui.station.railreplacement.RailReplacementFragment
 import de.deutschebahn.bahnhoflive.util.Collections
 
 class InfoCategorySelectionFragment : CategorySelectionFragment(
@@ -35,11 +36,12 @@ class InfoCategorySelectionFragment : CategorySelectionFragment(
 
     private lateinit var infoAndServicesLiveData: InfoAndServicesLiveData
     private lateinit var serviceNumbersLiveData: ServiceNumbersLiveData
-    private lateinit var detailedStationLiveData: LiveData<DetailedStopPlace?>
+    private lateinit var detailedStationLiveData: LiveData<RISServicesAndCategory?>
     private lateinit var staticInfoLiveData: LiveData<StaticInfoCollection?>
     private lateinit var parkingsResource: ParkingsResource
 
     private lateinit var elevatorsDataResource: LiveData<List<FacilityStatus>?>
+    private lateinit var railReplacementSummaryLiveData: LiveData<MutableMap<String, MutableList<String?>>?>
 
     private var infoAndServicesCategory: Category? = null
     private var serviceNumbersCategory: Category? = null
@@ -47,6 +49,7 @@ class InfoCategorySelectionFragment : CategorySelectionFragment(
     private var accessibilityCategory: Category? = null
     private var parkingsCategory: Category? = null
     private var elevatorsCategory: Category? = null
+    private var railReplacementCategory: Category? = null
 
     private fun updateCategories() {
         if (isAdded) {
@@ -59,6 +62,10 @@ class InfoCategorySelectionFragment : CategorySelectionFragment(
             accessibilityCategory = addAccessibility()
             parkingsCategory = addParkings()
 
+            if (!railReplacementSummaryLiveData.value.isNullOrEmpty()) {
+                railReplacementCategory = addRailReplacement()
+            }
+
             if (Collections.hasContent(elevatorsDataResource.value)) {
                 elevatorsCategory = addElevators()
             }
@@ -70,7 +77,8 @@ class InfoCategorySelectionFragment : CategorySelectionFragment(
                     wifiCategory,
                     accessibilityCategory,
                     parkingsCategory,
-                    elevatorsCategory
+                    elevatorsCategory,
+                    railReplacementCategory
                 )
             )
         }
@@ -146,15 +154,25 @@ class InfoCategorySelectionFragment : CategorySelectionFragment(
     private fun addAccessibility(): SimpleDynamicCategory? {
         return SimpleDynamicCategory(
             "Barrierefreiheit", R.drawable.app_zugang_wege,
-            TrackingManager.Category.ZUGANG_WEGE
+            TrackingManager.Category.BARRIEREFREIHEIT
         ) { category ->
             trackCategoryTap(category)
             startFragment(AccessibilityFragment())
         }
     }
 
+    private fun addRailReplacement(): SimpleDynamicCategory? {
+        return SimpleDynamicCategory(
+            getText(R.string.rail_replacement), R.drawable.app_rail_replacement,
+            TrackingManager.Category.SCHIENENERSATZVERKEHR
+        ) { category ->
+            trackCategoryTap(category)
+            startFragment(RailReplacementFragment())
+        }
+    }
+
     private fun addWifi(
-        station: DetailedStopPlace?,
+        station: RISServicesAndCategory?,
         staticInfoCollection: StaticInfoCollection
     ): SimpleDynamicCategory? {
         if (station == null || !station.hasWifi) {
@@ -180,24 +198,26 @@ class InfoCategorySelectionFragment : CategorySelectionFragment(
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        detailedStationLiveData = stationViewModel.detailedStopPlaceResource.data
+        detailedStationLiveData = stationViewModel.risServiceAndCategoryResource.data
         elevatorsDataResource = stationViewModel.elevatorsResource.data
         infoAndServicesLiveData = stationViewModel.infoAndServicesLiveData
         serviceNumbersLiveData = stationViewModel.serviceNumbersLiveData
         parkingsResource = stationViewModel.parking.parkingsResource
         staticInfoLiveData = stationViewModel.staticInfoLiveData
+        railReplacementSummaryLiveData = stationViewModel.railReplacementSummaryLiveData
 
-        staticInfoLiveData.observe(this, Observer {
+        staticInfoLiveData.observe(this) {
             updateCategories()
-        })
-        parkingsResource.data.observe(this, Observer {
+        }
+        parkingsResource.data.observe(this) {
             updateCategories()
-        })
+        }
 
-        elevatorsDataResource.observe(this, Observer { updateCategories() })
-        detailedStationLiveData.observe(this, Observer { updateCategories() })
-        infoAndServicesLiveData.observe(this, Observer { updateCategories() })
-        serviceNumbersLiveData.observe(this, Observer { updateCategories() })
+        elevatorsDataResource.observe(this) { updateCategories() }
+        detailedStationLiveData.observe(this) { updateCategories() }
+        infoAndServicesLiveData.observe(this) { updateCategories() }
+        serviceNumbersLiveData.observe(this) { updateCategories() }
+        railReplacementSummaryLiveData.observe(this) { updateCategories() }
 
         stationViewModel.selectedServiceContentType.observe(this, Observer {
             if (it != null) {
