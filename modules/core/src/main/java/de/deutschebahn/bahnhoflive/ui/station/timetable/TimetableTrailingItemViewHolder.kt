@@ -20,14 +20,18 @@ import java.text.DateFormat
 import java.text.SimpleDateFormat
 
 class TimetableTrailingItemViewHolder(
-    parent: ViewGroup,
-    loadMoreCallback: View.OnClickListener? = null,
-    private val itemMessageBinding: ItemMessageBinding = ItemMessageBinding.inflate(
-        parent.inflater,
-        parent,
-        false
-    )
+    private val itemMessageBinding: ItemMessageBinding,
+    loadMoreCallback: View.OnClickListener? = null
 ) : ViewHolder<FilterSummary>(itemMessageBinding.root) {
+
+    constructor(parent: ViewGroup, loadMoreCallback: View.OnClickListener? = null) : this(
+        ItemMessageBinding.inflate(
+            parent.inflater,
+            parent,
+            false
+        ),
+        loadMoreCallback
+    )
 
     companion object {
         val timeFormat: DateFormat = SimpleDateFormat.getTimeInstance(SimpleDateFormat.SHORT)

@@ -6,6 +6,7 @@
 
 package de.deutschebahn.bahnhoflive.ui.map
 
+import android.view.View
 import android.view.ViewGroup
 import de.deutschebahn.bahnhoflive.databinding.FlyoutTrackBinding
 import de.deutschebahn.bahnhoflive.repository.LoadingStatus
@@ -31,6 +32,12 @@ internal class TrackFlyoutViewHolder(
             false
         ), mapViewModel
     )
+
+    constructor(
+        view: View,
+        mapViewModel: MapViewModel,
+        expandableListener: ((Boolean) -> Unit)? = null
+    ) : this(FlyoutTrackBinding.bind(view), mapViewModel, expandableListener)
 
     private val onWagonOrderClickListener = OnWagonOrderClickListener { trainInfo, _ ->
         mapViewModel.openWaggonOrder(itemView.context, trainInfo)
