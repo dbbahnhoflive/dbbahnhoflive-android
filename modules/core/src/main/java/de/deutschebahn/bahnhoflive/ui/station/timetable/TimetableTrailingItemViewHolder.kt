@@ -13,12 +13,21 @@ import android.view.ViewGroup
 import android.widget.TextView
 import de.deutschebahn.bahnhoflive.R
 import de.deutschebahn.bahnhoflive.backend.ris.model.TrainEvent
+import de.deutschebahn.bahnhoflive.databinding.ItemMessageBinding
 import de.deutschebahn.bahnhoflive.ui.ViewHolder
-import kotlinx.android.synthetic.main.item_message.view.*
+import de.deutschebahn.bahnhoflive.view.inflater
 import java.text.DateFormat
 import java.text.SimpleDateFormat
 
-class TimetableTrailingItemViewHolder(parent: ViewGroup, loadMoreCallback: View.OnClickListener? = null) : ViewHolder<FilterSummary>(parent, R.layout.item_message) {
+class TimetableTrailingItemViewHolder(
+    parent: ViewGroup,
+    loadMoreCallback: View.OnClickListener? = null,
+    private val itemMessageBinding: ItemMessageBinding = ItemMessageBinding.inflate(
+        parent.inflater,
+        parent,
+        false
+    )
+) : ViewHolder<FilterSummary>(itemMessageBinding.root) {
 
     companion object {
         val timeFormat: DateFormat = SimpleDateFormat.getTimeInstance(SimpleDateFormat.SHORT)
@@ -31,10 +40,10 @@ class TimetableTrailingItemViewHolder(parent: ViewGroup, loadMoreCallback: View.
     }
 
     private val textView: TextView
-        get() = itemView.text
+        get() = itemMessageBinding.text
 
     private val button: View
-        get() = itemView.buttonLoadMore
+        get() = itemMessageBinding.buttonLoadMore
 
     private val context
         get() = itemView.context

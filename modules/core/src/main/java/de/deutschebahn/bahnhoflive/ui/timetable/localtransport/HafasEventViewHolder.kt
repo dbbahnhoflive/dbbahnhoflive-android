@@ -13,8 +13,6 @@ import de.deutschebahn.bahnhoflive.ui.timetable.RouteStop
 import de.deutschebahn.bahnhoflive.ui.timetable.RouteStopsAdapter
 import de.deutschebahn.bahnhoflive.view.SelectableItemViewHolder
 import de.deutschebahn.bahnhoflive.view.SingleSelectionManager
-import kotlinx.android.synthetic.main.card_expandable_hafas_event.view.*
-import java.util.*
 
 internal class HafasEventViewHolder(
     parent: ViewGroup,
@@ -25,7 +23,8 @@ internal class HafasEventViewHolder(
     singleSelectionManager
 ), DetailedHafasEvent.Listener {
 
-    private val overviewViewHolder: HafasEventOverviewViewHolder = HafasEventOverviewViewHolder(this@HafasEventViewHolder.itemView.overview)
+    private val overviewViewHolder: HafasEventOverviewViewHolder =
+        HafasEventOverviewViewHolder(this@HafasEventViewHolder.itemView.findViewById(R.id.overview))
     private val switcher: ViewSwitcher = itemView.findViewById(R.id.details)
     private val adapter: RouteStopsAdapter = RouteStopsAdapter()
     private val recyclerView: androidx.recyclerview.widget.RecyclerView = itemView.findViewById(R.id.stops_recycler)
