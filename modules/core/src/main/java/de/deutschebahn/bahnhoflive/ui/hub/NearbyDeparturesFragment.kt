@@ -15,16 +15,14 @@ import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.switchMap
 import com.android.volley.Request
 import de.deutschebahn.bahnhoflive.BaseApplication
-import de.deutschebahn.bahnhoflive.R
 import de.deutschebahn.bahnhoflive.analytics.TrackingManager
 import de.deutschebahn.bahnhoflive.backend.ris.model.RISTimetable
+import de.deutschebahn.bahnhoflive.databinding.FragmentNearbyDeparturesBinding
 import de.deutschebahn.bahnhoflive.location.BaseLocationListener
 import de.deutschebahn.bahnhoflive.permission.Permission
 import de.deutschebahn.bahnhoflive.repository.LoadingStatus
 import de.deutschebahn.bahnhoflive.ui.LoadingContentDecorationViewHolder
 import de.deutschebahn.bahnhoflive.util.Cancellable
-import kotlinx.android.synthetic.main.fragment_nearby_departures.*
-import java.util.*
 
 class NearbyDeparturesFragment : androidx.fragment.app.Fragment(), Permission.Listener, androidx.swiperefreshlayout.widget.SwipeRefreshLayout.OnRefreshListener {
 
@@ -49,6 +47,8 @@ class NearbyDeparturesFragment : androidx.fragment.app.Fragment(), Permission.Li
     private var nearbyDeparturesAdapter: NearbyDeparturesAdapter? = null
 
     private val hubViewModel by activityViewModels<HubViewModel>()
+
+    private var viewBinding: FragmentNearbyDeparturesBinding? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -90,54 +90,57 @@ class NearbyDeparturesFragment : androidx.fragment.app.Fragment(), Permission.Li
         }
     }
 
-    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? =
-        inflater.inflate(R.layout.fragment_nearby_departures, container, false)
+    override fun onCreateView(
+        inflater: LayoutInflater,
+        container: ViewGroup?,
+        savedInstanceState: Bundle?
+    ): View =
+        FragmentNearbyDeparturesBinding.inflate(inflater, container, false).apply {
+            viewBinding = this
 
-    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        super.onViewCreated(view, savedInstanceState)
-
-        nearbyDeparturesContainerHolder = LoadingContentDecorationViewHolder(view_flipper)
-        recycler.apply {
-            addItemDecoration(
-                androidx.recyclerview.widget.DividerItemDecoration(
-                    view.context,
-                    androidx.recyclerview.widget.DividerItemDecoration.VERTICAL
+            nearbyDeparturesContainerHolder = LoadingContentDecorationViewHolder(viewFlipper)
+            recycler.apply {
+                addItemDecoration(
+                    androidx.recyclerview.widget.DividerItemDecoration(
+                        context,
+                        androidx.recyclerview.widget.DividerItemDecoration.VERTICAL
+                    )
                 )
-            )
-            adapter = nearbyDeparturesAdapter
-        }
-        locationPermissionCard.setOnClickListener { locationPermission.request(activity) }
-        refreshLayout = refresher.apply {
-            setOnRefreshListener(this@NearbyDeparturesFragment)
-        }
+                adapter = nearbyDeparturesAdapter
+            }
+            locationPermissionCard.setOnClickListener { locationPermission.request(activity) }
+            refreshLayout = refresher.apply {
+                setOnRefreshListener(this@NearbyDeparturesFragment)
+            }
 
-        hubViewModel.nearbyStopPlacesLiveData.observe(
-            viewLifecycleOwner,
-            androidx.lifecycle.Observer {
-                nearbyDeparturesContainerHolder?.run {
-                    if (it?.isNotEmpty() == true) {
-                        showContent()
+            hubViewModel.nearbyStopPlacesLiveData.observe(
+                viewLifecycleOwner,
+                androidx.lifecycle.Observer {
+                    nearbyDeparturesContainerHolder?.run {
+                        if (it?.isNotEmpty() == true) {
+                            showContent()
                     } else {
                         showEmpty()
                     }
                 }
-                nearbyDeparturesAdapter?.setData(it)
-            })
+                    nearbyDeparturesAdapter?.setData(it)
+                })
 
-        hubViewModel.nearbyStopPlacesResourceLiveData.switchMap { it.error }
-            .observe(viewLifecycleOwner, androidx.lifecycle.Observer {
-                if (it != null) {
-                    nearbyDeparturesContainerHolder?.showError()
-                }
-            })
+            hubViewModel.nearbyStopPlacesResourceLiveData.switchMap { it.error }
+                .observe(viewLifecycleOwner, androidx.lifecycle.Observer {
+                    if (it != null) {
+                        nearbyDeparturesContainerHolder?.showError()
+                    }
+                })
 
-        hubViewModel.nearbyStopPlacesResourceLiveData.switchMap { it.loadingStatus }
-            .observe(viewLifecycleOwner, androidx.lifecycle.Observer {
-                if (it == LoadingStatus.BUSY) nearbyDeparturesContainerHolder?.showProgress()
-            })
-    }
+            hubViewModel.nearbyStopPlacesResourceLiveData.switchMap { it.loadingStatus }
+                .observe(viewLifecycleOwner, androidx.lifecycle.Observer {
+                    if (it == LoadingStatus.BUSY) nearbyDeparturesContainerHolder?.showProgress()
+                })
+        }.root
 
     override fun onDestroyView() {
+        viewBinding = null
         nearbyDeparturesContainerHolder = null
         refreshLayout = null
 
@@ -203,7 +206,7 @@ class NearbyDeparturesFragment : androidx.fragment.app.Fragment(), Permission.Li
 
     private fun updateLocationPermissionViews() {
         val granted = locationPermission.isGranted
-        locationPermissionCard?.let {
+        viewBinding?.locationPermissionCard?.let {
             setVisibility(it, !granted)
         }
         nearbyDeparturesContainerHolder?.run {

@@ -20,7 +20,9 @@
         android:layout_height="3dp"
         android:background="@color/graph_scale" />
 
-    <include layout="@layout/include_occupancy_time_label" />
+    <include
+        layout="@layout/include_occupancy_time_label"
+        android:id="@+id/occupancyTimeLabel" />
 </LinearLayout>
 
         

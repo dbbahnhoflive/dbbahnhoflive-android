@@ -18,16 +18,13 @@ import androidx.fragment.app.FragmentPagerAdapter
 import androidx.fragment.app.activityViewModels
 import de.deutschebahn.bahnhoflive.R
 import de.deutschebahn.bahnhoflive.analytics.TrackingManager
+import de.deutschebahn.bahnhoflive.databinding.FragmentHubBinding
 import de.deutschebahn.bahnhoflive.repository.AssetDocumentBroker
 import de.deutschebahn.bahnhoflive.tutorial.TutorialManager
-import de.deutschebahn.bahnhoflive.tutorial.TutorialView
 import de.deutschebahn.bahnhoflive.ui.accessibility.SpokenFeedbackAccessibilityLiveData
 import de.deutschebahn.bahnhoflive.ui.map.MapActivity
-import kotlinx.android.synthetic.main.fragment_hub.*
-import kotlinx.android.synthetic.main.fragment_hub.view.*
 
 class HubFragment : androidx.fragment.app.Fragment() {
-    private var mTutorialView: TutorialView? = null
 
     private val trackingManager = TrackingManager()
     private val hubViewModel by activityViewModels<HubViewModel>()
@@ -41,22 +38,19 @@ class HubFragment : androidx.fragment.app.Fragment() {
         get() = latestTabPreferences?.getInt(PREF_LATEST_TAB, 0)
             ?: 0
 
+    private var viewBinding: FragmentHubBinding? = null
 
-    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
-                              savedInstanceState: Bundle?): View? = inflater.inflate(R.layout.fragment_hub, container, false)
+    override fun onCreateView(
+        inflater: LayoutInflater, container: ViewGroup?,
+        savedInstanceState: Bundle?
+    ): View = FragmentHubBinding.inflate(inflater, container, false).apply {
+        viewBinding = this
 
-    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        super.onViewCreated(view, savedInstanceState)
+        appTitle.text = getText(R.string.rich_app_title)
 
-        val appTitleView = view.findViewById<TextView>(R.id.app_title)
-        appTitleView.text = getText(R.string.rich_app_title)
-
-        // Tutorial
-        mTutorialView = view.findViewById(R.id.hub_tutorial_view)
-
-
-        pager.pageMargin = view.resources.getDimensionPixelSize(R.dimen.default_space)
-        pager.adapter = object : FragmentPagerAdapter(childFragmentManager, BEHAVIOR_RESUME_ONLY_CURRENT_FRAGMENT) {
+        pager.pageMargin = resources.getDimensionPixelSize(R.dimen.default_space)
+        pager.adapter = object :
+            FragmentPagerAdapter(childFragmentManager, BEHAVIOR_RESUME_ONLY_CURRENT_FRAGMENT) {
             override fun getItem(position: Int): Fragment =
                 when (position) {
                     0 -> SearchStarterFragment()
@@ -68,18 +62,25 @@ class HubFragment : androidx.fragment.app.Fragment() {
 
             override fun getCount() = 3
 
-            override fun getPageTitle(position: Int) = getText(when (position) {
-                0 -> R.string.sr_hub_search
-                1 -> R.string.sr_hub_favorites
-                else -> R.string.sr_hub_nearby
-            })
+            override fun getPageTitle(position: Int) = getText(
+                when (position) {
+                    0 -> R.string.sr_hub_search
+                    1 -> R.string.sr_hub_favorites
+                    else -> R.string.sr_hub_nearby
+                }
+            )
         }
 
-        pager.addOnPageChangeListener(object : androidx.viewpager.widget.ViewPager.OnPageChangeListener {
+        pager.addOnPageChangeListener(object :
+            androidx.viewpager.widget.ViewPager.OnPageChangeListener {
             override fun onPageScrollStateChanged(state: Int) {
             }
 
-            override fun onPageScrolled(position: Int, positionOffset: Float, positionOffsetPixels: Int) {
+            override fun onPageScrolled(
+                position: Int,
+                positionOffset: Float,
+                positionOffsetPixels: Int
+            ) {
             }
 
             override fun onPageSelected(position: Int) {
@@ -99,25 +100,35 @@ class HubFragment : androidx.fragment.app.Fragment() {
         }
         tabFavorites.setOnClickListener {
             if (!it.isSelected) {
-                trackingManager.track(TrackingManager.TYPE_ACTION, TrackingManager.Screen.H0, TrackingManager.Action.TAP, TrackingManager.UiElement.FAVORITEN)
+                trackingManager.track(
+                    TrackingManager.TYPE_ACTION,
+                    TrackingManager.Screen.H0,
+                    TrackingManager.Action.TAP,
+                    TrackingManager.UiElement.FAVORITEN
+                )
                 pager.currentItem = 1
             }
         }
         tabNearby.setOnClickListener {
             if (!it.isSelected) {
-                trackingManager.track(TrackingManager.TYPE_ACTION, TrackingManager.Screen.H0, TrackingManager.Action.TAP, TrackingManager.UiElement.NEARBY)
+                trackingManager.track(
+                    TrackingManager.TYPE_ACTION,
+                    TrackingManager.Screen.H0,
+                    TrackingManager.Action.TAP,
+                    TrackingManager.UiElement.NEARBY
+                )
                 pager.currentItem = 2
             }
         }
 
         with(AssetDocumentBroker(requireContext(), trackingManager)) {
-            view.legal_notice?.prepareLegalButton(
+            legalNotice.prepareLegalButton(
                 hasLegalNotice,
                 AssetDocumentBroker.Document.LEGAL_NOTICE,
                 this
             )
 
-            view.privacy_policy?.prepareLegalButton(
+            privacyPolicy.prepareLegalButton(
                 hasPrivacyPolicy,
                 AssetDocumentBroker.Document.PRIVACY_POLICY,
                 this
@@ -125,7 +136,7 @@ class HubFragment : androidx.fragment.app.Fragment() {
         }
 
 
-        view.findViewById<View>(R.id.btn_map).apply {
+        btnMap.apply {
 
             SpokenFeedbackAccessibilityLiveData(context).observe(viewLifecycleOwner) { spokenFeedbackAccessibilityEnabled ->
                 isGone = spokenFeedbackAccessibilityEnabled
@@ -144,10 +155,10 @@ class HubFragment : androidx.fragment.app.Fragment() {
             }
         }
 
-        view.setOnClickListener {
+        root.setOnClickListener {
             unhandledClickListener?.onClick(it)
         }
-    }
+    }.root
 
     private fun TextView.prepareLegalButton(
         available: Boolean,
@@ -166,13 +177,20 @@ class HubFragment : androidx.fragment.app.Fragment() {
     override fun onViewStateRestored(savedInstanceState: Bundle?) {
         super.onViewStateRestored(savedInstanceState)
 
-        pager.setCurrentItem(latestTab, false)
+        viewBinding?.run {
+            pager.setCurrentItem(latestTab, false)
+        }
     }
 
-
+    override fun onDestroyView() {
+        viewBinding = null
+        super.onDestroyView()
+    }
 
     override fun onStop() {
-        TutorialManager.getInstance(activity).markTutorialAsIgnored(mTutorialView)
+        viewBinding?.run {
+            TutorialManager.getInstance(activity).markTutorialAsIgnored(hubTutorialView)
+        }
 
         super.onStop()
     }
