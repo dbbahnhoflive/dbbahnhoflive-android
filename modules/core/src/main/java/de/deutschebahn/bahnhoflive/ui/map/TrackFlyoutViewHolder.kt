@@ -8,6 +8,7 @@ package de.deutschebahn.bahnhoflive.ui.map
 
 import android.view.View
 import android.view.ViewGroup
+import de.deutschebahn.bahnhoflive.R
 import de.deutschebahn.bahnhoflive.databinding.FlyoutTrackBinding
 import de.deutschebahn.bahnhoflive.repository.LoadingStatus
 import de.deutschebahn.bahnhoflive.ui.LoadingContentDecorationViewHolder
@@ -17,7 +18,6 @@ import de.deutschebahn.bahnhoflive.util.destroy
 import de.deutschebahn.bahnhoflive.view.inflater
 import io.reactivex.disposables.Disposable
 import io.reactivex.functions.Consumer
-import kotlinx.android.synthetic.main.bottom_sheet_overlay_track_flyout.view.*
 
 internal class TrackFlyoutViewHolder(
     viewBinding: FlyoutTrackBinding,
@@ -52,18 +52,20 @@ internal class TrackFlyoutViewHolder(
             onWagonOrderClickListener
         )
 
-    private val secondTimetableOverviewViewHolder = itemView.secondSummary?.let {
-        TrackDepartureSummaryViewHolder(
-            it,
-            onWagonOrderClickListener
-        )
-    }
-    private val thirdTimetableOverviewViewHolder = itemView.thirdSummary?.let {
-        TrackDepartureSummaryViewHolder(
-            it,
-            onWagonOrderClickListener
-        )
-    }
+    private val secondTimetableOverviewViewHolder =
+        itemView.findViewById<View>(R.id.secondSummary)?.let {
+            TrackDepartureSummaryViewHolder(
+                it,
+                onWagonOrderClickListener
+            )
+        }
+    private val thirdTimetableOverviewViewHolder =
+        itemView.findViewById<View>(R.id.thirdSummary)?.let {
+            TrackDepartureSummaryViewHolder(
+                it,
+                onWagonOrderClickListener
+            )
+        }
 
     private var disposable: Disposable? = null
 

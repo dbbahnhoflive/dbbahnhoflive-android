@@ -8,19 +8,20 @@ package de.deutschebahn.bahnhoflive.ui.station
 
 import android.view.View
 import androidx.lifecycle.Observer
+import androidx.viewpager2.widget.ViewPager2
+import com.google.android.material.tabs.TabLayout
 import com.google.android.material.tabs.TabLayoutMediator
 import de.deutschebahn.bahnhoflive.R
 import de.deutschebahn.bahnhoflive.backend.db.newsapi.model.News
-import kotlinx.android.synthetic.main.fragment_station.view.*
 
 class NewsViewManager(
     containerView: View,
     private val newsAdapter: NewsAdapter = NewsAdapter()
 ) : Observer<List<News>> {
 
-    val pageIndicator = containerView.newsPagerIndicator
+    val pageIndicator = containerView.findViewById<TabLayout>(R.id.newsPagerIndicator)
 
-    val viewPager = containerView.newsPager.apply {
+    val viewPager = containerView.findViewById<ViewPager2>(R.id.newsPager).apply {
         adapter = newsAdapter
 
         TabLayoutMediator(pageIndicator, this) { tab, position ->
