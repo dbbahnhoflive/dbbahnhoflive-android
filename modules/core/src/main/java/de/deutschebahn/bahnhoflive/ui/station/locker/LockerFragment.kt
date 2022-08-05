@@ -6,6 +6,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.View.INVISIBLE
 import android.view.ViewGroup
+import android.view.accessibility.AccessibilityNodeInfo
 import androidx.core.view.forEach
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
@@ -19,6 +20,18 @@ import de.deutschebahn.bahnhoflive.ui.map.MapPresetProvider
 import de.deutschebahn.bahnhoflive.ui.map.content.rimap.RimapFilter
 import de.deutschebahn.bahnhoflive.ui.station.StationViewModel
 
+// Extension to replace the spoken text from ANY view
+private fun View.setAccessibilityText(text: String) {
+    accessibilityDelegate = object : View.AccessibilityDelegate() {
+        override fun onInitializeAccessibilityNodeInfo(
+            host: View,
+            info: AccessibilityNodeInfo
+        ) {
+            super.onInitializeAccessibilityNodeInfo(host, info)
+            info.text = text
+        }
+    }
+}
 
 class LockerFragment : Fragment(), MapPresetProvider {
 
@@ -61,10 +74,8 @@ class LockerFragment : Fragment(), MapPresetProvider {
                             )
                         else
                             lockerSize.text = lockerTypes[it.lockerType.ordinal]
-                        lockerSize.contentDescription = lockerSize.text
 
                         lockerAmount.text = getString(R.string.locker_amount_lockers, it.amount)
-                        lockerAmount.contentDescription = lockerAmount.text
 
                         lockerDimensions.text = getString(
                             R.string.locker_dimensions,
@@ -72,13 +83,14 @@ class LockerFragment : Fragment(), MapPresetProvider {
                             it.dimWidth,
                             it.dimHeight
                         )
-                        lockerDimensions.contentDescription = lockerDimensions.text
-//                        getString(
-//                            R.string.locker_dimensions_VO,
-//                            it.dimDepth,
-//                            it.dimWidth,
-//                            it.dimHeight
-//                        )
+                        lockerDimensions.setAccessibilityText(
+                            getString(
+                                R.string.locker_dimensions_VO,
+                                it.dimDepth,
+                                it.dimWidth,
+                                it.dimHeight
+                            )
+                        )
 
                         if (it.paymentTypes.contains(PaymentType.CARD))
                             string += "Karte"
@@ -93,7 +105,6 @@ class LockerFragment : Fragment(), MapPresetProvider {
                             string += "unbekannt"
                         }
                         lockerPaymentTypes.text = getString(R.string.locker_payment, string)
-                        lockerPaymentTypes.contentDescription = lockerPaymentTypes.text
 
 
                         var maxLeaseDurationAsString = (it.datePart + it.timePart)
@@ -125,9 +136,11 @@ class LockerFragment : Fragment(), MapPresetProvider {
                             R.string.locker_max_lease_duration,
                             maxLeaseDurationAsString
                         )
-                        lockerMaxLeaseDuration.contentDescription = resources.getString(
-                            R.string.locker_max_lease_duration_VO,
-                            maxLeaseDurationAsStringVO
+                        lockerMaxLeaseDuration.setAccessibilityText(
+                            resources.getString(
+                                R.string.locker_max_lease_duration_VO,
+                                maxLeaseDurationAsStringVO
+                            )
                         )
 
 
@@ -138,12 +151,14 @@ class LockerFragment : Fragment(), MapPresetProvider {
                             string += maxLeaseDurationAsString //maxLeaseDurationDateTimePart
                         lockerFee.text = string
 
+                        val lockerFeePeriodsVO =
+                            resources.getStringArray(R.array.locker_fee_periods_VO)
                         string =
-                            String.format(lockerFeePeriods[it.feePeriod.ordinal], it.feeAsString)
+                            String.format(lockerFeePeriodsVO[it.feePeriod.ordinal], it.feeAsString)
                         if (it.feePeriod == FeePeriod.PER_MAX_LEASE_DURATION)
                             string += maxLeaseDurationAsStringVO
 
-                        lockerFee.contentDescription = "Hand" // string
+                        lockerFee.setAccessibilityText(string)
 
                     }.root)
                 }
