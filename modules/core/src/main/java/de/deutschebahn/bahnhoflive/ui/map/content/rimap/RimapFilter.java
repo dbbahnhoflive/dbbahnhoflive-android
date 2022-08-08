@@ -64,10 +64,15 @@ public class RimapFilter {
         return findFilterItem("Öffentlicher Nahverkehr", "SEV");
     }
 
+    public Item findLockerFilterItem() {
+        return findFilterItem("Bahnhofseinrichtungen", "Schließfach");
+    }
+
     public void checkOnlyHafas(boolean check) {
         checkAllItems(false);
 
     }
+
 
     public Filter findHafasFilterItem() {
         return HAFAS_FILTER;

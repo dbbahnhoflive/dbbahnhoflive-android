@@ -390,6 +390,7 @@
 
     <string name="locker_max_lease_duration">"Max. Mietdauer:\u0020%s"</string>
     <string name="locker_max_lease_duration_VO">"Maximale Mietdauer :\u0020%s"</string>
+    <string name="locker_flyout_description_link">"Informationen zu den Schließfächern finden Sie unter Bahnhofsinformationen."</string>
 
     <string-array name="locker_fee_periods">
         <item>%s / Unbekannt</item>

@@ -226,7 +226,15 @@ public class MapOverlayFragment extends Fragment implements OnMapReadyCallback, 
 
                     final List<MarkerBinder> categoryPins = categoryListMapContentPreserver.get(filterItem);
 
-                    final RimapMarkerContent markerContent = new RimapMarkerContent(item, configItem, mapIconResId, RimapConfig.getFlyoutIconIdentifier(context, configItem, item.name));
+                    final MarkerContent markerContent;
+
+                    if (item.menucat == "Bahnhofseinrichtungen" && item.menusubcat == "Schließfach") {
+                        Log.d("cr", "Schliessfach");
+                        final StationProvider stationProvider = () -> stationResource.getData().getValue();
+                        markerContent = new LockersMarkerContent(item, stationProvider);
+                    } else
+                        markerContent = new RimapMarkerContent(item, configItem, mapIconResId, RimapConfig.getFlyoutIconIdentifier(context, configItem, item.name));
+
 
                     if (markerContent.getViewType() == MarkerContent.ViewType.TRACK) {
                         mapViewModel.setTracksAvailable();
@@ -247,6 +255,61 @@ public class MapOverlayFragment extends Fragment implements OnMapReadyCallback, 
             applyInitialMarkerBinder();
 
         });
+
+//        mapViewModel.getLockers().getData().observe(this, lockers -> {
+//
+//            if (lockers == null) {
+//                return;
+//            }
+//
+//            final RimapFilter.Item filterItem = rimapFilter.findLockerFilterItem();
+//            if (filterItem == null) {
+//                return;
+//            }
+//
+//            final HashMap<Filter, List<MarkerBinder>> categorizedMarkerBinders = new HashMap<>(lockers.size());
+//            final MapContentPreserver<Filter, List<MarkerBinder>> categoryListMapContentPreserver = new MapContentPreserver<>(categorizedMarkerBinders, new ArrayListFactory<>());
+//
+//            final List<MarkerBinder> allMarkerBinders = new ArrayList<>();
+//
+//            final StationProvider stationProvider = () -> stationResource.getData().getValue();
+//
+//            for (Locker item : lockers) {
+//                if (item == null) {
+//                    continue;
+//                }
+//
+//
+////                RimapConfig.Item configItem = rimapConfig.itemFor(item.menucat, item.menusubcat);
+////                if (configItem == null) {
+////                    continue;
+////                }
+////                final int mapIconResId = RimapConfig.getMapIconIdentifier(context, configItem, item.name);
+////                if (mapIconResId == 0) {
+////                    Log.d("requestRimapItems", "icon is null for: " + item.name);
+////                    continue;
+////                }
+//
+//
+//                final List<MarkerBinder> categoryPins = categoryListMapContentPreserver.get(filterItem);
+//
+//                RimapConfig.Item configItem = rimapConfig.itemFor("Bahnhofseinrichtungen", "Schließfach");
+//                final int mapIconResId = RimapConfig.getMapIconIdentifier(context, configItem, "lockers");
+//
+//
+//                final RimapMarkerContent markerContent = new RimapMarkerContent(item, configItem, mapIconResId, RimapConfig.getFlyoutIconIdentifier(context, configItem, "Schließfach"));
+//
+////                final LockersMarkerContent lockerContent = new LockersMarkerContent(item, stationProvider);
+//
+//                final MarkerBinder markerLockerBinder = new MarkerBinder(markerContent, mapViewModel.getZoom(), mapViewModel.getLevel(), filterItem);
+//                updateInitialMarkerBinder(markerLockerBinder);
+//                allMarkerBinders.add(markerLockerBinder);
+//                categoryPins.add(markerLockerBinder);
+//            }
+//
+//            content.setMarkerBinders(Content.Source.RIMAP, allMarkerBinders, categorizedMarkerBinders);
+//            content.updateVisibilities();
+//        });
 
         mapViewModel.getRailReplacementResource().getData().observe(this, rrtPoints -> {
             if (rrtPoints == null) {
@@ -284,6 +347,7 @@ public class MapOverlayFragment extends Fragment implements OnMapReadyCallback, 
 
                 allMarkerBinders.add(markerBinder);
                 categoryPins.add(markerBinder);
+
             }
 
             content.setMarkerBinders(Content.Source.RIMAPS_RRT, allMarkerBinders, categorizedMarkerBinders);
