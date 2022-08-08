@@ -15,6 +15,7 @@ import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.Observer
 import de.deutschebahn.bahnhoflive.R
 import de.deutschebahn.bahnhoflive.analytics.TrackingManager
+import de.deutschebahn.bahnhoflive.databinding.FragmentLocalTransportBinding
 import de.deutschebahn.bahnhoflive.repository.HafasStationsResource
 import de.deutschebahn.bahnhoflive.repository.StationResource
 import de.deutschebahn.bahnhoflive.ui.LoadingContentDecorationViewHolder
@@ -22,8 +23,6 @@ import de.deutschebahn.bahnhoflive.ui.station.StationViewModel
 import de.deutschebahn.bahnhoflive.ui.timetable.localtransport.DeparturesActivity
 import de.deutschebahn.bahnhoflive.view.BottomMarginLinker
 import de.deutschebahn.bahnhoflive.view.FullBottomSheetDialogFragment
-import kotlinx.android.synthetic.main.fragment_local_transport.*
-import kotlinx.android.synthetic.main.fragment_local_transport.view.*
 
 class LocalTransportFragment : FullBottomSheetDialogFragment() {
 
@@ -81,20 +80,23 @@ class LocalTransportFragment : FullBottomSheetDialogFragment() {
         inflater: LayoutInflater,
         container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View? =
-        inflater.inflate(R.layout.fragment_local_transport, container, false)
-
-    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        super.onViewCreated(view, savedInstanceState)
-
-        view.pageTitle?.apply {
-            text = HtmlCompat.fromHtml(getString(R.string.template_local_transport_connections, localTransportViewModel.MAX_NEARBY_DEPARTURES_DISTANCE), 0)
-            contentDescription = getString (R.string.sr_template_local_transport_connections, localTransportViewModel.MAX_NEARBY_DEPARTURES_DISTANCE)
+    ): View = FragmentLocalTransportBinding.inflate(inflater, container, false).apply {
+        pageTitle.apply {
+            text = HtmlCompat.fromHtml(
+                getString(
+                    R.string.template_local_transport_connections,
+                    localTransportViewModel.MAX_NEARBY_DEPARTURES_DISTANCE
+                ), 0
+            )
+            contentDescription = getString(
+                R.string.sr_template_local_transport_connections,
+                localTransportViewModel.MAX_NEARBY_DEPARTURES_DISTANCE
+            )
         }
 
-        close_button.setOnClickListener { dismiss() }
+        closeButton.setOnClickListener { dismiss() }
 
-        val hafasStationsContainerHolder = LoadingContentDecorationViewHolder(view_flipper)
+        val hafasStationsContainerHolder = LoadingContentDecorationViewHolder(viewFlipper)
         recycler.apply {
             adapter = localTransportsAdapter
         }
@@ -106,7 +108,7 @@ class LocalTransportFragment : FullBottomSheetDialogFragment() {
             )
             if (hafasStations != null && hafasStations.isNotEmpty()) {
                 hafasStationsContainerHolder.showContent()
-                view.requestLayout()
+                root.requestLayout()
             } else {
                 hafasStationsContainerHolder.showEmpty()
             }
@@ -118,8 +120,10 @@ class LocalTransportFragment : FullBottomSheetDialogFragment() {
             }
         })
 
-        appBar.addOnLayoutChangeListener(BottomMarginLinker(view_flipper))
-    }
+        appBar.addOnLayoutChangeListener(BottomMarginLinker(viewFlipper))
+
+    }.root
+
 
     override fun onDestroy() {
         super.onDestroy()
