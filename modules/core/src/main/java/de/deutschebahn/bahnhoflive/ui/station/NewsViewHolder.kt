@@ -8,38 +8,36 @@ package de.deutschebahn.bahnhoflive.ui.station
 
 import android.animation.ObjectAnimator
 import android.animation.ValueAnimator
-import android.view.LayoutInflater
 import android.view.View
-import android.view.ViewGroup
 import android.view.animation.LinearInterpolator
 import android.widget.ImageView
 import android.widget.TextView
 import androidx.core.view.get
-import de.deutschebahn.bahnhoflive.R
 import de.deutschebahn.bahnhoflive.backend.db.newsapi.model.News
+import de.deutschebahn.bahnhoflive.databinding.ItemNewsBinding
 import de.deutschebahn.bahnhoflive.ui.ViewHolder
 import de.deutschebahn.bahnhoflive.ui.station.news.groupIcon
 import de.deutschebahn.bahnhoflive.view.ItemClickListener
-import kotlinx.android.synthetic.main.item_news.view.*
 
-class NewsViewHolder(parent: ViewGroup, itemClickListener: ItemClickListener<News?>? = null) : ViewHolder<News>(parent, R.layout.item_news) {
+class NewsViewHolder(
+    itemNewsBinding: ItemNewsBinding,
+    itemClickListener: ItemClickListener<News?>? = null
+) : ViewHolder<News>(itemNewsBinding.root) {
 
-    val newsHeadline: TextView? = itemView.newsHeadline
-    val newsCopy: TextView? = itemView.newsCopy
-    val linkButton: View? = itemView.btnLink
-    val iconView: ImageView? = itemView.icon
+    val newsHeadline: TextView = itemNewsBinding.newsHeadline
+    val newsCopy: TextView = itemNewsBinding.newsCopy
+    val linkButton: View = itemNewsBinding.btnLink
+    val iconView: ImageView = itemNewsBinding.icon
 
     init {
         itemClickListener?.also { itemClickListener ->
-            itemView.setOnClickListener {
+            itemNewsBinding.root.setOnClickListener {
                 itemClickListener(item, adapterPosition)
             }
         }
 
-        itemView.animatedHeadlineScroller.also { scroller ->
-            val layoutInflater = LayoutInflater.from(itemView.context)
-
-            val container = scroller.animatedHeadlineContainer
+        itemNewsBinding.animatedHeadlineScroller.also { scroller ->
+            val container = itemNewsBinding.animatedHeadlineContainer
 
             var width = 0
             val animator = ObjectAnimator().also { animator ->
@@ -105,10 +103,10 @@ class NewsViewHolder(parent: ViewGroup, itemClickListener: ItemClickListener<New
     override fun onBind(item: News?) {
         super.onBind(item)
 
-        newsHeadline?.text = item?.title
+        newsHeadline.text = item?.title
 
-        newsCopy?.text = item?.summary
+        newsCopy.text = item?.summary
 
-        iconView?.setImageResource(item?.groupIcon()?.icon ?: 0)
+        iconView.setImageResource(item?.groupIcon()?.icon ?: 0)
     }
 }
