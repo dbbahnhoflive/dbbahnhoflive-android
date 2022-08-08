@@ -9,8 +9,10 @@ package de.deutschebahn.bahnhoflive.ui.station.news
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import de.deutschebahn.bahnhoflive.backend.db.newsapi.model.News
+import de.deutschebahn.bahnhoflive.databinding.CardExpandableCouponBinding
 import de.deutschebahn.bahnhoflive.view.ItemClickListener
 import de.deutschebahn.bahnhoflive.view.SingleSelectionManager
+import de.deutschebahn.bahnhoflive.view.inflater
 
 class CouponAdapter(val itemClickListener: ItemClickListener<News>) :
     RecyclerView.Adapter<CouponViewHolder>() {
@@ -24,7 +26,11 @@ class CouponAdapter(val itemClickListener: ItemClickListener<News>) :
             notifyDataSetChanged()
         }
 
-    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int) = CouponViewHolder(parent, singleSelectionManager, itemClickListener)
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int) = CouponViewHolder(
+        CardExpandableCouponBinding.inflate(parent.inflater, parent, false),
+        singleSelectionManager,
+        itemClickListener
+    )
 
     override fun getItemCount() = items?.size ?: 0
 

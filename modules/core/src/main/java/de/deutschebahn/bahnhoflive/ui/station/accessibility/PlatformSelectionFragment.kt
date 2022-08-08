@@ -2,13 +2,11 @@ package de.deutschebahn.bahnhoflive.ui.station.accessibility
 
 import android.os.Bundle
 import android.view.LayoutInflater
-import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.activityViewModels
-import de.deutschebahn.bahnhoflive.R
+import de.deutschebahn.bahnhoflive.databinding.FragmentPlatformSelectionBinding
 import de.deutschebahn.bahnhoflive.ui.station.StationViewModel
 import de.deutschebahn.bahnhoflive.view.FullBottomSheetDialogFragment
-import kotlinx.android.synthetic.main.fragment_platform_selection.view.*
 
 class PlatformSelectionFragment : FullBottomSheetDialogFragment() {
 
@@ -18,14 +16,10 @@ class PlatformSelectionFragment : FullBottomSheetDialogFragment() {
         inflater: LayoutInflater,
         container: ViewGroup?,
         savedInstanceState: Bundle?
-    ) = inflater.inflate(R.layout.fragment_platform_selection, container, false)
-
-    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        super.onViewCreated(view, savedInstanceState)
-
+    ) = FragmentPlatformSelectionBinding.inflate(inflater, container, false).apply {
         viewModel.accessibilityPlatformsAndSelectedLiveData.observe(viewLifecycleOwner) { platformsAndSelection ->
             platformsAndSelection.first?.also { platforms ->
-                with(view.picker) {
+                with(picker) {
 
                     minValue = 0
                     maxValue = platforms.size - 1
@@ -34,7 +28,7 @@ class PlatformSelectionFragment : FullBottomSheetDialogFragment() {
                         platforms[index].name
                     }
 
-                    view.button_apply.setOnClickListener {
+                    buttonApply.setOnClickListener {
                         viewModel.setSelectedAccessibilityPlatform(platforms[value])
 
                         dismiss()
@@ -53,8 +47,10 @@ class PlatformSelectionFragment : FullBottomSheetDialogFragment() {
 
         }
 
-        view.close_button.setOnClickListener {
+        closeButton.setOnClickListener {
             dismiss()
         }
-    }
+
+    }.root
+
 }

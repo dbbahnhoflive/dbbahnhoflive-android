@@ -12,20 +12,21 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import de.deutschebahn.bahnhoflive.BaseApplication
-import de.deutschebahn.bahnhoflive.R
 import de.deutschebahn.bahnhoflive.analytics.TrackingManager
 import de.deutschebahn.bahnhoflive.backend.hafas.model.HafasStation
+import de.deutschebahn.bahnhoflive.databinding.FragmentFavoritesBinding
 import de.deutschebahn.bahnhoflive.persistence.FavoriteStationsStore
 import de.deutschebahn.bahnhoflive.repository.InternalStation
 import de.deutschebahn.bahnhoflive.ui.DbStationWrapper
 import de.deutschebahn.bahnhoflive.ui.search.HafasStationSearchResult
 import de.deutschebahn.bahnhoflive.ui.search.StoredStationSearchResult
-import kotlinx.android.synthetic.main.fragment_favorites.*
 
 class FavoritesFragment : androidx.fragment.app.Fragment() {
 
     private var favoriteHafasStationsStore: FavoriteStationsStore<HafasStation>? = null
     private var favoriteDbStationsStore: FavoriteStationsStore<InternalStation>? = null
+
+    private var viewBinding: FragmentFavoritesBinding? = null
 
     private lateinit var stationImageResolver: StationImageResolver
 
@@ -55,18 +56,13 @@ class FavoritesFragment : androidx.fragment.app.Fragment() {
         inflater: LayoutInflater,
         container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View? =
-        inflater.inflate(R.layout.fragment_favorites, container, false)
+    ): View = FragmentFavoritesBinding.inflate(inflater, container, false).apply {
+        viewBinding = this
 
-    private var favoritesAdapter: FavoritesAdapter? = null
-
-    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        super.onViewCreated(view, savedInstanceState)
-
-        favoritesAdapter = FavoritesAdapter(this, TrackingManager())
+        favoritesAdapter = FavoritesAdapter(this@FavoritesFragment, TrackingManager())
 
         val dividerItemDecoration = androidx.recyclerview.widget.DividerItemDecoration(
-            view.context,
+            context,
             androidx.recyclerview.widget.DividerItemDecoration.VERTICAL
         )
         recycler.apply {
@@ -75,7 +71,17 @@ class FavoritesFragment : androidx.fragment.app.Fragment() {
         }
 
         registerUnhandledClickListenerIfVisible()
+
+    }.root
+
+    override fun onDestroyView() {
+        viewBinding = null
+
+        super.onDestroyView()
     }
+
+    private var favoritesAdapter: FavoritesAdapter? = null
+
 
     private val dbFavoritesListener = FavoriteStationsStore.Listener<InternalStation> {
         refreshFavorites()
@@ -123,7 +129,7 @@ class FavoritesFragment : androidx.fragment.app.Fragment() {
                         else -> it
                     }
                 }.also {
-                    viewFlipper.displayedChild = if (it.isEmpty()) 1 else 0
+                    viewBinding?.viewFlipper?.displayedChild = if (it.isEmpty()) 1 else 0
                 }
             }
         }

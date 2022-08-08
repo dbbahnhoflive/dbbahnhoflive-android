@@ -6,12 +6,11 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.DialogFragment
-import de.deutschebahn.bahnhoflive.R
 import de.deutschebahn.bahnhoflive.analytics.ConsentState
 import de.deutschebahn.bahnhoflive.analytics.TrackingManager
+import de.deutschebahn.bahnhoflive.databinding.FragmentConsentBinding
 import de.deutschebahn.bahnhoflive.repository.AssetDocumentBroker
 import de.deutschebahn.bahnhoflive.ui.WebViewActivity
-import kotlinx.android.synthetic.main.fragment_consent.view.*
 
 class ConsentFragment : DialogFragment() {
 
@@ -21,11 +20,7 @@ class ConsentFragment : DialogFragment() {
         inflater: LayoutInflater,
         container: ViewGroup?,
         savedInstanceState: Bundle?
-    ) = inflater.inflate(R.layout.fragment_consent, container, false)
-
-    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-
-
+    ) = FragmentConsentBinding.inflate(inflater, container, false).apply {
         val onClickListener: (v: View) -> Unit = {
             startActivity(
                 WebViewActivity.createIntent(
@@ -35,18 +30,24 @@ class ConsentFragment : DialogFragment() {
                 )
             )
         }
-        view.consentCopy1.setOnClickListener(onClickListener)
-        view.consentCopy2.setOnClickListener(onClickListener)
+        consentCopy1.setOnClickListener(onClickListener)
+        consentCopy2.setOnClickListener(onClickListener)
 
-        view.buttonDissent.setOnClickListener {
+        buttonDissent.setOnClickListener {
             trackingManager.setConsented(false)
             close()
         }
 
-        view.buttonConsent.setOnClickListener {
+        buttonConsent.setOnClickListener {
             trackingManager.setConsented(true)
             close()
         }
+
+    }.root
+
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+
+
 
     }
 

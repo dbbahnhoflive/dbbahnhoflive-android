@@ -19,6 +19,7 @@ import androidx.recyclerview.widget.RecyclerView;
 public class ViewHolder<T> extends RecyclerView.ViewHolder {
     private T item;
 
+    @Deprecated
     public ViewHolder(ViewGroup parent, int layout) {
         this(LayoutInflater.from(parent.getContext()).inflate(layout, parent, false));
     }

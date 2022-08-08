@@ -21,7 +21,6 @@ import de.deutschebahn.bahnhoflive.ui.station.HistoryFragment
 import de.deutschebahn.bahnhoflive.ui.station.StationViewModel
 import de.deutschebahn.bahnhoflive.ui.station.timetable.TimetableViewHelper
 import de.deutschebahn.bahnhoflive.ui.timetable.WagenstandFragment
-import kotlinx.android.synthetic.main.activity_consent.view.*
 
 class JourneyFragment() : Fragment(), MapPresetProvider {
 

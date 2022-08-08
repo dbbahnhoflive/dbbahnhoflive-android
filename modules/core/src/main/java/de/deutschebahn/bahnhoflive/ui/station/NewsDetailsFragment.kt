@@ -20,11 +20,10 @@ import de.deutschebahn.bahnhoflive.R
 import de.deutschebahn.bahnhoflive.analytics.IssueTracker
 import de.deutschebahn.bahnhoflive.analytics.TrackingManager
 import de.deutschebahn.bahnhoflive.analytics.UncriticalIssueException
+import de.deutschebahn.bahnhoflive.databinding.FragmentNewsDetailsBinding
 import de.deutschebahn.bahnhoflive.ui.station.news.groupIcon
 import de.deutschebahn.bahnhoflive.util.startSafely
 import de.deutschebahn.bahnhoflive.view.FullBottomSheetDialogFragment
-import kotlinx.android.synthetic.main.fragment_news_details.*
-import kotlinx.android.synthetic.main.fragment_news_details.view.*
 
 class NewsDetailsFragment : FullBottomSheetDialogFragment() {
 
@@ -38,59 +37,60 @@ class NewsDetailsFragment : FullBottomSheetDialogFragment() {
         }
     }
 
-    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?) =
-        inflater.inflate(R.layout.fragment_news_details, container, false)
+    override fun onCreateView(
+        inflater: LayoutInflater,
+        container: ViewGroup?,
+        savedInstanceState: Bundle?
+    ) =
+        FragmentNewsDetailsBinding.inflate(inflater, container, false).apply {
 
-    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        super.onViewCreated(view, savedInstanceState)
+            newsEntry.observe(viewLifecycleOwner, Observer { news ->
+                headline.text = news?.title
 
-        newsEntry.observe(viewLifecycleOwner, Observer { news ->
-            view.headline.text = news?.title
+                with(subtitle) {
+                    val subtitle = news?.subtitle?.takeUnless { it.isBlank() }
+                    text = subtitle
+                    visibility = if (subtitle == null) View.GONE else View.VISIBLE
+                }
 
-            with(view.subtitle) {
-                val subtitle = news?.subtitle?.takeUnless { it.isBlank() }
-                text = subtitle
-                visibility = if (subtitle == null) View.GONE else View.VISIBLE
-            }
+                copy.text = news?.content
 
-            view.copy.text = news?.content
-
-            image.visibility = if (news?.decodedImage?.let { imageByteArray ->
-                    try {
-                        image.setImageBitmap(
-                            BitmapFactory.decodeByteArray(
-                                imageByteArray,
-                                0,
-                                imageByteArray.size
+                image.visibility = if (news?.decodedImage?.let { imageByteArray ->
+                        try {
+                            image.setImageBitmap(
+                                BitmapFactory.decodeByteArray(
+                                    imageByteArray,
+                                    0,
+                                    imageByteArray.size
+                                )
                             )
-                        )
-                        true
-                    } catch (e: Exception) {
-                        false
-                    }
-                } == true) View.VISIBLE else View.GONE
+                            true
+                        } catch (e: Exception) {
+                            false
+                        }
+                    } == true) View.VISIBLE else View.GONE
 
-            view.btnExternalLink?.apply {
-                news?.linkUri?.also { linkUri ->
-                    setOnClickListener { _ ->
-                        TrackingManager.fromActivity(activity).run {
-                            track(
-                                TrackingManager.TYPE_ACTION,
-                                TrackingManager.Screen.H1,
-                                TrackingManager.Action.TAP,
-                                TrackingManager.Entity.NEWS_BOX,
-                                TrackingManager.Entity.LINK
-                            )
-                            news.group.id.let { groupId ->
+                btnExternalLink.apply {
+                    news?.linkUri?.also { linkUri ->
+                        setOnClickListener { _ ->
+                            TrackingManager.fromActivity(activity).run {
                                 track(
                                     TrackingManager.TYPE_ACTION,
                                     TrackingManager.Screen.H1,
                                     TrackingManager.Action.TAP,
-                                    TrackingManager.Entity.NEWS_TYPE,
-                                    groupId.toString(),
+                                    TrackingManager.Entity.NEWS_BOX,
                                     TrackingManager.Entity.LINK
                                 )
-                            }
+                                news.group.id.let { groupId ->
+                                    track(
+                                        TrackingManager.TYPE_ACTION,
+                                        TrackingManager.Screen.H1,
+                                        TrackingManager.Action.TAP,
+                                        TrackingManager.Entity.NEWS_TYPE,
+                                        groupId.toString(),
+                                        TrackingManager.Entity.LINK
+                                    )
+                                }
                         }
 
                         if (!Intent(Intent.ACTION_VIEW, linkUri).startSafely(context)) {
@@ -108,17 +108,19 @@ class NewsDetailsFragment : FullBottomSheetDialogFragment() {
                             }
                         }
 
+                        }
+                        setText(
+                            news.groupIcon()?.linkButtonText ?: R.string.button_news_external_link
+                        )
+                        visibility = View.VISIBLE
+                    } ?: kotlin.run {
+                        visibility = View.GONE
                     }
-                    setText(news.groupIcon()?.linkButtonText ?: R.string.button_news_external_link)
-                    visibility = View.VISIBLE
-                } ?: kotlin.run {
-                    visibility = View.GONE
                 }
-            }
-        })
+            })
 
-        view.btnClose.setOnClickListener { dismiss() }
-    }
+            btnClose.setOnClickListener { dismiss() }
+        }.root
 
     companion object {
         fun create(newsIndex: Int) = NewsDetailsFragment().apply {
