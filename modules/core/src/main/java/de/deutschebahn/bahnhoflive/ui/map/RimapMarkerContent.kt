@@ -112,8 +112,11 @@ private val mapIcon: Int, @field:DrawableRes
     }
 
     override fun getViewType(): MarkerContent.ViewType =
-        if (rimapPOI.type in MenuMapping.PLATFORM_TYPES) ViewType.TRACK
-        else super.getViewType()
+        when (rimapPOI.type) {
+            in MenuMapping.PLATFORM_TYPES -> ViewType.TRACK
+            MenuMapping.LOCKER -> ViewType.LOCKERS
+            else -> super.getViewType()
+        }
 
     /**
      * This method currently doesn't bother checking if this is actually a track / platform instance.

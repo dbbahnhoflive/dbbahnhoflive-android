@@ -15,72 +15,84 @@
     android:layout_marginRight="@dimen/tiny_space"
     android:orientation="vertical">
 
-    <include layout="@layout/header_flyout" />
+    <include
+        layout="@layout/header_flyout"
+        android:id="@+id/header" />
 
-    <androidx.core.widget.NestedScrollView
+    <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
-        android:layout_height="0dp"
+        android:layout_height="wrap_content"
         android:layout_weight="1"
-        android:fillViewport="true">
+        android:background="@color/white"
+        android:paddingStart="@dimen/default_space_half"
+        android:paddingTop="@dimen/default_space_half"
+        android:paddingEnd="@dimen/default_space_half">
 
-        <androidx.constraintlayout.widget.ConstraintLayout
-            android:layout_width="match_parent"
+        <TextView
+            android:id="@+id/text"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:background="@color/white"
-            android:paddingStart="@dimen/default_space_half"
-            android:paddingTop="@dimen/default_space_half"
-            android:paddingEnd="@dimen/default_space_half">
+            android:layout_margin="@dimen/default_space_half"
+            android:drawablePadding="@dimen/small_space"
+            android:gravity="center_vertical"
+            android:textSize="@dimen/textsize_h3"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintVertical_bias="0"
+            app:layout_constraintVertical_chainStyle="packed"
+            tools:text="Erdgeschoss" />
+
+
+        <androidx.core.widget.NestedScrollView
+            android:id="@+id/descriptionContainer"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:clipToPadding="false"
+            android:orientation="vertical"
+            android:paddingBottom="@dimen/default_space_half"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintHorizontal_bias="1.0"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintRight_toLeftOf="@+id/external_link"
+            app:layout_constraintTop_toBottomOf="@+id/text"
+
+            >
 
             <TextView
-                android:id="@+id/text"
-                android:layout_width="0dp"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_margin="@dimen/default_space_half"
-                android:drawablePadding="@dimen/small_space"
-                android:gravity="center_vertical"
-                android:textSize="@dimen/textsize_h3"
-                android:textStyle="bold"
-                app:layout_constraintLeft_toLeftOf="parent"
-                app:layout_constraintRight_toRightOf="parent"
-                app:layout_constraintTop_toTopOf="parent"
-                app:layout_constraintVertical_bias="0"
-                app:layout_constraintVertical_chainStyle="packed"
-                tools:text="Erdgeschoss" />
-
-            <TextView
-                android:id="@+id/description"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_margin="@dimen/default_space_half"
                 android:lineSpacingMultiplier="1.2"
                 android:textSize="@dimen/textsize_h3"
-                android:paddingEnd="@dimen/default_space"
-                android:text="@string/locker_flyout_description_link"
-                app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintEnd_toStartOf="@+id/external_link"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/sub_caption_text" />
+                android:id="@+id/description"
+                android:layout_marginStart="@dimen/default_space_half"
+                android:layout_marginEnd="@dimen/default_space"
+                android:layout_gravity="center_vertical"
+                android:text="@string/locker_flyout_description_link">
 
-            <ImageButton
-                android:id="@+id/external_link"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginEnd="@dimen/default_space_half"
-                android:layout_marginBottom="@dimen/default_space"
-                android:background="@drawable/shape_circle_button"
-                android:contentDescription="@string/sr_link_external"
-                android:elevation="@dimen/default_elevation"
-                android:src="@drawable/app_extern_link"
-                app:elevation="@dimen/default_elevation"
-                app:layout_constraintBottom_toBottomOf="@+id/description"
-                app:layout_constraintRight_toRightOf="parent"
-                app:layout_constraintTop_toTopOf="@+id/description" />
+            </TextView>
 
-        </androidx.constraintlayout.widget.ConstraintLayout>
 
-    </androidx.core.widget.NestedScrollView>
+        </androidx.core.widget.NestedScrollView>
 
+        <ImageButton
+            android:id="@+id/external_link"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="@dimen/default_space_half"
+            android:layout_marginBottom="@dimen/default_space"
+            android:background="@drawable/shape_circle_button"
+            android:contentDescription="@string/sr_link_external"
+            android:elevation="@dimen/default_elevation"
+            android:src="@drawable/app_link"
+            app:elevation="@dimen/default_elevation"
+            app:layout_constraintBottom_toBottomOf="@+id/descriptionContainer"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintTop_toTopOf="@+id/descriptionContainer"
+
+            />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
 
 </LinearLayout>
 

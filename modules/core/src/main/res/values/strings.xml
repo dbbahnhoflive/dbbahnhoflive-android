@@ -371,11 +371,11 @@
     <string name="rail_replacement_entry_label_singular">An diesem Bahnhof finden Sie folgende Ersatzhaltestelle:</string>
 
     <string name="locker_entry_label">An diesem Bahnhof können Sie Ihr Gepäck sicher aufbewahren. Alle Größenangaben zu den Schließfächern sind Länge, Breite und Höhe in Zentimeter. Bitte beachten Sie auch die Nutzungsbedingungen vor Ort.</string>
-    <string name="locker_amount_lockers">Insgesamt %d Schliessfächer</string>
+    <string name="locker_amount_lockers">Insgesamt %d Schließfächer</string>
 
     <string-array name="locker_types">
         <item>Unbekanntes Schließfach</item>
-        <item>Kleines Schliessfach</item>
+        <item>Kleines Schließfach</item>
         <item>Mittleres Schließfach</item>
         <item>Großes Schließfach</item>
         <item>Jumbo-Schließfach</item>
