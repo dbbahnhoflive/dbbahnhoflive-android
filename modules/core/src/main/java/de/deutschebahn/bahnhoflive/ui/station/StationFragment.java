@@ -38,6 +38,7 @@ import de.deutschebahn.bahnhoflive.backend.db.newsapi.GroupId;
 import de.deutschebahn.bahnhoflive.backend.db.newsapi.model.Group;
 import de.deutschebahn.bahnhoflive.backend.local.model.ServiceContent;
 import de.deutschebahn.bahnhoflive.databinding.DynamicCardLayoutBinding;
+import de.deutschebahn.bahnhoflive.databinding.IncludeOccupancyBinding;
 import de.deutschebahn.bahnhoflive.repository.DbTimetableResource;
 import de.deutschebahn.bahnhoflive.repository.ElevatorsResource;
 import de.deutschebahn.bahnhoflive.repository.LoadingStatus;
@@ -537,7 +538,7 @@ public class StationFragment extends androidx.fragment.app.Fragment implements
             });
         }
 
-        final OccupancyViewBinder occupancyViewBinder = new OccupancyViewBinder(view,
+        final OccupancyViewBinder occupancyViewBinder = new OccupancyViewBinder(IncludeOccupancyBinding.bind(view.findViewById(R.id.occupancyView)),
                 v -> {
                     final StationNavigation stationNavigation = stationViewModel.getStationNavigation();
                     if (stationNavigation != null) {
