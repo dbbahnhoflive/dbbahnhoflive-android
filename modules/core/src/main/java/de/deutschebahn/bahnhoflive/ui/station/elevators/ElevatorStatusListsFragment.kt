@@ -11,7 +11,6 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.activityViewModels
-import androidx.lifecycle.Observer
 import de.deutschebahn.bahnhoflive.R
 import de.deutschebahn.bahnhoflive.tutorial.TutorialManager
 import de.deutschebahn.bahnhoflive.tutorial.TutorialView
@@ -61,12 +60,14 @@ class ElevatorStatusListsFragment : TwoTabsFragment(R.string.facilityStatus_over
         installFragment(tag, stationElevatorStatusFragment)
     }
 
-    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
+    override fun onCreateView(
+        inflater: LayoutInflater,
+        container: ViewGroup?,
+        savedInstanceState: Bundle?
+    ): View {
         val view = super.onCreateView(inflater, container, savedInstanceState)
 
-        if (view != null) {
-            ToolbarViewHolder(view, R.string.title_elevators_and_escalators)
-        }
+        ToolbarViewHolder(view, R.string.title_elevators_and_escalators)
 
         return view
     }
@@ -74,11 +75,11 @@ class ElevatorStatusListsFragment : TwoTabsFragment(R.string.facilityStatus_over
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        stationViewModel.selectedServiceContentType.observe(this, Observer {
+        stationViewModel.selectedServiceContentType.observe(this) {
             if (it != null) {
                 HistoryFragment.parentOf(this).pop()
             }
-        })
+        }
     }
 
     override fun onStart() {
