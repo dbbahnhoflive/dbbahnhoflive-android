@@ -17,7 +17,7 @@ import de.deutschebahn.bahnhoflive.ui.TimetableItemOverviewViewHolder
 open class TrainInfoOverviewViewHolder(view: View, protected val provider: TrainEvent.Provider) :
     TimetableItemOverviewViewHolder<TrainInfo>(view) {
 
-    private val wagonOrderIndicator: View
+    private val wagonOrderIndicator: View?
     private val issuesBinder: IssuesBinder
 
     protected val issueIndicator = itemView.findViewById<ImageView>(R.id.issue_indicator)
@@ -57,7 +57,8 @@ open class TrainInfoOverviewViewHolder(view: View, protected val provider: Train
                 }
 
                 issuesBinder.bindIssues(item, trainMovementInfo)
-                wagonOrderIndicator.visibility = if (item.shouldOfferWagenOrder()) View.VISIBLE else View.GONE
+                wagonOrderIndicator?.visibility =
+                    if (item.shouldOfferWagenOrder()) View.VISIBLE else View.GONE
 
                 return
             }
@@ -70,7 +71,7 @@ open class TrainInfoOverviewViewHolder(view: View, protected val provider: Train
         platformView?.text = null
 
         issuesBinder.clear()
-        wagonOrderIndicator.visibility = View.GONE
+        wagonOrderIndicator?.visibility = View.GONE
     }
 
 
