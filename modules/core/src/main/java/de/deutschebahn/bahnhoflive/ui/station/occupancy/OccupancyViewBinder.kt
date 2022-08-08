@@ -23,10 +23,9 @@ import de.deutschebahn.bahnhoflive.databinding.ItemOccupancyDayOfWeekBinding
 import de.deutschebahn.bahnhoflive.databinding.PopupOccupancyDayOfWeekBinding
 import de.deutschebahn.bahnhoflive.repository.occupancy.model.Occupancy
 import de.deutschebahn.bahnhoflive.view.inflater
-import kotlinx.android.synthetic.main.include_occupancy.view.*
 
 class OccupancyViewBinder(
-    includeOccupancyBinding: IncludeOccupancyBinding,
+    private val includeOccupancyBinding: IncludeOccupancyBinding,
     onShowDetailsListener: View.OnClickListener
 ) {
 
@@ -152,8 +151,8 @@ class OccupancyViewBinder(
         setTextColor(context.resources.getColor(colorRes))
     }
 
-    private val selectedDayView = view.dayOfWeekSpinner.also { textView ->
-        textView?.setOnClickListener {
+    private val selectedDayView = includeOccupancyBinding.dayOfWeekSpinner.also { textView ->
+        textView.setOnClickListener {
             dayOfWeekPopup.showAsDropDown(
                 textView,
                 textView.measuredWidth - dayOfWeekPopupView.root.measuredWidth,
@@ -163,7 +162,7 @@ class OccupancyViewBinder(
 
     }
 
-    private val pager = view.occupancyViewPager.apply {
+    private val pager = includeOccupancyBinding.occupancyViewPager.apply {
         adapter = dailyOccupancyAdapter
 
         registerOnPageChangeCallback(object : ViewPager2.OnPageChangeCallback() {
@@ -174,14 +173,17 @@ class OccupancyViewBinder(
             }
         })
 
-        TabLayoutMediator(view.dailyOccupancyPagerIndicator, this) { tab, position ->
+        TabLayoutMediator(
+            includeOccupancyBinding.dailyOccupancyPagerIndicator,
+            this
+        ) { tab, position ->
             tab.icon = resources.getDrawable(R.drawable.shape_page_indicator_news)
         }.attach()
 
     }
 
-    private val currentStatusView = view.valueCurrentOccupancy
-    private val currentStatusLabelView = view.labelCurrentOccupancy
+    private val currentStatusView = includeOccupancyBinding.valueCurrentOccupancy
+    private val currentStatusLabelView = includeOccupancyBinding.labelCurrentOccupancy
 
 
     var occupancy: Occupancy? = null
