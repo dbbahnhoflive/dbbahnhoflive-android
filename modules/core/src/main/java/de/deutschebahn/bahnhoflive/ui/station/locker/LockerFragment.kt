@@ -12,7 +12,6 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.View.INVISIBLE
 import android.view.ViewGroup
-import android.view.accessibility.AccessibilityNodeInfo
 import androidx.core.view.forEach
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
@@ -25,19 +24,7 @@ import de.deutschebahn.bahnhoflive.repository.locker.PaymentType
 import de.deutschebahn.bahnhoflive.ui.map.MapPresetProvider
 import de.deutschebahn.bahnhoflive.ui.map.content.rimap.RimapFilter
 import de.deutschebahn.bahnhoflive.ui.station.StationViewModel
-
-// Extension to replace the spoken text from ANY view
-private fun View.setAccessibilityText(text: String) {
-    accessibilityDelegate = object : View.AccessibilityDelegate() {
-        override fun onInitializeAccessibilityNodeInfo(
-            host: View,
-            info: AccessibilityNodeInfo
-        ) {
-            super.onInitializeAccessibilityNodeInfo(host, info)
-            info.text = text
-        }
-    }
-}
+import de.deutschebahn.bahnhoflive.util.setAccessibilityText
 
 class LockerFragment : Fragment(), MapPresetProvider {
 
@@ -112,36 +99,23 @@ class LockerFragment : Fragment(), MapPresetProvider {
                         }
                         lockerPaymentTypes.text = getString(R.string.locker_payment, string)
 
-
-                        var maxLeaseDurationAsString = (it.datePart + it.timePart)
-
-                        if (maxLeaseDurationAsString.length > 2)
-                            maxLeaseDurationAsString = maxLeaseDurationAsString.dropLast(2)
-
-
-                        var datePartVO = it.datePart
-                        var timePartVO = it.timePart
-
-                        datePartVO = datePartVO
-                            .replace("y", getString(R.string.date_years))
-                            .replace("m", getString(R.string.date_months))
-                            .replace("w", getString(R.string.date_weeks))
-                            .replace("d", getString(R.string.date_days))
-
-                        timePartVO = timePartVO
-                            .replace("s", getString(R.string.date_seconds))
-                            .replace("h", getString(R.string.date_hours))
-                            .replace("m", getString(R.string.date_minutes))
-
-                        var maxLeaseDurationAsStringVO = (datePartVO + timePartVO)
-
-                        if (maxLeaseDurationAsStringVO.length > 2)
-                            maxLeaseDurationAsStringVO = maxLeaseDurationAsStringVO.dropLast(2)
-
+                        val maxLeaseDurationAsString = it.getMaxLeaseDurationAsHumanReadableString()
                         lockerMaxLeaseDuration.text = resources.getString(
                             R.string.locker_max_lease_duration,
                             maxLeaseDurationAsString
                         )
+
+                        val maxLeaseDurationAsStringVO =
+                            it.getMaxLeaseDurationAsHumanReadableString(
+                                getString(R.string.date_years),
+                                getString(R.string.date_months),
+                                getString(R.string.date_weeks),
+                                getString(R.string.date_days),
+                                getString(R.string.date_hours),
+                                getString(R.string.date_minutes),
+                                getString(R.string.date_seconds)
+                            )
+
                         lockerMaxLeaseDuration.setAccessibilityText(
                             resources.getString(
                                 R.string.locker_max_lease_duration_VO,
@@ -154,7 +128,7 @@ class LockerFragment : Fragment(), MapPresetProvider {
                         string =
                             String.format(lockerFeePeriods[it.feePeriod.ordinal], it.feeAsString)
                         if (it.feePeriod == FeePeriod.PER_MAX_LEASE_DURATION)
-                            string += maxLeaseDurationAsString //maxLeaseDurationDateTimePart
+                            string += maxLeaseDurationAsString
                         lockerFee.text = string
 
                         val lockerFeePeriodsVO =

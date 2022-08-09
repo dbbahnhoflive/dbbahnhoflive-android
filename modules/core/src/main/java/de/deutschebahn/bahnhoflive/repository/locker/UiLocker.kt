@@ -6,6 +6,7 @@
 package de.deutschebahn.bahnhoflive.repository.locker
 
 import de.deutschebahn.bahnhoflive.backend.db.ris.locker.model.Locker
+import de.deutschebahn.bahnhoflive.util.Iso8601Duration
 
 enum class LockerType {
     UNKNOWN,
@@ -31,6 +32,8 @@ enum class FeePeriod {
 
 class UiLocker() {
 
+    private var maxLeaseDurationAsIso8601Duration: String = ""
+
     var amount: Int = 0
     var isShortTimeLocker: Boolean = false
     var dimWidth: Int = 0
@@ -44,8 +47,29 @@ class UiLocker() {
     var lockerType: LockerType = LockerType.UNKNOWN
     var feePeriod: FeePeriod = FeePeriod.UNKNOWN
 
-    var datePart: String = ""
-    var timePart: String = ""
+    fun getMaxLeaseDurationAsHumanReadableString(): String {
+        return Iso8601Duration(maxLeaseDurationAsIso8601Duration).getHumanReadableString()
+    }
+
+    fun getMaxLeaseDurationAsHumanReadableString(
+        yearsReplacement: String,
+        monthsReplacement: String,
+        weeksReplacement: String,
+        daysReplacement: String,
+        hoursReplacement: String,
+        minutesReplacement: String,
+        secondsReplacement: String
+    ): String {
+        return Iso8601Duration(maxLeaseDurationAsIso8601Duration).getHumanReadableString(
+            yearsReplacement,
+            monthsReplacement,
+            weeksReplacement,
+            daysReplacement,
+            hoursReplacement,
+            minutesReplacement,
+            secondsReplacement
+        )
+    }
 
     constructor(locker: Locker) : this() {
 
@@ -55,50 +79,12 @@ class UiLocker() {
         }
 
         var maxLeaseDuration1 = locker.maxLeaseDuration
-        if (maxLeaseDuration1 != null) {
+        if (maxLeaseDuration1 != null)
+            maxLeaseDurationAsIso8601Duration = maxLeaseDuration1
+        else
+            maxLeaseDurationAsIso8601Duration = ""
 
-
-            if (maxLeaseDuration1.contains("T")) {
-                var durationDateTime = maxLeaseDuration1.split("T")
-                datePart = durationDateTime[0]
-                timePart = durationDateTime[1]
-            } else {
-                datePart = maxLeaseDuration1
-            }
-
-
-            datePart = datePart.lowercase()
-                .replace("p", "")
-                .replace("y", "y, ")
-                .replace("m", "m, ")
-                .replace("w", "w, ")
-                .replace("d", "d, ")
-
-            timePart = timePart.lowercase()
-                .replace("s", "s, ")
-                .replace("h", "h, ")
-                .replace("m", "m, ")
-
-
-//            maxLeaseDurationAsString = (datePart + timePart)
-//
-//            if (maxLeaseDurationAsString.length > 2)
-//                maxLeaseDurationAsString = maxLeaseDurationAsString.dropLast(2)
-//
-//            maxLeaseDurationDateTimePart = maxLeaseDurationAsString
-
-            if (datePart.isNotEmpty())
-                isShortTimeLocker = false
-            else {
-                val hourIndex = ("0" + timePart).indexOf("h")
-                if (hourIndex >= 2) {
-                    val hours = ("0" + timePart).substring(hourIndex - 2, hourIndex).toInt()
-                    isShortTimeLocker = hours < 24
-                }
-            }
-
-
-        }
+        isShortTimeLocker = Iso8601Duration(locker.maxLeaseDuration).isLess24h
 
         lockerType = when (locker.size) {
             "SMALL" -> LockerType.SMALL
