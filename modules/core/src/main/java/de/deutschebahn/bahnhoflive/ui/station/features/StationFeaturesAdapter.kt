@@ -8,8 +8,9 @@ package de.deutschebahn.bahnhoflive.ui.station.features
 
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
+import de.deutschebahn.bahnhoflive.databinding.RowStationFeatureBinding
 import de.deutschebahn.bahnhoflive.view.ItemClickListener
-import java.util.*
+import de.deutschebahn.bahnhoflive.view.inflater
 
 internal class StationFeaturesAdapter(private val itemClickListener: ItemClickListener<StationFeature>) :
     RecyclerView.Adapter<StationFeatureViewHolder>() {
@@ -17,7 +18,13 @@ internal class StationFeaturesAdapter(private val itemClickListener: ItemClickLi
     private var orderedFeatures: List<StationFeature>? = ArrayList()
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): StationFeatureViewHolder {
-        return StationFeatureViewHolder(parent, itemClickListener)
+        return StationFeatureViewHolder(
+            RowStationFeatureBinding.inflate(
+                parent.inflater,
+                parent,
+                false
+            ), itemClickListener
+        )
     }
 
     override fun onBindViewHolder(holder: StationFeatureViewHolder, position: Int) {

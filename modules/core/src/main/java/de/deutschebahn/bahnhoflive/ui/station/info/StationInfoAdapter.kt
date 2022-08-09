@@ -10,6 +10,7 @@ import de.deutschebahn.bahnhoflive.R
 import de.deutschebahn.bahnhoflive.analytics.TrackingManager
 import de.deutschebahn.bahnhoflive.backend.local.model.ServiceContent
 import de.deutschebahn.bahnhoflive.backend.local.model.ServiceContentType
+import de.deutschebahn.bahnhoflive.databinding.CardExpandableStationInfoBinding
 import de.deutschebahn.bahnhoflive.repository.Station
 import de.deutschebahn.bahnhoflive.ui.feedback.WhatsAppInstallation
 import de.deutschebahn.bahnhoflive.ui.feedback.createPlaystoreIntent
@@ -17,6 +18,7 @@ import de.deutschebahn.bahnhoflive.ui.feedback.deviceName
 import de.deutschebahn.bahnhoflive.ui.station.CommonDetailsCardViewHolder
 import de.deutschebahn.bahnhoflive.util.MailUri
 import de.deutschebahn.bahnhoflive.view.SingleSelectionManager
+import de.deutschebahn.bahnhoflive.view.inflater
 
 class StationInfoAdapter(
     private val serviceContents: List<ServiceContent>,
@@ -44,7 +46,10 @@ class StationInfoAdapter(
             activityStarter
         )
         else -> ServiceContentViewHolder(
-            parent, singleSelectionManager, trackingManager, dbActionButtonParser
+            CardExpandableStationInfoBinding.inflate(parent.inflater, parent, false),
+            singleSelectionManager,
+            trackingManager,
+            dbActionButtonParser
         ) { dbActionButton: DbActionButton ->
             if (dbActionButton.type == DbActionButton.Type.ACTION) {
                 when (dbActionButton.data) {

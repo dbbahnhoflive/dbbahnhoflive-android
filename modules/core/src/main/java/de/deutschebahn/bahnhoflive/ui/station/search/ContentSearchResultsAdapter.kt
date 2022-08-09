@@ -9,6 +9,8 @@ package de.deutschebahn.bahnhoflive.ui.station.search
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import de.deutschebahn.bahnhoflive.analytics.TrackingManager
+import de.deutschebahn.bahnhoflive.databinding.ItemContentSearchBinding
+import de.deutschebahn.bahnhoflive.view.inflater
 
 class ContentSearchResultsAdapter(val trackingManager: TrackingManager) :
     RecyclerView.Adapter<ContentSearchResultViewHolder>() {
@@ -21,7 +23,13 @@ class ContentSearchResultsAdapter(val trackingManager: TrackingManager) :
         }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int) =
-        ContentSearchResultViewHolder(parent, trackingManager)
+        ContentSearchResultViewHolder(
+            ItemContentSearchBinding.inflate(
+                parent.inflater,
+                parent,
+                false
+            ), trackingManager
+        )
 
     override fun getItemCount() = list?.let { Math.max(it.size, 1) } ?: 0
 

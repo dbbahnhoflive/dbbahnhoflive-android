@@ -7,25 +7,24 @@
 package de.deutschebahn.bahnhoflive.ui.station.features
 
 import android.view.View
-import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.TextView
 import de.deutschebahn.bahnhoflive.R
+import de.deutschebahn.bahnhoflive.databinding.RowStationFeatureBinding
 import de.deutschebahn.bahnhoflive.ui.Status
 import de.deutschebahn.bahnhoflive.ui.ViewHolder
 import de.deutschebahn.bahnhoflive.view.ItemClickListener
-import kotlinx.android.synthetic.main.row_station_feature.view.*
 
 internal class StationFeatureViewHolder(
-    parent: ViewGroup,
+    rowStationFeatureBinding: RowStationFeatureBinding,
     itemClickListener: ItemClickListener<StationFeature>
-) : ViewHolder<StationFeature>(parent, R.layout.row_station_feature) {
+) : ViewHolder<StationFeature>(rowStationFeatureBinding.root) {
 
-    private val iconView: ImageView = itemView.icon
-    private val labelView: TextView = itemView.label
-    private val statusView: TextView = itemView.status
-    private val staticInfoView: TextView = itemView.staticInfo
-    private val button: View = itemView.button.apply {
+    private val iconView: ImageView = rowStationFeatureBinding.icon
+    private val labelView: TextView = rowStationFeatureBinding.label
+    private val statusView: TextView = rowStationFeatureBinding.status
+    private val staticInfoView: TextView = rowStationFeatureBinding.staticInfo
+    private val button: View = rowStationFeatureBinding.button.apply {
         setOnClickListener {
             item?.also {
                 itemClickListener(it, bindingAdapterPosition)

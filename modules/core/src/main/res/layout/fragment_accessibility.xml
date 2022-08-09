@@ -11,7 +11,9 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-    <include layout="@layout/titlebar_common" />
+    <include
+        layout="@layout/titlebar_common"
+        android:id="@+id/commonTitlebar" />
 
     <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
         android:id="@+id/refresher"

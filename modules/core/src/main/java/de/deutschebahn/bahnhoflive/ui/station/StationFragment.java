@@ -37,6 +37,9 @@ import de.deutschebahn.bahnhoflive.backend.db.fasta2.model.FacilityStatus;
 import de.deutschebahn.bahnhoflive.backend.db.newsapi.GroupId;
 import de.deutschebahn.bahnhoflive.backend.db.newsapi.model.Group;
 import de.deutschebahn.bahnhoflive.backend.local.model.ServiceContent;
+import de.deutschebahn.bahnhoflive.databinding.DynamicCardLayoutBinding;
+import de.deutschebahn.bahnhoflive.databinding.IncludeOccupancyBinding;
+import de.deutschebahn.bahnhoflive.repository.DbTimetableResource;
 import de.deutschebahn.bahnhoflive.repository.ElevatorsResource;
 import de.deutschebahn.bahnhoflive.repository.MergedStation;
 import de.deutschebahn.bahnhoflive.repository.Resource;
@@ -424,8 +427,8 @@ public class StationFragment extends androidx.fragment.app.Fragment implements
         if (station != null) {
             setStationName(station.getTitle());
         }
-        stationDetailCardCoordinator = new StationDetailCardCoordinator(view,
-                localTransportSummary, shopsSummary, elevatorsSummary);
+        stationDetailCardCoordinator = new StationDetailCardCoordinator(DynamicCardLayoutBinding.bind(view.findViewById(R.id.dynamicCardLayout)),
+                view.findViewById(R.id.liveCardsProgressFlipper), localTransportSummary, shopsSummary, elevatorsSummary);
         stationViewModel.getRimapStationInfoLiveData().observe(getViewLifecycleOwner(), stationDetailCardCoordinator.getRimapStationInfoObserver());
 
         view.findViewById(R.id.searchCard).setOnClickListener(v -> {
@@ -499,7 +502,7 @@ public class StationFragment extends androidx.fragment.app.Fragment implements
             });
         }
 
-        final OccupancyViewBinder occupancyViewBinder = new OccupancyViewBinder(view,
+        final OccupancyViewBinder occupancyViewBinder = new OccupancyViewBinder(IncludeOccupancyBinding.bind(view.findViewById(R.id.occupancyView)),
                 v -> {
                     final StationNavigation stationNavigation = stationViewModel.getStationNavigation();
                     if (stationNavigation != null) {

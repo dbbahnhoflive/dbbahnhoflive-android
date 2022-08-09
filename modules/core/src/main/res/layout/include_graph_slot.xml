@@ -27,7 +27,9 @@
                 layout="@layout/include_graph_bar"
                 android:id="@+id/graphBar" />
 
-            <include layout="@layout/include_graph_bar_highlight" />
+            <include
+                layout="@layout/include_graph_bar_highlight"
+                android:id="@+id/graphBarHighlighted" />
 
             <include
                 layout="@layout/include_graph_bar"

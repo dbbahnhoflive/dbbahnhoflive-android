@@ -6,6 +6,7 @@
 
 package de.deutschebahn.bahnhoflive.ui.station;
 
+import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -23,8 +24,16 @@ public class CommonDetailsCardViewHolder<T> extends SelectableItemViewHolder<T> 
     protected final TextView statusView;
     protected final ImageView iconView;
 
+    @Deprecated
     public CommonDetailsCardViewHolder(ViewGroup parent, int layout, SingleSelectionManager singleSelectionManager) {
         super(parent, layout, singleSelectionManager);
+        statusView = findTextView(R.id.status);
+        titleView = findTextView(R.id.title);
+        iconView = itemView.findViewById(R.id.icon);
+    }
+
+    public CommonDetailsCardViewHolder(View view, SingleSelectionManager singleSelectionManager) {
+        super(view, singleSelectionManager);
         statusView = findTextView(R.id.status);
         titleView = findTextView(R.id.title);
         iconView = itemView.findViewById(R.id.icon);
