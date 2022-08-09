@@ -17,7 +17,6 @@ import androidx.core.view.forEach
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import de.deutschebahn.bahnhoflive.R
-import de.deutschebahn.bahnhoflive.analytics.TrackingManager
 import de.deutschebahn.bahnhoflive.databinding.FragmentLockerBinding
 import de.deutschebahn.bahnhoflive.databinding.IncludeItemLockerBinding
 import de.deutschebahn.bahnhoflive.repository.locker.FeePeriod
@@ -185,11 +184,11 @@ class LockerFragment : Fragment(), MapPresetProvider {
 
         stationViewModel.topInfoFragmentTag = TAG
 
-        TrackingManager.fromActivity(activity).track(
-            TrackingManager.TYPE_STATE,
-            TrackingManager.Screen.D1,
-            TrackingManager.Category.SCHLIESSFAECHER
-        )
+//        TrackingManager.fromActivity(activity).track(
+//            TrackingManager.TYPE_STATE,
+//            TrackingManager.Screen.D1,
+//            TrackingManager.Category.SCHLIESSFAECHER
+//        )
     }
 
     override fun onStop() {

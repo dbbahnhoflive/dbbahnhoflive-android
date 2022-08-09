@@ -33,10 +33,6 @@ class UiLocker() {
 
     var amount: Int = 0
     var isShortTimeLocker: Boolean = false
-
-//    var maxLeaseDurationAsString: String = ""
-//    var maxLeaseDurationDateTimePart: String = ""
-
     var dimWidth: Int = 0
     var dimHeight: Int = 0
     var dimDepth: Int = 0

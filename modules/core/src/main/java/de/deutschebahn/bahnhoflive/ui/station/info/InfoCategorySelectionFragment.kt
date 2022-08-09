@@ -204,7 +204,7 @@ class InfoCategorySelectionFragment : CategorySelectionFragment(
 
     private fun addLockers() =
         lockersResource.data.value?.takeUnless { it.isEmpty() }?.let {
-            SimpleDynamicCategory(getText(R.string.stationinfo_lockers),
+            SimpleDynamicCategory(getText(R.string.locker_name),
                 R.drawable.bahnhofsausstattung_schlie_faecher,
                 TrackingManager.Category.SCHLIESSFAECHER,
                 Category.CategorySelectionListener { category ->

@@ -372,6 +372,7 @@
 
     <string name="locker_entry_label">An diesem Bahnhof können Sie Ihr Gepäck sicher aufbewahren. Alle Größenangaben zu den Schließfächern sind Länge, Breite und Höhe in Zentimeter. Bitte beachten Sie auch die Nutzungsbedingungen vor Ort.</string>
     <string name="locker_amount_lockers">Insgesamt %d Schließfächer</string>
+    <string name="locker_name">"locker"</string>
 
     <string-array name="locker_types">
         <item>Unbekanntes Schließfach</item>
