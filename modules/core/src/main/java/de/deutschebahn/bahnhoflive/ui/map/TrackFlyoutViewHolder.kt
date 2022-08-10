@@ -10,6 +10,7 @@ import android.view.View
 import android.view.ViewGroup
 import de.deutschebahn.bahnhoflive.R
 import de.deutschebahn.bahnhoflive.databinding.FlyoutTrackBinding
+import de.deutschebahn.bahnhoflive.databinding.ItemTrackTimetableOverviewBinding
 import de.deutschebahn.bahnhoflive.repository.LoadingStatus
 import de.deutschebahn.bahnhoflive.ui.LoadingContentDecorationViewHolder
 import de.deutschebahn.bahnhoflive.ui.station.timetable.OnWagonOrderClickListener
@@ -17,7 +18,6 @@ import de.deutschebahn.bahnhoflive.ui.station.timetable.TrackDepartureSummaryVie
 import de.deutschebahn.bahnhoflive.util.destroy
 import de.deutschebahn.bahnhoflive.view.inflater
 import io.reactivex.disposables.Disposable
-import io.reactivex.functions.Consumer
 
 internal class TrackFlyoutViewHolder(
     viewBinding: FlyoutTrackBinding,
@@ -48,21 +48,21 @@ internal class TrackFlyoutViewHolder(
 
     private val timetableOverviewViewHolder =
         TrackDepartureSummaryViewHolder(
-            viewBinding.departureOverview.root,
+            viewBinding.departureOverview,
             onWagonOrderClickListener
         )
 
     private val secondTimetableOverviewViewHolder =
         itemView.findViewById<View>(R.id.secondSummary)?.let {
             TrackDepartureSummaryViewHolder(
-                it,
+                ItemTrackTimetableOverviewBinding.bind(it),
                 onWagonOrderClickListener
             )
         }
     private val thirdTimetableOverviewViewHolder =
         itemView.findViewById<View>(R.id.thirdSummary)?.let {
             TrackDepartureSummaryViewHolder(
-                it,
+                ItemTrackTimetableOverviewBinding.bind(it),
                 onWagonOrderClickListener
             )
         }
@@ -74,25 +74,25 @@ internal class TrackFlyoutViewHolder(
 
         markerContent.track?.let { track ->
             disposable =
-                mapViewModel.createTrackTimetableObservable(track, Consumer { resourceState ->
+                mapViewModel.createTrackTimetableObservable(track) { resourceState ->
                     expandableListener?.invoke(false)
-                when {
-                    resourceState.loadingStatus == LoadingStatus.BUSY -> loadingContentDecorationViewHolder.showProgress()
-                    resourceState.error != null -> loadingContentDecorationViewHolder.showError()
-                    else -> resourceState.data?.apply {
-                        if (isEmpty()) {
-                            loadingContentDecorationViewHolder.showEmpty()
-                        } else {
-                            loadingContentDecorationViewHolder.showContent()
-                            expandableListener?.invoke(true)
-                        }
-                        timetableOverviewViewHolder.bind(firstOrNull())
+                    when {
+                        resourceState.loadingStatus == LoadingStatus.BUSY -> loadingContentDecorationViewHolder.showProgress()
+                        resourceState.error != null -> loadingContentDecorationViewHolder.showError()
+                        else -> resourceState.data?.apply {
+                            if (isEmpty()) {
+                                loadingContentDecorationViewHolder.showEmpty()
+                            } else {
+                                loadingContentDecorationViewHolder.showContent()
+                                expandableListener?.invoke(true)
+                            }
+                            timetableOverviewViewHolder.bind(firstOrNull())
 
-                        secondTimetableOverviewViewHolder?.bind(getOrNull(1))
-                        thirdTimetableOverviewViewHolder?.bind(getOrNull(2))
+                            secondTimetableOverviewViewHolder?.bind(getOrNull(1))
+                            thirdTimetableOverviewViewHolder?.bind(getOrNull(2))
+                        }
                     }
                 }
-            })
         }
     }
 

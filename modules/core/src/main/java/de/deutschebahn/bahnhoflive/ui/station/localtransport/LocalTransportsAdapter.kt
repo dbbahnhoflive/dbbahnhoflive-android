@@ -14,9 +14,7 @@ import de.deutschebahn.bahnhoflive.backend.hafas.model.HafasStation
 import de.deutschebahn.bahnhoflive.backend.local.model.EvaIds
 import de.deutschebahn.bahnhoflive.ui.ViewHolder
 import de.deutschebahn.bahnhoflive.view.ItemClickListener
-import kotlinx.android.synthetic.main.item_local_transport_header.view.*
 import java.util.*
-import kotlin.collections.ArrayList
 
 internal class LocalTransportsAdapter(
     private val itemClickListener: ItemClickListener<HafasStation>
@@ -107,11 +105,7 @@ internal class LocalTransportsAdapter(
     }
 
     class HeaderViewHolder(parent: ViewGroup?) : ViewHolder<String>(parent, R.layout.item_local_transport_header) {
-        var titleView: TextView
-
-        init {
-            titleView = itemView.title
-        }
+        val titleView: TextView = itemView.findViewById(R.id.title)
 
         override fun onBind(item: String?) {
             titleView.text = item

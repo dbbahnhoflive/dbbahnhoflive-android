@@ -13,76 +13,75 @@ import android.view.ViewGroup
 import androidx.appcompat.widget.SearchView
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
-import androidx.lifecycle.Observer
-import de.deutschebahn.bahnhoflive.R
 import de.deutschebahn.bahnhoflive.analytics.TrackingManager
+import de.deutschebahn.bahnhoflive.databinding.FragmentContentSearchBinding
 import de.deutschebahn.bahnhoflive.ui.station.StationViewModel
 import de.deutschebahn.bahnhoflive.util.closeIme
 import de.deutschebahn.bahnhoflive.view.ConfirmationDialog
-import kotlinx.android.synthetic.main.fragment_content_search.view.*
 
 class ContentSearchFragment : Fragment() {
 
-    val viewModel: StationViewModel by activityViewModels<StationViewModel>()
+    val viewModel: StationViewModel by activityViewModels()
 
-    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?) =
-        inflater.inflate(R.layout.fragment_content_search, container, false)
+    override fun onCreateView(
+        inflater: LayoutInflater,
+        container: ViewGroup?,
+        savedInstanceState: Bundle?
+    ) =
+        FragmentContentSearchBinding.inflate(inflater, container, false).apply {
+            root.setOnClickListener {
+                // dummy to prevent clicks being delegated to underlying views
+            }
 
-    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        view.setOnClickListener {
-            // dummy to prevent clicks being delegated to underlying views
-        }
+            viewModel.stationResource.data.observe(viewLifecycleOwner) {
+                stationTitle.text = it?.title
+            }
 
-        viewModel.stationResource.data.observe(viewLifecycleOwner, Observer {
-            view.stationTitle?.text = it?.title
-        })
-
-        val clearHistoryButton = view.clear_history
-        clearHistoryButton?.setOnClickListener {
-            view.content?.let { contentView ->
-                ConfirmationDialog(contentView, "Suchverlauf löschen?", View.OnClickListener {
+            val clearHistoryButton = clearHistory
+            clearHistoryButton.setOnClickListener {
+                ConfirmationDialog(content, "Suchverlauf löschen?") {
                     viewModel.clearSearchHistory()
-                })
-            }
-        }
-
-        viewModel.resultSetType.observe(viewLifecycleOwner, Observer {
-            view.contentTitle?.setText(it.label)
-            clearHistoryButton?.apply {
-                visibility = if (it.showClearHistory) View.VISIBLE else View.GONE
-            }
-        })
-
-        view.inputQuery?.let { searchView ->
-            viewModel.contentQuery.observe(viewLifecycleOwner, Observer {
-                searchView.setQuery(it.first, true)
-            })
-
-            searchView.setOnQueryTextListener(object : SearchView.OnQueryTextListener {
-                override fun onQueryTextSubmit(query: String?) = updateQuery(query)
-
-                override fun onQueryTextChange(query: String?) = updateQuery(query)
-
-                private fun updateQuery(query: String?): Boolean {
-                    viewModel.contentQuery.value = query?.trim() to false
-                    return true
                 }
-            })
-
-            searchView.setOnSearchClickListener {
-                viewModel.contentQuery.value = searchView.query?.toString()?.trim() to true
             }
-        }
 
-        view.recycler?.adapter = ContentSearchResultsAdapter(TrackingManager.fromActivity(activity))
-            .also { adapter ->
-                viewModel.contentSearchResults.observe(viewLifecycleOwner, Observer {
-                    adapter.list = it
-                    view.recycler?.fling(0, -1000)
+            viewModel.resultSetType.observe(viewLifecycleOwner) {
+                contentTitle.setText(it.label)
+                clearHistoryButton.apply {
+                    visibility = if (it.showClearHistory) View.VISIBLE else View.GONE
+                }
+            }
+
+            inputQuery.let { searchView ->
+                viewModel.contentQuery.observe(viewLifecycleOwner) {
+                    searchView.setQuery(it.first, true)
+                }
+
+                searchView.setOnQueryTextListener(object : SearchView.OnQueryTextListener {
+                    override fun onQueryTextSubmit(query: String?) = updateQuery(query)
+
+                    override fun onQueryTextChange(query: String?) = updateQuery(query)
+
+                    private fun updateQuery(query: String?): Boolean {
+                        viewModel.contentQuery.value = query?.trim() to false
+                        return true
+                    }
                 })
+
+                searchView.setOnSearchClickListener {
+                    viewModel.contentQuery.value = searchView.query?.toString()?.trim() to true
+                }
             }
 
-    }
+            recycler.adapter =
+                ContentSearchResultsAdapter(TrackingManager.fromActivity(activity))
+                    .also { adapter ->
+                        viewModel.contentSearchResults.observe(viewLifecycleOwner) {
+                            adapter.list = it
+                            recycler.fling(0, -1000)
+                        }
+                    }
+
+        }.root
 
     override fun onStop() {
         context.closeIme()

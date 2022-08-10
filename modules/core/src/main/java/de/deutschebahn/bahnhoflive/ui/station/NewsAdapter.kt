@@ -9,7 +9,9 @@ package de.deutschebahn.bahnhoflive.ui.station
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import de.deutschebahn.bahnhoflive.backend.db.newsapi.model.News
+import de.deutschebahn.bahnhoflive.databinding.ItemNewsBinding
 import de.deutschebahn.bahnhoflive.view.ItemClickListener
+import de.deutschebahn.bahnhoflive.view.inflater
 
 class NewsAdapter(private val itemClickListener: ItemClickListener<News?>? = null) :
     RecyclerView.Adapter<NewsViewHolder>() {
@@ -20,7 +22,9 @@ class NewsAdapter(private val itemClickListener: ItemClickListener<News?>? = nul
             notifyDataSetChanged()
         }
 
-    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int) = NewsViewHolder(parent, itemClickListener)
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int) = NewsViewHolder(
+        ItemNewsBinding.inflate(parent.inflater, parent, false), itemClickListener
+    )
 
     override fun getItemCount() = newsList?.size ?: 0
 
