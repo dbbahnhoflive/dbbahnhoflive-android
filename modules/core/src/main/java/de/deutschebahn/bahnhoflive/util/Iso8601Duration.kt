@@ -14,7 +14,7 @@ package de.deutschebahn.bahnhoflive.util
  * specifications: [https://de.wikipedia.org/wiki/ISO_8601]
  */
 
-data class Iso8601Duration(val iso8601String: String?) {
+class Iso8601Duration(val iso8601String: String?) {
 
     private var datePart = ""
     private var timePart = ""

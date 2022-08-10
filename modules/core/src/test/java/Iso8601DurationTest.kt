@@ -52,60 +52,42 @@ class Iso8601DurationTest {
     fun getMonthsAndMinutesReplacedWithGerman() =
         assertEquals(
             "3 Monate, 2 Minuten",
-            Iso8601Duration("P3MT2M").getHumanReadableString(
-                " Jahre",
-                " Monate",
-                " Wochen",
-                " Tage",
-                " Stunden",
-                " Minuten",
-                " Sekunden"
-            )
+            Iso8601Duration("P3MT2M").getHumanReadableStringGerman()
         )
 
     @Test
     fun getMinutesReplacedWithGerman() =
         assertEquals(
             "12 Minuten",
-            Iso8601Duration("PT12M").getHumanReadableString(
-                " Jahre",
-                " Monate",
-                " Wochen",
-                " Tage",
-                " Stunden",
-                " Minuten",
-                " Sekunden"
-            )
+            Iso8601Duration("PT12M").getHumanReadableStringGerman()
         )
 
     @Test
-    fun getAllReplacedWithGerman() =
+    fun getAllReplacedWithGerman() {
+
         assertEquals(
             "3 Jahre, 4 Monate, 23 Wochen, 5 Tage, 16 Stunden, 12 Minuten, 57 Sekunden",
-            Iso8601Duration("P3Y4M23W5DT16H12M57S").getHumanReadableString(
-                " Jahre",
-                " Monate",
-                " Wochen",
-                " Tage",
-                " Stunden",
-                " Minuten",
-                " Sekunden"
-            )
+            Iso8601Duration("P3Y4M23W5DT16H12M57S").getHumanReadableStringGerman()
         )
+    }
 
     @Test
     fun getSecondsReplacedWithGerman() =
         assertEquals(
             "3 Jahre, 4 Monate, 23 Wochen, 5 Tage, 16 Stunden, 12 Minuten, 57.8 Sekunden",
-            Iso8601Duration("P3Y4M23W5DT16H12M57.8S").getHumanReadableString(
-                " Jahre",
-                " Monate",
-                " Wochen",
-                " Tage",
-                " Stunden",
-                " Minuten",
-                " Sekunden"
-            )
+            Iso8601Duration("P3Y4M23W5DT16H12M57.8S").getHumanReadableStringGerman()
         )
+
+    private fun Iso8601Duration.getHumanReadableStringGerman() =
+        getHumanReadableString(
+            " Jahre",
+            " Monate",
+            " Wochen",
+            " Tage",
+            " Stunden",
+            " Minuten",
+            " Sekunden"
+        )
+
 
 }

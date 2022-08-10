@@ -405,13 +405,13 @@
         <item>%s für\u0020</item>
     </string-array>
 
-    <string name="date_years">"Jahre"</string>
-    <string name="date_months">"Monate"</string>
-    <string name="date_weeks">"Wochen"</string>
-    <string name="date_days">"Tage"</string>
-    <string name="date_hours">"Stunden"</string>
-    <string name="date_minutes">"Minuten"</string>
-    <string name="date_seconds">"Sekunden"</string>
+    <string name="date_years">Jahre</string>
+    <string name="date_months">Monate</string>
+    <string name="date_weeks">Wochen</string>
+    <string name="date_days">Tage</string>
+    <string name="date_hours">Stunden</string>
+    <string name="date_minutes">Minuten</string>
+    <string name="date_seconds">Sekunden</string>
 
 </resources>
 
