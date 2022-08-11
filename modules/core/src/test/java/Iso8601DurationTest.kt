@@ -11,72 +11,14 @@ import org.junit.Test
 
 class Iso8601DurationTest {
 
-    @Test
-    fun getYearsPart() = assertEquals("1y", Iso8601Duration("P1Y").getHumanReadableString())
-
-    @Test
-    fun getMonthsPart() = assertEquals("4m", Iso8601Duration("P4M").getHumanReadableString())
-
-    @Test
-    fun getDaysPart() = assertEquals("4d", Iso8601Duration("P4D").getHumanReadableString())
-
-    @Test
-    fun getWeeksPart() = assertEquals("5w", Iso8601Duration("P5W").getHumanReadableString())
-
-    @Test
-    fun getHoursPart() = assertEquals("24h", Iso8601Duration("PT24H").getHumanReadableString())
-
-    @Test
-    fun getMinutesPart() = assertEquals("12m", Iso8601Duration("PT12M").getHumanReadableString())
-
-    @Test
-    fun getSecondsPart() = assertEquals("12s", Iso8601Duration("PT12S").getHumanReadableString())
-
-    @Test
-    fun getYearsAndMonthsPart() =
-        assertEquals("1y, 9m", Iso8601Duration("P1Y9M").getHumanReadableString())
-
-    @Test
-    fun getDaysAndHoursPart() =
-        assertEquals("4h, 9m", Iso8601Duration("PT4H9M").getHumanReadableString())
-
-    @Test
-    fun getYearsAndDaysAndHoursPart() =
-        assertEquals("3y, 4h, 9m", Iso8601Duration("P3YT4H9M").getHumanReadableString())
-
-    @Test
-    fun getMonthsAndMinutesPart() =
-        assertEquals("3m, 2m", Iso8601Duration("P3MT2M").getHumanReadableString())
-
-    @Test
-    fun getMonthsAndMinutesReplacedWithGerman() =
-        assertEquals(
-            "3 Monate, 2 Minuten",
-            Iso8601Duration("P3MT2M").getHumanReadableStringGerman()
-        )
-
-    @Test
-    fun getMinutesReplacedWithGerman() =
-        assertEquals(
-            "12 Minuten",
-            Iso8601Duration("PT12M").getHumanReadableStringGerman()
-        )
-
-    @Test
-    fun getAllReplacedWithGerman() {
-
-        assertEquals(
-            "3 Jahre, 4 Monate, 23 Wochen, 5 Tage, 16 Stunden, 12 Minuten, 57 Sekunden",
-            Iso8601Duration("P3Y4M23W5DT16H12M57S").getHumanReadableStringGerman()
-        )
+    fun getHumanReadableString(iso8601Part: String?): String {
+        return Iso8601Duration(iso8601Part).getHumanReadableString()
     }
 
-    @Test
-    fun getSecondsReplacedWithGerman() =
-        assertEquals(
-            "3 Jahre, 4 Monate, 23 Wochen, 5 Tage, 16 Stunden, 12 Minuten, 57.8 Sekunden",
-            Iso8601Duration("P3Y4M23W5DT16H12M57.8S").getHumanReadableStringGerman()
-        )
+    fun getHumanReadableStringGerman(iso8601Part: String?): String {
+        return Iso8601Duration(iso8601Part).getHumanReadableStringGerman()
+    }
+
 
     private fun Iso8601Duration.getHumanReadableStringGerman() =
         getHumanReadableString(
@@ -84,10 +26,72 @@ class Iso8601DurationTest {
             " Monate",
             " Wochen",
             " Tage",
-            " Stunden",
-            " Minuten",
-            " Sekunden"
+            "h", //" Stunden",
+            "m", //Minuten",
+            "s" //Sekunden"
         )
 
+    @Test
+    fun testUnexpectedNull() = assertEquals("", getHumanReadableString(null))
+
+    @Test
+    fun testUnexpectedEmptyTime() = assertEquals("", getHumanReadableString(""))
+
+    @Test
+    fun testUnexpectedStartCharMissingAndTimeDividerMissingAndTimeLowercase() =
+        assertEquals("", getHumanReadableString("1h"))
+
+    @Test
+    fun testUnexpectedStartCharMissingAndTimeDividerMissingAndTimeUppercase() =
+        assertEquals("", getHumanReadableString("1H"))
+
+    @Test
+    fun testUnexpectedStartCharMissing() =
+        assertEquals("", getHumanReadableString("T1h"))
+
+    @Test
+    fun testUnexpectedTimeDividerMissingWrongCaseSensitivity() =
+        assertEquals("", getHumanReadableString("P1h"))
+
+    @Test
+    fun testOneMonth() = assertEquals("1 Monate", getHumanReadableStringGerman("P1M"))
+
+    @Test
+    fun test44Months() = assertEquals("44 Monate", getHumanReadableStringGerman("P44M"))
+
+    @Test
+    fun testOneHourLowercase() =
+        assertEquals("1h", getHumanReadableString("PT1h"))
+
+    @Test
+    fun testOneHour() =
+        assertEquals("1h", getHumanReadableString("PT1H"))
+
+    @Test
+    fun testTwoHours() =
+        assertEquals("2h", getHumanReadableString("PT2H"))
+
+    @Test
+    fun test24Hours() =
+        assertEquals("24h", getHumanReadableString("PT24H"))
+
+    @Test
+    fun test24HoursLowercase() =
+        assertEquals("24h", getHumanReadableString("PT24h"))
+
+    @Test
+    fun test65Month() =
+        assertEquals("65m", getHumanReadableString("PT65M"))
+
+    @Test
+    fun testOneMonth5DaysGerman() =
+        assertEquals("1 Monate, 5h", getHumanReadableStringGerman("P1MT5H"))
+
+    @Test
+    fun testFullGerman() =
+        assertEquals(
+            "2 Jahre, 3 Monate, 4 Wochen, 5 Tage, 13h, 24m, 17s",
+            getHumanReadableStringGerman("P2Y3M4W5DT13H24M17S")
+        )
 
 }

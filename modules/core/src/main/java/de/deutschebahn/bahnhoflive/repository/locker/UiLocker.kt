@@ -7,6 +7,7 @@ package de.deutschebahn.bahnhoflive.repository.locker
 
 import de.deutschebahn.bahnhoflive.backend.db.ris.locker.model.Locker
 import de.deutschebahn.bahnhoflive.util.Iso8601Duration
+import kotlin.math.abs
 
 enum class LockerType {
     UNKNOWN,
@@ -123,7 +124,8 @@ class UiLocker() {
                     }
                 }
             }
-        } else
+        }
+        if (paymentTypes.isEmpty())
             paymentTypes.add(PaymentType.UNKNOWN)
 
         var fee1 = locker.fee
@@ -133,8 +135,8 @@ class UiLocker() {
                 if (fee2 != null) {
                     fee2 /= 100.0f
 
-                    if (fee2 - fee2.toBigDecimal().intValueExact() > 0)
-                        feeAsString = String.format("%.1f €", fee2)
+                    if (abs(fee2 % 1.0) >= 0.001f) // if decimal places exist
+                        feeAsString = String.format("%.2f €", fee2)
                     else
                         feeAsString = String.format("%.0f €", fee2)
 

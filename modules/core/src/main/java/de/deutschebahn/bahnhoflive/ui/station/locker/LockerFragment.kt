@@ -86,16 +86,16 @@ class LockerFragment : Fragment(), MapPresetProvider {
                         )
 
                         if (it.paymentTypes.contains(PaymentType.CARD))
-                            string += "Karte"
+                            string += getString(R.string.locker_payment_type_cashless)
                         if (it.paymentTypes.contains(PaymentType.CASH)) {
                             if (!string.isEmpty())
                                 string += ", "
-                            string += "bar"
+                            string += getString(R.string.locker_payment_type_cash)
                         }
                         if (it.paymentTypes.contains(PaymentType.UNKNOWN)) {
                             if (!string.isEmpty())
                                 string += ", "
-                            string += "unbekannt"
+                            string += getString(R.string.locker_payment_type_unknown)
                         }
                         lockerPaymentTypes.text = getString(R.string.locker_payment, string)
 
@@ -137,7 +137,6 @@ class LockerFragment : Fragment(), MapPresetProvider {
                             String.format(lockerFeePeriodsVO[it.feePeriod.ordinal], it.feeAsString)
                         if (it.feePeriod == FeePeriod.PER_MAX_LEASE_DURATION)
                             string += maxLeaseDurationAsStringVO
-
                         lockerFee.setAccessibilityText(string)
 
                     }.root)

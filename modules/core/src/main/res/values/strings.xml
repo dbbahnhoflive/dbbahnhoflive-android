@@ -383,7 +383,7 @@
     <string name="locker_short_term">"Kurzzeit"</string>
     <string name="locker_payment">"Zahlungsmittel: %s"</string>
     <string name="locker_payment_type_cash">"bar"</string>
-    <string name="locker_payment_type_card">"Karte"</string>
+    <string name="locker_payment_type_cashless">"bargeldlos"</string>
     <string name="locker_payment_type_unknown">"unbekannt"</string>
     <string name="locker_dimensions">"%d x %d x %d"</string>
     <string name="locker_dimensions_VO">"%d x %d x %d cm"</string>
@@ -395,7 +395,7 @@
     <string-array name="locker_fee_periods">
         <item>%s / Unbekannt</item>
         <item>%s / h</item>
-        <item>%s / 24h</item>
+        <item>%s / Tag</item>
         <item>%s /\u0020</item>
     </string-array>
     <string-array name="locker_fee_periods_VO">
