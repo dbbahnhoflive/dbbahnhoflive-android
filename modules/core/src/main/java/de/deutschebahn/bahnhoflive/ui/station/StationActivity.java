@@ -61,6 +61,7 @@ import de.deutschebahn.bahnhoflive.ui.station.features.StationFeaturesFragment;
 import de.deutschebahn.bahnhoflive.ui.station.info.InfoCategorySelectionFragment;
 import de.deutschebahn.bahnhoflive.ui.station.localtransport.LocalTransportFragment;
 import de.deutschebahn.bahnhoflive.ui.station.localtransport.LocalTransportViewModel;
+import de.deutschebahn.bahnhoflive.ui.station.locker.LockerFragment;
 import de.deutschebahn.bahnhoflive.ui.station.occupancy.OccupancyExplanationFragment;
 import de.deutschebahn.bahnhoflive.ui.station.parking.ParkingListFragment;
 import de.deutschebahn.bahnhoflive.ui.station.railreplacement.RailReplacementFragment;
@@ -432,6 +433,15 @@ public class StationActivity extends AppCompatActivity implements
 
         if (!ParkingListFragment.TAG.equals(stationViewModel.getTopInfoFragmentTag())) {
             infoFragment.push(ParkingListFragment.create());
+        }
+    }
+
+    @Override
+    public void showLockers() {
+        showInfoFragment(false);
+
+        if (!LockerFragment.Companion.getTAG().equals(stationViewModel.getTopInfoFragmentTag())) {
+            infoFragment.push(new LockerFragment());
         }
     }
 

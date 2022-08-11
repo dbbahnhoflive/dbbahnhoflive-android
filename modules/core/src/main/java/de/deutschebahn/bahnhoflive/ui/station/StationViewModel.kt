@@ -756,9 +756,9 @@ class StationViewModel(
                                             stationFeaturesOnClickListener
                                         )
                                     }
-                                    "Bahnhofsausstattung Schließfächer" -> featureVisible(
+                                    "Bahnhofsausstattung Schließfächer" -> (featureVisible(
                                         StationFeatureDefinition.LOCKERS
-                                    ) then {
+                                    ) && lockers.value.isNullOrEmpty()) then {
                                         ContentSearchResult(
                                             "Schließfächer",
                                             R.drawable.bahnhofsausstattung_schlie_faecher,
@@ -933,6 +933,21 @@ class StationViewModel(
                                 SearchResultClickListener(
                                     View.OnClickListener {
                                         stationNavigation?.showParkings()
+                                    })
+                            )
+                        } else null
+                        )
+
+                        .append(if (lockers.value?.takeUnless { it.isEmpty() } != null && matchingKeys.contains(
+                                "Bahnhofsinformation Schließfächer"
+                            )) {
+                            ContentSearchResult(
+                                "Schließfächer",
+                                R.drawable.bahnhofsausstattung_schlie_faecher,
+                                currentRawQuery,
+                                SearchResultClickListener(
+                                    View.OnClickListener {
+                                        stationNavigation?.showLockers()
                                     })
                             )
                         } else null
