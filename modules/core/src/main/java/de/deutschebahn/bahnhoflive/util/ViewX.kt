@@ -9,15 +9,44 @@ package de.deutschebahn.bahnhoflive.util
 import android.view.View
 import android.view.accessibility.AccessibilityNodeInfo
 
-// Extension to replace the spoken text from ANY view
+
+/**
+ * Extension to replace the spoken text from ANY view.
+ *
+ * <p>
+ *
+ * If text is empty, text is not replaced !
+ */
 fun View.setAccessibilityText(text: String) {
-    accessibilityDelegate = object : View.AccessibilityDelegate() {
-        override fun onInitializeAccessibilityNodeInfo(
-            host: View,
-            info: AccessibilityNodeInfo
-        ) {
-            super.onInitializeAccessibilityNodeInfo(host, info)
-            info.text = text
+    if (text.isNotBlank()) {
+        accessibilityDelegate = object : View.AccessibilityDelegate() {
+            override fun onInitializeAccessibilityNodeInfo(
+                host: View,
+                info: AccessibilityNodeInfo
+            ) {
+                super.onInitializeAccessibilityNodeInfo(host, info)
+                info.text = text
+            }
+        }
+    }
+}
+
+/**
+ * Extension to replace the spoken text from ANY view
+ * <p>
+ *
+ * If text is empty, text is not replaced !
+ */
+fun View.setAccessibilityText(text: CharSequence?) {
+    if (text != null) {
+        accessibilityDelegate = object : View.AccessibilityDelegate() {
+            override fun onInitializeAccessibilityNodeInfo(
+                host: View,
+                info: AccessibilityNodeInfo
+            ) {
+                super.onInitializeAccessibilityNodeInfo(host, info)
+                info.text = text
+            }
         }
     }
 }

@@ -30,7 +30,6 @@ class LockerFragment : Fragment(), MapPresetProvider {
 
     val stationViewModel by activityViewModels<StationViewModel>()
 
-
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
@@ -55,8 +54,6 @@ class LockerFragment : Fragment(), MapPresetProvider {
 
                     contentList.addView(IncludeItemLockerBinding.inflate(inflater).apply {
 
-                        var string = ""
-
                         val lockerTypes = resources.getStringArray(R.array.locker_types)
                         lockerSize.text = lockerTypes[it.lockerType.ordinal]
                         if (it.isShortTimeLocker)
@@ -70,41 +67,41 @@ class LockerFragment : Fragment(), MapPresetProvider {
 
                         lockerAmount.text = getString(R.string.locker_amount_lockers, it.amount)
 
-                        lockerDimensions.text = getString(
-                            R.string.locker_dimensions,
-                            it.dimDepth,
-                            it.dimWidth,
-                            it.dimHeight
-                        )
-                        lockerDimensions.setAccessibilityText(
-                            getString(
-                                R.string.locker_dimensions_VO,
+                        if (it.dimDepth != 0 && it.dimHeight != 0 && it.dimWidth != 0) {
+                            lockerDimensions.text = getString(
+                                R.string.locker_dimensions,
                                 it.dimDepth,
                                 it.dimWidth,
                                 it.dimHeight
                             )
-                        )
+                            lockerDimensions.setAccessibilityText(
+                                getString(
+                                    R.string.locker_dimensions_VO,
+                                    it.dimDepth,
+                                    it.dimWidth,
+                                    it.dimHeight
+                                )
+                            )
+                        }
+
+
+                        var string = ""
 
                         if (it.paymentTypes.contains(PaymentType.CARD))
                             string += getString(R.string.locker_payment_type_cashless)
                         if (it.paymentTypes.contains(PaymentType.CASH)) {
-                            if (!string.isEmpty())
+                            if (string.isNotEmpty())
                                 string += ", "
                             string += getString(R.string.locker_payment_type_cash)
                         }
                         if (it.paymentTypes.contains(PaymentType.UNKNOWN)) {
-                            if (!string.isEmpty())
+                            if (string.isNotEmpty())
                                 string += ", "
                             string += getString(R.string.locker_payment_type_unknown)
                         }
                         lockerPaymentTypes.text = getString(R.string.locker_payment, string)
 
                         val maxLeaseDurationAsString = it.getMaxLeaseDurationAsHumanReadableString()
-                        lockerMaxLeaseDuration.text = resources.getString(
-                            R.string.locker_max_lease_duration,
-                            maxLeaseDurationAsString
-                        )
-
                         val maxLeaseDurationAsStringVO =
                             it.getMaxLeaseDurationAsHumanReadableString(
                                 getString(R.string.date_years),
@@ -116,13 +113,20 @@ class LockerFragment : Fragment(), MapPresetProvider {
                                 getString(R.string.date_seconds)
                             )
 
-                        lockerMaxLeaseDuration.setAccessibilityText(
-                            resources.getString(
-                                R.string.locker_max_lease_duration_VO,
-                                maxLeaseDurationAsStringVO
-                            )
-                        )
 
+                        if (maxLeaseDurationAsString.isNotBlank()) {
+                            lockerMaxLeaseDuration.text = resources.getString(
+                                R.string.locker_max_lease_duration,
+                                maxLeaseDurationAsString
+                            )
+
+                            lockerMaxLeaseDuration.setAccessibilityText(
+                                resources.getString(
+                                    R.string.locker_max_lease_duration_VO,
+                                    maxLeaseDurationAsStringVO
+                                )
+                            )
+                        }
 
                         val lockerFeePeriods = resources.getStringArray(R.array.locker_fee_periods)
                         string =
