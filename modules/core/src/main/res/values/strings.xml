@@ -301,9 +301,9 @@
     <string name="feedback_whatsapp_unavailable">Sie benötigen ein bestehendes Nutzerkonto beim Dienst „WhatsApp“. Aktuell ist dieser Dienst nicht auf ihrem Gerät installiert.</string>
     <string name="feedback_headline_alternative_contacts">Alternative Kontaktmöglichkeiten</string>
 
-    <string name="accessibilityStepFreeAll">Dieser Bahnhof bietet Ihnen stufenfreien Zugang.</string>
-    <string name="accessibilityStepFreeNone">Dieser Bahnhof bietet Ihnen leider <b>keinen</b> stufenfreien Zugang.</string>
-    <string name="accessibilityStepFreePartial">Dieser Bahnhof bietet Ihnen <b>teilweise</b> stufenfreien Zugang.</string>
+    <string name="accessibilityStepFreeAll">Dieser Bahnhof bietet Ihnen einen stufenfreien Zugang zu den Bahnsteigen.</string>
+    <string name="accessibilityStepFreeNone">Dieser Bahnhof verfügt über <b>keinen</b> stufenfreien Zugang zu den Bahnsteigen.</string>
+    <string name="accessibilityStepFreePartial">Dieser Bahnhof bietet nur <b>teilweise</b> stufenfreien Zugang zu den Bahnsteigen. Für detaillierte Informationen wählen Sie bitte weiter unten auf dieser Seite ein Gleis aus.</string>
 
     <string name="accessibilityStepFreeAccess">Stufenfreier Zugang</string>
     <string name="accessibilityStandardPlatformHeight">Bahnsteighöhe >= 55 cm</string>
@@ -334,8 +334,8 @@
     <string name="accessibility_select_platform_invitation">Bitte wählen Sie ein Gleis aus.</string>
     <string name="accessibility_no_platform_selected">Kein Gleis ausgewählt</string>
     <string name="accessibility_hotline">030 6521 2888</string>
-    <string name="accessibility_hotline_advice">Bei Fragen wenden Sie sich bitte an die Mobilitätsservice-Zentrale unter</string>
-    <string name="accessibility_advice">Die nachfolgend genannten Ausstattungsmerkmale dienen der barrierefreien Zugänglichkeit des Bahnhofs.</string>
+    <string name="accessibility_hotline_advice">Zu Informationen über die Barrierefreiheit des Empfangsgebäudes oder bei weiteren Fragen wenden Sie Sich bitte an die Mobilitätsservice-Zentrale unter</string>
+    <string name="accessibility_advice">Die nachfolgend genannten Ausstattungsmerkmale dienen der barrierefreien Zugänglichkeit der Bahnsteige.</string>
     <string name="accessibility_key">Ausstattung für Barrierefreiheit</string>
     <string name="title_accessibility_key">Merkmale der Barrierefreiheit</string>
     <string name="accessibility_advice_elevators">Bitte beachten Sie, dass die Stufenfreiheit vor Ort durch Aufzugsanlagen oder Rampen ermöglicht werden kann. Eine Übersicht der Aufzugsanlagen und deren aktuelle Verfügbarkeit finden Sie hier:</string>
