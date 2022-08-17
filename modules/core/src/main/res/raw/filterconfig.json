@@ -84,19 +84,26 @@
       },
       {
         "title": "Aufzug",
-        "presets": ["elevators"],
+        "presets": [
+          "elevators",
+          "elevators_only"
+        ],
         "menucat": "Wegeleitung",
         "menusubcat": "Aufzüge"
       },
       {
         "title": "Rampe",
-        "presets": ["elevators"],
+        "presets": [
+          "elevators"
+        ],
         "menucat": "Wegeleitung",
         "menusubcat": "Rampen"
       },
       {
         "title": "Ein -/ Ausgang",
-        "presets": ["elevators"],
+        "presets": [
+          "elevators"
+        ],
         "menucat": "Wegeleitung",
         "menusubcat": "Ein-/Ausgänge"
       }
