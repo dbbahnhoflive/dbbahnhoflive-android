@@ -29,7 +29,7 @@ class JourneyViewModel(app: Application, savedStateHandle: SavedStateHandle) :
     val timetableRepository = getApplication<BaseApplication>().repositories.timetableRepository
 
     val stationProxyLiveData = ProxyLiveData<MergedStation>()
-    val timetableProxyLiveData = ProxyLiveData<Timetable>()
+    val timetableProxyLiveData = ProxyLiveData<Timetable?>()
 
     private val argumentTrainInfoLiveData = savedStateHandle.getLiveData<TrainInfo>(ARG_TRAIN_INFO)
 

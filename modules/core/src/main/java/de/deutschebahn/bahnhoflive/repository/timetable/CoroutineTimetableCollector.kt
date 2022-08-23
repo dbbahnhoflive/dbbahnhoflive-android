@@ -1,5 +1,6 @@
 package de.deutschebahn.bahnhoflive.repository.timetable
 
+import android.util.Log
 import androidx.lifecycle.asLiveData
 import de.deutschebahn.bahnhoflive.backend.local.model.EvaIds
 import de.deutschebahn.bahnhoflive.backend.ris.getCurrentHour
@@ -20,39 +21,150 @@ class CoroutineTimetableCollector(
     private val defaultDispatcher: CoroutineContext = Dispatchers.Default
 ) {
 
-    val hourInMillis = TimeUnit.HOURS.toMillis(1)
+    private val hourInMillis = TimeUnit.HOURS.toMillis(1)
 
-    private val refreshFlow = MutableStateFlow(false).apply {
-        onEach {
-            isLoadingMutableFlow.emit(true)
-        }
+    private val initialsCache = mutableMapOf<Long, MutableMap<String, TimetableHour>>()
+    private val changesCache = mutableMapOf<String, TimetableChanges>()
+
+    val isLoadingFlow = MutableStateFlow(false)
+    private val errorsStateFlow = MutableStateFlow(false)
+    private val timetableStateFlow = MutableStateFlow<Timetable?>(null)
+
+    private val firstHourFlow = flow {
+        emit(currentHourProvider())
     }
-
-    fun refresh(force: Boolean) {
-        coroutineScope.launch {
-            refreshFlow.emit(force)
-        }
-    }
-
-    val firstHourFlow = refreshFlow.map {
-        currentHourProvider()
-    }.shareDistincts(SharingStarted.Lazily)
-
-    val hourCountStateFlow = MutableStateFlow(Constants.PRELOAD_HOURS)
 
     private val hourLimit get() = Constants.HOUR_LIMIT
 
-    val hourCountFlow = hourCountStateFlow
-        .filter { it < hourLimit }
-        .shareDistincts(SharingStarted.Eagerly)
+    private val hourCountStateFlow = MutableStateFlow(Constants.PRELOAD_HOURS)
 
-    val maxHoursReachedFlow = hourCountFlow.map {
+    fun loadMore() {
+        hourCountStateFlow.update {
+            (it + 1).coerceAtMost(hourLimit)
+        }
+    }
+
+    data class Parameters(
+        val firstHourInMillis: Long,
+        val hourCount: Int,
+        val evaIds: EvaIds
+    )
+
+    private val parametersFlow = evaIdsFlow.combine(
+        hourCountStateFlow.combine(
+            firstHourFlow
+        ) { hourCount: Int, firstHour: Long ->
+            firstHour to hourCount
+        }
+    ) { evaIds: EvaIds, (firstHour, hourCount) ->
+        Parameters(firstHour, hourCount, evaIds)
+    }
+
+    data class Result<T>(
+        val payload: T?,
+        val error: Throwable?
+    )
+
+    private var refreshJob: Job? = null
+
+    fun refresh(force: Boolean) {
+
+        refreshJob?.cancel()
+
+        refreshJob = coroutineScope.launch(defaultDispatcher) {
+            parametersFlow.collectLatest { parameters ->
+                isLoadingFlow.value = true
+
+                try {
+                    initialsCache.keys
+                        .filter { it < parameters.firstHourInMillis - hourInMillis }
+                        .forEach {
+                            initialsCache.remove(it)
+                        }
+
+                    val changesResults = parameters.evaIds.ids.map { evaId ->
+                        async {
+                            kotlin.runCatching {
+                                timetableChangesProvider(evaId)
+                            }.onSuccess {
+                                changesCache[evaId] = it
+                            }.run {
+                                Result(getOrElse {
+                                    changesCache[evaId]
+                                }, exceptionOrNull())
+                            }
+                        }
+                    }.awaitAll()
+
+                    val initialsResults = parameters.evaIds.ids.flatMap { evaId ->
+                        (-1 until parameters.hourCount).map { hourOffset ->
+                            async {
+
+                                kotlin.runCatching {
+                                    initialsCache.getOrPut(hourOffset * hourInMillis + parameters.firstHourInMillis) {
+                                        mutableMapOf()
+                                    }.getOrPut(evaId) {
+                                        timetableHourProvider(
+                                            evaId,
+                                            parameters.firstHourInMillis + TimeUnit.HOURS.toMillis(
+                                                hourOffset.toLong()
+                                            )
+                                        )
+                                    }
+                                }
+
+                            }
+                        }
+                    }.awaitAll()
+
+                    errorsStateFlow.value =
+                        changesResults.any { it.error != null } || initialsResults.any { it.isFailure }
+
+                    val mergedInitials = initialsResults.unwrapSuccessful()
+                        .flatMap { it.trainInfos }
+                        .groupBy { it.id }
+                        .mapValues { (id, trainInfos) ->
+                            trainInfos.reduce { mergedTrainInfo, nextTrainInfo ->
+                                mergedTrainInfo.merge(
+                                    nextTrainInfo
+                                )
+                            }
+                        }
+
+                    val changes = changesResults.mapNotNull {
+                        it.payload
+                    }.flatMap { it.trainInfos }
+
+                    val mergedTrainInfos =
+                        TrainInfo.mergeChanges(mergedInitials.toMutableMap(), changes)
+
+                    timetableStateFlow.value = Timetable(
+                        mergedTrainInfos.values.toList(),
+                        (parameters.firstHourInMillis / hourInMillis + parameters.hourCount) * hourInMillis,
+                        parameters.hourCount
+                    )
+
+                } catch (t: Throwable) {
+                    Log.d(
+                        CoroutineTimetableCollector::class.java.simpleName,
+                        "Error loading time table",
+                        t
+                    )
+                    errorsStateFlow.value = true
+                }
+
+                isLoadingFlow.value = false
+            }
+        }
+    }
+
+    private val maxHoursReachedFlow = hourCountStateFlow.map {
         it >= hourLimit
     }.shareDistincts(SharingStarted.WhileSubscribed())
 
-    val lastHourEndFlow = firstHourFlow.combine(hourCountFlow) { firstHour, hourCount ->
-        ((firstHour / hourInMillis) + hourCount + 1) * hourInMillis
-    }.shareDistincts(SharingStarted.WhileSubscribed())
+    private val lastHourEndFlow = parametersFlow.map {
+        it.firstHourInMillis + it.hourCount * hourInMillis
+    }
 
     val lastHourEnd get() = runBlocking { lastHourEndFlow.first() }
 
@@ -62,107 +174,18 @@ class CoroutineTimetableCollector(
     private fun <T> Flow<T>.share(started: SharingStarted) =
         shareIn(coroutineScope, started, 1)
 
-    val changesResultsFlow = refreshFlow.flatMapLatest { force ->
-        evaIdsFlow.mapLatest { evaIds ->
-            evaIds.ids.map { evaId ->
-                kotlin.runCatching {
-                    timetableChangesProvider(evaId)
-                }
-            }
-        }
-    }.flowOn(defaultDispatcher).shareDistincts(SharingStarted.Lazily)
 
-    private fun <T> List<Result<T>>.unwrapSuccessful() = mapNotNull {
+    private fun <T> List<kotlin.Result<T>>.unwrapSuccessful() = mapNotNull {
         it.getOrNull()
     }
 
-    private fun <T> Flow<List<Result<T>>>.unwrapSuccessful() = map {
-        it.unwrapSuccessful()
-    }.flowOn(defaultDispatcher)
-
-    private val changesFlow = changesResultsFlow.unwrapSuccessful().map { changesList ->
-        changesList.flatMap { timetableChanges ->
-            timetableChanges.trainInfos
-        }
-    }
-
-    val initialTimetableResultsFlow = evaIdsFlow.flatMapLatest { evaIds ->
-        firstHourFlow.flatMapLatest { firstHour ->
-            hourCountFlow.map { hourCount ->
-                Triple(evaIds.ids.flatMap { evaId ->
-                    (-1 until hourCount).map { hour ->
-                        kotlin.runCatching {
-                            timetableHourProvider(
-                                evaId,
-                                firstHour + TimeUnit.HOURS.toMillis(hour.toLong())
-                            )
-                        }
-                    }
-                }, firstHour, hourCount)
-            }
-        }
-    }.flowOn(defaultDispatcher).shareDistincts(SharingStarted.Lazily)
-
-    private val mergedInitialTrainInfosFlow =
-        initialTimetableResultsFlow.map { (timetableHoursResults, firstHour, hourCount) ->
-            Triple(
-                timetableHoursResults.unwrapSuccessful()
-                    .flatMap { it.trainInfos }
-                    .groupBy { it.id }
-                    .mapValues { (id, trainInfos) ->
-                        trainInfos.reduce { mergedTrainInfo, nextTrainInfo ->
-                            mergedTrainInfo.merge(
-                                nextTrainInfo
-                            )
-                        }
-                    },
-                firstHour,
-                hourCount
-            )
-        }.flowOn(defaultDispatcher)
-
-    private fun <T> List<Result<T>>.errorCount() = mapNotNull { result ->
-        result.exceptionOrNull()
-    }.size
-
-    private fun <T> Flow<List<Result<T>>>.errorCount() = map { list ->
-        list.errorCount()
-    }
-
-    fun loadMore() {
-        coroutineScope.launch {
-            val currentHourCount = hourCountStateFlow.value
-            if (currentHourCount < hourLimit) {
-                hourCountStateFlow.emit(currentHourCount + 1)
-            }
-        }
-    }
-
-
-    val errorsFlow = initialTimetableResultsFlow.map { it.first.errorCount() }
-        .combine(changesResultsFlow.errorCount()) { a, b ->
-            a + b > 0
-        }
-
-    val errorsLiveData get() = errorsFlow.asLiveData()
-
-    val timetableFlow =
-        mergedInitialTrainInfosFlow.combine(changesFlow) { (initials, firstHour, hourCount), changes ->
-            val mergedTrainInfos = TrainInfo.mergeChanges(initials.toMutableMap(), changes)
-
-            Timetable(
-                mergedTrainInfos.values.toList(),
-                (firstHour / hourInMillis + hourCount) * hourInMillis,
-                hourCount
-            )
-        }.flowOn(defaultDispatcher).onEach {
-            isLoadingMutableFlow.emit(false)
-        }.share(SharingStarted.WhileSubscribed())
-
-    private val isLoadingMutableFlow = MutableStateFlow(false)
-
-    val isLoadingFlow = isLoadingMutableFlow.shareDistincts(SharingStarted.WhileSubscribed())
-
     val isLoadingLiveData get() = isLoadingFlow.asLiveData()
 
+    val errorsLiveData get() = errorsStateFlow.asLiveData()
+
+    val timetableLiveData get() = timetableStateFlow.asLiveData()
+
+    init {
+        refresh(false)
+    }
 }

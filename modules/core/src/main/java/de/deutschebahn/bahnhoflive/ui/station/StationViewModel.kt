@@ -68,7 +68,7 @@ import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.channels.awaitClose
-import kotlinx.coroutines.channels.sendBlocking
+import kotlinx.coroutines.channels.trySendBlocking
 import kotlinx.coroutines.flow.*
 import kotlinx.coroutines.launch
 import java.io.InputStreamReader
@@ -319,7 +319,7 @@ class StationViewModel(
                 getApplication<BaseApplication>().applicationServices.evaIdsProvider.withEvaIds(
                     station
                 ) { evaIds ->
-                    sendBlocking(evaIds ?: stationResource.data.value?.evaIds)
+                    trySendBlocking(evaIds ?: stationResource.data.value?.evaIds)
                 }
 
                 awaitClose()
@@ -336,7 +336,7 @@ class StationViewModel(
         }
     }
 
-    val newTimetableLiveData = timetableCollector.timetableFlow.asLiveData()
+    val newTimetableLiveData = timetableCollector.timetableLiveData
 
     private val timetableRepository: TimetableRepository
         get() = application.repositories.timetableRepository

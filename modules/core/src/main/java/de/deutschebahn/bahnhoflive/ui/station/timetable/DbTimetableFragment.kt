@@ -97,7 +97,7 @@ class DbTimetableFragment : Fragment(), MapPresetProvider {
             }
         })
         val viewSwitcher = view.findViewById<ViewAnimator>(R.id.switcher)
-        timetableCollector.timetableFlow.asLiveData().observe(viewLifecycleOwner) { timetable ->
+        timetableCollector.timetableLiveData.observe(viewLifecycleOwner) { timetable ->
             if (timetable == null) {
                 return@observe
             }
@@ -105,7 +105,7 @@ class DbTimetableFragment : Fragment(), MapPresetProvider {
             viewSwitcher.displayedChild = 0
         }
         timetableCollector.errorsLiveData.observe(viewLifecycleOwner) { volleyError ->
-            if (volleyError != null) {
+            if (volleyError == true) {
                 viewSwitcher.displayedChild = 2
             }
         }
