@@ -336,17 +336,20 @@ class StationViewModel(
         }
     }
 
-    val newTimetableLiveData = timetableCollector.timetableLiveData
+    val timetableErrorsLiveData =
+        timetableCollector.errorsStateFlow.asLiveData(viewModelScope.coroutineContext)
+
+    val timetableLoadingLiveData =
+        timetableCollector.progressFlow.asLiveData(viewModelScope.coroutineContext)
+
+    val newTimetableLiveData =
+        timetableCollector.timetableStateFlow.asLiveData(viewModelScope.coroutineContext)
 
     private val timetableRepository: TimetableRepository
         get() = application.repositories.timetableRepository
 
-    private val timetableHourCache = mutableMapOf<Pair<String, Long>, TimetableHour>()
-
     private suspend fun getTimetableHour(evaId: String, hour: Long): TimetableHour =
-        timetableHourCache.getOrPut(evaId to hour) {
-            timetableRepository.fetchTimetableHour(evaId, hour)
-        }
+        timetableRepository.fetchTimetableHour(evaId, hour)
 
     private suspend fun getTimetableChanges(evaId: String) =
         timetableRepository.fetchTimetableCahnges(evaId)
@@ -1403,7 +1406,7 @@ class StationViewModel(
 
     val isLoadingLiveData = shopsResource.loadingStatus.asFlow().combine(
         elevatorsResource.loadingStatus.asFlow().combine(
-            timetableCollector.isLoadingFlow
+            timetableCollector.progressFlow
         ) { elevatorsLoadingStatus, timetableIsLoading ->
             timetableIsLoading || elevatorsLoadingStatus == LoadingStatus.BUSY
         }

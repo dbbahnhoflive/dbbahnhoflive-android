@@ -39,7 +39,6 @@ import de.deutschebahn.bahnhoflive.backend.db.newsapi.model.Group;
 import de.deutschebahn.bahnhoflive.backend.local.model.ServiceContent;
 import de.deutschebahn.bahnhoflive.databinding.DynamicCardLayoutBinding;
 import de.deutschebahn.bahnhoflive.databinding.IncludeOccupancyBinding;
-import de.deutschebahn.bahnhoflive.repository.DbTimetableResource;
 import de.deutschebahn.bahnhoflive.repository.ElevatorsResource;
 import de.deutschebahn.bahnhoflive.repository.MergedStation;
 import de.deutschebahn.bahnhoflive.repository.Resource;
@@ -395,13 +394,13 @@ public class StationFragment extends androidx.fragment.app.Fragment implements
         reducedDbDeparturesViewHolder = new ReducedDbDeparturesViewHolder(dbDeparturesView, R.id.view_flipper, this);
         stationViewModel.getNewTimetableLiveData().observe(getViewLifecycleOwner(), timetable -> reducedDbDeparturesViewHolder.bind(timetable));
 
-        stationViewModel.getTimetableCollector().getErrorsLiveData().observe(getViewLifecycleOwner(), errors -> {
+        stationViewModel.getTimetableErrorsLiveData().observe(getViewLifecycleOwner(), errors -> {
             if (errors) {
                 reducedDbDeparturesViewHolder.showError();
             }
         });
 
-        stationViewModel.getTimetableCollector().isLoadingLiveData().observe(getViewLifecycleOwner(), isLoading -> {
+        stationViewModel.getTimetableLoadingLiveData().observe(getViewLifecycleOwner(), isLoading -> {
             if (isLoading) {
                 reducedDbDeparturesViewHolder.showProgress();
             }

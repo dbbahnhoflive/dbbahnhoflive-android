@@ -1,7 +1,6 @@
 package de.deutschebahn.bahnhoflive.repository.timetable
 
 import android.util.Log
-import androidx.lifecycle.asLiveData
 import de.deutschebahn.bahnhoflive.backend.local.model.EvaIds
 import de.deutschebahn.bahnhoflive.backend.ris.getCurrentHour
 import de.deutschebahn.bahnhoflive.backend.ris.model.TrainInfo
@@ -11,7 +10,6 @@ import java.util.concurrent.TimeUnit
 import kotlin.coroutines.CoroutineContext
 
 
-@OptIn(ExperimentalCoroutinesApi::class)
 class CoroutineTimetableCollector(
     val evaIdsFlow: Flow<EvaIds>,
     val coroutineScope: CoroutineScope,
@@ -21,14 +19,29 @@ class CoroutineTimetableCollector(
     private val defaultDispatcher: CoroutineContext = Dispatchers.Default
 ) {
 
+    constructor(
+        evaIdsFlow: Flow<EvaIds>,
+        coroutineScope: CoroutineScope,
+        timetableRepository: TimetableRepository,
+        currentHourProvider: suspend () -> Long = { getCurrentHour() },
+        defaultDispatcher: CoroutineContext = Dispatchers.Default
+    ) : this(
+        evaIdsFlow,
+        coroutineScope,
+        timetableRepository::fetchTimetableHour,
+        timetableRepository::fetchTimetableCahnges,
+        currentHourProvider,
+        defaultDispatcher
+    )
+
     private val hourInMillis = TimeUnit.HOURS.toMillis(1)
 
     private val initialsCache = mutableMapOf<Long, MutableMap<String, TimetableHour>>()
     private val changesCache = mutableMapOf<String, TimetableChanges>()
 
-    val isLoadingFlow = MutableStateFlow(false)
-    private val errorsStateFlow = MutableStateFlow(false)
-    private val timetableStateFlow = MutableStateFlow<Timetable?>(null)
+    val progressFlow = MutableStateFlow(false)
+    val errorsStateFlow = MutableStateFlow(false)
+    val timetableStateFlow = MutableStateFlow<Timetable?>(null)
 
     private val firstHourFlow = flow {
         emit(currentHourProvider())
@@ -73,7 +86,7 @@ class CoroutineTimetableCollector(
 
         refreshJob = coroutineScope.launch(defaultDispatcher) {
             parametersFlow.collectLatest { parameters ->
-                isLoadingFlow.value = true
+                progressFlow.value = true
 
                 try {
                     initialsCache.keys
@@ -131,12 +144,18 @@ class CoroutineTimetableCollector(
                             }
                         }
 
+                    yield()
+
                     val changes = changesResults.mapNotNull {
                         it.payload
                     }.flatMap { it.trainInfos }
 
+                    yield()
+
                     val mergedTrainInfos =
                         TrainInfo.mergeChanges(mergedInitials.toMutableMap(), changes)
+
+                    yield()
 
                     timetableStateFlow.value = Timetable(
                         mergedTrainInfos.values.toList(),
@@ -144,8 +163,13 @@ class CoroutineTimetableCollector(
                         parameters.hourCount
                     )
 
-                } catch (t: Throwable) {
+                } catch (cancellationException: CancellationException) {
                     Log.d(
+                        CoroutineTimetableCollector::class.java.simpleName,
+                        "Cancelled"
+                    )
+                } catch (t: Throwable) {
+                    Log.i(
                         CoroutineTimetableCollector::class.java.simpleName,
                         "Error loading time table",
                         t
@@ -153,7 +177,7 @@ class CoroutineTimetableCollector(
                     errorsStateFlow.value = true
                 }
 
-                isLoadingFlow.value = false
+                progressFlow.value = false
             }
         }
     }
@@ -178,12 +202,6 @@ class CoroutineTimetableCollector(
     private fun <T> List<kotlin.Result<T>>.unwrapSuccessful() = mapNotNull {
         it.getOrNull()
     }
-
-    val isLoadingLiveData get() = isLoadingFlow.asLiveData()
-
-    val errorsLiveData get() = errorsStateFlow.asLiveData()
-
-    val timetableLiveData get() = timetableStateFlow.asLiveData()
 
     init {
         refresh(false)
