@@ -23,6 +23,7 @@ import de.deutschebahn.bahnhoflive.push.createNotificationChannels
 import de.deutschebahn.bahnhoflive.repository.ApplicationServices
 import de.deutschebahn.bahnhoflive.repository.RepositoryHolder
 import de.deutschebahn.bahnhoflive.repository.elevator.Fasta2ElevatorStatusRepository
+import de.deutschebahn.bahnhoflive.repository.parking.ParkingInfoParkingRepository
 import de.deutschebahn.bahnhoflive.repository.poisearch.PoiSearchConfigurationProvider
 import de.deutschebahn.bahnhoflive.repository.station.OfficialStationRepository
 import de.deutschebahn.bahnhoflive.repository.timetable.RisTimetableRepository
@@ -95,7 +96,11 @@ abstract class BaseApplication(
             ),
             timetableRepository = RisTimetableRepository(
                 restHelper, risAndParkingAuthorizationTool
-            )
+            ),
+            parkingRepository = ParkingInfoParkingRepository(
+                restHelper,
+                risAndParkingAuthorizationTool
+            ),
         )
     }
 
