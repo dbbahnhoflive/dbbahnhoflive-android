@@ -2,7 +2,7 @@
 
 In diesem Open Source Projekt gibt es zwei wesentliche Anpassungen im Vergleich zu der DB Bahnhof live App, die im Play- und Appstore erhältlich ist:
 
-1. APIs bzw. deren API-Keys sind auf öffentliche Testzugänge umgestellt. Für den Zugriff auf die Schnittstellen PTS (Bahnhofssuche) und FASTA (Aufzugsinformationen) ist deshalb ein öffentlicher API-Key im Code hinterlegt.  
+1. APIs bzw. deren API-Keys sind auf öffentliche Testzugänge umgestellt. Für den Zugriff auf die Schnittstellen RIS :: Stations (Bahnhofssuche und allgemeine Stationsinformationen), RIS :: Journeys (Zuglauf) sowie FASTA (Aufzugsinformationen) und Parking Information (Parkplatzinformationen) sind deshalb öffentliche API-Keys im Code hinterlegt.  
 2. Bilder und andere urheberrechtlich relevante Inhalte sind nicht Teil des Open Source Projektes. Teilweise wurden deshalb Platzhalter-Graphiken verwendet, die leider nicht produktiv genutzt werden dürfen, sondern durch eigene ersetzt werden müssen.
 
 Rechtliche Hinweise:

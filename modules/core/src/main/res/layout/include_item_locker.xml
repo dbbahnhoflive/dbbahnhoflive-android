@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+
+<androidx.appcompat.widget.LinearLayoutCompat xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:focusable="true"
+    android:orientation="vertical"
+    android:paddingLeft="@dimen/default_space_double"
+    android:paddingRight="@dimen/default_space_double"
+    tools:showIn="@layout/fragment_locker"
+    android:layout_marginBottom="@dimen/default_space_double">
+
+    <TextView
+        android:id="@+id/locker_size"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:textSize="@dimen/textsize_28"
+        android:textStyle="bold"
+        android:text="Kleines Schliessfach" />
+
+    <TextView
+        android:id="@+id/locker_amount"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:textSize="@dimen/textsize_28"
+        android:text="Insgesamt xxx Schliessfächer" />
+
+    <TextView
+        android:id="@+id/locker_dimensions"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:textSize="@dimen/textsize_28"
+        android:text="42 x 24 x 76" />
+
+    <TextView
+        android:id="@+id/locker_max_lease_duration"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:textSize="@dimen/textsize_28"
+        android:text="Max. Mietdauer" />
+
+    <TextView
+        android:id="@+id/locker_fee"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:textSize="@dimen/textsize_28"
+        android:text="2,50 € / 24h" />
+
+    <TextView
+        android:id="@+id/locker_payment_types"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:textSize="@dimen/textsize_28"
+        android:text="Zahlungsmittel: bar" />
+
+</androidx.appcompat.widget.LinearLayoutCompat>

@@ -129,6 +129,7 @@
     <string name="stationinfo_infos_and_services">Info &amp; Services vor Ort</string>
     <string name="stationinfo_service_phone_numbers">Rufnummern &amp; Services</string>
     <string name="stationinfo_parkings">Parkplätze</string>
+    <string name="stationinfo_lockers">Schließfächer</string>
     <string name="title_stationinfo_categories">Bahnhofsinformationen</string>
     <string name="title_shopping_categories"><![CDATA[Shoppen & Schlemmen]]></string>
 
@@ -368,4 +369,49 @@
     <string name="rail_replacement_map_link">Eine Wegbeschreibung finden Sie unter Bahnhofsinformationen.</string>
     <string name="rail_replacement_entry_label_plural">An diesem Bahnhof finden Sie folgende Ersatzhaltestellen:</string>
     <string name="rail_replacement_entry_label_singular">An diesem Bahnhof finden Sie folgende Ersatzhaltestelle:</string>
+
+    <string name="locker_entry_label">An diesem Bahnhof können Sie Ihr Gepäck sicher aufbewahren. Alle Größenangaben zu den Schließfächern sind Länge, Breite und Höhe in Zentimeter. Bitte beachten Sie auch die Nutzungsbedingungen vor Ort.</string>
+    <string name="locker_amount_lockers">Insgesamt %d Schließfächer</string>
+
+    <string-array name="locker_types">
+        <item>Unbekanntes Schließfach</item>
+        <item>Kleines Schließfach</item>
+        <item>Mittleres Schließfach</item>
+        <item>Großes Schließfach</item>
+        <item>Jumbo-Schließfach</item>
+    </string-array>
+    <string name="locker_short_term">"Kurzzeit"</string>
+    <string name="locker_payment">"Zahlungsmittel: %s"</string>
+    <string name="locker_payment_type_cash">"bar"</string>
+    <string name="locker_payment_type_cashless">"bargeldlos"</string>
+    <string name="locker_payment_type_unknown">"unbekannt"</string>
+    <string name="locker_dimensions">"%d x %d x %d"</string>
+    <string name="locker_dimensions_VO">"Größe: %d x %d x %d cm"</string>
+
+    <string name="locker_max_lease_duration">"Max. Mietdauer:\u0020%s"</string>
+    <string name="locker_max_lease_duration_VO">"Maximale Mietdauer :\u0020%s"</string>
+    <string name="locker_flyout_description_link">"Informationen zu den Schließfächern finden Sie unter Bahnhofsinformationen."</string>
+
+    <string-array name="locker_fee_periods">
+        <item>%s / Unbekannt</item>
+        <item>%s / h</item>
+        <item>%s / Tag</item>
+        <item>%s /\u0020</item>
+    </string-array>
+    <string-array name="locker_fee_periods_VO">
+        <item>Preis: %s </item>
+        <item>Preis: %s pro Stunde</item>
+        <item>Preis: %s für 24 Stunden</item>
+        <item>Preis: %s für\u0020</item>
+    </string-array>
+
+    <string name="date_years">Jahre</string>
+    <string name="date_months">Monate</string>
+    <string name="date_weeks">Wochen</string>
+    <string name="date_days">Tage</string>
+    <string name="date_hours">Stunden</string>
+    <string name="date_minutes">Minuten</string>
+    <string name="date_seconds">Sekunden</string>
+
 </resources>
+

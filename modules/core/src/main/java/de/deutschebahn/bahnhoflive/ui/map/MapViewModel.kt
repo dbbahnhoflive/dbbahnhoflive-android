@@ -17,6 +17,7 @@ import de.deutschebahn.bahnhoflive.backend.rimap.model.RimapPOI
 import de.deutschebahn.bahnhoflive.backend.rimap.model.RimapStation
 import de.deutschebahn.bahnhoflive.backend.ris.model.TrainInfo
 import de.deutschebahn.bahnhoflive.repository.*
+import de.deutschebahn.bahnhoflive.repository.locker.LockerResource
 import de.deutschebahn.bahnhoflive.repository.parking.ViewModelParking
 import de.deutschebahn.bahnhoflive.stream.livedata.OneShotLiveData
 import de.deutschebahn.bahnhoflive.stream.livedata.switchMap
@@ -70,6 +71,8 @@ class MapViewModel(
 
     val parking = ViewModelParking()
 
+    val lockers = LockerResource()
+
     val stationResource =
         StationResource(
             openHoursParser,
@@ -117,6 +120,8 @@ class MapViewModel(
             parking.parkingsResource.initialize(station)
 
             railReplacementResource.initialize(station)
+
+            lockers.initialize(station)
         }
     }
 

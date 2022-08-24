@@ -131,10 +131,12 @@
         "menusubcat": "Wartebereich"
       },
       {
-        "title": "Schließfach",
+        "title": "Schließfächer",
         "menucat": "Bahnhofseinrichtungen",
-        "menusubcat": "Schließfach",
-        "presets": ["locker"]
+        "menusubcat": "Schließfächer",
+        "presets": [
+          "locker"
+        ]
       },
       {
         "title": "Gepäckaufbewahrung",

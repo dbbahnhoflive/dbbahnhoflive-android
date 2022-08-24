@@ -8,6 +8,7 @@ import com.google.android.material.bottomsheet.BottomSheetDialogFragment
 import de.deutschebahn.bahnhoflive.databinding.FragmentAccessibilityKeyBinding
 import de.deutschebahn.bahnhoflive.databinding.ItemKeyBinding
 import de.deutschebahn.bahnhoflive.repository.accessibility.AccessibilityFeature
+import de.deutschebahn.bahnhoflive.util.setAccessibilityText
 
 class AccessibilityKeyFragment : BottomSheetDialogFragment() {
 
@@ -25,8 +26,9 @@ class AccessibilityKeyFragment : BottomSheetDialogFragment() {
         AccessibilityFeature.values().forEach { accessibilityFeature ->
             ItemKeyBinding.inflate(inflater, contentContainer, true).also { itemView ->
                 itemView.key.setText(accessibilityFeature.label)
-                itemView.key.contentDescription = //FIXME: use accessibility delegate
-                    accessibilityFeature.contentDescription?.let { getText(it) }
+                itemView.key.setAccessibilityText(accessibilityFeature.contentDescription?.let {
+                    getText(it)
+                })
                 itemView.description.setText(accessibilityFeature.description)
             }
         }

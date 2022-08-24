@@ -284,6 +284,7 @@ public class MapOverlayFragment extends Fragment implements OnMapReadyCallback, 
 
                 allMarkerBinders.add(markerBinder);
                 categoryPins.add(markerBinder);
+
             }
 
             content.setMarkerBinders(Content.Source.RIMAPS_RRT, allMarkerBinders, categorizedMarkerBinders);

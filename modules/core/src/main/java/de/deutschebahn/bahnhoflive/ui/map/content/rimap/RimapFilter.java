@@ -66,8 +66,8 @@ public class RimapFilter {
 
     public void checkOnlyHafas(boolean check) {
         checkAllItems(false);
-
     }
+
 
     public Filter findHafasFilterItem() {
         return HAFAS_FILTER;

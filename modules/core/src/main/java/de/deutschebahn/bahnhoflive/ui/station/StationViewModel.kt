@@ -35,6 +35,7 @@ import de.deutschebahn.bahnhoflive.persistence.RecentContentQueriesStore
 import de.deutschebahn.bahnhoflive.repository.*
 import de.deutschebahn.bahnhoflive.repository.accessibility.AccessibilityFeaturesResource
 import de.deutschebahn.bahnhoflive.repository.feedback.WhatsAppFeeback
+import de.deutschebahn.bahnhoflive.repository.locker.LockersViewModel
 import de.deutschebahn.bahnhoflive.repository.map.RrtRequestResult
 import de.deutschebahn.bahnhoflive.repository.parking.ViewModelParking
 import de.deutschebahn.bahnhoflive.stream.livedata.MergedLiveData
@@ -321,6 +322,8 @@ class StationViewModel(
 
     val parking = ViewModelParking()
 
+    val lockers = LockersViewModel()
+
     val elevatorsResource = ElevatorsResource()
 
     val occupancyResource = StationOccupancyResource(repositories.occupancyRepository)
@@ -380,6 +383,7 @@ class StationViewModel(
             elevatorsResource.initialize(station)
             shopsResource.initialize(station)
             parking.parkingsResource.initialize(station)
+            lockers.lockerResource.initialize(station)
             dbTimetableResource.initialize(station)
 
             viewModelScope.launch {
@@ -496,6 +500,7 @@ class StationViewModel(
                     staticInfoLiveData.value,
                     shopsResource.data.value,
                     parking.parkingsResource.data.value,
+                    lockers.lockerResource.data.value,
                     elevatorsResource.data.value
                 )
                 if (stationFeature.isVisible) {
@@ -517,6 +522,7 @@ class StationViewModel(
                     staticInfoLiveData.value,
                     shopsResource.data.value,
                     parking.parkingsResource.data.value,
+                    lockers.lockerResource.data.value,
                     elevatorsResource.data.value
                 )
             }
@@ -526,6 +532,7 @@ class StationViewModel(
         addSource(elevatorsResource.data, observer)
         addSource(shopsResource.data, observer)
         addSource(parking.parkingsResource.data, observer)
+        addSource(lockers.lockerResource.data, observer)
         addSource(risServiceAndCategoryResource.data, observer)
 
     }
@@ -540,6 +547,7 @@ class StationViewModel(
         val detailedStopPlace = risServiceAndCategoryResource.data
         val elevators = elevatorsResource.data
         val parkings = parking.parkingsResource.data
+        val lockers = lockers.lockerResource.data
         val railReplacement = railReplacementSummaryLiveData
 
         val update = fun(_: Any?) {
@@ -747,9 +755,9 @@ class StationViewModel(
                                             stationFeaturesOnClickListener
                                         )
                                     }
-                                    "Bahnhofsausstattung Schließfächer" -> featureVisible(
+                                    "Bahnhofsausstattung Schließfächer" -> (featureVisible(
                                         StationFeatureDefinition.LOCKERS
-                                    ) then {
+                                    ) && lockers.value.isNullOrEmpty()) then {
                                         ContentSearchResult(
                                             "Schließfächer",
                                             R.drawable.bahnhofsausstattung_schlie_faecher,
@@ -929,6 +937,21 @@ class StationViewModel(
                         } else null
                         )
 
+                        .append(if (lockers.value?.takeUnless { it.isEmpty() } != null && matchingKeys.contains(
+                                "Bahnhofsinformation Schließfächer"
+                            )) {
+                            ContentSearchResult(
+                                "Schließfächer",
+                                R.drawable.bahnhofsausstattung_schlie_faecher,
+                                currentRawQuery,
+                                SearchResultClickListener(
+                                    View.OnClickListener {
+                                        stationNavigation?.showLockers()
+                                    })
+                            )
+                        } else null
+                        )
+
                         .append(if (railReplacement.value?.takeUnless { it.isEmpty() } != null && matchingKeys.contains(
                                 "Bahnhofsinformation Schienenersatzverkehr"
                             )) {
@@ -1054,6 +1077,7 @@ class StationViewModel(
         addSource(infoAvailability, update)
         addSource(elevators, update)
         addSource(parkings, update)
+        addSource(lockers, update)
         addSource(railReplacement, update)
         addSource(stationFeatures, update)
         addSource(queryAndParts, update)
@@ -1310,6 +1334,7 @@ class StationViewModel(
                         } == true
             } == true)
                     || !parking.parkingsResource.data.value.isNullOrEmpty()
+                    || !lockers.lockerResource.data.value.isNullOrEmpty()
                     || !elevatorsResource.data.value.isNullOrEmpty()
                     || !railReplacementSummaryLiveData.value.isNullOrEmpty()
         }
@@ -1318,6 +1343,7 @@ class StationViewModel(
         .addSource(serviceNumbersLiveData)
         .addSource(staticInfoLiveData)
         .addSource(parking.parkingsResource.data)
+        .addSource(lockers.lockerResource.data)
         .addSource(elevatorsResource.data)
         .addSource(risServiceAndCategoryResource.data)
         .addSource(railReplacementSummaryLiveData)

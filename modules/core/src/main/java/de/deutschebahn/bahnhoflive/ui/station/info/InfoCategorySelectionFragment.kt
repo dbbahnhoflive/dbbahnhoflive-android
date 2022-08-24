@@ -17,12 +17,14 @@ import de.deutschebahn.bahnhoflive.analytics.TrackingManager
 import de.deutschebahn.bahnhoflive.backend.db.fasta2.model.FacilityStatus
 import de.deutschebahn.bahnhoflive.backend.local.model.ServiceContent
 import de.deutschebahn.bahnhoflive.backend.local.model.ServiceContentType
+import de.deutschebahn.bahnhoflive.repository.locker.LockerResource
 import de.deutschebahn.bahnhoflive.repository.parking.ParkingsResource
 import de.deutschebahn.bahnhoflive.ui.ServiceContentFragment
 import de.deutschebahn.bahnhoflive.ui.station.*
 import de.deutschebahn.bahnhoflive.ui.station.accessibility.AccessibilityFragment
 import de.deutschebahn.bahnhoflive.ui.station.elevators.ElevatorStatusListsFragment
 import de.deutschebahn.bahnhoflive.ui.station.features.RISServicesAndCategory
+import de.deutschebahn.bahnhoflive.ui.station.locker.LockerFragment
 import de.deutschebahn.bahnhoflive.ui.station.parking.ParkingListFragment
 import de.deutschebahn.bahnhoflive.ui.station.railreplacement.RailReplacementFragment
 import de.deutschebahn.bahnhoflive.util.Collections
@@ -39,6 +41,7 @@ class InfoCategorySelectionFragment : CategorySelectionFragment(
     private lateinit var detailedStationLiveData: LiveData<RISServicesAndCategory?>
     private lateinit var staticInfoLiveData: LiveData<StaticInfoCollection?>
     private lateinit var parkingsResource: ParkingsResource
+    private lateinit var lockersResource: LockerResource
 
     private lateinit var elevatorsDataResource: LiveData<List<FacilityStatus>?>
     private lateinit var railReplacementSummaryLiveData: LiveData<MutableMap<String, MutableList<String?>>?>
@@ -50,6 +53,7 @@ class InfoCategorySelectionFragment : CategorySelectionFragment(
     private var parkingsCategory: Category? = null
     private var elevatorsCategory: Category? = null
     private var railReplacementCategory: Category? = null
+    private var lockerCategory: Category? = null
 
     private fun updateCategories() {
         if (isAdded) {
@@ -70,6 +74,8 @@ class InfoCategorySelectionFragment : CategorySelectionFragment(
                 elevatorsCategory = addElevators()
             }
 
+            lockerCategory = addLockers()
+
             adapter?.setCategories(
                 listOfNotNull(
                     infoAndServicesCategory,
@@ -78,11 +84,13 @@ class InfoCategorySelectionFragment : CategorySelectionFragment(
                     accessibilityCategory,
                     parkingsCategory,
                     elevatorsCategory,
-                    railReplacementCategory
+                    railReplacementCategory,
+                    lockerCategory
                 )
             )
         }
     }
+
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
@@ -194,6 +202,16 @@ class InfoCategorySelectionFragment : CategorySelectionFragment(
         }
     }
 
+    private fun addLockers() =
+        lockersResource.data.value?.takeUnless { it.isEmpty() }?.let {
+            SimpleDynamicCategory(getText(R.string.stationinfo_lockers),
+                R.drawable.bahnhofsausstattung_schlie_faecher,
+                TrackingManager.Category.SCHLIESSFAECHER,
+                Category.CategorySelectionListener { category ->
+                    trackCategoryTap(category)
+                    startFragment(LockerFragment())
+                })
+        }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -205,6 +223,8 @@ class InfoCategorySelectionFragment : CategorySelectionFragment(
         parkingsResource = stationViewModel.parking.parkingsResource
         staticInfoLiveData = stationViewModel.staticInfoLiveData
         railReplacementSummaryLiveData = stationViewModel.railReplacementSummaryLiveData
+
+        lockersResource = stationViewModel.lockers.lockerResource
 
         staticInfoLiveData.observe(this) {
             updateCategories()
@@ -218,6 +238,11 @@ class InfoCategorySelectionFragment : CategorySelectionFragment(
         infoAndServicesLiveData.observe(this) { updateCategories() }
         serviceNumbersLiveData.observe(this) { updateCategories() }
         railReplacementSummaryLiveData.observe(this) { updateCategories() }
+
+        lockersResource.data.observe(this) {
+            updateCategories()
+        }
+
 
         stationViewModel.selectedServiceContentType.observe(this, Observer {
             if (it != null) {
