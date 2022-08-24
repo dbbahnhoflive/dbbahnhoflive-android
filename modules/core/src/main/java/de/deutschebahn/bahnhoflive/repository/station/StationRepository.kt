@@ -34,7 +34,7 @@ open class StationRepository {
 
     open fun queryAccessibilityDetails(
         listener: VolleyRestListener<List<Platform>>,
-        evaId: String,
+        stadaId: String,
         force: Boolean
     ): VolleyRequestCancellable<List<Platform>>? {
         listener.fail()

@@ -313,8 +313,7 @@ class StationViewModel(
     private val evaIdsDataObserver = Observer<Station> { station ->
         if (station != null) {
             dbTimetableResource.loadIfNecessary()
-
-            accessibilityFeaturesResource.evaIds = station.evaIds
+            accessibilityFeaturesResource.station = station
         }
     }
 
@@ -367,8 +366,7 @@ class StationViewModel(
             collect {
                 if (it?.isSuccess == true) {
                     dbTimetableResource.loadIfNecessary()
-
-                    accessibilityFeaturesResource.evaIds = it.getOrNull()?.evaIds
+                    accessibilityFeaturesResource.station = it.getOrNull()
                 } else {
                     dbTimetableResource.setEvaIdsMissing()
                 }
@@ -396,6 +394,7 @@ class StationViewModel(
             occupancyResource.initialize(station)
 
             railReplacementResource.initialize(station)
+            accessibilityFeaturesResource.initialize(station)
         }
 
         stationResource.refresh()

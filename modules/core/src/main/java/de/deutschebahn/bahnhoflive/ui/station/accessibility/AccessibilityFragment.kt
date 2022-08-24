@@ -1,5 +1,6 @@
 package de.deutschebahn.bahnhoflive.ui.station.accessibility
 
+import android.content.Intent
 import android.os.Bundle
 import android.view.View
 import android.view.ViewGroup
@@ -19,14 +20,17 @@ import de.deutschebahn.bahnhoflive.databinding.IncludeAccessibilityElevatorLinkB
 import de.deutschebahn.bahnhoflive.databinding.IncludeAccessibilityHeaderBinding
 import de.deutschebahn.bahnhoflive.repository.LoadingStatus
 import de.deutschebahn.bahnhoflive.repository.accessibility.AccessibilityFeature
+import de.deutschebahn.bahnhoflive.ui.map.MapPresetProvider
+import de.deutschebahn.bahnhoflive.ui.map.content.rimap.RimapFilter
 import de.deutschebahn.bahnhoflive.ui.station.StationViewModel
 import de.deutschebahn.bahnhoflive.util.PhoneIntent
 import de.deutschebahn.bahnhoflive.view.*
 
-class AccessibilityFragment : Fragment(R.layout.fragment_accessibility) {
+class AccessibilityFragment : Fragment(R.layout.fragment_accessibility), MapPresetProvider {
 
     val viewModel by activityViewModels<StationViewModel>()
 
+    lateinit var includeAccessibilityHeaderBinding: IncludeAccessibilityHeaderBinding
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
@@ -39,7 +43,7 @@ class AccessibilityFragment : Fragment(R.layout.fragment_accessibility) {
             fragmentAccessibilityBinding.recycler.inflate(R.layout.item_progress)
         )
 
-        val includeAccessibilityHeaderBinding = IncludeAccessibilityHeaderBinding.inflate(
+        includeAccessibilityHeaderBinding = IncludeAccessibilityHeaderBinding.inflate(
             layoutInflater, fragmentAccessibilityBinding.recycler, false
         ).apply {
             key.setOnClickListener {
@@ -213,6 +217,18 @@ class AccessibilityFragment : Fragment(R.layout.fragment_accessibility) {
         }
 
         super.onStop()
+    }
+
+    override fun prepareMapIntent(intent: Intent): Boolean {
+//        if (includeAccessibilityHeaderBinding.selectedPlatform.tag != null) {
+        RimapFilter.putPreset(intent, RimapFilter.PRESET_ELEVATORS_ONLY)
+//            RimapFilter.putPresetTrackFilter(
+//                intent,
+//                includeAccessibilityHeaderBinding.selectedPlatform.tag as String
+//            )
+        return true
+//        } else
+//            return false
     }
 }
 

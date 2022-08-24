@@ -22,12 +22,11 @@ import java.util.*
 class RISPlatformsRequest(
     listener: VolleyRestListener<List<Platform>>,
     dbAuthorizationTool: DbAuthorizationTool,
-    evaId: String,
+    stadaId: String,
     force: Boolean = false,
     clientIdDbAuthorizationTool: DbAuthorizationTool?,
 ) : RISStationsRequest<List<Platform>>(
-    "platforms/$evaId" +
-            "?includeAccessibility=true",
+    "platforms/by-key?includeAccessibility=true&keyType=STADA&key=$stadaId",
     dbAuthorizationTool,
     listener
 ) {
@@ -84,5 +83,4 @@ class RISPlatformsRequest(
             Response.error(VolleyError(e))
         }
     }
-
 }
