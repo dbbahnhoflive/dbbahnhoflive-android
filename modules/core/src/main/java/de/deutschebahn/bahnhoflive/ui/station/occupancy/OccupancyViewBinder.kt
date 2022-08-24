@@ -17,14 +17,15 @@ import androidx.core.widget.PopupWindowCompat
 import androidx.viewpager2.widget.ViewPager2
 import com.google.android.material.tabs.TabLayoutMediator
 import de.deutschebahn.bahnhoflive.R
+import de.deutschebahn.bahnhoflive.databinding.IncludeOccupancyBinding
+import de.deutschebahn.bahnhoflive.databinding.IncludeOccupancyTimeLabelBinding
+import de.deutschebahn.bahnhoflive.databinding.ItemOccupancyDayOfWeekBinding
+import de.deutschebahn.bahnhoflive.databinding.PopupOccupancyDayOfWeekBinding
 import de.deutschebahn.bahnhoflive.repository.occupancy.model.Occupancy
-import kotlinx.android.synthetic.main.include_occupancy.view.*
-import kotlinx.android.synthetic.main.include_occupancy_time_label.view.*
-import kotlinx.android.synthetic.main.item_occupancy_day_of_week.view.*
-import kotlinx.android.synthetic.main.popup_occupancy_day_of_week.view.*
+import de.deutschebahn.bahnhoflive.view.inflater
 
 class OccupancyViewBinder(
-    parent: View,
+    private val includeOccupancyBinding: IncludeOccupancyBinding,
     onShowDetailsListener: View.OnClickListener
 ) {
 
@@ -34,16 +35,14 @@ class OccupancyViewBinder(
         HIGH(R.string.occupancy_level_high)
     }
 
-    private val view = parent.occupancyView.apply {
-//        occupancyInfoButton.
+    private val view = includeOccupancyBinding.occupancyView.apply {
         setOnClickListener(onShowDetailsListener)
     }
 
     private val context get() = view.context
 
     private val dailyOccupancyAdapter = DailyOccupancyAdapter(
-        LayoutInflater.from(parent.context)
-            .inflate(R.layout.include_occupancy_time_label, null)
+        IncludeOccupancyTimeLabelBinding.inflate(includeOccupancyBinding.root.inflater)
             .timeScale.paint.measureText("22:00"),
         onShowDetailsListener
     )
@@ -95,8 +94,7 @@ class OccupancyViewBinder(
         }
 
 
-    private val dayOfWeekPopupView = LayoutInflater.from(view.context)
-        .inflate(R.layout.popup_occupancy_day_of_week, null)
+    private val dayOfWeekPopupView = PopupOccupancyDayOfWeekBinding.inflate(view.inflater)
 
     private val selectedDayPopupView = dayOfWeekPopupView.currentlySelectedDay
 
@@ -110,8 +108,8 @@ class OccupancyViewBinder(
     private val popupDayViews = dayOfWeekPopupView.dayOfWeekListContainer.let { container ->
         with(LayoutInflater.from(container.context)) {
             DAY_OF_WEEK_LABELS.mapIndexed { dayIndex, labelStringRes ->
-                inflate(R.layout.item_occupancy_day_of_week, container, false).let { dayView ->
-                    container.addView(dayView)
+                ItemOccupancyDayOfWeekBinding.inflate(this, container, false).let { dayView ->
+                    container.addView(dayView.root)
                     dayView.textView.apply {
                         setText(labelStringRes)
                         tag = dayIndex
@@ -132,7 +130,7 @@ class OccupancyViewBinder(
         isOutsideTouchable = true
         setBackgroundDrawable(context.resources.getDrawable(R.drawable.shape_background_occupancy_day_of_week_popup))
         WindowManager.LayoutParams.TYPE_APPLICATION_PANEL
-        contentView = dayOfWeekPopupView
+        contentView = dayOfWeekPopupView.root
 
         contentView.measure(View.MeasureSpec.UNSPECIFIED, View.MeasureSpec.UNSPECIFIED)
     }
@@ -153,18 +151,18 @@ class OccupancyViewBinder(
         setTextColor(context.resources.getColor(colorRes))
     }
 
-    private val selectedDayView = view.dayOfWeekSpinner.also { textView ->
-        textView?.setOnClickListener {
+    private val selectedDayView = includeOccupancyBinding.dayOfWeekSpinner.also { textView ->
+        textView.setOnClickListener {
             dayOfWeekPopup.showAsDropDown(
                 textView,
-                textView.measuredWidth - dayOfWeekPopupView.measuredWidth,
+                textView.measuredWidth - dayOfWeekPopupView.root.measuredWidth,
                 0
             )
         }
 
     }
 
-    private val pager = view.occupancyViewPager.apply {
+    private val pager = includeOccupancyBinding.occupancyViewPager.apply {
         adapter = dailyOccupancyAdapter
 
         registerOnPageChangeCallback(object : ViewPager2.OnPageChangeCallback() {
@@ -175,14 +173,17 @@ class OccupancyViewBinder(
             }
         })
 
-        TabLayoutMediator(view.dailyOccupancyPagerIndicator, this) { tab, position ->
+        TabLayoutMediator(
+            includeOccupancyBinding.dailyOccupancyPagerIndicator,
+            this
+        ) { tab, position ->
             tab.icon = resources.getDrawable(R.drawable.shape_page_indicator_news)
         }.attach()
 
     }
 
-    private val currentStatusView = view.valueCurrentOccupancy
-    private val currentStatusLabelView = view.labelCurrentOccupancy
+    private val currentStatusView = includeOccupancyBinding.valueCurrentOccupancy
+    private val currentStatusLabelView = includeOccupancyBinding.labelCurrentOccupancy
 
 
     var occupancy: Occupancy? = null

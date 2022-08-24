@@ -13,10 +13,9 @@ import android.view.View
 import android.view.ViewGroup
 import com.google.android.material.tabs.TabLayout
 import de.deutschebahn.bahnhoflive.R
+import de.deutschebahn.bahnhoflive.databinding.FragmentTwoTabsBinding
 import de.deutschebahn.bahnhoflive.ui.map.MapPresetProvider
 import de.deutschebahn.bahnhoflive.view.BaseOnTabSelectedListener
-import kotlinx.android.synthetic.main.fragment_two_tabs.*
-import kotlinx.android.synthetic.main.fragment_two_tabs.view.*
 
 abstract class TwoTabsFragment protected constructor(
     private val tab1Name: Int,
@@ -28,11 +27,15 @@ abstract class TwoTabsFragment protected constructor(
     private val currentFragment: androidx.fragment.app.Fragment?
         get() = childFragmentManager.findFragmentById(R.id.fragment_container)
 
-    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
-                              savedInstanceState: Bundle?): View? {
-        val view = inflater.inflate(R.layout.fragment_two_tabs, container, false)
+    private var viewBinding: FragmentTwoTabsBinding? = null
 
-        view.tabs?.apply {
+    override fun onCreateView(
+        inflater: LayoutInflater, container: ViewGroup?,
+        savedInstanceState: Bundle?
+    ): View = FragmentTwoTabsBinding.inflate(inflater, container, false).apply {
+        viewBinding = this
+
+        tabs.apply {
             val leftTab = newTab().setText(tab1Name)
             val rightTab = newTab().setText(tab2Name)
             setHighlighted(leftTab, tab1Description, true)
@@ -48,11 +51,18 @@ abstract class TwoTabsFragment protected constructor(
                 }
             })
         }
-        return view
+    }.root
+
+    override fun onDestroyView() {
+        viewBinding = null
+        super.onDestroyView()
     }
 
-
-    private fun setHighlighted(tab: TabLayout.Tab, baseDescription: Int, highlighted: Boolean): TabLayout.Tab {
+    private fun setHighlighted(
+        tab: TabLayout.Tab,
+        baseDescription: Int,
+        highlighted: Boolean
+    ): TabLayout.Tab {
         return tab.setContentDescription(
             "${getText(baseDescription)} ${getString(if (highlighted) R.string.sr_tab_highlighted else R.string.sr_tab_not_highlighted)}"
         )
@@ -105,6 +115,6 @@ abstract class TwoTabsFragment protected constructor(
     }
 
     protected fun setTab(index: Int) {
-        tabs?.getTabAt(index)?.select()
+        viewBinding?.tabs?.getTabAt(index)?.select()
     }
 }

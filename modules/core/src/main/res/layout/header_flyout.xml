@@ -25,7 +25,6 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        tools:src="@drawable/rimap_fernbus_grau"
         android:importantForAccessibility="no"/>
 
     <TextView

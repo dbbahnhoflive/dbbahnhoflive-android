@@ -5,10 +5,9 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
-import de.deutschebahn.bahnhoflive.R
+import de.deutschebahn.bahnhoflive.databinding.FragmentAccessibilityKeyBinding
+import de.deutschebahn.bahnhoflive.databinding.ItemKeyBinding
 import de.deutschebahn.bahnhoflive.repository.accessibility.AccessibilityFeature
-import kotlinx.android.synthetic.main.fragment_accessibility_key.view.*
-import kotlinx.android.synthetic.main.item_key.view.*
 
 class AccessibilityKeyFragment : BottomSheetDialogFragment() {
 
@@ -16,26 +15,22 @@ class AccessibilityKeyFragment : BottomSheetDialogFragment() {
         inflater: LayoutInflater,
         container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View = inflater.inflate(R.layout.fragment_accessibility_key, container, false)
-        .also { fragmentView ->
+    ): View = FragmentAccessibilityKeyBinding.inflate(inflater, container, false).apply {
 
-            fragmentView.btnClose.setOnClickListener {
-                dismiss()
-            }
-
-            val contentContainer = fragmentView.contentContainer
-
-            AccessibilityFeature.values().forEach { accessibilityFeature ->
-                inflater.inflate(R.layout.item_key, contentContainer, false).also { itemView ->
-                    itemView.key.setText(accessibilityFeature.label)
-                    itemView.key.contentDescription =
-                        accessibilityFeature.contentDescription?.let { getText(it) }
-                    itemView.description.setText(accessibilityFeature.description)
-
-                    contentContainer.addView(itemView)
-                }
-            }
-
+        btnClose.setOnClickListener {
+            dismiss()
         }
+
+
+        AccessibilityFeature.values().forEach { accessibilityFeature ->
+            ItemKeyBinding.inflate(inflater, contentContainer, true).also { itemView ->
+                itemView.key.setText(accessibilityFeature.label)
+                itemView.key.contentDescription = //FIXME: use accessibility delegate
+                    accessibilityFeature.contentDescription?.let { getText(it) }
+                itemView.description.setText(accessibilityFeature.description)
+            }
+        }
+
+    }.root
 
 }

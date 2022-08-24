@@ -230,7 +230,7 @@ public class ServiceContentFragment extends Fragment {
                                 //this pattern does not know if we are in or outside of a tag
                                 // Pattern p = Pattern.compile("[0123456789\\- ]{5,}");
 
-                                Pattern p = Pattern.compile("(>|\\s)[\\d]{3,}\\/?([^\\D]|\\s)+[\\d]");
+                                Pattern p = Pattern.compile("(>|\\s)[\\d]{3,}/?([^\\D]|\\s)+[\\d]");
                                 final Matcher m = p.matcher(shrinkingDescription);
 
                                 MBTextView descriptionPartTextView = new MBTextView(activity);

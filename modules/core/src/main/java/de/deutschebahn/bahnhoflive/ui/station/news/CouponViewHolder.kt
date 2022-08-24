@@ -8,24 +8,22 @@ package de.deutschebahn.bahnhoflive.ui.station.news
 
 import android.graphics.BitmapFactory
 import android.view.View
-import android.view.ViewGroup
-import de.deutschebahn.bahnhoflive.R
 import de.deutschebahn.bahnhoflive.backend.db.newsapi.model.News
+import de.deutschebahn.bahnhoflive.databinding.CardExpandableCouponBinding
 import de.deutschebahn.bahnhoflive.view.ItemClickListener
 import de.deutschebahn.bahnhoflive.view.SelectableItemViewHolder
 import de.deutschebahn.bahnhoflive.view.SingleSelectionManager
-import kotlinx.android.synthetic.main.card_expandable_coupon.view.*
 
 class CouponViewHolder(
-    parent: ViewGroup,
+    private val cardExpandableCouponBinding: CardExpandableCouponBinding,
     singleSelectionManager: SingleSelectionManager,
     private val itemClickListener: ItemClickListener<News>
-) : SelectableItemViewHolder<News>(parent, R.layout.card_expandable_coupon, singleSelectionManager) {
+) : SelectableItemViewHolder<News>(cardExpandableCouponBinding.root, singleSelectionManager) {
 
     init {
-        itemView.btnExternalLink?.setOnClickListener {
+        cardExpandableCouponBinding.btnExternalLink.setOnClickListener {
             item?.also {
-                itemClickListener(it, adapterPosition)
+                itemClickListener(it, bindingAdapterPosition)
             }
         }
     }
@@ -33,12 +31,12 @@ class CouponViewHolder(
     override fun onBind(item: News?) {
         super.onBind(item)
 
-        itemView.title?.text = item?.title
-        itemView.subtitle?.text = item?.content
+        cardExpandableCouponBinding.title.text = item?.title
+        cardExpandableCouponBinding.subtitle.text = item?.content
 
-        itemView.contentText?.text = item?.content
+        cardExpandableCouponBinding.contentText.text = item?.content
 
-        itemView.image?.run {
+        cardExpandableCouponBinding.image.run {
             item?.decodedImage?.also {
                 val bitmap = BitmapFactory.decodeByteArray(it, 0, it.size)
                 setImageBitmap(bitmap)
@@ -48,6 +46,7 @@ class CouponViewHolder(
             }
         }
 
-        itemView.btnExternalLink?.visibility = if (item?.linkUri == null) View.GONE else View.VISIBLE
+        cardExpandableCouponBinding.btnExternalLink.visibility =
+            if (item?.linkUri == null) View.GONE else View.VISIBLE
     }
 }

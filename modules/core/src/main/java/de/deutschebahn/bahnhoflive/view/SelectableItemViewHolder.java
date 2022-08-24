@@ -18,8 +18,18 @@ public class SelectableItemViewHolder<T> extends ViewHolder<T> {
 
     private final View expandableContainer;
 
+    @Deprecated
     public SelectableItemViewHolder(ViewGroup parent, int layout, SingleSelectionManager singleSelectionManager) {
         super(parent, layout);
+        this.singleSelectionManager = singleSelectionManager;
+
+        prepareEventListener(itemView);
+
+        expandableContainer = itemView.findViewById(R.id.details);
+    }
+
+    public SelectableItemViewHolder(View view, SingleSelectionManager singleSelectionManager) {
+        super(view);
         this.singleSelectionManager = singleSelectionManager;
 
         prepareEventListener(itemView);

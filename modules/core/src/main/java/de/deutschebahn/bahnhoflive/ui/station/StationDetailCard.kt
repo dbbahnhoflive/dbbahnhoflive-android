@@ -9,12 +9,11 @@ package de.deutschebahn.bahnhoflive.ui.station
 import android.view.View
 import android.view.ViewGroup
 import androidx.annotation.DrawableRes
-import androidx.annotation.IdRes
 import androidx.annotation.StringRes
-import kotlinx.android.synthetic.main.stationcard_common.view.*
+import de.deutschebahn.bahnhoflive.databinding.StationcardCommonBinding
 
 open class StationDetailCard(
-    val view: View,
+    val view: StationcardCommonBinding,
     @StringRes label: Int,
     @DrawableRes icon: Int? = null,
     @DrawableRes background: Int? = null,
@@ -22,28 +21,28 @@ open class StationDetailCard(
     multiIcon: Boolean = false
 ) {
     init {
-        view.label?.apply {
+        view.label.apply {
             setText(label)
             if (contentDescription != null) {
-                setContentDescription(view.context.getText(contentDescription))
+                setContentDescription(view.root.context.getText(contentDescription))
             }
         }
 
         icon?.also {
-            view.icon?.setImageResource(it)
+            view.icon.setImageResource(it)
         }
         background?.also {
-            view.cardBackground?.setImageResource(it)
+            view.cardBackground.setImageResource(it)
         }
         if (multiIcon) {
-            view.additionalIconsContainer?.visibility = View.VISIBLE
+            view.additionalIconsContainer.visibility = View.VISIBLE
         }
     }
 
     var label = label
         set(value) {
             field = value
-            view.label?.setText(value)
+            view.label.setText(value)
         }
 
     fun setError(error: Boolean) {
@@ -51,18 +50,25 @@ open class StationDetailCard(
     }
 }
 
-fun View.grabStationDetailCard(
-    @IdRes id: Int,
+fun grabStationDetailCard(
+    stationcardCommonBinding: StationcardCommonBinding,
     @StringRes label: Int,
     @DrawableRes icon: Int? = null,
     @StringRes contentDescription: Int? = null,
     @DrawableRes background: Int? = null,
     multiIcon: Boolean = false
 ) =
-    findViewById<View>(id)?.let {
+    stationcardCommonBinding.root.let {
         val parent = it.parent
         if (parent is ViewGroup) {
             parent.removeView(it)
         }
-        StationDetailCard(it, label, icon, background, contentDescription, multiIcon)
+        StationDetailCard(
+            stationcardCommonBinding,
+            label,
+            icon,
+            background,
+            contentDescription,
+            multiIcon
+        )
     }

@@ -7,7 +7,6 @@ import android.text.method.LinkMovementMethod
 import android.util.Patterns
 import android.view.LayoutInflater
 import android.view.View
-import android.view.ViewGroup
 import android.widget.LinearLayout
 import android.widget.TextView
 import androidx.annotation.LayoutRes
@@ -18,26 +17,26 @@ import de.deutschebahn.bahnhoflive.analytics.TrackingManager
 import de.deutschebahn.bahnhoflive.backend.local.model.DailyOpeningHours
 import de.deutschebahn.bahnhoflive.backend.local.model.ServiceContent
 import de.deutschebahn.bahnhoflive.backend.local.model.ServiceContentType
+import de.deutschebahn.bahnhoflive.databinding.CardExpandableStationInfoBinding
+import de.deutschebahn.bahnhoflive.databinding.IncludeDescriptionLinkPartBinding
 import de.deutschebahn.bahnhoflive.databinding.IncludeDescriptionOpeningHoursBinding
 import de.deutschebahn.bahnhoflive.ui.map.content.MapIntent
 import de.deutschebahn.bahnhoflive.ui.station.CommonDetailsCardViewHolder
 import de.deutschebahn.bahnhoflive.ui.station.ServiceContents
 import de.deutschebahn.bahnhoflive.util.PhoneIntent
 import de.deutschebahn.bahnhoflive.view.SingleSelectionManager
-import kotlinx.android.synthetic.main.card_expandable_station_info.view.*
-import kotlinx.android.synthetic.main.include_description_link_part.view.*
+import de.deutschebahn.bahnhoflive.view.inflater
 import java.text.SimpleDateFormat
 import java.util.*
 
 open class ServiceContentViewHolder(
-    parent: ViewGroup,
+    cardExpandableStationInfoBinding: CardExpandableStationInfoBinding,
     singleSelectionManager: SingleSelectionManager,
     val trackingManager: TrackingManager,
     val dbActionButtonParser: DbActionButtonParser,
     val dbActionButtonCallback: (dbActionButton: DbActionButton) -> Unit
 ) : CommonDetailsCardViewHolder<ServiceContent>(
-    parent,
-    R.layout.card_expandable_station_info,
+    cardExpandableStationInfoBinding.root,
     singleSelectionManager
 ), View.OnClickListener {
 
@@ -47,14 +46,14 @@ open class ServiceContentViewHolder(
         this
     )
     private val descriptionLayout: LinearLayout = itemView.findViewById(R.id.description_layout)
-    private val layoutInflater: LayoutInflater = LayoutInflater.from(parent.context)
+    private val layoutInflater: LayoutInflater = cardExpandableStationInfoBinding.root.inflater
     private val onPhoneClickListener = View.OnClickListener { view ->
         if (view is TextView) {
             val text = view.text
             view.getContext().startActivity(PhoneIntent(text.toString()))
         }
     }
-    private val contentHeaderImage = itemView.contentHeaderImage
+    private val contentHeaderImage = cardExpandableStationInfoBinding.contentHeaderImage
 
     init {
         statusView.visibility = View.GONE
@@ -123,26 +122,26 @@ open class ServiceContentViewHolder(
                 if (item.address == null) {
                     defaultRender(item)
                 } else {
-                    val linkView = layoutInflater.inflate(
-                        R.layout.include_description_link_part,
+                    IncludeDescriptionLinkPartBinding.inflate(
+                        layoutInflater,
                         descriptionLayout,
-                        false
-                    )
-                    linkView.text.text =
-                        "<b>Nächstes Reisezentrum</b><br/>${item.address.toString()}".spannedHtml()
-                    item.location?.also { location ->
-                        linkView.linkButton.setOnClickListener {
-                            layoutInflater.context.startActivity(
-                                MapIntent(
-                                    location, item.address.toString().replace(
-                                        "<br/>",
-                                        ","
+                        true
+                    ).apply {
+                        text.text =
+                            "<b>Nächstes Reisezentrum</b><br/>${item.address.toString()}".spannedHtml()
+                        item.location?.also { location ->
+                            linkButton.setOnClickListener {
+                                layoutInflater.context.startActivity(
+                                    MapIntent(
+                                        location, item.address.toString().replace(
+                                            "<br/>",
+                                            ","
+                                        )
                                     )
                                 )
-                            )
+                            }
                         }
                     }
-                    descriptionLayout.addView(linkView)
                     renderAdditionalText(item)
                     renderDescriptionText(item)
                 }
@@ -154,21 +153,21 @@ open class ServiceContentViewHolder(
                     if (Calendar.getInstance().get(Calendar.HOUR_OF_DAY) in 7 until 22)
                         addButtonPart(
                             dbActionButton.label ?: "Chatbot",
-                            itemView.resources.getString(R.string.sr_chatbot),
-                            View.OnClickListener {
-                                trackingManager.track(
-                                    TrackingManager.TYPE_ACTION,
-                                    TrackingManager.Screen.D1,
-                                    TrackingManager.Action.TAP,
-                                    TrackingManager.UiElement.CHATBOT
+                            itemView.resources.getString(R.string.sr_chatbot)
+                        ) {
+                            trackingManager.track(
+                                TrackingManager.TYPE_ACTION,
+                                TrackingManager.Screen.D1,
+                                TrackingManager.Action.TAP,
+                                TrackingManager.UiElement.CHATBOT
+                            )
+                            it.context.startActivity(
+                                Intent(
+                                    Intent.ACTION_VIEW,
+                                    Uri.parse("https://bahnhof-bot.deutschebahn.com/")
                                 )
-                                it.context.startActivity(
-                                    Intent(
-                                        Intent.ACTION_VIEW,
-                                        Uri.parse("https://bahnhof-bot.deutschebahn.com/")
-                                    )
-                                )
-                            })
+                            )
+                        }
 
                 }
             }
@@ -270,7 +269,7 @@ open class ServiceContentViewHolder(
                         if (href == null) {
                             specialActionButtonFactory?.invoke(dbActionButton)
                         } else {
-                            addActionButton(dbActionButton) { view, dbActionButton ->
+                            addActionButton(dbActionButton) { view, _ ->
                                 view.context.startActivity(
                                     Intent(
                                         Intent.ACTION_VIEW,

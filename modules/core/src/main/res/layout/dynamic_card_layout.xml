@@ -13,6 +13,7 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     style="@style/App.Widget.CardContainer"
+    android:id="@+id/dynamicCardLayout"
     android:padding="@dimen/card_container_padding"
     tools:context=".ui.station.StationFragment">
 

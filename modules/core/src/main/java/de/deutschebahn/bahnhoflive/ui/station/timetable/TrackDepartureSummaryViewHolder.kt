@@ -10,19 +10,23 @@ import android.view.View
 import com.google.android.material.floatingactionbutton.FloatingActionButton
 import de.deutschebahn.bahnhoflive.backend.ris.model.TrainEvent
 import de.deutschebahn.bahnhoflive.backend.ris.model.TrainInfo
-import kotlinx.android.synthetic.main.item_track_timetable_overview.view.*
+import de.deutschebahn.bahnhoflive.databinding.ItemTrackTimetableOverviewBinding
 
 class TrackDepartureSummaryViewHolder(
-    view: View,
+    itemTrackTimetableOverviewBinding: ItemTrackTimetableOverviewBinding,
     onWaggonOrderClickListener: OnWagonOrderClickListener
-) : ReducedTrainInfoOverviewViewHolder(view, TrainEvent.DEPARTURE_PROVIDER) {
-    val waggonOrderButton: FloatingActionButton = view.wagon_order_indicator.apply {
-        setOnClickListener {
-            item?.also { trainInfo ->
-                onWaggonOrderClickListener.onWagonOrderClick(trainInfo, TrainEvent.DEPARTURE)
+) : ReducedTrainInfoOverviewViewHolder(
+    itemTrackTimetableOverviewBinding.root,
+    TrainEvent.DEPARTURE_PROVIDER
+) {
+    private val waggonOrderButton: FloatingActionButton =
+        itemTrackTimetableOverviewBinding.wagonOrderButton.apply {
+            setOnClickListener {
+                item?.also { trainInfo ->
+                    onWaggonOrderClickListener.onWagonOrderClick(trainInfo, TrainEvent.DEPARTURE)
+                }
             }
         }
-    }
 
     override fun onBind(item: TrainInfo?) {
         super.onBind(item)
