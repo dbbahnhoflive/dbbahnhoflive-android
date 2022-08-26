@@ -386,7 +386,7 @@
     <string name="locker_payment_type_cashless">"bargeldlos"</string>
     <string name="locker_payment_type_unknown">"unbekannt"</string>
     <string name="locker_dimensions">"%d x %d x %d"</string>
-    <string name="locker_dimensions_VO">"Größe: %d x %d x %d cm"</string>
+    <string name="locker_dimensions_VO">"Größe: %d Zentimeter Länge, %d Zentimeter Breite, %d Zentimeter Höhe"</string>
 
     <string name="locker_max_lease_duration">"Max. Mietdauer:\u0020%s"</string>
     <string name="locker_max_lease_duration_VO">"Maximale Mietdauer :\u0020%s"</string>
@@ -401,8 +401,8 @@
     <string-array name="locker_fee_periods_VO">
         <item>Preis: %s </item>
         <item>Preis: %s pro Stunde</item>
-        <item>Preis: %s für 24 Stunden</item>
-        <item>Preis: %s für\u0020</item>
+        <item>Preis: %s pro 24 Stunden</item>
+        <item>Preis: %s pro\u0020</item>
     </string-array>
 
     <string name="date_years">Jahre</string>
