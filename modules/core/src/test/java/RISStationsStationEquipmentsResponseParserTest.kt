@@ -32,7 +32,7 @@ class RISStationsStationEquipmentsResponseParserTest {
     lateinit var lockerInvalidSizeEmptyPaymentTypeInvalidFeePeriod: UiLocker
     lateinit var lockerMissingDuration: UiLocker
     lateinit var lockerInvalidPaymentTypeNull: UiLocker
-
+    lateinit var lockerInvalidlockerDataMissing: UiLocker
 
     @Before
     fun before() {
@@ -53,7 +53,7 @@ class RISStationsStationEquipmentsResponseParserTest {
         lockerMissingDuration = UiLocker(parse(invalidlockerDuration).first())
         lockerSizeMissing = UiLocker(parse(invalidlockerSizeMissing).first())
         lockerInvalidPaymentTypeNull = UiLocker(parse(invalidlockerPaymentTypeNull).first())
-
+        lockerInvalidlockerDataMissing = UiLocker(parse(invalidlockerDataMissing).first())
 
     }
 
@@ -466,6 +466,19 @@ class RISStationsStationEquipmentsResponseParserTest {
             ]
         }"""
 
+    private val invalidlockerDataMissing: String =
+        """{
+            "lockerList": [
+            {
+                "lockers": [
+                {
+                    "size": "SMALL"
+                }
+                ]
+            }
+            ]
+        }"""
+
     // testLockerStructureParsing
 
     @Test
@@ -844,5 +857,39 @@ class RISStationsStationEquipmentsResponseParserTest {
         )
     }
 
+    @Test
+    fun testUiLockerDataMissingMaxLeaseTime() {
+        assertEquals(
+            true,
+            lockerInvalidlockerDataMissing.getMaxLeaseDurationAsHumanReadableString() == ""
+        )
+    }
 
+    @Test
+    fun testUiLockerDataMissingDimension() {
+        assertEquals(
+            true,
+            lockerInvalidlockerDataMissing.dimDepth == 0 &&
+                    lockerInvalidlockerDataMissing.dimHeight == 0 &&
+                    lockerInvalidlockerDataMissing.dimWidth == 0
+
+        )
+    }
+
+    @Test
+    fun testUiLockerDataMissingFee() {
+        assertEquals(
+            true,
+            lockerInvalidlockerDataMissing.feeAsString == ""
+        )
+    }
+
+    @Test
+    fun testUiLockerDataMissingPaymenType() {
+        assertEquals(
+            true,
+            lockerInvalidlockerDataMissing.paymentTypes.size == 1 &&
+                    lockerInvalidlockerDataMissing.paymentTypes.contains(PaymentType.UNKNOWN)
+        )
+    }
 }
