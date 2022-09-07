@@ -58,7 +58,7 @@ class FlyoutsAdapter extends RecyclerView.Adapter<ViewHolder<MarkerBinder>> {
             case TRACK:
                 return new TrackFlyoutViewHolder(parent, mapViewModel);
             case RAIL_REPLACEMENT:
-                return new RailReplacementFlyoutViewHolder(parent);
+                return new RailReplacementFlyoutViewHolder(parent, stationActivityStarter);
             case LOCKERS:
                 return new LockerFlyoutViewHolder(parent, stationActivityStarter);
             case COMMON:

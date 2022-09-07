@@ -12,13 +12,15 @@ class StationActivityStarter(
     ) {
         fragment.mapViewModel.stationResource.data.value?.let { station ->
             fragment.requireActivity().let { activity ->
-                activity.finish()
 
                 activity.startActivity(
                     prepareIntent(
                         StationActivity.createIntent(activity, station)
                     )
                 )
+
+                activity.finish()
+
             }
         }
     }
