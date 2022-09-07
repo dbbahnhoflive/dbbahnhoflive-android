@@ -18,8 +18,10 @@ class LockerFlyoutViewHolder(parent: ViewGroup, mapViewModel: MapViewModel) :
 
     private val binding = FlyoutLockersBinding.bind(itemView).apply {
         externalLink.setOnClickListener {
-
             mapViewModel.stationResource.data.value.let { station ->
+
+                (parent.context as MapActivity)?.finish()
+
                 parent.context.startActivity(
                     StationActivity.createIntent(parent.context, station).apply {
                         addFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT)
