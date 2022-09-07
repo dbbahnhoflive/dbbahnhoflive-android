@@ -29,11 +29,13 @@ class FlyoutsAdapter extends RecyclerView.Adapter<ViewHolder<MarkerBinder>> {
     private final FacilityPushManager facilityPushManager = FacilityPushManager.getInstance();
     private final LifecycleOwner owner;
     private final MapViewModel mapViewModel;
+    private final StationActivityStarter stationActivityStarter;
 
-    public FlyoutsAdapter(Content content, LifecycleOwner owner, MapViewModel mapViewModel) {
+    public FlyoutsAdapter(Content content, LifecycleOwner owner, MapViewModel mapViewModel, StationActivityStarter stationActivityStarter) {
         this.content = content;
         this.owner = owner;
         this.mapViewModel = mapViewModel;
+        this.stationActivityStarter = stationActivityStarter;
     }
 
     @NonNull
@@ -58,7 +60,7 @@ class FlyoutsAdapter extends RecyclerView.Adapter<ViewHolder<MarkerBinder>> {
             case RAIL_REPLACEMENT:
                 return new RailReplacementFlyoutViewHolder(parent);
             case LOCKERS:
-                return new LockerFlyoutViewHolder(parent, mapViewModel);
+                return new LockerFlyoutViewHolder(parent, stationActivityStarter);
             case COMMON:
             default:
                 return new CommonFlyoutViewHolder(parent);
