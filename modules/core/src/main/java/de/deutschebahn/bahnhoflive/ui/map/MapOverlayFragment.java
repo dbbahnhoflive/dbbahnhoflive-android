@@ -91,7 +91,7 @@ public class MapOverlayFragment extends Fragment implements OnMapReadyCallback, 
     private InitialPoiManager initialPoiManager;
     private MarkerBinder initialMarkerBinder;
     private TutorialView mTutorialView;
-    private MapViewModel mapViewModel;
+    protected MapViewModel mapViewModel;
     private StationResource stationResource;
     private FlyoutOverlayViewHolder flyoutOverlayViewHolder;
 
@@ -155,7 +155,7 @@ public class MapOverlayFragment extends Fragment implements OnMapReadyCallback, 
                 Log.w(TAG, "Could not read zone id: " + zoneId, e);
             }
         });
-        flyoutsAdapter = new FlyoutsAdapter(content, this, mapViewModel);
+        flyoutsAdapter = new FlyoutsAdapter(content, this, mapViewModel, new StationActivityStarter(this));
 
         initialPoiManager = new InitialPoiManager(getActivity().getIntent(), savedInstanceState);
 

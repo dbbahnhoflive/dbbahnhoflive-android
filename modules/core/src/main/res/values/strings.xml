@@ -387,6 +387,9 @@
     <string name="locker_payment_type_unknown">"unbekannt"</string>
     <string name="locker_dimensions">"%d x %d x %d"</string>
     <string name="locker_dimensions_VO">"Größe: %d Zentimeter Länge, %d Zentimeter Breite, %d Zentimeter Höhe"</string>
+    <string name="locker_dimensions_unknown">"Größe: Information liegt nicht vor"</string>
+    <string name="locker_information_missing">"Information liegt nicht vor"</string>
+    <string name="locker_fee_missing">"Preis: Information liegt nicht vor"</string>
 
     <string name="locker_max_lease_duration">"Max. Mietdauer:\u0020%s"</string>
     <string name="locker_max_lease_duration_VO">"Maximale Mietdauer :\u0020%s"</string>

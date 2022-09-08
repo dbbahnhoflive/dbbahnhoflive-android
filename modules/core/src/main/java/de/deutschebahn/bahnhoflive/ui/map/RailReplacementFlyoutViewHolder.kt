@@ -1,17 +1,24 @@
 package de.deutschebahn.bahnhoflive.ui.map
 
 import android.content.Context
+import android.content.Intent
 import android.view.ViewGroup
 import de.deutschebahn.bahnhoflive.R
 import de.deutschebahn.bahnhoflive.databinding.FlyoutRailReplacementBinding
 import de.deutschebahn.bahnhoflive.view.inflate
 
-class RailReplacementFlyoutViewHolder(parent: ViewGroup) :
+class RailReplacementFlyoutViewHolder(
+    parent: ViewGroup,
+    stationActivityStarter: StationActivityStarter
+) :
     FlyoutViewHolder(parent.inflate(R.layout.flyout_rail_replacement)) {
 
     private val binding = FlyoutRailReplacementBinding.bind(itemView).apply {
         externalLink.setOnClickListener {
-            item?.markerContent?.openLink(context)
+            stationActivityStarter.startStationActivity {
+                addFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT)
+            }
+//            item?.markerContent?.openLink(context)
         }
     }
 

@@ -10,20 +10,18 @@ import android.content.Intent
 import android.view.ViewGroup
 import de.deutschebahn.bahnhoflive.R
 import de.deutschebahn.bahnhoflive.databinding.FlyoutLockersBinding
-import de.deutschebahn.bahnhoflive.ui.station.StationActivity
 import de.deutschebahn.bahnhoflive.view.inflate
 
-class LockerFlyoutViewHolder(parent: ViewGroup, mapViewModel: MapViewModel) :
+class LockerFlyoutViewHolder(
+    parent: ViewGroup,
+    stationActivityStarter: StationActivityStarter
+) :
     FlyoutViewHolder(parent.inflate(R.layout.flyout_lockers)) {
 
     private val binding = FlyoutLockersBinding.bind(itemView).apply {
         externalLink.setOnClickListener {
-
-            mapViewModel.stationResource.data.value.let { station ->
-                parent.context.startActivity(
-                    StationActivity.createIntent(parent.context, station).apply {
-                        addFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT)
-                    })
+            stationActivityStarter.startStationActivity {
+                addFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT)
             }
         }
 
