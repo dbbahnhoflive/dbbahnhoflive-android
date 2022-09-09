@@ -257,6 +257,26 @@ public class StationActivity extends AppCompatActivity implements
         super.onResume();
 
         trackingManager.collectLifecycleData(this);
+
+        Bundle bdl = getIntent().getExtras();
+        if (bdl != null) {
+
+            int show_equip_id = bdl.getInt("show_equip_id");
+
+            getIntent().removeExtra("show_equip_id"); // use it only once
+
+            switch (show_equip_id) {
+
+                case 1:
+                    showLockers();
+                    break;
+                case 2:
+                    showRailReplacement();
+                    break;
+            }
+
+
+        }
     }
 
     @Override
@@ -603,7 +623,9 @@ public class StationActivity extends AppCompatActivity implements
         super.onNewIntent(intent);
 
         exploitIntent(intent);
+
+        if (intent.hasExtra("show_equip_id")) {
+            getIntent().putExtra("show_equip_id", intent.getIntExtra("show_equip_id", 0));
+        }
     }
-
-
 }

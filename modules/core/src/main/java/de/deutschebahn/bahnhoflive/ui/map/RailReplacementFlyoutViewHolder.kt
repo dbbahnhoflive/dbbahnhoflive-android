@@ -17,8 +17,8 @@ class RailReplacementFlyoutViewHolder(
         externalLink.setOnClickListener {
             stationActivityStarter.startStationActivity {
                 addFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT)
+                putExtra("show_equip_id", 2)
             }
-//            item?.markerContent?.openLink(context)
         }
     }
 
