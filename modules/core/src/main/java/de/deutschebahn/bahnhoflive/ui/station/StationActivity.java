@@ -52,6 +52,7 @@ import de.deutschebahn.bahnhoflive.repository.StationResource;
 import de.deutschebahn.bahnhoflive.tutorial.TutorialManager;
 import de.deutschebahn.bahnhoflive.tutorial.TutorialView;
 import de.deutschebahn.bahnhoflive.ui.hub.HubActivity;
+import de.deutschebahn.bahnhoflive.ui.map.EquipmentID;
 import de.deutschebahn.bahnhoflive.ui.map.MapActivity;
 import de.deutschebahn.bahnhoflive.ui.map.MapPresetProvider;
 import de.deutschebahn.bahnhoflive.ui.map.content.rimap.RimapFilter;
@@ -81,6 +82,7 @@ public class StationActivity extends AppCompatActivity implements
     private static final String ARG_TRACK_FILTER = "trackFilter";
     private static final String ARG_TRAIN_INFO = "trainInfo";
     private static final String ARG_RRT_POINT = "rrtPoint";
+    private static final String ARG_EQUIPMENT_ID = "equipment_id"; // 0=show nothing
 
     private HistoryFragment infoFragment;
 
@@ -255,28 +257,7 @@ public class StationActivity extends AppCompatActivity implements
     @Override
     protected void onResume() {
         super.onResume();
-
         trackingManager.collectLifecycleData(this);
-
-        Bundle bdl = getIntent().getExtras();
-        if (bdl != null) {
-
-            int show_equip_id = bdl.getInt("show_equip_id");
-
-            getIntent().removeExtra("show_equip_id"); // use it only once
-
-            switch (show_equip_id) {
-
-                case 1:
-                    showLockers();
-                    break;
-                case 2:
-                    showRailReplacement();
-                    break;
-            }
-
-
-        }
     }
 
     @Override
@@ -529,13 +510,32 @@ public class StationActivity extends AppCompatActivity implements
             stationViewModel.pendingRailReplacementPointLiveData.setValue(intent.getParcelableExtra(ARG_RRT_POINT));
         }
 
+        if (intent.hasExtra(ARG_EQUIPMENT_ID)) {
+
+            try {
+                EquipmentID equip_id = EquipmentID.values()[intent.getIntExtra(ARG_EQUIPMENT_ID, 0)];
+
+                switch (equip_id) {
+                    case LOCKERS:
+                        showLockers();
+                        break;
+                    case RAIL_REPLACEMENT:
+                        showRailReplacement();
+                        break;
+                }
+            } catch (Exception e) {
+                Log.d("stationActivity", "unexpected equip_id");
+            }
+        }
+
         return false;
     }
 
-    public static Intent createIntent(Context context, Station station) {
+    public static Intent createIntent(Context context, Station station, EquipmentID equipment_id) {
         final Intent intent = new Intent(context, StationActivity.class);
         intent.putExtra(ARG_STATION, station instanceof Parcelable ?
                 (Parcelable) station : new InternalStation(station));
+        intent.putExtra(ARG_EQUIPMENT_ID, equipment_id.getCode());
         return intent;
     }
 
@@ -593,7 +593,7 @@ public class StationActivity extends AppCompatActivity implements
     }
 
     public static Intent createIntent(Context context, Station station, boolean details) {
-        final Intent intent = createIntent(context, station);
+        final Intent intent = createIntent(context, station, EquipmentID.NONE);
         intent.putExtra(ARG_SHOW_DEPARTURES, details);
         return intent;
     }
@@ -612,8 +612,9 @@ public class StationActivity extends AppCompatActivity implements
         return intent;
     }
 
+    @NotNull
     public static Intent createIntent(Context context, Station station, RrtPoint rrtPoint) {
-        final Intent intent = createIntent(context, station);
+        final Intent intent = createIntent(context, station, EquipmentID.NONE);
         intent.putExtra(ARG_RRT_POINT, rrtPoint);
         return intent;
     }
@@ -624,8 +625,5 @@ public class StationActivity extends AppCompatActivity implements
 
         exploitIntent(intent);
 
-        if (intent.hasExtra("show_equip_id")) {
-            getIntent().putExtra("show_equip_id", intent.getIntExtra("show_equip_id", 0));
-        }
     }
 }

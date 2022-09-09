@@ -20,10 +20,12 @@ class LockerFlyoutViewHolder(
 
     private val binding = FlyoutLockersBinding.bind(itemView).apply {
         externalLink.setOnClickListener {
-            stationActivityStarter.startStationActivity {
-                addFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT)
-                putExtra("show_equip_id", 1)
-            }
+            stationActivityStarter.startStationActivity(
+                {
+                    addFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT)
+                },
+                EquipmentID.LOCKERS
+            )
         }
         }
 
