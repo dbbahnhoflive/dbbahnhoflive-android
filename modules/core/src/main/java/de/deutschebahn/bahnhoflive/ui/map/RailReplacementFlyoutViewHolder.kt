@@ -15,10 +15,12 @@ class RailReplacementFlyoutViewHolder(
 
     private val binding = FlyoutRailReplacementBinding.bind(itemView).apply {
         externalLink.setOnClickListener {
-            stationActivityStarter.startStationActivity {
-                addFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT)
-            }
-//            item?.markerContent?.openLink(context)
+            stationActivityStarter.startStationActivity(
+                {
+                    addFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT)
+                },
+                EquipmentID.RAIL_REPLACEMENT
+            )
         }
     }
 

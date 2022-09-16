@@ -57,7 +57,7 @@ internal class StationMarkerContent(private val station: Station, context: Conte
     }
 
     override fun onFlyoutClick(context: Context) {
-        val intent = StationActivity.createIntent(context, station)
+        val intent = StationActivity.createIntent(context, station, EquipmentID.NONE)
         context.startActivity(intent)
     }
 
