@@ -19,8 +19,11 @@ import de.deutschebahn.bahnhoflive.R
 import de.deutschebahn.bahnhoflive.analytics.TrackingManager
 import de.deutschebahn.bahnhoflive.databinding.FragmentLockerBinding
 import de.deutschebahn.bahnhoflive.databinding.IncludeItemLockerBinding
+import de.deutschebahn.bahnhoflive.repository.locker.AnyLockerInitialPoi
 import de.deutschebahn.bahnhoflive.repository.locker.FeePeriod
 import de.deutschebahn.bahnhoflive.repository.locker.PaymentType
+import de.deutschebahn.bahnhoflive.ui.map.Content
+import de.deutschebahn.bahnhoflive.ui.map.InitialPoiManager
 import de.deutschebahn.bahnhoflive.ui.map.MapPresetProvider
 import de.deutschebahn.bahnhoflive.ui.map.content.rimap.RimapFilter
 import de.deutschebahn.bahnhoflive.ui.station.StationViewModel
@@ -197,6 +200,7 @@ class LockerFragment : Fragment(), MapPresetProvider {
 
     override fun prepareMapIntent(intent: Intent): Boolean {
         RimapFilter.putPreset(intent, RimapFilter.PRESET_LOCKERS)
+        InitialPoiManager.putInitialPoi(intent, Content.Source.RIMAP, AnyLockerInitialPoi)
 
         return true
     }
