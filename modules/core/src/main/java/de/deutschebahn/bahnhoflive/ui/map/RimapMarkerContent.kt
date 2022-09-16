@@ -18,6 +18,7 @@ import de.deutschebahn.bahnhoflive.backend.rimap.RimapConfig
 import de.deutschebahn.bahnhoflive.backend.rimap.model.LevelMapping
 import de.deutschebahn.bahnhoflive.backend.rimap.model.MenuMapping
 import de.deutschebahn.bahnhoflive.backend.rimap.model.RimapPOI
+import de.deutschebahn.bahnhoflive.repository.locker.AnyLockerInitialPoi
 import de.deutschebahn.bahnhoflive.ui.map.content.rimap.Track
 import de.deutschebahn.bahnhoflive.ui.station.shop.OpenStatusResolver
 import de.deutschebahn.bahnhoflive.ui.station.shop.RimapShop
@@ -102,6 +103,10 @@ private val mapIcon: Int, @field:DrawableRes
             if (!TextUtils.isEmpty(platform)) {
                 return platform == rimapPOI.name
             }
+        }
+
+        if (viewType == ViewType.LOCKERS) {
+            return item == AnyLockerInitialPoi
         }
 
         return false

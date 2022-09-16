@@ -3,48 +3,45 @@
  *
  * SPDX-License-Identifier: Apache-2.0
  */
+package de.deutschebahn.bahnhoflive.ui.map
 
-package de.deutschebahn.bahnhoflive.ui.map;
+import android.content.Intent
+import android.os.Bundle
+import android.os.Parcelable
 
-import android.content.Intent;
-import android.os.Bundle;
-import android.os.Parcelable;
+class InitialPoiManager(intent: Intent?, savedInstanceState: Bundle?) {
 
-import androidx.annotation.Nullable;
+    private val initialItem: Parcelable?
 
-public class InitialPoiManager {
+    @JvmField
+    val source: Content.Source?
+    private val done = false
 
-    public static final String ARG_SOURCE = "initialPoiSource";
-    public static final String ARG_POI = "initialPoi";
-    public static final String STATE_DONE = "initialPoiManagerDone";
+    init {
+        source = intent?.getSerializableExtra(ARG_SOURCE) as Content.Source?
 
-    private final Parcelable initialItem;
-
-    @Nullable
-    public final Content.Source source;
-
-    private boolean done = false;
-
-    public static void putInitialPoi(Intent intent, Content.Source source, Parcelable poiItem) {
-        intent.putExtra(ARG_SOURCE, source);
-        intent.putExtra(ARG_POI, poiItem);
+        initialItem = intent?.takeIf {
+            savedInstanceState == null || !savedInstanceState.getBoolean(STATE_DONE, false)
+        }?.getParcelableExtra(ARG_POI)
     }
 
-    public InitialPoiManager(Intent intent, Bundle savedInstanceState) {
-        source = intent == null ? null : (Content.Source) intent.getSerializableExtra(ARG_SOURCE);
+    fun onSaveInstanceState(outState: Bundle) {
+        outState.putBoolean(STATE_DONE, done)
+    }
 
-        if (savedInstanceState == null || !savedInstanceState.getBoolean(STATE_DONE, false)) {
-            initialItem = intent.getParcelableExtra(ARG_POI);
-        } else {
-            initialItem = null;
+    fun isInitial(markerBinder: MarkerBinder): Boolean {
+        return markerBinder.markerContent.wraps(initialItem)
+    }
+
+    companion object {
+        const val ARG_SOURCE = "initialPoiSource"
+        const val ARG_POI = "initialPoi"
+        const val STATE_DONE = "initialPoiManagerDone"
+
+        @JvmStatic
+        fun putInitialPoi(intent: Intent, source: Content.Source?, poiItem: Parcelable?) {
+            intent.putExtra(ARG_SOURCE, source)
+            intent.putExtra(ARG_POI, poiItem)
         }
-    }
-
-    public void onSaveInstanceState(Bundle outState) {
-        outState.putBoolean(STATE_DONE, done);
-    }
-
-    public boolean isInitial(MarkerBinder markerBinder) {
-        return markerBinder.getMarkerContent().wraps(initialItem);
     }
 }
