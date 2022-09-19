@@ -170,7 +170,7 @@ public class ImprintFragment extends Fragment {
             webview.loadDataWithBaseURL("nil://nil.nil", imprint
                     , "text/html", "UTF-8", null);
 
-            webview.loadDataWithBaseURL("nil://nil.nil", imprint + "</body>", "text/html", "UTF-8", null);
+//            webview.loadDataWithBaseURL("nil://nil.nil", imprint + "</body>", "text/html", "UTF-8", null);
         } catch (IOException e) {
             e.printStackTrace();
         }
