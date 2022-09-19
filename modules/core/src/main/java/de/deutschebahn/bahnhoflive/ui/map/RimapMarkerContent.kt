@@ -57,10 +57,12 @@ private val mapIcon: Int, @field:DrawableRes
         return rimapPOI.bbox
     }
 
+    // todo cr: InitialPoiManager sometimes not working
     override fun getPreSelectionRating(): Int =
         when (rimapPOI.type) {
-            "DB_TRAVEL_CENTER" -> 2
-            "ENTRANCE_EXIT" -> 1
+            "DB_TRAVEL_CENTER" -> 3
+            "ENTRANCE_EXIT" -> 2
+            "LOCKER" -> 1
             else -> super.getPreSelectionRating()
         }
 
