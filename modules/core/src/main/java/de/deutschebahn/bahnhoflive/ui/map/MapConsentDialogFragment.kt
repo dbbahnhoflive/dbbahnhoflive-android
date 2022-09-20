@@ -12,9 +12,15 @@ import androidx.fragment.app.activityViewModels
 import de.deutschebahn.bahnhoflive.databinding.DialogMapConsentBinding
 import de.deutschebahn.bahnhoflive.repository.AssetDocumentBroker
 
+interface OnMapConsentDialogListener {
+    fun onConsentAccepted()
+}
+
 class MapConsentDialogFragment : DialogFragment() {
 
     private val mapViewModel: MapViewModel by activityViewModels()
+
+    private var listener: OnMapConsentDialogListener? = null
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -58,11 +64,19 @@ class MapConsentDialogFragment : DialogFragment() {
     override fun onCancel(dialog: DialogInterface) {
         super.onCancel(dialog)
 
-        activity?.finish()
+//        activity?.finish()
     }
 
     private fun onAccept() {
         mapViewModel.mapConsentedLiveData.value = true
+
+        listener?.onConsentAccepted()
+
         dismiss()
     }
+
+    fun setOnMapConsentDialogListener(_listener: OnMapConsentDialogListener) {
+        listener = _listener
+    }
+
 }
