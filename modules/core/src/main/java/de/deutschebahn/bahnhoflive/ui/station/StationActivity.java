@@ -37,6 +37,7 @@ import org.jetbrains.annotations.NotNull;
 import java.util.ArrayList;
 import java.util.List;
 
+import de.deutschebahn.bahnhoflive.BaseApplication;
 import de.deutschebahn.bahnhoflive.BuildConfig;
 import de.deutschebahn.bahnhoflive.R;
 import de.deutschebahn.bahnhoflive.analytics.IssueTracker;
@@ -54,7 +55,9 @@ import de.deutschebahn.bahnhoflive.tutorial.TutorialView;
 import de.deutschebahn.bahnhoflive.ui.hub.HubActivity;
 import de.deutschebahn.bahnhoflive.ui.map.EquipmentID;
 import de.deutschebahn.bahnhoflive.ui.map.MapActivity;
+import de.deutschebahn.bahnhoflive.ui.map.MapConsentDialogFragment;
 import de.deutschebahn.bahnhoflive.ui.map.MapPresetProvider;
+import de.deutschebahn.bahnhoflive.ui.map.OnMapConsentDialogListener;
 import de.deutschebahn.bahnhoflive.ui.map.content.rimap.RimapFilter;
 import de.deutschebahn.bahnhoflive.ui.station.accessibility.AccessibilityFragment;
 import de.deutschebahn.bahnhoflive.ui.station.elevators.ElevatorStatusListsFragment;
@@ -202,12 +205,29 @@ public class StationActivity extends AppCompatActivity implements
             @Override
             public void onClick(View v) {
                 trackingManager.track(TrackingManager.TYPE_ACTION, TrackingManager.Source.TAB_NAVI, TrackingManager.Action.TAP, TrackingManager.UiElement.MAP_BUTTON);
-                final Intent intent = MapActivity.createIntent(StationActivity.this, station);
-                Fragment currentContentFragment = getCurrentContentFragment();
-                if (currentContentFragment instanceof MapPresetProvider) {
-                    ((MapPresetProvider) currentContentFragment).prepareMapIntent(intent);
+
+                if (!Boolean.TRUE.equals(BaseApplication.Companion.get().getApplicationServices().getMapConsentRepository().getConsented().getValue())) {
+                    MapConsentDialogFragment mp = new MapConsentDialogFragment();
+                    mp.setOnMapConsentDialogListener(new OnMapConsentDialogListener() {
+                        @Override
+                        public void onConsentAccepted() {
+                            final Intent intent = MapActivity.createIntent(StationActivity.this, station);
+                            Fragment currentContentFragment = getCurrentContentFragment();
+                            if (currentContentFragment instanceof MapPresetProvider) {
+                                ((MapPresetProvider) currentContentFragment).prepareMapIntent(intent);
+                            }
+                            startActivity(intent);
+                        }
+                    });
+                    mp.show(getSupportFragmentManager(), null);
+                } else {
+                    final Intent intent = MapActivity.createIntent(StationActivity.this, station);
+                    Fragment currentContentFragment = getCurrentContentFragment();
+                    if (currentContentFragment instanceof MapPresetProvider) {
+                        ((MapPresetProvider) currentContentFragment).prepareMapIntent(intent);
+                    }
+                    startActivity(intent);
                 }
-                startActivity(intent);
             }
         });
 
