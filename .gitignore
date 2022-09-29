@@ -34,3 +34,4 @@ local.properties
 *.apk
 
 **/src/*/assets/crashlytics-build.properties
+/*.hprof
