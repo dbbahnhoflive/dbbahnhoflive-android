@@ -104,7 +104,11 @@ class StationViewModel(
                 }),
             StationFeatureTemplate(
                 StationFeatureDefinition.LOCKERS,
-                LockerLink() // tracking is set inside LockerFragment.kt
+                MapOrInfoLink(
+                    ServiceContentType.LOCKERS,
+                    ServiceContentType.LOCKERS
+                ),
+                LockerLink()
             ),
             StationFeatureTemplate(
                 StationFeatureDefinition.DB_INFO,
