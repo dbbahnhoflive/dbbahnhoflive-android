@@ -107,8 +107,7 @@ class StationViewModel(
                 MapOrInfoLink(
                     ServiceContentType.LOCKERS,
                     ServiceContentType.LOCKERS
-                ),
-                LockerLink()
+                )
             ),
             StationFeatureTemplate(
                 StationFeatureDefinition.DB_INFO,

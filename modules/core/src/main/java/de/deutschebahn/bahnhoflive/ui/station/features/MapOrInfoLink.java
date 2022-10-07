@@ -68,6 +68,7 @@ public class MapOrInfoLink extends MapLink {
     @Override
     public boolean isAvailable(Context context, StationFeature stationFeature) {
         return super.isAvailable(context, stationFeature) || getStaticInfo(stationFeature) != null;
+
     }
 
     private StaticInfo getStaticInfo(StationFeature stationFeature) {

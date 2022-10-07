@@ -22,37 +22,15 @@ import de.deutschebahn.bahnhoflive.view.FullBottomSheetDialogFragment
 
 class StationFeaturesFragment : FullBottomSheetDialogFragment() {
 
-    // itemClickListener is called from StationFeatureViewHolder.kt
     private val stationFeaturesAdapter = StationFeaturesAdapter { item, adapterPosition ->
-        if (item.stationFeatureTemplate.link != null) {
-            item.stationFeatureTemplate.link.also { link ->
-                link.createMapActivityIntent(requireContext(), item)?.let {
-                    startActivity(it)
+        item.stationFeatureTemplate.link?.also { link ->
+            link.createMapActivityIntent(requireContext(), item)?.let {
+                startActivity(it)
+            }
+                ?: link.createServiceContentFragment(requireContext(), item)?.let { serviceContentFragment ->
+                    dismiss()
+                    HistoryFragment.parentOf(this).push(serviceContentFragment)
                 }
-                    ?:
-                        link.createServiceContentFragment(requireContext(), item)
-                            ?.let { serviceContentFragment ->
-                                dismiss()
-                                HistoryFragment.parentOf(this).push(serviceContentFragment)
-                            } ?: run {
-                        if (item.stationFeatureTemplate.fallbackLink != null) {
-                            item.stationFeatureTemplate.fallbackLink.createServiceContentFragment(
-                                requireContext(),
-                                item
-                            ) ?.let { serviceContentFragment ->
-                                dismiss()
-                                HistoryFragment.parentOf(this).push(serviceContentFragment)
-
-                            }
-                        }
-                    }
-
-
-            }
-        } else {
-            if (item.stationFeatureTemplate.fallbackLink != null) {
-                item.stationFeatureTemplate.fallbackLink.createServiceContentFragment(requireContext(), item)
-            }
         }
     }
 

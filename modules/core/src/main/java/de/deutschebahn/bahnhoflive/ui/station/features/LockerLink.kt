@@ -17,4 +17,11 @@ class LockerLink :
         stationFeature: StationFeature
     ) = LockerFragment()
 
+    override fun isAvailable(
+        context: Context,
+        stationFeature: StationFeature
+    ): Boolean {
+        return true
+    }
+
 }

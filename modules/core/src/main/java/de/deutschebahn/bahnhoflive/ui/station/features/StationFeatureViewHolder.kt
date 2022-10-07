@@ -37,13 +37,12 @@ internal class StationFeatureViewHolder(
         iconView.setImageResource(stationFeatureTemplate.definition.icon)
         labelView.setText(stationFeatureTemplate.definition.label)
 
-        when (stationFeature.isFeatured) { // definitions in StationFeatureDefinition.kt
+        when (stationFeature.isFeatured) {
             true -> bindStatusView(R.string.available, Status.POSITIVE)
             false -> bindStatusView(R.string.not_available, Status.NEGATIVE)
             else -> bindStatusView(0, Status.NONE)
         }
 
-        // link->button to map
         button.visibility =
             if (stationFeature.isLinkVisible(button.context)) View.VISIBLE else View.GONE
 
