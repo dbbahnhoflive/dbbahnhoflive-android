@@ -90,7 +90,7 @@ public class MarkerBinder {
     }
 
     public boolean isVisible() {
-        return isFilterChecked() && markerContent.acceptsLevel(level);
+        return markerContent.acceptsZoom(zoom) && isFilterChecked() && markerContent.acceptsLevel(level);
     }
 
     public boolean isFilterChecked() {
