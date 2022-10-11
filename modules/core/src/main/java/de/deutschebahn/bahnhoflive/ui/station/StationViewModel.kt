@@ -7,6 +7,7 @@
 package de.deutschebahn.bahnhoflive.ui.station
 
 import android.app.Application
+import android.content.Context
 import android.util.Log
 import android.view.View
 import androidx.lifecycle.*
@@ -44,10 +45,13 @@ import de.deutschebahn.bahnhoflive.stream.rx.Optional
 import de.deutschebahn.bahnhoflive.ui.accessibility.SpokenFeedbackAccessibilityLiveData
 import de.deutschebahn.bahnhoflive.ui.map.Content
 import de.deutschebahn.bahnhoflive.ui.map.MapActivity
+import de.deutschebahn.bahnhoflive.ui.station.elevators.ElevatorStatusListsFragment
 import de.deutschebahn.bahnhoflive.ui.station.features.*
 import de.deutschebahn.bahnhoflive.ui.station.info.InfoAndServicesLiveData
 import de.deutschebahn.bahnhoflive.ui.station.info.ServiceNumbersLiveData
 import de.deutschebahn.bahnhoflive.ui.station.localtransport.LocalTransportViewModel
+import de.deutschebahn.bahnhoflive.ui.station.locker.LockerFragment
+import de.deutschebahn.bahnhoflive.ui.station.parking.ParkingListFragment
 import de.deutschebahn.bahnhoflive.ui.station.search.ContentSearchResult
 import de.deutschebahn.bahnhoflive.ui.station.search.QueryPart
 import de.deutschebahn.bahnhoflive.ui.station.search.ResultSetType
@@ -72,6 +76,7 @@ import java.text.Collator
 import java.util.*
 import java.util.concurrent.Executors
 
+
 class StationViewModel(
     application: Application,
 ) : HafasTimetableViewModel(application) {
@@ -93,7 +98,8 @@ class StationViewModel(
                 StationFeatureDefinition.WIFI,
                 MapOrInfoLink(ServiceContentType.WIFI, TrackingManager.Category.WLAN)
             ),
-            StationFeatureTemplate(StationFeatureDefinition.ELEVATORS,
+            StationFeatureTemplate(
+                StationFeatureDefinition.ELEVATORS,
                 object : MapLink() {
                     override fun getMapSource(): Content.Source {
                         return Content.Source.FACILITY_STATUS
@@ -101,14 +107,44 @@ class StationViewModel(
 
                     override fun getPois(stationFeature: StationFeature) =
                         stationFeature.facilityStatuses
-                }),
+                },
+                object : Link() { // fallback to infotext
+
+                    override fun createServiceContentFragment(
+                        context: Context,
+                        stationFeature: StationFeature
+                    ) = ElevatorStatusListsFragment()
+
+                    override fun isAvailable(
+                        context: Context?,
+                        stationFeature: StationFeature?
+                    ): Boolean {
+                        return stationFeature?.facilityStatuses?.isNotEmpty() ?: false
+                    }
+                }
+
+            ),
             StationFeatureTemplate(
                 StationFeatureDefinition.LOCKERS,
                 MapOrInfoLink(
                     ServiceContentType.LOCKERS,
                     ServiceContentType.LOCKERS
                 ),
-                LockerLink()
+                object : Link() { // fallback to infotext
+
+                    override fun createServiceContentFragment(
+                        context: Context,
+                        stationFeature: StationFeature
+                    ) = LockerFragment()
+
+                    override fun isAvailable(
+                        context: Context?,
+                        stationFeature: StationFeature?
+                    ): Boolean {
+                        return stationFeature?.lockers?.isNotEmpty() ?: false
+                    }
+                }
+
             ),
             StationFeatureTemplate(
                 StationFeatureDefinition.DB_INFO,
@@ -143,7 +179,21 @@ class StationViewModel(
 
                     override fun getPois(stationFeature: StationFeature) =
                         stationFeature.parkingFacilities
-                }),
+                },
+                object: Link() { // fallback
+                    override fun createServiceContentFragment(
+                        context: Context,
+                        stationFeature: StationFeature
+                    ) = ParkingListFragment()
+
+                    override fun isAvailable(
+                        context: Context?,
+                        stationFeature: StationFeature?
+                    ): Boolean {
+                        return stationFeature?.parkingFacilities?.isNotEmpty() ?: false
+                    }
+                }
+            ),
             StationFeatureTemplate(
                 StationFeatureDefinition.BICYCLE_PARKING,
                 MapLink()

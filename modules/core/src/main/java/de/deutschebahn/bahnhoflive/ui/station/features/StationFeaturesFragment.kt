@@ -25,6 +25,8 @@ class StationFeaturesFragment : FullBottomSheetDialogFragment() {
     // itemClickListener is called from StationFeatureViewHolder.kt
     private val stationFeaturesAdapter = StationFeaturesAdapter { item, adapterPosition ->
         if (item.stationFeatureTemplate.link != null) {
+
+            // try to go to map, if poi does not exist in map, try to show info-page
             item.stationFeatureTemplate.link.also { link ->
                 link.createMapActivityIntent(requireContext(), item)?.let {
                     startActivity(it)
