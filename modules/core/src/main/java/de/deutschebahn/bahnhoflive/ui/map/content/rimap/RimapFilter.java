@@ -66,8 +66,8 @@ public class RimapFilter {
 
     public void checkOnlyHafas(boolean check) {
         checkAllItems(false);
-
     }
+
 
     public Filter findHafasFilterItem() {
         return HAFAS_FILTER;
@@ -105,6 +105,7 @@ public class RimapFilter {
             PRESET_SHOP_PRESS,
 
             PRESET_NONE,
+            PRESET_ELEVATORS_ONLY
     })
     public @interface Preset {
     }
@@ -139,7 +140,7 @@ public class RimapFilter {
     public static final String PRESET_SHOP_PRESS = "shop_press";
 
     public static final String PRESET_NONE = "none";
-
+    public static final String PRESET_ELEVATORS_ONLY = "elevators_only";
 
     public static void putPreset(@NonNull final Intent intent, @Preset final String preset) {
         intent.putExtra(ARG_FILTER_PRESET, preset);

@@ -9,7 +9,7 @@ android {
     compileSdkVersion 32
     defaultConfig {
         minSdkVersion 19
-        targetSdkVersion 30
+        targetSdkVersion 31
         versionCode 84
         versionName "3.6.1"
         applicationId "de.deutschebahn.bahnhoflive.community"

@@ -119,16 +119,22 @@ internal class LocalTransportViewHolder(parent: ViewGroup, itemClickListener: It
 
     private fun getIconDrawable(category: ProductCategory): Drawable? {
         val context = itemView.context
-        when (category) {
-            ProductCategory.S -> return AppCompatResources.getDrawable(context, R.drawable.app_sbahn_klein)
-            ProductCategory.BUS -> return AppCompatResources.getDrawable(context, R.drawable.app_bus_klein)
-            ProductCategory.SUBWAY -> return AppCompatResources.getDrawable(context, R.drawable.app_ubahn_klein)
-            ProductCategory.TRAM -> return AppCompatResources.getDrawable(context, R.drawable.app_tram_klein)
-            ProductCategory.SHIP -> return AppCompatResources.getDrawable(
+        return when (category) {
+            ProductCategory.S -> AppCompatResources.getDrawable(context, R.drawable.app_sbahn_klein)
+            ProductCategory.BUS -> AppCompatResources.getDrawable(context, R.drawable.app_bus_klein)
+            ProductCategory.SUBWAY -> AppCompatResources.getDrawable(
+                context,
+                R.drawable.app_ubahn_klein
+            )
+            ProductCategory.TRAM -> AppCompatResources.getDrawable(
+                context,
+                R.drawable.app_tram_klein
+            )
+            ProductCategory.SHIP -> AppCompatResources.getDrawable(
                 context,
                 R.drawable.app_faehre_klein
             )
-            else -> return AppCompatResources.getDrawable(context, R.drawable.app_haltestelle)
+            else -> AppCompatResources.getDrawable(context, R.drawable.app_haltestelle)
         }
     }
 

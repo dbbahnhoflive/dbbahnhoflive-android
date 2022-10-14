@@ -24,6 +24,8 @@ import java.util.List;
 
 public class GPSLocationManager {
 
+    private static final String TAG = GPSLocationManager.class.getSimpleName();
+
     public interface GPSLocationManagerListener {
         void didUpdateLocation(Location location);
     }
@@ -118,20 +120,24 @@ public class GPSLocationManager {
         }
         List<Location> locations = new ArrayList<>();
         for (String p: providers) {
-            locations.add(locationManager.getLastKnownLocation(p));
+            try {
+                locations.add(locationManager.getLastKnownLocation(p));
 
-            locationManager.requestSingleUpdate(p, new BaseLocationListener() {
-                @Override
-                public void onLocationChanged(Location location) {
-                    Log.e(GPSLocationManager.this.getClass().getSimpleName(),"new location");
+                locationManager.requestSingleUpdate(p, new BaseLocationListener() {
+                    @Override
+                    public void onLocationChanged(Location location) {
+                        Log.e(GPSLocationManager.this.getClass().getSimpleName(), "new location");
 
-                    if (listener != null) {
-                        listener.didUpdateLocation(location);
+                        if (listener != null) {
+                            listener.didUpdateLocation(location);
+                        }
+
+                        locationManager.removeUpdates(this);
                     }
-
-                    locationManager.removeUpdates(this);
-                }
-            }, context.getMainLooper());
+                }, context.getMainLooper());
+            } catch (SecurityException e) {
+                Log.i(TAG, "Missing location permission", e);
+            }
         }
 
         if (locations.size() > 0) {

@@ -37,6 +37,7 @@ import org.jetbrains.annotations.NotNull;
 import java.util.ArrayList;
 import java.util.List;
 
+import de.deutschebahn.bahnhoflive.BaseApplication;
 import de.deutschebahn.bahnhoflive.BuildConfig;
 import de.deutschebahn.bahnhoflive.R;
 import de.deutschebahn.bahnhoflive.analytics.IssueTracker;
@@ -52,8 +53,11 @@ import de.deutschebahn.bahnhoflive.repository.StationResource;
 import de.deutschebahn.bahnhoflive.tutorial.TutorialManager;
 import de.deutschebahn.bahnhoflive.tutorial.TutorialView;
 import de.deutschebahn.bahnhoflive.ui.hub.HubActivity;
+import de.deutschebahn.bahnhoflive.ui.map.EquipmentID;
 import de.deutschebahn.bahnhoflive.ui.map.MapActivity;
+import de.deutschebahn.bahnhoflive.ui.map.MapConsentDialogFragment;
 import de.deutschebahn.bahnhoflive.ui.map.MapPresetProvider;
+import de.deutschebahn.bahnhoflive.ui.map.OnMapConsentDialogListener;
 import de.deutschebahn.bahnhoflive.ui.map.content.rimap.RimapFilter;
 import de.deutschebahn.bahnhoflive.ui.station.accessibility.AccessibilityFragment;
 import de.deutschebahn.bahnhoflive.ui.station.elevators.ElevatorStatusListsFragment;
@@ -61,6 +65,7 @@ import de.deutschebahn.bahnhoflive.ui.station.features.StationFeaturesFragment;
 import de.deutschebahn.bahnhoflive.ui.station.info.InfoCategorySelectionFragment;
 import de.deutschebahn.bahnhoflive.ui.station.localtransport.LocalTransportFragment;
 import de.deutschebahn.bahnhoflive.ui.station.localtransport.LocalTransportViewModel;
+import de.deutschebahn.bahnhoflive.ui.station.locker.LockerFragment;
 import de.deutschebahn.bahnhoflive.ui.station.occupancy.OccupancyExplanationFragment;
 import de.deutschebahn.bahnhoflive.ui.station.parking.ParkingListFragment;
 import de.deutschebahn.bahnhoflive.ui.station.railreplacement.RailReplacementFragment;
@@ -80,6 +85,7 @@ public class StationActivity extends AppCompatActivity implements
     private static final String ARG_TRACK_FILTER = "trackFilter";
     private static final String ARG_TRAIN_INFO = "trainInfo";
     private static final String ARG_RRT_POINT = "rrtPoint";
+    private static final String ARG_EQUIPMENT_ID = "equipment_id"; // 0=show nothing
 
     private HistoryFragment infoFragment;
 
@@ -199,12 +205,29 @@ public class StationActivity extends AppCompatActivity implements
             @Override
             public void onClick(View v) {
                 trackingManager.track(TrackingManager.TYPE_ACTION, TrackingManager.Source.TAB_NAVI, TrackingManager.Action.TAP, TrackingManager.UiElement.MAP_BUTTON);
-                final Intent intent = MapActivity.createIntent(StationActivity.this, station);
-                Fragment currentContentFragment = getCurrentContentFragment();
-                if (currentContentFragment instanceof MapPresetProvider) {
-                    ((MapPresetProvider) currentContentFragment).prepareMapIntent(intent);
+
+                if (!Boolean.TRUE.equals(BaseApplication.Companion.get().getApplicationServices().getMapConsentRepository().getConsented().getValue())) {
+                    MapConsentDialogFragment mp = new MapConsentDialogFragment();
+                    mp.setOnMapConsentDialogListener(new OnMapConsentDialogListener() {
+                        @Override
+                        public void onConsentAccepted() {
+                            final Intent intent = MapActivity.createIntent(StationActivity.this, station);
+                            Fragment currentContentFragment = getCurrentContentFragment();
+                            if (currentContentFragment instanceof MapPresetProvider) {
+                                ((MapPresetProvider) currentContentFragment).prepareMapIntent(intent);
+                            }
+                            startActivity(intent);
+                        }
+                    });
+                    mp.show(getSupportFragmentManager(), null);
+                } else {
+                    final Intent intent = MapActivity.createIntent(StationActivity.this, station);
+                    Fragment currentContentFragment = getCurrentContentFragment();
+                    if (currentContentFragment instanceof MapPresetProvider) {
+                        ((MapPresetProvider) currentContentFragment).prepareMapIntent(intent);
+                    }
+                    startActivity(intent);
                 }
-                startActivity(intent);
             }
         });
 
@@ -254,7 +277,6 @@ public class StationActivity extends AppCompatActivity implements
     @Override
     protected void onResume() {
         super.onResume();
-
         trackingManager.collectLifecycleData(this);
     }
 
@@ -436,6 +458,15 @@ public class StationActivity extends AppCompatActivity implements
     }
 
     @Override
+    public void showLockers() {
+        showInfoFragment(false);
+
+        if (!LockerFragment.Companion.getTAG().equals(stationViewModel.getTopInfoFragmentTag())) {
+            infoFragment.push(new LockerFragment());
+        }
+    }
+
+    @Override
     public void showAccessibility() {
         showInfoFragment(false);
 
@@ -499,13 +530,32 @@ public class StationActivity extends AppCompatActivity implements
             stationViewModel.pendingRailReplacementPointLiveData.setValue(intent.getParcelableExtra(ARG_RRT_POINT));
         }
 
+        if (intent.hasExtra(ARG_EQUIPMENT_ID)) {
+
+            try {
+                EquipmentID equip_id = EquipmentID.values()[intent.getIntExtra(ARG_EQUIPMENT_ID, 0)];
+
+                switch (equip_id) {
+                    case LOCKERS:
+                        showLockers();
+                        break;
+                    case RAIL_REPLACEMENT:
+                        showRailReplacement();
+                        break;
+                }
+            } catch (Exception e) {
+                Log.d("stationActivity", "unexpected equip_id");
+            }
+        }
+
         return false;
     }
 
-    public static Intent createIntent(Context context, Station station) {
+    public static Intent createIntent(Context context, Station station, EquipmentID equipment_id) {
         final Intent intent = new Intent(context, StationActivity.class);
         intent.putExtra(ARG_STATION, station instanceof Parcelable ?
                 (Parcelable) station : new InternalStation(station));
+        intent.putExtra(ARG_EQUIPMENT_ID, equipment_id.getCode());
         return intent;
     }
 
@@ -563,7 +613,7 @@ public class StationActivity extends AppCompatActivity implements
     }
 
     public static Intent createIntent(Context context, Station station, boolean details) {
-        final Intent intent = createIntent(context, station);
+        final Intent intent = createIntent(context, station, EquipmentID.NONE);
         intent.putExtra(ARG_SHOW_DEPARTURES, details);
         return intent;
     }
@@ -582,8 +632,9 @@ public class StationActivity extends AppCompatActivity implements
         return intent;
     }
 
+    @NotNull
     public static Intent createIntent(Context context, Station station, RrtPoint rrtPoint) {
-        final Intent intent = createIntent(context, station);
+        final Intent intent = createIntent(context, station, EquipmentID.NONE);
         intent.putExtra(ARG_RRT_POINT, rrtPoint);
         return intent;
     }
@@ -593,7 +644,6 @@ public class StationActivity extends AppCompatActivity implements
         super.onNewIntent(intent);
 
         exploitIntent(intent);
+
     }
-
-
 }

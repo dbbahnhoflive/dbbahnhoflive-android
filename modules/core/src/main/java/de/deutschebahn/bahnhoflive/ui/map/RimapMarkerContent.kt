@@ -18,6 +18,7 @@ import de.deutschebahn.bahnhoflive.backend.rimap.RimapConfig
 import de.deutschebahn.bahnhoflive.backend.rimap.model.LevelMapping
 import de.deutschebahn.bahnhoflive.backend.rimap.model.MenuMapping
 import de.deutschebahn.bahnhoflive.backend.rimap.model.RimapPOI
+import de.deutschebahn.bahnhoflive.repository.locker.AnyLockerInitialPoi
 import de.deutschebahn.bahnhoflive.ui.map.content.rimap.Track
 import de.deutschebahn.bahnhoflive.ui.station.shop.OpenStatusResolver
 import de.deutschebahn.bahnhoflive.ui.station.shop.RimapShop
@@ -56,10 +57,12 @@ private val mapIcon: Int, @field:DrawableRes
         return rimapPOI.bbox
     }
 
+    // todo cr: InitialPoiManager sometimes not working
     override fun getPreSelectionRating(): Int =
         when (rimapPOI.type) {
-            "DB_TRAVEL_CENTER" -> 2
-            "ENTRANCE_EXIT" -> 1
+            "DB_TRAVEL_CENTER" -> 3
+            "ENTRANCE_EXIT" -> 2
+            "LOCKER" -> 1
             else -> super.getPreSelectionRating()
         }
 
@@ -104,6 +107,10 @@ private val mapIcon: Int, @field:DrawableRes
             }
         }
 
+        if (viewType == ViewType.LOCKERS) {
+            return item == AnyLockerInitialPoi
+        }
+
         return false
     }
 
@@ -112,8 +119,11 @@ private val mapIcon: Int, @field:DrawableRes
     }
 
     override fun getViewType(): MarkerContent.ViewType =
-        if (rimapPOI.type in MenuMapping.PLATFORM_TYPES) ViewType.TRACK
-        else super.getViewType()
+        when (rimapPOI.type) {
+            in MenuMapping.PLATFORM_TYPES -> ViewType.TRACK
+            MenuMapping.LOCKER -> ViewType.LOCKERS
+            else -> super.getViewType()
+        }
 
     /**
      * This method currently doesn't bother checking if this is actually a track / platform instance.

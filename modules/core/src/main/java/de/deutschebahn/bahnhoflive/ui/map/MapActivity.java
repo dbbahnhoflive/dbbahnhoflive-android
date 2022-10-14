@@ -18,7 +18,6 @@ import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
-import androidx.lifecycle.Transformations;
 import androidx.lifecycle.ViewModelProvider;
 
 import com.google.android.gms.maps.MapFragment;
@@ -89,14 +88,20 @@ public class MapActivity extends AppCompatActivity implements
             overlayFragment.setStationDepartures(intent.getParcelableArrayListExtra(ARG_STATION_DEPARTURES));
         }
 
+        initializeMap();
 
-        Transformations.distinctUntilChanged(mapViewModel.getMapConsentedLiveData()).observe(this, aBoolean -> {
-            if (aBoolean) {
-                initializeMap();
-            } else {
-                new MapConsentDialogFragment().show(getSupportFragmentManager(), null);
-            }
-        });
+//        if (!Boolean.TRUE.equals(mapViewModel.getMapConsentedLiveData().getValue())) {
+//            new MapConsentDialogFragment().show(getSupportFragmentManager(), null);
+//        }
+
+
+//        Transformations.distinctUntilChanged(mapViewModel.getMapConsentedLiveData()).observe(this, aBoolean -> {
+//            if (aBoolean) {
+//                initializeMap();
+//            } else {
+////                new MapConsentDialogFragment().show(getSupportFragmentManager(), null);
+//            }
+//        });
     }
 
     private void initializeMap() {

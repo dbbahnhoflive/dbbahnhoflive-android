@@ -39,4 +39,6 @@ public interface StationNavigation extends TimetablesFragment.Host {
     void showAccessibility();
 
     void showRailReplacement();
+
+    void showLockers();
 }

@@ -100,6 +100,7 @@ class OfficialStationRepository(
             )
         ).cancellable()
 
+
     override fun queryStation(
         listener: VolleyRestListener<RISStation>,
         stadaId: String,
@@ -115,12 +116,12 @@ class OfficialStationRepository(
 
     override fun queryAccessibilityDetails(
         listener: VolleyRestListener<List<Platform>>,
-        evaId: String,
+        stadaId: String,
         force: Boolean
     ): VolleyRequestCancellable<List<Platform>> = restHelper
         .add(
             RISPlatformsRequest(
-                listener, dbAuthorizationTool, evaId, force, clientIdDbAuthorizationTool
+                listener, dbAuthorizationTool, stadaId, force, clientIdDbAuthorizationTool
             )
         )
         .cancellable()

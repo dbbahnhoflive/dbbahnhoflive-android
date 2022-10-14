@@ -11,7 +11,7 @@ android {
     compileSdkVersion 32
     defaultConfig {
         minSdkVersion 19
-        targetSdkVersion 30
+        targetSdkVersion 31
         multiDexEnabled true
 
         buildConfigField "String", "RIS_JOURNEYS_BASE_URL", "\"https://apis.deutschebahn.com/db/apis/ris-journeys/v1/\""
@@ -22,6 +22,7 @@ android {
         buildConfigField "String", "FASTA_API_KEY", "\"15d020725ecb768ea41a5925a26bf50e\""
         buildConfigField "String", "FASTA_CLIENT_ID", "\"1c5f5114b79924f8d34d50cb601d4dd6\""
 
+        buildConfigField "String", "PARKING_INFORMATION_BASE_URL", "\"https://apis.deutschebahn.com/db/apis/parking-information/db-bahnpark/v2/\""
     }
     buildTypes {
         release {

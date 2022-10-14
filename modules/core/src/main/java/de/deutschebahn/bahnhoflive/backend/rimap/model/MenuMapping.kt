@@ -107,7 +107,7 @@ object MenuMapping {
         TOILET to (ShopCategory.Menucat.STATIONSERVICES to "WC"),
         TOILET_HANDICAPPED to (ShopCategory.Menucat.STATIONSERVICES to "WC Rollstuhlbenutzer"),
         WAITING_AREA to (ShopCategory.Menucat.STATIONSERVICES to "Wartebereich"),
-        LOCKER to (ShopCategory.Menucat.STATIONSERVICES to "Schließfach"),
+        LOCKER to (ShopCategory.Menucat.STATIONSERVICES to "Schließfächer"),
         BAGGAGE_ROOM to (ShopCategory.Menucat.STATIONSERVICES to "Gepäckaufbewahrung"),
         WIFI to (ShopCategory.Menucat.STATIONSERVICES to "WLAN"),
         LETTERBOX to (ShopCategory.Menucat.STATIONSERVICES to "Briefkasten"),

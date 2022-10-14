@@ -129,6 +129,7 @@
     <string name="stationinfo_infos_and_services">Info &amp; Services vor Ort</string>
     <string name="stationinfo_service_phone_numbers">Rufnummern &amp; Services</string>
     <string name="stationinfo_parkings">Parkplätze</string>
+    <string name="stationinfo_lockers">Schließfächer</string>
     <string name="title_stationinfo_categories">Bahnhofsinformationen</string>
     <string name="title_shopping_categories"><![CDATA[Shoppen & Schlemmen]]></string>
 
@@ -301,9 +302,9 @@
     <string name="feedback_whatsapp_unavailable">Sie benötigen ein bestehendes Nutzerkonto beim Dienst „WhatsApp“. Aktuell ist dieser Dienst nicht auf ihrem Gerät installiert.</string>
     <string name="feedback_headline_alternative_contacts">Alternative Kontaktmöglichkeiten</string>
 
-    <string name="accessibilityStepFreeAll">Dieser Bahnhof bietet Ihnen stufenfreien Zugang.</string>
-    <string name="accessibilityStepFreeNone">Dieser Bahnhof bietet Ihnen leider <b>keinen</b> stufenfreien Zugang.</string>
-    <string name="accessibilityStepFreePartial">Dieser Bahnhof bietet Ihnen <b>teilweise</b> stufenfreien Zugang.</string>
+    <string name="accessibilityStepFreeAll">Dieser Bahnhof bietet Ihnen einen stufenfreien Zugang zu den Bahnsteigen.</string>
+    <string name="accessibilityStepFreeNone">Dieser Bahnhof verfügt über <b>keinen</b> stufenfreien Zugang zu den Bahnsteigen.</string>
+    <string name="accessibilityStepFreePartial">Dieser Bahnhof bietet nur <b>teilweise</b> stufenfreien Zugang zu den Bahnsteigen. Für detaillierte Informationen wählen Sie bitte weiter unten auf dieser Seite ein Gleis aus.</string>
 
     <string name="accessibilityStepFreeAccess">Stufenfreier Zugang</string>
     <string name="accessibilityStandardPlatformHeight">Bahnsteighöhe >= 55 cm</string>
@@ -334,7 +335,7 @@
     <string name="accessibility_select_platform_invitation">Bitte wählen Sie ein Gleis aus.</string>
     <string name="accessibility_no_platform_selected">Kein Gleis ausgewählt</string>
     <string name="accessibility_hotline">030 6521 2888</string>
-    <string name="accessibility_hotline_advice">Bei Fragen wenden Sie sich bitte an die Mobilitätsservice-Zentrale unter</string>
+    <string name="accessibility_hotline_advice">Zu Informationen über die Barrierefreiheit des Bahnhofs oder bei weiteren Fragen wenden Sie Sich bitte an die Mobilitätsservice-Zentrale unter</string>
     <string name="accessibility_advice">Die nachfolgend genannten Ausstattungsmerkmale dienen der barrierefreien Zugänglichkeit des Bahnhofs.</string>
     <string name="accessibility_key">Ausstattung für Barrierefreiheit</string>
     <string name="title_accessibility_key">Merkmale der Barrierefreiheit</string>
@@ -368,4 +369,52 @@
     <string name="rail_replacement_map_link">Eine Wegbeschreibung finden Sie unter Bahnhofsinformationen.</string>
     <string name="rail_replacement_entry_label_plural">An diesem Bahnhof finden Sie folgende Ersatzhaltestellen:</string>
     <string name="rail_replacement_entry_label_singular">An diesem Bahnhof finden Sie folgende Ersatzhaltestelle:</string>
+
+    <string name="locker_entry_label">An diesem Bahnhof können Sie Ihr Gepäck sicher aufbewahren. Alle Größenangaben zu den Schließfächern sind Länge, Breite und Höhe in Zentimeter. Bitte beachten Sie auch die Nutzungsbedingungen vor Ort.</string>
+    <string name="locker_amount_lockers">Insgesamt %d Schließfächer</string>
+
+    <string-array name="locker_types">
+        <item>Unbekanntes Schließfach</item>
+        <item>Kleines Schließfach</item>
+        <item>Mittleres Schließfach</item>
+        <item>Großes Schließfach</item>
+        <item>Jumbo-Schließfach</item>
+    </string-array>
+    <string name="locker_short_term">"Kurzzeit"</string>
+    <string name="locker_payment">"Zahlungsmittel: %s"</string>
+    <string name="locker_payment_type_cash">"bar"</string>
+    <string name="locker_payment_type_cashless">"bargeldlos"</string>
+    <string name="locker_payment_type_unknown">"unbekannt"</string>
+    <string name="locker_dimensions">"%d x %d x %d"</string>
+    <string name="locker_dimensions_VO">"Größe: %d Zentimeter Länge, %d Zentimeter Breite, %d Zentimeter Höhe"</string>
+    <string name="locker_dimensions_unknown">"Größe: Information liegt nicht vor"</string>
+    <string name="locker_information_missing">"Information liegt nicht vor"</string>
+    <string name="locker_fee_missing">"Preis: Information liegt nicht vor"</string>
+
+    <string name="locker_max_lease_duration">"Max. Mietdauer:\u0020%s"</string>
+    <string name="locker_max_lease_duration_VO">"Maximale Mietdauer :\u0020%s"</string>
+    <string name="locker_flyout_description_link">"Informationen zu den Schließfächern finden Sie unter Bahnhofsinformationen."</string>
+
+    <string-array name="locker_fee_periods">
+        <item>%s / Unbekannt</item>
+        <item>%s / h</item>
+        <item>%s / Tag</item>
+        <item>%s /\u0020</item>
+    </string-array>
+    <string-array name="locker_fee_periods_VO">
+        <item>Preis: %s </item>
+        <item>Preis: %s pro Stunde</item>
+        <item>Preis: %s pro 24 Stunden</item>
+        <item>Preis: %s pro\u0020</item>
+    </string-array>
+
+    <string name="date_years">Jahre</string>
+    <string name="date_months">Monate</string>
+    <string name="date_weeks">Wochen</string>
+    <string name="date_days">Tage</string>
+    <string name="date_hours">Stunden</string>
+    <string name="date_minutes">Minuten</string>
+    <string name="date_seconds">Sekunden</string>
+
 </resources>
+

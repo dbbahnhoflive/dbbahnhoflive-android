@@ -165,12 +165,12 @@ public class ImprintFragment extends Fragment {
         try {
             in = getResources().getAssets().open(url);
             final String versionName = BaseApplication.get().getVersionName();
-            String imprint = getString(in).replaceAll("\\{APP_VERSION\\}", versionName);
+            String imprint = getString(in).replaceAll("\\{APP_VERSION\\}", versionName);  // todo check
 
             webview.loadDataWithBaseURL("nil://nil.nil", imprint
                     , "text/html", "UTF-8", null);
 
-            webview.loadDataWithBaseURL("nil://nil.nil", imprint + "</body>", "text/html", "UTF-8", null);
+//            webview.loadDataWithBaseURL("nil://nil.nil", imprint + "</body>", "text/html", "UTF-8", null);
         } catch (IOException e) {
             e.printStackTrace();
         }

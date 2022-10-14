@@ -40,7 +40,7 @@ open class StadaStationCacheViewModel(application: Application) : AndroidViewMod
             }
         }
     val nearbyStopPlacesLiveData = nearbyStopPlacesResourceLiveData.switchMap {
-        it?.data
+        it.data
     }
 
     val openHoursParser by lazy {
