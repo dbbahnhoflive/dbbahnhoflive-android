@@ -7,7 +7,7 @@ import de.deutschebahn.bahnhoflive.repository.InternalStation
 import de.deutschebahn.bahnhoflive.repository.Station
 import kotlinx.coroutines.*
 import kotlinx.coroutines.channels.awaitClose
-import kotlinx.coroutines.channels.sendBlocking
+import kotlinx.coroutines.channels.trySendBlocking
 import kotlinx.coroutines.flow.*
 
 class UpdatedStationRepository(
@@ -29,7 +29,7 @@ class UpdatedStationRepository(
                             payload?.firstOrNull {
                                 it.stationID == station.id
                             }?.also {
-                                sendBlocking(
+                                trySendBlocking(
                                     Result.success(
                                         InternalStation(
                                             station.id,
@@ -37,15 +37,16 @@ class UpdatedStationRepository(
                                             station.location,
                                             it.evaIds
                                         )
-                                    )
+                                    ).onSuccess { }
+                                        .onFailure { t: Throwable? -> {} }
                                 )
                             } ?: kotlin.run {
-                                sendBlocking(Result.failure(Exception("Not found")))
+                                trySendBlocking(Result.failure(Exception("Not found")))
                             }
                         }
 
                         override fun onFail(reason: VolleyError) {
-                            sendBlocking(Result.failure(reason))
+                            trySendBlocking(Result.failure(reason))
                         }
                     },
                     station.title,
