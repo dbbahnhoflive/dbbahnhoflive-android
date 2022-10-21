@@ -6,6 +6,8 @@
 
 package de.deutschebahn.bahnhoflive.ui.station;
 
+import static de.deutschebahn.bahnhoflive.util.MapXKt.startMapActivityIfConsent;
+
 import android.app.Activity;
 import android.content.Intent;
 import android.net.Uri;
@@ -412,7 +414,10 @@ public class StationFragment extends androidx.fragment.app.Fragment implements
             final Station station = stationLiveData.getValue();
             if (station != null && station.getLocation() != null) {
                 getTrackingManager().track(TrackingManager.TYPE_ACTION, TrackingManager.Screen.H1, TrackingManager.Action.TAP, TrackingManager.UiElement.MAP);
-                startActivity(MapActivity.createIntent(getActivity(), station));
+
+
+                startMapActivityIfConsent(this, ()->MapActivity.createIntent(getActivity(), station));
+//                startActivity(MapActivity.createIntent(getActivity(), station));
             }
         });
 

@@ -9,6 +9,7 @@ package de.deutschebahn.bahnhoflive.ui.station
 import android.app.Application
 import android.util.Log
 import android.view.View
+import androidx.fragment.app.findFragment
 import androidx.lifecycle.*
 import androidx.lifecycle.Observer
 import com.android.volley.VolleyError
@@ -55,11 +56,8 @@ import de.deutschebahn.bahnhoflive.ui.station.shop.Shop
 import de.deutschebahn.bahnhoflive.ui.station.shop.ShopCategory
 import de.deutschebahn.bahnhoflive.ui.station.timetable.TimetableViewHelper
 import de.deutschebahn.bahnhoflive.ui.timetable.localtransport.HafasTimetableViewModel
-import de.deutschebahn.bahnhoflive.util.Token
-import de.deutschebahn.bahnhoflive.util.append
-import de.deutschebahn.bahnhoflive.util.asLiveData
+import de.deutschebahn.bahnhoflive.util.*
 import de.deutschebahn.bahnhoflive.util.openhours.OpenHoursParser
-import de.deutschebahn.bahnhoflive.util.then
 import io.reactivex.Observable
 import io.reactivex.subjects.BehaviorSubject
 import kotlinx.coroutines.CoroutineDispatcher
@@ -612,9 +610,17 @@ class StationViewModel(
                                         View.OnClickListener {
                                             stationResource.data.value?.let { station ->
                                                 val context = it.context
-                                                val intent =
-                                                    MapActivity.createIntent(context, station)
-                                                context.startActivity(intent)
+
+                                                startMapActivityIfConsent(it.findFragment()) {
+                                                    MapActivity.createIntent(
+                                                        context,
+                                                        station
+                                                    )
+                                                }
+
+//                                                val intent =
+//                                                    MapActivity.createIntent(context, station)
+//                                                context.startActivity(intent)
                                             }
                                         })
                                 )

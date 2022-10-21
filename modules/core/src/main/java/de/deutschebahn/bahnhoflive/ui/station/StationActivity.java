@@ -7,6 +7,7 @@
 package de.deutschebahn.bahnhoflive.ui.station;
 
 import static de.deutschebahn.bahnhoflive.analytics.TrackingManager.Screen.H1;
+import static de.deutschebahn.bahnhoflive.util.MapXKt.startMapActivityIfConsent;
 
 import android.content.Context;
 import android.content.Intent;
@@ -29,6 +30,7 @@ import androidx.lifecycle.LiveData;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModel;
 import androidx.lifecycle.ViewModelProvider;
+import androidx.lifecycle.ViewModelStoreOwner;
 
 import com.google.android.material.internal.CheckableImageButton;
 
@@ -117,7 +119,7 @@ public class StationActivity extends AppCompatActivity implements
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        final ViewModelProvider viewModelProvider = new ViewModelProvider(this, new ViewModelProvider.AndroidViewModelFactory(getApplication()) {
+        ViewModelProvider.AndroidViewModelFactory fac = new ViewModelProvider.AndroidViewModelFactory(getApplication()) {
             @NonNull
             @Override
             public <T extends ViewModel> T create(@NonNull Class<T> modelClass) {
@@ -129,7 +131,25 @@ public class StationActivity extends AppCompatActivity implements
                 }
                 return super.create(modelClass);
             }
-        });
+        };
+
+        final ViewModelProvider viewModelProvider = new ViewModelProvider(this, (ViewModelProvider.Factory) fac);
+
+//        final ViewModelProvider viewModelProvider = new ViewModelProvider(this, (ViewModelProvider.Factory) new ViewModelProvider.AndroidViewModelFactory(getApplication()) {
+//            @NonNull
+//            @Override
+//            public <T extends ViewModel> T create(@NonNull Class<T> modelClass) {
+//                if (modelClass == LocalTransportViewModel.class) {
+//                    return (T) stationViewModel.getLocalTransportViewModel();
+//                }
+//                if (modelClass == HafasTimetableViewModel.class) {
+//                    return (T) stationViewModel.getHafasTimetableViewModel();
+//                }
+//                return super.create(modelClass);
+//            }
+//        });
+
+
         stationViewModel = viewModelProvider.get(StationViewModel.class);
         stationViewModel.setStationNavigation(this);
 
@@ -205,29 +225,7 @@ public class StationActivity extends AppCompatActivity implements
             @Override
             public void onClick(View v) {
                 trackingManager.track(TrackingManager.TYPE_ACTION, TrackingManager.Source.TAB_NAVI, TrackingManager.Action.TAP, TrackingManager.UiElement.MAP_BUTTON);
-
-                if (!Boolean.TRUE.equals(BaseApplication.Companion.get().getApplicationServices().getMapConsentRepository().getConsented().getValue())) {
-                    MapConsentDialogFragment mp = new MapConsentDialogFragment();
-                    mp.setOnMapConsentDialogListener(new OnMapConsentDialogListener() {
-                        @Override
-                        public void onConsentAccepted() {
-                            final Intent intent = MapActivity.createIntent(StationActivity.this, station);
-                            Fragment currentContentFragment = getCurrentContentFragment();
-                            if (currentContentFragment instanceof MapPresetProvider) {
-                                ((MapPresetProvider) currentContentFragment).prepareMapIntent(intent);
-                            }
-                            startActivity(intent);
-                        }
-                    });
-                    mp.show(getSupportFragmentManager(), null);
-                } else {
-                    final Intent intent = MapActivity.createIntent(StationActivity.this, station);
-                    Fragment currentContentFragment = getCurrentContentFragment();
-                    if (currentContentFragment instanceof MapPresetProvider) {
-                        ((MapPresetProvider) currentContentFragment).prepareMapIntent(intent);
-                    }
-                    startActivity(intent);
-                }
+                startMapActivityIfConsent(getCurrentContentFragment(), ()->MapActivity.createIntent(StationActivity.this, station));
             }
         });
 
