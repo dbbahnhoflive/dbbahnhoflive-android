@@ -214,8 +214,13 @@ public class WagenstandAlarmReceiver extends BroadcastReceiver implements RestLi
         TaskStackBuilder stackBuilder = TaskStackBuilder.create(mContext);
         stackBuilder.addNextIntent(resultIntent);
 
+        int flags = PendingIntent.FLAG_UPDATE_CURRENT;
+        if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.M) {
+            flags |= PendingIntent.FLAG_IMMUTABLE;
+        }
+
         PendingIntent resultPendingIntent = stackBuilder.getPendingIntent(
-                0, PendingIntent.FLAG_UPDATE_CURRENT
+                0, flags
         );
         builder.setContentIntent(resultPendingIntent);
 
