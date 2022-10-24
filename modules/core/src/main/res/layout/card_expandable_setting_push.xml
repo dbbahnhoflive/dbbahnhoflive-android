@@ -11,14 +11,14 @@
     android:layout_height="wrap_content"
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
-<LinearLayout
+    <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
 
         android:background="@color/white"
         android:orientation="vertical">
 
-        <androidx.cardview.widget.CardView
+        <androidx.cardview.widget.CardView xmlns:app="http://schemas.android.com/apk/res-auto"
             xmlns:tools="http://schemas.android.com/tools"
             android:id="@+id/overview"
             android:layout_width="match_parent"
@@ -45,18 +45,18 @@
                     android:ellipsize="end"
                     android:maxLines="2"
                     android:textStyle="bold"
-                    app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintLeft_toLeftOf="@+id/guideline"
                     app:layout_constraintRight_toRightOf="parent"
                     app:layout_constraintTop_toTopOf="parent"
-                    tools:text="Bahnhofsmission mit sehr langem Namen" />
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    android:text="@string/settings_title_push_notifications" />
 
                 <ImageView
                     android:importantForAccessibility="no"
                     android:id="@+id/icon"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:src="@drawable/app_bahnhof"
+                    android:src="@drawable/ic_push_icon"
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintLeft_toLeftOf="parent"
                     app:layout_constraintRight_toLeftOf="@+id/guideline"
@@ -68,25 +68,23 @@
         <FrameLayout
             android:id="@+id/details"
             android:layout_width="match_parent"
-            android:layout_height="@dimen/setting_card_height">
+            android:layout_height="@dimen/setting_card_height"
+            >
 
             <androidx.appcompat.widget.SwitchCompat
-                android:id="@+id/add_favourite_switch"
+                android:id="@+id/enable_push"
                 android:background="@null"
                 android:textSize="@dimen/textsize_h4"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_vertical"
                 android:layout_margin="@dimen/default_space"
-                android:text="@string/setting_station_favorite"
+                android:text="@string/setting_enable_push"
                 android:checked="true"
                 android:textColor="@android:color/black"
                 android:thumb="@drawable/switch_ios_selector"
                 app:track="@drawable/switch_ios_track"
                 />
-
-
-
         </FrameLayout>
     </LinearLayout>
 </de.deutschebahn.bahnhoflive.view.DecoratedCard>

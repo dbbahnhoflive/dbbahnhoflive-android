@@ -6,6 +6,7 @@
 
 package de.deutschebahn.bahnhoflive.view;
 
+import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
@@ -174,7 +175,12 @@ public class SectionAdapter<VH extends RecyclerView.ViewHolder> extends Recycler
     public void onBindViewHolder(RecyclerView.ViewHolder holder, int position, List<Object> payloads) {
         final SectionPosition sectionPosition = new SectionPosition(position);
         if (sectionPosition.position == 0) {
-            ((TitleViewHolder) holder).bind(sectionPosition.section.title);
+            if (sectionPosition.section.title == "") {
+                holder.itemView.setVisibility(View.GONE); // why ? not working
+                holder.itemView.getLayoutParams().height = 0;
+            } else
+                ((TitleViewHolder) holder).bind(sectionPosition.section.title);
+
         } else {
             sectionPosition.section.adapter.onBindViewHolder(holder, sectionPosition.position - 1, payloads);
         }

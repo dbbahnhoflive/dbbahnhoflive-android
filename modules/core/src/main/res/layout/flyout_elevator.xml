@@ -74,7 +74,7 @@
                 android:drawablePadding="@dimen/small_space"
                 android:ellipsize="end"
                 android:lines="1"
-                app:layout_constraintBottom_toTopOf="@+id/bookmarked_switch"
+                app:layout_constraintBottom_toTopOf="@+id/receive_push_msg_if_broken_switch"
                 app:layout_constraintLeft_toLeftOf="parent"
                 app:layout_constraintRight_toRightOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/status_text_2"
@@ -83,7 +83,7 @@
                 tools:textColor="@color/red" />
 
             <Switch
-                android:id="@+id/bookmarked_switch"
+                android:id="@+id/receive_push_msg_if_broken_switch"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_margin="@dimen/default_space_half"

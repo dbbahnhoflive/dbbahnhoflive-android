@@ -98,5 +98,4 @@
         <item name="layout_constraintWidth_min">@dimen/indent</item>
     </style>
 
-
 </resources>

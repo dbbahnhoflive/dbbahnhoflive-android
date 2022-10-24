@@ -73,14 +73,14 @@ class FavoritesAdapter extends RecyclerView.Adapter<ViewHolder<StationWrapper>> 
     public static class StationViewHolder extends SelectableItemViewHolder<StationWrapper> implements CompoundButton.OnCheckedChangeListener {
 
         private final TextView titleView;
-        private final CompoundButtonChecker bookmarkSwitch;
+        private final CompoundButtonChecker addFavouriteSwitch;
 
         public StationViewHolder(ViewGroup parent, SingleSelectionManager selectionManager) {
             super(parent, R.layout.card_expandable_setting_station, selectionManager);
 
             titleView = findTextView(R.id.title);
 
-            bookmarkSwitch = new CompoundButtonChecker(itemView.findViewById(R.id.bookmarked_switch), this);
+            addFavouriteSwitch = new CompoundButtonChecker(itemView.findViewById(R.id.add_favourite_switch), this);
         }
 
 
@@ -90,7 +90,7 @@ class FavoritesAdapter extends RecyclerView.Adapter<ViewHolder<StationWrapper>> 
 
             titleView.setText(item.getTitle());
 
-            bookmarkSwitch.setChecked(item.isFavorite());
+            addFavouriteSwitch.setChecked(item.isFavorite());
         }
 
         @Override

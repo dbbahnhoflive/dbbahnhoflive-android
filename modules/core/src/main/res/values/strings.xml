@@ -147,6 +147,7 @@
     <string name="parking_details_button_reservation">Reservierung</string>
     <string name="parking_details_button_subscribe">Monatskarte beantragen</string>
     <string name="facility_bookmarked">Aufzug der Merkliste hinzugefügt</string>
+    <string name="facility_receive_push_notification">Bei Defekt Mitteilung erhalten</string>
     <string name="title_timetable_filter">Verkehrsmittel</string>
     <string name="apply">Übernehmen</string>
     <string name="title_station_features">Bahnhofsausstattung</string>
@@ -179,7 +180,10 @@
     <string name="rimap_category_service">Dienstleistungen</string>
     <string name="setting_station_favorite">Als Favorit hinzugefügt</string>
     <string name="setting_show_hints"><![CDATA[Tipps & Hinweise anzeigen]]></string>
+    <string name="setting_enable_push"><![CDATA[Push-Mitteilungen dieser App erhalten]]></string>
     <string name="settings_title_hints"><![CDATA[Tipps & Hinweise]]></string>
+    <string name="settings_title_push_notifications"><![CDATA[Push-Mitteilungen]]></string>
+    <string name="settings_manage_notifications"><![CDATA[Benachrichtigungen verwalten]]></string>
     <string name="template_level_overground">%1$d. Obergeschoss</string>
     <string name="template_level_underground">%1$d. Untergeschoss</string>
     <string name="level_base">Erdgeschoss</string>
