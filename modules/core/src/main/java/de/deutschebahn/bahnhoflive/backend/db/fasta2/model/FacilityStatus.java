@@ -43,7 +43,9 @@ public class FacilityStatus implements Parcelable, Comparable<FacilityStatus>, M
     private String stationName;
 
     private boolean saved;
-    private boolean subscribed;
+    private boolean bookmarked; // is in bookmarklist
+
+    private boolean canReceivePushMessages; // can receive push-messages
 
     public boolean isSaved() {
         return saved;
@@ -53,12 +55,20 @@ public class FacilityStatus implements Parcelable, Comparable<FacilityStatus>, M
         this.saved = saved;
     }
 
-    public boolean isSubscribed() {
-        return subscribed;
+    public boolean isBookmarked() {
+        return bookmarked;
     }
 
-    public void setSubscribed(boolean subscribed) {
-        this.subscribed = subscribed;
+    public void setBookmarked(boolean subscribed) {
+        this.bookmarked = subscribed;
+    }
+
+    public boolean canReceivePushMessages() {
+        return canReceivePushMessages;
+    }
+
+    public void enableReceivePushMessages(boolean enabled) {
+        this.canReceivePushMessages = enabled;
     }
 
     // Facility Types
@@ -245,8 +255,8 @@ public class FacilityStatus implements Parcelable, Comparable<FacilityStatus>, M
                 .compareTo(Boolean.valueOf(isSubscribable()));
 
         if (comparison == 0) {
-            comparison = Boolean.valueOf(another.isSubscribed())
-                    .compareTo(Boolean.valueOf(isSubscribed()));
+            comparison = Boolean.valueOf(another.isBookmarked())
+                    .compareTo(Boolean.valueOf(isBookmarked()));
         }
 
         return comparison;
@@ -262,7 +272,13 @@ public class FacilityStatus implements Parcelable, Comparable<FacilityStatus>, M
         latitude = in.readString();
         stationName = in.readString();
         saved = in.readByte() != 0x00;
-        subscribed = in.readByte() != 0x00;
+        bookmarked = in.readByte() != 0x00;
+
+        // for compatibility to version < 3.20.0 (push is available >= 3.20.0)
+        if(in.dataAvail()>0)
+            canReceivePushMessages = in.readByte() != 0x00;
+        else
+            canReceivePushMessages = false;
     }
 
     @Override
@@ -281,7 +297,11 @@ public class FacilityStatus implements Parcelable, Comparable<FacilityStatus>, M
         dest.writeString(latitude);
         dest.writeString(stationName);
         dest.writeByte((byte) (saved ? 0x01 : 0x00));
-        dest.writeByte((byte) (subscribed ? 0x01 : 0x00));
+        dest.writeByte((byte) (bookmarked ? 0x01 : 0x00));
+
+        // starts with 3.20.0
+        dest.writeByte((byte) (canReceivePushMessages ? 0x01 : 0x00));
+
     }
 
     @SuppressWarnings("unused")

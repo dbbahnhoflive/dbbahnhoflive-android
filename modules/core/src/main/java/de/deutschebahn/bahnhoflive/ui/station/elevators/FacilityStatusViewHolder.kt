@@ -6,6 +6,7 @@
 
 package de.deutschebahn.bahnhoflive.ui.station.elevators
 
+import android.util.Log
 import android.view.ViewGroup
 import android.widget.CompoundButton
 import android.widget.ImageView
@@ -18,12 +19,11 @@ import de.deutschebahn.bahnhoflive.ui.station.CommonDetailsCardViewHolder
 import de.deutschebahn.bahnhoflive.view.CompoundButtonChecker
 import de.deutschebahn.bahnhoflive.view.SingleSelectionManager
 
-// card_expandable_facility_status.xml
-abstract class FacilityStatusViewHolder(parent: ViewGroup, selectionManager: SingleSelectionManager, private val facilityPushManager: FacilityPushManager) :
+abstract class FacilityStatusViewHolder(parent: ViewGroup, selectionManager: SingleSelectionManager?, private val facilityPushManager: FacilityPushManager) :
     CommonDetailsCardViewHolder<FacilityStatus>(parent, R.layout.card_expandable_facility_status, selectionManager), CompoundButton.OnCheckedChangeListener {
 
-    private val bookmarkedIndicator: ImageView = itemView.findViewById(R.id.bookmarked_indicator)
-    private val bookmarkedSwitch: CompoundButtonChecker =
+    private val bookmarkedIndicator: ImageView = itemView.findViewById(R.id.bookmarked_indicator) // star
+    private val subscribePushSwitch: CompoundButtonChecker =
         CompoundButtonChecker(itemView.findViewById(R.id.receive_push_msg_if_broken_switch), this)
 
     override fun onBind(item: FacilityStatus) {
@@ -32,20 +32,21 @@ abstract class FacilityStatusViewHolder(parent: ViewGroup, selectionManager: Sin
         titleView.text = item.stationName
         iconView.setImageResource(item.flyoutIcon)
 
-        val subscribed = facilityPushManager.getPushStatus(itemView.context, item.equipmentNumber)
-        bindBookmarkedIndicator(subscribed)
+        val bookmarked = facilityPushManager.getBookmarked(itemView.context, item.equipmentNumber)
+        bindBookmarkedIndicator(bookmarked)
 
-        bookmarkedSwitch.isChecked = subscribed
-//        bookmarkedSwitch.compoundButton.text = itemView.context.getString(if(subscribed) R.string.facility_bookmarked else R.string.facility_add_bookmark )
-//
+        subscribePushSwitch.isChecked = facilityPushManager.canReceivePushMessages(itemView.context, item.equipmentNumber)
+
         val status = Status.of(item)
         setStatus(status, item.description, renderDescription(status, item.description)) // ex.: 'von Gleis 1/2 (S-Bahn)
 
-        bookmarkedIndicator.setOnClickListener {
+        itemView.setOnClickListener{
+            // toggle bookmarked-state
             val facilityStatus = item
-            val bookmarked = facilityPushManager.getPushStatus(itemView.context, item.equipmentNumber)
-            facilityPushManager.setPushStatus(itemView.context, facilityStatus, !bookmarked)
-            onSubscriptionChanged(!bookmarked)
+            val newBookmarkState = !facilityPushManager.getBookmarked(itemView.context, item.equipmentNumber)
+            facilityPushManager.setBookmarked(itemView.context, facilityStatus, newBookmarkState)
+            onBookmarkChanged(newBookmarkState)
+            toggleSelection()
         }
     }
 
@@ -64,19 +65,18 @@ abstract class FacilityStatusViewHolder(parent: ViewGroup, selectionManager: Sin
     }
 
     protected fun bindBookmarkedIndicator(bookmarked: Boolean) {
-//        bookmarkedIndicator.visibility = if (bookmarked) View.VISIBLE else View.GONE
-//        bookmarkedSwitch.isChecked = bookmarked
-//        bookmarkedSwitch.compoundButton.text = itemView.context.getString(if(bookmarked) R.string.facility_bookmarked else R.string.facility_add_bookmark )
-
         bookmarkedIndicator.setImageResource(if(bookmarked) R.drawable.ic_star else R.drawable.ic_star_outline)
-
     }
 
     override fun onCheckedChanged(buttonView: CompoundButton, isChecked: Boolean) {
-//        val facilityStatus = item
-//        facilityPushManager.setPushStatus(buttonView.context, facilityStatus, isChecked)
+        // enable/disable push
+        val facilityStatus = item
+
+        facilityStatus?.let {
+            facilityPushManager.enablePushMessages(buttonView.context, facilityStatus, isChecked)
+        }
 //        onSubscriptionChanged(isChecked)
     }
 
-    protected abstract fun onSubscriptionChanged(isChecked: Boolean)
+    protected abstract fun onBookmarkChanged(isChecked: Boolean)
 }

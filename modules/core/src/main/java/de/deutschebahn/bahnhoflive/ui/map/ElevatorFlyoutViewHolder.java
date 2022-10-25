@@ -30,7 +30,7 @@ class ElevatorFlyoutViewHolder extends StatusFlyoutViewHolder {
         if (buttonView.isPressed()) {
             final FacilityStatus facilityStatus = getFacilityStatus();
             if (facilityStatus != null) {
-                facilityPushManager.setPushStatus(buttonView.getContext(), facilityStatus, isChecked);
+                facilityPushManager.setBookmarked(buttonView.getContext(), facilityStatus, isChecked);
             }
 
         }
@@ -43,7 +43,7 @@ class ElevatorFlyoutViewHolder extends StatusFlyoutViewHolder {
         final MarkerContent markerContent = item.getMarkerContent();
         if (markerContent instanceof FacilityStatusMarkerContent) {
             final FacilityStatus facilityStatus = ((FacilityStatusMarkerContent) markerContent).getFacilityStatus();
-            final boolean subscribed = facilityPushManager.getPushStatus(itemView.getContext(), facilityStatus.getEquipmentNumber());
+            final boolean subscribed = facilityPushManager.getBookmarked(itemView.getContext(), facilityStatus.getEquipmentNumber());
             receivePushMsgSwitch.setOnCheckedChangeListener(null);
             receivePushMsgSwitch.setChecked(subscribed);
             receivePushMsgSwitch.setOnCheckedChangeListener(this::onCheckedChanged);

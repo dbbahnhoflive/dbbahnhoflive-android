@@ -70,21 +70,15 @@
             android:layout_width="match_parent"
             android:layout_height="@dimen/setting_card_height">
 
-            <androidx.appcompat.widget.SwitchCompat
+            <Switch
+                android:layout_gravity="center_vertical"
                 android:id="@+id/add_favourite_switch"
-                android:background="@null"
                 android:textSize="@dimen/textsize_h4"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_gravity="center_vertical"
                 android:layout_margin="@dimen/default_space"
                 android:text="@string/setting_station_favorite"
-                android:checked="true"
-                android:textColor="@android:color/black"
-                android:thumb="@drawable/switch_ios_selector"
-                app:track="@drawable/switch_ios_track"
-                />
-
+                android:trackTint="@color/anthracite" />
 
 
         </FrameLayout>

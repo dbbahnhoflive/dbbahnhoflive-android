@@ -74,6 +74,16 @@ abstract class BaseApplication(
         repositories = onCreateRepositories(restHelper)
         applicationServices = ApplicationServices(this, repositories)
 
+        if(BuildConfig.DEBUG) {
+            try {
+                Class.forName("dalvik.system.CloseGuard")
+                    .getMethod("setEnabled", Boolean::class.javaPrimitiveType)
+                    .invoke(null, true)
+            } catch (e: ReflectiveOperationException) {
+                throw java.lang.RuntimeException(e)
+            }
+        }
+
         createNotificationChannels()
     }
 
