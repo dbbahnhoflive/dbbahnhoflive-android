@@ -6,7 +6,6 @@
 
 package de.deutschebahn.bahnhoflive.ui.station.elevators
 
-import android.util.Log
 import android.view.ViewGroup
 import android.widget.CompoundButton
 import android.widget.ImageView
@@ -35,7 +34,7 @@ abstract class FacilityStatusViewHolder(parent: ViewGroup, selectionManager: Sin
         val bookmarked = facilityPushManager.getBookmarked(itemView.context, item.equipmentNumber)
         bindBookmarkedIndicator(bookmarked)
 
-        subscribePushSwitch.isChecked = facilityPushManager.canReceivePushMessages(itemView.context, item.equipmentNumber)
+        subscribePushSwitch.isChecked = facilityPushManager.canReceivePushMessage(itemView.context, item.equipmentNumber)
 
         val status = Status.of(item)
         setStatus(status, item.description, renderDescription(status, item.description)) // ex.: 'von Gleis 1/2 (S-Bahn)
@@ -73,7 +72,7 @@ abstract class FacilityStatusViewHolder(parent: ViewGroup, selectionManager: Sin
         val facilityStatus = item
 
         facilityStatus?.let {
-            facilityPushManager.enablePushMessages(buttonView.context, facilityStatus, isChecked)
+            facilityPushManager.enablePushMessage(buttonView.context, facilityStatus, isChecked)
         }
 //        onSubscriptionChanged(isChecked)
     }

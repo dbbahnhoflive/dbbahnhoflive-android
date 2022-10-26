@@ -19,7 +19,7 @@ abstract class ElevatorStatusAdapter(useSelectionManager:Boolean=true) : Recycle
     private val facilityPushManager = instance
 
     init {
-        if(useSelectionManager)
+//        if(useSelectionManager)
          selectionManager = SingleSelectionManager(this)
         SingleSelectionManager.type = "d1_aufzuege"
     }

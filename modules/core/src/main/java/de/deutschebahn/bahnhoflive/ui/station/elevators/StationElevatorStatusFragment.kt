@@ -18,6 +18,7 @@ import de.deutschebahn.bahnhoflive.analytics.TrackingManager
 import de.deutschebahn.bahnhoflive.analytics.TrackingManager.Companion.fromActivity
 import de.deutschebahn.bahnhoflive.backend.db.fasta2.model.FacilityStatus
 import de.deutschebahn.bahnhoflive.push.FacilityPushManager
+import de.deutschebahn.bahnhoflive.push.NotificationChannelManager
 import de.deutschebahn.bahnhoflive.ui.Status
 import de.deutschebahn.bahnhoflive.ui.map.Content
 import de.deutschebahn.bahnhoflive.ui.map.InitialPoiManager.Companion.putInitialPoi
@@ -127,10 +128,14 @@ class StationElevatorStatusFragment : Fragment(), MapPresetProvider {
                 override fun isSelected(): Boolean {
                     // true: expanded
                     item?.let {
-                        return facilityPushManager.getBookmarked(
-                            itemView.context,
-                            it.equipmentNumber
+                        return NotificationChannelManager.arePushNotificationsGloballyEnabled(
+                            itemView.context
                         )
+                                &&
+                                facilityPushManager.getBookmarked(
+                                    itemView.context,
+                                    it.equipmentNumber
+                                )
                     }
                     return true
                 }

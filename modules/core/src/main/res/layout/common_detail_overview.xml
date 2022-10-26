@@ -50,7 +50,7 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginBottom="@dimen/default_space"
-            android:layout_marginRight="@dimen/default_space"
+            android:layout_marginEnd="@dimen/default_space"
             android:gravity="center_vertical"
             android:textSize="@dimen/textsize_h3"
             app:layout_constraintBottom_toBottomOf="parent"
@@ -58,6 +58,7 @@
             app:layout_constraintRight_toRightOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/title"
             tools:drawableLeft="@drawable/app_check"
+            android:drawablePadding="@dimen/default_space_half"
             tools:text="Geöffnet"
             tools:textColor="@color/green" />
 

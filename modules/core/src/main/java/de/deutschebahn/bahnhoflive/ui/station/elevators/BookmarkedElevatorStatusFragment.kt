@@ -26,6 +26,7 @@ import android.content.Intent
 import android.view.View
 import androidx.fragment.app.Fragment
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
+import de.deutschebahn.bahnhoflive.push.NotificationChannelManager
 import de.deutschebahn.bahnhoflive.ui.map.Content
 import de.deutschebahn.bahnhoflive.ui.map.content.rimap.RimapFilter
 
@@ -47,6 +48,21 @@ class BookmarkedElevatorStatusFragment : Fragment(), SwipeRefreshLayout.OnRefres
 
                     override fun onBookmarkChanged(isChecked: Boolean) {
                         resetAdapter()
+                    }
+
+                    override fun isSelected(): Boolean {
+                        // true: expanded
+                        item?.let {
+                            return NotificationChannelManager.arePushNotificationsGloballyEnabled(
+                                itemView.context
+                            )
+                                    &&
+                                    facilityPushManager.getBookmarked(
+                                        itemView.context,
+                                        it.equipmentNumber
+                                    )
+                        }
+                        return true
                     }
                 }
             }

@@ -88,6 +88,26 @@
             android:screenOrientation="portrait" />
         <activity android:name=".ui.timetable.localtransport.DeparturesActivity" />
 
+        <service
+            android:name=".push.FirebaseService"
+            android:exported="false"
+            android:permission="false"
+            >
+            <intent-filter>
+                <action android:name="com.google.firebase.MESSAGING_EVENT"/>
+            </intent-filter>
+        </service>
+
+        <receiver
+            android:name=".push.FacilityNotificationReceiver"
+            android:exported="false">
+            <intent-filter>
+                <action android:name="android.intent.action.BOOT_COMPLETED" />
+            </intent-filter>
+        </receiver>
+
+
+
         <meta-data
             android:name="io.sentry.auto-init"
             android:value="false" />
