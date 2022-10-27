@@ -32,18 +32,8 @@ class FacilityPushManager private constructor() {
 
     fun setBookmarked(context: Context, facilityStatus: FacilityStatus, isBookmarked: Boolean) {
         PrefUtil.setFacilityBookmarked(context, facilityStatus, isBookmarked)
-        if (isBookmarked) {
-//            if (isGlobalPushActive(context)) {
-//                //just subscribe this
-//                subscribe(facilityStatus)
-//            } else {
-//                //activating global push will subscribe all (including our new facility)
-//                setGlobalPushActive(context, true)
-//            }
-        } else {
-//            if (isGlobalPushActive(context)) {
-//                unsubscribe(facilityStatus)
-//            }
+        if (!isBookmarked) {
+            unsubscribe(facilityStatus.equipmentNumber)
             removeFavorite(context, facilityStatus)
         }
     }
@@ -54,8 +44,6 @@ class FacilityPushManager private constructor() {
 
     fun enablePushMessage(context: Context, facilityStatus: FacilityStatus, enable : Boolean) {
         PrefUtil.setFacilityPushEnabled(context, facilityStatus, enable)
-
-        val topicName = "F" + facilityStatus.equipmentNumber
 
         if(enable)
             subscribe(facilityStatus.equipmentNumber)
@@ -76,7 +64,6 @@ class FacilityPushManager private constructor() {
                     msg = "Subscribe failed $topicName"
                 }
                 Log.d("cr", msg)
-//                    Toast.makeText(baseContext, msg, Toast.LENGTH_SHORT).show()
             }
     }
 
@@ -92,7 +79,6 @@ class FacilityPushManager private constructor() {
                     msg = "Unsubscribe failed $topicName"
                 }
                 Log.d("cr", msg)
-//                    Toast.makeText(baseContext, msg, Toast.LENGTH_SHORT).show()
             }
     }
 

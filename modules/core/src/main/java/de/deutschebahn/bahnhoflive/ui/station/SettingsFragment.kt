@@ -5,15 +5,13 @@
  */
 package de.deutschebahn.bahnhoflive.ui.station
 
+import android.app.AlertDialog
+import android.content.DialogInterface
 import android.content.Intent
-import android.os.Build
 import android.os.Bundle
 import android.provider.Settings
-import android.util.Log
 import android.view.ViewGroup
 import android.widget.CompoundButton
-import androidx.annotation.RequiresApi
-import androidx.core.app.NotificationManagerCompat
 import androidx.recyclerview.widget.RecyclerView
 import de.deutschebahn.bahnhoflive.BaseApplication
 import de.deutschebahn.bahnhoflive.BaseApplication.Companion.get
@@ -30,6 +28,7 @@ import de.deutschebahn.bahnhoflive.view.CompoundButtonChecker
 import de.deutschebahn.bahnhoflive.view.SectionAdapter
 import de.deutschebahn.bahnhoflive.view.SelectableItemViewHolder
 import de.deutschebahn.bahnhoflive.view.SingleSelectionManager
+import kotlin.system.exitProcess
 
 class SettingsFragment : RecyclerFragment<SectionAdapter<*>?>(R.layout.fragment_recycler_linear) {
 
@@ -207,11 +206,56 @@ class SettingsFragment : RecyclerFragment<SectionAdapter<*>?>(R.layout.fragment_
 
 
                 val intent = Intent(Settings.ACTION_APP_NOTIFICATION_SETTINGS).apply {
-                    putExtra(Settings.EXTRA_APP_PACKAGE, BaseApplication.get().packageName)
-//                    putExtra(Settings.EXTRA_CHANNEL_ID, "arrival")
+                    putExtra(Settings.EXTRA_APP_PACKAGE, BaseApplication.get().packageName) // general push-settings
+//                    putExtra(Settings.EXTRA_CHANNEL_ID, "arrival") // special push-settings
                 }
 
-                startActivity(intent)
+                if(!isChecked) {
+
+                    val alertDialog: AlertDialog = AlertDialog.Builder(
+                        activity
+                    )
+                        .setTitle("Hinweis")
+                        .setMessage("Die App wird beendet und es wird zu den Systemeinstellungen gewechselt. Wollen Sie das ?")
+                        .setCancelable(true)
+                        .setPositiveButton(
+                            R.string.dlg_yes,
+                            object : DialogInterface.OnClickListener {
+                                override fun onClick(dialog: DialogInterface, which: Int) {
+                                    dialog.dismiss()
+                                    startActivity(intent)
+                                    activity?.finish()
+                                    exitProcess(0)
+                                }
+                            }).setNeutralButton(
+                            R.string.dlg_no,
+                            object : DialogInterface.OnClickListener {
+                                override fun onClick(dialog: DialogInterface, which: Int) {
+                                    toggleView.isChecked=true
+                                    dialog.dismiss()
+                                }
+                            })
+//                        .setNegativeButton(
+//                            R.string.dlg_cancel,
+//                            object : DialogInterface.OnClickListener {
+//                                override fun onClick(dialog: DialogInterface, which: Int) {
+//                                    dialog.dismiss()
+//                                }
+//                            })
+                        .setOnCancelListener(object : DialogInterface.OnCancelListener {
+                            override fun onCancel(dialog: DialogInterface) {
+                                dialog.dismiss()
+                            }
+                        })
+                        .create()
+
+                    alertDialog.show()
+
+                }
+                 else
+                    startActivity(intent)
+
+
         }
     }
 

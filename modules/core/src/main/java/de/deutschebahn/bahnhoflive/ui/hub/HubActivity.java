@@ -14,6 +14,7 @@ import android.os.Bundle;
 import android.transition.ChangeBounds;
 import android.transition.Fade;
 import android.transition.Transition;
+import android.util.Log;
 import android.view.View;
 import android.view.accessibility.AccessibilityEvent;
 
@@ -28,11 +29,17 @@ import de.deutschebahn.bahnhoflive.R;
 import de.deutschebahn.bahnhoflive.analytics.IssueTracker;
 import de.deutschebahn.bahnhoflive.analytics.TrackingManager;
 import de.deutschebahn.bahnhoflive.permission.Permission;
+import de.deutschebahn.bahnhoflive.push.NotificationChannelManager;
+import de.deutschebahn.bahnhoflive.repository.Station;
+import de.deutschebahn.bahnhoflive.ui.station.StationActivity;
 import de.deutschebahn.bahnhoflive.ui.tutorial.TutorialFragment;
+
+import de.deutschebahn.bahnhoflive.repository.InternalStation;
 
 public class HubActivity extends AppCompatActivity implements TutorialFragment.Host {
 
     private TrackingManager trackingManager = new TrackingManager(this);
+private Boolean splashWasSeen=false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -40,16 +47,49 @@ public class HubActivity extends AppCompatActivity implements TutorialFragment.H
 
         setContentView(R.layout.activity_hub);
 
-        final FragmentManager fragmentManager = getSupportFragmentManager();
-        final Fragment hubFragment = fragmentManager.findFragmentByTag("hub");
-        if (hubFragment == null) {
-            final Fragment splashFragment = fragmentManager.findFragmentByTag("splash");
-            if (splashFragment == null) {
-                fragmentManager.beginTransaction()
-                        .add(R.id.fragment_container, new SplashFragment(), "splash")
-                        .commit();
+        Intent iintent = getIntent();
+
+        if(iintent!=null) {
+
+            // gestarter aus notification
+            Bundle bundle = iintent.getBundleExtra(NotificationChannelManager.BUNDLENAME_FACILITY_MESSAGE);
+
+            if(bundle!=null) {
+
+                Integer stationNumber = bundle.getInt("stationNumber");
+                String  stationName = bundle.getString("stationName");
+
+                if (stationNumber != 0 && stationName != null) {
+                    Station station = new InternalStation(stationNumber.toString(), stationName, null);
+
+                    splashWasSeen=true;
+                    final Intent intent = StationActivity.createIntent(this, station, false);
+
+                    intent.putExtra("SHOW_ELEVATORS", "1");
+
+                    startActivity(intent);
+                }
             }
         }
+
+        if(!splashWasSeen) {
+            final FragmentManager fragmentManager = getSupportFragmentManager();
+            final Fragment hubFragment = fragmentManager.findFragmentByTag("hub");
+            if (hubFragment == null) {
+                final Fragment splashFragment = fragmentManager.findFragmentByTag("splash");
+                if (splashFragment == null) {
+                    splashWasSeen = true;
+                    fragmentManager.beginTransaction()
+                            .add(R.id.fragment_container, new SplashFragment(), "splash")
+                            .commit();
+                }
+            }
+        }
+        else
+            endSplash(); // show hubfragment
+
+
+
     }
 
     @Override
@@ -66,6 +106,8 @@ public class HubActivity extends AppCompatActivity implements TutorialFragment.H
         super.onResume();
 
         trackingManager.collectLifecycleData(this);
+
+        Log.d("cr", "onResume StartHub");
     }
 
     @Override

@@ -15,16 +15,20 @@ import de.deutschebahn.bahnhoflive.backend.wagenstand.receiver.WagenstandAlarmRe
 
 // extension
 fun Context.createNotificationChannels() {
+
+    // Wagenstand
     if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
 
-        val arrivalAlarmChannel =
-            WagenstandAlarmReceiver.createNotificationChannel(
-                this
-            )
+        val notificationManager =  (getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager)
 
-        (getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager)
-            .createNotificationChannel(arrivalAlarmChannel)
+        val arrivalAlarmChannel = WagenstandAlarmReceiver.createNotificationChannel( this )
+        notificationManager.createNotificationChannel(arrivalAlarmChannel)
+
+        val facilityAlarmChannel = FirebaseService.createNotificationChannel(this)
+        facilityAlarmChannel?.let { notificationManager.createNotificationChannel(it) }
+
     }
+
 
 }
 
@@ -34,8 +38,25 @@ class NotificationChannelManager {
 
         const val BUNDLENAME_FACILITY_MESSAGE = "BUNDLENAME_FACILITY_MESSAGE"
 
-        // Wagenstands...
+        //                NotificationManagerCompat.from(itemView.context).notificationChannels.forEach {
+//                    val id = it.id
+//                    Log.d("cr", it.description)
+//                }
+
+        // notification_channel_arrival_name Wagenstands...
         private fun arePushNotificationsEnabledForArrival(notificationManager: NotificationManagerCompat) = when {
+
+            notificationManager.areNotificationsEnabled().not() -> false
+            Build.VERSION.SDK_INT >= Build.VERSION_CODES.O -> {
+                notificationManager.notificationChannels.firstOrNull { channel ->
+                    channel.importance == NotificationManager.IMPORTANCE_NONE
+                } == null
+            }
+            else -> true
+        }
+
+        // Defekte Aufzüge
+        private fun arePushNotificationsEnabledForElevators(notificationManager: NotificationManagerCompat) = when {
 
             notificationManager.areNotificationsEnabled().not() -> false
             Build.VERSION.SDK_INT >= Build.VERSION_CODES.O -> {

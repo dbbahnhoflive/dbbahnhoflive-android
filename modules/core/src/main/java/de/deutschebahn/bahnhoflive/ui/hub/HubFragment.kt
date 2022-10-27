@@ -158,23 +158,6 @@ class HubFragment : androidx.fragment.app.Fragment() {
                         hubViewModel.hafasData
                     )
                 }
-
-//                if (java.lang.Boolean.TRUE != get().applicationServices.mapConsentRepository.consented.value) {
-//                    val mp = MapConsentDialogFragment()
-//                    mp.setOnMapConsentDialogListener(object : OnMapConsentDialogListener {
-//                        override fun onConsentAccepted() {
-//                            val intent = MapActivity.createIntent(activity, hubViewModel.hafasData)
-//                            startActivity(intent)
-//                        }
-//                    })
-//                    mp.show(parentFragmentManager, null)
-//                } else {
-//                    val intent = MapActivity.createIntent(activity, hubViewModel.hafasData)
-//                    startActivity(intent)
-//                }
-
-//                val intent = MapActivity.createIntent(activity, hubViewModel.hafasData)
-//                startActivity(intent)
             }
         }
 

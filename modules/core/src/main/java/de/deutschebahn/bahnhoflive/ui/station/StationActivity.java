@@ -30,7 +30,6 @@ import androidx.lifecycle.LiveData;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModel;
 import androidx.lifecycle.ViewModelProvider;
-import androidx.lifecycle.ViewModelStoreOwner;
 
 import com.google.android.material.internal.CheckableImageButton;
 
@@ -39,7 +38,6 @@ import org.jetbrains.annotations.NotNull;
 import java.util.ArrayList;
 import java.util.List;
 
-import de.deutschebahn.bahnhoflive.BaseApplication;
 import de.deutschebahn.bahnhoflive.BuildConfig;
 import de.deutschebahn.bahnhoflive.R;
 import de.deutschebahn.bahnhoflive.analytics.IssueTracker;
@@ -57,9 +55,6 @@ import de.deutschebahn.bahnhoflive.tutorial.TutorialView;
 import de.deutschebahn.bahnhoflive.ui.hub.HubActivity;
 import de.deutschebahn.bahnhoflive.ui.map.EquipmentID;
 import de.deutschebahn.bahnhoflive.ui.map.MapActivity;
-import de.deutschebahn.bahnhoflive.ui.map.MapConsentDialogFragment;
-import de.deutschebahn.bahnhoflive.ui.map.MapPresetProvider;
-import de.deutschebahn.bahnhoflive.ui.map.OnMapConsentDialogListener;
 import de.deutschebahn.bahnhoflive.ui.map.content.rimap.RimapFilter;
 import de.deutschebahn.bahnhoflive.ui.station.accessibility.AccessibilityFragment;
 import de.deutschebahn.bahnhoflive.ui.station.elevators.ElevatorStatusListsFragment;
@@ -106,6 +101,8 @@ public class StationActivity extends AppCompatActivity implements
     private StationTrackingManager trackingManager;
     private boolean initializeShowingDepartures;
     private StationViewModel stationViewModel;
+
+    private Boolean wasStarted = false;
 
     private final Observer<Pair<StationNavigation, RrtPoint>> pendingRrtPointAndStationNavigationObserver = pair -> {
         final StationNavigation stationNavigation = pair.getFirst();
@@ -270,6 +267,17 @@ public class StationActivity extends AppCompatActivity implements
         }
 
         stationViewModel.getPendingRrtPointAndStationNavigationLiveData().observe(this, pendingRrtPointAndStationNavigationObserver);
+
+        if(!wasStarted) {
+            wasStarted = true;
+            Intent intent = getIntent();
+            if (intent != null) {
+                if (intent.getStringExtra("SHOW_ELEVATORS") != null)
+                    showElevators();
+            }
+        }
+
+
     }
 
     @Override
