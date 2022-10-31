@@ -7,7 +7,6 @@
 package de.deutschebahn.bahnhoflive.ui.station;
 
 import static de.deutschebahn.bahnhoflive.analytics.TrackingManager.Screen.H1;
-import static de.deutschebahn.bahnhoflive.util.MapXKt.startMapActivityIfConsent;
 
 import android.content.Context;
 import android.content.Intent;
@@ -23,7 +22,6 @@ import android.widget.ViewFlipper;
 import androidx.annotation.IdRes;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.DialogFragment;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.LiveData;
@@ -38,6 +36,7 @@ import org.jetbrains.annotations.NotNull;
 import java.util.ArrayList;
 import java.util.List;
 
+import de.deutschebahn.bahnhoflive.BaseActivity;
 import de.deutschebahn.bahnhoflive.BuildConfig;
 import de.deutschebahn.bahnhoflive.R;
 import de.deutschebahn.bahnhoflive.analytics.IssueTracker;
@@ -71,8 +70,9 @@ import de.deutschebahn.bahnhoflive.ui.station.shop.ShopCategorySelectionFragment
 import de.deutschebahn.bahnhoflive.ui.station.timetable.TimetablesFragment;
 import de.deutschebahn.bahnhoflive.ui.timetable.localtransport.HafasTimetableViewModel;
 import kotlin.Pair;
+import de.deutschebahn.bahnhoflive.util.GoogleLocationPermissions;
 
-public class StationActivity extends AppCompatActivity implements
+public class StationActivity extends BaseActivity implements
         StationProvider, HistoryFragment.RootProvider,
         TrackingManager.Provider, StationNavigation {
 
@@ -222,7 +222,7 @@ public class StationActivity extends AppCompatActivity implements
             @Override
             public void onClick(View v) {
                 trackingManager.track(TrackingManager.TYPE_ACTION, TrackingManager.Source.TAB_NAVI, TrackingManager.Action.TAP, TrackingManager.UiElement.MAP_BUTTON);
-                startMapActivityIfConsent(getCurrentContentFragment(), ()->MapActivity.createIntent(StationActivity.this, station));
+                GoogleLocationPermissions.startMapActivityIfConsent(getCurrentContentFragment(), ()->MapActivity.createIntent(StationActivity.this, station));
             }
         });
 

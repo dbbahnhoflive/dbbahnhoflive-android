@@ -34,7 +34,7 @@ abstract class FacilityStatusViewHolder(parent: ViewGroup, selectionManager: Sin
         val bookmarked = facilityPushManager.getBookmarked(itemView.context, item.equipmentNumber)
         bindBookmarkedIndicator(bookmarked)
 
-        subscribePushSwitch.isChecked = facilityPushManager.canReceivePushMessage(itemView.context, item.equipmentNumber)
+        subscribePushSwitch.isChecked = facilityPushManager.isPushMessageSubscribed(itemView.context, item.equipmentNumber)
 
         val status = Status.of(item)
         setStatus(status, item.description, renderDescription(status, item.description)) // ex.: 'von Gleis 1/2 (S-Bahn)
@@ -71,9 +71,13 @@ abstract class FacilityStatusViewHolder(parent: ViewGroup, selectionManager: Sin
         // enable/disable push
         val facilityStatus = item
 
-        facilityStatus?.let {
-            facilityPushManager.enablePushMessage(buttonView.context, facilityStatus, isChecked)
-        }
+            facilityStatus?.let {
+                facilityPushManager.subscribeOrUnsubscribePushMessage(
+                    buttonView.context,
+                    facilityStatus,
+                    isChecked
+                )
+            }
 //        onSubscriptionChanged(isChecked)
     }
 

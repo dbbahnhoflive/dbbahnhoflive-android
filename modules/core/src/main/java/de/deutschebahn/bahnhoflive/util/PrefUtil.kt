@@ -64,6 +64,7 @@ object PrefUtil {
         return false
     }
 
+
     fun setFacilityBookmarked(context: Context, facility: FacilityStatus, isBookmarked: Boolean) {
         val savedFacilities = getSavedFacilities(context)
         for (fs in savedFacilities) {

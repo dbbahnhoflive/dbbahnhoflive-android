@@ -194,17 +194,6 @@ class SettingsFragment : RecyclerFragment<SectionAdapter<*>?>(R.layout.fragment_
             isChecked: Boolean
         ) { // toggleView
 
-//                NotificationManagerCompat.from(itemView.context).notificationChannels.forEach {
-//                    val id = it.id
-//                    Log.d("cr", it.description)
-//                }
-
-//                val intent = Intent(Settings.ACTION_CHANNEL_NOTIFICATION_SETTINGS).apply {
-//                    putExtra(Settings.EXTRA_APP_PACKAGE, BaseApplication.get().packageName)
-//                    putExtra(Settings.EXTRA_CHANNEL_ID, "arrival")
-//                }
-
-
                 val intent = Intent(Settings.ACTION_APP_NOTIFICATION_SETTINGS).apply {
                     putExtra(Settings.EXTRA_APP_PACKAGE, BaseApplication.get().packageName) // general push-settings
 //                    putExtra(Settings.EXTRA_CHANNEL_ID, "arrival") // special push-settings

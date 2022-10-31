@@ -15,6 +15,7 @@
     <string name="dlg_yes">Ja</string>
     <string name="dlg_no">Nein</string>
     <string name="dlg_cancel">Abbrechen</string>
+    <string name="dlg_ok">Ok</string>
 
     <!--<string name="dialog_stationNotAvailableTitle">Entschuldigung!</string>-->
 
@@ -423,6 +424,9 @@
     <string name="date_hours">Stunden</string>
     <string name="date_minutes">Minuten</string>
     <string name="date_seconds">Sekunden</string>
+
+    <string name="notice_location_permissions_missing"><b>Hinweis:</b> Der Standort-Zugriff ist erst nicht möglich, wenn Sie ihn erlauben.</string>
+
 
 </resources>
 

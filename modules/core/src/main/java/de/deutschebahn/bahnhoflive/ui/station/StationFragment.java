@@ -6,8 +6,6 @@
 
 package de.deutschebahn.bahnhoflive.ui.station;
 
-import static de.deutschebahn.bahnhoflive.util.MapXKt.startMapActivityIfConsent;
-
 import android.app.Activity;
 import android.content.Intent;
 import android.net.Uri;
@@ -65,6 +63,7 @@ import de.deutschebahn.bahnhoflive.ui.station.shop.Shop;
 import de.deutschebahn.bahnhoflive.ui.station.shop.ShopCategory;
 import de.deutschebahn.bahnhoflive.ui.station.timetable.TimetablesFragment;
 import de.deutschebahn.bahnhoflive.ui.timetable.localtransport.ReducedDbDeparturesViewHolder;
+import de.deutschebahn.bahnhoflive.util.GoogleLocationPermissions;
 import de.deutschebahn.bahnhoflive.view.StatusPreviewButton;
 import kotlin.Unit;
 
@@ -414,10 +413,7 @@ public class StationFragment extends androidx.fragment.app.Fragment implements
             final Station station = stationLiveData.getValue();
             if (station != null && station.getLocation() != null) {
                 getTrackingManager().track(TrackingManager.TYPE_ACTION, TrackingManager.Screen.H1, TrackingManager.Action.TAP, TrackingManager.UiElement.MAP);
-
-
-                startMapActivityIfConsent(this, ()->MapActivity.createIntent(getActivity(), station));
-//                startActivity(MapActivity.createIntent(getActivity(), station));
+                GoogleLocationPermissions.startMapActivityIfConsent(this, ()->MapActivity.createIntent(getActivity(), station));
             }
         });
 

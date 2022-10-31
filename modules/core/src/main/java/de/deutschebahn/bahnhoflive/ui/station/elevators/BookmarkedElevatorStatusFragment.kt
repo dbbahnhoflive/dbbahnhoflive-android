@@ -53,9 +53,7 @@ class BookmarkedElevatorStatusFragment : Fragment(), SwipeRefreshLayout.OnRefres
                     override fun isSelected(): Boolean {
                         // true: expanded
                         item?.let {
-                            return NotificationChannelManager.arePushNotificationsGloballyEnabled(
-                                itemView.context
-                            )
+                            return FacilityPushManager.isPushEnabled(itemView.context)
                                     &&
                                     facilityPushManager.getBookmarked(
                                         itemView.context,

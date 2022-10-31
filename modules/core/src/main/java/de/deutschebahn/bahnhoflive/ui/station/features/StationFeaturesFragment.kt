@@ -3,6 +3,11 @@
  *
  * SPDX-License-Identifier: Apache-2.0
  */
+/*
+ * SPDX-FileCopyrightText: 2020 DB Station&Service AG <bahnhoflive-opensource@deutschebahn.com>
+ *
+ * SPDX-License-Identifier: Apache-2.0
+ */
 
 package de.deutschebahn.bahnhoflive.ui.station.features
 
@@ -17,7 +22,7 @@ import de.deutschebahn.bahnhoflive.R
 import de.deutschebahn.bahnhoflive.analytics.TrackingManager
 import de.deutschebahn.bahnhoflive.ui.station.HistoryFragment
 import de.deutschebahn.bahnhoflive.ui.station.StationViewModel
-import de.deutschebahn.bahnhoflive.util.startMapActivityIfConsent
+import de.deutschebahn.bahnhoflive.util.GoogleLocationPermissions
 import de.deutschebahn.bahnhoflive.view.BottomMarginLinker
 import de.deutschebahn.bahnhoflive.view.FullBottomSheetDialogFragment
 
@@ -38,7 +43,7 @@ class StationFeaturesFragment : FullBottomSheetDialogFragment() {
 
             } else {
                 // show map if consent ok
-                startMapActivityIfConsent(this) {
+                GoogleLocationPermissions.startMapActivityIfConsent(this) {
                     link.createMapActivityIntent(requireContext(), item)
                 }
 

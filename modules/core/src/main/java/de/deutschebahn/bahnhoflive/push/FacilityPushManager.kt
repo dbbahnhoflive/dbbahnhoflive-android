@@ -18,11 +18,13 @@ import java.util.ArrayList
 
 class FacilityPushManager private constructor() {
 
-    fun removeFavorite(context: Context, facilityStatus: FacilityStatus) {
-        PrefUtil.removeSavedFacilityStatus(context, facilityStatus)
-    }
-
     fun removeAll(context: Context) {
+        val savedList = PrefUtil.getSavedFacilities(context)
+
+        savedList.forEach {
+          unsubscribePushMessage(context, it.equipmentNumber)
+        }
+
         PrefUtil.storeSavedFacilities(context, ArrayList())
     }
 
@@ -33,27 +35,26 @@ class FacilityPushManager private constructor() {
     fun setBookmarked(context: Context, facilityStatus: FacilityStatus, isBookmarked: Boolean) {
         PrefUtil.setFacilityBookmarked(context, facilityStatus, isBookmarked)
         if (!isBookmarked) {
-            unsubscribe(facilityStatus.equipmentNumber)
-            removeFavorite(context, facilityStatus)
+            unsubscribePushMessage(context, facilityStatus.equipmentNumber)
+            PrefUtil.removeSavedFacilityStatus(context, facilityStatus)
         }
     }
 
-    fun canReceivePushMessage(context: Context, equipmentNumber: Int): Boolean {
+    fun isPushMessageSubscribed(context: Context, equipmentNumber: Int): Boolean {
         return PrefUtil.getFacilityPushEnabled(context, equipmentNumber)
     }
 
-    fun enablePushMessage(context: Context, facilityStatus: FacilityStatus, enable : Boolean) {
-        PrefUtil.setFacilityPushEnabled(context, facilityStatus, enable)
+    fun subscribeOrUnsubscribePushMessage(context: Context, facilityStatus: FacilityStatus, subscribe : Boolean) {
+        PrefUtil.setFacilityPushEnabled(context, facilityStatus, subscribe)
 
-        if(enable)
-            subscribe(facilityStatus.equipmentNumber)
+        if(subscribe)
+            subscribePushMessage(context, facilityStatus.equipmentNumber)
         else
-            unsubscribe(facilityStatus.equipmentNumber)
+            unsubscribePushMessage(context, facilityStatus.equipmentNumber)
 
     }
 
-    // global for test only
-    fun subscribe(equipmentNumber: Int) {
+    fun subscribePushMessage(context: Context, equipmentNumber: Int) {
 
         val topicName = "F$equipmentNumber"
 
@@ -67,41 +68,45 @@ class FacilityPushManager private constructor() {
             }
     }
 
-    // global for test only
-   fun unsubscribe(equipmentNumber: Int) {
+    private fun unsubscribePushMessage(context: Context, equipmentNumber: Int) {
 
-        val topicName = "F$equipmentNumber"
+        if(isPushMessageSubscribed(context, equipmentNumber)) {
 
-        Firebase.messaging.unsubscribeFromTopic(topicName)
-            .addOnCompleteListener { task ->
-                var msg = "Unubscribed $topicName"
-                if (!task.isSuccessful) {
-                    msg = "Unsubscribe failed $topicName"
+            val topicName = "F$equipmentNumber"
+
+            Firebase.messaging.unsubscribeFromTopic(topicName)
+                .addOnCompleteListener { task ->
+                    var msg = "Unubscribed $topicName"
+                    if (!task.isSuccessful) {
+                        msg = "Unsubscribe failed $topicName"
+                    }
+                    Log.d("cr", msg)
                 }
-                Log.d("cr", msg)
-            }
+        }
     }
 
     companion object {
 
-        private fun areNotificationsEnabled(notificationManager: NotificationManagerCompat) = when {
+        private fun isPushNotificationChannelEnabled(notificationManager: NotificationManagerCompat) : Boolean {
 
-
-            notificationManager.areNotificationsEnabled().not() -> false
-            Build.VERSION.SDK_INT >= Build.VERSION_CODES.O -> {
-                notificationManager.notificationChannels.firstOrNull { channel ->
-                    channel.importance == NotificationManager.IMPORTANCE_NONE
-                } == null
+            if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+                notificationManager.notificationChannels.forEach { channel ->
+                    if(channel.id==FacilityFirebaseService.FCM_NOTIFICATION_CHANNEL_ID)
+                        return channel.importance != NotificationManager.IMPORTANCE_NONE
+                }
             }
-            else -> true
+            return true
+        }
+
+        private fun arePushNotificationsEnabled(notificationManager: NotificationManagerCompat) : Boolean {
+            if(notificationManager.areNotificationsEnabled().not())
+                return false
+            else
+                return isPushNotificationChannelEnabled(notificationManager)
         }
 
         fun isPushEnabled(context: Context): Boolean {
-
-            return  areNotificationsEnabled(NotificationManagerCompat.from(context))
-//        NotificationManagerCompat.from(context).areNotificationsEnabled();
-//
-//       return ContextCompat.checkSelfPermission(context, "") == PackageManager.PERMISSION_GRANTED
+            return  arePushNotificationsEnabled(NotificationManagerCompat.from(context))
         }
 
         val instance = FacilityPushManager()

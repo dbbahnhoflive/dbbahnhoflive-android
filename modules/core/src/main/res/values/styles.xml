@@ -98,4 +98,19 @@
         <item name="layout_constraintWidth_min">@dimen/indent</item>
     </style>
 
+<!--    Theme.AppCompat.Light-->
+
+    <style name="App.Dialog.Theme" parent="Theme.AppCompat.Light.Dialog.Alert">
+        <item name="android:textViewStyle">@style/App.Dialog.Theme.TextViewStyle</item>
+        <item name="android:buttonStyle">@style/App.Dialog.Theme.ButtonStyle</item>
+    </style>
+
+    <style name="App.Dialog.Theme.TextViewStyle" parent="android:Widget.TextView">
+    </style>
+
+    <style name="App.Dialog.Theme.ButtonStyle" parent="android:Widget.Button">
+        <item name="android:textAllCaps">false</item>
+        <item name="android:textColor">@android:color/black</item>
+    </style>
+
 </resources>

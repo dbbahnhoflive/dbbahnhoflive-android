@@ -611,16 +611,12 @@ class StationViewModel(
                                             stationResource.data.value?.let { station ->
                                                 val context = it.context
 
-                                                startMapActivityIfConsent(it.findFragment()) {
+                                                 GoogleLocationPermissions.startMapActivityIfConsent(it.findFragment()) {
                                                     MapActivity.createIntent(
                                                         context,
                                                         station
                                                     )
                                                 }
-
-//                                                val intent =
-//                                                    MapActivity.createIntent(context, station)
-//                                                context.startActivity(intent)
                                             }
                                         })
                                 )
