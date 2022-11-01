@@ -33,7 +33,8 @@
             android:id="@+id/title"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_marginRight="@dimen/default_space"
+            android:layout_marginStart="@dimen/default_space_triple"
+            android:layout_marginEnd="@dimen/default_space"
             android:layout_marginTop="@dimen/default_space"
             android:ellipsize="end"
             android:lines="1"
@@ -49,8 +50,10 @@
             android:id="@+id/status"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/default_space_half"
             android:layout_marginBottom="@dimen/default_space"
             android:layout_marginEnd="@dimen/default_space"
+            android:layout_marginStart="@dimen/default_space_triple"
             android:gravity="center_vertical"
             android:textSize="@dimen/textsize_h3"
             app:layout_constraintBottom_toBottomOf="parent"
@@ -63,7 +66,7 @@
             tools:textColor="@color/green" />
 
         <ImageView
-            android:importantForAccessibility="no"
+            android:importantForAccessibility="yes"
             android:id="@+id/icon"
             android:layout_width="@dimen/icon_size"
             android:layout_height="@dimen/icon_size"

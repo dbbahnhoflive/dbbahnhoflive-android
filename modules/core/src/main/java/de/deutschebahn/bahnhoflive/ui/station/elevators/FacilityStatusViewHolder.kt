@@ -6,15 +6,21 @@
 
 package de.deutschebahn.bahnhoflive.ui.station.elevators
 
+import android.view.View
 import android.view.ViewGroup
+import android.view.accessibility.AccessibilityNodeInfo
 import android.widget.CompoundButton
 import android.widget.ImageView
+import android.widget.LinearLayout
+import androidx.cardview.widget.CardView
+import androidx.constraintlayout.widget.Guideline
 
 import de.deutschebahn.bahnhoflive.R
 import de.deutschebahn.bahnhoflive.backend.db.fasta2.model.FacilityStatus
 import de.deutschebahn.bahnhoflive.push.FacilityPushManager
 import de.deutschebahn.bahnhoflive.ui.Status
 import de.deutschebahn.bahnhoflive.ui.station.CommonDetailsCardViewHolder
+import de.deutschebahn.bahnhoflive.util.setAccessibilityText
 import de.deutschebahn.bahnhoflive.view.CompoundButtonChecker
 import de.deutschebahn.bahnhoflive.view.SingleSelectionManager
 
@@ -29,15 +35,29 @@ abstract class FacilityStatusViewHolder(parent: ViewGroup, selectionManager: Sin
         super.onBind(item)
 
         titleView.text = item.stationName
-        iconView.setImageResource(item.flyoutIcon)
+//        iconView.setImageResource(item.flyoutIcon)
+
+        val guideline : Guideline = itemView.findViewById(R.id.guideline)
+        guideline.setGuidelineBegin(0)
+        guideline.setGuidelineEnd(0)
+
+        iconView.visibility= View.GONE
+
+
+        titleView.rootView.setAccessibilityText("", AccessibilityNodeInfo.ACTION_CLICK, itemView.context.getText(R.string.general_switch).toString())
+
 
         val bookmarked = facilityPushManager.getBookmarked(itemView.context, item.equipmentNumber)
         bindBookmarkedIndicator(bookmarked)
 
-        subscribePushSwitch.isChecked = facilityPushManager.isPushMessageSubscribed(itemView.context, item.equipmentNumber)
+        val subscribed = facilityPushManager.isPushMessageSubscribed(itemView.context, item.equipmentNumber)
+        subscribePushSwitch.isChecked = subscribed
+//        subscribePushSwitch.compoundButton.contentDescription=""
+//        subscribePushSwitch.setAccessibilityText(if(subscribed) "subscribed" else "not subscribed")
 
         val status = Status.of(item)
-        setStatus(status, item.description, renderDescription(status, item.description)) // ex.: 'von Gleis 1/2 (S-Bahn)
+        val accessibilityText = item.description + "  " + iconView.context.getText(item.stateDescription)
+        setStatus(status, item.description, renderDescription(status, item.description), accessibilityText) // ex.: 'von Gleis 1/2 (S-Bahn)
 
         itemView.setOnClickListener{
             // toggle bookmarked-state
@@ -65,19 +85,21 @@ abstract class FacilityStatusViewHolder(parent: ViewGroup, selectionManager: Sin
 
     protected fun bindBookmarkedIndicator(bookmarked: Boolean) {
         bookmarkedIndicator.setImageResource(if(bookmarked) R.drawable.ic_star else R.drawable.ic_star_outline)
+        bookmarkedIndicator.contentDescription =  bookmarkedIndicator.context.getText(if(bookmarked) R.string.sr_indicator_bookmarked else R.string.sr_indicator_not_bookmarked)
     }
 
+    // callback from subscribePushSwitch
     override fun onCheckedChanged(buttonView: CompoundButton, isChecked: Boolean) {
         // enable/disable push
         val facilityStatus = item
 
-            facilityStatus?.let {
-                facilityPushManager.subscribeOrUnsubscribePushMessage(
-                    buttonView.context,
-                    facilityStatus,
-                    isChecked
-                )
-            }
+        facilityStatus?.let {
+            facilityPushManager.subscribeOrUnsubscribePushMessage(
+                buttonView.context,
+                facilityStatus,
+                isChecked
+            )
+        }
 //        onSubscriptionChanged(isChecked)
     }
 
