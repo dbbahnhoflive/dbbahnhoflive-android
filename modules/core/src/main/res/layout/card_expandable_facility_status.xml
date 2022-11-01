@@ -30,7 +30,7 @@
 
                 <Switch
                     android:id="@+id/receive_push_msg_if_broken_switch"
-                    android:textSize="@dimen/textsize_h3"
+                    android:textSize="@dimen/textsize_h3plus"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginStart="@dimen/default_space_triple"
