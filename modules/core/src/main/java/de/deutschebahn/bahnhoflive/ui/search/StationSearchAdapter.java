@@ -25,11 +25,13 @@ import de.deutschebahn.bahnhoflive.persistence.FavoriteStationsStore;
 import de.deutschebahn.bahnhoflive.persistence.RecentSearchesStore;
 import de.deutschebahn.bahnhoflive.repository.EvaIdsProvider;
 import de.deutschebahn.bahnhoflive.repository.InternalStation;
+import de.deutschebahn.bahnhoflive.repository.timetable.TimetableCollectorFactory;
 import de.deutschebahn.bahnhoflive.ui.ViewHolder;
 import de.deutschebahn.bahnhoflive.ui.hub.DbDeparturesViewHolder;
 import de.deutschebahn.bahnhoflive.ui.hub.DeparturesViewHolder;
 import de.deutschebahn.bahnhoflive.ui.hub.HubViewModel;
 import de.deutschebahn.bahnhoflive.view.SingleSelectionManager;
+import kotlinx.coroutines.CoroutineScope;
 
 class StationSearchAdapter extends RecyclerView.Adapter<ViewHolder> {
 
@@ -51,10 +53,12 @@ class StationSearchAdapter extends RecyclerView.Adapter<ViewHolder> {
     private final LifecycleOwner owner;
     private final TrackingManager trackingManager;
     private EvaIdsProvider evaIdsProvider;
+    private final CoroutineScope coroutineScope;
 
-    StationSearchAdapter(FragmentActivity context, RecentSearchesStore recentSearchesStore, SearchItemPickedListener searchItemPickedListener, LifecycleOwner owner, TrackingManager trackingManager, EvaIdsProvider evaIdsProvider) {
+    StationSearchAdapter(FragmentActivity context, RecentSearchesStore recentSearchesStore, SearchItemPickedListener searchItemPickedListener, LifecycleOwner owner, TrackingManager trackingManager, EvaIdsProvider evaIdsProvider, CoroutineScope coroutineScope) {
         hubViewModel = new ViewModelProvider(context).get(HubViewModel.class);
         this.evaIdsProvider = evaIdsProvider;
+        this.coroutineScope = coroutineScope;
 
         this.favoriteDbStationsStore = BaseApplication.get().getApplicationServices().getFavoriteDbStationStore();
         this.favoriteHafasStationsStore = BaseApplication.get().getApplicationServices().getFavoriteHafasStationsStore();
@@ -67,15 +71,15 @@ class StationSearchAdapter extends RecyclerView.Adapter<ViewHolder> {
             public void onSelectionChanged(SingleSelectionManager selectionManager) {
                 final SearchResult selectedItem = selectionManager.getSelectedItem(searchResults);
                 if (selectedItem instanceof StoredStationSearchResult) {
-                    ((StoredStationSearchResult) selectedItem).getTimetable().loadIfNecessary();
+                    ((StoredStationSearchResult) selectedItem).getTimetable().getFirst().loadIfNecessary();
                 } else if (selectedItem instanceof StopPlaceSearchResult) {
-                    ((StopPlaceSearchResult) selectedItem).getTimetable().loadIfNecessary();
+                    ((StopPlaceSearchResult) selectedItem).getTimetable().getFirst().loadIfNecessary();
                 } else if (selectedItem instanceof HafasStationSearchResult) {
                     ((HafasStationSearchResult) selectedItem).getTimetable().requestTimetable(true, "search");
                 }
             }
         });
-        showRecents();
+        showRecents(coroutineScope, timetableCollectorFactory);
     }
 
     @Override
@@ -135,7 +139,7 @@ class StationSearchAdapter extends RecyclerView.Adapter<ViewHolder> {
             for (StopPlace dbStation : dbStations) {
                 final SearchResult searchResult;
                 if (dbStation.isDbStation()) {
-                    searchResult = new StopPlaceSearchResult(dbStation, recentSearchesStore, favoriteDbStationsStore);
+                    searchResult = new StopPlaceSearchResult(coroutineScope, dbStation, recentSearchesStore, favoriteDbStationsStore);
                 } else {
                     final HafasStation hafasStation = StopPlaceXKt.toHafasStation(dbStation);
                     searchResult = new HafasStationSearchResult(hafasStation, recentSearchesStore, favoriteHafasStationsStore);
@@ -160,10 +164,10 @@ class StationSearchAdapter extends RecyclerView.Adapter<ViewHolder> {
         updateItems();
     }
 
-    public void showRecents() {
+    public void showRecents(CoroutineScope coroutineScope, TimetableCollectorFactory timetableCollectorFactory) {
         singleSelectionManager.clearSelection();
 
-        searchResults = recentSearchesStore.loadRecentStations(evaIdsProvider);
+        searchResults = recentSearchesStore.loadRecentStations(timetableCollectorFactory);
 
         notifyDataSetChanged();
     }

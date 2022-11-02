@@ -6,28 +6,20 @@
 
 package de.deutschebahn.bahnhoflive.ui;
 
+import androidx.annotation.NonNull;
+
 import de.deutschebahn.bahnhoflive.persistence.FavoriteStationsStore;
-import de.deutschebahn.bahnhoflive.repository.DbTimetableResource;
-import de.deutschebahn.bahnhoflive.repository.EvaIdsProvider;
 import de.deutschebahn.bahnhoflive.repository.InternalStation;
 import de.deutschebahn.bahnhoflive.ui.search.StoredStationSearchResult;
+import kotlinx.coroutines.CoroutineScope;
 
 public class DbStationWrapper extends StoredStationSearchResult implements StationWrapper<InternalStation> {
 
-    private final DbTimetableResource dbTimetableResource;
     private final long timestamp;
 
-    public DbStationWrapper(InternalStation station, FavoriteStationsStore<InternalStation> favoriteStationsStore, long timestamp, EvaIdsProvider evaIdsProvider) {
+    public DbStationWrapper(InternalStation station, FavoriteStationsStore<InternalStation> favoriteStationsStore, long timestamp, CoroutineScope coroutineScope) {
         super(station, null, favoriteStationsStore, evaIdsProvider);
-        this.dbTimetableResource = new DbTimetableResource(station);
         this.timestamp = timestamp;
-    }
-
-    @Override
-    public boolean equals(Object obj) {
-        return obj instanceof DbStationWrapper ?
-                dbTimetableResource.equals(((DbStationWrapper) obj).dbTimetableResource) :
-                super.equals(obj);
     }
 
     @Override
@@ -38,19 +30,16 @@ public class DbStationWrapper extends StoredStationSearchResult implements Stati
     @Override
     public boolean wraps(Object o) {
         if (o instanceof InternalStation) {
-            return dbTimetableResource != null && dbTimetableResource.getStationId() != null && ((InternalStation) o).getId().equals(dbTimetableResource.getStationId());
+            return ((InternalStation) o).getId().equals(station.getId());
         }
 
         return false;
     }
 
+    @NonNull
     @Override
     public InternalStation getWrappedStation() {
-        return dbTimetableResource.getInternalStation();
+        return InternalStation.of(station);
     }
 
-    @Override
-    public int hashCode() {
-        return dbTimetableResource.hashCode();
-    }
 }

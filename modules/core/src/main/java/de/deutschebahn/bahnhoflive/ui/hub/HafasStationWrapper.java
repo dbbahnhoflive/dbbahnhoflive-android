@@ -6,6 +6,8 @@
 
 package de.deutschebahn.bahnhoflive.ui.hub;
 
+import androidx.annotation.NonNull;
+
 import de.deutschebahn.bahnhoflive.backend.hafas.model.HafasStation;
 import de.deutschebahn.bahnhoflive.persistence.FavoriteStationsStore;
 import de.deutschebahn.bahnhoflive.ui.StationWrapper;
@@ -30,6 +32,7 @@ public class HafasStationWrapper extends HafasStationSearchResult implements Sta
         return o == null ? getTimetable() == null : o.equals(getTimetable());
     }
 
+    @NonNull
     @Override
     public HafasStation getWrappedStation() {
         return getTimetable().getStation();

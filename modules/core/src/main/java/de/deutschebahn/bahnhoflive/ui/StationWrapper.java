@@ -6,6 +6,8 @@
 
 package de.deutschebahn.bahnhoflive.ui;
 
+import androidx.annotation.NonNull;
+
 import de.deutschebahn.bahnhoflive.ui.search.SearchResult;
 
 public interface StationWrapper<T> extends SearchResult {
@@ -16,5 +18,6 @@ public interface StationWrapper<T> extends SearchResult {
 
     boolean wraps(Object o);
 
+    @NonNull
     T getWrappedStation();
 }

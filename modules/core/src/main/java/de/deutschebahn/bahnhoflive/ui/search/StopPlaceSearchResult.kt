@@ -14,48 +14,56 @@ import de.deutschebahn.bahnhoflive.persistence.RecentSearchesStore
 import de.deutschebahn.bahnhoflive.repository.DbTimetableResource
 import de.deutschebahn.bahnhoflive.repository.InternalStation
 import de.deutschebahn.bahnhoflive.ui.station.StationActivity
+import kotlinx.coroutines.CoroutineScope
 
 class StopPlaceSearchResult(
+    val coroutineScope: CoroutineScope,
     val stopPlace: StopPlace,
     val recentSearchesStore: RecentSearchesStore,
     val favoriteStationsStore: FavoriteStationsStore<InternalStation>
-) : StationSearchResult<InternalStation, DbTimetableResource>(
+) : StationSearchResult<InternalStation, Pair<DbTimetableResource, Float>>(
     R.drawable.legacy_dbmappinicon,
     recentSearchesStore,
     favoriteStationsStore
 ) {
 
+    private val internalStation = stopPlace.asInternalStation
+
     private val dbTimetableResource: DbTimetableResource =
-        DbTimetableResource(stopPlace.asInternalStation, stopPlace)
+        DbTimetableResource(coroutineScope, stopPlace)
 
     override fun getTitle(): CharSequence {
-        return dbTimetableResource.getStationName()
+        return stopPlace.name ?: ""
     }
 
     override fun isFavorite(): Boolean {
-        return favoriteStationsStore.isFavorite(dbTimetableResource.getStationId())
+        return stopPlace.stationID?.let {
+            favoriteStationsStore.isFavorite(it)
+        } ?: false
     }
 
     override fun setFavorite(favorite: Boolean) {
         if (favorite) {
-            favoriteStationsStore.add(InternalStation.of(dbTimetableResource.station))
+            favoriteStationsStore.add(internalStation)
         } else {
-            favoriteStationsStore.remove(dbTimetableResource.getStationId())
+            internalStation?.id.let {
+                favoriteStationsStore.remove(it)
+            }
         }
     }
 
     override fun onClick(context: Context, details: Boolean) {
         val intent =
-            StationActivity.createIntent(context, dbTimetableResource.getInternalStation(), details)
+            StationActivity.createIntent(context, internalStation, details)
         context.startActivity(intent)
-        recentSearchesStore.put(dbTimetableResource.internalStation)
+        recentSearchesStore.put(internalStation)
     }
 
     override fun isLocal(): Boolean {
         return false
     }
 
-    override fun getTimetable(): DbTimetableResource {
-        return dbTimetableResource
+    override fun getTimetable(): Pair<DbTimetableResource, Float> {
+        return dbTimetableResource to 0f
     }
 }

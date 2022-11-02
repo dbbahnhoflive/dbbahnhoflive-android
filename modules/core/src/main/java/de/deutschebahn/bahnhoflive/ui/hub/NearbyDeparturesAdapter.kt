@@ -19,8 +19,10 @@ import de.deutschebahn.bahnhoflive.ui.ViewHolder
 import de.deutschebahn.bahnhoflive.ui.search.HafasStationSearchResult
 import de.deutschebahn.bahnhoflive.ui.search.StopPlaceSearchResult
 import de.deutschebahn.bahnhoflive.view.SingleSelectionManager
+import kotlinx.coroutines.CoroutineScope
 
 internal class NearbyDeparturesAdapter(
+    private val coroutineScope: CoroutineScope,
     private val owner: LifecycleOwner,
     private val recentSearchesStore: RecentSearchesStore,
     private val favoriteHafasStationsStore: FavoriteStationsStore<HafasStation>,
@@ -28,18 +30,19 @@ internal class NearbyDeparturesAdapter(
     val trackingManager: TrackingManager
 ) : androidx.recyclerview.widget.RecyclerView.Adapter<ViewHolder<*>>() {
 
-    private val singleSelectionManager: SingleSelectionManager = SingleSelectionManager(this).apply {
-        addListener(SingleSelectionManager.Listener { selectionManager ->
-            val selection = selectionManager.selection
+    private val singleSelectionManager: SingleSelectionManager =
+        SingleSelectionManager(this).apply {
+            addListener(SingleSelectionManager.Listener { selectionManager ->
+                val selection = selectionManager.selection
 
-            if (selection == SingleSelectionManager.INVALID_SELECTION) {
-                return@Listener
-            }
+                if (selection == SingleSelectionManager.INVALID_SELECTION) {
+                    return@Listener
+                }
 
-            items?.get(selection)?.onLoadDetails()
-        })
+                items?.get(selection)?.onLoadDetails()
+            })
 
-    }
+        }
 
     private var items: List<NearbyStationItem>? = null
 
@@ -75,6 +78,7 @@ internal class NearbyDeparturesAdapter(
                 stopPlace.isDbStation -> {
                     NearbyDbStationItem(
                         StopPlaceSearchResult(
+                            coroutineScope,
                             stopPlace,
                             recentSearchesStore,
                             favoriteStationsStore

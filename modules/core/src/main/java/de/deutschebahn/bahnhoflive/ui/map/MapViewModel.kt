@@ -38,7 +38,10 @@ class MapViewModel(
 ) : StadaStationCacheViewModel(application) {
 
     private val dbTimetableResource =
-        DbTimetableResource(getApplication<BaseApplication>().applicationServices.evaIdsProvider)
+        DbTimetableResource(
+            viewModelScope,
+            getApplication<BaseApplication>().applicationServices.evaIdsProvider
+        )
 
     private val evaIdsErrorObserver = Observer<VolleyError> { volleyError ->
         if (volleyError != null) {

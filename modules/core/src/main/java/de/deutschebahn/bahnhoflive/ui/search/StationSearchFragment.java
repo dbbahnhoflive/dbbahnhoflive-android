@@ -25,6 +25,8 @@ import android.widget.ViewFlipper;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
+import androidx.lifecycle.LifecycleCoroutineScope;
+import androidx.lifecycle.LifecycleOwnerKt;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.DividerItemDecoration;
 import androidx.recyclerview.widget.RecyclerView;
@@ -88,7 +90,7 @@ public class StationSearchFragment extends Fragment {
         locationFragment = LocationFragment.get(fragmentManager);
         locationFragment.addLocationListener(locationListener);
 
-        adapter = new StationSearchAdapter(getActivity(), recentSearchesStore, queryRecorder::clear, this, new TrackingManager(), BaseApplication.get().getApplicationServices().getEvaIdsProvider());
+        adapter = new StationSearchAdapter(getActivity(), recentSearchesStore, queryRecorder::clear, this, new TrackingManager(), BaseApplication.get().getApplicationServices().getEvaIdsProvider(), getLifecycleScope());
     }
 
     @Override
@@ -209,10 +211,19 @@ public class StationSearchFragment extends Fragment {
             closeKeyboard();
             new ConfirmationDialog(coordinatorLayout, "Suchverlauf löschen?", v -> {
                 recentSearchesStore.clear();
-                adapter.showRecents();
+                showRecents();
             });
         }
     }
+
+    private void showRecents() {
+        adapter.showRecents(stationSearchViewModel.getTimetableCollectorFactory());
+    }
+
+    private LifecycleCoroutineScope getLifecycleScope() {
+        return LifecycleOwnerKt.getLifecycleScope(this);
+    }
+
 
     private void closeKeyboard() {
         closeIme(getContext());
@@ -264,7 +275,7 @@ public class StationSearchFragment extends Fragment {
             listHeadlineView.setText(R.string.search_history);
             clearHistoryView.setVisibility(View.VISIBLE);
             noResultsView.setVisibility(View.GONE);
-            adapter.showRecents();
+            showRecents();
         }
     }
 

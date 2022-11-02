@@ -11,9 +11,16 @@ import de.deutschebahn.bahnhoflive.backend.local.model.EvaIds
 import de.deutschebahn.bahnhoflive.backend.ris.model.TrainEvent
 import de.deutschebahn.bahnhoflive.repository.fail
 import de.deutschebahn.bahnhoflive.ui.timetable.journey.JourneyStop
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.flow.Flow
 
 open class TimetableRepository {
-    open fun createTimetableCollector(): TimetableCollector = TimetableCollector()
+    open fun createTimetableCollector(
+        evaIdsFlow: Flow<EvaIds>,
+        coroutineScope: CoroutineScope,
+        timetableRepository: TimetableRepository
+    ): CoroutineTimetableCollector =
+        CoroutineTimetableCollector(evaIdsFlow, coroutineScope, timetableRepository)
 
     open fun queryJourneys(
         evaIds: EvaIds,

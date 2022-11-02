@@ -124,6 +124,7 @@ public class InternalStation implements Parcelable, Station {
         return Objects.hash(id);
     }
 
+    @NonNull
     public static InternalStation of(Station station) {
         return station instanceof InternalStation ? (InternalStation) station : new InternalStation(station);
     }

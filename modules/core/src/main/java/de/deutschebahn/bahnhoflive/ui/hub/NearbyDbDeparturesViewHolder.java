@@ -16,6 +16,7 @@ import de.deutschebahn.bahnhoflive.repository.DbTimetableResource;
 import de.deutschebahn.bahnhoflive.repository.InternalStation;
 import de.deutschebahn.bahnhoflive.ui.search.StationSearchResult;
 import de.deutschebahn.bahnhoflive.view.SingleSelectionManager;
+import kotlin.Pair;
 
 class NearbyDbDeparturesViewHolder extends DbDeparturesViewHolder {
     private final DistanceViewHolder distanceViewHolder;
@@ -26,10 +27,10 @@ class NearbyDbDeparturesViewHolder extends DbDeparturesViewHolder {
     }
 
     @Override
-    protected void onBind(StationSearchResult<InternalStation, DbTimetableResource> item) {
+    protected void onBind(StationSearchResult<InternalStation, Pair<DbTimetableResource, Float>> item) {
         super.onBind(item);
 
-        distanceViewHolder.bind(item.getTimetable().getDistanceInKm());
+        distanceViewHolder.bind(item.getTimetable().getSecond());
     }
 
 

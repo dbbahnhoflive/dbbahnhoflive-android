@@ -1,14 +1,13 @@
 package de.deutschebahn.bahnhoflive.repository.station
 
+import android.util.Log
 import com.android.volley.VolleyError
 import de.deutschebahn.bahnhoflive.backend.VolleyRestListener
 import de.deutschebahn.bahnhoflive.backend.db.ris.model.StopPlace
 import de.deutschebahn.bahnhoflive.repository.InternalStation
 import de.deutschebahn.bahnhoflive.repository.Station
 import kotlinx.coroutines.*
-import kotlinx.coroutines.channels.awaitClose
-import kotlinx.coroutines.channels.trySendBlocking
-import kotlinx.coroutines.flow.*
+import kotlinx.coroutines.flow.Flow
 
 class UpdatedStationRepository(
     private val stationRepository: StationRepository,
@@ -18,50 +17,58 @@ class UpdatedStationRepository(
 ) {
 
     private val cache = mutableMapOf<String, Flow<Result<InternalStation>>>()
+    private val newCache = mutableMapOf<String, InternalStation>()
 
-    @OptIn(ExperimentalCoroutinesApi::class)
     suspend fun getUpdatedStation(station: Station) =
-        cache.getOrPut(station.id) {
-            callbackFlow<Result<InternalStation>> {
-                val queryStationsCancellable = stationRepository.queryStations(
-                    object : VolleyRestListener<List<StopPlace>?> {
-                        override fun onSuccess(payload: List<StopPlace>?) {
-                            payload?.firstOrNull {
-                                it.stationID == station.id
-                            }?.also {
-                                trySendBlocking(
-                                    Result.success(
-                                        InternalStation(
-                                            station.id,
-                                            station.title,
-                                            station.location,
-                                            it.evaIds
+        try {
+            newCache.getOrPut(station.id) {
+                suspendCancellableCoroutine { continuation ->
+                    val queryStationsCancellable = stationRepository.queryStations(
+                        object : VolleyRestListener<List<StopPlace>?> {
+                            override fun onSuccess(payload: List<StopPlace>?) {
+                                payload?.firstOrNull {
+                                    it.stationID == station.id
+                                }?.also {
+                                    continuation.resumeWith(
+                                        Result.success(
+                                            InternalStation(
+                                                station.id,
+                                                station.title,
+                                                station.location,
+                                                it.evaIds
+                                            )
                                         )
                                     )
-                                )
-                            } ?: kotlin.run {
-                                trySendBlocking(Result.failure(Exception("Not found")))
+                                } ?: kotlin.run {
+                                    continuation.resumeWith(Result.failure(Exception("Not found")))
+                                }
                             }
-                        }
 
-                        override fun onFail(reason: VolleyError) {
-                            trySendBlocking(Result.failure(reason))
-                        }
-                    },
-                    station.title,
-                    null,
-                    true,
-                    mixedResults = false,
-                    collapseNeighbours = true,
-                    pullUpFirstDbStation = false,
-                )
+                            override fun onFail(reason: VolleyError) {
+                                continuation.resumeWith(Result.failure(reason))
+                            }
+                        },
+                        station.title,
+                        null,
+                        true,
+                        mixedResults = false,
+                        collapseNeighbours = true,
+                        pullUpFirstDbStation = false,
+                    )
 
-                awaitClose { queryStationsCancellable?.cancel() }
-            }.onEach {
-                if (it.isFailure) {
-                    cache.remove(station.id)
+                    continuation.invokeOnCancellation {
+                        queryStationsCancellable?.cancel()
+                    }
+
                 }
-            }.shareIn(scope, SharingStarted.Lazily, 1)
-        }.firstOrNull()
+            }
+        } catch (t: Throwable) {
+            Log.i(
+                UpdatedStationRepository::class.java.simpleName,
+                "Could not get updated station",
+                t
+            )
+            null
+        }
 
 }

@@ -65,13 +65,10 @@ import de.deutschebahn.bahnhoflive.util.then
 import de.deutschebahn.bahnhoflive.util.toLiveData
 import io.reactivex.Observable
 import io.reactivex.subjects.BehaviorSubject
-import kotlinx.coroutines.CoroutineDispatcher
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.ExperimentalCoroutinesApi
+import kotlinx.coroutines.*
 import kotlinx.coroutines.channels.awaitClose
 import kotlinx.coroutines.channels.trySendBlocking
 import kotlinx.coroutines.flow.*
-import kotlinx.coroutines.launch
 import java.io.InputStreamReader
 import java.text.Collator
 import java.util.*
@@ -303,7 +300,9 @@ class StationViewModel(
     }
 
     private val evaIdsProvider = object : EvaIdsProvider {
-        override fun withEvaIds(station: Station, action: (evaIds: EvaIds?) -> Unit) {
+        override suspend fun withEvaIds(
+            station: Station, action: (evaIds: EvaIds?) -> Unit
+        ) {
             getApplication<BaseApplication>().applicationServices.evaIdsProvider.withEvaIds(
                 station
             ) {
@@ -413,7 +412,7 @@ class StationViewModel(
     }.apply {
         viewModelScope.launch {
             collect {
-                accessibilityFeaturesResource.station = it.getOrNull()
+                accessibilityFeaturesResource.station = it?.getOrNull()
             }
         }
     }
@@ -1127,7 +1126,8 @@ class StationViewModel(
             addSource(infoAvailability, update)
             addSource(elevators, update)
             addSource(parkings, update)
-            addSource(lockers, update) addSource (railReplacement, update)
+            addSource(lockers, update)
+            addSource(railReplacement, update)
             addSource(stationFeatures, update)
             addSource(queryAndParts, update)
         }

@@ -25,18 +25,21 @@ import de.deutschebahn.bahnhoflive.ui.hub.StationImageResolver;
 import de.deutschebahn.bahnhoflive.view.CompoundButtonChecker;
 import de.deutschebahn.bahnhoflive.view.SelectableItemViewHolder;
 import de.deutschebahn.bahnhoflive.view.SingleSelectionManager;
+import kotlinx.coroutines.CoroutineScope;
 
 class FavoritesAdapter extends RecyclerView.Adapter<ViewHolder<StationWrapper>> {
 
     private final StationWrapper stationWrapper;
     private final List<StationWrapper<InternalStation>> stations;
     private final EvaIdsProvider evaIdsProvider;
+    private final CoroutineScope coroutineScope;
 
     private final SingleSelectionManager selectionManager;
 
-    public FavoritesAdapter(InternalStation station, FavoriteStationsStore<InternalStation> favoriteStationsStore, SingleSelectionManager selectionManager, StationImageResolver stationImageResolver, EvaIdsProvider evaIdsProvider) {
+    public FavoritesAdapter(InternalStation station, FavoriteStationsStore<InternalStation> favoriteStationsStore, SingleSelectionManager selectionManager, StationImageResolver stationImageResolver, EvaIdsProvider evaIdsProvider, CoroutineScope coroutineScope) {
         stations = favoriteStationsStore.getAll();
         this.evaIdsProvider = evaIdsProvider;
+        this.coroutineScope = coroutineScope;
         this.stationWrapper = find(stations, station, stationImageResolver, favoriteStationsStore);
         stations.remove(this.stationWrapper);
 
@@ -50,7 +53,7 @@ class FavoritesAdapter extends RecyclerView.Adapter<ViewHolder<StationWrapper>> 
             }
         }
 
-        return new DbStationWrapper(station, favoriteStationsStore, 0, evaIdsProvider);
+        return new DbStationWrapper(station, favoriteStationsStore, 0, evaIdsProvider, coroutineScope);
     }
 
     @Override

@@ -9,48 +9,53 @@ package de.deutschebahn.bahnhoflive.ui.search;
 import android.content.Context;
 import android.content.Intent;
 
+import androidx.annotation.NonNull;
+
 import de.deutschebahn.bahnhoflive.R;
 import de.deutschebahn.bahnhoflive.persistence.FavoriteStationsStore;
 import de.deutschebahn.bahnhoflive.persistence.RecentSearchesStore;
-import de.deutschebahn.bahnhoflive.repository.DbTimetableResource;
-import de.deutschebahn.bahnhoflive.repository.EvaIdsProvider;
 import de.deutschebahn.bahnhoflive.repository.InternalStation;
+import de.deutschebahn.bahnhoflive.repository.Station;
+import de.deutschebahn.bahnhoflive.repository.timetable.TimetableCollector;
 import de.deutschebahn.bahnhoflive.ui.station.StationActivity;
+import kotlin.Pair;
 
-public class StoredStationSearchResult extends StationSearchResult<InternalStation, DbTimetableResource> {
-    private final DbTimetableResource dbTimetableResource;
+public class StoredStationSearchResult extends StationSearchResult<InternalStation, Pair<TimetableCollector, Float>> {
+    private final TimetableCollector timetableCollector;
 
-    public StoredStationSearchResult(InternalStation dbStation, RecentSearchesStore recentSearchesStore, FavoriteStationsStore<InternalStation> favoriteStationsStore, EvaIdsProvider evaIdsProvider) {
+    @NonNull
+    protected final Station station;
+
+    public StoredStationSearchResult(@NonNull InternalStation dbStation, RecentSearchesStore recentSearchesStore, FavoriteStationsStore<InternalStation> favoriteStationsStore, TimetableCollector timetableCollector) {
         super(R.drawable.legacy_dbmappinicon, recentSearchesStore, favoriteStationsStore);
-        this.dbTimetableResource = new DbTimetableResource(dbStation, evaIdsProvider);
+        this.timetableCollector = timetableCollector;
+        station = dbStation;
     }
 
     @Override
     public CharSequence getTitle() {
-        return dbTimetableResource.getStationName();
+        return station.getTitle();
     }
 
     @Override
     public boolean isFavorite() {
-        return favoriteStationsStore.isFavorite(dbTimetableResource.getStationId());
+        return favoriteStationsStore.isFavorite(station.getId());
     }
 
     @Override
     public void setFavorite(boolean favorite) {
         if (favorite) {
-            favoriteStationsStore.add(dbTimetableResource.getInternalStation());
+            favoriteStationsStore.add(InternalStation.of(station));
         } else {
-            favoriteStationsStore.remove(dbTimetableResource.getStationId());
+            favoriteStationsStore.remove(station.getId());
         }
     }
 
     @Override
     public void onClick(Context context, boolean details) {
-        final Intent intent = StationActivity.createIntent(context, dbTimetableResource.getInternalStation(), details);
+        final Intent intent = StationActivity.createIntent(context, station, details);
         context.startActivity(intent);
-        if (recentSearchesStore != null) {
-            recentSearchesStore.put(dbTimetableResource.getInternalStation());
-        }
+        recentSearchesStore.put(station);
     }
 
     @Override
@@ -59,7 +64,7 @@ public class StoredStationSearchResult extends StationSearchResult<InternalStati
     }
 
     @Override
-    public DbTimetableResource getTimetable() {
-        return dbTimetableResource;
+    public Pair<TimetableCollector, Float> getTimetable() {
+        return new Pair<>(timetableCollector, 0f /* TODO */);
     }
 }

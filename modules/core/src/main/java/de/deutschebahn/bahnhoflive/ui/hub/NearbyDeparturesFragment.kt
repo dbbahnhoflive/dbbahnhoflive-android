@@ -12,6 +12,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.activityViewModels
+import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.switchMap
 import com.android.volley.Request
 import de.deutschebahn.bahnhoflive.BaseApplication
@@ -55,6 +56,7 @@ class NearbyDeparturesFragment : androidx.fragment.app.Fragment(), Permission.Li
 
         val applicationServices = BaseApplication.get().applicationServices
         nearbyDeparturesAdapter = NearbyDeparturesAdapter(
+            lifecycleScope,
             this,
             applicationServices.recentSearchesStore,
             applicationServices.favoriteHafasStationsStore,

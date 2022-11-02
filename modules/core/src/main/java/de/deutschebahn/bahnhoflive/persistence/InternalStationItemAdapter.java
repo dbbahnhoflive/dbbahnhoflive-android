@@ -6,7 +6,6 @@
 
 package de.deutschebahn.bahnhoflive.persistence;
 
-import de.deutschebahn.bahnhoflive.repository.EvaIdsProvider;
 import de.deutschebahn.bahnhoflive.repository.InternalStation;
 import de.deutschebahn.bahnhoflive.ui.DbStationWrapper;
 import de.deutschebahn.bahnhoflive.ui.StationWrapper;
@@ -16,10 +15,7 @@ import de.deutschebahn.bahnhoflive.ui.StationWrapper;
  */
 public class InternalStationItemAdapter implements FavoriteStationsStore.ItemAdapter<InternalStation> {
 
-    private final EvaIdsProvider evaIdsProvider;
-
-    public InternalStationItemAdapter(EvaIdsProvider evaIdsProvider) {
-        this.evaIdsProvider = evaIdsProvider;
+    public InternalStationItemAdapter() {
     }
 
     @Override
@@ -34,7 +30,7 @@ public class InternalStationItemAdapter implements FavoriteStationsStore.ItemAda
 
     @Override
     public StationWrapper createStationWrapper(InternalStation station, long timestamp, FavoriteStationsStore<InternalStation> favoriteStationsStore) {
-        return new DbStationWrapper(station, favoriteStationsStore, timestamp, evaIdsProvider);
+        return new DbStationWrapper(station, favoriteStationsStore, timestamp);
     }
 
 }
