@@ -69,6 +69,7 @@ import de.deutschebahn.bahnhoflive.ui.station.search.ContentSearchFragment;
 import de.deutschebahn.bahnhoflive.ui.station.shop.ShopCategorySelectionFragment;
 import de.deutschebahn.bahnhoflive.ui.station.timetable.TimetablesFragment;
 import de.deutschebahn.bahnhoflive.ui.timetable.localtransport.HafasTimetableViewModel;
+import de.deutschebahn.bahnhoflive.util.DebugX;
 import kotlin.Pair;
 import de.deutschebahn.bahnhoflive.util.GoogleLocationPermissions;
 
@@ -115,6 +116,8 @@ public class StationActivity extends BaseActivity implements
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        DebugX.Companion.logIntent(this.getLocalClassName(), getIntent());
 
         ViewModelProvider.AndroidViewModelFactory fac = new ViewModelProvider.AndroidViewModelFactory(getApplication()) {
             @NonNull

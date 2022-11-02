@@ -38,6 +38,7 @@ import de.deutschebahn.bahnhoflive.ui.search.SearchResultResource;
 import de.deutschebahn.bahnhoflive.ui.search.StationSearchViewModel;
 import de.deutschebahn.bahnhoflive.ui.station.StationActivity;
 import de.deutschebahn.bahnhoflive.ui.tutorial.TutorialFragment;
+import de.deutschebahn.bahnhoflive.util.DebugX;
 
 public class HubActivity extends BaseActivity implements TutorialFragment.Host {
 
@@ -51,6 +52,8 @@ public class HubActivity extends BaseActivity implements TutorialFragment.Host {
         setContentView(R.layout.activity_hub);
 
         final Intent iintent = getIntent();
+
+        DebugX.Companion.logIntent(this.getLocalClassName(), iintent);
 
         if (iintent != null) {
 

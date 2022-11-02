@@ -52,8 +52,7 @@ abstract class FacilityStatusViewHolder(parent: ViewGroup, selectionManager: Sin
 
         val subscribed = facilityPushManager.isPushMessageSubscribed(itemView.context, item.equipmentNumber)
         subscribePushSwitch.isChecked = subscribed
-//        subscribePushSwitch.compoundButton.contentDescription=""
-//        subscribePushSwitch.setAccessibilityText(if(subscribed) "subscribed" else "not subscribed")
+//        subscribePushSwitch.compoundButton.setAccessibilityText("", AccessibilityNodeInfo.ACTION_CLICK, itemView.context.getText(R.string.general_switch).toString())
 
         val status = Status.of(item)
         val accessibilityText = item.description + "  " + iconView.context.getText(item.stateDescription)

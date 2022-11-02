@@ -8,8 +8,10 @@ package de.deutschebahn.bahnhoflive.ui.station
 import android.app.AlertDialog
 import android.content.DialogInterface
 import android.content.Intent
+import android.content.Intent.getIntent
 import android.os.Bundle
 import android.provider.Settings
+import android.util.Log
 import android.view.ViewGroup
 import android.widget.CompoundButton
 import androidx.recyclerview.widget.RecyclerView
@@ -24,6 +26,8 @@ import de.deutschebahn.bahnhoflive.tutorial.TutorialManager
 import de.deutschebahn.bahnhoflive.tutorial.TutorialPreferenceStore
 import de.deutschebahn.bahnhoflive.ui.RecyclerFragment
 import de.deutschebahn.bahnhoflive.ui.hub.StationImageResolver
+import de.deutschebahn.bahnhoflive.util.DebugX.Companion.logBundle
+import de.deutschebahn.bahnhoflive.util.DebugX.Companion.logIntent
 import de.deutschebahn.bahnhoflive.view.CompoundButtonChecker
 import de.deutschebahn.bahnhoflive.view.SectionAdapter
 import de.deutschebahn.bahnhoflive.view.SelectableItemViewHolder
@@ -44,6 +48,10 @@ class SettingsFragment : RecyclerFragment<SectionAdapter<*>?>(R.layout.fragment_
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+
+        Log.d("cr", "------------ " + this.javaClass.name)
+        logBundle( "    ", savedInstanceState)
+        Log.d("cr", "------------ " + this.javaClass.name)
 
         if (activity is StationActivity) {
 

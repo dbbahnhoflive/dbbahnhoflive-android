@@ -125,7 +125,16 @@ class FacilityFirebaseService : FirebaseMessagingService() {
                     }
             }
 
+            // unique id to create multiple notifications
+            var id: Int = ((System.currentTimeMillis() / 1000L) % Int.MAX_VALUE).toInt()
+
             val resultIntent = Intent(this, HubActivity::class.java)
+
+            var flags = 0
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+                flags = flags or PendingIntent.FLAG_IMMUTABLE
+            }
+
             val pendingIntent:
                     PendingIntent? = TaskStackBuilder.create(this).run {
                 // Add the intent, which inflates the back stack
@@ -135,12 +144,7 @@ class FacilityFirebaseService : FirebaseMessagingService() {
                     createReceiverBundle(json, message)
                 )
 
-                var flags = PendingIntent.FLAG_UPDATE_CURRENT
-                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-                    flags = flags or PendingIntent.FLAG_IMMUTABLE
-                }
-
-                getPendingIntent(0, flags)
+                getPendingIntent(id, flags)
             }
 
             val builder = NotificationCompat.Builder(this, FCM_NOTIFICATION_CHANNEL_ID)
@@ -158,15 +162,10 @@ class FacilityFirebaseService : FirebaseMessagingService() {
                 builder.setChannelId(FCM_NOTIFICATION_CHANNEL_ID)
             }
 
-//            notificationManager.notify(FCM_NOTIFICATION_ID, builder.build()) // anzeigen
-            notificationManager.notify(FCM_NOTIFICATION_ID, builder.build()) // anzeigen
-        }
+            // show multiple messages
+            notificationManager.notify(id, builder.build()) // anzeigen
 
-//    private fun cancelNotification() {
-//        val ns = NOTIFICATION_SERVICE
-//        val nMgr = applicationContext.getSystemService(ns) as NotificationManager
-//        nMgr.cancel(NOTIFICATION_ID)
-//    }
+        }
 
         private fun createAndSendNotification(messagebody: String?) {
 
@@ -195,10 +194,7 @@ class FacilityFirebaseService : FirebaseMessagingService() {
         companion object {
 
             const val FCM_SENDER_ID = 127465195830 // code from firebase-console (not sure its needed)
-
             const val FCM_NOTIFICATION_CHANNEL_ID = "notification_id_facilities"
-            const val FCM_NOTIFICATION_ID = 1
-
             const val BUNDLE_NAME_FACILITY_MESSAGE = "BUNDLENAME_FACILITY_MESSAGE"
 
             fun createNotificationChannel(context: Context): NotificationChannel? {

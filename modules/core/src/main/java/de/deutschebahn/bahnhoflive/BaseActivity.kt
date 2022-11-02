@@ -15,6 +15,7 @@ open class BaseActivity : AppCompatActivity() {
 
     private var permissionResponseFunction: ((response: Boolean) -> Unit)? = null
 
+    // must be initialized very early, not possible after onCreate !
     private val requestPermissionLauncher =
         registerForActivityResult(
             ActivityResultContracts.RequestMultiplePermissions()
