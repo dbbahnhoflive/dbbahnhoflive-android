@@ -23,7 +23,6 @@ import de.deutschebahn.bahnhoflive.view.FullBottomSheetDialogFragment
 
 class StationFeaturesFragment : FullBottomSheetDialogFragment() {
 
-    // itemClickListener is called from StationFeatureViewHolder.kt
     private val stationFeaturesAdapter = StationFeaturesAdapter { item, adapterPosition ->
         item.stationFeatureTemplate.link?.also { link ->
 

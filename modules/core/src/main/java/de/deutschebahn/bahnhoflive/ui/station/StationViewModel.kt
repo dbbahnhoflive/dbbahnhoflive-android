@@ -128,21 +128,7 @@ class StationViewModel(
                     ServiceContentType.LOCKERS,
                     ServiceContentType.LOCKERS
                 ),
-                object : Link() { // fallback to infotext
-
-                    override fun createServiceContentFragment(
-                        context: Context,
-                        stationFeature: StationFeature
-                    ) = LockerFragment()
-
-                    override fun isAvailable(
-                        context: Context?,
-                        stationFeature: StationFeature?
-                    ): Boolean {
-                        return stationFeature?.lockers?.isNotEmpty() ?: false
-                    }
-                }
-
+                LockerLink()
             ),
             StationFeatureTemplate(
                 StationFeatureDefinition.DB_INFO,
