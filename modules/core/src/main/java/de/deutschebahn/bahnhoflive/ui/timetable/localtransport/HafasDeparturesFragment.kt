@@ -23,11 +23,9 @@ import de.deutschebahn.bahnhoflive.repository.HafasTimetableResource
 import de.deutschebahn.bahnhoflive.repository.LoadingStatus
 import de.deutschebahn.bahnhoflive.ui.LoadingContentDecorationViewHolder
 import de.deutschebahn.bahnhoflive.ui.RecyclerFragment
-import de.deutschebahn.bahnhoflive.ui.map.Content
-import de.deutschebahn.bahnhoflive.ui.map.InitialPoiManager
 import de.deutschebahn.bahnhoflive.ui.map.MapActivity
 import de.deutschebahn.bahnhoflive.ui.map.content.rimap.RimapFilter
-import de.deutschebahn.bahnhoflive.util.startMapActivityIfConsent
+import de.deutschebahn.bahnhoflive.util.GoogleLocationPermissions
 
 class HafasDeparturesFragment : RecyclerFragment<HafasDeparturesAdapter>(R.layout.recycler_linear_refreshable), HafasFilterDialogFragment.Consumer {
 
@@ -132,7 +130,7 @@ class HafasDeparturesFragment : RecyclerFragment<HafasDeparturesAdapter>(R.layou
                     }
                 }?.let {itList->
 
-                    startMapActivityIfConsent(this) {
+                    GoogleLocationPermissions.startMapActivityIfConsent(this) {
                         val intent = MapActivity.createIntent(v.context, station, ArrayList(itList))
                         RimapFilter.putPreset(intent, RimapFilter.PRESET_NONE)
                         intent

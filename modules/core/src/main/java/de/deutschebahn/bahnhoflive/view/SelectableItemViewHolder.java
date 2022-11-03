@@ -54,16 +54,27 @@ public class SelectableItemViewHolder<T> extends ViewHolder<T> {
         expandableContainer.setVisibility(selected ? View.VISIBLE : View.GONE);
     }
 
-    protected boolean isSelected() {
-        return singleSelectionManager.isSelected(getAdapterPosition());
+    public boolean isSelected() {
+        if (singleSelectionManager == null)
+            return true;
+        else
+            return singleSelectionManager.isSelected(getAdapterPosition());
     }
 
     public void toggleSelection() {
-        final int position = getAdapterPosition();
-        if (singleSelectionManager.isSelected(position)) {
-            singleSelectionManager.clearSelection();
+        if (singleSelectionManager == null) {
+            if (expandableContainer.getVisibility() == View.GONE)
+                expandableContainer.setVisibility(View.VISIBLE);
+            else
+                expandableContainer.setVisibility(View.GONE);
+
         } else {
-            singleSelectionManager.setSelection(position);
+            final int position = getAdapterPosition();
+            if (singleSelectionManager.isSelected(position)) {
+                singleSelectionManager.clearSelection();
+            } else {
+                singleSelectionManager.setSelection(position);
+            }
         }
     }
 }

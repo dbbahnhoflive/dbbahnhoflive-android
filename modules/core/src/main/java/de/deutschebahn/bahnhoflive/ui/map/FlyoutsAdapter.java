@@ -26,7 +26,7 @@ class FlyoutsAdapter extends RecyclerView.Adapter<ViewHolder<MarkerBinder>> {
 
     private int actualItemCount = 0;
 
-    private final FacilityPushManager facilityPushManager = FacilityPushManager.getInstance();
+    private final FacilityPushManager facilityPushManager = FacilityPushManager.Companion.getInstance();
     private final LifecycleOwner owner;
     private final MapViewModel mapViewModel;
     private final StationActivityStarter stationActivityStarter;

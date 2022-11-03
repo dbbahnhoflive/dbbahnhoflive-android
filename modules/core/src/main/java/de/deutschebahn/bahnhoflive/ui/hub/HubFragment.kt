@@ -24,7 +24,7 @@ import de.deutschebahn.bahnhoflive.repository.AssetDocumentBroker
 import de.deutschebahn.bahnhoflive.tutorial.TutorialManager
 import de.deutschebahn.bahnhoflive.ui.accessibility.SpokenFeedbackAccessibilityLiveData
 import de.deutschebahn.bahnhoflive.ui.map.MapActivity
-import de.deutschebahn.bahnhoflive.util.startMapActivityIfConsent
+import de.deutschebahn.bahnhoflive.util.GoogleLocationPermissions
 
 class HubFragment : androidx.fragment.app.Fragment() {
 
@@ -152,29 +152,12 @@ class HubFragment : androidx.fragment.app.Fragment() {
                     TrackingManager.UiElement.MAP_BUTTON
                 )
 
-                startMapActivityIfConsent(this.findFragment()) {
+                GoogleLocationPermissions.startMapActivityIfConsent(this.findFragment()) {
                     MapActivity.createIntent(
                         activity,
                         hubViewModel.hafasData
                     )
                 }
-
-//                if (java.lang.Boolean.TRUE != get().applicationServices.mapConsentRepository.consented.value) {
-//                    val mp = MapConsentDialogFragment()
-//                    mp.setOnMapConsentDialogListener(object : OnMapConsentDialogListener {
-//                        override fun onConsentAccepted() {
-//                            val intent = MapActivity.createIntent(activity, hubViewModel.hafasData)
-//                            startActivity(intent)
-//                        }
-//                    })
-//                    mp.show(parentFragmentManager, null)
-//                } else {
-//                    val intent = MapActivity.createIntent(activity, hubViewModel.hafasData)
-//                    startActivity(intent)
-//                }
-
-//                val intent = MapActivity.createIntent(activity, hubViewModel.hafasData)
-//                startActivity(intent)
             }
         }
 

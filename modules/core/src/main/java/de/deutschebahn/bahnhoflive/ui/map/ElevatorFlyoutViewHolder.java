@@ -17,20 +17,20 @@ class ElevatorFlyoutViewHolder extends StatusFlyoutViewHolder {
 
     private final FacilityPushManager facilityPushManager;
 
-    private final CompoundButton bookmarkedSwitch;
+    private final CompoundButton receivePushMsgSwitch;
 
     public ElevatorFlyoutViewHolder(ViewGroup parent, final FacilityPushManager facilityPushManager) {
         super(parent, R.layout.flyout_elevator);
         this.facilityPushManager = facilityPushManager;
 
-        bookmarkedSwitch = itemView.findViewById(R.id.bookmarked_switch);
+        receivePushMsgSwitch = itemView.findViewById(R.id.receive_push_msg_if_broken_switch);
     }
 
     public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
         if (buttonView.isPressed()) {
             final FacilityStatus facilityStatus = getFacilityStatus();
             if (facilityStatus != null) {
-                facilityPushManager.setPushStatus(buttonView.getContext(), facilityStatus, isChecked);
+                facilityPushManager.setBookmarked(buttonView.getContext(), facilityStatus, isChecked);
             }
 
         }
@@ -43,10 +43,10 @@ class ElevatorFlyoutViewHolder extends StatusFlyoutViewHolder {
         final MarkerContent markerContent = item.getMarkerContent();
         if (markerContent instanceof FacilityStatusMarkerContent) {
             final FacilityStatus facilityStatus = ((FacilityStatusMarkerContent) markerContent).getFacilityStatus();
-            final boolean bookmarked = facilityPushManager.getPushStatus(itemView.getContext(), facilityStatus.getEquipmentNumber());
-            bookmarkedSwitch.setOnCheckedChangeListener(null);
-            bookmarkedSwitch.setChecked(bookmarked);
-            bookmarkedSwitch.setOnCheckedChangeListener(this::onCheckedChanged);
+            final boolean subscribed = facilityPushManager.getBookmarked(itemView.getContext(), facilityStatus.getEquipmentNumber());
+            receivePushMsgSwitch.setOnCheckedChangeListener(null);
+            receivePushMsgSwitch.setChecked(subscribed);
+            receivePushMsgSwitch.setOnCheckedChangeListener(this::onCheckedChanged);
         }
     }
 

@@ -7,7 +7,6 @@
 package de.deutschebahn.bahnhoflive.ui.station;
 
 import static de.deutschebahn.bahnhoflive.analytics.TrackingManager.Screen.H1;
-import static de.deutschebahn.bahnhoflive.util.MapXKt.startMapActivityIfConsent;
 
 import android.content.Context;
 import android.content.Intent;
@@ -23,14 +22,12 @@ import android.widget.ViewFlipper;
 import androidx.annotation.IdRes;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.DialogFragment;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModel;
 import androidx.lifecycle.ViewModelProvider;
-import androidx.lifecycle.ViewModelStoreOwner;
 
 import com.google.android.material.internal.CheckableImageButton;
 
@@ -39,7 +36,7 @@ import org.jetbrains.annotations.NotNull;
 import java.util.ArrayList;
 import java.util.List;
 
-import de.deutschebahn.bahnhoflive.BaseApplication;
+import de.deutschebahn.bahnhoflive.BaseActivity;
 import de.deutschebahn.bahnhoflive.BuildConfig;
 import de.deutschebahn.bahnhoflive.R;
 import de.deutschebahn.bahnhoflive.analytics.IssueTracker;
@@ -57,9 +54,6 @@ import de.deutschebahn.bahnhoflive.tutorial.TutorialView;
 import de.deutschebahn.bahnhoflive.ui.hub.HubActivity;
 import de.deutschebahn.bahnhoflive.ui.map.EquipmentID;
 import de.deutschebahn.bahnhoflive.ui.map.MapActivity;
-import de.deutschebahn.bahnhoflive.ui.map.MapConsentDialogFragment;
-import de.deutschebahn.bahnhoflive.ui.map.MapPresetProvider;
-import de.deutschebahn.bahnhoflive.ui.map.OnMapConsentDialogListener;
 import de.deutschebahn.bahnhoflive.ui.map.content.rimap.RimapFilter;
 import de.deutschebahn.bahnhoflive.ui.station.accessibility.AccessibilityFragment;
 import de.deutschebahn.bahnhoflive.ui.station.elevators.ElevatorStatusListsFragment;
@@ -75,9 +69,11 @@ import de.deutschebahn.bahnhoflive.ui.station.search.ContentSearchFragment;
 import de.deutschebahn.bahnhoflive.ui.station.shop.ShopCategorySelectionFragment;
 import de.deutschebahn.bahnhoflive.ui.station.timetable.TimetablesFragment;
 import de.deutschebahn.bahnhoflive.ui.timetable.localtransport.HafasTimetableViewModel;
+import de.deutschebahn.bahnhoflive.util.DebugX;
 import kotlin.Pair;
+import de.deutschebahn.bahnhoflive.util.GoogleLocationPermissions;
 
-public class StationActivity extends AppCompatActivity implements
+public class StationActivity extends BaseActivity implements
         StationProvider, HistoryFragment.RootProvider,
         TrackingManager.Provider, StationNavigation {
 
@@ -107,6 +103,8 @@ public class StationActivity extends AppCompatActivity implements
     private boolean initializeShowingDepartures;
     private StationViewModel stationViewModel;
 
+    private Boolean wasStarted = false;
+
     private final Observer<Pair<StationNavigation, RrtPoint>> pendingRrtPointAndStationNavigationObserver = pair -> {
         final StationNavigation stationNavigation = pair.getFirst();
         final RrtPoint rrtPoint = pair.getSecond();
@@ -118,6 +116,8 @@ public class StationActivity extends AppCompatActivity implements
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        DebugX.Companion.logIntent(this.getLocalClassName(), getIntent());
 
         ViewModelProvider.AndroidViewModelFactory fac = new ViewModelProvider.AndroidViewModelFactory(getApplication()) {
             @NonNull
@@ -225,7 +225,7 @@ public class StationActivity extends AppCompatActivity implements
             @Override
             public void onClick(View v) {
                 trackingManager.track(TrackingManager.TYPE_ACTION, TrackingManager.Source.TAB_NAVI, TrackingManager.Action.TAP, TrackingManager.UiElement.MAP_BUTTON);
-                startMapActivityIfConsent(getCurrentContentFragment(), ()->MapActivity.createIntent(StationActivity.this, station));
+                GoogleLocationPermissions.startMapActivityIfConsent(getCurrentContentFragment(), ()->MapActivity.createIntent(StationActivity.this, station));
             }
         });
 
@@ -270,6 +270,17 @@ public class StationActivity extends AppCompatActivity implements
         }
 
         stationViewModel.getPendingRrtPointAndStationNavigationLiveData().observe(this, pendingRrtPointAndStationNavigationObserver);
+
+        if(!wasStarted) {
+            wasStarted = true;
+            Intent intent = getIntent();
+            if (intent != null) {
+                if (intent.getStringExtra("SHOW_ELEVATORS") != null)
+                    showElevators();
+            }
+        }
+
+
     }
 
     @Override
