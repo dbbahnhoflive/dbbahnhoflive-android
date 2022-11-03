@@ -12,6 +12,7 @@ import android.view.accessibility.AccessibilityNodeInfo
 import android.widget.CompoundButton
 import android.widget.ImageView
 import android.widget.LinearLayout
+import android.widget.Space
 import androidx.cardview.widget.CardView
 import androidx.constraintlayout.widget.Guideline
 
@@ -35,14 +36,14 @@ abstract class FacilityStatusViewHolder(parent: ViewGroup, selectionManager: Sin
         super.onBind(item)
 
         titleView.text = item.stationName
-//        iconView.setImageResource(item.flyoutIcon)
+        iconView.visibility= View.GONE
 
         val guideline : Guideline = itemView.findViewById(R.id.guideline)
         guideline.setGuidelineBegin(0)
         guideline.setGuidelineEnd(0)
 
-        iconView.visibility= View.GONE
-
+        val spaceMargin : Space = itemView.findViewById(R.id.spaceMargin)
+        spaceMargin.visibility=View.VISIBLE
 
         titleView.rootView.setAccessibilityText("", AccessibilityNodeInfo.ACTION_CLICK, itemView.context.getText(R.string.general_switch).toString())
 

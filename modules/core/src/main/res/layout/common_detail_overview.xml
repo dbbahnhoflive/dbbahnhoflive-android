@@ -29,11 +29,20 @@
             android:orientation="vertical"
             app:layout_constraintGuide_begin="@dimen/indent" />
 
+        <Space
+            android:id="@+id/spaceMargin"
+            android:layout_width="@dimen/default_space_triple"
+            android:layout_height="match_parent"
+            app:layout_constraintLeft_toLeftOf="@+id/guideline"
+            app:layout_constraintTop_toTopOf="parent"
+            android:visibility="gone"
+            >
+        </Space>
+
         <TextView
             android:id="@+id/title"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_marginStart="@dimen/default_space_triple"
             android:layout_marginEnd="@dimen/default_space"
             android:layout_marginTop="@dimen/default_space"
             android:ellipsize="end"
@@ -41,7 +50,7 @@
             android:textStyle="bold"
             app:layout_constraintVertical_chainStyle="packed"
             app:layout_constraintBottom_toTopOf="@+id/status"
-            app:layout_constraintLeft_toLeftOf="@+id/guideline"
+            app:layout_constraintLeft_toRightOf="@+id/spaceMargin"
             app:layout_constraintRight_toRightOf="parent"
             app:layout_constraintTop_toTopOf="parent"
             tools:text="Bahnhofsmission" />
@@ -53,11 +62,10 @@
             android:layout_marginTop="@dimen/default_space_half"
             android:layout_marginBottom="@dimen/default_space"
             android:layout_marginEnd="@dimen/default_space"
-            android:layout_marginStart="@dimen/default_space_triple"
             android:gravity="center_vertical"
             android:textSize="@dimen/textsize_h3"
             app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintLeft_toRightOf="@+id/guideline"
+            app:layout_constraintLeft_toRightOf="@+id/spaceMargin"
             app:layout_constraintRight_toRightOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/title"
             tools:drawableLeft="@drawable/app_check"
