@@ -39,8 +39,18 @@ class StationFeaturesFragment : FullBottomSheetDialogFragment() {
                     ?.let { serviceContentFragment ->
                         dismiss()
                         HistoryFragment.parentOf(this).push(serviceContentFragment)
-                    }
+                    } ?: run {
+                    if (item.stationFeatureTemplate.fallbackLink != null) {
+                        item.stationFeatureTemplate.fallbackLink.createServiceContentFragment(
+                            requireContext(),
+                            item
+                        )?.let { serviceContentFragment ->
+                            dismiss()
+                            HistoryFragment.parentOf(this).push(serviceContentFragment)
 
+                        }
+                    }
+                }
             } else {
                 // show map if consent ok
                 GoogleLocationPermissions.startMapActivityIfConsent(this) {
