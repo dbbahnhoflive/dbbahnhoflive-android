@@ -42,7 +42,6 @@ public class MapLink extends Link {
     @Nullable
     public Intent createMapActivityIntent(Context context, StationFeature stationFeature) {
         final List<? extends Parcelable> pois = getPois(stationFeature);
-
         if (!Collections.hasContent(pois)) {
             return null;
         }

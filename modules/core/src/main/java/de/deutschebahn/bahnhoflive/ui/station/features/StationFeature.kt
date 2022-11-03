@@ -40,7 +40,8 @@ class StationFeature(
         )
 
     fun isLinkVisible(context: Context): Boolean = (isFeatured != false
-            && (stationFeatureTemplate.link?.isAvailable(context, this)) == true)
+            && ( (stationFeatureTemplate.link?.isAvailable(context, this) == true) ||
+                  stationFeatureTemplate.fallbackLink?.isAvailable(context, this) == true))
 
     init {
 
