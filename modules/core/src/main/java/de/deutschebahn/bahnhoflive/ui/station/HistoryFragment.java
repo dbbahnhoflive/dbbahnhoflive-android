@@ -65,34 +65,21 @@ public class HistoryFragment extends Fragment implements MapPresetProvider {
         final RootProvider rootProvider = (RootProvider) activity;
 
         if (fragment != null) {
-            Log.d("cr", "HistoryFragment.initialize() fragment!=null");
-//            removeFragment(fragment);
-//            setRootFragment(rootProvider.createRootFragment(this));
-
+            // works on Android 11
             String tg = fragment.getTag();
-
-
-            if(Objects.equals(tg, "root")) {
-            removeFragment(fragment);
-            setRootFragment(rootProvider.createRootFragment(this));
-
-            }
-            else {
+            if (Objects.equals(tg, "root")) {
+                removeFragment(fragment);
+                fragment = rootProvider.createRootFragment(this);
+                setRootFragment(fragment);
+            } else {
                 removeFragment(fragment);
                 getChildFragmentManager().beginTransaction()
                         .add(getId(), fragment, tg)
                         .commit();
-
-//                childFragmentManager.beginTransaction()
-//                        .replace(getId(), fragment, tg)
-//                        .commit();
             }
-//            replaceRootFragment(fragment);
 
 
-        }
-        else {
-            Log.d("cr", "HistoryFragment.initialize() fragment=null");
+        } else {
             setRootFragment(rootProvider.createRootFragment(this));
         }
     }
