@@ -15,6 +15,7 @@ import de.deutschebahn.bahnhoflive.backend.toHafasStation
 import de.deutschebahn.bahnhoflive.persistence.FavoriteStationsStore
 import de.deutschebahn.bahnhoflive.persistence.RecentSearchesStore
 import de.deutschebahn.bahnhoflive.repository.InternalStation
+import de.deutschebahn.bahnhoflive.repository.timetable.TimetableRepository
 import de.deutschebahn.bahnhoflive.ui.ViewHolder
 import de.deutschebahn.bahnhoflive.ui.search.HafasStationSearchResult
 import de.deutschebahn.bahnhoflive.ui.search.StopPlaceSearchResult
@@ -27,6 +28,7 @@ internal class NearbyDeparturesAdapter(
     private val recentSearchesStore: RecentSearchesStore,
     private val favoriteHafasStationsStore: FavoriteStationsStore<HafasStation>,
     private val favoriteStationsStore: FavoriteStationsStore<InternalStation>,
+    private val timetableRepository: TimetableRepository,
     val trackingManager: TrackingManager
 ) : androidx.recyclerview.widget.RecyclerView.Adapter<ViewHolder<*>>() {
 
@@ -81,7 +83,8 @@ internal class NearbyDeparturesAdapter(
                             coroutineScope,
                             stopPlace,
                             recentSearchesStore,
-                            favoriteStationsStore
+                            favoriteStationsStore,
+                            timetableRepository
                         )
                     )
                 }

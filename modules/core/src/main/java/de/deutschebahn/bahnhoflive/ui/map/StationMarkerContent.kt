@@ -12,9 +12,9 @@ import android.os.Parcelable
 import androidx.core.content.ContextCompat
 import com.google.android.gms.maps.model.MarkerOptions
 import de.deutschebahn.bahnhoflive.R
-import de.deutschebahn.bahnhoflive.repository.DbTimetableResource
 import de.deutschebahn.bahnhoflive.repository.Station
 import de.deutschebahn.bahnhoflive.repository.appRepositories
+import de.deutschebahn.bahnhoflive.repository.timetable.TimetableCollector
 import de.deutschebahn.bahnhoflive.ui.ViewHolder
 import de.deutschebahn.bahnhoflive.ui.station.StationActivity
 import de.deutschebahn.bahnhoflive.view.TextDrawable
@@ -33,7 +33,7 @@ internal class StationMarkerContent(private val station: Station, context: Conte
             }, context.resources.getDimensionPixelOffset(R.dimen.default_space), station.title)
         )
     }) {
-    var departures: DbTimetableResource? = null
+    var departures: TimetableCollector? = null
         private set
 
     override fun getTitle(): String {
@@ -65,7 +65,7 @@ internal class StationMarkerContent(private val station: Station, context: Conte
         return ViewType.DB_STATION
     }
 
-    fun setTimetable(timetable: DbTimetableResource?) {
+    fun setTimetable(timetable: TimetableCollector?) {
         departures = timetable
     }
 

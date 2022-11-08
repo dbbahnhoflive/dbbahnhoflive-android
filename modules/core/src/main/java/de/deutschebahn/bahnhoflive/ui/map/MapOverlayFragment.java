@@ -29,7 +29,6 @@ import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.android.volley.VolleyError;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.model.LatLng;
@@ -60,14 +59,11 @@ import de.deutschebahn.bahnhoflive.backend.rimap.model.RimapPOI;
 import de.deutschebahn.bahnhoflive.backend.rimap.model.RimapStation;
 import de.deutschebahn.bahnhoflive.location.GPSLocationManager;
 import de.deutschebahn.bahnhoflive.model.parking.ParkingFacility;
-import de.deutschebahn.bahnhoflive.repository.DbTimetableResource;
-import de.deutschebahn.bahnhoflive.repository.InternalStation;
-import de.deutschebahn.bahnhoflive.repository.LoadingStatus;
 import de.deutschebahn.bahnhoflive.repository.MergedStation;
 import de.deutschebahn.bahnhoflive.repository.RepositoryHolderKt;
 import de.deutschebahn.bahnhoflive.repository.Station;
 import de.deutschebahn.bahnhoflive.repository.StationResource;
-import de.deutschebahn.bahnhoflive.repository.timetable.Timetable;
+import de.deutschebahn.bahnhoflive.repository.timetable.TimetableCollector;
 import de.deutschebahn.bahnhoflive.tutorial.TutorialManager;
 import de.deutschebahn.bahnhoflive.tutorial.TutorialView;
 import de.deutschebahn.bahnhoflive.ui.map.content.MapConstants;
@@ -344,9 +340,8 @@ public class MapOverlayFragment extends Fragment implements OnMapReadyCallback, 
         final RimapFilter.Item stationFilterItem = rimapFilter.getStationFilterItem();
 
         final StationMarkerContent markerContent = new StationMarkerContent(station, requireContext());
-        final DbTimetableResource timetable = new DbTimetableResource(InternalStation.of(station));
-        timetable.loadIfNecessary();
-        markerContent.setTimetable(timetable);
+
+        markerContent.setTimetable(mapViewModel.getActiveTimetableCollector());
         final MarkerBinder markerBinder = new MarkerBinder(markerContent, mapViewModel.getZoom(), mapViewModel.getLevel(), stationFilterItem);
         final List<MarkerBinder> markerBinders = Collections.singletonList(markerBinder);
         final Map<Filter, List<MarkerBinder>> categorizedMarkerBinders = Collections.singletonMap(stationFilterItem, markerBinders);
@@ -779,28 +774,11 @@ public class MapOverlayFragment extends Fragment implements OnMapReadyCallback, 
                         final MarkerBinder markerBinder = new MarkerBinder(stationMarkerContent, mapViewModel.getZoom(), mapViewModel.getLevel(), stationRequestArguments.filterItem);
                         stationRequestArguments.categoryMarkerBinders.add(markerBinder);
                         markerBinders.add(markerBinder);
-                        final DbTimetableResource dbTimetableResource = new DbTimetableResource(station, stationRequestArguments.stopPlace);
-                        dbTimetableResource.loadIfNecessary();
-                        stationMarkerContent.setTimetable(dbTimetableResource);
+                        final TimetableCollector timetableCollector = mapViewModel.createActiveTimetableCollector(station);
+                        stationMarkerContent.setTimetable(timetableCollector);
                         final MapOverlayFragment owner = MapOverlayFragment.this;
-                        dbTimetableResource.getData().observe(owner, new Observer<Timetable>() {
-                            @Override
-                            public void onChanged(@Nullable Timetable timetable) {
-                                flyoutsAdapter.notifyDataSetChanged();
-                            }
-                        });
-                        dbTimetableResource.getError().observe(owner, new Observer<VolleyError>() {
-                            @Override
-                            public void onChanged(@Nullable VolleyError volleyError) {
-                                flyoutsAdapter.notifyDataSetChanged();
-                            }
-                        });
-                        dbTimetableResource.getLoadingStatus().observe(owner, new Observer<LoadingStatus>() {
-                            @Override
-                            public void onChanged(@Nullable LoadingStatus loadingStatus) {
-                                flyoutsAdapter.notifyDataSetChanged();
-                            }
-                        });
+
+                        timetableCollector.getAnyUpdateLiveData().observe(owner, unit -> flyoutsAdapter.notifyDataSetChanged());
                     }
 
                     stationResourceData.removeObserver(this);

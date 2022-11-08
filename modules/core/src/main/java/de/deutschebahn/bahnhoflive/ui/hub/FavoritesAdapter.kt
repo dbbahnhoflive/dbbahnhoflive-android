@@ -25,7 +25,7 @@ class FavoritesAdapter(val owner: LifecycleOwner, private val trackingManager: T
 
             val searchResult = favorites?.get(it.selection)
             when (searchResult) {
-                is StoredStationSearchResult -> searchResult.timetable.first.loadIfNecessary()
+                is StoredStationSearchResult -> searchResult.timetable.first.refresh(false)
                 is HafasStationSearchResult -> searchResult.timetable.requestTimetable(true, "hub")
             }
         }

@@ -11,17 +11,20 @@ import de.deutschebahn.bahnhoflive.R
 import de.deutschebahn.bahnhoflive.backend.db.ris.model.StopPlace
 import de.deutschebahn.bahnhoflive.persistence.FavoriteStationsStore
 import de.deutschebahn.bahnhoflive.persistence.RecentSearchesStore
-import de.deutschebahn.bahnhoflive.repository.DbTimetableResource
 import de.deutschebahn.bahnhoflive.repository.InternalStation
+import de.deutschebahn.bahnhoflive.repository.timetable.TimetableCollector
+import de.deutschebahn.bahnhoflive.repository.timetable.TimetableRepository
 import de.deutschebahn.bahnhoflive.ui.station.StationActivity
 import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.flow.flow
 
 class StopPlaceSearchResult(
     val coroutineScope: CoroutineScope,
     val stopPlace: StopPlace,
     val recentSearchesStore: RecentSearchesStore,
-    val favoriteStationsStore: FavoriteStationsStore<InternalStation>
-) : StationSearchResult<InternalStation, Pair<DbTimetableResource, Float>>(
+    val favoriteStationsStore: FavoriteStationsStore<InternalStation>,
+    val timetableRepository: TimetableRepository
+) : StationSearchResult<InternalStation, Pair<TimetableCollector, Float>>(
     R.drawable.legacy_dbmappinicon,
     recentSearchesStore,
     favoriteStationsStore
@@ -29,8 +32,9 @@ class StopPlaceSearchResult(
 
     private val internalStation = stopPlace.asInternalStation
 
-    private val dbTimetableResource: DbTimetableResource =
-        DbTimetableResource(coroutineScope, stopPlace)
+    private val timetableCollector = timetableRepository.createTimetableCollector(
+        flow { stopPlace.evaIds }, coroutineScope
+    )
 
     override fun getTitle(): CharSequence {
         return stopPlace.name ?: ""
@@ -63,7 +67,7 @@ class StopPlaceSearchResult(
         return false
     }
 
-    override fun getTimetable(): Pair<DbTimetableResource, Float> {
-        return dbTimetableResource to 0f
+    override fun getTimetable(): Pair<TimetableCollector, Float> {
+        return timetableCollector to 0f
     }
 }

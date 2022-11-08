@@ -7,12 +7,11 @@
 package de.deutschebahn.bahnhoflive.ui.search
 
 import androidx.lifecycle.ViewModel
-import androidx.lifecycle.viewModelScope
-import de.deutschebahn.bahnhoflive.repository.timetable.TimetableCollectorFactory
+import de.deutschebahn.bahnhoflive.BaseApplication
 
 class StationSearchViewModel : ViewModel() {
 
-    val timetableCollectorFactory = TimetableCollectorFactory(viewModelScope)
+    val timetableCollectorFactory = BaseApplication.get().repositories.timetableRepository
 
     val searchResource = SearchResultResource()
 

@@ -61,6 +61,7 @@ class NearbyDeparturesFragment : androidx.fragment.app.Fragment(), Permission.Li
             applicationServices.recentSearchesStore,
             applicationServices.favoriteHafasStationsStore,
             applicationServices.favoriteDbStationStore,
+            hubViewModel.timetableRepository,
             trackingManager
         )
 

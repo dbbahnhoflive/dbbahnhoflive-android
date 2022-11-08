@@ -17,11 +17,12 @@ import de.deutschebahn.bahnhoflive.backend.hafas.model.HafasStation;
 import de.deutschebahn.bahnhoflive.repository.ApplicationServices;
 import de.deutschebahn.bahnhoflive.repository.InternalStation;
 import de.deutschebahn.bahnhoflive.repository.Station;
-import de.deutschebahn.bahnhoflive.repository.timetable.TimetableCollectorFactory;
+import de.deutschebahn.bahnhoflive.repository.timetable.TimetableRepository;
 import de.deutschebahn.bahnhoflive.ui.StationWrapper;
 import de.deutschebahn.bahnhoflive.ui.search.HafasStationSearchResult;
 import de.deutschebahn.bahnhoflive.ui.search.SearchResult;
 import de.deutschebahn.bahnhoflive.ui.search.StoredStationSearchResult;
+import kotlinx.coroutines.CoroutineScope;
 
 public class RecentSearchesStore {
 
@@ -59,14 +60,16 @@ public class RecentSearchesStore {
         recentHafasStationsStore.adopt(legacyRecentHafasStations);
     }
 
-    public List<SearchResult> loadRecentStations(TimetableCollectorFactory timetableCollectorFactory) {
+    public List<SearchResult> loadRecentStations(CoroutineScope coroutineScope, TimetableRepository timetableRepository) {
         final List<StationWrapper<InternalStation>> all = recentDbStationsStore.getAll();
         final List<StationWrapper<HafasStation>> allHafas = recentHafasStationsStore.getAll();
 
         final ArrayList<SearchResult> searchResults = new ArrayList<>();
 
         for (StationWrapper<InternalStation> stationWrapper : all) {
-            searchResults.add(new StoredStationSearchResult(stationWrapper.getWrappedStation(), this, favoriteStationsStore, timetableCollectorFactory.create(stationWrapper)));
+            searchResults.add(new StoredStationSearchResult(stationWrapper.getWrappedStation(), this, favoriteStationsStore,
+                    timetableRepository.createTimetableCollector((flowCollector, continuation) -> stationWrapper.getWrappedStation().getEvaIds(), coroutineScope))
+            );
         }
         for (StationWrapper<HafasStation> hafasStationWrapper : allHafas) {
             searchResults.add(new HafasStationSearchResult(hafasStationWrapper.getWrappedStation(), this, favoriteHafasStationsStore));

@@ -38,7 +38,7 @@ import de.deutschebahn.bahnhoflive.repository.feedback.WhatsAppFeeback
 import de.deutschebahn.bahnhoflive.repository.locker.LockersViewModel
 import de.deutschebahn.bahnhoflive.repository.map.RrtRequestResult
 import de.deutschebahn.bahnhoflive.repository.parking.ViewModelParking
-import de.deutschebahn.bahnhoflive.repository.timetable.CoroutineTimetableCollector
+import de.deutschebahn.bahnhoflive.repository.timetable.TimetableCollector
 import de.deutschebahn.bahnhoflive.repository.timetable.TimetableHour
 import de.deutschebahn.bahnhoflive.repository.timetable.TimetableRepository
 import de.deutschebahn.bahnhoflive.stream.livedata.MergedLiveData
@@ -66,8 +66,6 @@ import de.deutschebahn.bahnhoflive.util.toLiveData
 import io.reactivex.Observable
 import io.reactivex.subjects.BehaviorSubject
 import kotlinx.coroutines.*
-import kotlinx.coroutines.channels.awaitClose
-import kotlinx.coroutines.channels.trySendBlocking
 import kotlinx.coroutines.flow.*
 import java.io.InputStreamReader
 import java.text.Collator
@@ -299,31 +297,18 @@ class StationViewModel(
         }
     }
 
-    private val evaIdsProvider = object : EvaIdsProvider {
-        override suspend fun withEvaIds(
-            station: Station, action: (evaIds: EvaIds?) -> Unit
-        ) {
-            getApplication<BaseApplication>().applicationServices.evaIdsProvider.withEvaIds(
+    private val evaIdsProvider: suspend (Station) -> EvaIds? = object : EvaIdsProvider {
+        override suspend fun invoke(station: Station): EvaIds? =
+            getApplication<BaseApplication>().applicationServices.updatedStationRepository.getUpdatedStation(
                 station
-            ) {
-                action(it ?: stationResource.data.value?.evaIds)
-            }
-        }
+            )?.evaIds ?: station.evaIds
     }
 
     private val refreshLiveData = false.toLiveData()
 
-    val timetableCollector = CoroutineTimetableCollector(
-        stationStateFlow.filterNotNull().flatMapLatest { station ->
-            callbackFlow {
-                getApplication<BaseApplication>().applicationServices.evaIdsProvider.withEvaIds(
-                    station
-                ) { evaIds ->
-                    trySendBlocking(evaIds ?: stationResource.data.value?.evaIds)
-                }
-
-                awaitClose()
-            }
+    val timetableCollector = TimetableCollector(
+        stationStateFlow.filterNotNull().map { station ->
+            evaIdsProvider(station)
         }.filterNotNull(),
         viewModelScope,
         ::getTimetableHour,
@@ -412,7 +397,7 @@ class StationViewModel(
     }.apply {
         viewModelScope.launch {
             collect {
-                accessibilityFeaturesResource.station = it?.getOrNull()
+                accessibilityFeaturesResource.station = it
             }
         }
     }

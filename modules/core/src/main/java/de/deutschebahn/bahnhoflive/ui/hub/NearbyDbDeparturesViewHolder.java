@@ -12,8 +12,8 @@ import androidx.lifecycle.LifecycleOwner;
 
 import de.deutschebahn.bahnhoflive.R;
 import de.deutschebahn.bahnhoflive.analytics.TrackingManager;
-import de.deutschebahn.bahnhoflive.repository.DbTimetableResource;
 import de.deutschebahn.bahnhoflive.repository.InternalStation;
+import de.deutschebahn.bahnhoflive.repository.timetable.TimetableCollector;
 import de.deutschebahn.bahnhoflive.ui.search.StationSearchResult;
 import de.deutschebahn.bahnhoflive.view.SingleSelectionManager;
 import kotlin.Pair;
@@ -27,7 +27,7 @@ class NearbyDbDeparturesViewHolder extends DbDeparturesViewHolder {
     }
 
     @Override
-    protected void onBind(StationSearchResult<InternalStation, Pair<DbTimetableResource, Float>> item) {
+    protected void onBind(StationSearchResult<InternalStation, Pair<TimetableCollector, Float>> item) {
         super.onBind(item);
 
         distanceViewHolder.bind(item.getTimetable().getSecond());

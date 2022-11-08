@@ -15,8 +15,8 @@ import androidx.lifecycle.LifecycleOwner;
 
 import de.deutschebahn.bahnhoflive.R;
 import de.deutschebahn.bahnhoflive.analytics.TrackingManager;
-import de.deutschebahn.bahnhoflive.repository.DbTimetableResource;
 import de.deutschebahn.bahnhoflive.repository.InternalStation;
+import de.deutschebahn.bahnhoflive.repository.timetable.TimetableCollector;
 import de.deutschebahn.bahnhoflive.ui.search.SearchItemPickedListener;
 import de.deutschebahn.bahnhoflive.ui.search.StationSearchResult;
 import de.deutschebahn.bahnhoflive.ui.search.StationSearchViewHolder;
@@ -25,7 +25,7 @@ import de.deutschebahn.bahnhoflive.view.LongClickSelectableItemViewHolder;
 import de.deutschebahn.bahnhoflive.view.SingleSelectionManager;
 import kotlin.Pair;
 
-public class DbDeparturesViewHolder extends LongClickSelectableItemViewHolder<StationSearchResult<InternalStation, Pair<DbTimetableResource, Float>>> implements View.OnClickListener {
+public class DbDeparturesViewHolder extends LongClickSelectableItemViewHolder<StationSearchResult<InternalStation, Pair<TimetableCollector, Float>>> implements View.OnClickListener {
 
     public static final String TAG = DbDeparturesViewHolder.class.getSimpleName();
 
@@ -61,11 +61,11 @@ public class DbDeparturesViewHolder extends LongClickSelectableItemViewHolder<St
     }
 
     @Override
-    protected void onBind(StationSearchResult<InternalStation, Pair<DbTimetableResource, Float>> item) {
+    protected void onBind(StationSearchResult<InternalStation, Pair<TimetableCollector, Float>> item) {
         super.onBind(item);
         stationSearchViewHolder.bind(item);
 
-        reducedDbDeparturesViewHolder.bind(item.getTimetable().getFirst().getData().getValue() /* FIXME */);
+        reducedDbDeparturesViewHolder.bind(item.getTimetable().getFirst().getTimetableStateFlow().getValue() /* FIXME */);
     }
 
 
@@ -77,7 +77,7 @@ public class DbDeparturesViewHolder extends LongClickSelectableItemViewHolder<St
         }
 
         final Context context = v.getContext();
-        final StationSearchResult<InternalStation, Pair<DbTimetableResource, Float>> item = getItem();
+        final StationSearchResult<InternalStation, Pair<TimetableCollector, Float>> item = getItem();
         if (item != null) {
             item.onClick(context, v != itemView);
         }

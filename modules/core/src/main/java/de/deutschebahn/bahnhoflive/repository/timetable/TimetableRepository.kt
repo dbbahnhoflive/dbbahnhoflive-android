@@ -17,10 +17,9 @@ import kotlinx.coroutines.flow.Flow
 open class TimetableRepository {
     open fun createTimetableCollector(
         evaIdsFlow: Flow<EvaIds>,
-        coroutineScope: CoroutineScope,
-        timetableRepository: TimetableRepository
-    ): CoroutineTimetableCollector =
-        CoroutineTimetableCollector(evaIdsFlow, coroutineScope, timetableRepository)
+        coroutineScope: CoroutineScope
+    ): TimetableCollector =
+        TimetableCollector(evaIdsFlow, coroutineScope, this)
 
     open fun queryJourneys(
         evaIds: EvaIds,

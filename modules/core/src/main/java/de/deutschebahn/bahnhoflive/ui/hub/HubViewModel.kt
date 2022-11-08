@@ -13,6 +13,7 @@ import de.deutschebahn.bahnhoflive.BaseApplication
 import de.deutschebahn.bahnhoflive.backend.hafas.model.HafasStation
 import de.deutschebahn.bahnhoflive.backend.hafas.model.HafasTimetable
 import de.deutschebahn.bahnhoflive.repository.InternalStation
+import de.deutschebahn.bahnhoflive.repository.timetable.TimetableRepository
 import de.deutschebahn.bahnhoflive.ui.StadaStationCacheViewModel
 
 class HubViewModel(application: Application) : StadaStationCacheViewModel(application) {
@@ -39,4 +40,7 @@ class HubViewModel(application: Application) : StadaStationCacheViewModel(applic
         liveData(viewModelScope.coroutineContext) {
             emit(updatedStationRepository.getUpdatedStation(station))
         }
+
+    val timetableRepository: TimetableRepository
+        get() = BaseApplication.get().repositories.timetableRepository
 }

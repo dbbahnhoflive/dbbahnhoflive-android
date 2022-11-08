@@ -11,6 +11,7 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.lifecycle.lifecycleScope
 import de.deutschebahn.bahnhoflive.BaseApplication
 import de.deutschebahn.bahnhoflive.analytics.TrackingManager
 import de.deutschebahn.bahnhoflive.backend.hafas.model.HafasStation
@@ -20,6 +21,7 @@ import de.deutschebahn.bahnhoflive.repository.InternalStation
 import de.deutschebahn.bahnhoflive.ui.DbStationWrapper
 import de.deutschebahn.bahnhoflive.ui.search.HafasStationSearchResult
 import de.deutschebahn.bahnhoflive.ui.search.StoredStationSearchResult
+import kotlinx.coroutines.flow.flow
 
 class FavoritesFragment : androidx.fragment.app.Fragment() {
 
@@ -111,6 +113,7 @@ class FavoritesFragment : androidx.fragment.app.Fragment() {
             val favoriteHafasStationsStore = applicationServices.favoriteHafasStationsStore
             val favoriteDbStationsStore = applicationServices.favoriteDbStationStore
             val recentSearchesStore = applicationServices.recentSearchesStore
+            val timetableRepository = applicationServices.repositories.timetableRepository
 
             favoritesAdapter?.apply {
                 favorites = FavoriteStationsStore.getFavoriteStations(activity).map {
@@ -120,12 +123,16 @@ class FavoritesFragment : androidx.fragment.app.Fragment() {
                             recentSearchesStore,
                             favoriteHafasStationsStore
                         )
-                        is DbStationWrapper -> StoredStationSearchResult(
-                            it.wrappedStation,
-                            recentSearchesStore,
-                            favoriteDbStationsStore,
-                            applicationServices.evaIdsProvider
-                        )
+                        is DbStationWrapper -> {
+                            StoredStationSearchResult(
+                                it.wrappedStation,
+                                recentSearchesStore,
+                                favoriteDbStationsStore,
+                                timetableRepository.createTimetableCollector(flow {
+                                    it.wrappedStation.evaIds
+                                }, lifecycleScope)
+                            )
+                        }
                         else -> it
                     }
                 }.also {

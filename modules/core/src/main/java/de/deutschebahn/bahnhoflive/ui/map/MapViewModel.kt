@@ -19,10 +19,12 @@ import de.deutschebahn.bahnhoflive.backend.ris.model.TrainInfo
 import de.deutschebahn.bahnhoflive.repository.*
 import de.deutschebahn.bahnhoflive.repository.locker.LockerResource
 import de.deutschebahn.bahnhoflive.repository.parking.ViewModelParking
+import de.deutschebahn.bahnhoflive.repository.timetable.Timetable
+import de.deutschebahn.bahnhoflive.repository.timetable.TimetableCollector
+import de.deutschebahn.bahnhoflive.repository.timetable.TimetableRepository
 import de.deutschebahn.bahnhoflive.stream.livedata.OneShotLiveData
 import de.deutschebahn.bahnhoflive.stream.livedata.switchMap
 import de.deutschebahn.bahnhoflive.stream.rx.ResourceState
-import de.deutschebahn.bahnhoflive.stream.rx.toObservable
 import de.deutschebahn.bahnhoflive.ui.StadaStationCacheViewModel
 import de.deutschebahn.bahnhoflive.ui.station.StationActivity
 import io.reactivex.BackpressureStrategy
@@ -31,28 +33,14 @@ import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.functions.Consumer
 import io.reactivex.schedulers.Schedulers
 import io.reactivex.subjects.BehaviorSubject
+import kotlinx.coroutines.flow.flow
+import kotlinx.coroutines.flow.mapNotNull
+import kotlinx.coroutines.launch
 
 class MapViewModel(
     application: Application,
     private val savedStateHandle: SavedStateHandle,
 ) : StadaStationCacheViewModel(application) {
-
-    private val dbTimetableResource =
-        DbTimetableResource(
-            viewModelScope,
-            getApplication<BaseApplication>().applicationServices.evaIdsProvider
-        )
-
-    private val evaIdsErrorObserver = Observer<VolleyError> { volleyError ->
-        if (volleyError != null) {
-            dbTimetableResource.setEvaIdsMissing()
-        }
-    }
-    private val evaIdsDataObserver = Observer<Station> { evaIds ->
-        if (evaIds != null) {
-            dbTimetableResource.loadIfNecessary()
-        }
-    }
 
     var zoom: Float
         get() = savedStateHandle["zoom"] ?: MapOverlayFragment.DEFAULT_ZOOM
@@ -82,6 +70,25 @@ class MapViewModel(
             risServiceAndCategoryResource,
             rimapStationFeatureCollectionResource
         )
+
+    private val timetableRepository: TimetableRepository
+        get() = baseApplication.repositories.timetableRepository
+
+    private val timetableCollector =
+        timetableRepository.createTimetableCollector(
+            stationResource.data.asFlow().mapNotNull { it.evaIds }, viewModelScope
+        )
+
+    val activeTimetableCollector
+        get() = timetableCollector.apply {
+            loadIfNecessary()
+        }
+
+    private val evaIdsDataObserver = Observer<Station> { evaIds ->
+        if (evaIds != null) {
+            timetableCollector.loadIfNecessary()
+        }
+    }
 
     val isMapLayedOut = MutableLiveData<Boolean?>()
 
@@ -115,10 +122,7 @@ class MapViewModel(
 
             stationResource.initialize(station)
 
-            dbTimetableResource.initialize(station)
-
             stationResource.data.observeForever(evaIdsDataObserver)
-            stationResource.error.observeForever(evaIdsErrorObserver)
 
             parking.parkingsResource.initialize(station)
 
@@ -135,9 +139,64 @@ class MapViewModel(
     val restHelper
         get() = baseApplication.restHelper
 
-    private val timetableObservable = dbTimetableResource.toObservable()
+    private val timetableObservable =
+        BehaviorSubject.create<ResourceState<Timetable, Exception>> { emitter ->
+            try {
+                with(timetableCollector) {
+                    val dataJob = viewModelScope.launch {
+                        timetableStateFlow.collect { value ->
+                            emitter.onNext(
+                                ResourceState(
+                                    value,
+                                    errorsStateFlow.value.toException(),
+                                    progressFlow.value.asLoadingStatus()
+                                )
+                            )
+                        }
+                    }
 
-    fun createTrackTimetableObservable(track: String, consumer: Consumer<ResourceState<List<TrainInfo>, VolleyError>>) = timetableObservable
+                    val errorJob = viewModelScope.launch {
+                        errorsStateFlow.collect { anyErrors ->
+                            emitter.onNext(
+                                ResourceState(
+                                    timetableStateFlow.value,
+                                    anyErrors.toException(),
+                                    progressFlow.value.asLoadingStatus()
+                                )
+                            )
+                        }
+                    }
+
+                    val progressJob = viewModelScope.launch {
+                        progressFlow.collect { progress ->
+                            emitter.onNext(
+                                ResourceState(
+                                    timetableStateFlow.value, errorsStateFlow.value.toException(),
+                                    progress.asLoadingStatus()
+                                )
+                            )
+
+                        }
+                    }
+
+                    emitter.setCancellable {
+                        AndroidSchedulers.mainThread().scheduleDirect {
+                            dataJob.cancel()
+                            errorJob.cancel()
+                            progressJob.cancel()
+                        }
+                    }
+                }
+            } catch (e: Exception) {
+                emitter.tryOnError(e)
+            }
+        }.subscribeOn(AndroidSchedulers.mainThread())
+
+
+    fun createTrackTimetableObservable(
+        track: String,
+        consumer: Consumer<ResourceState<List<TrainInfo>, Exception>>
+    ) = timetableObservable
         .map { upstreamState ->
             ResourceState(
                 upstreamState.data?.let { timetable ->
@@ -149,7 +208,7 @@ class MapViewModel(
                 upstreamState.loadingStatus
             )
         }.onErrorReturn {
-            ResourceState<List<TrainInfo>, VolleyError>(
+            ResourceState<List<TrainInfo>, Exception>(
                 null,
                 when (it) {
                     is VolleyError -> it
@@ -260,4 +319,12 @@ class MapViewModel(
 
     val mapConsentedLiveData = baseApplication.applicationServices.mapConsentRepository.consented
 
+    private fun Boolean.toException(): Exception? = if (this) Exception() else null
+
+    private fun Boolean.asLoadingStatus() = if (this) LoadingStatus.BUSY else LoadingStatus.IDLE
+
+    fun createActiveTimetableCollector(station: Station): TimetableCollector =
+        timetableRepository.createTimetableCollector(flow {
+            station.evaIds
+        }, viewModelScope)
 }

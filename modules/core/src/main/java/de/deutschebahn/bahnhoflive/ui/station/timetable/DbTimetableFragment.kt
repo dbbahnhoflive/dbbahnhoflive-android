@@ -23,7 +23,7 @@ import de.deutschebahn.bahnhoflive.analytics.TrackingManager.Companion.fromActiv
 import de.deutschebahn.bahnhoflive.backend.ris.model.TrainEvent
 import de.deutschebahn.bahnhoflive.backend.ris.model.TrainInfo
 import de.deutschebahn.bahnhoflive.repository.MergedStation
-import de.deutschebahn.bahnhoflive.repository.timetable.CoroutineTimetableCollector
+import de.deutschebahn.bahnhoflive.repository.timetable.TimetableCollector
 import de.deutschebahn.bahnhoflive.ui.map.Content
 import de.deutschebahn.bahnhoflive.ui.map.InitialPoiManager
 import de.deutschebahn.bahnhoflive.ui.map.MapPresetProvider
@@ -36,7 +36,7 @@ class DbTimetableFragment : Fragment(), MapPresetProvider {
 
     private val selectedTrainInfo get() = stationViewModel.selectedTrainInfo
 
-    private val timetableCollector: CoroutineTimetableCollector
+    private val timetableCollector: TimetableCollector
         get() = stationViewModel.timetableCollector
 
     val trackingManager: TrackingManager

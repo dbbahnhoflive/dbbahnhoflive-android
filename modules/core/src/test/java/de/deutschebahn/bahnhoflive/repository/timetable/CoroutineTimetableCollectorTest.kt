@@ -40,7 +40,7 @@ class CoroutineTimetableCollectorTest {
         timetableHourProvider: suspend (evaId: String, hour: Long) -> TimetableHour = emptyHourProvider,
         timetableChangesProvider: suspend (evaId: String) -> TimetableChanges = emptyChangesProvider,
         currentHourProvider: suspend () -> Long = productionHourProvider
-    ) = CoroutineTimetableCollector(
+    ) = TimetableCollector(
         evaIdsFlow,
         this,
         timetableHourProvider,
@@ -54,7 +54,7 @@ class CoroutineTimetableCollectorTest {
         timetableHourProvider: suspend (evaId: String, hour: Long) -> TimetableHour = emptyHourProvider,
         timetableChangesProvider: suspend (evaId: String) -> TimetableChanges = emptyChangesProvider,
         currentHourProvider: suspend () -> Long = productionHourProvider,
-        test: suspend CoroutineScope.(dispatcher: TestDispatcher, timetableCollector: CoroutineTimetableCollector) -> Unit
+        test: suspend CoroutineScope.(dispatcher: TestDispatcher, timetableCollector: TimetableCollector) -> Unit
     ) = runTest(dispatchTimeoutMs = 3000) {
         val dispatcher = StandardTestDispatcher(testScheduler)
 
@@ -121,12 +121,12 @@ class CoroutineTimetableCollectorTest {
                 )
             },
             currentHourProvider = { 0 }
-        ) { testDispatcher: TestDispatcher, coroutineTimetableCollector: CoroutineTimetableCollector ->
+        ) { testDispatcher: TestDispatcher, timetableCollector: TimetableCollector ->
 
             val expectedDefaultHourCount = 2
             assert(expectedDefaultHourCount == Constants.PRELOAD_HOURS) { "Expected hour count ($expectedDefaultHourCount) does not match PRELOAD_HOURS constant (${Constants.PRELOAD_HOURS})" }
 
-            val timetable = coroutineTimetableCollector.timetableFlow.first()
+            val timetable = timetableCollector.timetableFlow.first()
 
             val duration = timetable.duration
 
@@ -155,16 +155,16 @@ class CoroutineTimetableCollectorTest {
                     )
                 },
                 currentHourProvider = { 0 }
-            ) { testDispatcher: TestDispatcher, coroutineTimetableCollector: CoroutineTimetableCollector ->
+            ) { testDispatcher: TestDispatcher, timetableCollector: TimetableCollector ->
 
-                val initialDuration = coroutineTimetableCollector.timetableFlow.first().duration
+                val initialDuration = timetableCollector.timetableFlow.first().duration
 
-                coroutineTimetableCollector.loadMore()
+                timetableCollector.loadMore()
 
                 testDispatcher.scheduler.runCurrent()
 
                 val subsequentDuration =
-                    coroutineTimetableCollector.timetableFlow.drop(1).first().duration
+                    timetableCollector.timetableFlow.drop(1).first().duration
 
                 assert(subsequentDuration == initialDuration + 1) { "Duration should have increased by one: $initialDuration -> $subsequentDuration" }
 

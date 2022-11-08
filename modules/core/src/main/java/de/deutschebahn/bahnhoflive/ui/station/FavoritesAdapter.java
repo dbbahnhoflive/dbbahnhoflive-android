@@ -17,6 +17,7 @@ import java.util.List;
 import de.deutschebahn.bahnhoflive.R;
 import de.deutschebahn.bahnhoflive.persistence.FavoriteStationsStore;
 import de.deutschebahn.bahnhoflive.repository.EvaIdsProvider;
+import de.deutschebahn.bahnhoflive.repository.EvaIdsProviderKt;
 import de.deutschebahn.bahnhoflive.repository.InternalStation;
 import de.deutschebahn.bahnhoflive.ui.DbStationWrapper;
 import de.deutschebahn.bahnhoflive.ui.StationWrapper;
@@ -31,7 +32,7 @@ class FavoritesAdapter extends RecyclerView.Adapter<ViewHolder<StationWrapper>> 
 
     private final StationWrapper stationWrapper;
     private final List<StationWrapper<InternalStation>> stations;
-    private final EvaIdsProvider evaIdsProvider;
+    private final EvaIdsProviderKt evaIdsProvider;
     private final CoroutineScope coroutineScope;
 
     private final SingleSelectionManager selectionManager;

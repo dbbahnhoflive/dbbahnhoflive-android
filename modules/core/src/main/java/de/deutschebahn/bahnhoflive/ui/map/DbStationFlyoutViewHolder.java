@@ -12,7 +12,7 @@ import android.view.ViewGroup;
 import androidx.lifecycle.LifecycleOwner;
 
 import de.deutschebahn.bahnhoflive.R;
-import de.deutschebahn.bahnhoflive.repository.DbTimetableResource;
+import de.deutschebahn.bahnhoflive.repository.timetable.TimetableCollector;
 import de.deutschebahn.bahnhoflive.ui.timetable.localtransport.ReducedDbDeparturesViewHolder;
 import de.deutschebahn.bahnhoflive.view.Views;
 
@@ -45,8 +45,8 @@ class DbStationFlyoutViewHolder extends FlyoutViewHolder {
         if (markerContent instanceof StationMarkerContent) {
             final StationMarkerContent stationMarkerContent = (StationMarkerContent) markerContent;
 
-            final DbTimetableResource dbTimetableResource = stationMarkerContent.getDepartures();
-            departuresViewHolder.bind(dbTimetableResource == null ? null : dbTimetableResource.getData().getValue());
+            final TimetableCollector timetableCollector = stationMarkerContent.getDepartures();
+            departuresViewHolder.bind(timetableCollector == null ? null : timetableCollector.getTimetableStateFlow().getValue());
         }
     }
 

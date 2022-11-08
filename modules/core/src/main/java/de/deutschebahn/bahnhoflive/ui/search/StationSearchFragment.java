@@ -90,7 +90,7 @@ public class StationSearchFragment extends Fragment {
         locationFragment = LocationFragment.get(fragmentManager);
         locationFragment.addLocationListener(locationListener);
 
-        adapter = new StationSearchAdapter(getActivity(), recentSearchesStore, queryRecorder::clear, this, new TrackingManager(), BaseApplication.get().getApplicationServices().getEvaIdsProvider(), getLifecycleScope());
+        adapter = new StationSearchAdapter(getActivity(), recentSearchesStore, queryRecorder::clear, this, new TrackingManager(), getLifecycleScope(), stationSearchViewModel.getTimetableCollectorFactory());
     }
 
     @Override
@@ -217,7 +217,7 @@ public class StationSearchFragment extends Fragment {
     }
 
     private void showRecents() {
-        adapter.showRecents(stationSearchViewModel.getTimetableCollectorFactory());
+        adapter.showRecents(getLifecycleScope(), stationSearchViewModel.getTimetableCollectorFactory());
     }
 
     private LifecycleCoroutineScope getLifecycleScope() {
