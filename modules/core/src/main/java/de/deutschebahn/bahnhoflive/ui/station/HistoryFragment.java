@@ -53,7 +53,17 @@ public class HistoryFragment extends Fragment implements MapPresetProvider {
     }
 
     public void initialize(Activity activity) {
-        if (getChildFragmentManager().findFragmentById(getId()) == null) {
+//        if (getChildFragmentManager().findFragmentById(getId()) == null) {
+//            final RootProvider rootProvider = (RootProvider) activity;
+//            setRootFragment(rootProvider.createRootFragment(this));
+//        }
+        final FragmentManager childFragmentManager = getChildFragmentManager();
+        Fragment fragment = childFragmentManager.findFragmentById(getId());
+
+        if (fragment != null) {
+            replaceRootFragment(fragment);
+        }
+        else {
             final RootProvider rootProvider = (RootProvider) activity;
             setRootFragment(rootProvider.createRootFragment(this));
         }
@@ -139,6 +149,12 @@ public class HistoryFragment extends Fragment implements MapPresetProvider {
     private void setRootFragment(Fragment fragment) {
         getChildFragmentManager().beginTransaction()
                 .add(getId(), fragment, "root")
+                .commit();
+    }
+
+    private void replaceRootFragment(Fragment fragment) {
+        getChildFragmentManager().beginTransaction()
+                .replace(getId(), fragment, "root")
                 .commit();
     }
 
