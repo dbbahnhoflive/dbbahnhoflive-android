@@ -8,7 +8,6 @@ package de.deutschebahn.bahnhoflive.ui.station
 import android.app.AlertDialog
 import android.content.DialogInterface
 import android.content.Intent
-import android.content.Intent.getIntent
 import android.os.Bundle
 import android.provider.Settings
 import android.util.Log
@@ -21,13 +20,13 @@ import de.deutschebahn.bahnhoflive.R
 import de.deutschebahn.bahnhoflive.analytics.TrackingManager
 import de.deutschebahn.bahnhoflive.analytics.TrackingManager.Companion.fromActivity
 import de.deutschebahn.bahnhoflive.push.FacilityPushManager.Companion.isPushEnabled
+import de.deutschebahn.bahnhoflive.push.NotificationChannelManager
 import de.deutschebahn.bahnhoflive.repository.InternalStation
 import de.deutschebahn.bahnhoflive.tutorial.TutorialManager
 import de.deutschebahn.bahnhoflive.tutorial.TutorialPreferenceStore
 import de.deutschebahn.bahnhoflive.ui.RecyclerFragment
 import de.deutschebahn.bahnhoflive.ui.hub.StationImageResolver
 import de.deutschebahn.bahnhoflive.util.DebugX.Companion.logBundle
-import de.deutschebahn.bahnhoflive.util.DebugX.Companion.logIntent
 import de.deutschebahn.bahnhoflive.view.CompoundButtonChecker
 import de.deutschebahn.bahnhoflive.view.SectionAdapter
 import de.deutschebahn.bahnhoflive.view.SelectableItemViewHolder
@@ -196,63 +195,11 @@ class SettingsFragment : RecyclerFragment<SectionAdapter<*>?>(R.layout.fragment_
             toggleView.isChecked = isPushEnabled(itemView.context)
         }
 
-//        @RequiresApi(Build.VERSION_CODES.O)
         override fun onCheckedChanged(
             buttonView: CompoundButton,
             isChecked: Boolean
         ) { // toggleView
-
-                val intent = Intent(Settings.ACTION_APP_NOTIFICATION_SETTINGS).apply {
-                    putExtra(Settings.EXTRA_APP_PACKAGE, BaseApplication.get().packageName) // general push-settings
-//                    putExtra(Settings.EXTRA_CHANNEL_ID, "arrival") // special push-settings
-                }
-
-                if(!isChecked) {
-
-                    val alertDialog: AlertDialog = AlertDialog.Builder(
-                        activity
-                    )
-                        .setTitle("Hinweis")
-                        .setMessage("Die App wird beendet und es wird zu den Systemeinstellungen gewechselt. Wollen Sie das ?")
-                        .setCancelable(true)
-                        .setPositiveButton(
-                            R.string.dlg_yes,
-                            object : DialogInterface.OnClickListener {
-                                override fun onClick(dialog: DialogInterface, which: Int) {
-                                    dialog.dismiss()
-                                    startActivity(intent)
-                                    activity?.finish()
-                                    exitProcess(0)
-                                }
-                            }).setNeutralButton(
-                            R.string.dlg_no,
-                            object : DialogInterface.OnClickListener {
-                                override fun onClick(dialog: DialogInterface, which: Int) {
-                                    toggleView.isChecked=true
-                                    dialog.dismiss()
-                                }
-                            })
-//                        .setNegativeButton(
-//                            R.string.dlg_cancel,
-//                            object : DialogInterface.OnClickListener {
-//                                override fun onClick(dialog: DialogInterface, which: Int) {
-//                                    dialog.dismiss()
-//                                }
-//                            })
-                        .setOnCancelListener(object : DialogInterface.OnCancelListener {
-                            override fun onCancel(dialog: DialogInterface) {
-                                dialog.dismiss()
-                            }
-                        })
-                        .create()
-
-                    alertDialog.show()
-
-                }
-                 else
-                    startActivity(intent)
-
-
+            context?.let { NotificationChannelManager.showNotificationSettingsDialog(it) }
         }
     }
 

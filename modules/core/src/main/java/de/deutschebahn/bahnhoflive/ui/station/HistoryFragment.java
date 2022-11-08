@@ -9,6 +9,7 @@ package de.deutschebahn.bahnhoflive.ui.station;
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -18,6 +19,8 @@ import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
+
+import java.util.Objects;
 
 import de.deutschebahn.bahnhoflive.R;
 import de.deutschebahn.bahnhoflive.ui.map.MapPresetProvider;
@@ -59,12 +62,37 @@ public class HistoryFragment extends Fragment implements MapPresetProvider {
 //        }
         final FragmentManager childFragmentManager = getChildFragmentManager();
         Fragment fragment = childFragmentManager.findFragmentById(getId());
+        final RootProvider rootProvider = (RootProvider) activity;
 
         if (fragment != null) {
-            replaceRootFragment(fragment);
+            Log.d("cr", "HistoryFragment.initialize() fragment!=null");
+//            removeFragment(fragment);
+//            setRootFragment(rootProvider.createRootFragment(this));
+
+            String tg = fragment.getTag();
+
+
+            if(Objects.equals(tg, "root")) {
+            removeFragment(fragment);
+            setRootFragment(rootProvider.createRootFragment(this));
+
+            }
+            else {
+                removeFragment(fragment);
+                getChildFragmentManager().beginTransaction()
+                        .add(getId(), fragment, tg)
+                        .commit();
+
+//                childFragmentManager.beginTransaction()
+//                        .replace(getId(), fragment, tg)
+//                        .commit();
+            }
+//            replaceRootFragment(fragment);
+
+
         }
         else {
-            final RootProvider rootProvider = (RootProvider) activity;
+            Log.d("cr", "HistoryFragment.initialize() fragment=null");
             setRootFragment(rootProvider.createRootFragment(this));
         }
     }
@@ -155,6 +183,12 @@ public class HistoryFragment extends Fragment implements MapPresetProvider {
     private void replaceRootFragment(Fragment fragment) {
         getChildFragmentManager().beginTransaction()
                 .replace(getId(), fragment, "root")
+                .commit();
+    }
+
+    private void removeFragment(Fragment fragment) {
+        getChildFragmentManager().beginTransaction()
+                .remove(fragment)
                 .commit();
     }
 
