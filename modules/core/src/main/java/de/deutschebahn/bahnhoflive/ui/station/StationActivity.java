@@ -483,6 +483,11 @@ public class StationActivity extends AppCompatActivity implements
     }
 
     @Override
+    public void showMobilityServiceNumbers() {
+        stationViewModel.navigateToInfo(ServiceContentType.MOBILITY_SERVICE);
+    }
+
+    @Override
     public Station getStation() {
         return station;
     }
