@@ -6,7 +6,7 @@
 			"type": "db_information"
 		},
 		{
-			"descriptionText": "<p>Auf dem Bahnhof stehen Ihnen unsere mobilen Service-Mitarbeiter mit Rat und Tat zur Seite.<br>Achten Sie auf die rote Mütze mit der Aufschrift \"Service\".</p>",
+			"descriptionText": "<p>Auf dem Bahnhof stehen Ihnen unsere mobilen Service-Mitarbeiter mit Rat und Tat zur Seite.<br>Die mobilen Service-Mitarbeitenden unterstützen Sie mit aktuellen Informationen und beantworten Ihnen Fragen auf Ihrer Reise. Bei Abweichungen, wie beispielsweise Verspätungen, erhalten Sie Reisealternativen und weiterführende Details.<br>Darüber hinaus unterstützt der mobile Service mobilitätseingeschränkte Reisende beim Ein-, Um- oder Aussteigen. Hierzu erhalten sie weitere Informationen unter <a href=\"showServiceNrMobi\">Mobilitätsservice</a>.<br></p>",
 			"title": "Mobiler Service",
 			"type": "mobiler_service"
 		},

@@ -494,6 +494,11 @@ public class StationActivity extends BaseActivity implements
     }
 
     @Override
+    public void showMobilityServiceNumbers() {
+        stationViewModel.navigateToInfo(ServiceContentType.MOBILITY_SERVICE);
+    }
+
+    @Override
     public Station getStation() {
         return station;
     }

@@ -24,6 +24,7 @@ import de.deutschebahn.bahnhoflive.ui.map.content.MapIntent
 import de.deutschebahn.bahnhoflive.ui.station.CommonDetailsCardViewHolder
 import de.deutschebahn.bahnhoflive.ui.station.ServiceContents
 import de.deutschebahn.bahnhoflive.util.PhoneIntent
+import de.deutschebahn.bahnhoflive.util.handleUrlClicks
 import de.deutschebahn.bahnhoflive.view.SingleSelectionManager
 import de.deutschebahn.bahnhoflive.view.inflater
 import java.text.SimpleDateFormat
@@ -169,6 +170,15 @@ open class ServiceContentViewHolder(
                             )
                         }
 
+                }
+            }
+
+            ServiceContentType.MOBILE_SERVICE -> {
+                val partTextView = addHtmlPart(item.descriptionText)
+                partTextView.handleUrlClicks { url ->
+                    if(url == "showServiceNrMobi") {
+                        dbActionButtonCallback(DbActionButton(DbActionButton.Type.ACTION, url))
+                    }
                 }
             }
 
@@ -323,8 +333,8 @@ open class ServiceContentViewHolder(
         }
     }
 
-    private fun addHtmlPart(htmlString: String) {
-        addTextPart(htmlString.spannedHtml())
+    private fun addHtmlPart(htmlString: String) : TextView {
+        return addTextPart(htmlString.spannedHtml())
     }
 
     private fun String.spannedHtml() = Html.fromHtml(this)
@@ -349,7 +359,7 @@ open class ServiceContentViewHolder(
         textView.contentDescription = contentDescription
     }
 
-    private fun addTextPart(description: CharSequence) {
+    private fun addTextPart(description: CharSequence) : TextView {
         val partTextView = addPartView(R.layout.include_description_text_part)
         partTextView.movementMethod = LinkMovementMethod.getInstance()
         partTextView.text = description
@@ -358,6 +368,7 @@ open class ServiceContentViewHolder(
             " bis 24 Uhr"
         )
             .replace("◾", "/")
+        return partTextView
     }
 
     private fun addPartView(@LayoutRes layout: Int): TextView {
