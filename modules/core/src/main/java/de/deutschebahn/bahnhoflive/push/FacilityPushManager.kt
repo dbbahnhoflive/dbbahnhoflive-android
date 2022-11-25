@@ -45,13 +45,13 @@ class FacilityPushManager private constructor() {
     }
 
     fun subscribeOrUnsubscribePushMessage(context: Context, facilityStatus: FacilityStatus, subscribe : Boolean) {
-        PrefUtil.setFacilityPushEnabled(context, facilityStatus, subscribe)
 
         if(subscribe)
             subscribePushMessage(context, facilityStatus.equipmentNumber)
         else
             unsubscribePushMessage(context, facilityStatus.equipmentNumber)
 
+        PrefUtil.setFacilityPushEnabled(context, facilityStatus, subscribe)
     }
 
     fun subscribePushMessage(context: Context, equipmentNumber: Int) {

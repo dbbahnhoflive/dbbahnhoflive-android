@@ -17,6 +17,7 @@ import com.google.firebase.messaging.RemoteMessage
 import de.deutschebahn.bahnhoflive.BaseApplication.Companion.get
 import de.deutschebahn.bahnhoflive.R
 import de.deutschebahn.bahnhoflive.ui.hub.HubActivity
+import de.deutschebahn.bahnhoflive.util.PrefUtil
 import org.json.JSONObject
 
 
@@ -183,7 +184,24 @@ class FacilityFirebaseService : FirebaseMessagingService() {
                 val msg: String = json.getString("message")
                 val properties = json.getJSONObject("properties")
 
-                sendNotification(properties, msg)
+                try {
+                    val equipmentNumber = properties.getString("facilityEquipmentNumber")
+
+                    Log.d("cr", "notification: " + equipmentNumber)
+
+                    if (PrefUtil.getFacilityPushEnabled(
+                            this.applicationContext,
+                            equipmentNumber.toInt()
+                        )
+                    ) {
+                        sendNotification(properties, msg)
+                    }
+
+                }
+                catch(e : Exception) {
+                    Log.d("cr", e.message.toString())
+                }
+
 
             } catch (e: Exception) {
                 e.message?.let { Log.d("cr", it) }
