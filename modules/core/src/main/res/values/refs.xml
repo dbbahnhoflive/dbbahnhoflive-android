@@ -97,9 +97,6 @@
     <drawable name="app_website_corrected">@drawable/missing</drawable>
     <drawable name="menuicon_wagenstandsanzeiger">@drawable/missing</drawable>
     <drawable name="rimap_bahnhofsmission">@drawable/missing</drawable>
-    <drawable name="mek_landscape">@drawable/missing</drawable>
-    <drawable name="mek_square">@drawable/missing</drawable>
-    <drawable name="app_pickpack">@drawable/missing</drawable>
     <drawable name="live_parkplatz">@drawable/missing</drawable>
     <drawable name="blurred_hintergrund">@drawable/missing</drawable>
     <drawable name="app_pfeil_oben">@drawable/missing</drawable>

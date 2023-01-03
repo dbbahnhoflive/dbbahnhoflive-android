@@ -27,7 +27,7 @@
 		},
 
 		{
-			"descriptionText": "<p>An diesem Bahnhof bieten wir Ihnen kostenloses WLAN an. Damit können Sie mit dem Smartphone oder Laptop surfen, E-Mails bearbeiten und vieles mehr.</p><p>Informationen zu den verschiedenen WLAN-Angeboten an unseren Bahnhöfen finden Sie <a href=\"https://www.bahnhof.de/bahnhof-de/service/WLAN-519242\">hier</a></p>",
+			"descriptionText": "<p>An diesem Bahnhof bieten wir Ihnen kostenloses WLAN an. Damit können Sie mit dem Smartphone oder Laptop surfen, E-Mails bearbeiten und vieles mehr.</p><p>Informationen zu den verschiedenen WLAN-Angeboten an unseren Bahnhöfen finden Sie <a href=\"https://www.bahnhof.de/bahnhof-de/service/wlan\">hier</a></p>",
 			"title": "WLAN",
 			"type": "wlan"
 		},

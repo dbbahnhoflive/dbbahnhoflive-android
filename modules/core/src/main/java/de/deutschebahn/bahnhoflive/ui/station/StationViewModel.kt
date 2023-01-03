@@ -22,7 +22,6 @@ import de.deutschebahn.bahnhoflive.backend.VolleyRestListener
 import de.deutschebahn.bahnhoflive.backend.db.newsapi.GroupId
 import de.deutschebahn.bahnhoflive.backend.db.newsapi.model.News
 import de.deutschebahn.bahnhoflive.backend.db.ris.model.Platform
-import de.deutschebahn.bahnhoflive.backend.einkaufsbahnhof.model.StationList
 import de.deutschebahn.bahnhoflive.backend.hafas.model.ProductCategory
 import de.deutschebahn.bahnhoflive.backend.local.model.EvaIds
 import de.deutschebahn.bahnhoflive.backend.local.model.ServiceContentType
@@ -277,30 +276,6 @@ class StationViewModel(
                         this.postValue(null)
                     }
                 }
-            }
-        }
-    }
-
-    val einkaufsbahnhofListLiveData = object : MutableLiveData<StationList>() {
-        private val token = Token()
-
-        override fun onActive() {
-            super.onActive()
-
-            if (token.take()) {
-                this@StationViewModel.application.repositories.einkaufsbahnhofRepository.queryStations(
-                    true,
-                    object : VolleyRestListener<StationList?> {
-                        override fun onSuccess(payload: StationList?) {
-                            value = payload
-                        }
-
-                        override fun onFail(reason: VolleyError) {
-                            reason?.run {
-                                Log.w(StationViewModel::class.java.simpleName, message, this)
-                            }
-                        }
-                    })
             }
         }
     }
@@ -1299,20 +1274,11 @@ class StationViewModel(
         it?.isEco ?: false
     }
 
-    val einkaufsbahnhofLiveData = Transformations.switchMap(stationResource.data) { station ->
-        Transformations.map(einkaufsbahnhofListLiveData) { stationList ->
-            stationList.stations.firstOrNull { mekStation ->
-                mekStation.id.toString() == station.id
-            }
-        }
-    }
-
     private val stationIdLiveData = Transformations.distinctUntilChanged(
         Transformations.map(stationResource.data) { station ->
             station.id
         }
     )
-
 
     val newsLiveData = Transformations.switchMap(refreshLiveData) { force ->
         Transformations.switchMap(stationIdLiveData) { stationId ->

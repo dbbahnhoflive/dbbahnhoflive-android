@@ -12,7 +12,6 @@ import de.deutschebahn.bahnhoflive.repository.elevator.ElevatorStatusRepository
 import de.deutschebahn.bahnhoflive.repository.localtransport.LocalTransportRepository
 import de.deutschebahn.bahnhoflive.repository.locker.LockerRepository
 import de.deutschebahn.bahnhoflive.repository.map.MapRepository
-import de.deutschebahn.bahnhoflive.repository.misc.EinkaufsbahnhofRepository
 import de.deutschebahn.bahnhoflive.repository.news.NewsRepository
 import de.deutschebahn.bahnhoflive.repository.occupancy.OccupancyRepository
 import de.deutschebahn.bahnhoflive.repository.parking.ParkingRepository
@@ -27,7 +26,6 @@ data class RepositoryHolder(
     val elevatorStatusRepository: ElevatorStatusRepository = ElevatorStatusRepository(),
     val wagonOrderRepository: WagonOrderRepository = WagonOrderRepository(),
     val timetableRepository: TimetableRepository = TimetableRepository(),
-    val einkaufsbahnhofRepository: EinkaufsbahnhofRepository = EinkaufsbahnhofRepository(),
     val mapRepository: MapRepository = MapRepository(),
     val parkingRepository: ParkingRepository = ParkingRepository(),
     val occupancyRepository: OccupancyRepository = OccupancyRepository(),
