@@ -89,7 +89,7 @@ abstract class BaseApplication(
                 throw java.lang.RuntimeException(e)
             }
 
-            FacilityFirebaseService.debugPrintFirebaseToken()
+            //FacilityFirebaseService.debugPrintFirebaseToken()
 
             // todo !!!!!!!!! cr:test
 //            if (FacilityPushManager.isPushEnabled(this)) {
