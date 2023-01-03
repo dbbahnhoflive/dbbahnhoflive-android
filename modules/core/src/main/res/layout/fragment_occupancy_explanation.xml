@@ -104,32 +104,6 @@
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="@dimen/occupancy_paragraph_space" />
 
-            <TextView
-                android:text="@string/occupancy_additional_info_title"
-                android:lineSpacingMultiplier="1.2"
-                android:textStyle="bold"
-                android:layout_marginBottom="@dimen/occupancy_headline_space"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content" />
-
-            <TextView
-                android:text="@string/occupancy_additional_info_copy"
-                android:lineSpacingMultiplier="1.2"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginBottom="@dimen/occupancy_button_space" />
-
-            <TextView
-                android:id="@+id/btnExternalLink"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:background="@drawable/shape_round_button_grey"
-                android:gravity="center"
-                android:minHeight="64dp"
-                android:textColor="@color/white"
-                android:textStyle="bold"
-                android:text="@string/occupancy_external_link_button" />
-
         </LinearLayout>
     </androidx.core.widget.NestedScrollView>
 

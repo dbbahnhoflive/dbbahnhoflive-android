@@ -19,13 +19,5 @@ class OccupancyExplanationFragment : FullBottomSheetDialogFragment() {
             dismiss()
         }
 
-        btnExternalLink.setOnClickListener {
-            it.context.startActivity(
-                Intent(
-                    Intent.ACTION_VIEW,
-                    Uri.parse("https://gemeinsamgehtdas.de")
-                )
-            )
-        }
     }.root
 }
