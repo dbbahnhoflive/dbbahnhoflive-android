@@ -1,14 +1,7 @@
 package de.deutschebahn.bahnhoflive
 
-import android.Manifest
-import android.annotation.SuppressLint
-import android.content.DialogInterface
-import android.content.pm.PackageManager
-import android.os.Bundle
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AppCompatActivity
-import androidx.core.app.ActivityCompat
-import androidx.core.content.ContextCompat
 
 
 open class BaseActivity : AppCompatActivity() {

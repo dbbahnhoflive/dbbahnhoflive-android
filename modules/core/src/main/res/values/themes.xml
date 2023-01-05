@@ -35,11 +35,14 @@
 
         <item name="elevation">6dp</item>
 
+        <item name="android:windowIsTranslucent">true</item>
     </style>
 
     <style name="App.Theme.Base" parent="App.Theme.Core" />
 
-    <style name="App.Theme" parent="App.Theme.Base"/>
+    <style name="App.Theme" parent="App.Theme.Base">
+<!--    <item name="android:windowIsTranslucent">true</item>-->
+    </style>
 
     <style name="App.Theme.Inverse">
         <item name="android:colorForeground">@color/white</item>
@@ -48,6 +51,23 @@
         <item name="android:textColorSecondary">@color/white</item>
         <item name="android:colorBackground">@color/anthracite</item>
         <item name="colorUncheckedFavorite">?android:attr/textColor</item>
+    </style>
+
+    <style name="Theme.App.Starting" parent="Theme.SplashScreen">
+        <!-- Set the splash screen background, animated icon, and animation duration. -->
+        <item name="windowSplashScreenBackground">#FF0000</item>
+<!--        <item name="windowSplashScreenAnimatedIcon">@mipmap/ic_splash_launcher</item>-->
+<!--        <item name="windowSplashScreenAnimatedIcon">@mipmap/ic_launcher</item>-->
+        <!-- Use windowSplashScreenAnimatedIcon to add either a drawable or an
+             animated drawable. One of these is required. -->
+<!--        <item name="windowSplashScreenAnimatedIcon">@drawable/...</item>-->
+        <!-- Required for animated icons -->
+<!--        <item name="windowSplashScreenAnimationDuration">200</item>-->
+
+        <!-- Set the theme of the Activity that directly follows your splash screen. -->
+        <!-- Required -->
+        <item name="postSplashScreenTheme">@style/App.Theme</item>
+
     </style>
 
 </resources>
