@@ -6,38 +6,43 @@
 
 package de.deutschebahn.bahnhoflive.ui.timetable.localtransport
 
+import android.view.View
 import android.view.ViewGroup
 import android.widget.ViewSwitcher
 import de.deutschebahn.bahnhoflive.R
+import de.deutschebahn.bahnhoflive.ui.ViewHolder
+import de.deutschebahn.bahnhoflive.ui.station.HistoryFragment
 import de.deutschebahn.bahnhoflive.ui.timetable.RouteStop
 import de.deutschebahn.bahnhoflive.ui.timetable.RouteStopsAdapter
-import de.deutschebahn.bahnhoflive.view.SelectableItemViewHolder
+import de.deutschebahn.bahnhoflive.ui.timetable.journey.JourneyFragment
 import de.deutschebahn.bahnhoflive.view.SingleSelectionManager
 
 internal class HafasEventViewHolder(
     parent: ViewGroup,
+    hafasDetailsClickEvent : (View, DetailedHafasEvent)->Unit,
+    hafasDataReceivedEvent : (View, DetailedHafasEvent)->Unit,
     singleSelectionManager: SingleSelectionManager
-) : SelectableItemViewHolder<DetailedHafasEvent>(
-    parent,
-    R.layout.card_expandable_hafas_event,
-    singleSelectionManager
-), DetailedHafasEvent.Listener {
+)
+    : ViewHolder<DetailedHafasEvent>(parent,R.layout.card_expandable_hafas_event )
+    , DetailedHafasEvent.Listener {
+
+    private val onHafasDetailsClickEvent :  (View, DetailedHafasEvent)->Unit = hafasDetailsClickEvent
+    private val onHafasDataReceivedEvent :  (View, DetailedHafasEvent)->Unit = hafasDataReceivedEvent
 
     private val overviewViewHolder: HafasEventOverviewViewHolder =
         HafasEventOverviewViewHolder(this@HafasEventViewHolder.itemView.findViewById(R.id.overview))
-    private val switcher: ViewSwitcher = itemView.findViewById(R.id.details)
     private val adapter: RouteStopsAdapter = RouteStopsAdapter()
-    private val recyclerView: androidx.recyclerview.widget.RecyclerView = itemView.findViewById(R.id.stops_recycler)
-
-    init {
-        recyclerView.adapter = adapter
-    }
 
     override fun onBind(item: DetailedHafasEvent) {
         super.onBind(item)
         overviewViewHolder.bind(item.hafasEvent)
         bindStops(item)
         item.setListener(this)
+        overviewViewHolder.itemView.setOnClickListener {
+
+            onHafasDetailsClickEvent(it, item)
+
+        }
     }
 
     override fun onUnbind(item: DetailedHafasEvent) {
@@ -47,18 +52,16 @@ internal class HafasEventViewHolder(
 
     override fun onDetailUpdated(detailedHafasEvent: DetailedHafasEvent) {
         if (detailedHafasEvent === item) {
-            bindStops(detailedHafasEvent)
+            onHafasDataReceivedEvent(itemView,detailedHafasEvent)
         }
     }
 
     private fun bindStops(detailedHafasEvent: DetailedHafasEvent) {
         val hafasDetail = detailedHafasEvent.hafasDetail
         if (hafasDetail == null) {
-            switcher.displayedChild = 0
             adapter.setRouteStops(null)
             itemView.contentDescription = null
         } else {
-            switcher.displayedChild = 1
 
             val routeStops = ArrayList<RouteStop>()
 
@@ -76,17 +79,7 @@ internal class HafasEventViewHolder(
 
             adapter.setRouteStops(routeStops)
 
-            with(itemView.resources) {
-                itemView.contentDescription = if (isSelected)
-                    getString(R.string.sr_template_local_departure_prefix,
-                        detailedHafasEvent.hafasEvent.displayName, detailedHafasEvent.hafasEvent.direction,
-                        routeStops.filterNot {
-                            it.isFirst || it.isCurrent || it.isLast
-                        }.takeUnless { it.isEmpty() }?.run {
-                            getString(R.string.sr_template_local_departure_stops, joinToString(separator = ". ") { it.name.replace("/", " ") })
-                        } ?: "")
-                else null
-            }
+            onHafasDataReceivedEvent(itemView,detailedHafasEvent)
 
         }
     }

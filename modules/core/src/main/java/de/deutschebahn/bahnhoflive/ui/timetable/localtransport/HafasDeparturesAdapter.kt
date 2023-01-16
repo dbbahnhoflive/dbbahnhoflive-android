@@ -25,7 +25,8 @@ import java.util.*
 class HafasDeparturesAdapter(
     private val onFilterClickListener: View.OnClickListener,
     trackingManager: TrackingManager,
-    private val loadMoreCallback: View.OnClickListener
+    private val loadMoreCallback: View.OnClickListener,
+    private val hafasDataReceivedCallback : (view:View, item:DetailedHafasEvent)->Unit
 ) : androidx.recyclerview.widget.RecyclerView.Adapter<ViewHolder<out Any>>() {
 
     private val singleSelectionManager = SingleSelectionManager(this)
@@ -56,7 +57,14 @@ class HafasDeparturesAdapter(
         when (viewType) {
             VIEW_TYPE_HEADER -> HeaderViewHolder(parent)
             VIEW_TYPE_FOOTER -> TimetableTrailingItemViewHolder(parent, loadMoreCallback)
-            else -> HafasEventViewHolder(parent, singleSelectionManager)
+            else -> HafasEventViewHolder(parent, hafasDetailsClickEvent = { view,details ->
+                run {
+                    details.requestDetails()
+                }
+            }, hafasDataReceivedEvent = { view,details -> run {
+                hafasDataReceivedCallback(view,details)
+            }}
+                , singleSelectionManager)
         }
 
     private var filterSummary: FilterSummary? = null
