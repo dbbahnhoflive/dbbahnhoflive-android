@@ -12,6 +12,7 @@ import android.widget.TextView;
 
 import androidx.recyclerview.widget.RecyclerView;
 
+import java.util.Collections;
 import java.util.List;
 
 import de.deutschebahn.bahnhoflive.R;
@@ -39,6 +40,8 @@ class FavoritesAdapter extends RecyclerView.Adapter<ViewHolder<StationWrapper>> 
         this.evaIdsProvider = evaIdsProvider;
         this.stationWrapper = find(stations, station, stationImageResolver, favoriteStationsStore);
         stations.remove(this.stationWrapper);
+
+        Collections.sort(stations, (station1, station2) -> station1.getWrappedStation().getTitle().compareToIgnoreCase(station2.getWrappedStation().getTitle()));
 
         this.selectionManager = selectionManager;
     }
