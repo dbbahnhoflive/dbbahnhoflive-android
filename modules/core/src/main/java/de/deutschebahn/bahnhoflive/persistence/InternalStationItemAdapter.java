@@ -30,7 +30,7 @@ public class InternalStationItemAdapter implements FavoriteStationsStore.ItemAda
 
     @Override
     public StationWrapper createStationWrapper(InternalStation station, long timestamp, FavoriteStationsStore<InternalStation> favoriteStationsStore) {
-        return new DbStationWrapper(station, favoriteStationsStore, timestamp);
+        return new DbStationWrapper(station, favoriteStationsStore, timestamp, null); // #cr
     }
 
 }

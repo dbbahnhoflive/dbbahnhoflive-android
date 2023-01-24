@@ -30,7 +30,7 @@ class TimetableCollector(
         evaIdsFlow,
         coroutineScope,
         timetableRepository::fetchTimetableHour,
-        timetableRepository::fetchTimetableCahnges,
+        timetableRepository::fetchTimetableChanges,
         currentHourProvider,
         defaultDispatcher
     )
@@ -158,6 +158,12 @@ class TimetableCollector(
 
                     yield()
 
+                    val allStationsHaveErrors =
+                        changesResults.all { it.error != null } && initialsResults.all { it.isFailure }
+
+                    if (allStationsHaveErrors)
+                        timetableStateFlow.value = null
+                    else
                     timetableStateFlow.value = Timetable(
                         mergedTrainInfos.values.toList(),
                         (parameters.firstHourInMillis / hourInMillis + parameters.hourCount) * hourInMillis,

@@ -9,6 +9,7 @@ package de.deutschebahn.bahnhoflive.ui;
 import androidx.annotation.NonNull;
 
 import de.deutschebahn.bahnhoflive.persistence.FavoriteStationsStore;
+import de.deutschebahn.bahnhoflive.repository.EvaIdsProviderKt;
 import de.deutschebahn.bahnhoflive.repository.InternalStation;
 import de.deutschebahn.bahnhoflive.ui.search.StoredStationSearchResult;
 import kotlinx.coroutines.CoroutineScope;
@@ -18,7 +19,7 @@ public class DbStationWrapper extends StoredStationSearchResult implements Stati
     private final long timestamp;
 
     public DbStationWrapper(InternalStation station, FavoriteStationsStore<InternalStation> favoriteStationsStore, long timestamp, CoroutineScope coroutineScope) {
-        super(station, null, favoriteStationsStore, evaIdsProvider);
+        super(station, null, favoriteStationsStore, null); // evaIdsProvider); #cr
         this.timestamp = timestamp;
     }
 

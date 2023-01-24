@@ -117,7 +117,23 @@ public class StationActivity extends AppCompatActivity implements
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        final ViewModelProvider viewModelProvider = new ViewModelProvider(this, new ViewModelProvider.AndroidViewModelFactory(getApplication()) {
+//        final ViewModelProvider viewModelProvider = new ViewModelProvider(this, new ViewModelProvider.AndroidViewModelFactory(getApplication()) {
+//            @NonNull
+//            @Override
+//            public <T extends ViewModel> T create(@NonNull Class<T> modelClass) {
+//                if (modelClass == LocalTransportViewModel.class) {
+//                    return (T) stationViewModel.getLocalTransportViewModel();
+//                }
+//                if (modelClass == HafasTimetableViewModel.class) {
+//                    return (T) stationViewModel.getHafasTimetableViewModel();
+//                }
+//                return super.create(modelClass);
+//            }
+//        });
+
+
+// #cr
+        ViewModelProvider.AndroidViewModelFactory fac = new ViewModelProvider.AndroidViewModelFactory(getApplication()) {
             @NonNull
             @Override
             public <T extends ViewModel> T create(@NonNull Class<T> modelClass) {
@@ -129,7 +145,11 @@ public class StationActivity extends AppCompatActivity implements
                 }
                 return super.create(modelClass);
             }
-        });
+        };
+
+        final ViewModelProvider viewModelProvider = new ViewModelProvider(this, (ViewModelProvider.Factory) fac); // #cr
+
+
         stationViewModel = viewModelProvider.get(StationViewModel.class);
         stationViewModel.setStationNavigation(this);
 

@@ -92,6 +92,13 @@ open class RisTimetableRepository(
         )
     }
 
+    override suspend fun fetchTimetableHour(evaId: String, hour: Long): TimetableHour {
+        return TimetableHour(hour,evaId, emptyList())
+    }
+    override suspend fun fetchTimetableChanges(evaId: String): TimetableChanges {
+        return TimetableChanges(evaId, emptyList())
+    }
+
     inner class JourneyDetailsFetcher(
         val listener: VolleyRestListener<List<JourneyStop>>,
         private val evaIds: EvaIds,

@@ -337,7 +337,7 @@ class StationViewModel(
         timetableRepository.fetchTimetableHour(evaId, hour)
 
     private suspend fun getTimetableChanges(evaId: String) =
-        timetableRepository.fetchTimetableCahnges(evaId)
+        timetableRepository.fetchTimetableChanges(evaId)
 
     private val evaIdsDataObserver = Observer<Station> { station ->
         if (station != null) {

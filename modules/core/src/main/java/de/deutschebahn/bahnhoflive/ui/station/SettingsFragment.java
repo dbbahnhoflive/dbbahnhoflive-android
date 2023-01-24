@@ -46,7 +46,10 @@ public class SettingsFragment extends RecyclerFragment<SectionAdapter> {
             final SingleSelectionManager selectionManager = new SingleSelectionManager(null);
 
             final FavoritesAdapter favoritesAdapter = new FavoritesAdapter(InternalStation.of(station),
-                    BaseApplication.get().getApplicationServices().getFavoriteDbStationStore(), selectionManager, new StationImageResolver(getActivity()), BaseApplication.get().getApplicationServices().getEvaIdsProvider(), LifecycleOwnerKt.getLifecycleScope(this));
+                    BaseApplication.get().getApplicationServices().getFavoriteDbStationStore(), selectionManager, new StationImageResolver(getActivity()),
+                    null, // BaseApplication.get().getApplicationServices().getEvaIdsProvider(), // #cr
+                    LifecycleOwnerKt.getLifecycleScope(this));
+
             final TutorialAdapter tutorialAdapter = new TutorialAdapter(selectionManager);
 
             final SectionAdapter adapter = new SectionAdapter(

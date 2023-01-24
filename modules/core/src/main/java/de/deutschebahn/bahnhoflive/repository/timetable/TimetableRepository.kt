@@ -36,6 +36,6 @@ open class TimetableRepository {
     open suspend fun fetchTimetableHour(evaId: String, hour: Long): TimetableHour =
         throw NotImplementedError()
 
-    open suspend fun fetchTimetableCahnges(evaId: String): TimetableChanges =
+    open suspend fun fetchTimetableChanges(evaId: String): TimetableChanges =
         throw NotImplementedError()
 }

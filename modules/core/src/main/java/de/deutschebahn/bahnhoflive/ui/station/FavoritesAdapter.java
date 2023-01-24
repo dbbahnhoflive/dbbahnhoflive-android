@@ -16,7 +16,6 @@ import java.util.List;
 
 import de.deutschebahn.bahnhoflive.R;
 import de.deutschebahn.bahnhoflive.persistence.FavoriteStationsStore;
-import de.deutschebahn.bahnhoflive.repository.EvaIdsProvider;
 import de.deutschebahn.bahnhoflive.repository.EvaIdsProviderKt;
 import de.deutschebahn.bahnhoflive.repository.InternalStation;
 import de.deutschebahn.bahnhoflive.ui.DbStationWrapper;
@@ -37,7 +36,9 @@ class FavoritesAdapter extends RecyclerView.Adapter<ViewHolder<StationWrapper>> 
 
     private final SingleSelectionManager selectionManager;
 
-    public FavoritesAdapter(InternalStation station, FavoriteStationsStore<InternalStation> favoriteStationsStore, SingleSelectionManager selectionManager, StationImageResolver stationImageResolver, EvaIdsProvider evaIdsProvider, CoroutineScope coroutineScope) {
+    public FavoritesAdapter(InternalStation station, FavoriteStationsStore<InternalStation> favoriteStationsStore,
+                            SingleSelectionManager selectionManager, StationImageResolver stationImageResolver,
+                            EvaIdsProviderKt evaIdsProvider, CoroutineScope coroutineScope) {
         stations = favoriteStationsStore.getAll();
         this.evaIdsProvider = evaIdsProvider;
         this.coroutineScope = coroutineScope;
@@ -54,7 +55,8 @@ class FavoritesAdapter extends RecyclerView.Adapter<ViewHolder<StationWrapper>> 
             }
         }
 
-        return new DbStationWrapper(station, favoriteStationsStore, 0, evaIdsProvider, coroutineScope);
+//        return new DbStationWrapper(station, favoriteStationsStore, 0, evaIdsProvider, coroutineScope);
+        return new DbStationWrapper(station, favoriteStationsStore, 0, coroutineScope); // #cr
     }
 
     @Override
