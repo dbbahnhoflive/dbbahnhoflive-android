@@ -19,8 +19,8 @@ import de.deutschebahn.bahnhoflive.analytics.TrackingDelegate
 import de.deutschebahn.bahnhoflive.analytics.TrackingHttpStack
 import de.deutschebahn.bahnhoflive.backend.*
 import de.deutschebahn.bahnhoflive.backend.db.MultiHeaderDbAuthorizationTool
-import de.deutschebahn.bahnhoflive.push.FacilityPushManager
-import de.deutschebahn.bahnhoflive.push.FacilityFirebaseService
+//import de.deutschebahn.bahnhoflive.push.FacilityPushManager
+//import de.deutschebahn.bahnhoflive.push.FacilityFirebaseService
 import de.deutschebahn.bahnhoflive.push.createNotificationChannels
 import de.deutschebahn.bahnhoflive.repository.ApplicationServices
 import de.deutschebahn.bahnhoflive.repository.RepositoryHolder
@@ -89,7 +89,7 @@ abstract class BaseApplication(
                 throw java.lang.RuntimeException(e)
             }
 
-            FacilityFirebaseService.debugPrintFirebaseToken()
+//            FacilityFirebaseService.debugPrintFirebaseToken()
 
             // todo !!!!!!!!! cr:test
 //            if (FacilityPushManager.isPushEnabled(this)) {

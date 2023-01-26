@@ -32,7 +32,7 @@ import de.deutschebahn.bahnhoflive.R;
 import de.deutschebahn.bahnhoflive.analytics.IssueTracker;
 import de.deutschebahn.bahnhoflive.analytics.TrackingManager;
 import de.deutschebahn.bahnhoflive.permission.Permission;
-import de.deutschebahn.bahnhoflive.push.FacilityFirebaseService;
+//import de.deutschebahn.bahnhoflive.push.FacilityFirebaseService;
 import de.deutschebahn.bahnhoflive.repository.Station;
 import de.deutschebahn.bahnhoflive.ui.search.SearchResultResource;
 import de.deutschebahn.bahnhoflive.ui.search.StationSearchViewModel;
@@ -50,7 +50,7 @@ public class HubActivity extends BaseActivity implements TutorialFragment.Host {
         super.onCreate(savedInstanceState);
 
         setContentView(R.layout.activity_hub);
-
+/*
         final Intent iintent = getIntent();
 
         DebugX.Companion.logIntent(this.getLocalClassName(), iintent);
@@ -111,7 +111,7 @@ public class HubActivity extends BaseActivity implements TutorialFragment.Host {
                 }
             }
         }
-
+*/
         if (!splashWasSeen) {
             final FragmentManager fragmentManager = getSupportFragmentManager();
             final Fragment hubFragment = fragmentManager.findFragmentByTag("hub");

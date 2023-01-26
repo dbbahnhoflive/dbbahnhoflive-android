@@ -28,8 +28,8 @@ fun Context.createNotificationChannels() {
         notificationManager.createNotificationChannel(arrivalAlarmChannel)
 
         // Push
-        val facilityAlarmChannel = FacilityFirebaseService.createNotificationChannel(this)
-        facilityAlarmChannel?.let { notificationManager.createNotificationChannel(it) }
+//        val facilityAlarmChannel = FacilityFirebaseService.createNotificationChannel(this)
+//        facilityAlarmChannel?.let { notificationManager.createNotificationChannel(it) }
 
     }
 

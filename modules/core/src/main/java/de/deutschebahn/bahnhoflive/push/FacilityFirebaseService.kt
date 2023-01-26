@@ -11,16 +11,16 @@ import android.text.TextUtils
 import android.util.Log
 import androidx.core.app.NotificationCompat
 import androidx.core.app.NotificationManagerCompat
-import com.google.firebase.messaging.FirebaseMessaging
-import com.google.firebase.messaging.FirebaseMessagingService
-import com.google.firebase.messaging.RemoteMessage
+//import com.google.firebase.messaging.FirebaseMessaging
+//import com.google.firebase.messaging.FirebaseMessagingService
+//import com.google.firebase.messaging.RemoteMessage
 import de.deutschebahn.bahnhoflive.BaseApplication.Companion.get
 import de.deutschebahn.bahnhoflive.R
 import de.deutschebahn.bahnhoflive.ui.hub.HubActivity
 import de.deutschebahn.bahnhoflive.util.PrefUtil
 import org.json.JSONObject
 
-
+/*
 class FacilityFirebaseService : FirebaseMessagingService() {
 
     override fun onNewToken(s: String) {
@@ -248,5 +248,6 @@ class FacilityFirebaseService : FirebaseMessagingService() {
 //                }
             }
         }
-
     }
+
+ */
