@@ -350,6 +350,7 @@
     <string name="title_accessibility_key">Merkmale der Barrierefreiheit</string>
     <string name="accessibility_advice_elevators">Bitte beachten Sie, dass die Stufenfreiheit vor Ort durch Aufzugsanlagen oder Rampen ermöglicht werden kann. Eine Übersicht der Aufzugsanlagen und deren aktuelle Verfügbarkeit finden Sie hier:</string>
     <string name="accessibility_link_elevators">Übersicht Aufzüge</string>
+    <string name="accessibility_link_gruen_deutsche_bahn">zur externen Website www.gruen.deutschebahn.com</string>
     <string name="journey_stop_additional">Zusätzlicher Halt</string>
     <string name="journey_stop_platform_change">Gleiswechsel</string>
     <string name="template_journey_title">Zuglauf %s%s</string>

@@ -77,7 +77,8 @@
                 android:background="@drawable/shape_circle_button"
                 android:src="@drawable/app_extern_link"
                 app:layout_constraintTop_toTopOf="parent"
-                app:layout_constraintEnd_toEndOf="parent" />
+                app:layout_constraintEnd_toEndOf="parent"
+                android:contentDescription="@string/accessibility_link_gruen_deutsche_bahn" />
 
             <TextView
                 android:contentDescription="Mehr Informationen zu Ökostrom am Bahnhof"
