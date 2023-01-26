@@ -58,11 +58,6 @@
 			"type": "chatbot"
 		},
 		{
-			"descriptionText": "<p><b>Einfach vorbestellen</b></p><p>Machen Sie es sich bequem, mit der pickpack App. Zum Beispiel das Lieblingsessen vorbestellen, Abholzeit aussuchen und ohne extra Wartezeit genießen. Das pickpack Einkaufserlebnis ermöglichen wir gemeinsam mit Partnerläden Ihres Bahnhofs.</p><p><b>Ihre Vorteile</b><ul><li>Kein Anstehen</li><li>Kein Bargeld</li><li>Keine Wartezeit</li></ul></p><p> </p>",
-			"title": "pickpack",
-			"type": "pickpack"
-		},
-		{
 			"descriptionText": "<p><b>Zufrieden mit der App?</b></p>Unterstützen Sie uns mit einer positiven Bewertung im Play Store.<dbactionbutton action=\"rateApp\">App bewerten</dbactionbutton>",
 			"title": "App bewerten",
 			"type": "rate_app"
