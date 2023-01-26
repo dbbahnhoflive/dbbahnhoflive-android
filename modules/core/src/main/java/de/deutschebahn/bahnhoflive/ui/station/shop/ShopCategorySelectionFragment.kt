@@ -35,24 +35,6 @@ class ShopCategorySelectionFragment : CategorySelectionFragment(
 
     val stationViewModel by activityViewModels<StationViewModel>()
 
-    private val specialCategoriesLiveData by lazy {
-        MediatorLiveData<List<SpecialCategoryFactory>>().apply {
-            val einkaufsbahnhofLiveData = stationViewModel.einkaufsbahnhofLiveData
-
-            val update = fun() {
-
-                val einkaufsbahnhofFactory: SpecialCategoryFactory? = einkaufsbahnhofLiveData.value?.let {
-                    MekSpecialCategoryFactory(trackingManager)
-                }
-
-                value = listOfNotNull(einkaufsbahnhofFactory)
-            }
-
-            addSource(einkaufsbahnhofLiveData) { update() }
-        }
-
-    }
-
     private val categoriesLiveData by lazy {
         MediatorLiveData<List<Category>>().apply {
             val shopCategoriesLiveData = Transformations.map(stationViewModel.shopsResource.data) {
@@ -132,9 +114,6 @@ class ShopCategorySelectionFragment : CategorySelectionFragment(
             adapter?.setCategories(it)
         })
 
-        specialCategoriesLiveData.observe(viewLifecycleOwner, Observer {
-            adapter?.setSpecialCardFactories(it)
-        })
     }
 
 
@@ -176,13 +155,3 @@ class ShopCategorySelectionFragment : CategorySelectionFragment(
     }
 }
 
-class MekSpecialCategoryFactory(val trackingManager: TrackingManager) : SpecialCategoryFactory() {
-
-    override fun getViewType(portrait: Boolean) = if (portrait) 12 else 13
-
-    override fun createSpecialCard(parent: ViewGroup, viewType: Int): ViewHolder<Category>? {
-        return viewType.takeIf { it in 12..13 }?.let {
-            MekCardViewHolder(parent, trackingManager, it == 12)
-        }
-    }
-}

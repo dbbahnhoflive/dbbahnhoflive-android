@@ -11,8 +11,6 @@ import java.util.EnumMap;
 import java.util.List;
 import java.util.Map;
 
-import de.deutschebahn.bahnhoflive.backend.einkaufsbahnhof.model.StationResponse;
-import de.deutschebahn.bahnhoflive.backend.einkaufsbahnhof.model.Store;
 import de.deutschebahn.bahnhoflive.backend.rimap.model.RimapPOI;
 import de.deutschebahn.bahnhoflive.repository.VenueFeature;
 
@@ -50,21 +48,6 @@ public class CategorizedShops {
             map.put(key, shops);
         }
         shops.add(shop);
-    }
-
-    public CategorizedShops(StationResponse stationResponse) {
-        for (Store store : stationResponse.stores) {
-            final ShopCategory category = ShopCategory.of(store);
-            if (category != null) {
-                put(categorizedShops, category, new EinkaufsbahnhofShop(store));
-            }
-
-
-            if (store.getGermanLocalizedVenue().name.toLowerCase().contains("reisezentrum")) {
-                put(featureVenues, VenueFeature.TRAVEL_CENTER, new EinkaufsbahnhofShop(store));
-            }
-        }
-
     }
 
     public Map<ShopCategory, List<Shop>> getShops() {
