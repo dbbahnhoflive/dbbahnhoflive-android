@@ -22,6 +22,7 @@ import android.view.accessibility.AccessibilityEvent;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.StringRes;
+import androidx.core.splashscreen.SplashScreen;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
@@ -43,10 +44,18 @@ import de.deutschebahn.bahnhoflive.util.DebugX;
 public class HubActivity extends BaseActivity implements TutorialFragment.Host {
 
     private TrackingManager trackingManager = new TrackingManager(this);
-    private Boolean splashWasSeen = false; // todo, not working
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+            setTheme(R.style.Theme_App_Starting);
+            SplashScreen.installSplashScreen(this);
+        }else{
+            setTheme(R.style.App_Theme);
+        }
+
+
         super.onCreate(savedInstanceState);
 
         setContentView(R.layout.activity_hub);
@@ -67,8 +76,6 @@ public class HubActivity extends BaseActivity implements TutorialFragment.Host {
                 final String stationName = bundle.getString("stationName");
 
                 final Boolean mapconsent = bundle.getBoolean("mapconsent");
-
-                splashWasSeen=true;
 
                 get().getApplicationServices().getMapConsentRepository().getConsented().setValue(mapconsent);
 
@@ -111,7 +118,8 @@ public class HubActivity extends BaseActivity implements TutorialFragment.Host {
                 }
             }
         }
-*/
+/* cr: todo
+
         if (!splashWasSeen) {
             final FragmentManager fragmentManager = getSupportFragmentManager();
             final Fragment hubFragment = fragmentManager.findFragmentByTag("hub");
@@ -125,6 +133,7 @@ public class HubActivity extends BaseActivity implements TutorialFragment.Host {
                 }
             }
         } else
+*/
             endSplash(); // show hubfragment
 
 
