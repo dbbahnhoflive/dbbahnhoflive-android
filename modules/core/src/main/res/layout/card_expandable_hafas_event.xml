@@ -32,26 +32,5 @@
                 android:layout_margin="@dimen/default_space"/>
         </androidx.cardview.widget.CardView>
 
-        <ViewSwitcher
-            android:id="@+id/details"
-
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content">
-
-            <include layout="@layout/include_progress" />
-
-            <androidx.recyclerview.widget.RecyclerView
-                android:importantForAccessibility="yes"
-                android:id="@+id/stops_recycler"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="horizontal"
-                android:paddingBottom="@dimen/default_space"
-                android:paddingTop="@dimen/default_space"
-                app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
-                tools:listitem="@layout/item_route_stop" />
-        </ViewSwitcher>
-
-
     </LinearLayout>
 </de.deutschebahn.bahnhoflive.view.DecoratedCard>

@@ -355,6 +355,7 @@
     <string name="template_journey_title">Zuglauf %s%s</string>
     <string name="template_journey_title_destination">nach %s</string>
     <string name="journeys_show_all">Gesamten Fahrtverlauf anzeigen</string>
+    <string name="template_hafas_journey_title">Haltestellen %s nach %s</string>
     <string name="wagon_feature_comfort">BahnComfort Bereich</string>
     <string name="wagon_feature_severely_disabled">Vorrangplätze für Reisende mit eingeschränkter Mobilität</string>
     <string name="wagon_feature_family">Familienbereich</string>

@@ -58,6 +58,8 @@ public class HafasTimetableViewModel extends AndroidViewModel {
     private Station station;
     private List<HafasStation> hafasStations;
 
+    public String filterName = null;
+
     public HafasTimetableViewModel(Application application) {
         super(application);
         mediatorResource.addSource(hafasTimetableResource);
