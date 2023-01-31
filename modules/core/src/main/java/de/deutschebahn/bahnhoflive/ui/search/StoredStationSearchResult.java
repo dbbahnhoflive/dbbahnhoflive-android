@@ -10,26 +10,47 @@ import android.content.Context;
 import android.content.Intent;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 
 import de.deutschebahn.bahnhoflive.R;
 import de.deutschebahn.bahnhoflive.persistence.FavoriteStationsStore;
 import de.deutschebahn.bahnhoflive.persistence.RecentSearchesStore;
 import de.deutschebahn.bahnhoflive.repository.InternalStation;
 import de.deutschebahn.bahnhoflive.repository.Station;
+import de.deutschebahn.bahnhoflive.repository.timetable.Timetable;
 import de.deutschebahn.bahnhoflive.repository.timetable.TimetableCollector;
 import de.deutschebahn.bahnhoflive.ui.station.StationActivity;
+import de.deutschebahn.bahnhoflive.ui.station.timetable.TimetableCollectorConnector;
 import kotlin.Pair;
 
 public class StoredStationSearchResult extends StationSearchResult<InternalStation, Pair<TimetableCollector, Float>> {
     private final TimetableCollector timetableCollector;
 
+    @Nullable
+    public final TimetableCollectorConnector timetableCollectorConnector;
+
     @NonNull
     protected final Station station;
 
-    public StoredStationSearchResult(@NonNull InternalStation dbStation, RecentSearchesStore recentSearchesStore, FavoriteStationsStore<InternalStation> favoriteStationsStore, TimetableCollector timetableCollector) {
+    // #cr : todo, nur 1 constructor
+    public StoredStationSearchResult(@NonNull InternalStation dbStation,
+                                     RecentSearchesStore recentSearchesStore,
+                                     FavoriteStationsStore<InternalStation> favoriteStationsStore,
+                                     TimetableCollector timetableCollector,
+                                     @Nullable TimetableCollectorConnector timetableCollectorConnector) {
         super(R.drawable.legacy_dbmappinicon, recentSearchesStore, favoriteStationsStore);
         this.timetableCollector = timetableCollector;
+        this.timetableCollectorConnector = timetableCollectorConnector;
         station = dbStation;
+    }
+
+
+    public StoredStationSearchResult(@NonNull InternalStation dbStation,
+                                     RecentSearchesStore recentSearchesStore,
+                                     FavoriteStationsStore<InternalStation> favoriteStationsStore,
+                                     @NonNull TimetableCollectorConnector timetableCollectorConnector) {
+        this(dbStation, recentSearchesStore, favoriteStationsStore,
+                timetableCollectorConnector.getTimetableCollector(), timetableCollectorConnector);
     }
 
     @Override
@@ -66,5 +87,9 @@ public class StoredStationSearchResult extends StationSearchResult<InternalStati
     @Override
     public Pair<TimetableCollector, Float> getTimetable() {
         return new Pair<>(timetableCollector, 0f /* TODO */);
+    }
+
+    public Station getStation() {
+        return station;
     }
 }

@@ -6,6 +6,7 @@
 
 package de.deutschebahn.bahnhoflive.ui.hub
 
+import android.util.Log
 import android.view.ViewGroup
 import androidx.lifecycle.LifecycleOwner
 import de.deutschebahn.bahnhoflive.analytics.TrackingManager
@@ -19,6 +20,7 @@ import de.deutschebahn.bahnhoflive.repository.timetable.TimetableRepository
 import de.deutschebahn.bahnhoflive.ui.ViewHolder
 import de.deutschebahn.bahnhoflive.ui.search.HafasStationSearchResult
 import de.deutschebahn.bahnhoflive.ui.search.StopPlaceSearchResult
+import de.deutschebahn.bahnhoflive.ui.station.timetable.TimetableCollectorConnector
 import de.deutschebahn.bahnhoflive.view.SingleSelectionManager
 import kotlinx.coroutines.CoroutineScope
 
@@ -41,7 +43,24 @@ internal class NearbyDeparturesAdapter(
                     return@Listener
                 }
 
-                items?.get(selection)?.onLoadDetails()
+                val selected = items?.get(selection)
+
+                when (selected) {
+                    is NearbyDbStationItem -> {
+
+                        selected.timetableCollectorConnector?.setStationAndRequestDestinationStations(selected.station, onTimetableReceived = {
+                            Log.d("cr", "onTimetableReceived")
+                            notifyDataSetChanged()
+//                            selected.onLoadDetails()
+
+                        })
+
+                    }
+                    is NearbyHafasStationItem -> {
+
+                        selected?.onLoadDetails()
+                    }
+            }
             })
 
         }
@@ -61,7 +80,9 @@ internal class NearbyDeparturesAdapter(
         }
 
     override fun onBindViewHolder(holder: ViewHolder<*>, position: Int) {
-        items?.get(position)?.bindViewHolder(holder)
+        val item = items?.get(position)
+
+        item?.bindViewHolder(holder)
     }
 
     override fun getItemViewType(position: Int) = items?.get(position)?.type ?: 0
@@ -78,13 +99,17 @@ internal class NearbyDeparturesAdapter(
         items = stopPlaces?.mapNotNull { stopPlace ->
             when {
                 stopPlace.isDbStation -> {
+
+                    val timetableCollectorConnector =  TimetableCollectorConnector(owner) // neue Instanz
+
                     NearbyDbStationItem(
                         StopPlaceSearchResult(
                             coroutineScope,
                             stopPlace,
                             recentSearchesStore,
                             favoriteStationsStore,
-                            timetableRepository
+                            timetableRepository,
+                            timetableCollectorConnector
                         )
                     )
                 }

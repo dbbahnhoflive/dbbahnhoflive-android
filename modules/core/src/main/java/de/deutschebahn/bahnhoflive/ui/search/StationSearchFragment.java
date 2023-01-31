@@ -90,7 +90,8 @@ public class StationSearchFragment extends Fragment {
         locationFragment = LocationFragment.get(fragmentManager);
         locationFragment.addLocationListener(locationListener);
 
-        adapter = new StationSearchAdapter(getActivity(), recentSearchesStore, queryRecorder::clear, this, new TrackingManager(), getLifecycleScope(), stationSearchViewModel.getTimetableCollectorFactory());
+        adapter = new StationSearchAdapter(getActivity(), recentSearchesStore, queryRecorder::clear, this, new TrackingManager(),
+                getLifecycleScope(), stationSearchViewModel.getTimetableCollectorFactory());
     }
 
     @Override

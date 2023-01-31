@@ -6,6 +6,7 @@
 
 package de.deutschebahn.bahnhoflive.ui.hub
 
+import android.util.Log
 import android.view.ViewGroup
 import androidx.lifecycle.LifecycleOwner
 import de.deutschebahn.bahnhoflive.analytics.TrackingManager
@@ -15,17 +16,25 @@ import de.deutschebahn.bahnhoflive.ui.search.SearchResult
 import de.deutschebahn.bahnhoflive.ui.search.StoredStationSearchResult
 import de.deutschebahn.bahnhoflive.view.SingleSelectionManager
 
-class FavoritesAdapter(val owner: LifecycleOwner, private val trackingManager: TrackingManager) : androidx.recyclerview.widget.RecyclerView.Adapter<ViewHolder<out Any>>() {
+class FavoritesAdapter(val owner: LifecycleOwner, private val trackingManager: TrackingManager) :
+    androidx.recyclerview.widget.RecyclerView.Adapter<ViewHolder<out Any>>() {
 
     val singleSelectionManager = SingleSelectionManager(this).apply {
         addListener {
+            // long click
             if (it.selection == SingleSelectionManager.INVALID_SELECTION) {
                 return@addListener
             }
 
             val searchResult = favorites?.get(it.selection)
             when (searchResult) {
-                is StoredStationSearchResult -> searchResult.timetable.first.refresh(false)
+                is StoredStationSearchResult -> {
+                    (searchResult as StoredStationSearchResult).timetableCollectorConnector?.setStationAndRequestDestinationStations(searchResult.station, onTimetableReceived = {
+                         Log.d("cr", "onTimetableReceived")
+                         notifyDataSetChanged()
+
+                    })
+                }
                 is HafasStationSearchResult -> searchResult.timetable.requestTimetable(true, "hub")
             }
         }
@@ -38,23 +47,30 @@ class FavoritesAdapter(val owner: LifecycleOwner, private val trackingManager: T
             notifyDataSetChanged()
         }
 
-    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder<out Any> = when (viewType) {
-        0 -> DbDeparturesViewHolder(
-            parent,
-            singleSelectionManager,
-            owner,
-            trackingManager,
-            null,
-            TrackingManager.UiElement.ABFAHRT_FAVORITEN_BHF
-        )
-        else -> DeparturesViewHolder(
-            parent,
-            owner,
-            singleSelectionManager,
-            trackingManager,
-            null,
-            TrackingManager.UiElement.ABFAHRT_FAVORITEN_OPNV
-        )
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder<out Any> {
+
+        val vh : ViewHolder<out Any>
+
+        when (viewType) {
+            0 -> vh = DbDeparturesViewHolder(
+                parent,
+                singleSelectionManager,
+                owner,
+                trackingManager,
+                null, //searchItemPickedListener,
+                TrackingManager.UiElement.ABFAHRT_FAVORITEN_BHF
+            ) as ViewHolder<Any>
+             else -> vh = DeparturesViewHolder(
+                parent,
+                owner,
+                singleSelectionManager,
+                trackingManager,
+                null,
+                TrackingManager.UiElement.ABFAHRT_FAVORITEN_OPNV
+            )
+        }
+
+        return vh
     }
 
     override fun getItemCount() = favorites?.size ?: 0
@@ -65,7 +81,9 @@ class FavoritesAdapter(val owner: LifecycleOwner, private val trackingManager: T
     override fun onBindViewHolder(holder: ViewHolder<out Any>, position: Int) {
         val searchResult = favorites?.get(position)
         when (getItemViewType(position)) {
-            0 -> (holder as DbDeparturesViewHolder).bind(searchResult as StoredStationSearchResult?)
+            0 -> {
+                (holder as DbDeparturesViewHolder).bind(searchResult as StoredStationSearchResult?)
+            }
             1 -> (holder as DeparturesViewHolder).bind(searchResult as HafasStationSearchResult?)
         }
     }

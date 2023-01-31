@@ -12,9 +12,11 @@ import de.deutschebahn.bahnhoflive.backend.db.ris.model.StopPlace
 import de.deutschebahn.bahnhoflive.persistence.FavoriteStationsStore
 import de.deutschebahn.bahnhoflive.persistence.RecentSearchesStore
 import de.deutschebahn.bahnhoflive.repository.InternalStation
+import de.deutschebahn.bahnhoflive.repository.Station
 import de.deutschebahn.bahnhoflive.repository.timetable.TimetableCollector
 import de.deutschebahn.bahnhoflive.repository.timetable.TimetableRepository
 import de.deutschebahn.bahnhoflive.ui.station.StationActivity
+import de.deutschebahn.bahnhoflive.ui.station.timetable.TimetableCollectorConnector
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.flow.flow
 
@@ -23,7 +25,8 @@ class StopPlaceSearchResult(
     val stopPlace: StopPlace,
     val recentSearchesStore: RecentSearchesStore,
     val favoriteStationsStore: FavoriteStationsStore<InternalStation>,
-    val timetableRepository: TimetableRepository
+    val timetableRepository: TimetableRepository,
+    val timetableCollectorConnector: TimetableCollectorConnector?
 ) : StationSearchResult<InternalStation, Pair<TimetableCollector, Float>>(
     R.drawable.legacy_dbmappinicon,
     recentSearchesStore,
@@ -32,9 +35,13 @@ class StopPlaceSearchResult(
 
     private val internalStation = stopPlace.asInternalStation
 
-    private val timetableCollector = timetableRepository.createTimetableCollector(
-        flow { stopPlace.evaIds }, coroutineScope
-    )
+    private fun getTimetableCollector(): TimetableCollector {
+
+        return timetableCollectorConnector?.timetableCollector
+            ?: timetableRepository.createTimetableCollector(
+                flow { stopPlace.evaIds }, coroutineScope
+            )
+    }
 
     override fun getTitle(): CharSequence {
         return stopPlace.name ?: ""
@@ -68,6 +75,17 @@ class StopPlaceSearchResult(
     }
 
     override fun getTimetable(): Pair<TimetableCollector, Float> {
-        return timetableCollector to 0f
+            return getTimetableCollector() to 0f
+        }
+
+        fun getStation(): Station {
+            return internalStation as Station
+        }
+
+    override fun getDistance(): Float {
+        if(stopPlace.distanceInKm!=null)
+          return stopPlace.distanceInKm!!
+        else
+            return 0.0f
     }
 }

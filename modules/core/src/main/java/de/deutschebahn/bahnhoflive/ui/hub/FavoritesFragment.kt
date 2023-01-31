@@ -11,6 +11,7 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
 import de.deutschebahn.bahnhoflive.BaseApplication
 import de.deutschebahn.bahnhoflive.analytics.TrackingManager
@@ -21,6 +22,8 @@ import de.deutschebahn.bahnhoflive.repository.InternalStation
 import de.deutschebahn.bahnhoflive.ui.DbStationWrapper
 import de.deutschebahn.bahnhoflive.ui.search.HafasStationSearchResult
 import de.deutschebahn.bahnhoflive.ui.search.StoredStationSearchResult
+import de.deutschebahn.bahnhoflive.ui.station.StationViewModel
+import de.deutschebahn.bahnhoflive.ui.station.timetable.TimetableCollectorConnector
 import kotlinx.coroutines.flow.flow
 
 class FavoritesFragment : androidx.fragment.app.Fragment() {
@@ -28,14 +31,57 @@ class FavoritesFragment : androidx.fragment.app.Fragment() {
     private var favoriteHafasStationsStore: FavoriteStationsStore<HafasStation>? = null
     private var favoriteDbStationsStore: FavoriteStationsStore<InternalStation>? = null
 
-    private var viewBinding: FragmentFavoritesBinding? = null
+    private lateinit var viewBinding: FragmentFavoritesBinding
 
     private lateinit var stationImageResolver: StationImageResolver
+
+
+//    private lateinit var timetableCollectorConnector: TimetableCollectorConnector
+
+    private var favoritesAdapter: FavoritesAdapter? = null
+
+    private val dbFavoritesListener = FavoriteStationsStore.Listener<InternalStation> {
+        refreshFavorites()
+    }
+
+    private val hafasFavoritesListener = FavoriteStationsStore.Listener<HafasStation> {
+        refreshFavorites()
+    }
+
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
         stationImageResolver = StationImageResolver(context)
+
+//        timetableCollectorConnector = TimetableCollectorConnector(this)
+    }
+
+    override fun onCreateView(
+        inflater: LayoutInflater,
+        container: ViewGroup?,
+        savedInstanceState: Bundle?
+    ): View {
+
+        viewBinding = FragmentFavoritesBinding.inflate(inflater, container, false)
+
+        favoritesAdapter = FavoritesAdapter(
+            this@FavoritesFragment,
+            TrackingManager()
+        )
+
+        val dividerItemDecoration = androidx.recyclerview.widget.DividerItemDecoration(
+            context,
+            androidx.recyclerview.widget.DividerItemDecoration.VERTICAL
+        )
+        viewBinding.recycler.apply {
+            addItemDecoration(dividerItemDecoration)
+            adapter = favoritesAdapter
+        }
+
+        registerUnhandledClickListenerIfVisible()
+
+        return viewBinding.root
 
     }
 
@@ -52,45 +98,6 @@ class FavoritesFragment : androidx.fragment.app.Fragment() {
         favoriteDbStationsStore = null
 
         super.onDetach()
-    }
-
-    override fun onCreateView(
-        inflater: LayoutInflater,
-        container: ViewGroup?,
-        savedInstanceState: Bundle?
-    ): View = FragmentFavoritesBinding.inflate(inflater, container, false).apply {
-        viewBinding = this
-
-        favoritesAdapter = FavoritesAdapter(this@FavoritesFragment, TrackingManager())
-
-        val dividerItemDecoration = androidx.recyclerview.widget.DividerItemDecoration(
-            context,
-            androidx.recyclerview.widget.DividerItemDecoration.VERTICAL
-        )
-        recycler.apply {
-            addItemDecoration(dividerItemDecoration)
-            adapter = favoritesAdapter
-        }
-
-        registerUnhandledClickListenerIfVisible()
-
-    }.root
-
-    override fun onDestroyView() {
-        viewBinding = null
-
-        super.onDestroyView()
-    }
-
-    private var favoritesAdapter: FavoritesAdapter? = null
-
-
-    private val dbFavoritesListener = FavoriteStationsStore.Listener<InternalStation> {
-        refreshFavorites()
-    }
-
-    private val hafasFavoritesListener = FavoriteStationsStore.Listener<HafasStation> {
-        refreshFavorites()
     }
 
     override fun onResume() {
@@ -124,19 +131,25 @@ class FavoritesFragment : androidx.fragment.app.Fragment() {
                             favoriteHafasStationsStore
                         )
                         is DbStationWrapper -> {
+
+                            val timetableCollectorConnector =  TimetableCollectorConnector(this@FavoritesFragment) // neue Instanz
+
                             StoredStationSearchResult(
                                 it.wrappedStation,
                                 recentSearchesStore,
                                 favoriteDbStationsStore,
-                                timetableRepository.createTimetableCollector(flow {
-                                    it.wrappedStation.evaIds
-                                }, lifecycleScope)
+                                timetableCollectorConnector
+//                                timetableCollectorConnector.timetableCollector,
+//                                timetableCollectorConnector
+//                                timetableRepository.createTimetableCollector(flow {
+//                                    it.wrappedStation.evaIds
+//                                }, lifecycleScope)
                             )
                         }
                         else -> it
                     }
                 }.also {
-                    viewBinding?.viewFlipper?.displayedChild = if (it.isEmpty()) 1 else 0
+                    viewBinding.viewFlipper.displayedChild = if (it.isEmpty()) 1 else 0
                 }
             }
         }

@@ -6,6 +6,7 @@
 
 package de.deutschebahn.bahnhoflive.ui.search;
 
+import android.util.Log;
 import android.view.ViewGroup;
 
 import androidx.fragment.app.FragmentActivity;
@@ -54,7 +55,10 @@ class StationSearchAdapter extends RecyclerView.Adapter<ViewHolder> {
     private final CoroutineScope coroutineScope;
     private final TimetableRepository timetableRepository;
 
-    StationSearchAdapter(FragmentActivity context, RecentSearchesStore recentSearchesStore, SearchItemPickedListener searchItemPickedListener, LifecycleOwner owner, TrackingManager trackingManager, CoroutineScope coroutineScope, TimetableRepository timetableRepository) {
+
+
+    StationSearchAdapter(FragmentActivity context, RecentSearchesStore recentSearchesStore, SearchItemPickedListener searchItemPickedListener,
+                         LifecycleOwner owner, TrackingManager trackingManager, CoroutineScope coroutineScope, TimetableRepository timetableRepository) {
         hubViewModel = new ViewModelProvider(context).get(HubViewModel.class);
         this.coroutineScope = coroutineScope;
         this.timetableRepository = timetableRepository;
@@ -68,7 +72,21 @@ class StationSearchAdapter extends RecyclerView.Adapter<ViewHolder> {
         singleSelectionManager.addListener(selectionManager -> {
             final SearchResult selectedItem = selectionManager.getSelectedItem(searchResults);
             if (selectedItem instanceof StoredStationSearchResult) {
+
+                final StoredStationSearchResult searchResult = (StoredStationSearchResult) selectedItem;
+
                 ((StoredStationSearchResult) selectedItem).getTimetable().getFirst().loadIfNecessary();
+
+                // get Station-Abfahrten
+                if(searchResult.timetableCollectorConnector != null)
+                 searchResult.timetableCollectorConnector.setStationAndRequestDestinationStations(searchResult.station, onTimetableReceived-> {
+                     Log.d("cr", "setStation");
+                     notifyDataSetChanged();
+                     return null;
+                 });
+
+
+
             } else if (selectedItem instanceof StopPlaceSearchResult) {
                 ((StopPlaceSearchResult) selectedItem).getTimetable().getFirst().loadIfNecessary();
             } else if (selectedItem instanceof HafasStationSearchResult) {
@@ -83,7 +101,8 @@ class StationSearchAdapter extends RecyclerView.Adapter<ViewHolder> {
         switch (viewType) {
             case 0:
             case 2:
-                return new DbDeparturesViewHolder(parent, singleSelectionManager, owner, trackingManager, searchItemPickedListener, TrackingManager.UiElement.ABFAHRT_SUCHE_BHF);
+                return new DbDeparturesViewHolder(parent, singleSelectionManager, owner,
+                        trackingManager, searchItemPickedListener, TrackingManager.UiElement.ABFAHRT_SUCHE_BHF);
             case 1:
                 return new DeparturesViewHolder(parent, owner, singleSelectionManager, trackingManager, searchItemPickedListener, TrackingManager.UiElement.ABFAHRT_SUCHE_OPNV);
             default:
@@ -135,7 +154,8 @@ class StationSearchAdapter extends RecyclerView.Adapter<ViewHolder> {
             for (StopPlace dbStation : dbStations) {
                 final SearchResult searchResult;
                 if (dbStation.isDbStation()) {
-                    searchResult = new StopPlaceSearchResult(coroutineScope, dbStation, recentSearchesStore, favoriteDbStationsStore, timetableRepository);
+                    searchResult = new StopPlaceSearchResult(coroutineScope, dbStation,
+                            recentSearchesStore, favoriteDbStationsStore, timetableRepository, null);
                 } else {
                     final HafasStation hafasStation = StopPlaceXKt.toHafasStation(dbStation);
                     searchResult = new HafasStationSearchResult(hafasStation, recentSearchesStore, favoriteHafasStationsStore);

@@ -21,16 +21,20 @@ import kotlin.Pair;
 class NearbyDbDeparturesViewHolder extends DbDeparturesViewHolder {
     private final DistanceViewHolder distanceViewHolder;
 
-    public NearbyDbDeparturesViewHolder(ViewGroup parent, SingleSelectionManager singleSelectionManager, LifecycleOwner owner, TrackingManager trackingManager) {
-        super(parent, R.layout.card_nearby_departures, singleSelectionManager, owner, trackingManager, null, TrackingManager.UiElement.ABFAHRT_NAEHE_BHF);
+    public NearbyDbDeparturesViewHolder(ViewGroup parent, SingleSelectionManager singleSelectionManager,
+                                        LifecycleOwner owner, TrackingManager trackingManager) {
+        super(parent, R.layout.card_nearby_departures, singleSelectionManager, owner,
+                trackingManager, null, TrackingManager.UiElement.ABFAHRT_NAEHE_BHF);
         distanceViewHolder = new DistanceViewHolder(itemView);
     }
 
     @Override
     protected void onBind(StationSearchResult<InternalStation, Pair<TimetableCollector, Float>> item) {
+        if(item!=null) {
         super.onBind(item);
 
-        distanceViewHolder.bind(item.getTimetable().getSecond());
+            distanceViewHolder.bind(item.getDistance());
+        }
     }
 
 

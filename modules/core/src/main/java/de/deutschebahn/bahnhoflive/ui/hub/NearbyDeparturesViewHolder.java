@@ -26,7 +26,9 @@ class NearbyDeparturesViewHolder extends DeparturesViewHolder {
 
     @Override
     protected void onBind(HafasStationSearchResult item) {
+        if(item!=null) {
         super.onBind(item);
         distanceViewHolder.bind(item.getTimetable().getStation().dist / 1000f);
     }
+        }
 }

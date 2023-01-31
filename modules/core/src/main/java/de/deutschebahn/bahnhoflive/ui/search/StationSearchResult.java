@@ -31,4 +31,6 @@ public abstract class StationSearchResult<T, U> implements SearchResult {
     }
 
     public abstract U getTimetable();
+
+    public float getDistance() { return 0.0f; }
 }

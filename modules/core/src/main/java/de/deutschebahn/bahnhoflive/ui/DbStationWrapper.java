@@ -19,7 +19,7 @@ public class DbStationWrapper extends StoredStationSearchResult implements Stati
     private final long timestamp;
 
     public DbStationWrapper(InternalStation station, FavoriteStationsStore<InternalStation> favoriteStationsStore, long timestamp, CoroutineScope coroutineScope) {
-        super(station, null, favoriteStationsStore, null); // evaIdsProvider); #cr
+        super(station, null, favoriteStationsStore, null, null); // evaIdsProvider); #cr
         this.timestamp = timestamp;
     }
 
