@@ -75,7 +75,7 @@ class StopPlaceSearchResult(
     }
 
     override fun getTimetable(): Pair<TimetableCollector, Float> {
-            return getTimetableCollector() to 0f
+            return getTimetableCollector() to getDistance()
         }
 
         fun getStation(): Station {

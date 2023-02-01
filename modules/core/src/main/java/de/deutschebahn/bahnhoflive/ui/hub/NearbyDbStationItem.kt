@@ -13,7 +13,6 @@ import de.deutschebahn.bahnhoflive.ui.station.timetable.TimetableCollectorConnec
 
 
 class NearbyDbStationItem(val dbStationSearchResult: StopPlaceSearchResult) :
-//class NearbyDbStationItem(val dbStationSearchResult: StationSearchResult<InternalStation, Pair<TimetableCollector, Float>>) :
     NearbyStationItem {
 
     override fun onLoadDetails() {

@@ -47,20 +47,16 @@ internal class NearbyDeparturesAdapter(
 
                 when (selected) {
                     is NearbyDbStationItem -> {
-
-                        selected.timetableCollectorConnector?.setStationAndRequestDestinationStations(selected.station, onTimetableReceived = {
-                            Log.d("cr", "onTimetableReceived")
-                            notifyDataSetChanged()
-//                            selected.onLoadDetails()
-
-                        })
-
+                        selected.timetableCollectorConnector?.setStationAndRequestDestinationStations(
+                            selected.station,
+                            onTimetableReceivedHandler = {
+                                notifyDataSetChanged()
+                            })
                     }
                     is NearbyHafasStationItem -> {
-
                         selected?.onLoadDetails()
                     }
-            }
+                }
             })
 
         }
@@ -100,7 +96,8 @@ internal class NearbyDeparturesAdapter(
             when {
                 stopPlace.isDbStation -> {
 
-                    val timetableCollectorConnector =  TimetableCollectorConnector(owner) // neue Instanz
+                    val timetableCollectorConnector =
+                        TimetableCollectorConnector(owner) // neue Instanz
 
                     NearbyDbStationItem(
                         StopPlaceSearchResult(

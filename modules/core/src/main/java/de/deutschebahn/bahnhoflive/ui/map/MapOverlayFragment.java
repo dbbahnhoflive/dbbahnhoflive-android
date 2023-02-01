@@ -485,7 +485,7 @@ public class MapOverlayFragment extends Fragment implements OnMapReadyCallback, 
         mapLevelPicker = view.findViewById(R.id.level_picker);
         mapLevelPicker.setOnValueChangeListener(new MapLevelPicker.OnLevelChangeListener() {
             @Override
-            public void onLevelChange(int newVal) {
+             public void onLevelChange(int newVal) {
                 setIndoorLevel(newVal);
             }
         });

@@ -27,7 +27,7 @@ public class StoredStationSearchResult extends StationSearchResult<InternalStati
     private final TimetableCollector timetableCollector;
 
     @Nullable
-    public final TimetableCollectorConnector timetableCollectorConnector;
+    public TimetableCollectorConnector timetableCollectorConnector;
 
     @NonNull
     protected final Station station;
@@ -86,6 +86,10 @@ public class StoredStationSearchResult extends StationSearchResult<InternalStati
 
     @Override
     public Pair<TimetableCollector, Float> getTimetable() {
+
+        if(timetableCollectorConnector!=null)
+          return new Pair<> (timetableCollectorConnector.getTimetableCollector(), 0.0f);
+        else
         return new Pair<>(timetableCollector, 0f /* TODO */);
     }
 

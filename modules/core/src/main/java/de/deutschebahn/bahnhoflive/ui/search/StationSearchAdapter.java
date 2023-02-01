@@ -30,7 +30,9 @@ import de.deutschebahn.bahnhoflive.ui.ViewHolder;
 import de.deutschebahn.bahnhoflive.ui.hub.DbDeparturesViewHolder;
 import de.deutschebahn.bahnhoflive.ui.hub.DeparturesViewHolder;
 import de.deutschebahn.bahnhoflive.ui.hub.HubViewModel;
+import de.deutschebahn.bahnhoflive.ui.station.timetable.TimetableCollectorConnector;
 import de.deutschebahn.bahnhoflive.view.SingleSelectionManager;
+import kotlin.Unit;
 import kotlinx.coroutines.CoroutineScope;
 
 class StationSearchAdapter extends RecyclerView.Adapter<ViewHolder> {
@@ -74,19 +76,26 @@ class StationSearchAdapter extends RecyclerView.Adapter<ViewHolder> {
             if (selectedItem instanceof StoredStationSearchResult) {
 
                 final StoredStationSearchResult searchResult = (StoredStationSearchResult) selectedItem;
-
+Log.d("cr", "selItem: " + selectedItem.toString() + " searcgResult: " + searchResult.toString());
                 ((StoredStationSearchResult) selectedItem).getTimetable().getFirst().loadIfNecessary();
 
+                if(searchResult.timetableCollectorConnector == null)
+                    searchResult.timetableCollectorConnector = new TimetableCollectorConnector(owner);
+
                 // get Station-Abfahrten
-                if(searchResult.timetableCollectorConnector != null)
-                 searchResult.timetableCollectorConnector.setStationAndRequestDestinationStations(searchResult.station, onTimetableReceived-> {
-                     Log.d("cr", "setStation");
-                     notifyDataSetChanged();
-                     return null;
-                 });
+                if (searchResult.timetableCollectorConnector != null)
+                    searchResult.timetableCollectorConnector.setStationAndRequestDestinationStations(searchResult.station, timetable -> {
+                                notifyDataSetChanged();
+                                return Unit.INSTANCE;
+                            },
+                            integer -> {
+                                return Unit.INSTANCE;
+                            },
+                            aBoolean -> {
+                                return Unit.INSTANCE;
+                            }
 
-
-
+                    );
             } else if (selectedItem instanceof StopPlaceSearchResult) {
                 ((StopPlaceSearchResult) selectedItem).getTimetable().getFirst().loadIfNecessary();
             } else if (selectedItem instanceof HafasStationSearchResult) {

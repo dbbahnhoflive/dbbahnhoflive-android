@@ -35,9 +35,6 @@ class FavoritesFragment : androidx.fragment.app.Fragment() {
 
     private lateinit var stationImageResolver: StationImageResolver
 
-
-//    private lateinit var timetableCollectorConnector: TimetableCollectorConnector
-
     private var favoritesAdapter: FavoritesAdapter? = null
 
     private val dbFavoritesListener = FavoriteStationsStore.Listener<InternalStation> {
@@ -53,8 +50,6 @@ class FavoritesFragment : androidx.fragment.app.Fragment() {
         super.onCreate(savedInstanceState)
 
         stationImageResolver = StationImageResolver(context)
-
-//        timetableCollectorConnector = TimetableCollectorConnector(this)
     }
 
     override fun onCreateView(

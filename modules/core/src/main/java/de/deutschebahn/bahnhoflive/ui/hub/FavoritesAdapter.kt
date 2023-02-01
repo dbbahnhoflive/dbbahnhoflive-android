@@ -29,11 +29,12 @@ class FavoritesAdapter(val owner: LifecycleOwner, private val trackingManager: T
             val searchResult = favorites?.get(it.selection)
             when (searchResult) {
                 is StoredStationSearchResult -> {
-                    (searchResult as StoredStationSearchResult).timetableCollectorConnector?.setStationAndRequestDestinationStations(searchResult.station, onTimetableReceived = {
-                         Log.d("cr", "onTimetableReceived")
-                         notifyDataSetChanged()
+                    searchResult.timetableCollectorConnector?.setStationAndRequestDestinationStations(searchResult.station,
+                        onTimetableReceivedHandler =
+                        {
+                            notifyDataSetChanged()
 
-                    })
+                        })
                 }
                 is HafasStationSearchResult -> searchResult.timetable.requestTimetable(true, "hub")
             }

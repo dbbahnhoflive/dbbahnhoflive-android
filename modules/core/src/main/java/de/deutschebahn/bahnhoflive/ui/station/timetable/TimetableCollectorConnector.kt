@@ -21,11 +21,12 @@ import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.launch
 
 /*
-
  connects new flow-timetable with station,
- allows
-
 */
+
+typealias OnTimetableReceivedHandler  = (Timetable?)->Unit
+typealias OnTimetableErrorHandler = (errorCode:Int) -> Unit
+typealias OnTimetableLoadingHandler = (status:Boolean) -> Unit
 
 class TimetableCollectorConnector(owner : LifecycleOwner) : ViewModel() {
 
@@ -80,29 +81,29 @@ class TimetableCollectorConnector(owner : LifecycleOwner) : ViewModel() {
     private val newTimetableLiveData =
         timetableCollector.timetableStateFlow.asLiveData(viewModelScope.coroutineContext)
 
-    private var onTimetableReceiver : ((Timetable?) -> Unit)? = null
-    private var onTimetableError : ((errorCode:Int) -> Unit)? = null
-    private var onTimetableLoading : ((status:Boolean) -> Unit)? = null
+    private var onTimetableReceivedHandler : OnTimetableReceivedHandler? = null
+    private var onTimetableErrorHandler : OnTimetableErrorHandler? = null
+    private var onTimetableLoadingHandler : OnTimetableLoadingHandler? = null
 
 
     init {
 
         newTimetableLiveData.observe(owner,
             Observer { timetable: Timetable? ->
-                onTimetableReceiver?.let { it(timetable) } // in general a onBind in a ViewHolder is called
+                onTimetableReceivedHandler?.let { it(timetable) } // in general a onBind in a ViewHolder is called
             })
 
         timetableErrorsLiveData.observe(owner,
             Observer { errors: Boolean ->
                 if (errors) {
-                    onTimetableError?.let { 1 } // in general a onBind in a ViewHolder is called (todo: erorcode)
+                    onTimetableErrorHandler?.let { it(1) } // in general a onBind in a ViewHolder is called (todo: erorcode)
                 }
             })
 
         timetableLoadingLiveData.observe(owner,
             Observer { isLoading: Boolean ->
                 if (isLoading) {
-                    onTimetableLoading?.let { isLoading }
+                    onTimetableLoadingHandler?.let { it(isLoading) }
                 }
             })
     }
@@ -119,21 +120,36 @@ class TimetableCollectorConnector(owner : LifecycleOwner) : ViewModel() {
             }
         }
 
-    fun setStationAndRequestDestinationStations(station:Station?,
-                                                onTimetableReceived:(timetable: Timetable?)->Unit
-    ){
+    fun setStationAndRequestDestinationStations(
+        station: Station?,
+        onTimetableReceivedHandler : OnTimetableReceivedHandler?=null,
+        onTimetableErrorHandler : OnTimetableErrorHandler?=null,
+        onTimetableLoadingHandler : OnTimetableLoadingHandler?=null
+    ) {
 
-        if(station==null)
+        if (station == null)
             return
 
-        onTimetableReceiver = onTimetableReceived
+        this.onTimetableReceivedHandler = onTimetableReceivedHandler
+        this.onTimetableErrorHandler = onTimetableErrorHandler
+        this.onTimetableLoadingHandler=onTimetableLoadingHandler
 
         viewModelScope.launch {
             stationStateFlow.emit(station)
         }
 
         // alle Ziele dieses Bahnhofs anfordern
-        stationRepository.queryStations(mListener, station.title, null, false, 3, 10000, true, true, false)
+        stationRepository.queryStations(
+            mListener,
+            station.title,
+            null,
+            false,
+            3,
+            10000,
+            true,
+            true,
+            false
+        )
     }
 
 

@@ -164,11 +164,11 @@ class TimetableCollector(
                     if (allStationsHaveErrors)
                         timetableStateFlow.value = null
                     else
-                    timetableStateFlow.value = Timetable(
-                        mergedTrainInfos.values.toList(),
-                        (parameters.firstHourInMillis / hourInMillis + parameters.hourCount) * hourInMillis,
-                        parameters.hourCount
-                    )
+                        timetableStateFlow.value = Timetable(
+                            mergedTrainInfos.values.toList(),
+                            (parameters.firstHourInMillis / hourInMillis + parameters.hourCount) * hourInMillis,
+                            parameters.hourCount
+                        )
 
                 } catch (cancellationException: CancellationException) {
                     Log.d(
