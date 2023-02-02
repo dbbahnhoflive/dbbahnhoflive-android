@@ -16,6 +16,7 @@ import de.deutschebahn.bahnhoflive.ui.map.MapPresetProvider
 import de.deutschebahn.bahnhoflive.ui.map.content.rimap.RimapFilter
 import de.deutschebahn.bahnhoflive.ui.timetable.RouteStop
 import de.deutschebahn.bahnhoflive.ui.timetable.journey.HafasRouteItemViewHolder
+import de.deutschebahn.bahnhoflive.util.TAG
 import de.deutschebahn.bahnhoflive.view.BaseListAdapter
 import de.deutschebahn.bahnhoflive.view.ListViewHolderDelegate
 
@@ -96,6 +97,9 @@ class HafasJourneyFragment() : Fragment()
 
     }
 
+    companion object {
+        val TAG = HafasJourneyFragment::class.java.simpleName
+    }
 
 }
 

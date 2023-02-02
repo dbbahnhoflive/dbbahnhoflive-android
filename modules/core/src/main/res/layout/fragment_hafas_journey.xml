@@ -5,6 +5,7 @@
     android:layout_height="match_parent"
     xmlns:tools="http://schemas.android.com/tools"
     android:clipChildren="false"
+    android:background="@color/white"
     android:orientation="vertical">
 
     <include
