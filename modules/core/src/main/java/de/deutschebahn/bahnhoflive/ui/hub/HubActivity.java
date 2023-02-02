@@ -13,6 +13,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.Build;
 import android.os.Bundle;
+import android.os.Handler;
 import android.transition.ChangeBounds;
 import android.transition.Fade;
 import android.transition.Transition;
@@ -45,12 +46,19 @@ public class HubActivity extends BaseActivity implements TutorialFragment.Host {
 
     private TrackingManager trackingManager = new TrackingManager(this);
 
+    boolean keep = true;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
             setTheme(R.style.Theme_App_Starting);
-            SplashScreen.installSplashScreen(this);
+            SplashScreen splashScreen = SplashScreen.installSplashScreen(this);
+
+            splashScreen.setKeepOnScreenCondition(() -> keep);
+            Handler handler = new Handler();
+            handler.postDelayed(() -> keep = false, 800L);
+
         }else{
             setTheme(R.style.App_Theme);
         }
