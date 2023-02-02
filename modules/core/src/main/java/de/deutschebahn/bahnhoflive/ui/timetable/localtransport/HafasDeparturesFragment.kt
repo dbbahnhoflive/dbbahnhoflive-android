@@ -63,10 +63,29 @@ class HafasDeparturesFragment : RecyclerFragment<HafasDeparturesAdapter>(R.layou
         },
             hafasDataReceivedCallback = { view: View, details: DetailedHafasEvent ->
                 run {
-                    val historyFragment = HistoryFragment.parentOf(this)
+
                     val hafasJourneyFragment = HafasJourneyFragment()
                     hafasJourneyFragment.onDataReceived(details)
-                    historyFragment.push(hafasJourneyFragment)
+
+
+                    if(parentFragment!=null) {
+
+                        val historyFragment = HistoryFragment.parentOf(this)
+                        historyFragment.push(hafasJourneyFragment)
+                    }
+                    else
+                    {
+                        // aufruf aus Favoriten OHNE vorher geladene Station !!!!!! (kein HistoryFragment)
+                        // todo: besser Station ermitteln, laden, Abfahrtstafel laden, gewünschte ÖPNV-Haltestelle laden und dann
+                        // das zugehörige HafasJourneyFragment anzeigen !
+
+                        activity?.supportFragmentManager?.beginTransaction()
+                        ?.replace(R.id.hafas_fragment_container, hafasJourneyFragment, HafasJourneyFragment.TAG)
+                        ?.addToBackStack(null)
+                        ?.commit()
+
+                    }
+
                 }
             }
         )
@@ -126,47 +145,6 @@ class HafasDeparturesFragment : RecyclerFragment<HafasDeparturesAdapter>(R.layou
         val mapButton = view.findViewById<View>(R.id.btn_map)
         mapButton?.visibility = View.GONE
 
-//
-//        val stationViewModel = ViewModelProvider(requireActivity()).get(
-//            StationViewModel::class.java
-//        )
-//
-//        val station: Station? = stationViewModel.stationResource.data.value
-//
-////        val station = hafasTimetableViewModel.station
-//        if (station == null) {
-//            mapButton.visibility = View.GONE
-//        } else {
-//            mapButton.setOnClickListener { v ->
-//
-//                val hafasStation = hafasTimetableViewModel.hafasStationResource.data.value
-//                val hafasTimetable = HafasTimetable(hafasStation, hafasTimetableViewModel.hafasTimetableResource)
-//
-//                hafasTimetableViewModel.hafasStations?.map{
-//                    if (it == hafasStation) {
-//                        hafasTimetable
-//                    } else {
-//                        HafasTimetable(it, HafasTimetableResource())
-//                    }
-//                }?.let {itList->
-//
-//                    GoogleLocationPermissions.startMapActivityIfConsent(this) {
-//                    val intent = MapActivity.createIntent(v.context, station, ArrayList(itList))
-////                        InitialPoiManager.putInitialPoi(intent, Content.Source.HAFAS, hafasTimetable)
-//                        RimapFilter.putPreset(intent, RimapFilter.PRESET_RAIL_REPLACEMENT) //PRESET_NONE)
-//                        intent
-//                    }
-//
-////                    val intent = MapActivity.createIntent(v.context, station, ArrayList(itList))
-////                    InitialPoiManager.putInitialPoi(intent, Content.Source.HAFAS, hafasTimetable)
-////                    RimapFilter.putPreset(intent, RimapFilter.PRESET_NONE)
-////                    startActivity(intent)
-//                }
-//
-//
-//            }
-//        }
-
         Transformations.switchMap(hafasTimetableResource.data) {
             it?.let {
                 hafasTimetableViewModel.selectedHafasStationProduct
@@ -183,6 +161,17 @@ class HafasDeparturesFragment : RecyclerFragment<HafasDeparturesAdapter>(R.layou
     }
 
     override fun onDestroyView() {
+
+
+        // not working ???
+//        val mFragmentMgr = activity?.supportFragmentManager
+//        val  mTransaction = mFragmentMgr?.beginTransaction()
+//        val  childFragment = mFragmentMgr?.findFragmentByTag(HafasJourneyFragment.TAG)
+//        if (childFragment != null) {
+//            mTransaction?.remove(childFragment)
+//            mTransaction?.commit()
+//        }
+
         swipeRefreshLayout = null
         super.onDestroyView()
         hafasTimetableViewModel.filterName = adapter?.filter?.label
