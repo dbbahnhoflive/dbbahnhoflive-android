@@ -56,9 +56,15 @@ class ShopViewHolder(parent: ViewGroup, singleSelectionManager: SingleSelectionM
             phoneString = null
         }
 
-        webString = item.web?.trim { it <= ' ' }?.also {
+//        webString = item.web?.trim { it <= ' ' }?.also {
+//            threeButtonsViewHolder.enableButton(R.id.button_left)
+//        }
+
+        webString = item.web?.trim() ?: ""
+        if(webString?.isNotEmpty() == true) {
             threeButtonsViewHolder.enableButton(R.id.button_left)
         }
+
 
         emailString = item.email ?: ""
         if (emailString.length > 2) {
