@@ -96,8 +96,25 @@ Log.d("cr", "selItem: " + selectedItem.toString() + " searcgResult: " + searchRe
                             }
 
                     );
-            } else if (selectedItem instanceof StopPlaceSearchResult) {
-                ((StopPlaceSearchResult) selectedItem).getTimetable().getFirst().loadIfNecessary();
+            } else if (selectedItem instanceof StopPlaceSearchResult) { // long click on (temp.) searchresult
+                StopPlaceSearchResult searchResult = ((StopPlaceSearchResult) selectedItem);
+
+
+                // get Station-Abfahrten
+                if(searchResult.getTimetableCollectorConnector() != null)
+                    searchResult.getTimetableCollectorConnector().setStationAndRequestDestinationStations(searchResult.getStation(), timetable -> {
+                                notifyDataSetChanged();
+                                return Unit.INSTANCE;
+                            },
+                            integer -> {
+                                return Unit.INSTANCE;
+                            },
+                            aBoolean -> {
+                                return Unit.INSTANCE;
+                            }
+
+                    );
+
             } else if (selectedItem instanceof HafasStationSearchResult) {
                 ((HafasStationSearchResult) selectedItem).getTimetable().requestTimetable(true, "search");
             }
@@ -113,7 +130,8 @@ Log.d("cr", "selItem: " + selectedItem.toString() + " searcgResult: " + searchRe
                 return new DbDeparturesViewHolder(parent, singleSelectionManager, owner,
                         trackingManager, searchItemPickedListener, TrackingManager.UiElement.ABFAHRT_SUCHE_BHF);
             case 1:
-                return new DeparturesViewHolder(parent, owner, singleSelectionManager, trackingManager, searchItemPickedListener, TrackingManager.UiElement.ABFAHRT_SUCHE_OPNV);
+                return new DeparturesViewHolder(parent, owner, singleSelectionManager, trackingManager,
+                        searchItemPickedListener, TrackingManager.UiElement.ABFAHRT_SUCHE_OPNV);
             default:
                 return new StationSearchViewHolder(parent, R.layout.card_station_suggestion);
         }
@@ -163,8 +181,11 @@ Log.d("cr", "selItem: " + selectedItem.toString() + " searcgResult: " + searchRe
             for (StopPlace dbStation : dbStations) {
                 final SearchResult searchResult;
                 if (dbStation.isDbStation()) {
+
+                    TimetableCollectorConnector timetableCollectorConnector  = new TimetableCollectorConnector(this.owner);
+
                     searchResult = new StopPlaceSearchResult(coroutineScope, dbStation,
-                            recentSearchesStore, favoriteDbStationsStore, timetableRepository, null);
+                            recentSearchesStore, favoriteDbStationsStore, timetableRepository, timetableCollectorConnector);
                 } else {
                     final HafasStation hafasStation = StopPlaceXKt.toHafasStation(dbStation);
                     searchResult = new HafasStationSearchResult(hafasStation, recentSearchesStore, favoriteHafasStationsStore);

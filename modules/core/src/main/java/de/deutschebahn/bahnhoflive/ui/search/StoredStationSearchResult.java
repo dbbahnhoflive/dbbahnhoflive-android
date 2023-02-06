@@ -93,6 +93,7 @@ public class StoredStationSearchResult extends StationSearchResult<InternalStati
         return new Pair<>(timetableCollector, 0f /* TODO */);
     }
 
+    @NonNull
     public Station getStation() {
         return station;
     }

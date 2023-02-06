@@ -68,7 +68,8 @@ public class RecentSearchesStore {
 
         for (StationWrapper<InternalStation> stationWrapper : all) {
             searchResults.add(new StoredStationSearchResult(stationWrapper.getWrappedStation(), this, favoriteStationsStore,
-                    timetableRepository.createTimetableCollector((flowCollector, continuation) -> stationWrapper.getWrappedStation().getEvaIds(), coroutineScope), null)
+                    timetableRepository.createTimetableCollector((flowCollector, continuation) -> stationWrapper.getWrappedStation().getEvaIds(), coroutineScope),
+                            null)
             );
         }
         for (StationWrapper<HafasStation> hafasStationWrapper : allHafas) {
