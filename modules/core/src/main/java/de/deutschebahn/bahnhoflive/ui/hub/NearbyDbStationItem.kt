@@ -22,17 +22,30 @@ class NearbyDbStationItem(val dbStationSearchResult: StopPlaceSearchResult) :
 
     override val distance: Float
         get() = dbStationSearchResult.distance
-              //  get() = dbStationSearchResult.timetable.second
+    //  get() = dbStationSearchResult.timetable.second
 
     override fun bindViewHolder(holder: androidx.recyclerview.widget.RecyclerView.ViewHolder) {
         (holder as NearbyDbDeparturesViewHolder).bind(dbStationSearchResult)
     }
 
-    val station : Station
+    override fun equals(other: Any?): Boolean {
+        if (this === other) return true
+        if (other !is NearbyDbStationItem) return false
+
+        if (station.id != other.station.id) return false
+
+        return true
+    }
+
+    override fun hashCode(): Int {
+        return station.hashCode()
+    }
+
+    val station: Station
         get() = dbStationSearchResult.getStation()
 
- //   val timetableCollectorConnector : TimetableCollectorConnector?
-   //     get() = dbStationSearchResult.timetableCollectorConnector
+    //   val timetableCollectorConnector : TimetableCollectorConnector?
+    //     get() = dbStationSearchResult.timetableCollectorConnector
 
 //    var timetable : Timetable?
 //        get() = dbStationSearchResult.timetable

@@ -23,4 +23,19 @@ class NearbyHafasStationItem(val hafasStationSearchResult: HafasStationSearchRes
     override fun bindViewHolder(holder: androidx.recyclerview.widget.RecyclerView.ViewHolder) {
         (holder as NearbyDeparturesViewHolder).bind(hafasStationSearchResult)
     }
+
+    override fun equals(other: Any?): Boolean {
+        if (this === other) return true
+        if (other !is NearbyHafasStationItem) return false
+
+        if (hafasStationSearchResult.timetable.station.extId != other.hafasStationSearchResult.timetable.station.extId) return false
+
+        return true
+    }
+
+    override fun hashCode(): Int {
+        return hafasStationSearchResult.hashCode()
+    }
+
+
 }

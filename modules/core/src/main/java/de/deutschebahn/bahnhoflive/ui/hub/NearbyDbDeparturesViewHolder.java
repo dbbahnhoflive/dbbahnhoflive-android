@@ -19,6 +19,7 @@ import de.deutschebahn.bahnhoflive.view.SingleSelectionManager;
 import kotlin.Pair;
 
 class NearbyDbDeparturesViewHolder extends DbDeparturesViewHolder {
+    public static final String TAG = NearbyDbDeparturesViewHolder.class.getSimpleName();
     private final DistanceViewHolder distanceViewHolder;
 
     public NearbyDbDeparturesViewHolder(ViewGroup parent, SingleSelectionManager singleSelectionManager,
@@ -30,9 +31,8 @@ class NearbyDbDeparturesViewHolder extends DbDeparturesViewHolder {
 
     @Override
     protected void onBind(StationSearchResult<InternalStation, Pair<TimetableCollector, Float>> item) {
-        if(item!=null) {
-        super.onBind(item);
-
+        if (item != null) {
+            super.onBind(item);
             distanceViewHolder.bind(item.getDistance());
         }
     }

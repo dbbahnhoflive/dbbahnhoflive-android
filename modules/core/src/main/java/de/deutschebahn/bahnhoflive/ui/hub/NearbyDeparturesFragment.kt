@@ -8,14 +8,11 @@ package de.deutschebahn.bahnhoflive.ui.hub
 
 import android.location.Location
 import android.os.Bundle
-import android.text.format.Time
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.asLiveData
-import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.switchMap
 import androidx.lifecycle.viewModelScope
 import de.deutschebahn.bahnhoflive.BaseApplication
@@ -24,14 +21,13 @@ import de.deutschebahn.bahnhoflive.databinding.FragmentNearbyDeparturesBinding
 import de.deutschebahn.bahnhoflive.location.BaseLocationListener
 import de.deutschebahn.bahnhoflive.permission.Permission
 import de.deutschebahn.bahnhoflive.repository.LoadingStatus
-import de.deutschebahn.bahnhoflive.repository.timetable.TimetableCollector
 import de.deutschebahn.bahnhoflive.ui.LoadingContentDecorationViewHolder
 import de.deutschebahn.bahnhoflive.ui.station.StationViewModel
 import de.deutschebahn.bahnhoflive.util.Cancellable
 import de.deutschebahn.bahnhoflive.util.CdeTimer
-import de.deutschebahn.bahnhoflive.util.system.RuntimeInfo
 
-class NearbyDeparturesFragment : androidx.fragment.app.Fragment(), Permission.Listener, androidx.swiperefreshlayout.widget.SwipeRefreshLayout.OnRefreshListener {
+class NearbyDeparturesFragment : androidx.fragment.app.Fragment(), Permission.Listener,
+    androidx.swiperefreshlayout.widget.SwipeRefreshLayout.OnRefreshListener {
 
     val STATE_ASK_FOR_PERMISSION = "askForPermission"
     val MIN_NEARBY_DEPARTURES = 3
@@ -58,8 +54,8 @@ class NearbyDeparturesFragment : androidx.fragment.app.Fragment(), Permission.Li
 
     private var viewBinding: FragmentNearbyDeparturesBinding? = null
 
-    var selectedStation:NearbyDbStationItem?=null
-    val timerCounter : CdeTimer = CdeTimer()
+    var selectedStation: NearbyDbStationItem? = null
+    val timerCounter: CdeTimer = CdeTimer()
 
 //                         Log.d("cr", "avail heap before: " + RuntimeInfo.getFreeHeapMemInBytes().toString())
 //                        Log.d("cr", "avail heap after : " + RuntimeInfo.getFreeHeapMemInBytes().toString())
@@ -92,10 +88,6 @@ class NearbyDeparturesFragment : androidx.fragment.app.Fragment(), Permission.Li
 //                    }
 
 
-
-
-
-
 //                    stationViewModel.loadNearbyStations(itStation.currentStation, onTimetableReceivedHandler = {
 //                        itStation.timetable = it
 //                        nearbyDeparturesAdapter?.notifyDataSetChanged()
@@ -106,22 +98,22 @@ class NearbyDeparturesFragment : androidx.fragment.app.Fragment(), Permission.Li
             intervalMilliSeconds = 2000L,
             startDelayMilliSeconds = 2000L,
             backgroundThreadAction = null
-            )
+        )
 
         val applicationServices = BaseApplication.get().applicationServices
         nearbyDeparturesAdapter = NearbyDeparturesAdapter(
             stationViewModel.viewModelScope,
-   //         lifecycleScope,
+            //         lifecycleScope,
             this,
             applicationServices.recentSearchesStore,
             applicationServices.favoriteHafasStationsStore,
             applicationServices.favoriteDbStationStore,
             hubViewModel.timetableRepository,
             trackingManager,
-            loadNextDeparturesCallback = {selected:NearbyDbStationItem?, selection:Int ->
+            loadNextDeparturesCallback = { selected: NearbyDbStationItem?, selection: Int ->
                 run {
                     selectedStation = selected
-                    if(selected!=null) {
+                    if (selected != null) {
                         stationViewModel.loadNearbyStations(selected.station)
                     }
                 }
@@ -179,18 +171,16 @@ class NearbyDeparturesFragment : androidx.fragment.app.Fragment(), Permission.Li
                 setOnRefreshListener(this@NearbyDeparturesFragment)
             }
 
-            hubViewModel.nearbyStopPlacesLiveData.observe(
-                viewLifecycleOwner,
-                androidx.lifecycle.Observer {
-                    nearbyDeparturesContainerHolder?.run {
-                        if (it?.isNotEmpty() == true) {
-                            showContent()
+            hubViewModel.nearbyStopPlacesLiveData.observe(viewLifecycleOwner) {
+                nearbyDeparturesContainerHolder?.run {
+                    if (it?.isNotEmpty() == true) {
+                        showContent()
                     } else {
                         showEmpty()
                     }
                 }
-                    nearbyDeparturesAdapter?.setData(it)
-                })
+                nearbyDeparturesAdapter?.setData(it)
+            }
 
             hubViewModel.nearbyStopPlacesResourceLiveData.switchMap { it.error }
                 .observe(viewLifecycleOwner, androidx.lifecycle.Observer {
@@ -216,7 +206,7 @@ class NearbyDeparturesFragment : androidx.fragment.app.Fragment(), Permission.Li
     override fun onPause() {
         timerCounter.cancelTimer()
         super.onPause()
-        }
+    }
 
     override fun onResume() {
         super.onResume()
@@ -262,7 +252,7 @@ class NearbyDeparturesFragment : androidx.fragment.app.Fragment(), Permission.Li
 
         updateLocation(false)
 
-        if(nearbyDeparturesAdapter != null && nearbyDeparturesAdapter!!.itemCount > 0) {
+        if (nearbyDeparturesAdapter != null && nearbyDeparturesAdapter!!.itemCount > 0) {
             nearbyDeparturesContainerHolder?.run { showContent() }
         }
 
