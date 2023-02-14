@@ -8,8 +8,6 @@ package de.deutschebahn.bahnhoflive.ui.hub
 
 import de.deutschebahn.bahnhoflive.repository.Station
 import de.deutschebahn.bahnhoflive.ui.search.StopPlaceSearchResult
-import de.deutschebahn.bahnhoflive.ui.station.timetable.TimetableCollectorConnector
-
 
 
 class NearbyDbStationItem(val dbStationSearchResult: StopPlaceSearchResult) :
@@ -23,7 +21,8 @@ class NearbyDbStationItem(val dbStationSearchResult: StopPlaceSearchResult) :
         get() = 0
 
     override val distance: Float
-        get() = dbStationSearchResult.timetable.second
+        get() = dbStationSearchResult.distance
+              //  get() = dbStationSearchResult.timetable.second
 
     override fun bindViewHolder(holder: androidx.recyclerview.widget.RecyclerView.ViewHolder) {
         (holder as NearbyDbDeparturesViewHolder).bind(dbStationSearchResult)
@@ -32,8 +31,11 @@ class NearbyDbStationItem(val dbStationSearchResult: StopPlaceSearchResult) :
     val station : Station
         get() = dbStationSearchResult.getStation()
 
-    val timetableCollectorConnector : TimetableCollectorConnector?
-        get() = dbStationSearchResult.timetableCollectorConnector
+ //   val timetableCollectorConnector : TimetableCollectorConnector?
+   //     get() = dbStationSearchResult.timetableCollectorConnector
 
+//    var timetable : Timetable?
+//        get() = dbStationSearchResult.timetable
+//        set(value) {dbStationSearchResult.timetable=value}
 
 }

@@ -101,19 +101,19 @@ Log.d("cr", "selItem: " + selectedItem.toString() + " searcgResult: " + searchRe
 
 
                 // get Station-Abfahrten
-                if(searchResult.getTimetableCollectorConnector() != null)
-                    searchResult.getTimetableCollectorConnector().setStationAndRequestDestinationStations(searchResult.getStation(), timetable -> {
-                                notifyDataSetChanged();
-                                return Unit.INSTANCE;
-                            },
-                            integer -> {
-                                return Unit.INSTANCE;
-                            },
-                            aBoolean -> {
-                                return Unit.INSTANCE;
-                            }
-
-                    );
+//                if(searchResult.getTimetableCollectorConnector() != null)
+//                    searchResult.getTimetableCollectorConnector().setStationAndRequestDestinationStations(searchResult.getStation(), timetable -> {
+//                                notifyDataSetChanged();
+//                                return Unit.INSTANCE;
+//                            },
+//                            integer -> {
+//                                return Unit.INSTANCE;
+//                            },
+//                            aBoolean -> {
+//                                return Unit.INSTANCE;
+//                            }
+//
+//                    );
 
             } else if (selectedItem instanceof HafasStationSearchResult) {
                 ((HafasStationSearchResult) selectedItem).getTimetable().requestTimetable(true, "search");
@@ -182,10 +182,10 @@ Log.d("cr", "selItem: " + selectedItem.toString() + " searcgResult: " + searchRe
                 final SearchResult searchResult;
                 if (dbStation.isDbStation()) {
 
-                    TimetableCollectorConnector timetableCollectorConnector  = new TimetableCollectorConnector(this.owner);
+//                    TimetableCollectorConnector timetableCollectorConnector  = new TimetableCollectorConnector(this.owner);
 
                     searchResult = new StopPlaceSearchResult(coroutineScope, dbStation,
-                            recentSearchesStore, favoriteDbStationsStore, timetableRepository, timetableCollectorConnector);
+                            recentSearchesStore, favoriteDbStationsStore, timetableRepository); //, timetableCollectorConnector);
                 } else {
                     final HafasStation hafasStation = StopPlaceXKt.toHafasStation(dbStation);
                     searchResult = new HafasStationSearchResult(hafasStation, recentSearchesStore, favoriteHafasStationsStore);

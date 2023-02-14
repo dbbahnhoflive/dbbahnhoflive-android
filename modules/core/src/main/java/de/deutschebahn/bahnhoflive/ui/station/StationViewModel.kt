@@ -38,6 +38,7 @@ import de.deutschebahn.bahnhoflive.repository.feedback.WhatsAppFeeback
 import de.deutschebahn.bahnhoflive.repository.locker.LockersViewModel
 import de.deutschebahn.bahnhoflive.repository.map.RrtRequestResult
 import de.deutschebahn.bahnhoflive.repository.parking.ViewModelParking
+import de.deutschebahn.bahnhoflive.repository.timetable.Timetable
 import de.deutschebahn.bahnhoflive.repository.timetable.TimetableCollector
 import de.deutschebahn.bahnhoflive.repository.timetable.TimetableHour
 import de.deutschebahn.bahnhoflive.repository.timetable.TimetableRepository
@@ -399,6 +400,12 @@ class StationViewModel(
             collect {
                 accessibilityFeaturesResource.station = it
             }
+        }
+    }
+
+    fun loadNearbyStations(station: Station) {
+        viewModelScope.launch {
+            stationStateFlow.emit(station)
         }
     }
 

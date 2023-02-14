@@ -70,9 +70,11 @@ class TimetableCollector(
         ) { hourCount: Int, firstHour: Long ->
             firstHour to hourCount
         }
-    ) { evaIds: EvaIds, (firstHour, hourCount) ->
+    ) {
+            evaIds: EvaIds, (firstHour, hourCount) ->
         Parameters(firstHour, hourCount, evaIds)
-    }
+    }.shareIn(coroutineScope, SharingStarted.Lazily,1)
+
 
     data class Result<T>(
         val payload: T?,
@@ -80,6 +82,7 @@ class TimetableCollector(
     )
 
     private var refreshJob: Job? = null
+
 
     fun refresh(force: Boolean) {
 
@@ -187,6 +190,7 @@ class TimetableCollector(
                 progressFlow.value = false
             }
         }
+        Log.d("cr", "end of launch")
     }
 
     private val maxHoursReachedFlow = hourCountStateFlow.map {
