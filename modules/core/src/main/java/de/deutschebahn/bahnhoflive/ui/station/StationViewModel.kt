@@ -38,9 +38,7 @@ import de.deutschebahn.bahnhoflive.repository.feedback.WhatsAppFeeback
 import de.deutschebahn.bahnhoflive.repository.locker.LockersViewModel
 import de.deutschebahn.bahnhoflive.repository.map.RrtRequestResult
 import de.deutschebahn.bahnhoflive.repository.parking.ViewModelParking
-import de.deutschebahn.bahnhoflive.repository.timetable.Timetable
 import de.deutschebahn.bahnhoflive.repository.timetable.TimetableCollector
-import de.deutschebahn.bahnhoflive.repository.timetable.TimetableHour
 import de.deutschebahn.bahnhoflive.repository.timetable.TimetableRepository
 import de.deutschebahn.bahnhoflive.stream.livedata.MergedLiveData
 import de.deutschebahn.bahnhoflive.stream.livedata.switchMap
@@ -312,8 +310,8 @@ class StationViewModel(
             evaIdsProvider(station)
         }.filterNotNull(),
         viewModelScope,
-        ::getTimetableHour,
-        ::getTimetableChanges
+        timetableRepository::fetchTimetableHour,
+        timetableRepository::fetchTimetableChanges
     ).apply {
         viewModelScope.launch {
             refreshLiveData.asFlow().collect { force ->
@@ -333,12 +331,6 @@ class StationViewModel(
 
     private val timetableRepository: TimetableRepository
         get() = application.repositories.timetableRepository
-
-    private suspend fun getTimetableHour(evaId: String, hour: Long): TimetableHour =
-        timetableRepository.fetchTimetableHour(evaId, hour)
-
-    private suspend fun getTimetableChanges(evaId: String) =
-        timetableRepository.fetchTimetableChanges(evaId)
 
     private val evaIdsDataObserver = Observer<Station> { station ->
         if (station != null) {
