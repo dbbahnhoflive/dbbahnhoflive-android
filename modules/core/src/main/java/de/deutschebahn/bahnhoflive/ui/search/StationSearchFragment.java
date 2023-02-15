@@ -38,10 +38,14 @@ import de.deutschebahn.bahnhoflive.analytics.TrackingManager;
 import de.deutschebahn.bahnhoflive.location.BaseLocationListener;
 import de.deutschebahn.bahnhoflive.persistence.RecentSearchesStore;
 import de.deutschebahn.bahnhoflive.repository.LoadingStatus;
+import de.deutschebahn.bahnhoflive.repository.timetable.Constants;
+import de.deutschebahn.bahnhoflive.repository.timetable.TimetableCollector;
 import de.deutschebahn.bahnhoflive.ui.hub.LocationFragment;
+import de.deutschebahn.bahnhoflive.util.GeneralPurposeMillisecondsTimer;
 import de.deutschebahn.bahnhoflive.util.ImeCloserKt;
 import de.deutschebahn.bahnhoflive.view.BaseTextWatcher;
 import de.deutschebahn.bahnhoflive.view.ConfirmationDialog;
+import kotlin.Unit;
 
 public class StationSearchFragment extends Fragment {
 
@@ -77,6 +81,9 @@ public class StationSearchFragment extends Fragment {
     private ViewFlipper viewFlipper;
     private StationSearchViewModel stationSearchViewModel;
 
+    private TimetableCollector selectedTimetableCollector = null;
+    private GeneralPurposeMillisecondsTimer timerCounter = new GeneralPurposeMillisecondsTimer();
+
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -89,8 +96,33 @@ public class StationSearchFragment extends Fragment {
         locationFragment = LocationFragment.get(fragmentManager);
         locationFragment.addLocationListener(locationListener);
 
-        adapter = new StationSearchAdapter(getActivity(), recentSearchesStore, queryRecorder::clear, this, new TrackingManager(),
-                getLifecycleScope(), stationSearchViewModel.getTimetableCollectorFactory());
+        adapter = new StationSearchAdapter(getActivity(),
+                recentSearchesStore,
+                queryRecorder::clear,
+                this,
+                new TrackingManager(),
+                getLifecycleScope(),
+                stationSearchViewModel.getTimetableCollectorFactory(),
+                (TimetableCollector selected, int selection) -> {
+                    selectedTimetableCollector = selected;
+
+                    selectedTimetableCollector.getTimetableUpdateAsLiveData().observe(getViewLifecycleOwner(), timetable -> {
+                        adapter.notifyItemChanged(selection, timetable);
+                    });
+
+                });
+
+        timerCounter.startTimer(
+                 null,
+                Constants.TIMETABLE_REFRESH_INTERVAL_MILLISECONDS,
+                2000L,
+                () -> {
+                     if(selectedTimetableCollector !=null)
+                         selectedTimetableCollector.refresh(false);
+                      return Unit.INSTANCE;
+                 }
+
+        );
     }
 
     @Override

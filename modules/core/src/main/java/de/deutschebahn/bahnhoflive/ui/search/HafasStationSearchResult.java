@@ -63,4 +63,11 @@ public class HafasStationSearchResult extends StationSearchResult<HafasStation, 
     public HafasTimetable getTimetable() {
         return hafasTimetable;
     }
+
+    @Override
+    public float getDistance() {
+       if(hafasTimetable.station.dist>=0)
+        return (float) hafasTimetable.station.dist;
+       else return 0.0f;
+    }
 }

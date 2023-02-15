@@ -31,24 +31,23 @@ class SettingsFragmentFavoritesAdapter extends RecyclerView.Adapter<ViewHolder<S
 
     private final StationWrapper stationWrapper;
     private final List<StationWrapper<InternalStation>> stations;
-    private final EvaIdsProviderKt evaIdsProvider;
-    private final CoroutineScope coroutineScope;
 
     private final SingleSelectionManager selectionManager;
 
-    public SettingsFragmentFavoritesAdapter(InternalStation station, FavoriteStationsStore<InternalStation> favoriteStationsStore,
-                            SingleSelectionManager selectionManager, StationImageResolver stationImageResolver,
-                            EvaIdsProviderKt evaIdsProvider, CoroutineScope coroutineScope) {
+    public SettingsFragmentFavoritesAdapter(InternalStation station,
+                                            FavoriteStationsStore<InternalStation> favoriteStationsStore,
+                                            SingleSelectionManager selectionManager,
+                                            StationImageResolver stationImageResolver) {
         stations = favoriteStationsStore.getAll();
-        this.evaIdsProvider = evaIdsProvider;
-        this.coroutineScope = coroutineScope;
         this.stationWrapper = find(stations, station, stationImageResolver, favoriteStationsStore);
         stations.remove(this.stationWrapper);
 
         this.selectionManager = selectionManager;
     }
 
-    private StationWrapper find(List<StationWrapper<InternalStation>> stationWrappers, InternalStation station, StationImageResolver stationImageResolver,
+    private StationWrapper find(List<StationWrapper<InternalStation>> stationWrappers,
+                                InternalStation station,
+                                StationImageResolver stationImageResolver,
                                 FavoriteStationsStore<InternalStation> favoriteStationsStore) {
         for (StationWrapper wrapper : stationWrappers) {
             if (wrapper.wraps(station)) {
@@ -56,8 +55,8 @@ class SettingsFragmentFavoritesAdapter extends RecyclerView.Adapter<ViewHolder<S
             }
         }
 
-//        return new DbStationWrapper(station, favoriteStationsStore, 0, evaIdsProvider, coroutineScope);
-        return new DbStationWrapper(station, favoriteStationsStore, 0, coroutineScope); // #cr
+        return new DbStationWrapper(station, favoriteStationsStore, 0, null, null);
+
     }
 
     @Override

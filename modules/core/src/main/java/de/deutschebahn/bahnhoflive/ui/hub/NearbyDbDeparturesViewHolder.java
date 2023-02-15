@@ -22,8 +22,10 @@ class NearbyDbDeparturesViewHolder extends DbDeparturesViewHolder {
     public static final String TAG = NearbyDbDeparturesViewHolder.class.getSimpleName();
     private final DistanceViewHolder distanceViewHolder;
 
-    public NearbyDbDeparturesViewHolder(ViewGroup parent, SingleSelectionManager singleSelectionManager,
-                                        LifecycleOwner owner, TrackingManager trackingManager) {
+    public NearbyDbDeparturesViewHolder(ViewGroup parent,
+                                        LifecycleOwner owner,
+                                        SingleSelectionManager singleSelectionManager,
+                                        TrackingManager trackingManager) {
         super(parent, R.layout.card_nearby_departures, singleSelectionManager, owner,
                 trackingManager, null, TrackingManager.UiElement.ABFAHRT_NAEHE_BHF);
         distanceViewHolder = new DistanceViewHolder(itemView);

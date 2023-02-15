@@ -395,12 +395,6 @@ class StationViewModel(
         }
     }
 
-    fun loadNearbyStations(station: Station) {
-        viewModelScope.launch {
-            stationStateFlow.emit(station)
-        }
-    }
-
     fun initialize(station: Station?) {
         if (station != null && initializationPending.take()) {
             stationResource.initialize(station)

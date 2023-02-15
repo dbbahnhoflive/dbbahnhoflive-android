@@ -11,7 +11,7 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.lifecycle.ViewModelProvider
+import androidx.lifecycle.asLiveData
 import androidx.lifecycle.lifecycleScope
 import de.deutschebahn.bahnhoflive.BaseApplication
 import de.deutschebahn.bahnhoflive.analytics.TrackingManager
@@ -19,11 +19,12 @@ import de.deutschebahn.bahnhoflive.backend.hafas.model.HafasStation
 import de.deutschebahn.bahnhoflive.databinding.FragmentFavoritesBinding
 import de.deutschebahn.bahnhoflive.persistence.FavoriteStationsStore
 import de.deutschebahn.bahnhoflive.repository.InternalStation
+import de.deutschebahn.bahnhoflive.repository.timetable.Constants
+import de.deutschebahn.bahnhoflive.repository.timetable.TimetableCollector
 import de.deutschebahn.bahnhoflive.ui.DbStationWrapper
 import de.deutschebahn.bahnhoflive.ui.search.HafasStationSearchResult
 import de.deutschebahn.bahnhoflive.ui.search.StoredStationSearchResult
-import de.deutschebahn.bahnhoflive.ui.station.StationViewModel
-import de.deutschebahn.bahnhoflive.ui.station.timetable.TimetableCollectorConnector
+import de.deutschebahn.bahnhoflive.util.GeneralPurposeMillisecondsTimer
 import kotlinx.coroutines.flow.flow
 
 class FavoritesFragment : androidx.fragment.app.Fragment() {
@@ -36,6 +37,9 @@ class FavoritesFragment : androidx.fragment.app.Fragment() {
     private lateinit var stationImageResolver: StationImageResolver
 
     private var favoritesAdapter: FavoritesAdapter? = null
+
+    private var selectedTimetableController : TimetableCollector? = null
+    private val timerCounter : GeneralPurposeMillisecondsTimer = GeneralPurposeMillisecondsTimer()
 
     private val dbFavoritesListener = FavoriteStationsStore.Listener<InternalStation> {
         refreshFavorites()
@@ -50,6 +54,15 @@ class FavoritesFragment : androidx.fragment.app.Fragment() {
         super.onCreate(savedInstanceState)
 
         stationImageResolver = StationImageResolver(context)
+
+        timerCounter.startTimer(
+            mainThreadAction = null,
+            intervalMilliSeconds = Constants.TIMETABLE_REFRESH_INTERVAL_MILLISECONDS,
+            startDelayMilliSeconds = 2000L,
+            backgroundThreadAction = {
+                selectedTimetableController?.refresh(false)
+            }
+        )
     }
 
     override fun onCreateView(
@@ -62,7 +75,18 @@ class FavoritesFragment : androidx.fragment.app.Fragment() {
 
         favoritesAdapter = FavoritesAdapter(
             this@FavoritesFragment,
-            TrackingManager()
+            TrackingManager(),
+            loadNewTimetableCallback = {selected:TimetableCollector?, selection:Int ->
+                run {
+                    selectedTimetableController = selected
+                    selectedTimetableController?.let {
+                        it.timetableStateFlow?.asLiveData()?.observe(viewLifecycleOwner) {itTimetable ->
+//                        nearbyDeparturesAdapter?.notifyDataSetChanged()
+                            favoritesAdapter?.notifyItemChanged(selection, itTimetable)
+                        }
+                    }
+                }
+            }
         )
 
         val dividerItemDecoration = androidx.recyclerview.widget.DividerItemDecoration(
@@ -127,18 +151,13 @@ class FavoritesFragment : androidx.fragment.app.Fragment() {
                         )
                         is DbStationWrapper -> {
 
-                            val timetableCollectorConnector =  TimetableCollectorConnector(this@FavoritesFragment) // neue Instanz
-
                             StoredStationSearchResult(
                                 it.wrappedStation,
                                 recentSearchesStore,
                                 favoriteDbStationsStore,
-                                timetableCollectorConnector
-//                                timetableCollectorConnector.timetableCollector,
-//                                timetableCollectorConnector
-//                                timetableRepository.createTimetableCollector(flow {
-//                                    it.wrappedStation.evaIds
-//                                }, lifecycleScope)
+                                timetableRepository.createTimetableCollector(flow {
+                                    it.wrappedStation.evaIds?.let { it1 -> emit(it1) }
+                                }, lifecycleScope)
                             )
                         }
                         else -> it

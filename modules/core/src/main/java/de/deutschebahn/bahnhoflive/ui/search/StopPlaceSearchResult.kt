@@ -16,7 +16,6 @@ import de.deutschebahn.bahnhoflive.repository.Station
 import de.deutschebahn.bahnhoflive.repository.timetable.TimetableCollector
 import de.deutschebahn.bahnhoflive.repository.timetable.TimetableRepository
 import de.deutschebahn.bahnhoflive.ui.station.StationActivity
-import de.deutschebahn.bahnhoflive.ui.station.timetable.TimetableCollectorConnector
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.flow.flow
 
@@ -26,7 +25,6 @@ class StopPlaceSearchResult(
     val recentSearchesStore: RecentSearchesStore,
     val favoriteStationsStore: FavoriteStationsStore<InternalStation>,
     val timetableRepository: TimetableRepository
-//    val timetableCollectorConnector: TimetableCollectorConnector?
 ) : StationSearchResult<InternalStation, Pair<TimetableCollector, Float>>(
     R.drawable.legacy_dbmappinicon,
     recentSearchesStore,
@@ -34,14 +32,6 @@ class StopPlaceSearchResult(
 ) {
 
     private val internalStation = stopPlace.asInternalStation
-
-//    private fun getTimetableCollector(): TimetableCollector {
-//
-//        return timetableCollectorConnector?.timetableCollector
-//            ?: timetableRepository.createTimetableCollector(
-//                flow { stopPlace.evaIds }, coroutineScope
-//            )
-//    }
 
     private val timetableCollector = timetableRepository.createTimetableCollector(
                 flow { emit(stopPlace.evaIds) }, coroutineScope

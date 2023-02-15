@@ -1,6 +1,8 @@
 package de.deutschebahn.bahnhoflive.repository.timetable
 
 import android.util.Log
+import androidx.lifecycle.LiveData
+import androidx.lifecycle.asLiveData
 import androidx.lifecycle.liveData
 import de.deutschebahn.bahnhoflive.backend.local.model.EvaIds
 import de.deutschebahn.bahnhoflive.backend.ris.getCurrentHour
@@ -166,12 +168,13 @@ class TimetableCollector(
 
                     if (allStationsHaveErrors)
                         timetableStateFlow.value = null
-                    else
+                    else {
                         timetableStateFlow.value = Timetable(
                             mergedTrainInfos.values.toList(),
                             (parameters.firstHourInMillis / hourInMillis + parameters.hourCount) * hourInMillis,
                             parameters.hourCount
                         )
+                    }
 
                 } catch (cancellationException: CancellationException) {
                     Log.d(
@@ -190,7 +193,6 @@ class TimetableCollector(
                 progressFlow.value = false
             }
         }
-        Log.d("cr", "end of launch")
     }
 
     private val maxHoursReachedFlow = hourCountStateFlow.map {
@@ -221,6 +223,8 @@ class TimetableCollector(
     fun loadIfNecessary() {
         refresh(false)
     }
+
+    val timetableUpdateAsLiveData : LiveData<Timetable?> = timetableStateFlow.asLiveData()
 
     val anyUpdateLiveData
         get() = liveData<Unit> {

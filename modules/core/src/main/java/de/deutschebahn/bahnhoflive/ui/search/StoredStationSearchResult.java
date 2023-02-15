@@ -26,9 +26,6 @@ import kotlin.Pair;
 public class StoredStationSearchResult extends StationSearchResult<InternalStation, Pair<TimetableCollector, Float>> {
     private final TimetableCollector timetableCollector;
 
-    @Nullable
-    public TimetableCollectorConnector timetableCollectorConnector;
-
     @NonNull
     protected final Station station;
 
@@ -36,22 +33,12 @@ public class StoredStationSearchResult extends StationSearchResult<InternalStati
     public StoredStationSearchResult(@NonNull InternalStation dbStation,
                                      RecentSearchesStore recentSearchesStore,
                                      FavoriteStationsStore<InternalStation> favoriteStationsStore,
-                                     TimetableCollector timetableCollector,
-                                     @Nullable TimetableCollectorConnector timetableCollectorConnector) {
+                                     TimetableCollector timetableCollector) {
         super(R.drawable.legacy_dbmappinicon, recentSearchesStore, favoriteStationsStore);
         this.timetableCollector = timetableCollector;
-        this.timetableCollectorConnector = timetableCollectorConnector;
         station = dbStation;
     }
 
-
-    public StoredStationSearchResult(@NonNull InternalStation dbStation,
-                                     RecentSearchesStore recentSearchesStore,
-                                     FavoriteStationsStore<InternalStation> favoriteStationsStore,
-                                     @NonNull TimetableCollectorConnector timetableCollectorConnector) {
-        this(dbStation, recentSearchesStore, favoriteStationsStore,
-                timetableCollectorConnector.getTimetableCollector(), timetableCollectorConnector);
-    }
 
     @Override
     public CharSequence getTitle() {
@@ -86,15 +73,7 @@ public class StoredStationSearchResult extends StationSearchResult<InternalStati
 
     @Override
     public Pair<TimetableCollector, Float> getTimetable() {
-
-        if(timetableCollectorConnector!=null)
-          return new Pair<> (timetableCollectorConnector.getTimetableCollector(), 0.0f);
-        else
         return new Pair<>(timetableCollector, 0f /* TODO */);
     }
 
-    @NonNull
-    public Station getStation() {
-        return station;
-    }
 }

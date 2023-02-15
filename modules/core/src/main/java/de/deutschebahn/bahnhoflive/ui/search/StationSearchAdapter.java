@@ -6,7 +6,6 @@
 
 package de.deutschebahn.bahnhoflive.ui.search;
 
-import android.util.Log;
 import android.view.ViewGroup;
 
 import androidx.fragment.app.FragmentActivity;
@@ -25,17 +24,20 @@ import de.deutschebahn.bahnhoflive.backend.hafas.model.HafasStation;
 import de.deutschebahn.bahnhoflive.persistence.FavoriteStationsStore;
 import de.deutschebahn.bahnhoflive.persistence.RecentSearchesStore;
 import de.deutschebahn.bahnhoflive.repository.InternalStation;
+import de.deutschebahn.bahnhoflive.repository.timetable.TimetableCollector;
 import de.deutschebahn.bahnhoflive.repository.timetable.TimetableRepository;
 import de.deutschebahn.bahnhoflive.ui.ViewHolder;
 import de.deutschebahn.bahnhoflive.ui.hub.DbDeparturesViewHolder;
 import de.deutschebahn.bahnhoflive.ui.hub.DeparturesViewHolder;
 import de.deutschebahn.bahnhoflive.ui.hub.HubViewModel;
-import de.deutschebahn.bahnhoflive.ui.station.timetable.TimetableCollectorConnector;
 import de.deutschebahn.bahnhoflive.view.SingleSelectionManager;
-import kotlin.Unit;
 import kotlinx.coroutines.CoroutineScope;
 
 class StationSearchAdapter extends RecyclerView.Adapter<ViewHolder> {
+
+    public interface OnTimetableCollectorChangedListener {
+        void onLoadNewTimetable(TimetableCollector timetableCollector, int selection);
+    }
 
     private final SingleSelectionManager singleSelectionManager = new SingleSelectionManager(this);
 
@@ -57,10 +59,18 @@ class StationSearchAdapter extends RecyclerView.Adapter<ViewHolder> {
     private final CoroutineScope coroutineScope;
     private final TimetableRepository timetableRepository;
 
+   private final OnTimetableCollectorChangedListener loadNewTimetableCallback;
 
+    StationSearchAdapter(FragmentActivity context,
+                         RecentSearchesStore recentSearchesStore,
+                         SearchItemPickedListener searchItemPickedListener,
+                         LifecycleOwner owner,
+                         TrackingManager trackingManager,
+                         CoroutineScope coroutineScope,
+                         TimetableRepository timetableRepository,
+                         OnTimetableCollectorChangedListener loadNewTimetableCallback
+                         ) {
 
-    StationSearchAdapter(FragmentActivity context, RecentSearchesStore recentSearchesStore, SearchItemPickedListener searchItemPickedListener,
-                         LifecycleOwner owner, TrackingManager trackingManager, CoroutineScope coroutineScope, TimetableRepository timetableRepository) {
         hubViewModel = new ViewModelProvider(context).get(HubViewModel.class);
         this.coroutineScope = coroutineScope;
         this.timetableRepository = timetableRepository;
@@ -71,50 +81,21 @@ class StationSearchAdapter extends RecyclerView.Adapter<ViewHolder> {
         this.searchItemPickedListener = searchItemPickedListener;
         this.owner = owner;
         this.trackingManager = trackingManager;
+        this.loadNewTimetableCallback = loadNewTimetableCallback;
+
+
         singleSelectionManager.addListener(selectionManager -> {
             final SearchResult selectedItem = selectionManager.getSelectedItem(searchResults);
             if (selectedItem instanceof StoredStationSearchResult) {
-
+                // long click on stored item
                 final StoredStationSearchResult searchResult = (StoredStationSearchResult) selectedItem;
-Log.d("cr", "selItem: " + selectedItem.toString() + " searcgResult: " + searchResult.toString());
-                ((StoredStationSearchResult) selectedItem).getTimetable().getFirst().loadIfNecessary();
-
-                if(searchResult.timetableCollectorConnector == null)
-                    searchResult.timetableCollectorConnector = new TimetableCollectorConnector(owner);
-
-                // get Station-Abfahrten
-                if (searchResult.timetableCollectorConnector != null)
-                    searchResult.timetableCollectorConnector.setStationAndRequestDestinationStations(searchResult.station, timetable -> {
-                                notifyDataSetChanged();
-                                return Unit.INSTANCE;
-                            },
-                            integer -> {
-                                return Unit.INSTANCE;
-                            },
-                            aBoolean -> {
-                                return Unit.INSTANCE;
-                            }
-
-                    );
-            } else if (selectedItem instanceof StopPlaceSearchResult) { // long click on (temp.) searchresult
+                if(this.loadNewTimetableCallback!=null)
+                    this.loadNewTimetableCallback.onLoadNewTimetable(searchResult.getTimetable().getFirst(), selectionManager.getSelection());
+            } else if (selectedItem instanceof StopPlaceSearchResult) {
+                // long click on typed searchresult
                 StopPlaceSearchResult searchResult = ((StopPlaceSearchResult) selectedItem);
-
-
-                // get Station-Abfahrten
-//                if(searchResult.getTimetableCollectorConnector() != null)
-//                    searchResult.getTimetableCollectorConnector().setStationAndRequestDestinationStations(searchResult.getStation(), timetable -> {
-//                                notifyDataSetChanged();
-//                                return Unit.INSTANCE;
-//                            },
-//                            integer -> {
-//                                return Unit.INSTANCE;
-//                            },
-//                            aBoolean -> {
-//                                return Unit.INSTANCE;
-//                            }
-//
-//                    );
-
+                if(this.loadNewTimetableCallback!=null)
+                    this.loadNewTimetableCallback.onLoadNewTimetable(searchResult.getTimetable().getFirst(), selectionManager.getSelection());
             } else if (selectedItem instanceof HafasStationSearchResult) {
                 ((HafasStationSearchResult) selectedItem).getTimetable().requestTimetable(true, "search");
             }
@@ -182,10 +163,8 @@ Log.d("cr", "selItem: " + selectedItem.toString() + " searcgResult: " + searchRe
                 final SearchResult searchResult;
                 if (dbStation.isDbStation()) {
 
-//                    TimetableCollectorConnector timetableCollectorConnector  = new TimetableCollectorConnector(this.owner);
-
                     searchResult = new StopPlaceSearchResult(coroutineScope, dbStation,
-                            recentSearchesStore, favoriteDbStationsStore, timetableRepository); //, timetableCollectorConnector);
+                            recentSearchesStore, favoriteDbStationsStore, timetableRepository);
                 } else {
                     final HafasStation hafasStation = StopPlaceXKt.toHafasStation(dbStation);
                     searchResult = new HafasStationSearchResult(hafasStation, recentSearchesStore, favoriteHafasStationsStore);

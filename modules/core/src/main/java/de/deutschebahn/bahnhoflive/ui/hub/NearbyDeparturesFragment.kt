@@ -13,18 +13,19 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.asLiveData
+import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.switchMap
-import androidx.lifecycle.viewModelScope
 import de.deutschebahn.bahnhoflive.BaseApplication
 import de.deutschebahn.bahnhoflive.analytics.TrackingManager
 import de.deutschebahn.bahnhoflive.databinding.FragmentNearbyDeparturesBinding
 import de.deutschebahn.bahnhoflive.location.BaseLocationListener
 import de.deutschebahn.bahnhoflive.permission.Permission
 import de.deutschebahn.bahnhoflive.repository.LoadingStatus
+import de.deutschebahn.bahnhoflive.repository.timetable.Constants
+import de.deutschebahn.bahnhoflive.repository.timetable.TimetableCollector
 import de.deutschebahn.bahnhoflive.ui.LoadingContentDecorationViewHolder
-import de.deutschebahn.bahnhoflive.ui.station.StationViewModel
 import de.deutschebahn.bahnhoflive.util.Cancellable
-import de.deutschebahn.bahnhoflive.util.CdeTimer
+import de.deutschebahn.bahnhoflive.util.GeneralPurposeMillisecondsTimer
 
 class NearbyDeparturesFragment : androidx.fragment.app.Fragment(), Permission.Listener,
     androidx.swiperefreshlayout.widget.SwipeRefreshLayout.OnRefreshListener {
@@ -50,72 +51,42 @@ class NearbyDeparturesFragment : androidx.fragment.app.Fragment(), Permission.Li
 
     private val hubViewModel by activityViewModels<HubViewModel>()
 
-    private val stationViewModel by activityViewModels<StationViewModel>()
-
     private var viewBinding: FragmentNearbyDeparturesBinding? = null
 
-    var selectedStation: NearbyDbStationItem? = null
-    val timerCounter: CdeTimer = CdeTimer()
-
-//                         Log.d("cr", "avail heap before: " + RuntimeInfo.getFreeHeapMemInBytes().toString())
-//                        Log.d("cr", "avail heap after : " + RuntimeInfo.getFreeHeapMemInBytes().toString())
+    private var selectedTimetableController: TimetableCollector?=null
+    private val timerCounter : GeneralPurposeMillisecondsTimer = GeneralPurposeMillisecondsTimer()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
         timerCounter.startTimer(
-            mainThreadAction = {
-                // ui-actions possible
-
-                // StopPlaceSearchResult
-
-                selectedStation?.let { itNearbyStation ->
-                    run {
-
-                        itNearbyStation.dbStationSearchResult.timetable.first.let {
-                            it.refresh(false)
-                            it.timetableStateFlow.asLiveData().observe(this) {
-                                nearbyDeparturesAdapter?.notifyDataSetChanged()
-                            }
-                        }
-
-
-//                    stationViewModel.timetableCollector.let {
-//                        it.refresh(false)
-//                        it.timetableStateFlow.asLiveData().observe(this) {
-//                            nearbyDeparturesAdapter?.notifyDataSetChanged()
-//                        }
-//                    }
-
-
-//                    stationViewModel.loadNearbyStations(itStation.currentStation, onTimetableReceivedHandler = {
-//                        itStation.timetable = it
-//                        nearbyDeparturesAdapter?.notifyDataSetChanged()
-//                    })
-                    }
-                }
-            },
-            intervalMilliSeconds = 2000L,
+            mainThreadAction = null,
+            intervalMilliSeconds = Constants.TIMETABLE_REFRESH_INTERVAL_MILLISECONDS,
             startDelayMilliSeconds = 2000L,
-            backgroundThreadAction = null
+            backgroundThreadAction = {
+                selectedTimetableController?.refresh(false)
+                            }
         )
 
         val applicationServices = BaseApplication.get().applicationServices
         nearbyDeparturesAdapter = NearbyDeparturesAdapter(
-            stationViewModel.viewModelScope,
-            //         lifecycleScope,
+            lifecycleScope,
             this,
             applicationServices.recentSearchesStore,
             applicationServices.favoriteHafasStationsStore,
             applicationServices.favoriteDbStationStore,
             hubViewModel.timetableRepository,
             trackingManager,
-            loadNextDeparturesCallback = { selected: NearbyDbStationItem?, selection: Int ->
+            loadNextDeparturesCallback = { selected: TimetableCollector?, selection: Int ->
                 run {
-                    selectedStation = selected
-                    if (selected != null) {
-                        stationViewModel.loadNearbyStations(selected.station)
-                    }
+                    selectedTimetableController = selected
+
+                    selectedTimetableController?.let {
+                        timerCounter.restartTimer()
+                        it.timetableStateFlow?.asLiveData()?.observe(this) { itTimetable ->
+                            nearbyDeparturesAdapter?.notifyItemChanged(selection, itTimetable)
+                        }
+                    } ?:  timerCounter.cancelTimer()
                 }
             }
         )

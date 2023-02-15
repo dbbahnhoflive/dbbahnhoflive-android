@@ -143,7 +143,8 @@ public class FavoriteStationsStore<T> {
             try {
 
                 final T station = unmarshall(String.valueOf(value));
-                stations.add(itemAdapter.createStationWrapper(station, timestampPreferences.getLong(itemAdapter.getId(station), 0), this));
+                stations.add(itemAdapter.createStationWrapper(station,
+                        timestampPreferences.getLong(itemAdapter.getId(station), 0), this));
             } catch (RuntimeException e) {
                 Log.w(TAG, "Unmarshall failed", e);
             }

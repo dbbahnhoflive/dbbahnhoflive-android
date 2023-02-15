@@ -17,6 +17,7 @@ import de.deutschebahn.bahnhoflive.backend.toHafasStation
 import de.deutschebahn.bahnhoflive.persistence.FavoriteStationsStore
 import de.deutschebahn.bahnhoflive.persistence.RecentSearchesStore
 import de.deutschebahn.bahnhoflive.repository.InternalStation
+import de.deutschebahn.bahnhoflive.repository.timetable.TimetableCollector
 import de.deutschebahn.bahnhoflive.repository.timetable.TimetableRepository
 import de.deutschebahn.bahnhoflive.ui.ViewHolder
 import de.deutschebahn.bahnhoflive.ui.search.HafasStationSearchResult
@@ -33,7 +34,7 @@ internal class NearbyDeparturesAdapter(
     private val favoriteStationsStore: FavoriteStationsStore<InternalStation>,
     private val timetableRepository: TimetableRepository,
     val trackingManager: TrackingManager,
-    loadNextDeparturesCallback: (station: NearbyDbStationItem, selection: Int) -> Unit
+    loadNextDeparturesCallback: (timetableCollector: TimetableCollector?, selection: Int) -> Unit
 ) : ListAdapter<NearbyStationItem, RecyclerView.ViewHolder>(
     object : BaseItemCallback<NearbyStationItem>() {
         override fun areItemsTheSame(
@@ -49,18 +50,13 @@ internal class NearbyDeparturesAdapter(
                 val selection = selectionManager.selection
 
                 if (selection == SingleSelectionManager.INVALID_SELECTION) {
+                    loadNextDeparturesCallback(null, selection)
                     return@Listener
                 }
 
                 when (val selected = currentList[selection]) {
                     is NearbyDbStationItem -> {
-                        selected.onLoadDetails()
-                        loadNextDeparturesCallback(selected, selection)
-//                        selected.timetableCollectorConnector?.setStationAndRequestDestinationStations(
-//                            selected.station,
-//                            onTimetableReceivedHandler = {
-//                                notifyDataSetChanged()
-//                            })
+                        loadNextDeparturesCallback(selected.dbStationSearchResult.timetable.first, selection)
                     }
                     is NearbyHafasStationItem -> {
                         selected.onLoadDetails()
@@ -75,8 +71,8 @@ internal class NearbyDeparturesAdapter(
             1 -> NearbyDeparturesViewHolder(parent, owner, singleSelectionManager, trackingManager)
             else -> NearbyDbDeparturesViewHolder(
                 parent,
-                singleSelectionManager,
                 owner,
+                singleSelectionManager,
                 trackingManager
             )
         }
@@ -115,7 +111,6 @@ internal class NearbyDeparturesAdapter(
                             timetableRepository
                         )
                     )
-//                    null
                 }
                 stopPlace.isLocalTransportStation -> {
                     NearbyHafasStationItem(
