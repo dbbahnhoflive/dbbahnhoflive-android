@@ -21,7 +21,7 @@ class StationFlyoutViewHolder extends FlyoutViewHolder {
     private final LifecycleOwner owner;
 
     public StationFlyoutViewHolder(ViewGroup parent, LifecycleOwner owner) {
-        super(Views.inflate(parent, R.layout.flyout_station));
+        super(Views.inflate(parent, R.layout.flyout_station), EquipmentID.UNKNOWN);
         this.owner = owner;
 
         reducedHafasDeparturesViewHolder = new ReducedHafasDeparturesViewHolder(itemView, this.owner);

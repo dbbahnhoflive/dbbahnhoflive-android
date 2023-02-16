@@ -24,6 +24,7 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.DialogFragment;
 import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentManager;
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModel;
@@ -67,6 +68,7 @@ import de.deutschebahn.bahnhoflive.ui.station.parking.ParkingListFragment;
 import de.deutschebahn.bahnhoflive.ui.station.railreplacement.RailReplacementFragment;
 import de.deutschebahn.bahnhoflive.ui.station.search.ContentSearchFragment;
 import de.deutschebahn.bahnhoflive.ui.station.shop.ShopCategorySelectionFragment;
+import de.deutschebahn.bahnhoflive.ui.station.timetable.DbTimetableFragment;
 import de.deutschebahn.bahnhoflive.ui.station.timetable.TimetablesFragment;
 import de.deutschebahn.bahnhoflive.ui.timetable.localtransport.HafasTimetableViewModel;
 import de.deutschebahn.bahnhoflive.util.DebugX;
@@ -466,14 +468,7 @@ public class StationActivity extends BaseActivity implements
         }
     }
 
-    @Override
-    public void showLockers() {
-        showInfoFragment(false);
 
-        if (!LockerFragment.Companion.getTAG().equals(stationViewModel.getTopInfoFragmentTag())) {
-            infoFragment.push(new LockerFragment());
-        }
-    }
 
     @Override
     public void showAccessibility() {
@@ -496,6 +491,39 @@ public class StationActivity extends BaseActivity implements
     @Override
     public void showMobilityServiceNumbers() {
         stationViewModel.navigateToInfo(ServiceContentType.MOBILITY_SERVICE);
+    }
+
+
+    @Override
+    public void showLockers(boolean removeFeaturesFragment) {
+
+        if(removeFeaturesFragment)
+            removeFeaturesFragment();
+
+        showInfoFragment(false);
+
+        if (!LockerFragment.Companion.getTAG().equals(stationViewModel.getTopInfoFragmentTag())) {
+            infoFragment.push(new LockerFragment());
+        }
+    }
+
+    void removeFeaturesFragment() {
+        try {
+            FragmentManager fm = overviewFragment.getChildFragmentManager();
+            Fragment f = fm.findFragmentByTag("features");
+
+            if (f != null)
+                fm.beginTransaction().remove(f).commit();
+        } catch (Exception e) {
+            Log.d(this.TAG, e.getMessage());
+        }
+    }
+
+    @Override
+    public void showInfo(String serviceContentType, boolean removeFeaturesFragment) {
+        if(removeFeaturesFragment)
+            removeFeaturesFragment();
+        stationViewModel.navigateToInfo(serviceContentType);
     }
 
     @Override
@@ -551,10 +579,26 @@ public class StationActivity extends BaseActivity implements
 
                 switch (equip_id) {
                     case LOCKERS:
-                        showLockers();
+                        showLockers(true);
                         break;
                     case RAIL_REPLACEMENT:
                         showRailReplacement();
+                        break;
+
+                    case DB_INFORMATION:
+                        showInfo(ServiceContentType.DB_INFORMATION, true);
+                        break;
+                    case RAILWAY_MISSION:
+                        showInfo(ServiceContentType.BAHNHOFSMISSION, true);
+                        break;
+                    case DB_TRAVEL_CENTER:
+                        showInfo(ServiceContentType.Local.TRAVEL_CENTER, true);
+                        break;
+                    case DB_LOUNGE:
+                        showInfo(ServiceContentType.Local.DB_LOUNGE, true);
+                        break;
+                    default:
+                    case UNKNOWN:
                         break;
                 }
             } catch (Exception e) {
@@ -627,7 +671,7 @@ public class StationActivity extends BaseActivity implements
     }
 
     public static Intent createIntent(Context context, Station station, boolean details) {
-        final Intent intent = createIntent(context, station, EquipmentID.NONE);
+        final Intent intent = createIntent(context, station, EquipmentID.UNKNOWN);
         intent.putExtra(ARG_SHOW_DEPARTURES, details);
         return intent;
     }
@@ -648,7 +692,7 @@ public class StationActivity extends BaseActivity implements
 
     @NotNull
     public static Intent createIntent(Context context, Station station, RrtPoint rrtPoint) {
-        final Intent intent = createIntent(context, station, EquipmentID.NONE);
+        final Intent intent = createIntent(context, station, EquipmentID.UNKNOWN);
         intent.putExtra(ARG_RRT_POINT, rrtPoint);
         return intent;
     }

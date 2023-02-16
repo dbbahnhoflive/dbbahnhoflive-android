@@ -47,10 +47,11 @@ public class StoredStationSearchResult extends StationSearchResult<InternalStati
     @Override
     public void onClick(Context context, boolean details) {
         final Intent intent = StationActivity.createIntent(context, dbTimetableResource.getInternalStation(), details);
-        context.startActivity(intent);
         if (recentSearchesStore != null) {
             recentSearchesStore.put(dbTimetableResource.getInternalStation());
         }
+
+        context.startActivity(intent);
     }
 
     @Override

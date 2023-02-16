@@ -975,7 +975,7 @@ class StationViewModel(
                                 currentRawQuery,
                                 SearchResultClickListener(
                                     View.OnClickListener {
-                                        stationNavigation?.showLockers()
+                                        stationNavigation?.showLockers(false)
                                     })
                             )
                         } else null

@@ -20,7 +20,7 @@ class DbStationFlyoutViewHolder extends FlyoutViewHolder {
     public final ReducedDbDeparturesViewHolder departuresViewHolder;
 
     public DbStationFlyoutViewHolder(ViewGroup parent, LifecycleOwner owner) {
-        super(Views.inflate(parent, R.layout.flyout_station));
+        super(Views.inflate(parent, R.layout.flyout_station), EquipmentID.UNKNOWN);
 
         departuresViewHolder = new ReducedDbDeparturesViewHolder(itemView, R.id.view_flipper, owner);
 
