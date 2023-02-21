@@ -502,6 +502,11 @@ class StationViewModel(
         travelCenterLiveData,
         shopsResource
     )
+
+    fun infoAndServicesTitles() : ArrayList<String>?
+      = infoAndServicesLiveData.value?.map{  it.title}?.let { ArrayList<String>(it) }
+
+
     val serviceNumbersLiveData =
         ServiceNumbersLiveData(risServiceAndCategoryResource, staticInfoLiveData)
 

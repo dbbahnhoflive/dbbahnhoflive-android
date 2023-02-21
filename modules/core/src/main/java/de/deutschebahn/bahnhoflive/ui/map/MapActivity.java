@@ -42,6 +42,10 @@ public class MapActivity extends AppCompatActivity implements
 
     private final static String ARG_STATION = FragmentArgs.STATION;
     private static final String ARG_LOADER_STATES = LoaderFragment.ARG_LOADER_STATES;
+    private static final String ARG_INFO_AND_SERVICES_TITLES = "INFO_AND_SERVICES_TITLES";
+
+
+
     private static final String ARG_STATION_DEPARTURES = "stationDepartures";
 
     private MapOverlayFragment overlayFragment;
@@ -69,8 +73,15 @@ public class MapActivity extends AppCompatActivity implements
             }
         });
 
+        ArrayList<String> infoAndServicesTitles = null;
+
+        if (intent.hasExtra(ARG_INFO_AND_SERVICES_TITLES)) {
+            infoAndServicesTitles = intent.getStringArrayListExtra(ARG_INFO_AND_SERVICES_TITLES);
+        }
+
         mapViewModel = new ViewModelProvider(this).get(MapViewModel.class);
-        mapViewModel.setStation(station);
+        mapViewModel.setStation(station, infoAndServicesTitles);
+
 
         trackingManager = station == null ? new TrackingManager(this) : new StationTrackingManager(this, station);
 
@@ -129,6 +140,13 @@ public class MapActivity extends AppCompatActivity implements
         trackingManager.track(TrackingManager.TYPE_STATE, TrackingManager.Screen.F1);
     }
 
+    private static Intent createIntent(Context context) {
+        final Intent intent = new Intent(context, MapActivity.class);
+        intent.addFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT);
+        return intent;
+    }
+
+
     public static Intent createIntent(Context context, Station station) {
         final Intent intent = createIntent(context);
 
@@ -138,9 +156,15 @@ public class MapActivity extends AppCompatActivity implements
         return intent;
     }
 
-    private static Intent createIntent(Context context) {
-        final Intent intent = new Intent(context, MapActivity.class);
-        intent.addFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT);
+    public static Intent createIntentWithInfoAndServicesTitles(Context context, Station station, @Nullable ArrayList<String> infoAndServicesTitles) {
+        final Intent intent = createIntent(context);
+
+        intent.putExtra(ARG_STATION, station instanceof Parcelable ?
+                (Parcelable) station : new InternalStation(station));
+
+        if(infoAndServicesTitles!=null)
+           intent.putStringArrayListExtra(ARG_INFO_AND_SERVICES_TITLES, infoAndServicesTitles);
+
         return intent;
     }
 
