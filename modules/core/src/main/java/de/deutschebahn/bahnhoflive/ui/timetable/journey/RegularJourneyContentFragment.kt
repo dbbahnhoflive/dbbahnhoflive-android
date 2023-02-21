@@ -45,6 +45,8 @@ class RegularJourneyContentFragment : Fragment() {
         val issueBinder =
             IssuesBinder(issueContainer, issueText, IssueIndicatorBinder(issueIcon))
 
+        var shouldOfferWagenOrder = false
+
         journeyViewModel.essentialParametersLiveData.observe(viewLifecycleOwner) { (station, trainInfo, trainEvent) ->
 
             issueBinder.bindIssues(
@@ -53,7 +55,8 @@ class RegularJourneyContentFragment : Fragment() {
             )
 
             with(buttonWagonOrder) {
-                if (trainInfo.shouldOfferWagenOrder()) {
+                shouldOfferWagenOrder = trainInfo.shouldOfferWagenOrder()
+                if (shouldOfferWagenOrder) {
                     setOnClickListener {
                         activity?.also {
                             TrackingManager.fromActivity(it).track(
@@ -65,9 +68,9 @@ class RegularJourneyContentFragment : Fragment() {
                         }
                         showWaggonOrder(trainInfo, trainEvent)
                     }
-                    isGone = false
+//                    isGone = false
                 } else {
-                    isGone = true
+//                    isGone = true
                 }
             }
         }
@@ -96,6 +99,17 @@ class RegularJourneyContentFragment : Fragment() {
 
                     filterAdapter.count = if (filtered) 1 else 0
                     journeyAdapter.submitList(journeyStops)
+
+                    // hide buttonWagonOrder if Endbahnhof
+                    if(journeyStops.firstOrNull() { it.current && it.last }!=null) {
+                        buttonWagonOrder.isGone = true
+                    }
+                    else {
+                        buttonWagonOrder.isGone = !shouldOfferWagenOrder
+                    }
+
+                    textWagonOrder.isGone =  buttonWagonOrder.isGone
+
 
                 }, {
                     Log.d(JourneyFragment::class.java.simpleName, "Error: $it")
