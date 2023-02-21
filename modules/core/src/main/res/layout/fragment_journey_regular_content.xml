@@ -65,8 +65,10 @@
             tools:showIn="@layout/fragment_journey">
 
             <TextView
+                android:id="@+id/text_wagon_order"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:visibility="gone"
                 android:layout_gravity="center"
                 android:drawableRight="@drawable/menuicon_wagenstandsanzeiger"
                 android:gravity="center"

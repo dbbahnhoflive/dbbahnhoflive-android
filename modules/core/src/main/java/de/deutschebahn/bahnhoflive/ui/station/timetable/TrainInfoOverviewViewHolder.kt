@@ -58,7 +58,7 @@ open class TrainInfoOverviewViewHolder(view: View, protected val provider: Train
 
                 issuesBinder.bindIssues(item, trainMovementInfo)
                 wagonOrderIndicator?.visibility =
-                    if (item.shouldOfferWagenOrder()) View.VISIBLE else View.GONE
+                    if (item.shouldOfferWagenOrder() && item.departure!=null) View.VISIBLE else View.GONE
 
                 return
             }
