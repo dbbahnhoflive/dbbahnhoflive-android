@@ -45,6 +45,7 @@ import de.deutschebahn.bahnhoflive.analytics.IssueTrackerKt;
 import de.deutschebahn.bahnhoflive.analytics.StationTrackingManager;
 import de.deutschebahn.bahnhoflive.analytics.TrackingManager;
 import de.deutschebahn.bahnhoflive.backend.local.model.RrtPoint;
+import de.deutschebahn.bahnhoflive.backend.local.model.ServiceContent;
 import de.deutschebahn.bahnhoflive.backend.local.model.ServiceContentType;
 import de.deutschebahn.bahnhoflive.backend.ris.model.TrainInfo;
 import de.deutschebahn.bahnhoflive.repository.InternalStation;
@@ -59,6 +60,7 @@ import de.deutschebahn.bahnhoflive.ui.map.content.rimap.RimapFilter;
 import de.deutschebahn.bahnhoflive.ui.station.accessibility.AccessibilityFragment;
 import de.deutschebahn.bahnhoflive.ui.station.elevators.ElevatorStatusListsFragment;
 import de.deutschebahn.bahnhoflive.ui.station.features.StationFeaturesFragment;
+import de.deutschebahn.bahnhoflive.ui.station.info.InfoAndServicesLiveData;
 import de.deutschebahn.bahnhoflive.ui.station.info.InfoCategorySelectionFragment;
 import de.deutschebahn.bahnhoflive.ui.station.localtransport.LocalTransportFragment;
 import de.deutschebahn.bahnhoflive.ui.station.localtransport.LocalTransportViewModel;
@@ -68,7 +70,6 @@ import de.deutschebahn.bahnhoflive.ui.station.parking.ParkingListFragment;
 import de.deutschebahn.bahnhoflive.ui.station.railreplacement.RailReplacementFragment;
 import de.deutschebahn.bahnhoflive.ui.station.search.ContentSearchFragment;
 import de.deutschebahn.bahnhoflive.ui.station.shop.ShopCategorySelectionFragment;
-import de.deutschebahn.bahnhoflive.ui.station.timetable.DbTimetableFragment;
 import de.deutschebahn.bahnhoflive.ui.station.timetable.TimetablesFragment;
 import de.deutschebahn.bahnhoflive.ui.timetable.localtransport.HafasTimetableViewModel;
 import de.deutschebahn.bahnhoflive.util.DebugX;
@@ -227,7 +228,9 @@ public class StationActivity extends BaseActivity implements
             @Override
             public void onClick(View v) {
                 trackingManager.track(TrackingManager.TYPE_ACTION, TrackingManager.Source.TAB_NAVI, TrackingManager.Action.TAP, TrackingManager.UiElement.MAP_BUTTON);
-                GoogleLocationPermissions.startMapActivityIfConsent(getCurrentContentFragment(), ()->MapActivity.createIntent(StationActivity.this, station));
+                GoogleLocationPermissions.startMapActivityIfConsent(getCurrentContentFragment(),
+                        () -> MapActivity.createIntentWithInfoAndServicesTitles(StationActivity.this, station, stationViewModel.infoAndServicesTitles()));
+                ;
             }
         });
 
