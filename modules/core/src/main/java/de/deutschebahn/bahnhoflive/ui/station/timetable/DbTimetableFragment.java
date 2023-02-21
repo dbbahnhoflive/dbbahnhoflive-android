@@ -27,6 +27,7 @@ import com.android.volley.VolleyError;
 
 import de.deutschebahn.bahnhoflive.R;
 import de.deutschebahn.bahnhoflive.analytics.TrackingManager;
+import de.deutschebahn.bahnhoflive.backend.ris.model.TrainEvent;
 import de.deutschebahn.bahnhoflive.backend.ris.model.TrainInfo;
 import de.deutschebahn.bahnhoflive.repository.DbTimetableResource;
 import de.deutschebahn.bahnhoflive.repository.LoadingStatus;
@@ -56,6 +57,9 @@ public class DbTimetableFragment extends Fragment
     private CompositeDisposable disposable = new CompositeDisposable();
     private MutableLiveData<TrainInfo> selectedTrainInfo;
 
+    private TrainInfo trainInfoFromMap = null;
+    private Boolean trainInfoFromMapSimulateClick = false;
+
     public DbTimetableFragment() {
     }
 
@@ -78,9 +82,9 @@ public class DbTimetableFragment extends Fragment
             filterDialogFragment.show(getChildFragmentManager(), "filterDialog");
         }, getTrackingManager(), view -> {
             dbTimetableResource.loadMore();
-        }, (trainInfo, trainEvent, integer) -> {
+        }, (trainInfo, trainEvent, integer) -> { // click on station in list
             final HistoryFragment historyFragment = HistoryFragment.parentOf(this);
-            historyFragment.push(new JourneyFragment(trainInfo, trainEvent));
+            historyFragment.push(new JourneyFragment(trainInfo, trainEvent, false));
             return Unit.INSTANCE;
         });
 
@@ -96,6 +100,11 @@ public class DbTimetableFragment extends Fragment
                 }
                 adapter.setTimetable(timetable);
                 viewSwitcher.setDisplayedChild(0);
+                if (trainInfoFromMap != null) {
+                    trainInfoFromMapSimulateClick = true;
+                    selectedTrainInfo.setValue(trainInfoFromMap);
+                    trainInfoFromMap = null;
+                }
             }
         });
 
@@ -124,6 +133,14 @@ public class DbTimetableFragment extends Fragment
             }
         }));
 
+        // Observer fuer Wagenreihungs-Anzeige (kommt leider BEVOR die traininfos geladen sind...)
+        // kommt letztendlich aus der map
+        disposable.add(stationViewModel.getWaggonOrderObservable().subscribe(new Consumer<TrainInfo>() {
+            @Override
+            public void accept(TrainInfo trainInfo) {
+                trainInfoFromMap = trainInfo;
+            }
+        }));
     }
 
 
@@ -164,8 +181,16 @@ public class DbTimetableFragment extends Fragment
                 final int itemIndex = adapter.setSelectedItem(trainInfo);
                 if (itemIndex >= 0) {
                     recyclerView.scrollToPosition(itemIndex);
+                    if(trainInfoFromMapSimulateClick) {
+                        trainInfoFromMapSimulateClick = false;
+                        TrainEvent trainEvent = TrainEvent.DEPARTURE;
+                        final HistoryFragment historyFragment = HistoryFragment.parentOf(this);
+                        historyFragment.push(new JourneyFragment(trainInfo, trainEvent, true));
+                    }
+
                 }
                 selectedTrainInfo.setValue(null);
+                trainInfoFromMapSimulateClick = false;
             }
         });
 

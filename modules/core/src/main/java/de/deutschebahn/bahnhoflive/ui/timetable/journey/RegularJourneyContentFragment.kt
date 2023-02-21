@@ -73,6 +73,14 @@ class RegularJourneyContentFragment : Fragment() {
 //                    isGone = true
                 }
             }
+
+
+
+            if(journeyViewModel.showWagonOrderLiveData.value==true) {
+                journeyViewModel.showWagonOrderLiveData.value=false
+                trainInfo.let { it1 -> trainEvent?.let { it2 -> showWaggonOrder(it1, it2) } }
+            }
+
         }
 
         with(contentLayout) {
@@ -91,8 +99,8 @@ class RegularJourneyContentFragment : Fragment() {
                 }.root.toViewHolder()
             }
             val journeyConcatAdapter = ConcatAdapter(journeyAdapter, filterAdapter)
-            journeyViewModel.eventuallyFilteredJourneysLiveData.observe(viewLifecycleOwner) {
-                it.fold({ (filtered, journeyStops) ->
+            journeyViewModel.eventuallyFilteredJourneysLiveData.observe(viewLifecycleOwner) { pairResult ->
+                pairResult.fold({ (filtered, journeyStops) ->
                     if (recycler.adapter != journeyConcatAdapter) {
                         recycler.adapter = journeyConcatAdapter
                     }

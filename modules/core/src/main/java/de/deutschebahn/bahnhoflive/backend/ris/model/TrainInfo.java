@@ -562,7 +562,7 @@ public class TrainInfo implements Parcelable {
     }
 
     public boolean supportsWagonOrder() {
-        return !TextUtils.isEmpty(trainCategory);
+        return shouldOfferWagenOrder(); // todo #cr
     }
 
     public static class Comparator implements java.util.Comparator<TrainInfo> {
