@@ -5,6 +5,7 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.view.accessibility.AccessibilityEvent
 import androidx.fragment.app.Fragment
 import de.deutschebahn.bahnhoflive.R
 import de.deutschebahn.bahnhoflive.backend.hafas.model.HafasEvent
@@ -36,18 +37,20 @@ class HafasJourneyFragment() : Fragment()
         savedInstanceState: Bundle?
     ): View {
 
-    binding = FragmentHafasJourneyBinding.inflate(inflater).apply {
-        recycler.adapter = adapter
-    }
+        binding = FragmentHafasJourneyBinding.inflate(inflater).apply {
+            recycler.adapter = adapter
+        }
 
-    return binding.root
-}
+        return binding.root
+    }
 
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
         adapter.submitList(routeStops)
+
+        binding.titleBar.screenTitle.sendAccessibilityEvent(AccessibilityEvent.TYPE_VIEW_FOCUSED)
 
         if(hafasEvent!=null)
          binding.titleBar.screenTitle.setText(getString(R.string.template_hafas_journey_title, hafasEvent?.displayName, hafasEvent?.direction))
@@ -75,6 +78,7 @@ class HafasJourneyFragment() : Fragment()
             }
             routeStops.last().isLast = true
         }
+
 
     }
 
