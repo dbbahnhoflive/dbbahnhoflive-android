@@ -6,8 +6,6 @@
 
 package de.deutschebahn.bahnhoflive.ui.hub;
 
-import static de.deutschebahn.bahnhoflive.BaseApplication.get;
-
 import android.annotation.TargetApi;
 import android.content.Context;
 import android.content.Intent;
@@ -27,7 +25,6 @@ import androidx.core.splashscreen.SplashScreen;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
-import androidx.lifecycle.ViewModelProvider;
 
 import de.deutschebahn.bahnhoflive.BaseActivity;
 import de.deutschebahn.bahnhoflive.R;
@@ -35,12 +32,7 @@ import de.deutschebahn.bahnhoflive.analytics.IssueTracker;
 import de.deutschebahn.bahnhoflive.analytics.TrackingManager;
 import de.deutschebahn.bahnhoflive.permission.Permission;
 //import de.deutschebahn.bahnhoflive.push.FacilityFirebaseService;
-import de.deutschebahn.bahnhoflive.repository.Station;
-import de.deutschebahn.bahnhoflive.ui.search.SearchResultResource;
-import de.deutschebahn.bahnhoflive.ui.search.StationSearchViewModel;
-import de.deutschebahn.bahnhoflive.ui.station.StationActivity;
 import de.deutschebahn.bahnhoflive.ui.tutorial.TutorialFragment;
-import de.deutschebahn.bahnhoflive.util.DebugX;
 
 public class HubActivity extends BaseActivity implements TutorialFragment.Host {
 

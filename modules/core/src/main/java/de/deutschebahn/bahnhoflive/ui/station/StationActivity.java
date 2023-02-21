@@ -45,7 +45,6 @@ import de.deutschebahn.bahnhoflive.analytics.IssueTrackerKt;
 import de.deutschebahn.bahnhoflive.analytics.StationTrackingManager;
 import de.deutschebahn.bahnhoflive.analytics.TrackingManager;
 import de.deutschebahn.bahnhoflive.backend.local.model.RrtPoint;
-import de.deutschebahn.bahnhoflive.backend.local.model.ServiceContent;
 import de.deutschebahn.bahnhoflive.backend.local.model.ServiceContentType;
 import de.deutschebahn.bahnhoflive.backend.ris.model.TrainInfo;
 import de.deutschebahn.bahnhoflive.repository.InternalStation;
@@ -60,7 +59,6 @@ import de.deutschebahn.bahnhoflive.ui.map.content.rimap.RimapFilter;
 import de.deutschebahn.bahnhoflive.ui.station.accessibility.AccessibilityFragment;
 import de.deutschebahn.bahnhoflive.ui.station.elevators.ElevatorStatusListsFragment;
 import de.deutschebahn.bahnhoflive.ui.station.features.StationFeaturesFragment;
-import de.deutschebahn.bahnhoflive.ui.station.info.InfoAndServicesLiveData;
 import de.deutschebahn.bahnhoflive.ui.station.info.InfoCategorySelectionFragment;
 import de.deutschebahn.bahnhoflive.ui.station.localtransport.LocalTransportFragment;
 import de.deutschebahn.bahnhoflive.ui.station.localtransport.LocalTransportViewModel;
@@ -79,6 +77,8 @@ import de.deutschebahn.bahnhoflive.util.GoogleLocationPermissions;
 public class StationActivity extends BaseActivity implements
         StationProvider, HistoryFragment.RootProvider,
         TrackingManager.Provider, StationNavigation {
+
+    public static final String ARG_INTENT_CREATION_TIME = "intent_creation_time";
 
     public static final String ARG_STATION = "station";
     public static final String TAG = StationActivity.class.getSimpleName();
@@ -568,7 +568,12 @@ public class StationActivity extends BaseActivity implements
             stationViewModel.setTrackFilter(intent.getStringExtra(ARG_TRACK_FILTER));
         }
         if (intent.hasExtra(ARG_TRAIN_INFO)) {
-            stationViewModel.showWaggonOrder(intent.getParcelableExtra(ARG_TRAIN_INFO));
+            TrainInfo trainInfo = intent.getParcelableExtra(ARG_TRAIN_INFO);
+            long creationTime = intent.getLongExtra(ARG_INTENT_CREATION_TIME, 0);
+            long timeDiff = Math.abs(System.currentTimeMillis()-creationTime);
+
+            if(timeDiff<3L*1000L)
+              stationViewModel.showWaggonOrder(trainInfo);
         }
 
         if (intent.hasExtra(ARG_RRT_POINT)) {
@@ -617,6 +622,7 @@ public class StationActivity extends BaseActivity implements
         intent.putExtra(ARG_STATION, station instanceof Parcelable ?
                 (Parcelable) station : new InternalStation(station));
         intent.putExtra(ARG_EQUIPMENT_ID, equipment_id.getCode());
+        intent.putExtra(ARG_INTENT_CREATION_TIME, System.currentTimeMillis());
         return intent;
     }
 
@@ -686,6 +692,7 @@ public class StationActivity extends BaseActivity implements
         return intent;
     }
 
+    // wird aus MapViewModel.kt aufgerufen !!!
     @NotNull
     public static Intent createIntent(@NotNull Context context, @NotNull Station station, @NotNull TrainInfo trainInfo) {
         final Intent intent = createIntent(context, station, trainInfo.getDeparture().getPurePlatform());
