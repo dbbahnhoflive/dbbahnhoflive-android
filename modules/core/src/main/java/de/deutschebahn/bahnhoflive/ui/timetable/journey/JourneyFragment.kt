@@ -26,17 +26,21 @@ class JourneyFragment() : Fragment(), MapPresetProvider {
 
     constructor(
         trainInfo: TrainInfo,
-        trainEvent: TrainEvent
+        trainEvent: TrainEvent,
+        showWagonOrderFromExtern: Boolean = false
     ) : this() {
         arguments = Bundle().apply {
             putParcelable(JourneyViewModel.ARG_TRAIN_INFO, trainInfo)
             putSerializable(JourneyViewModel.ARG_TRAIN_EVENT, trainEvent)
         }
+        this.showWagonOrderFromExtern = showWagonOrderFromExtern
     }
 
     val stationViewModel: StationViewModel by activityViewModels()
 
     val journeyViewModel: JourneyViewModel by viewModels()
+
+    var showWagonOrderFromExtern : Boolean=false
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -59,6 +63,12 @@ class JourneyFragment() : Fragment(), MapPresetProvider {
                     " ${getString(R.string.template_journey_title_destination, it)}"
                 } ?: ""
             )
+
+            if (showWagonOrderFromExtern)
+                journeyViewModel.showWagonOrderLiveData.value = true
+
+            showWagonOrderFromExtern = false
+
         }
 
         journeyViewModel.trainFormationOutputLiveData.observe(viewLifecycleOwner) { (trainFormation, trainInfo, trainEvent) ->

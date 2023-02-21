@@ -482,6 +482,7 @@ public class MapOverlayFragment extends Fragment implements OnMapReadyCallback, 
         locateButton = view.findViewById(R.id.btn_locate);
         locateButton.setOnClickListener(this);
         filterButton = view.findViewById(R.id.btn_filter);
+        filterButton.setVisibility(View.INVISIBLE);
         filterButton.setOnClickListener(this);
         updateFilterButton();
 
