@@ -17,10 +17,8 @@ import de.deutschebahn.bahnhoflive.persistence.FavoriteStationsStore;
 import de.deutschebahn.bahnhoflive.persistence.RecentSearchesStore;
 import de.deutschebahn.bahnhoflive.repository.InternalStation;
 import de.deutschebahn.bahnhoflive.repository.Station;
-import de.deutschebahn.bahnhoflive.repository.timetable.Timetable;
 import de.deutschebahn.bahnhoflive.repository.timetable.TimetableCollector;
 import de.deutschebahn.bahnhoflive.ui.station.StationActivity;
-import de.deutschebahn.bahnhoflive.ui.station.timetable.TimetableCollectorConnector;
 import kotlin.Pair;
 
 public class StoredStationSearchResult extends StationSearchResult<InternalStation, Pair<TimetableCollector, Float>> {

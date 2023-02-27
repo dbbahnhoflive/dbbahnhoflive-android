@@ -2,7 +2,7 @@ package de.deutschebahn.bahnhoflive.util
 
 import kotlinx.coroutines.*
 
-class CdeTimer {
+class GeneralPurposeMillisecondsTimer {
 
     private val job = SupervisorJob()
     private val scope = CoroutineScope(Dispatchers.Default + job)
