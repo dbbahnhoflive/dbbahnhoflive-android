@@ -172,13 +172,15 @@ class GoogleLocationPermissions {
                             OnMapConsentDialogListener {
 
                             override fun onConsentAccepted() {
-                                showMapButAskForLocationPermissionsIfNecessary(baseActivity)
+                                permissionResponse(true)
+//                                showMapButAskForLocationPermissionsIfNecessary(baseActivity)
                             }
 
                         })
                             .show(fragment.parentFragmentManager, null)
                     } else
-                        showMapButAskForLocationPermissionsIfNecessary(baseActivity)
+                        permissionResponse(true)
+//                        showMapButAskForLocationPermissionsIfNecessary(baseActivity)
 
 
                 }

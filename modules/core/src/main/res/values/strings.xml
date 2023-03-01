@@ -426,7 +426,7 @@
     <string name="date_minutes">Minuten</string>
     <string name="date_seconds">Sekunden</string>
 
-    <string name="notice_location_permissions_missing"><b>Hinweis:</b> Der Standort-Zugriff ist erst nicht möglich, wenn Sie ihn erlauben.</string>
+    <string name="notice_location_permissions_missing"><b>Hinweis:</b> Der Standort-Zugriff ist erst möglich, wenn Sie ihn erlauben.</string>
     <string name="general_switch">Umschalten</string>
 
 
