@@ -29,10 +29,14 @@ class DebugX {
                     } else
                         Log.d("cr", newPreString + key + " : NULL")
 
-                    it.getBundle(key)?.let {
-                        logBundle(newPreString + " ", it)
+                    try {
+                        it.getBundle(key)?.let {
+                            logBundle(newPreString + " ", it)
+                        }
                     }
+                    catch(e:Exception) {
 
+                    }
 
                     try {
                         var station: Station? = it.getParcelable(key)
