@@ -11,7 +11,6 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.Build;
 import android.os.Bundle;
-import android.os.Handler;
 import android.transition.ChangeBounds;
 import android.transition.Fade;
 import android.transition.Transition;
@@ -21,7 +20,6 @@ import android.view.accessibility.AccessibilityEvent;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.StringRes;
-import androidx.core.splashscreen.SplashScreen;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
@@ -43,18 +41,18 @@ public class HubActivity extends BaseActivity implements TutorialFragment.Host {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
 
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-            setTheme(R.style.Theme_App_Starting);
-            SplashScreen splashScreen = SplashScreen.installSplashScreen(this);
-
-            splashScreen.setKeepOnScreenCondition(() -> keep);
-            Handler handler = new Handler();
-            handler.postDelayed(() -> keep = false, 800L);
-
-        }else{
-            setTheme(R.style.App_Theme);
-        }
-
+//        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+//            setTheme(R.style.Theme_App_Starting);
+//            SplashScreen splashScreen = SplashScreen.installSplashScreen(this);
+//
+//            splashScreen.setKeepOnScreenCondition(() -> keep);
+//            Handler handler = new Handler();
+//            handler.postDelayed(() -> keep = false, 800L);
+//
+//        }else{
+//            setTheme(R.style.App_Theme);
+//        }
+        setTheme(R.style.App_Theme);
 
         super.onCreate(savedInstanceState);
 
@@ -160,7 +158,6 @@ public class HubActivity extends BaseActivity implements TutorialFragment.Host {
     @Override
     protected void onPause() {
         super.onPause();
-
         trackingManager.pauseCollectingLifecycleData();
     }
 

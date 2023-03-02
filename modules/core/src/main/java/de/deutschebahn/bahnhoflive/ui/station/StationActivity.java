@@ -297,7 +297,6 @@ public class StationActivity extends BaseActivity implements
     @Override
     protected void onPause() {
         super.onPause();
-
         trackingManager.pauseCollectingLifecycleData();
     }
 
