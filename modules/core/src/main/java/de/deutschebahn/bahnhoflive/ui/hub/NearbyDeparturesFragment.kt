@@ -12,8 +12,8 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.activityViewModels
-import androidx.lifecycle.asLiveData
 import androidx.lifecycle.lifecycleScope
+import androidx.lifecycle.observe
 import androidx.lifecycle.switchMap
 import de.deutschebahn.bahnhoflive.BaseApplication
 import de.deutschebahn.bahnhoflive.analytics.TrackingManager
@@ -21,11 +21,10 @@ import de.deutschebahn.bahnhoflive.databinding.FragmentNearbyDeparturesBinding
 import de.deutschebahn.bahnhoflive.location.BaseLocationListener
 import de.deutschebahn.bahnhoflive.permission.Permission
 import de.deutschebahn.bahnhoflive.repository.LoadingStatus
-import de.deutschebahn.bahnhoflive.repository.timetable.Constants
+import de.deutschebahn.bahnhoflive.repository.timetable.CyclicTimetableCollector
 import de.deutschebahn.bahnhoflive.repository.timetable.TimetableCollector
 import de.deutschebahn.bahnhoflive.ui.LoadingContentDecorationViewHolder
 import de.deutschebahn.bahnhoflive.util.Cancellable
-import de.deutschebahn.bahnhoflive.util.GeneralPurposeMillisecondsTimer
 
 class NearbyDeparturesFragment : androidx.fragment.app.Fragment(), Permission.Listener,
     androidx.swiperefreshlayout.widget.SwipeRefreshLayout.OnRefreshListener {
@@ -53,20 +52,10 @@ class NearbyDeparturesFragment : androidx.fragment.app.Fragment(), Permission.Li
 
     private var viewBinding: FragmentNearbyDeparturesBinding? = null
 
-    private var selectedTimetableController: TimetableCollector?=null
-    private val timerCounter : GeneralPurposeMillisecondsTimer = GeneralPurposeMillisecondsTimer()
+    private val cyclicTimetableCollector : CyclicTimetableCollector = CyclicTimetableCollector(this)
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-
-        timerCounter.startTimer(
-            mainThreadAction = null,
-            intervalMilliSeconds = Constants.TIMETABLE_REFRESH_INTERVAL_MILLISECONDS,
-            startDelayMilliSeconds = 2000L,
-            backgroundThreadAction = {
-                selectedTimetableController?.refresh(false)
-                            }
-        )
 
         val applicationServices = BaseApplication.get().applicationServices
         nearbyDeparturesAdapter = NearbyDeparturesAdapter(
@@ -76,17 +65,15 @@ class NearbyDeparturesFragment : androidx.fragment.app.Fragment(), Permission.Li
             applicationServices.favoriteHafasStationsStore,
             applicationServices.favoriteDbStationStore,
             hubViewModel.timetableRepository,
+            hubViewModel.locationLiveData,
             trackingManager,
-            loadNextDeparturesCallback = { selected: TimetableCollector?, selection: Int ->
-                run {
-                    selectedTimetableController = selected
-
-                    selectedTimetableController?.let {
-                        timerCounter.restartTimer()
-                        it.timetableStateFlow?.asLiveData()?.observe(this) { itTimetable ->
-                            nearbyDeparturesAdapter?.notifyItemChanged(selection, itTimetable)
-                        }
-                    } ?:  timerCounter.cancelTimer()
+            startOrStopCyclicLoadingOfTimetable = { selectedTimetableCollector: TimetableCollector?,
+                                                    selectedNearbyItem : NearbyHafasStationItem?,
+                                                    selection: Int ->
+                nearbyDeparturesAdapter?.let {
+                    cyclicTimetableCollector.changeTimetableSource(selectedTimetableCollector,
+                        selectedNearbyItem?.hafasStationSearchResult?.timetable,
+                            it, selection)
                 }
             }
         )
@@ -174,23 +161,10 @@ class NearbyDeparturesFragment : androidx.fragment.app.Fragment(), Permission.Li
         super.onDestroyView()
     }
 
-    override fun onPause() {
-        timerCounter.cancelTimer()
-        super.onPause()
-    }
-
-    override fun onResume() {
-        super.onResume()
-        timerCounter.restartTimer()
-    }
-
-    private fun cancelTimetableRequests() {
-        timerCounter.cancelTimer()
-    }
 
     override fun onDestroy() {
         super.onDestroy()
-        cancelTimetableRequests()
+//        cancelTimetableRequests()
 
         nearbyDeparturesAdapter = null
         stationLookupRequest?.run {

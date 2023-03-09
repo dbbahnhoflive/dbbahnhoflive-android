@@ -25,14 +25,17 @@
         <ViewFlipper
             android:id="@+id/view_flipper"
             android:layout_width="match_parent"
-            android:layout_height="0dp"
-            android:layout_weight="1">
+            android:layout_height="match_parent"
+            >
 
             <include
                 android:id="@+id/departureOverview"
                 layout="@layout/item_track_timetable_overview" />
 
-            <include layout="@layout/include_progress_and_error_and_empty" />
+            <include layout="@layout/include_progress_and_error" />
+            <include layout="@layout/include_empty" />
+
+<!--            <include layout="@layout/include_progress_and_error_and_empty" />-->
         </ViewFlipper>
 
 

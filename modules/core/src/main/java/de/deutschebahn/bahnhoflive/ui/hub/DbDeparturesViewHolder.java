@@ -23,9 +23,8 @@ import de.deutschebahn.bahnhoflive.ui.search.StationSearchViewHolder;
 import de.deutschebahn.bahnhoflive.ui.timetable.localtransport.ReducedDbDeparturesViewHolder;
 import de.deutschebahn.bahnhoflive.view.LongClickSelectableItemViewHolder;
 import de.deutschebahn.bahnhoflive.view.SingleSelectionManager;
-import kotlin.Pair;
 
-public class DbDeparturesViewHolder extends LongClickSelectableItemViewHolder<StationSearchResult<InternalStation, Pair<TimetableCollector, Float>>> implements View.OnClickListener {
+public class DbDeparturesViewHolder extends LongClickSelectableItemViewHolder<StationSearchResult<InternalStation, TimetableCollector>> implements View.OnClickListener {
 
     public static final String TAG = DbDeparturesViewHolder.class.getSimpleName();
 
@@ -61,11 +60,10 @@ public class DbDeparturesViewHolder extends LongClickSelectableItemViewHolder<St
     }
 
     @Override
-    protected void onBind(StationSearchResult<InternalStation, Pair<TimetableCollector, Float>> item) {
+    protected void onBind(StationSearchResult<InternalStation, TimetableCollector> item) {
         super.onBind(item);
         stationSearchViewHolder.bind(item);
-
-        reducedDbDeparturesViewHolder.bind(item.getTimetable().getFirst().getTimetableStateFlow().getValue() /* FIXME */);
+        reducedDbDeparturesViewHolder.bind(item.getTimetable().getTimetableStateFlow().getValue() );
     }
 
 
@@ -77,7 +75,7 @@ public class DbDeparturesViewHolder extends LongClickSelectableItemViewHolder<St
         }
 
         final Context context = v.getContext();
-        final StationSearchResult<InternalStation, Pair<TimetableCollector, Float>> item = getItem();
+        final StationSearchResult<InternalStation, TimetableCollector> item = getItem();
         if (item != null) {
             item.onClick(context, v != itemView);
         }

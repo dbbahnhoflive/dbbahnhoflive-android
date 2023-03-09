@@ -37,5 +37,8 @@ class NearbyHafasStationItem(val hafasStationSearchResult: HafasStationSearchRes
         return hafasStationSearchResult.hashCode()
     }
 
+    fun refresh() {
+        hafasStationSearchResult.timetable.refreshTimetable()
+    }
 
 }

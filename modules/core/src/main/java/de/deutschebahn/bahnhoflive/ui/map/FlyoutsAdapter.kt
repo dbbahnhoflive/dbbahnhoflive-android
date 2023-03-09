@@ -3,122 +3,95 @@
  *
  * SPDX-License-Identifier: Apache-2.0
  */
+package de.deutschebahn.bahnhoflive.ui.map
 
-package de.deutschebahn.bahnhoflive.ui.map;
+import android.view.ViewGroup
+import androidx.lifecycle.LifecycleOwner
+import androidx.recyclerview.widget.RecyclerView
+import de.deutschebahn.bahnhoflive.push.FacilityPushManager
+import de.deutschebahn.bahnhoflive.ui.ViewHolder
+import de.deutschebahn.bahnhoflive.ui.map.MarkerContent.ViewType
 
-import android.view.ViewGroup;
-
-import androidx.annotation.NonNull;
-import androidx.lifecycle.LifecycleOwner;
-import androidx.recyclerview.widget.RecyclerView;
-
-import java.util.ArrayList;
-import java.util.List;
-
-import de.deutschebahn.bahnhoflive.push.FacilityPushManager;
-import de.deutschebahn.bahnhoflive.ui.ViewHolder;
-
-class FlyoutsAdapter extends RecyclerView.Adapter<ViewHolder<MarkerBinder>> {
-
-    private final Content content;
-
-    private final List<MarkerBinder> visibleMarkerBinders = new ArrayList<>();
-
-    private int actualItemCount = 0;
-
-    private final FacilityPushManager facilityPushManager = FacilityPushManager.getInstance();
-    private final LifecycleOwner owner;
-    private final MapViewModel mapViewModel;
-    private final StationActivityStarter stationActivityStarter;
-
-    public FlyoutsAdapter(Content content, LifecycleOwner owner, MapViewModel mapViewModel, StationActivityStarter stationActivityStarter) {
-        this.content = content;
-        this.owner = owner;
-        this.mapViewModel = mapViewModel;
-        this.stationActivityStarter = stationActivityStarter;
+internal class FlyoutsAdapter(
+    private val content: Content,
+    private val owner: LifecycleOwner,
+    private val mapViewModel: MapViewModel,
+    private val stationActivityStarter: StationActivityStarter
+) : RecyclerView.Adapter<ViewHolder<MarkerBinder>>() {
+    private val visibleMarkerBinders: MutableList<MarkerBinder> = ArrayList()
+    private var actualItemCount = 0
+    private val facilityPushManager = FacilityPushManager.getInstance()
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder<MarkerBinder> {
+        val contentViewType = ViewType.VALUES[viewType]
+        return createViewHolder(parent, contentViewType)
     }
 
-    @NonNull
-    @Override
-    public ViewHolder<MarkerBinder> onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        final MarkerContent.ViewType contentViewType = MarkerContent.ViewType.VALUES[viewType];
-
-        return createViewHolder(parent, contentViewType);
-    }
-
-    @NonNull
-    private ViewHolder<MarkerBinder> createViewHolder(ViewGroup parent, MarkerContent.ViewType contentViewType) {
-        switch (contentViewType) {
-            case STATION:
-                return new StationFlyoutViewHolder(parent, owner);
-            case DB_STATION:
-                return new DbStationFlyoutViewHolder(parent, owner);
-            case BOOKMARKABLE:
-                return new ElevatorFlyoutViewHolder(parent, facilityPushManager);
-            case TRACK:
-                return new TrackFlyoutViewHolder(parent, mapViewModel);
-            case RAIL_REPLACEMENT:
-                return new RailReplacementFlyoutViewHolder(parent, stationActivityStarter);
-            case LOCKERS:
-                return new LockerFlyoutViewHolder(parent, stationActivityStarter);
-            case COMMON:
-            default:
-                return new CommonFlyoutViewHolder(parent);
+    private fun createViewHolder(
+        parent: ViewGroup,
+        contentViewType: ViewType
+    ): ViewHolder<MarkerBinder> {
+        return when (contentViewType) {
+            ViewType.STATION -> StationFlyoutViewHolder(parent, owner)
+            ViewType.DB_STATION -> DbStationFlyoutViewHolder(parent, owner)
+            ViewType.BOOKMARKABLE -> ElevatorFlyoutViewHolder(parent, facilityPushManager)
+            ViewType.TRACK -> {
+//                startOrStopCyclicLoadingOfTimetable(mapViewModel.activeTimetableCollector, null, -1)
+                TrackFlyoutViewHolder(parent, mapViewModel, owner)
+            }
+            ViewType.RAIL_REPLACEMENT -> RailReplacementFlyoutViewHolder(
+                parent,
+                stationActivityStarter
+            )
+            ViewType.LOCKERS -> LockerFlyoutViewHolder(parent, stationActivityStarter)
+            else -> CommonFlyoutViewHolder(parent)
         }
     }
 
-    @Override
-    public void onBindViewHolder(ViewHolder<MarkerBinder> holder, final int virtualPosition) {
-        holder.bind(getMarkerBinder(virtualPosition));
+    override fun onBindViewHolder(holder: ViewHolder<MarkerBinder>, virtualPosition: Int) {
+        holder.bind(getMarkerBinder(virtualPosition))
     }
 
-    private int getActualPosition(int virtualPosition) {
-        return virtualPosition % actualItemCount;
+    private fun getActualPosition(virtualPosition: Int): Int {
+        return virtualPosition % actualItemCount
     }
 
-    @Override
-    public int getItemCount() {
-        return actualItemCount;
+    override fun getItemCount(): Int {
+        return actualItemCount
     }
 
-    @Override
-    public int getItemViewType(int virtualPosition) {
-        final MarkerBinder markerBinder = getMarkerBinder(virtualPosition);
-
-        return markerBinder.getMarkerContent().getViewType().ordinal();
+    override fun getItemViewType(virtualPosition: Int): Int {
+        val markerBinder = getMarkerBinder(virtualPosition)
+        return markerBinder.markerContent.viewType.ordinal
     }
 
-    private MarkerBinder getMarkerBinder(int virtualPosition) {
-        final int actualPosition = getActualPosition(virtualPosition);
-        return visibleMarkerBinders.get(actualPosition);
+    private fun getMarkerBinder(virtualPosition: Int): MarkerBinder {
+        val actualPosition = getActualPosition(virtualPosition)
+        return visibleMarkerBinders[actualPosition]
     }
 
-    private void updateItemCounts() {
-        actualItemCount = visibleMarkerBinders.size();
+    private fun updateItemCounts() {
+        actualItemCount = visibleMarkerBinders.size
     }
 
-    int getCentralPosition(MarkerContent markerContent) {
-        for (int i = 0; i < visibleMarkerBinders.size(); i++) {
-            if (visibleMarkerBinders.get(i).getMarkerContent() == markerContent) {
-                return i;
+    fun getCentralPosition(markerContent: MarkerContent): Int {
+        for (i in visibleMarkerBinders.indices) {
+            if (visibleMarkerBinders[i].markerContent === markerContent) {
+                return i
             }
         }
-
-        return -1;
+        return -1
     }
 
-    void visibilityChanged() {
-        visibleMarkerBinders.clear();
-
-        visibleMarkerBinders.addAll(content.getVisibleMarkerBinders());
-
-        updateItemCounts();
-
-        notifyDataSetChanged();
+    fun visibilityChanged() {
+        visibleMarkerBinders.clear()
+        visibleMarkerBinders.addAll(content.visibleMarkerBinders)
+        updateItemCounts()
+        notifyDataSetChanged()
     }
 
-    public MarkerBinder getFirstItem() {
-        final List<MarkerBinder> visibleMarkerBinders = this.visibleMarkerBinders;
-        return (visibleMarkerBinders.isEmpty()) ? null : visibleMarkerBinders.get(0);
-    }
+    val firstItem: MarkerBinder?
+        get() {
+            val visibleMarkerBinders: List<MarkerBinder> = visibleMarkerBinders
+            return if (visibleMarkerBinders.isEmpty()) null else visibleMarkerBinders[0]
+        }
 }

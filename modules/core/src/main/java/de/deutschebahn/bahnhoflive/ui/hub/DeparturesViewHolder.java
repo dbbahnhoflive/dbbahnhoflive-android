@@ -36,9 +36,15 @@ public class DeparturesViewHolder extends LongClickSelectableItemViewHolder<Hafa
     @Nullable
     private final SearchItemPickedListener searchItemPickedListener;
 
-    public DeparturesViewHolder(ViewGroup parent, LifecycleOwner owner, SingleSelectionManager singleSelectionManager,
-                                TrackingManager trackingManager, SearchItemPickedListener searchItemPickedListener, String itemTag) {
-        this(parent, R.layout.card_departures, owner, singleSelectionManager, trackingManager, searchItemPickedListener, itemTag);
+    public DeparturesViewHolder(ViewGroup parent,
+                                LifecycleOwner owner,
+                                SingleSelectionManager singleSelectionManager,
+                                TrackingManager trackingManager,
+                                SearchItemPickedListener searchItemPickedListener,
+                                String itemTag) {
+
+        this(parent, R.layout.card_departures, owner, singleSelectionManager,
+                trackingManager, searchItemPickedListener, itemTag);
     }
 
     public DeparturesViewHolder(ViewGroup parent,

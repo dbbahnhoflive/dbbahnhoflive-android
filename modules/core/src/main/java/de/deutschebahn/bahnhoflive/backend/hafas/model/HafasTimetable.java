@@ -75,4 +75,9 @@ public class HafasTimetable implements Parcelable {
     public void requestTimetable(boolean filterStrictly, String origin) {
         resource.initialize(station, null, filterStrictly, origin);
     }
+
+    public void refreshTimetable() {
+        resource.refresh(station);
+    }
+
 }

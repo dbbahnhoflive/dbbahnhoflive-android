@@ -16,9 +16,7 @@
 
     tools:showIn="@layout/bottom_sheet_overlay_track_flyout">
 
-    <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
-        xmlns:app="http://schemas.android.com/apk/res-auto"
-        xmlns:tools="http://schemas.android.com/tools"
+    <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:padding="@dimen/default_space">
@@ -67,8 +65,8 @@
             app:layout_constraintLeft_toLeftOf="@+id/time"
             app:layout_constraintRight_toLeftOf="@+id/guideline"
             app:layout_constraintTop_toBottomOf="@+id/time"
-
             tools:text="13:37" />
+
 
         <TextView
             android:id="@+id/direction"
@@ -78,8 +76,8 @@
             android:maxLines="1"
             app:layout_constraintBaseline_toBaselineOf="@+id/time"
             app:layout_constraintHorizontal_bias="0.0"
-            app:layout_constraintLeft_toLeftOf="@+id/guideline"
-            app:layout_constraintRight_toLeftOf="@id/wagon_order_indicator"
+            app:layout_constraintStart_toEndOf="@+id/guideline"
+            app:layout_constraintEnd_toStartOf="@+id/wagon_order_button"
             tools:text="Stadt mit besonders langem Namen Hbf" />
 
         <TextView
@@ -93,7 +91,7 @@
             app:layout_constraintBaseline_toBaselineOf="@+id/delay"
             app:layout_constraintHorizontal_bias="0"
             app:layout_constraintHorizontal_chainStyle="packed"
-            app:layout_constraintLeft_toLeftOf="@+id/direction"
+            app:layout_constraintStart_toEndOf="@+id/guideline"
             tools:text="ICE 1630" />
 
 

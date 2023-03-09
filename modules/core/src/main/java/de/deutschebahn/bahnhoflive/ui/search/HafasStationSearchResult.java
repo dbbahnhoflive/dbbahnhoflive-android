@@ -66,8 +66,8 @@ public class HafasStationSearchResult extends StationSearchResult<HafasStation, 
 
     @Override
     public float getDistance() {
-       if(hafasTimetable.station.dist>=0)
+       if(hafasTimetable.station.dist>=0) // todo
         return (float) hafasTimetable.station.dist;
-       else return 0.0f;
+       else return -1.0f;
     }
 }

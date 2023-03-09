@@ -11,20 +11,19 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.lifecycle.asLiveData
 import androidx.lifecycle.lifecycleScope
 import de.deutschebahn.bahnhoflive.BaseApplication
 import de.deutschebahn.bahnhoflive.analytics.TrackingManager
 import de.deutschebahn.bahnhoflive.backend.hafas.model.HafasStation
+import de.deutschebahn.bahnhoflive.backend.hafas.model.HafasTimetable
 import de.deutschebahn.bahnhoflive.databinding.FragmentFavoritesBinding
 import de.deutschebahn.bahnhoflive.persistence.FavoriteStationsStore
 import de.deutschebahn.bahnhoflive.repository.InternalStation
-import de.deutschebahn.bahnhoflive.repository.timetable.Constants
+import de.deutschebahn.bahnhoflive.repository.timetable.CyclicTimetableCollector
 import de.deutschebahn.bahnhoflive.repository.timetable.TimetableCollector
 import de.deutschebahn.bahnhoflive.ui.DbStationWrapper
 import de.deutschebahn.bahnhoflive.ui.search.HafasStationSearchResult
 import de.deutschebahn.bahnhoflive.ui.search.StoredStationSearchResult
-import de.deutschebahn.bahnhoflive.util.GeneralPurposeMillisecondsTimer
 import kotlinx.coroutines.flow.flow
 
 class FavoritesFragment : androidx.fragment.app.Fragment() {
@@ -38,8 +37,7 @@ class FavoritesFragment : androidx.fragment.app.Fragment() {
 
     private var favoritesAdapter: FavoritesAdapter? = null
 
-    private var selectedTimetableController : TimetableCollector? = null
-    private val timerCounter : GeneralPurposeMillisecondsTimer = GeneralPurposeMillisecondsTimer()
+    private val cyclicTimetableCollector : CyclicTimetableCollector = CyclicTimetableCollector(this)
 
     private val dbFavoritesListener = FavoriteStationsStore.Listener<InternalStation> {
         refreshFavorites()
@@ -54,15 +52,6 @@ class FavoritesFragment : androidx.fragment.app.Fragment() {
         super.onCreate(savedInstanceState)
 
         stationImageResolver = StationImageResolver(context)
-
-        timerCounter.startTimer(
-            mainThreadAction = null,
-            intervalMilliSeconds = Constants.TIMETABLE_REFRESH_INTERVAL_MILLISECONDS,
-            startDelayMilliSeconds = 2000L,
-            backgroundThreadAction = {
-                selectedTimetableController?.refresh(false)
-            }
-        )
     }
 
     override fun onCreateView(
@@ -76,15 +65,16 @@ class FavoritesFragment : androidx.fragment.app.Fragment() {
         favoritesAdapter = FavoritesAdapter(
             this@FavoritesFragment,
             TrackingManager(),
-            loadNewTimetableCallback = {selected:TimetableCollector?, selection:Int ->
-                run {
-                    selectedTimetableController = selected
-                    selectedTimetableController?.let {
-                        it.timetableStateFlow?.asLiveData()?.observe(viewLifecycleOwner) {itTimetable ->
-//                        nearbyDeparturesAdapter?.notifyDataSetChanged()
-                            favoritesAdapter?.notifyItemChanged(selection, itTimetable)
-                        }
-                    }
+
+            startOrStopCyclicLoadingOfTimetable = { selectedDbTimetable: TimetableCollector?,
+                                                    selectedHafasTimetable: HafasTimetable?,
+                                                    selection: Int ->
+
+                favoritesAdapter?.let {
+                    cyclicTimetableCollector.changeTimetableSource(
+                        selectedDbTimetable, selectedHafasTimetable,
+                        it, selection
+                    )
                 }
             }
         )

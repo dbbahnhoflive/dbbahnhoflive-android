@@ -7,6 +7,7 @@ import androidx.lifecycle.liveData
 import de.deutschebahn.bahnhoflive.backend.local.model.EvaIds
 import de.deutschebahn.bahnhoflive.backend.ris.getCurrentHour
 import de.deutschebahn.bahnhoflive.backend.ris.model.TrainInfo
+import de.deutschebahn.bahnhoflive.util.DebugX
 import kotlinx.coroutines.*
 import kotlinx.coroutines.flow.*
 import java.util.concurrent.TimeUnit
@@ -63,7 +64,8 @@ class TimetableCollector(
     data class Parameters(
         val firstHourInMillis: Long,
         val hourCount: Int,
-        val evaIds: EvaIds
+        val evaIds: EvaIds,
+        val firstHourInMillisRounded : Long = (firstHourInMillis / TimeUnit.HOURS.toMillis(1)) * TimeUnit.HOURS.toMillis(1)
     )
 
     private val parametersFlow = evaIdsFlow.combine(
@@ -75,7 +77,7 @@ class TimetableCollector(
     ) {
             evaIds: EvaIds, (firstHour, hourCount) ->
         Parameters(firstHour, hourCount, evaIds)
-    }.shareIn(coroutineScope, SharingStarted.Lazily,1)
+    } //.shareIn(coroutineScope, SharingStarted.Lazily,1)
 
 
     data class Result<T>(
@@ -120,14 +122,12 @@ class TimetableCollector(
                             async {
 
                                 kotlin.runCatching {
-                                    initialsCache.getOrPut(hourOffset * hourInMillis + parameters.firstHourInMillis) {
+                                    initialsCache.getOrPut(parameters.firstHourInMillis + hourOffset * hourInMillis ) {
                                         mutableMapOf()
                                     }.getOrPut(evaId) {
                                         timetableHourProvider(
                                             evaId,
-                                            parameters.firstHourInMillis + TimeUnit.HOURS.toMillis(
-                                                hourOffset.toLong()
-                                            )
+                                            parameters.firstHourInMillis + hourOffset * hourInMillis
                                         )
                                     }
                                 }
@@ -166,14 +166,18 @@ class TimetableCollector(
                     val allStationsHaveErrors =
                         changesResults.all { it.error != null } && initialsResults.all { it.isFailure }
 
-                    if (allStationsHaveErrors)
+                    if (allStationsHaveErrors) {
                         timetableStateFlow.value = null
+                        Log.d("dbg", "Timetable = NULL ")
+
+                    }
                     else {
-                        timetableStateFlow.value = Timetable(
+                        val tt = Timetable(
                             mergedTrainInfos.values.toList(),
                             (parameters.firstHourInMillis / hourInMillis + parameters.hourCount) * hourInMillis,
                             parameters.hourCount
                         )
+                        timetableStateFlow.value = tt
                     }
 
                 } catch (cancellationException: CancellationException) {
@@ -217,7 +221,7 @@ class TimetableCollector(
     }
 
     init {
-        refresh(false) //TODO Is this actually correct on initialization?
+//        refresh(false) //TODO Is this actually correct on initialization?
     }
 
     fun loadIfNecessary() {
@@ -225,25 +229,4 @@ class TimetableCollector(
     }
 
     val timetableUpdateAsLiveData : LiveData<Timetable?> = timetableStateFlow.asLiveData()
-
-    val anyUpdateLiveData
-        get() = liveData<Unit> {
-            coroutineScope.launch {
-                timetableStateFlow.collect {
-                    emit(Unit)
-                }
-            }
-
-            coroutineScope.launch {
-                errorsStateFlow.collect {
-                    emit(Unit)
-                }
-            }
-
-            coroutineScope.launch {
-                progressFlow.collect {
-                    emit(Unit)
-                }
-            }
-        }
 }

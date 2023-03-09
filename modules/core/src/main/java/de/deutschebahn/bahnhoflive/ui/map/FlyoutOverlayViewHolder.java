@@ -11,6 +11,7 @@ import android.view.ViewGroup;
 import android.widget.CompoundButton;
 
 import androidx.annotation.NonNull;
+import androidx.lifecycle.LifecycleOwner;
 
 import com.google.android.material.bottomsheet.BottomSheetBehavior;
 
@@ -30,7 +31,7 @@ class FlyoutOverlayViewHolder extends ViewHolder<MarkerBinder> {
 
     private boolean expandable = false;
 
-    public FlyoutOverlayViewHolder(View view, final MapViewModel mapViewModel) {
+    public FlyoutOverlayViewHolder(View view, final MapViewModel mapViewModel, LifecycleOwner owner) {
         super(view);
 
         expansionToggle = itemView.findViewById(R.id.expansionToggle);
@@ -77,7 +78,8 @@ class FlyoutOverlayViewHolder extends ViewHolder<MarkerBinder> {
             }
         });
 
-        trackFlyoutViewHolder = new TrackFlyoutViewHolder(overlayView, mapViewModel, expandable -> {
+        trackFlyoutViewHolder = new TrackFlyoutViewHolder(overlayView, mapViewModel, owner,
+                expandable -> {
             setExpansionToggleAvailability(expandable);
             return null;
         });
@@ -103,6 +105,7 @@ class FlyoutOverlayViewHolder extends ViewHolder<MarkerBinder> {
     }
 
     private void setExpansionToggleAvailability(boolean available) {
+//        expandable = available;
         expansionToggle.setClickable(available);
         expansionToggle.setEnabled(available);
     }
@@ -133,6 +136,13 @@ class FlyoutOverlayViewHolder extends ViewHolder<MarkerBinder> {
             collapse();
         }
         overlayView.setVisibility(visible ? View.VISIBLE : View.GONE);
+
+        try {
+            itemView.findViewById(R.id.departuresButton).setVisibility(visible ? View.VISIBLE : View.GONE);
+        }
+        catch(Exception e) {
+        }
+
     }
 
     private void collapse() {
@@ -144,7 +154,13 @@ class FlyoutOverlayViewHolder extends ViewHolder<MarkerBinder> {
 
     private boolean hasContent() {
         final MarkerBinder item = getItem();
-        return isTrackContent(item);
+
+        if (isTrackContent(item)) {
+            return trackFlyoutViewHolder.hasData();
+        }
+        return false;
+
+//        return isTrackContent(item);
     }
 
     private boolean isTrackContent(MarkerBinder item) {
@@ -166,9 +182,9 @@ class FlyoutOverlayViewHolder extends ViewHolder<MarkerBinder> {
     protected void onUnbind(@NonNull MarkerBinder item) {
         super.onUnbind(item);
 
-        if (isTrackContent(item)) {
-            trackFlyoutViewHolder.onUnbind(item);
-        }
+//        if (isTrackContent(item)) {
+//            trackFlyoutViewHolder.onUnbind(item);
+//        }
 
         updateVisibility();
     }

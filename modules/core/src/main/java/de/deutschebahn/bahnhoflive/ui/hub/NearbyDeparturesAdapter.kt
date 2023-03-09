@@ -6,8 +6,11 @@
 
 package de.deutschebahn.bahnhoflive.ui.hub
 
+import android.location.Location
+import android.util.Log
 import android.view.ViewGroup
 import androidx.lifecycle.LifecycleOwner
+import androidx.lifecycle.MutableLiveData
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import de.deutschebahn.bahnhoflive.analytics.TrackingManager
@@ -33,8 +36,11 @@ internal class NearbyDeparturesAdapter(
     private val favoriteHafasStationsStore: FavoriteStationsStore<HafasStation>,
     private val favoriteStationsStore: FavoriteStationsStore<InternalStation>,
     private val timetableRepository: TimetableRepository,
+    private val locationLiveData : MutableLiveData<Location>,
     val trackingManager: TrackingManager,
-    loadNextDeparturesCallback: (timetableCollector: TimetableCollector?, selection: Int) -> Unit
+    startOrStopCyclicLoadingOfTimetable: (timetableCollector: TimetableCollector?,
+                                          selectedNearbyItem : NearbyHafasStationItem?,
+                                          selection: Int) -> Unit
 ) : ListAdapter<NearbyStationItem, RecyclerView.ViewHolder>(
     object : BaseItemCallback<NearbyStationItem>() {
         override fun areItemsTheSame(
@@ -47,19 +53,29 @@ internal class NearbyDeparturesAdapter(
     private val singleSelectionManager: SingleSelectionManager =
         SingleSelectionManager(this).apply {
             addListener(SingleSelectionManager.Listener { selectionManager ->
+                // long click
                 val selection = selectionManager.selection
 
                 if (selection == SingleSelectionManager.INVALID_SELECTION) {
-                    loadNextDeparturesCallback(null, selection)
+                    // selection wurde eingeklappt
+                    startOrStopCyclicLoadingOfTimetable(null, null, selection) // permanentes laden abbrechen
                     return@Listener
                 }
 
                 when (val selected = currentList[selection]) {
                     is NearbyDbStationItem -> {
-                        loadNextDeparturesCallback(selected.dbStationSearchResult.timetable.first, selection)
+                        Log.d("dbg", "select")
+                        startOrStopCyclicLoadingOfTimetable(selected.dbStationSearchResult.timetable,
+                            null,
+                            selection) // permanentes laden (wieder) starten
                     }
                     is NearbyHafasStationItem -> {
-                        selected.onLoadDetails()
+                        selected.onLoadDetails() // schnelles erstes laden
+
+                        startOrStopCyclicLoadingOfTimetable(null,
+                            selected,
+                            selection) // permanentes laden (wieder) starten
+
                     }
                 }
             })
@@ -68,12 +84,8 @@ internal class NearbyDeparturesAdapter(
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder<*> =
         when (viewType) {
-            1 -> NearbyDeparturesViewHolder(parent, owner, singleSelectionManager, trackingManager)
-            else -> NearbyDbDeparturesViewHolder(
-                parent,
-                owner,
-                singleSelectionManager,
-                trackingManager
+            1 -> NearbyDeparturesViewHolder(parent, owner, singleSelectionManager, trackingManager, locationLiveData)
+            else -> NearbyDbDeparturesViewHolder(parent, owner,singleSelectionManager,trackingManager
             )
         }
 
@@ -98,9 +110,6 @@ internal class NearbyDeparturesAdapter(
         submitList(stopPlaces?.mapNotNull { stopPlace ->
             when {
                 stopPlace.isDbStation -> {
-
-//                    val timetableCollectorConnector =
-//                        TimetableCollectorConnector(owner) // neue Instanz
 
                     NearbyDbStationItem(
                         StopPlaceSearchResult(

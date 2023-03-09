@@ -32,10 +32,11 @@ class NearbyDbDeparturesViewHolder extends DbDeparturesViewHolder {
     }
 
     @Override
-    protected void onBind(StationSearchResult<InternalStation, Pair<TimetableCollector, Float>> item) {
+    protected void onBind(StationSearchResult<InternalStation, TimetableCollector> item) {
         if (item != null) {
             super.onBind(item);
-            distanceViewHolder.bind(item.getDistance());
+            float distance = item.getDistance();
+            distanceViewHolder.bind(distance);
         }
     }
 

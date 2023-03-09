@@ -14,7 +14,7 @@ class NearbyDbStationItem(val dbStationSearchResult: StopPlaceSearchResult) :
     NearbyStationItem {
 
     override fun onLoadDetails() {
-        dbStationSearchResult.timetable.first.loadIfNecessary()
+        dbStationSearchResult.timetable.loadIfNecessary()
     }
 
     override val type: Int
@@ -22,7 +22,6 @@ class NearbyDbStationItem(val dbStationSearchResult: StopPlaceSearchResult) :
 
     override val distance: Float
         get() = dbStationSearchResult.distance
-    //  get() = dbStationSearchResult.timetable.second
 
     override fun bindViewHolder(holder: androidx.recyclerview.widget.RecyclerView.ViewHolder) {
         (holder as NearbyDbDeparturesViewHolder).bind(dbStationSearchResult)
@@ -44,11 +43,5 @@ class NearbyDbStationItem(val dbStationSearchResult: StopPlaceSearchResult) :
     val station: Station
         get() = dbStationSearchResult.getStation()
 
-    //   val timetableCollectorConnector : TimetableCollectorConnector?
-    //     get() = dbStationSearchResult.timetableCollectorConnector
-
-//    var timetable : Timetable?
-//        get() = dbStationSearchResult.timetable
-//        set(value) {dbStationSearchResult.timetable=value}
 
 }

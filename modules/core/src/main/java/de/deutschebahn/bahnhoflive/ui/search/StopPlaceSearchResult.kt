@@ -25,7 +25,7 @@ class StopPlaceSearchResult(
     val recentSearchesStore: RecentSearchesStore,
     val favoriteStationsStore: FavoriteStationsStore<InternalStation>,
     val timetableRepository: TimetableRepository
-) : StationSearchResult<InternalStation, Pair<TimetableCollector, Float>>(
+) : StationSearchResult<InternalStation, TimetableCollector>(
     R.drawable.legacy_dbmappinicon,
     recentSearchesStore,
     favoriteStationsStore
@@ -69,12 +69,8 @@ class StopPlaceSearchResult(
         return false
     }
 
-//    override fun getTimetable(): Pair<TimetableCollector, Float> {
-//            return getTimetableCollector() to getDistance()
-//        }
-
-    override fun getTimetable(): Pair<TimetableCollector, Float> {
-        return timetableCollector to 0f
+    override fun getTimetable(): TimetableCollector {
+        return timetableCollector
         }
 
         fun getStation(): Station {

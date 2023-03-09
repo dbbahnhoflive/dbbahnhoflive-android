@@ -8,9 +8,13 @@ package de.deutschebahn.bahnhoflive.repository.timetable
 
 import android.os.Parcel
 import android.os.Parcelable
+import android.util.Log
 import de.deutschebahn.bahnhoflive.backend.ris.model.RISTimetable
 import de.deutschebahn.bahnhoflive.backend.ris.model.TrainEvent
 import de.deutschebahn.bahnhoflive.backend.ris.model.TrainInfo
+import de.deutschebahn.bahnhoflive.util.DebugX
+import java.util.*
+
 
 class Timetable(private val trainInfos: List<TrainInfo>, val endTime: Long, val duration: Int = 2) :
     Parcelable {
@@ -42,6 +46,11 @@ class Timetable(private val trainInfos: List<TrainInfo>, val endTime: Long, val 
         `in`.readInt()
     )
 
+//    init {
+//        DebugX.logDateTimeFromMillis(endTime, "endTime :")
+//    }
+
+
     override fun describeContents(): Int {
         return 0
     }
@@ -67,4 +76,20 @@ class Timetable(private val trainInfos: List<TrainInfo>, val endTime: Long, val 
     }
 
     fun Long.before(other: Long) = this > 0 && (other < 0 || other >= this)
+
+
+
+//    fun logIt(preText:String) {
+//
+//        Log.d(preText, "Timetable Abfahrten ${this.endTime}")
+//
+//        for(i in 0..6) {
+//           val dep = departures[i]
+//            val stops = dep.departure.via.split("\\|".toRegex()).dropLastWhile { it.isEmpty() }
+//            val n = stops.size
+//            Log.d(preText, DebugX.getFormattedDateTimeFromMillis(dep.departure.plannedDateTime,
+//                "", "HH:mm")  + " " + dep.trainCategory + " " +  dep.trainName + " nach  " + stops[n-1])
+//        }
+//
+//    }
 }

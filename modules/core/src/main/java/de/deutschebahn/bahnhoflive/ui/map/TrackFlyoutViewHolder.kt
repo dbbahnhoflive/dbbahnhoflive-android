@@ -8,36 +8,43 @@ package de.deutschebahn.bahnhoflive.ui.map
 
 import android.view.View
 import android.view.ViewGroup
+import androidx.core.view.isVisible
+import androidx.lifecycle.LifecycleOwner
+import androidx.lifecycle.Observer
+import androidx.lifecycle.asLiveData
 import de.deutschebahn.bahnhoflive.R
+import de.deutschebahn.bahnhoflive.backend.ris.model.TrainInfo
 import de.deutschebahn.bahnhoflive.databinding.FlyoutTrackBinding
 import de.deutschebahn.bahnhoflive.databinding.ItemTrackTimetableOverviewBinding
-import de.deutschebahn.bahnhoflive.repository.LoadingStatus
+import de.deutschebahn.bahnhoflive.repository.timetable.Timetable
 import de.deutschebahn.bahnhoflive.ui.LoadingContentDecorationViewHolder
 import de.deutschebahn.bahnhoflive.ui.station.timetable.OnWagonOrderClickListener
 import de.deutschebahn.bahnhoflive.ui.station.timetable.TrackDepartureSummaryViewHolder
-import de.deutschebahn.bahnhoflive.util.destroy
 import de.deutschebahn.bahnhoflive.view.inflater
-import io.reactivex.disposables.Disposable
 
 internal class TrackFlyoutViewHolder(
     viewBinding: FlyoutTrackBinding,
     private val mapViewModel: MapViewModel,
-    private val expandableListener: ((Boolean) -> Unit)? = null
-) : FlyoutViewHolder(viewBinding.root) {
+    private val owner : LifecycleOwner,
+    private val expandableListener: ((Boolean) -> Unit)? = null,
 
-    constructor(parent: ViewGroup, mapViewModel: MapViewModel) : this(
+    ) : FlyoutViewHolder(viewBinding.root) {
+
+    constructor(parent: ViewGroup, mapViewModel: MapViewModel, owner : LifecycleOwner ) : this(
         FlyoutTrackBinding.inflate(
             parent.inflater,
             parent,
             false
-        ), mapViewModel
+        ), mapViewModel, owner
     )
 
     constructor(
         view: View,
         mapViewModel: MapViewModel,
+        owner : LifecycleOwner,
         expandableListener: ((Boolean) -> Unit)? = null
-    ) : this(FlyoutTrackBinding.bind(view), mapViewModel, expandableListener)
+    ) : this(FlyoutTrackBinding.bind(view), mapViewModel, owner, expandableListener)
+
 
     private val onWagonOrderClickListener = OnWagonOrderClickListener { trainInfo, _ ->
         mapViewModel.openWaggonOrder(itemView.context, trainInfo)
@@ -67,40 +74,59 @@ internal class TrackFlyoutViewHolder(
             )
         }
 
-    private var disposable: Disposable? = null
+    fun hasData() : Boolean = timetableOverviewViewHolder.itemView.isVisible
 
     override fun onBind(markerContent: MarkerContent) {
+
         super.onBind(markerContent)
 
-        markerContent.track?.let { track ->
-            disposable =
-                mapViewModel.createTrackTimetableObservable(track) { resourceState ->
-                    expandableListener?.invoke(false)
-                    when {
-                        resourceState.loadingStatus == LoadingStatus.BUSY -> loadingContentDecorationViewHolder.showProgress()
-                        resourceState.error != null -> loadingContentDecorationViewHolder.showError()
-                        else -> resourceState.data?.apply {
-                            if (isEmpty()) {
-                                loadingContentDecorationViewHolder.showEmpty()
-                            } else {
-                                loadingContentDecorationViewHolder.showContent()
-                                expandableListener?.invoke(true)
-                            }
-                            timetableOverviewViewHolder.bind(firstOrNull())
+        val timetableCollector = mapViewModel.createActiveTimetableCollector()
 
-                            secondTimetableOverviewViewHolder?.bind(getOrNull(1))
-                            thirdTimetableOverviewViewHolder?.bind(getOrNull(2))
-                        }
-                    }
+        timetableCollector.let {
+
+            it.errorsStateFlow.asLiveData().observe(owner, Observer<Boolean> { itError->
+                if (itError) {
+                    loadingContentDecorationViewHolder.showError()
+                    timetableOverviewViewHolder.bind(null)
+                    expandableListener?.invoke(false) // todo: fix FlyoutOverlayViewHolder::expansionToggle still visible
                 }
+            })
+
+            it.progressFlow.asLiveData().observe(owner, Observer<Boolean> { itProgress ->
+                if (itProgress == true)
+                    loadingContentDecorationViewHolder.showProgress()
+            })
+
+            it.timetableStateFlow.asLiveData().observe(owner, Observer<Timetable?> { itTimetable ->
+
+                expandableListener?.invoke(false)
+
+                if (itTimetable != null ) {
+
+                    val trainInfos: List<TrainInfo> =
+                        itTimetable.departures.filter { trainInfo ->
+                            trainInfo.departure?.purePlatform == markerContent.track
+                        }
+
+                    if(trainInfos.isNotEmpty()) {
+                        loadingContentDecorationViewHolder.showContent()
+                        expandableListener?.invoke(true)
+                    }
+                    else
+                        loadingContentDecorationViewHolder.showEmpty()
+
+                    trainInfos.apply {
+                        timetableOverviewViewHolder.bind(firstOrNull())
+                        secondTimetableOverviewViewHolder?.bind(getOrNull(1))
+                        thirdTimetableOverviewViewHolder?.bind(getOrNull(2))
+                    }
+
+                }
+            })
+
+            it.refresh(false)
         }
+
     }
 
-    override fun onUnbind(item: MarkerBinder) {
-        disposable = disposable.destroy {
-            dispose()
-        }
-
-        super.onUnbind(item)
-    }
 }

@@ -62,6 +62,7 @@ public class LoadingContentDecorationViewHolder extends RecyclerView.ViewHolder 
     }
 
     public void showChild(int child) {
+       if(container!=null)
         if (container.getChildCount() > child) {
             container.setDisplayedChild(child);
         }

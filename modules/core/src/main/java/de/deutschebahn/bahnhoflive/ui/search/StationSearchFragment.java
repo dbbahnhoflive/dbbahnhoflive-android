@@ -35,13 +35,13 @@ import de.deutschebahn.bahnhoflive.BaseApplication;
 import de.deutschebahn.bahnhoflive.R;
 import de.deutschebahn.bahnhoflive.analytics.IssueTracker;
 import de.deutschebahn.bahnhoflive.analytics.TrackingManager;
+import de.deutschebahn.bahnhoflive.backend.hafas.model.HafasTimetable;
 import de.deutschebahn.bahnhoflive.location.BaseLocationListener;
 import de.deutschebahn.bahnhoflive.persistence.RecentSearchesStore;
 import de.deutschebahn.bahnhoflive.repository.LoadingStatus;
-import de.deutschebahn.bahnhoflive.repository.timetable.Constants;
+import de.deutschebahn.bahnhoflive.repository.timetable.CyclicTimetableCollector;
 import de.deutschebahn.bahnhoflive.repository.timetable.TimetableCollector;
 import de.deutschebahn.bahnhoflive.ui.hub.LocationFragment;
-import de.deutschebahn.bahnhoflive.util.GeneralPurposeMillisecondsTimer;
 import de.deutschebahn.bahnhoflive.util.ImeCloserKt;
 import de.deutschebahn.bahnhoflive.view.BaseTextWatcher;
 import de.deutschebahn.bahnhoflive.view.ConfirmationDialog;
@@ -81,8 +81,7 @@ public class StationSearchFragment extends Fragment {
     private ViewFlipper viewFlipper;
     private StationSearchViewModel stationSearchViewModel;
 
-    private TimetableCollector selectedTimetableCollector = null;
-    private GeneralPurposeMillisecondsTimer timerCounter = new GeneralPurposeMillisecondsTimer();
+    private CyclicTimetableCollector cyclicTimetableCollector = new CyclicTimetableCollector(this);
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
@@ -103,26 +102,16 @@ public class StationSearchFragment extends Fragment {
                 new TrackingManager(),
                 getLifecycleScope(),
                 stationSearchViewModel.getTimetableCollectorFactory(),
-                (TimetableCollector selected, int selection) -> {
-                    selectedTimetableCollector = selected;
+                (TimetableCollector selectedDbTimetable,
+                 HafasTimetable selectedHafasTimetable ,
+                 int selection) -> {
 
-                    selectedTimetableCollector.getTimetableUpdateAsLiveData().observe(getViewLifecycleOwner(), timetable -> {
-                        adapter.notifyItemChanged(selection, timetable);
-                    });
+                    cyclicTimetableCollector.changeTimetableSource(selectedDbTimetable,
+                            selectedHafasTimetable,
+                            adapter, selection);
 
                 });
 
-        timerCounter.startTimer(
-                 null,
-                Constants.TIMETABLE_REFRESH_INTERVAL_MILLISECONDS,
-                2000L,
-                () -> {
-                     if(selectedTimetableCollector !=null)
-                         selectedTimetableCollector.refresh(false);
-                      return Unit.INSTANCE;
-                 }
-
-        );
     }
 
     @Override

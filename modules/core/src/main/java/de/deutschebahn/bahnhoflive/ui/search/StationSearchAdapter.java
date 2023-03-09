@@ -8,6 +8,7 @@ package de.deutschebahn.bahnhoflive.ui.search;
 
 import android.view.ViewGroup;
 
+import androidx.annotation.NonNull;
 import androidx.fragment.app.FragmentActivity;
 import androidx.lifecycle.LifecycleOwner;
 import androidx.lifecycle.ViewModelProvider;
@@ -21,9 +22,11 @@ import de.deutschebahn.bahnhoflive.analytics.TrackingManager;
 import de.deutschebahn.bahnhoflive.backend.StopPlaceXKt;
 import de.deutschebahn.bahnhoflive.backend.db.ris.model.StopPlace;
 import de.deutschebahn.bahnhoflive.backend.hafas.model.HafasStation;
+import de.deutschebahn.bahnhoflive.backend.hafas.model.HafasTimetable;
 import de.deutschebahn.bahnhoflive.persistence.FavoriteStationsStore;
 import de.deutschebahn.bahnhoflive.persistence.RecentSearchesStore;
 import de.deutschebahn.bahnhoflive.repository.InternalStation;
+import de.deutschebahn.bahnhoflive.repository.timetable.OnStartStopCyclicLoadingOfTimetableListener;
 import de.deutschebahn.bahnhoflive.repository.timetable.TimetableCollector;
 import de.deutschebahn.bahnhoflive.repository.timetable.TimetableRepository;
 import de.deutschebahn.bahnhoflive.ui.ViewHolder;
@@ -35,9 +38,7 @@ import kotlinx.coroutines.CoroutineScope;
 
 class StationSearchAdapter extends RecyclerView.Adapter<ViewHolder> {
 
-    public interface OnTimetableCollectorChangedListener {
-        void onLoadNewTimetable(TimetableCollector timetableCollector, int selection);
-    }
+
 
     private final SingleSelectionManager singleSelectionManager = new SingleSelectionManager(this);
 
@@ -59,8 +60,6 @@ class StationSearchAdapter extends RecyclerView.Adapter<ViewHolder> {
     private final CoroutineScope coroutineScope;
     private final TimetableRepository timetableRepository;
 
-   private final OnTimetableCollectorChangedListener loadNewTimetableCallback;
-
     StationSearchAdapter(FragmentActivity context,
                          RecentSearchesStore recentSearchesStore,
                          SearchItemPickedListener searchItemPickedListener,
@@ -68,7 +67,7 @@ class StationSearchAdapter extends RecyclerView.Adapter<ViewHolder> {
                          TrackingManager trackingManager,
                          CoroutineScope coroutineScope,
                          TimetableRepository timetableRepository,
-                         OnTimetableCollectorChangedListener loadNewTimetableCallback
+                         OnStartStopCyclicLoadingOfTimetableListener onStartOrStopCyclicLoadingOfTimetableListener
                          ) {
 
         hubViewModel = new ViewModelProvider(context).get(HubViewModel.class);
@@ -81,28 +80,47 @@ class StationSearchAdapter extends RecyclerView.Adapter<ViewHolder> {
         this.searchItemPickedListener = searchItemPickedListener;
         this.owner = owner;
         this.trackingManager = trackingManager;
-        this.loadNewTimetableCallback = loadNewTimetableCallback;
-
 
         singleSelectionManager.addListener(selectionManager -> {
             final SearchResult selectedItem = selectionManager.getSelectedItem(searchResults);
-            if (selectedItem instanceof StoredStationSearchResult) {
+
+            // long click
+            final int selection = selectionManager.getSelection();
+
+            if(selection == SingleSelectionManager.INVALID_SELECTION) {
+                // selection wurde eingeklappt
+                onStartOrStopCyclicLoadingOfTimetableListener.onStartStopCyclicLoading(
+                        null, null, selection); // permanentes laden abbrechen
+            }
+            else if (selectedItem instanceof StoredStationSearchResult) {
                 // long click on stored item
                 final StoredStationSearchResult searchResult = (StoredStationSearchResult) selectedItem;
-                if(this.loadNewTimetableCallback!=null)
-                    this.loadNewTimetableCallback.onLoadNewTimetable(searchResult.getTimetable().getFirst(), selectionManager.getSelection());
+                onStartOrStopCyclicLoadingOfTimetableListener.onStartStopCyclicLoading(
+                        searchResult.getTimetable(),
+                        null,
+                        selection);
+
             } else if (selectedItem instanceof StopPlaceSearchResult) {
                 // long click on typed searchresult
                 StopPlaceSearchResult searchResult = ((StopPlaceSearchResult) selectedItem);
-                if(this.loadNewTimetableCallback!=null)
-                    this.loadNewTimetableCallback.onLoadNewTimetable(searchResult.getTimetable().getFirst(), selectionManager.getSelection());
+                onStartOrStopCyclicLoadingOfTimetableListener.onStartStopCyclicLoading(
+                        searchResult.getTimetable(),
+                        null,
+                        selection);
+
             } else if (selectedItem instanceof HafasStationSearchResult) {
-                ((HafasStationSearchResult) selectedItem).getTimetable().requestTimetable(true, "search");
+                HafasStationSearchResult searchResult = ((HafasStationSearchResult) selectedItem);
+                searchResult.getTimetable().requestTimetable(true, "search");
+                onStartOrStopCyclicLoadingOfTimetableListener.onStartStopCyclicLoading(
+                        null,
+                        searchResult.getTimetable(),
+                        selection);
             }
         });
         showRecents(coroutineScope, timetableRepository);
     }
 
+    @NonNull
     @Override
     public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         switch (viewType) {

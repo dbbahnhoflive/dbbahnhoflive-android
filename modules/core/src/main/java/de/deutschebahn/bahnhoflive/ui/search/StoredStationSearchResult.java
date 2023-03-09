@@ -10,7 +10,6 @@ import android.content.Context;
 import android.content.Intent;
 
 import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
 
 import de.deutschebahn.bahnhoflive.R;
 import de.deutschebahn.bahnhoflive.persistence.FavoriteStationsStore;
@@ -19,9 +18,8 @@ import de.deutschebahn.bahnhoflive.repository.InternalStation;
 import de.deutschebahn.bahnhoflive.repository.Station;
 import de.deutschebahn.bahnhoflive.repository.timetable.TimetableCollector;
 import de.deutschebahn.bahnhoflive.ui.station.StationActivity;
-import kotlin.Pair;
 
-public class StoredStationSearchResult extends StationSearchResult<InternalStation, Pair<TimetableCollector, Float>> {
+public class StoredStationSearchResult extends StationSearchResult<InternalStation, TimetableCollector> {
     private final TimetableCollector timetableCollector;
 
     @NonNull
@@ -70,8 +68,8 @@ public class StoredStationSearchResult extends StationSearchResult<InternalStati
     }
 
     @Override
-    public Pair<TimetableCollector, Float> getTimetable() {
-        return new Pair<>(timetableCollector, 0f /* TODO */);
+    public TimetableCollector getTimetable() {
+        return timetableCollector;
     }
 
 }

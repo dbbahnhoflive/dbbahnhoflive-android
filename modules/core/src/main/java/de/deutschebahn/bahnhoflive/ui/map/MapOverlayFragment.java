@@ -63,7 +63,6 @@ import de.deutschebahn.bahnhoflive.repository.MergedStation;
 import de.deutschebahn.bahnhoflive.repository.RepositoryHolderKt;
 import de.deutschebahn.bahnhoflive.repository.Station;
 import de.deutschebahn.bahnhoflive.repository.StationResource;
-import de.deutschebahn.bahnhoflive.repository.timetable.TimetableCollector;
 import de.deutschebahn.bahnhoflive.tutorial.TutorialManager;
 import de.deutschebahn.bahnhoflive.tutorial.TutorialView;
 import de.deutschebahn.bahnhoflive.ui.map.content.MapConstants;
@@ -73,6 +72,7 @@ import de.deutschebahn.bahnhoflive.ui.map.content.rimap.RimapFilter;
 import de.deutschebahn.bahnhoflive.ui.station.ElevatorIssuesLoaderFragment;
 import de.deutschebahn.bahnhoflive.ui.station.StationProvider;
 import de.deutschebahn.bahnhoflive.util.ArrayListFactory;
+import de.deutschebahn.bahnhoflive.util.GeneralPurposeMillisecondsTimer;
 import de.deutschebahn.bahnhoflive.util.MapContentPreserver;
 
 public class MapOverlayFragment extends Fragment implements OnMapReadyCallback, View.OnClickListener, ElevatorIssuesLoaderFragment.Listener, GoogleMap.OnMapClickListener, MapInterface.MapTypeListener {
@@ -90,6 +90,8 @@ public class MapOverlayFragment extends Fragment implements OnMapReadyCallback, 
     protected MapViewModel mapViewModel;
     private StationResource stationResource;
     private FlyoutOverlayViewHolder flyoutOverlayViewHolder;
+
+    private GeneralPurposeMillisecondsTimer timerCounter = new GeneralPurposeMillisecondsTimer();
 
     private final RecyclerView.AdapterDataObserver adapterDataObserver = new RecyclerView.AdapterDataObserver() {
         @Override
@@ -151,7 +153,12 @@ public class MapOverlayFragment extends Fragment implements OnMapReadyCallback, 
                 Log.w(TAG, "Could not read zone id: " + zoneId, e);
             }
         });
-        flyoutsAdapter = new FlyoutsAdapter(content, this, mapViewModel, new StationActivityStarter(this));
+
+        flyoutsAdapter = new FlyoutsAdapter(content,
+                this,
+                mapViewModel,
+                new StationActivityStarter(this)
+        );
 
         initialPoiManager = new InitialPoiManager(getActivity().getIntent(), savedInstanceState);
 
@@ -492,7 +499,7 @@ public class MapOverlayFragment extends Fragment implements OnMapReadyCallback, 
 
         mTutorialView = view.findViewById(R.id.map_tutorial_view);
 
-        flyoutOverlayViewHolder = new FlyoutOverlayViewHolder(view, mapViewModel);
+        flyoutOverlayViewHolder = new FlyoutOverlayViewHolder(view, mapViewModel, this);
 
         flyoutsRecycler = view.findViewById(R.id.flyouts);
         linearSnapHelper = new FlyoutLinearSnapHelper();
@@ -507,7 +514,7 @@ public class MapOverlayFragment extends Fragment implements OnMapReadyCallback, 
                     TutorialManager.getInstance(getActivity()).showTutorialIfNecessary(mTutorialView, TutorialManager.Id.MAP);
                     getTrackingManager().track(TrackingManager.TYPE_ACTION, TrackingManager.Screen.F1, TrackingManager.Action.SCROLL, TrackingManager.UiElement.POIS);
 
-                    flyoutSettled();
+                    flyoutSettled(scrollState==RecyclerView.SCROLL_STATE_SETTLING);
                 }
 
                 flyoutOverlayViewHolder.setCurrentlyWanted(scrollState == RecyclerView.SCROLL_STATE_IDLE && linearSnapHelper.isIdle());
@@ -530,13 +537,29 @@ public class MapOverlayFragment extends Fragment implements OnMapReadyCallback, 
         return view;
     }
 
-    private void flyoutSettled() {
+    private void flyoutSettled(Boolean isRealySettled) {
         final View latestFinalTargetView = linearSnapHelper.getLatestFinalTargetView();
         if (latestFinalTargetView != null) {
             final RecyclerView.ViewHolder childViewHolder = flyoutsRecycler.getChildViewHolder(latestFinalTargetView);
             if (childViewHolder instanceof FlyoutViewHolder) {
                 final MarkerBinder markerBinder = ((FlyoutViewHolder) childViewHolder).getItem();
                 highlight(markerBinder);
+
+                if (isRealySettled && markerBinder != null) {
+                    if (markerBinder.getMarkerContent().getViewType() == MarkerContent.ViewType.TRACK) {
+                        if(childViewHolder instanceof TrackFlyoutViewHolder) {
+                            final Integer n = flyoutsRecycler.getAdapter().getItemCount();
+                            for(Integer i=0; i<n; i++) {
+                                final RecyclerView.ViewHolder holder = flyoutsRecycler.findViewHolderForAdapterPosition(i);
+                                if(holder==childViewHolder) {
+//                                    flyoutsRecycler.getAdapter().notifyItemChanged(i);
+                                    break;
+                                }
+                            }
+                        }
+                    }
+                }
+
             }
         }
     }
@@ -774,11 +797,6 @@ public class MapOverlayFragment extends Fragment implements OnMapReadyCallback, 
                         final MarkerBinder markerBinder = new MarkerBinder(stationMarkerContent, mapViewModel.getZoom(), mapViewModel.getLevel(), stationRequestArguments.filterItem);
                         stationRequestArguments.categoryMarkerBinders.add(markerBinder);
                         markerBinders.add(markerBinder);
-                        final TimetableCollector timetableCollector = mapViewModel.createActiveTimetableCollector(station);
-                        stationMarkerContent.setTimetable(timetableCollector);
-                        final MapOverlayFragment owner = MapOverlayFragment.this;
-
-                        timetableCollector.getAnyUpdateLiveData().observe(owner, unit -> flyoutsAdapter.notifyDataSetChanged());
                     }
 
                     stationResourceData.removeObserver(this);

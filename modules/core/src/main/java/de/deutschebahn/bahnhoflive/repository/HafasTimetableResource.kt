@@ -19,7 +19,8 @@ class HafasTimetableResource : RemoteResource<HafasDepartures>() {
     private var origin = HafasStationResource.ORIGIN_TIMETABLE
     private var hours = Constants.PRELOAD_HOURS
 
-    fun initialize(hafasStation: HafasStation?, departures: HafasDepartures?, filterStrictly: Boolean, origin: String) {
+    fun initialize(hafasStation: HafasStation?, departures: HafasDepartures?,
+                   filterStrictly: Boolean, origin: String) {
         this.filterStrictly = filterStrictly
         this.origin = origin
 
@@ -31,6 +32,11 @@ class HafasTimetableResource : RemoteResource<HafasDepartures>() {
 
         this.hafasStation = hafasStation
         loadData(false)
+    }
+
+    fun refresh(hafasStation: HafasStation?) {
+        this.hafasStation = hafasStation
+        loadData(true)
     }
 
     override fun onStartLoading(force: Boolean) {
