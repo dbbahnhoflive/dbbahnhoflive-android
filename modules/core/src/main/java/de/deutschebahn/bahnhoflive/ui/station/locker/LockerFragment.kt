@@ -174,9 +174,6 @@ class LockerFragment : Fragment(), MapPresetProvider {
 
     }.root
 
-    companion object {
-        val TAG: String = LockerFragment::class.java.simpleName
-    }
 
     override fun onStart() {
         super.onStart()
@@ -204,4 +201,9 @@ class LockerFragment : Fragment(), MapPresetProvider {
 
         return true
     }
+
+    companion object {
+        val TAG: String = LockerFragment::class.java.simpleName
+    }
+
 }

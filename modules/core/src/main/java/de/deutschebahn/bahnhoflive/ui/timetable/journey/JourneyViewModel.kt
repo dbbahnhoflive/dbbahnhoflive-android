@@ -22,6 +22,7 @@ class JourneyViewModel(app: Application, savedStateHandle: SavedStateHandle) :
         const val ARG_TRAIN_EVENT = "trainEvent"
     }
 
+    val showWagonOrderLiveData = MutableLiveData<Boolean>()
 
     val showFullDeparturesLiveData = MutableLiveData<Boolean>()
     val trainFormationInputLiveData = MutableLiveData<TrainFormation?>()

@@ -16,6 +16,7 @@ import androidx.core.view.isGone
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentPagerAdapter
 import androidx.fragment.app.activityViewModels
+import androidx.fragment.app.findFragment
 import de.deutschebahn.bahnhoflive.R
 import de.deutschebahn.bahnhoflive.analytics.TrackingManager
 import de.deutschebahn.bahnhoflive.databinding.FragmentHubBinding
@@ -23,6 +24,7 @@ import de.deutschebahn.bahnhoflive.repository.AssetDocumentBroker
 import de.deutschebahn.bahnhoflive.tutorial.TutorialManager
 import de.deutschebahn.bahnhoflive.ui.accessibility.SpokenFeedbackAccessibilityLiveData
 import de.deutschebahn.bahnhoflive.ui.map.MapActivity
+import de.deutschebahn.bahnhoflive.util.GoogleLocationPermissions
 
 class HubFragment : androidx.fragment.app.Fragment() {
 
@@ -150,8 +152,12 @@ class HubFragment : androidx.fragment.app.Fragment() {
                     TrackingManager.UiElement.MAP_BUTTON
                 )
 
-                val intent = MapActivity.createIntent(activity, hubViewModel.hafasData)
-                startActivity(intent)
+                GoogleLocationPermissions.startMapActivityIfConsent(this.findFragment()) {
+                    MapActivity.createIntent(
+                        activity,
+                        hubViewModel.hafasData
+                    )
+                }
             }
         }
 

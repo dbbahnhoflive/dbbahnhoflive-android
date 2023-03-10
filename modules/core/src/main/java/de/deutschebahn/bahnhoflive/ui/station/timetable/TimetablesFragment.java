@@ -11,6 +11,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentActivity;
@@ -42,6 +43,8 @@ public class TimetablesFragment extends TwoTabsFragment {
 
         stationViewModel = new ViewModelProvider(requireActivity()).get(StationViewModel.class);
     }
+    private int tabSelectedIndex = 0;
+    private int savedTabSelectedIndex = 0;
 
     @Override
     protected void showFragment(int position) {
@@ -125,6 +128,8 @@ public class TimetablesFragment extends TwoTabsFragment {
 
         final String tag = HafasDeparturesFragment.Companion.getTAG();
 
+        tabSelectedIndex=1;
+
         if (setFragment(tag, HafasDeparturesFragment.class)) {
             return;
         }
@@ -136,11 +141,32 @@ public class TimetablesFragment extends TwoTabsFragment {
     protected void showDbFragment() {
         final String tag = DbTimetableFragment.TAG;
 
+        tabSelectedIndex=0;
+
         if (setFragment(tag, DbTimetableFragment.class)) {
             return;
         }
 
         installFragment(tag, new DbTimetableFragment());
+    }
+
+
+    @Override
+    public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
+        if(savedTabSelectedIndex ==1) {
+//         showFragment(savedTabSelectedIndex); // not working because childFragmentManager.commit() async !
+         installFragment(HafasDeparturesFragment.Companion.getTAG(), new HafasDeparturesFragment());
+         setTab(savedTabSelectedIndex);
+        }
+
+    }
+
+    @Override
+    public void onDestroyView() {
+        super.onDestroyView();
+
+        savedTabSelectedIndex = tabSelectedIndex;
     }
 
     @Override

@@ -6,7 +6,7 @@
 			"type": "db_information"
 		},
 		{
-			"descriptionText": "<p>Auf dem Bahnhof stehen Ihnen unsere mobilen Service-Mitarbeiter mit Rat und Tat zur Seite.<br>Achten Sie auf die rote Mütze mit der Aufschrift \"Service\".</p>",
+			"descriptionText": "<p>Auf dem Bahnhof stehen Ihnen unsere mobilen Service-Mitarbeiter mit Rat und Tat zur Seite.<br>Die mobilen Service-Mitarbeitenden unterstützen Sie mit aktuellen Informationen und beantworten Ihnen Fragen auf Ihrer Reise. Bei Abweichungen, wie beispielsweise Verspätungen, erhalten Sie Reisealternativen und weiterführende Details.<br>Darüber hinaus unterstützt der mobile Service mobilitätseingeschränkte Reisende beim Ein-, Um- oder Aussteigen. Hierzu erhalten sie weitere Informationen unter <a href=\"showServiceNrMobi\">Mobilitätsservice</a>.<br></p>",
 			"title": "Mobiler Service",
 			"type": "mobiler_service"
 		},
@@ -27,7 +27,7 @@
 		},
 
 		{
-			"descriptionText": "<p>An diesem Bahnhof bieten wir Ihnen kostenloses WLAN an. Damit können Sie mit dem Smartphone oder Laptop surfen, E-Mails bearbeiten und vieles mehr.</p><p>Informationen zu den verschiedenen WLAN-Angeboten an unseren Bahnhöfen finden Sie <a href=\"https://www.bahnhof.de/bahnhof-de/service/WLAN-519242\">hier</a></p>",
+			"descriptionText": "<p>An diesem Bahnhof bieten wir Ihnen kostenloses WLAN an. Damit können Sie mit dem Smartphone oder Laptop surfen, E-Mails bearbeiten und vieles mehr.</p><p>Informationen zu den verschiedenen WLAN-Angeboten an unseren Bahnhöfen finden Sie <a href=\"https://www.bahnhof.de/bahnhof-de/service/wlan\">hier</a></p>",
 			"title": "WLAN",
 			"type": "wlan"
 		},
@@ -56,11 +56,6 @@
 			"descriptionText": "<p>Hallo, mein Name ist DB Smile. Ich bin Ihr digitaler Assistent und helfe bei Fragen zum Bahnhof.</p> <dbactionbutton>Chatten Sie mit mir</dbactionbutton> <p>Ich bin <b>Montag bis Sonntag von 07:00 - 22:00 Uhr</b> in vollem Umfang für Sie da.</p><p><b>Alternative Kontaktmöglichkeiten</b><dbactionbutton href=\"mailto:feedback@bahnhof.de\">E-Mail</dbactionbutton> <dbactionbutton href=\"tel:030 586020930\">030 586020930</dbactionbutton>Montag bis Sonntag von 07:00 - 22:00 Uhr</p>",
 			"title": "Fragen & Feedback zum Bahnhof",
 			"type": "chatbot"
-		},
-		{
-			"descriptionText": "<p><b>Einfach vorbestellen</b></p><p>Machen Sie es sich bequem, mit der pickpack App. Zum Beispiel das Lieblingsessen vorbestellen, Abholzeit aussuchen und ohne extra Wartezeit genießen. Das pickpack Einkaufserlebnis ermöglichen wir gemeinsam mit Partnerläden Ihres Bahnhofs.</p><p><b>Ihre Vorteile</b><ul><li>Kein Anstehen</li><li>Kein Bargeld</li><li>Keine Wartezeit</li></ul></p><p> </p>",
-			"title": "pickpack",
-			"type": "pickpack"
 		},
 		{
 			"descriptionText": "<p><b>Zufrieden mit der App?</b></p>Unterstützen Sie uns mit einer positiven Bewertung im Play Store.<dbactionbutton action=\"rateApp\">App bewerten</dbactionbutton>",

@@ -14,10 +14,10 @@ import de.deutschebahn.bahnhoflive.R;
 import de.deutschebahn.bahnhoflive.backend.db.fasta2.model.FacilityStatus;
 
 public enum Status {
-    POSITIVE(R.color.green, R.drawable.app_check),
+    POSITIVE(R.color.green, R.drawable.ic_check_circle_solid), //app_check),
     NEUTRAL(R.color.gray, R.drawable.app_achtung),
     UNKNOWN(R.color.gray, R.drawable.app_unbekannt),
-    NEGATIVE(R.color.red, R.drawable.app_kreuz),
+    NEGATIVE(R.color.red, R.drawable.ic_cancel_solid), //app_kreuz),
     NONE(R.color.gray, 0);
 
     @ColorRes

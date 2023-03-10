@@ -153,6 +153,11 @@ class DbTimetableFragment : Fragment(), MapPresetProvider {
         return false
     }
 
+    fun setModeAndFilter(arrivals: Boolean, trackFilter: String?) {
+        setFilter(trackFilter)
+        adapter!!.setArrivals(arrivals)
+    }
+
     companion object {
         @JvmField
         val TAG = DbTimetableFragment::class.java.simpleName

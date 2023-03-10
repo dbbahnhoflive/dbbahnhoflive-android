@@ -32,6 +32,26 @@ import io.reactivex.subjects.BehaviorSubject
 import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.mapNotNull
 
+enum class EquipmentID(var code: Int) {
+    UNKNOWN(0),
+    LOCKERS(1),
+    RAIL_REPLACEMENT(2),
+    DB_INFORMATION(3),
+    RAILWAY_MISSION(4),
+    DB_TRAVEL_CENTER(5),
+    DB_LOUNGE(6)
+    ;
+}
+
+private val mapMarkerContentTitle_EquipmentID = mapOf(
+    "DB Information" to EquipmentID.DB_INFORMATION,
+    "Bahnhofsmission" to EquipmentID.RAILWAY_MISSION,
+    "DB Reisezentrum" to EquipmentID.DB_TRAVEL_CENTER,
+    "DB Lounge" to EquipmentID.DB_LOUNGE,
+
+    "Schlieﬂfach" to EquipmentID.LOCKERS
+)
+
 class MapViewModel(
     application: Application,
     private val savedStateHandle: SavedStateHandle,
@@ -99,6 +119,8 @@ class MapViewModel(
 
     val railReplacementResource = RimapRRTResource()
 
+    private var infoAndServicesTitles : List<String>? = null
+
     val stationLocationLiveData: LiveData<LatLng?> = MediatorLiveData<LatLng?>().apply {
 
         addSource(originalStationLiveData) { originalStation ->
@@ -113,7 +135,7 @@ class MapViewModel(
 
     }.distinctUntilChanged()
 
-    fun setStation(station: Station?) {
+    fun setStation(station: Station?, infoAndServicesTitles : List<String>? ) {
         originalStationLiveData.value = station
         if (station != null) {
             zoneIdLiveData.value = station.id
@@ -131,6 +153,9 @@ class MapViewModel(
 
             lockers.initialize(station)
         }
+
+        this.infoAndServicesTitles = infoAndServicesTitles
+
     }
 
 
@@ -253,4 +278,17 @@ class MapViewModel(
 
 
 
+    // check if Marker-Type exists in Station
+    // needed for possible to set a link from map into Station-Activity
+    fun isMarkerContentValidStationFeature(typeName:String) : EquipmentID {
+
+        var equipmentID : EquipmentID = EquipmentID.UNKNOWN
+
+        infoAndServicesTitles?.let {
+            if(it.contains(typeName))
+                equipmentID = mapMarkerContentTitle_EquipmentID[typeName] ?: EquipmentID.UNKNOWN
+        }
+
+        return equipmentID
+    }
 }

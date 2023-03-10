@@ -18,6 +18,7 @@
     android:layout_height="match_parent"
     android:paddingBottom="@dimen/overscroll_height"
     android:clipToPadding="false"
+    android:importantForAccessibility="no"
     app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
     app:layout_behavior="@string/appbar_scrolling_view_behavior"
     tools:listitem="@layout/card_category_selection"

@@ -75,8 +75,9 @@ class MapConsentDialogFragment : DialogFragment() {
         dismiss()
     }
 
-    fun setOnMapConsentDialogListener(_listener: OnMapConsentDialogListener) {
+    fun setOnMapConsentDialogListener(_listener: OnMapConsentDialogListener) : MapConsentDialogFragment {
         listener = _listener
+        return this
     }
 
 }

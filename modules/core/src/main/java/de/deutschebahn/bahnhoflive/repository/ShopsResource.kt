@@ -22,12 +22,10 @@ class ShopsResource constructor(
         Observer { loadingStatus -> this@ShopsResource.loadingStatus.value = loadingStatus }
     private val errorForwarder = Observer<VolleyError?> { throwable -> error.value = throwable }
     val rimapPOIListResource = RimapPOIListResource()
-    private val einkaufsbahnhofStationResponseResource = EinkaufsbahnhofStationResponseResource()
     private var skipRimap = false
     private var skipEinkaufsbahnhof = false
     fun initialize(station: Station) {
         rimapPOIListResource.initialize(station)
-        einkaufsbahnhofStationResponseResource.initialize(station.id)
         rimapPOIListResource.load()
     }
 
@@ -35,7 +33,6 @@ class ShopsResource constructor(
         if (skipEinkaufsbahnhof) {
             super.onRefresh()
         } else if (skipRimap) {
-            einkaufsbahnhofStationResponseResource.refresh()
         } else {
             rimapPOIListResource.refresh()
         }
@@ -44,11 +41,6 @@ class ShopsResource constructor(
 
     init {
         loadingStatus.addSource(rimapPOIListResource.loadingStatus, loadingStatusForwarder)
-        loadingStatus.addSource(
-            einkaufsbahnhofStationResponseResource.loadingStatus,
-            loadingStatusForwarder
-        )
-        error.addSource(einkaufsbahnhofStationResponseResource.error, errorForwarder)
         error.addSource(rimapPOIListResource.error) { volleyError ->
             if (volleyError == null) {
                 error.value = volleyError
@@ -56,28 +48,17 @@ class ShopsResource constructor(
         }
         data.addSource(rimapPOIListResource.error) { volleyError ->
             if (volleyError != null) {
-                einkaufsbahnhofStationResponseResource.refresh()
+                error.value = volleyError
             }
         }
         data.addSource(rimapPOIListResource.data) { rimapPOIs: List<RimapPOI?>? ->
             if (rimapPOIs == null || rimapPOIs.isEmpty()) {
                 skipRimap = true
-                einkaufsbahnhofStationResponseResource.load()
                 return@addSource
             }
             val categorizedShops = CategorizedShops(rimapPOIs)
             data.setValue(categorizedShops)
         }
-        data.addSource(einkaufsbahnhofStationResponseResource.data) { stationResponse ->
-            if (stationResponse?.stores == null || stationResponse.stores.isEmpty()) {
-                skipEinkaufsbahnhof = true
-                if (data.value == null) {
-                    data.value = null // trigger value update without overwriting existing data
-                }
-                return@addSource
-            }
-            val categorizedShops = CategorizedShops(stationResponse)
-            data.setValue(categorizedShops)
-        }
+
     }
 }

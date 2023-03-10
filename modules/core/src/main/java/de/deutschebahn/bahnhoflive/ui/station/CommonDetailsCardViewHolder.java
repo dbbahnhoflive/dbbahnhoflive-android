@@ -6,6 +6,8 @@
 
 package de.deutschebahn.bahnhoflive.ui.station;
 
+import static de.deutschebahn.bahnhoflive.util.ViewXKt.setAccessibilityText;
+
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
@@ -49,12 +51,14 @@ public class CommonDetailsCardViewHolder<T> extends SelectableItemViewHolder<T> 
     }
 
     protected void setStatus(@NonNull Status status, CharSequence text) {
-        setStatus(status, text, null);
+        setStatus(status, text, null, null);
     }
 
-    protected void setStatus(@NonNull Status status, CharSequence text, CharSequence contentDescription) {
+    protected void setStatus(@NonNull Status status, CharSequence text, CharSequence contentDescription, CharSequence accessibilityText) {
         statusView.setText(text);
         applyStatus(status, contentDescription);
+        if(accessibilityText!=null)
+         setAccessibilityText(statusView, accessibilityText);
     }
 
     private void applyStatus(@NonNull Status status, CharSequence contentDescription) {

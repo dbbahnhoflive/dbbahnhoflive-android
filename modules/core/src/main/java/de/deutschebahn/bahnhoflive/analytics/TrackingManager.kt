@@ -99,7 +99,6 @@ open class TrackingManager(activity: ComponentActivity? = null) {
             const val POI_SEARCH_QUERY = "such-aktion"
             const val ECO_TEASER = "oekostrom-teaser"
             const val CHATBOT = "chatbot"
-            const val MEK_TEASER = "mek-teaser"
         }
     }
 

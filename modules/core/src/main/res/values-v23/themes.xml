@@ -11,4 +11,5 @@
         <!--<item name="android:windowTranslucentStatus">true</item>-->
         <item name="android:trackTint">@color/anthracite</item>
     </style>
+
 </resources>

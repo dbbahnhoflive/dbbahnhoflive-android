@@ -75,7 +75,8 @@ import de.deutschebahn.bahnhoflive.util.ArrayListFactory;
 import de.deutschebahn.bahnhoflive.util.GeneralPurposeMillisecondsTimer;
 import de.deutschebahn.bahnhoflive.util.MapContentPreserver;
 
-public class MapOverlayFragment extends Fragment implements OnMapReadyCallback, View.OnClickListener, ElevatorIssuesLoaderFragment.Listener, GoogleMap.OnMapClickListener, MapInterface.MapTypeListener {
+public class MapOverlayFragment extends Fragment implements OnMapReadyCallback, View.OnClickListener,
+        ElevatorIssuesLoaderFragment.Listener, GoogleMap.OnMapClickListener, MapInterface.MapTypeListener {
 
     private static final String TAG = MapOverlayFragment.class.getSimpleName();
     public static final float DEFAULT_ZOOM = MapConstants.minimumZoomForIndoorMarkers;
@@ -237,6 +238,9 @@ public class MapOverlayFragment extends Fragment implements OnMapReadyCallback, 
 
                     final MarkerBinder markerBinder = new MarkerBinder(markerContent, mapViewModel.getZoom(), mapViewModel.getLevel(), filterItem);
                     updateInitialMarkerBinder(markerBinder);
+
+//                    if(markerBinder.getMarkerContent().getTitle().toString().contains("DB Information"))
+//                        Log.d("cr", markerBinder.getMarkerContent().getTitle());
 
                     allMarkerBinders.add(markerBinder);
                     categoryPins.add(markerBinder);
@@ -484,6 +488,7 @@ public class MapOverlayFragment extends Fragment implements OnMapReadyCallback, 
         locateButton = view.findViewById(R.id.btn_locate);
         locateButton.setOnClickListener(this);
         filterButton = view.findViewById(R.id.btn_filter);
+        filterButton.setVisibility(View.INVISIBLE);
         filterButton.setOnClickListener(this);
         updateFilterButton();
 

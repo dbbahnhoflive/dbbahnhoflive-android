@@ -60,6 +60,12 @@ public class StoredStationSearchResult extends StationSearchResult<InternalStati
         final Intent intent = StationActivity.createIntent(context, station, details);
         context.startActivity(intent);
         recentSearchesStore.put(station);
+        final Intent intent = StationActivity.createIntent(context, dbTimetableResource.getInternalStation(), details);
+        if (recentSearchesStore != null) {
+            recentSearchesStore.put(dbTimetableResource.getInternalStation());
+        }
+
+        context.startActivity(intent);
     }
 
     @Override

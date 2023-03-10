@@ -6,6 +6,7 @@
 
 package de.deutschebahn.bahnhoflive.ui.timetable.localtransport
 
+import android.content.Intent
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -17,18 +18,18 @@ import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
 import de.deutschebahn.bahnhoflive.BaseApplication
 import de.deutschebahn.bahnhoflive.R
 import de.deutschebahn.bahnhoflive.analytics.TrackingManager
-import de.deutschebahn.bahnhoflive.backend.hafas.model.HafasTimetable
 import de.deutschebahn.bahnhoflive.backend.hafas.model.ProductCategory
-import de.deutschebahn.bahnhoflive.repository.HafasTimetableResource
 import de.deutschebahn.bahnhoflive.repository.LoadingStatus
+import de.deutschebahn.bahnhoflive.repository.localtransport.AnyLocalTransportInitialPoi
 import de.deutschebahn.bahnhoflive.ui.LoadingContentDecorationViewHolder
 import de.deutschebahn.bahnhoflive.ui.RecyclerFragment
 import de.deutschebahn.bahnhoflive.ui.map.Content
 import de.deutschebahn.bahnhoflive.ui.map.InitialPoiManager
-import de.deutschebahn.bahnhoflive.ui.map.MapActivity
+import de.deutschebahn.bahnhoflive.ui.map.MapPresetProvider
 import de.deutschebahn.bahnhoflive.ui.map.content.rimap.RimapFilter
+import de.deutschebahn.bahnhoflive.ui.station.HistoryFragment
 
-class HafasDeparturesFragment : RecyclerFragment<HafasDeparturesAdapter>(R.layout.recycler_linear_refreshable), HafasFilterDialogFragment.Consumer {
+class HafasDeparturesFragment : RecyclerFragment<HafasDeparturesAdapter>(R.layout.recycler_linear_refreshable), HafasFilterDialogFragment.Consumer, MapPresetProvider {
 
     private val restHelper = BaseApplication.get().restHelper
 
@@ -59,8 +60,37 @@ class HafasDeparturesFragment : RecyclerFragment<HafasDeparturesAdapter>(R.layou
             hafasFilterDialogFragment.show(childFragmentManager, "filter")
         }, trackingManager, View.OnClickListener {
             hafasTimetableViewModel.loadMore()
-        })
+        },
+            hafasDataReceivedCallback = { view: View, details: DetailedHafasEvent ->
+                run {
 
+                    val hafasJourneyFragment = HafasJourneyFragment()
+                    hafasJourneyFragment.onDataReceived(details)
+
+
+                    if(parentFragment!=null) {
+
+                        val historyFragment = HistoryFragment.parentOf(this)
+                        historyFragment.push(hafasJourneyFragment)
+                    }
+                    else
+                    {
+                        // aufruf aus Favoriten OHNE vorher geladene Station !!!!!! (kein HistoryFragment)
+                        // todo: besser Station ermitteln, laden, Abfahrtstafel laden, gewünschte ÖPNV-Haltestelle laden und dann
+                        // das zugehörige HafasJourneyFragment anzeigen !
+
+                        activity?.supportFragmentManager?.beginTransaction()
+                        ?.replace(R.id.hafas_fragment_container, hafasJourneyFragment, HafasJourneyFragment.TAG)
+                        ?.addToBackStack(null)
+                        ?.commit()
+
+                    }
+
+                }
+            }
+        )
+
+        setFilter(hafasTimetableViewModel.filterName)
 
         hafasTimetableResource.data.observe(this, Observer { hafasDepartures ->
             if (hafasDepartures == null) {
@@ -113,34 +143,7 @@ class HafasDeparturesFragment : RecyclerFragment<HafasDeparturesAdapter>(R.layou
         super.onViewCreated(view, savedInstanceState)
 
         val mapButton = view.findViewById<View>(R.id.btn_map)
-
-        val station = hafasTimetableViewModel.station
-        if (station == null) {
-            mapButton.visibility = View.GONE
-        } else {
-            mapButton.setOnClickListener { v ->
-
-                val hafasStation = hafasTimetableViewModel.hafasStationResource.data.value
-                val hafasTimetable = HafasTimetable(hafasStation, hafasTimetableViewModel.hafasTimetableResource)
-
-                hafasTimetableViewModel.hafasStations?.map{
-                    if (it == hafasStation) {
-                        hafasTimetable
-                    } else {
-                        HafasTimetable(it, HafasTimetableResource())
-                    }
-                }?.let {
-                    val intent = MapActivity.createIntent(v.context, station, ArrayList(it))
-
-                    InitialPoiManager.putInitialPoi(intent, Content.Source.HAFAS, hafasTimetable)
-                    RimapFilter.putPreset(intent, RimapFilter.PRESET_NONE)
-
-                    startActivity(intent)
-                }
-
-
-            }
-        }
+        mapButton?.visibility = View.GONE
 
         Transformations.switchMap(hafasTimetableResource.data) {
             it?.let {
@@ -158,18 +161,35 @@ class HafasDeparturesFragment : RecyclerFragment<HafasDeparturesAdapter>(R.layou
     }
 
     override fun onDestroyView() {
-        swipeRefreshLayout = null
 
+
+        // not working ???
+//        val mFragmentMgr = activity?.supportFragmentManager
+//        val  mTransaction = mFragmentMgr?.beginTransaction()
+//        val  childFragment = mFragmentMgr?.findFragmentByTag(HafasJourneyFragment.TAG)
+//        if (childFragment != null) {
+//            mTransaction?.remove(childFragment)
+//            mTransaction?.commit()
+//        }
+
+        swipeRefreshLayout = null
         super.onDestroyView()
+        hafasTimetableViewModel.filterName = adapter?.filter?.label
+
     }
 
     override fun setFilter(trainCategory: String?) {
         adapter?.filter = ProductCategory.ofLabel(trainCategory)
     }
 
-    companion object {
 
-        val TAG = HafasDeparturesFragment::class.java.simpleName
+    override fun prepareMapIntent(intent: Intent): Boolean {
+        RimapFilter.putPreset(intent, RimapFilter.PRESET_LOCAL_TIMETABLE)
+        InitialPoiManager.putInitialPoi(intent, Content.Source.RIMAP, AnyLocalTransportInitialPoi)
+        return true
+    }
+
+    companion object {        val TAG = HafasDeparturesFragment::class.java.simpleName
         val REQUEST_CODE = 815
     }
 }

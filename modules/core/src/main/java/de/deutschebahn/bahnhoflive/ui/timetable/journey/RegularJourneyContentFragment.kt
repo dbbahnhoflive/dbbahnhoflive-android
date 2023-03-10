@@ -45,6 +45,8 @@ class RegularJourneyContentFragment : Fragment() {
         val issueBinder =
             IssuesBinder(issueContainer, issueText, IssueIndicatorBinder(issueIcon))
 
+        var shouldOfferWagenOrder = false
+
         journeyViewModel.essentialParametersLiveData.observe(viewLifecycleOwner) { (station, trainInfo, trainEvent) ->
 
             issueBinder.bindIssues(
@@ -53,7 +55,8 @@ class RegularJourneyContentFragment : Fragment() {
             )
 
             with(buttonWagonOrder) {
-                if (trainInfo.shouldOfferWagenOrder()) {
+                shouldOfferWagenOrder = trainInfo.shouldOfferWagenOrder()
+                if (shouldOfferWagenOrder) {
                     setOnClickListener {
                         activity?.also {
                             TrackingManager.fromActivity(it).track(
@@ -65,11 +68,19 @@ class RegularJourneyContentFragment : Fragment() {
                         }
                         showWaggonOrder(trainInfo, trainEvent)
                     }
-                    isGone = false
+//                    isGone = false
                 } else {
-                    isGone = true
+//                    isGone = true
                 }
             }
+
+
+
+            if(journeyViewModel.showWagonOrderLiveData.value==true) {
+                journeyViewModel.showWagonOrderLiveData.value=false
+                trainInfo.let { it1 -> trainEvent?.let { it2 -> showWaggonOrder(it1, it2) } }
+            }
+
         }
 
         with(contentLayout) {
@@ -88,14 +99,25 @@ class RegularJourneyContentFragment : Fragment() {
                 }.root.toViewHolder()
             }
             val journeyConcatAdapter = ConcatAdapter(journeyAdapter, filterAdapter)
-            journeyViewModel.eventuallyFilteredJourneysLiveData.observe(viewLifecycleOwner) {
-                it.fold({ (filtered, journeyStops) ->
+            journeyViewModel.eventuallyFilteredJourneysLiveData.observe(viewLifecycleOwner) { pairResult ->
+                pairResult.fold({ (filtered, journeyStops) ->
                     if (recycler.adapter != journeyConcatAdapter) {
                         recycler.adapter = journeyConcatAdapter
                     }
 
                     filterAdapter.count = if (filtered) 1 else 0
                     journeyAdapter.submitList(journeyStops)
+
+                    // hide buttonWagonOrder if Endbahnhof
+                    if(journeyStops.firstOrNull() { it.current && it.last }!=null) {
+                        buttonWagonOrder.isGone = true
+                    }
+                    else {
+                        buttonWagonOrder.isGone = !shouldOfferWagenOrder
+                    }
+
+                    textWagonOrder.isGone =  buttonWagonOrder.isGone
+
 
                 }, {
                     Log.d(JourneyFragment::class.java.simpleName, "Error: $it")

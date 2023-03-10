@@ -22,9 +22,9 @@ import android.widget.ViewFlipper;
 import androidx.annotation.IdRes;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.DialogFragment;
 import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentManager;
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModel;
@@ -37,7 +37,7 @@ import org.jetbrains.annotations.NotNull;
 import java.util.ArrayList;
 import java.util.List;
 
-import de.deutschebahn.bahnhoflive.BaseApplication;
+import de.deutschebahn.bahnhoflive.BaseActivity;
 import de.deutschebahn.bahnhoflive.BuildConfig;
 import de.deutschebahn.bahnhoflive.R;
 import de.deutschebahn.bahnhoflive.analytics.IssueTracker;
@@ -55,9 +55,6 @@ import de.deutschebahn.bahnhoflive.tutorial.TutorialView;
 import de.deutschebahn.bahnhoflive.ui.hub.HubActivity;
 import de.deutschebahn.bahnhoflive.ui.map.EquipmentID;
 import de.deutschebahn.bahnhoflive.ui.map.MapActivity;
-import de.deutschebahn.bahnhoflive.ui.map.MapConsentDialogFragment;
-import de.deutschebahn.bahnhoflive.ui.map.MapPresetProvider;
-import de.deutschebahn.bahnhoflive.ui.map.OnMapConsentDialogListener;
 import de.deutschebahn.bahnhoflive.ui.map.content.rimap.RimapFilter;
 import de.deutschebahn.bahnhoflive.ui.station.accessibility.AccessibilityFragment;
 import de.deutschebahn.bahnhoflive.ui.station.elevators.ElevatorStatusListsFragment;
@@ -73,11 +70,15 @@ import de.deutschebahn.bahnhoflive.ui.station.search.ContentSearchFragment;
 import de.deutschebahn.bahnhoflive.ui.station.shop.ShopCategorySelectionFragment;
 import de.deutschebahn.bahnhoflive.ui.station.timetable.TimetablesFragment;
 import de.deutschebahn.bahnhoflive.ui.timetable.localtransport.HafasTimetableViewModel;
+import de.deutschebahn.bahnhoflive.util.DebugX;
 import kotlin.Pair;
+import de.deutschebahn.bahnhoflive.util.GoogleLocationPermissions;
 
-public class StationActivity extends AppCompatActivity implements
+public class StationActivity extends BaseActivity implements
         StationProvider, HistoryFragment.RootProvider,
         TrackingManager.Provider, StationNavigation {
+
+    public static final String ARG_INTENT_CREATION_TIME = "intent_creation_time";
 
     public static final String ARG_STATION = "station";
     public static final String TAG = StationActivity.class.getSimpleName();
@@ -105,6 +106,8 @@ public class StationActivity extends AppCompatActivity implements
     private boolean initializeShowingDepartures;
     private StationViewModel stationViewModel;
 
+    private Boolean wasStarted = false;
+
     private final Observer<Pair<StationNavigation, RrtPoint>> pendingRrtPointAndStationNavigationObserver = pair -> {
         final StationNavigation stationNavigation = pair.getFirst();
         final RrtPoint rrtPoint = pair.getSecond();
@@ -117,22 +120,8 @@ public class StationActivity extends AppCompatActivity implements
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-//        final ViewModelProvider viewModelProvider = new ViewModelProvider(this, new ViewModelProvider.AndroidViewModelFactory(getApplication()) {
-//            @NonNull
-//            @Override
-//            public <T extends ViewModel> T create(@NonNull Class<T> modelClass) {
-//                if (modelClass == LocalTransportViewModel.class) {
-//                    return (T) stationViewModel.getLocalTransportViewModel();
-//                }
-//                if (modelClass == HafasTimetableViewModel.class) {
-//                    return (T) stationViewModel.getHafasTimetableViewModel();
-//                }
-//                return super.create(modelClass);
-//            }
-//        });
+        DebugX.Companion.logIntent(this.getLocalClassName(), getIntent());
 
-
-// #cr
         ViewModelProvider.AndroidViewModelFactory fac = new ViewModelProvider.AndroidViewModelFactory(getApplication()) {
             @NonNull
             @Override
@@ -147,7 +136,21 @@ public class StationActivity extends AppCompatActivity implements
             }
         };
 
-        final ViewModelProvider viewModelProvider = new ViewModelProvider(this, (ViewModelProvider.Factory) fac); // #cr
+        final ViewModelProvider viewModelProvider = new ViewModelProvider(this, (ViewModelProvider.Factory) fac);
+
+//        final ViewModelProvider viewModelProvider = new ViewModelProvider(this, (ViewModelProvider.Factory) new ViewModelProvider.AndroidViewModelFactory(getApplication()) {
+//            @NonNull
+//            @Override
+//            public <T extends ViewModel> T create(@NonNull Class<T> modelClass) {
+//                if (modelClass == LocalTransportViewModel.class) {
+//                    return (T) stationViewModel.getLocalTransportViewModel();
+//                }
+//                if (modelClass == HafasTimetableViewModel.class) {
+//                    return (T) stationViewModel.getHafasTimetableViewModel();
+//                }
+//                return super.create(modelClass);
+//            }
+//        });
 
 
         stationViewModel = viewModelProvider.get(StationViewModel.class);
@@ -225,29 +228,9 @@ public class StationActivity extends AppCompatActivity implements
             @Override
             public void onClick(View v) {
                 trackingManager.track(TrackingManager.TYPE_ACTION, TrackingManager.Source.TAB_NAVI, TrackingManager.Action.TAP, TrackingManager.UiElement.MAP_BUTTON);
-
-                if (!Boolean.TRUE.equals(BaseApplication.Companion.get().getApplicationServices().getMapConsentRepository().getConsented().getValue())) {
-                    MapConsentDialogFragment mp = new MapConsentDialogFragment();
-                    mp.setOnMapConsentDialogListener(new OnMapConsentDialogListener() {
-                        @Override
-                        public void onConsentAccepted() {
-                            final Intent intent = MapActivity.createIntent(StationActivity.this, station);
-                            Fragment currentContentFragment = getCurrentContentFragment();
-                            if (currentContentFragment instanceof MapPresetProvider) {
-                                ((MapPresetProvider) currentContentFragment).prepareMapIntent(intent);
-                            }
-                            startActivity(intent);
-                        }
-                    });
-                    mp.show(getSupportFragmentManager(), null);
-                } else {
-                    final Intent intent = MapActivity.createIntent(StationActivity.this, station);
-                    Fragment currentContentFragment = getCurrentContentFragment();
-                    if (currentContentFragment instanceof MapPresetProvider) {
-                        ((MapPresetProvider) currentContentFragment).prepareMapIntent(intent);
-                    }
-                    startActivity(intent);
-                }
+                GoogleLocationPermissions.startMapActivityIfConsent(getCurrentContentFragment(),
+                        () -> MapActivity.createIntentWithInfoAndServicesTitles(StationActivity.this, station, stationViewModel.infoAndServicesTitles()));
+                ;
             }
         });
 
@@ -292,6 +275,17 @@ public class StationActivity extends AppCompatActivity implements
         }
 
         stationViewModel.getPendingRrtPointAndStationNavigationLiveData().observe(this, pendingRrtPointAndStationNavigationObserver);
+
+        if(!wasStarted) {
+            wasStarted = true;
+            Intent intent = getIntent();
+            if (intent != null) {
+                if (intent.getStringExtra("SHOW_ELEVATORS") != null)
+                    showElevators();
+            }
+        }
+
+
     }
 
     @Override
@@ -303,7 +297,6 @@ public class StationActivity extends AppCompatActivity implements
     @Override
     protected void onPause() {
         super.onPause();
-
         trackingManager.pauseCollectingLifecycleData();
     }
 
@@ -477,14 +470,7 @@ public class StationActivity extends AppCompatActivity implements
         }
     }
 
-    @Override
-    public void showLockers() {
-        showInfoFragment(false);
 
-        if (!LockerFragment.Companion.getTAG().equals(stationViewModel.getTopInfoFragmentTag())) {
-            infoFragment.push(new LockerFragment());
-        }
-    }
 
     @Override
     public void showAccessibility() {
@@ -502,6 +488,44 @@ public class StationActivity extends AppCompatActivity implements
         if (!RailReplacementFragment.Companion.getTAG().equals(stationViewModel.getTopInfoFragmentTag())) {
             infoFragment.push(new RailReplacementFragment());
         }
+    }
+
+    @Override
+    public void showMobilityServiceNumbers() {
+        stationViewModel.navigateToInfo(ServiceContentType.MOBILITY_SERVICE);
+    }
+
+
+    @Override
+    public void showLockers(boolean removeFeaturesFragment) {
+
+        if(removeFeaturesFragment)
+            removeFeaturesFragment();
+
+        showInfoFragment(false);
+
+        if (!LockerFragment.Companion.getTAG().equals(stationViewModel.getTopInfoFragmentTag())) {
+            infoFragment.push(new LockerFragment());
+        }
+    }
+
+    void removeFeaturesFragment() {
+        try {
+            FragmentManager fm = overviewFragment.getChildFragmentManager();
+            Fragment f = fm.findFragmentByTag("features");
+
+            if (f != null)
+                fm.beginTransaction().remove(f).commit();
+        } catch (Exception e) {
+            Log.d(this.TAG, e.getMessage());
+        }
+    }
+
+    @Override
+    public void showInfo(String serviceContentType, boolean removeFeaturesFragment) {
+        if(removeFeaturesFragment)
+            removeFeaturesFragment();
+        stationViewModel.navigateToInfo(serviceContentType);
     }
 
     @Override
@@ -543,9 +567,13 @@ public class StationActivity extends AppCompatActivity implements
             stationViewModel.setTrackFilter(intent.getStringExtra(ARG_TRACK_FILTER));
         }
         if (intent.hasExtra(ARG_TRAIN_INFO)) {
-            stationViewModel.showWaggonOrder(intent.getParcelableExtra(ARG_TRAIN_INFO));
-        }
+            TrainInfo trainInfo = intent.getParcelableExtra(ARG_TRAIN_INFO);
+            long creationTime = intent.getLongExtra(ARG_INTENT_CREATION_TIME, 0);
+            long timeDiff = Math.abs(System.currentTimeMillis()-creationTime);
 
+            if(timeDiff<3L*1000L)
+              stationViewModel.showWaggonOrder(trainInfo);
+        }
         if (intent.hasExtra(ARG_RRT_POINT)) {
             stationViewModel.pendingRailReplacementPointLiveData.setValue(intent.getParcelableExtra(ARG_RRT_POINT));
         }
@@ -557,10 +585,26 @@ public class StationActivity extends AppCompatActivity implements
 
                 switch (equip_id) {
                     case LOCKERS:
-                        showLockers();
+                        showLockers(true);
                         break;
                     case RAIL_REPLACEMENT:
                         showRailReplacement();
+                        break;
+
+                    case DB_INFORMATION:
+                        showInfo(ServiceContentType.DB_INFORMATION, true);
+                        break;
+                    case RAILWAY_MISSION:
+                        showInfo(ServiceContentType.BAHNHOFSMISSION, true);
+                        break;
+                    case DB_TRAVEL_CENTER:
+                        showInfo(ServiceContentType.Local.TRAVEL_CENTER, true);
+                        break;
+                    case DB_LOUNGE:
+                        showInfo(ServiceContentType.Local.DB_LOUNGE, true);
+                        break;
+                    default:
+                    case UNKNOWN:
                         break;
                 }
             } catch (Exception e) {
@@ -576,6 +620,7 @@ public class StationActivity extends AppCompatActivity implements
         intent.putExtra(ARG_STATION, station instanceof Parcelable ?
                 (Parcelable) station : new InternalStation(station));
         intent.putExtra(ARG_EQUIPMENT_ID, equipment_id.getCode());
+        intent.putExtra(ARG_INTENT_CREATION_TIME, System.currentTimeMillis());
         return intent;
     }
 
@@ -633,7 +678,7 @@ public class StationActivity extends AppCompatActivity implements
     }
 
     public static Intent createIntent(Context context, Station station, boolean details) {
-        final Intent intent = createIntent(context, station, EquipmentID.NONE);
+        final Intent intent = createIntent(context, station, EquipmentID.UNKNOWN);
         intent.putExtra(ARG_SHOW_DEPARTURES, details);
         return intent;
     }
@@ -645,6 +690,7 @@ public class StationActivity extends AppCompatActivity implements
         return intent;
     }
 
+    // wird aus MapViewModel.kt aufgerufen !!!
     @NotNull
     public static Intent createIntent(@NotNull Context context, @NotNull Station station, @NotNull TrainInfo trainInfo) {
         final Intent intent = createIntent(context, station, trainInfo.getDeparture().getPurePlatform());
@@ -654,7 +700,7 @@ public class StationActivity extends AppCompatActivity implements
 
     @NotNull
     public static Intent createIntent(Context context, Station station, RrtPoint rrtPoint) {
-        final Intent intent = createIntent(context, station, EquipmentID.NONE);
+        final Intent intent = createIntent(context, station, EquipmentID.UNKNOWN);
         intent.putExtra(ARG_RRT_POINT, rrtPoint);
         return intent;
     }

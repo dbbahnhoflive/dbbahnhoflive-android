@@ -28,7 +28,7 @@ internal class TrackFlyoutViewHolder(
     private val owner : LifecycleOwner,
     private val expandableListener: ((Boolean) -> Unit)? = null,
 
-    ) : FlyoutViewHolder(viewBinding.root) {
+    ) : FlyoutViewHolder(viewBinding.root, EquipmentID.UNKNOWN) {
 
     constructor(parent: ViewGroup, mapViewModel: MapViewModel, owner : LifecycleOwner ) : this(
         FlyoutTrackBinding.inflate(

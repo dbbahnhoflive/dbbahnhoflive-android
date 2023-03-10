@@ -54,7 +54,7 @@ class FavoritesAdapter(val owner: LifecycleOwner,
     var favorites: List<SearchResult>? = null
         set(value) {
             singleSelectionManager.clearSelection()
-            field = value
+            field = value?.sortedBy { it.title.toString() }
             notifyDataSetChanged()
         }
 

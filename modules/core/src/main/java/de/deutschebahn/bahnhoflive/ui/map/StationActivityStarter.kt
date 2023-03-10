@@ -3,13 +3,6 @@ package de.deutschebahn.bahnhoflive.ui.map
 import android.content.Intent
 import de.deutschebahn.bahnhoflive.ui.station.StationActivity
 
-
-enum class EquipmentID(var code: Int) {
-    NONE(0),
-    LOCKERS(1),
-    RAIL_REPLACEMENT(2);
-}
-
 class StationActivityStarter(
     val fragment: MapOverlayFragment
 ) {
@@ -32,5 +25,6 @@ class StationActivityStarter(
             }
         }
     }
+
 
 }

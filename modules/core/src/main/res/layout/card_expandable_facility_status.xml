@@ -21,7 +21,7 @@
             android:background="@color/card_background"
             android:orientation="vertical">
 
-            <include layout="@layout/common_detail_overview" />
+            <include android:id="@+id/overview_layout" layout="@layout/common_detail_overview" />
 
             <FrameLayout
                 android:id="@+id/details"
@@ -29,12 +29,14 @@
                 android:layout_height="wrap_content">
 
                 <Switch
-                    android:id="@+id/bookmarked_switch"
-                    android:textSize="@dimen/textsize_h4"
+                    android:id="@+id/receive_push_msg_if_broken_switch"
+                    android:textSize="@dimen/textsize_h3plus"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_margin="@dimen/default_space"
-                    android:text="@string/facility_bookmarked" />
+                    android:layout_marginStart="@dimen/default_space_triple"
+                    android:layout_marginEnd="@dimen/default_space"
+                    android:layout_marginVertical="@dimen/default_space"
+                    android:text="@string/facility_receive_push_notification" />
             </FrameLayout>
         </LinearLayout>
     </de.deutschebahn.bahnhoflive.view.DecoratedCard>
@@ -44,10 +46,9 @@
         android:id="@+id/bookmarked_indicator"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_gravity="top|right"
-        android:layout_marginRight="@dimen/default_space_double"
-        android:layout_marginTop="@dimen/tiny_space"
-        android:background="@drawable/app_bookmark"
+        android:layout_gravity="top|end"
+        android:layout_marginEnd="@dimen/default_space_triple"
+        android:layout_marginTop="32dp"
         android:elevation="6dp"
-        android:src="@drawable/app_bookmark" />
+        android:src="@drawable/ic_star_outline" />
 </FrameLayout>

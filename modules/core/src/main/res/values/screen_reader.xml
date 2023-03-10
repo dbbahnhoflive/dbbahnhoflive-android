@@ -11,6 +11,7 @@
     <string name="sr_tab_shopping">Shoppen und schlemmen</string>
     <string name="sr_filter">Filter</string>
     <string name="sr_indicator_bookmarked">Auf der Merkliste</string>
+    <string name="sr_indicator_not_bookmarked">Nicht auf der Merkliste</string>
     <string name="sr_tab_info">Bahnhofsinformationen</string>
     <string name="sr_link_external">Zur Webseite</string>
     <string name="sr_link_details">Weitere Details</string>

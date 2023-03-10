@@ -7,6 +7,7 @@
 package de.deutschebahn.bahnhoflive.ui.station
 
 import android.app.Application
+import android.content.Context
 import android.util.Log
 import android.view.View
 import androidx.lifecycle.*
@@ -21,7 +22,6 @@ import de.deutschebahn.bahnhoflive.backend.VolleyRestListener
 import de.deutschebahn.bahnhoflive.backend.db.newsapi.GroupId
 import de.deutschebahn.bahnhoflive.backend.db.newsapi.model.News
 import de.deutschebahn.bahnhoflive.backend.db.ris.model.Platform
-import de.deutschebahn.bahnhoflive.backend.einkaufsbahnhof.model.StationList
 import de.deutschebahn.bahnhoflive.backend.hafas.model.ProductCategory
 import de.deutschebahn.bahnhoflive.backend.local.model.EvaIds
 import de.deutschebahn.bahnhoflive.backend.local.model.ServiceContentType
@@ -46,10 +46,13 @@ import de.deutschebahn.bahnhoflive.stream.rx.Optional
 import de.deutschebahn.bahnhoflive.ui.accessibility.SpokenFeedbackAccessibilityLiveData
 import de.deutschebahn.bahnhoflive.ui.map.Content
 import de.deutschebahn.bahnhoflive.ui.map.MapActivity
+import de.deutschebahn.bahnhoflive.ui.station.elevators.ElevatorStatusListsFragment
 import de.deutschebahn.bahnhoflive.ui.station.features.*
 import de.deutschebahn.bahnhoflive.ui.station.info.InfoAndServicesLiveData
 import de.deutschebahn.bahnhoflive.ui.station.info.ServiceNumbersLiveData
 import de.deutschebahn.bahnhoflive.ui.station.localtransport.LocalTransportViewModel
+import de.deutschebahn.bahnhoflive.ui.station.locker.LockerFragment
+import de.deutschebahn.bahnhoflive.ui.station.parking.ParkingListFragment
 import de.deutschebahn.bahnhoflive.ui.station.search.ContentSearchResult
 import de.deutschebahn.bahnhoflive.ui.station.search.QueryPart
 import de.deutschebahn.bahnhoflive.ui.station.search.ResultSetType
@@ -70,6 +73,7 @@ import java.io.InputStreamReader
 import java.text.Collator
 import java.util.*
 import java.util.concurrent.Executors
+
 
 class StationViewModel(
     application: Application,
@@ -92,7 +96,8 @@ class StationViewModel(
                 StationFeatureDefinition.WIFI,
                 MapOrInfoLink(ServiceContentType.WIFI, TrackingManager.Category.WLAN)
             ),
-            StationFeatureTemplate(StationFeatureDefinition.ELEVATORS,
+            StationFeatureTemplate(
+                StationFeatureDefinition.ELEVATORS,
                 object : MapLink() {
                     override fun getMapSource(): Content.Source {
                         return Content.Source.FACILITY_STATUS
@@ -100,10 +105,44 @@ class StationViewModel(
 
                     override fun getPois(stationFeature: StationFeature) =
                         stationFeature.facilityStatuses
-                }),
+                },
+                object : Link() { // fallback to infotext
+
+                    override fun createServiceContentFragment(
+                        context: Context,
+                        stationFeature: StationFeature
+                    ) = ElevatorStatusListsFragment()
+
+                    override fun isAvailable(
+                        context: Context?,
+                        stationFeature: StationFeature?
+                    ): Boolean {
+                        return stationFeature?.facilityStatuses?.isNotEmpty() ?: false
+                    }
+                }
+
+            ),
             StationFeatureTemplate(
                 StationFeatureDefinition.LOCKERS,
-                LockerLink() // tracking is set inside LockerFragment.kt
+                MapOrInfoLink(
+                    ServiceContentType.LOCKERS,
+                    ServiceContentType.LOCKERS
+                ),
+                object : Link() { // fallback to infotext
+
+                    override fun createServiceContentFragment(
+                        context: Context,
+                        stationFeature: StationFeature
+                    ) = LockerFragment()
+
+                    override fun isAvailable(
+                        context: Context?,
+                        stationFeature: StationFeature?
+                    ): Boolean {
+                        return stationFeature?.lockers?.isNotEmpty() ?: false
+                    }
+                }
+
             ),
             StationFeatureTemplate(
                 StationFeatureDefinition.DB_INFO,
@@ -138,7 +177,21 @@ class StationViewModel(
 
                     override fun getPois(stationFeature: StationFeature) =
                         stationFeature.parkingFacilities
-                }),
+                },
+                object: Link() { // fallback
+                    override fun createServiceContentFragment(
+                        context: Context,
+                        stationFeature: StationFeature
+                    ) = ParkingListFragment()
+
+                    override fun isAvailable(
+                        context: Context?,
+                        stationFeature: StationFeature?
+                    ): Boolean {
+                        return stationFeature?.parkingFacilities?.isNotEmpty() ?: false
+                    }
+                }
+            ),
             StationFeatureTemplate(
                 StationFeatureDefinition.BICYCLE_PARKING,
                 MapLink()
@@ -222,30 +275,6 @@ class StationViewModel(
                         this.postValue(null)
                     }
                 }
-            }
-        }
-    }
-
-    val einkaufsbahnhofListLiveData = object : MutableLiveData<StationList>() {
-        private val token = Token()
-
-        override fun onActive() {
-            super.onActive()
-
-            if (token.take()) {
-                this@StationViewModel.application.repositories.einkaufsbahnhofRepository.queryStations(
-                    true,
-                    object : VolleyRestListener<StationList?> {
-                        override fun onSuccess(payload: StationList?) {
-                            value = payload
-                        }
-
-                        override fun onFail(reason: VolleyError) {
-                            reason?.run {
-                                Log.w(StationViewModel::class.java.simpleName, message, this)
-                            }
-                        }
-                    })
             }
         }
     }
@@ -490,6 +519,11 @@ class StationViewModel(
         travelCenterLiveData,
         shopsResource
     )
+
+    fun infoAndServicesTitles() : ArrayList<String>?
+      = infoAndServicesLiveData.value?.map{  it.title}?.let { ArrayList<String>(it) }
+
+
     val serviceNumbersLiveData =
         ServiceNumbersLiveData(risServiceAndCategoryResource, staticInfoLiveData)
 
@@ -973,7 +1007,7 @@ class StationViewModel(
                                     currentRawQuery,
                                     SearchResultClickListener(
                                         View.OnClickListener {
-                                            stationNavigation?.showLockers()
+                                            stationNavigation?.showLockers(false)
                                         })
                                 )
                             } else null
@@ -1273,20 +1307,11 @@ class StationViewModel(
         it?.isEco ?: false
     }
 
-    val einkaufsbahnhofLiveData = Transformations.switchMap(stationResource.data) { station ->
-        Transformations.map(einkaufsbahnhofListLiveData) { stationList ->
-            stationList.stations.firstOrNull { mekStation ->
-                mekStation.id.toString() == station.id
-            }
-        }
-    }
-
     private val stationIdLiveData = Transformations.distinctUntilChanged(
         Transformations.map(stationResource.data) { station ->
             station.id
         }
     )
-
 
     val newsLiveData = Transformations.switchMap(refreshLiveData) { force ->
         Transformations.switchMap(stationIdLiveData) { stationId ->

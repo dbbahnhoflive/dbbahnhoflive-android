@@ -10,7 +10,6 @@ import android.app.Activity;
 import android.view.ViewGroup;
 import android.widget.CompoundButton;
 
-import androidx.lifecycle.LifecycleOwnerKt;
 import androidx.recyclerview.widget.RecyclerView;
 
 import de.deutschebahn.bahnhoflive.BaseApplication;
@@ -26,8 +25,6 @@ import de.deutschebahn.bahnhoflive.view.CompoundButtonChecker;
 import de.deutschebahn.bahnhoflive.view.SectionAdapter;
 import de.deutschebahn.bahnhoflive.view.SelectableItemViewHolder;
 import de.deutschebahn.bahnhoflive.view.SingleSelectionManager;
-
-import  de.deutschebahn.bahnhoflive.ui.station.SettingsFragmentFavoritesAdapter;
 
 public class SettingsFragment extends RecyclerFragment<SectionAdapter> {
 
@@ -47,11 +44,8 @@ public class SettingsFragment extends RecyclerFragment<SectionAdapter> {
 
             final SingleSelectionManager selectionManager = new SingleSelectionManager(null);
 
-            final SettingsFragmentFavoritesAdapter favoritesAdapter = new SettingsFragmentFavoritesAdapter(InternalStation.of(station),
-                    BaseApplication.get().getApplicationServices().getFavoriteDbStationStore(),
-                    selectionManager,
-                    new StationImageResolver(getActivity()));
-
+            final FavoritesAdapter favoritesAdapter = new FavoritesAdapter(InternalStation.of(station),
+                    BaseApplication.get().getApplicationServices().getFavoriteDbStationStore(), selectionManager, new StationImageResolver(getActivity()), BaseApplication.get().getApplicationServices().getEvaIdsProvider());
             final TutorialAdapter tutorialAdapter = new TutorialAdapter(selectionManager);
 
             final SectionAdapter adapter = new SectionAdapter(

@@ -12,6 +12,7 @@ import android.widget.TextView;
 
 import androidx.recyclerview.widget.RecyclerView;
 
+import java.util.Collections;
 import java.util.List;
 
 import de.deutschebahn.bahnhoflive.R;
@@ -41,6 +42,8 @@ class SettingsFragmentFavoritesAdapter extends RecyclerView.Adapter<ViewHolder<S
         stations = favoriteStationsStore.getAll();
         this.stationWrapper = find(stations, station, stationImageResolver, favoriteStationsStore);
         stations.remove(this.stationWrapper);
+
+        Collections.sort(stations, (station1, station2) -> station1.getWrappedStation().getTitle().compareToIgnoreCase(station2.getWrappedStation().getTitle()));
 
         this.selectionManager = selectionManager;
     }
@@ -79,14 +82,14 @@ class SettingsFragmentFavoritesAdapter extends RecyclerView.Adapter<ViewHolder<S
     public static class StationViewHolder extends SelectableItemViewHolder<StationWrapper> implements CompoundButton.OnCheckedChangeListener {
 
         private final TextView titleView;
-        private final CompoundButtonChecker bookmarkSwitch;
+        private final CompoundButtonChecker addFavouriteSwitch;
 
         public StationViewHolder(ViewGroup parent, SingleSelectionManager selectionManager) {
             super(parent, R.layout.card_expandable_setting_station, selectionManager);
 
             titleView = findTextView(R.id.title);
 
-            bookmarkSwitch = new CompoundButtonChecker(itemView.findViewById(R.id.bookmarked_switch), this);
+            addFavouriteSwitch = new CompoundButtonChecker(itemView.findViewById(R.id.add_favourite_switch), this);
         }
 
 
@@ -96,7 +99,7 @@ class SettingsFragmentFavoritesAdapter extends RecyclerView.Adapter<ViewHolder<S
 
             titleView.setText(item.getTitle());
 
-            bookmarkSwitch.setChecked(item.isFavorite());
+            addFavouriteSwitch.setChecked(item.isFavorite());
         }
 
         @Override

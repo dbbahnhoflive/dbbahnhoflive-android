@@ -16,6 +16,7 @@ import de.deutschebahn.bahnhoflive.ui.feedback.WhatsAppInstallation
 import de.deutschebahn.bahnhoflive.ui.feedback.createPlaystoreIntent
 import de.deutschebahn.bahnhoflive.ui.feedback.deviceName
 import de.deutschebahn.bahnhoflive.ui.station.CommonDetailsCardViewHolder
+import de.deutschebahn.bahnhoflive.ui.station.StationActivity
 import de.deutschebahn.bahnhoflive.util.MailUri
 import de.deutschebahn.bahnhoflive.view.SingleSelectionManager
 import de.deutschebahn.bahnhoflive.view.inflater
@@ -77,6 +78,9 @@ class StationInfoAdapter(
                     }
                     "rateApp" -> {
                         activityStarter(parent.context.createPlaystoreIntent())
+                    }
+                    "showServiceNrMobi" -> run {
+                        (parent.context as? StationActivity)?.showMobilityServiceNumbers()
                     }
                 }
             }

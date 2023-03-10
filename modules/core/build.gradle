@@ -56,27 +56,26 @@ android {
 
 dependencies {
     api "androidx.legacy:legacy-support-v4:1.0.0"
-    api "androidx.appcompat:appcompat:1.6.1"
-    implementation "com.google.android.material:material:1.8.0"
+    api 'androidx.appcompat:appcompat:1.5.1'
+    implementation "com.google.android.material:material:1.7.0"
     implementation "androidx.vectordrawable:vectordrawable-animated:1.1.0"
     implementation "androidx.viewpager2:viewpager2:1.0.0"
     implementation 'androidx.media:media:1.6.0'
     implementation "androidx.recyclerview:recyclerview:1.2.1"
     implementation "androidx.cardview:cardview:1.0.0"
-    implementation 'androidx.core:core-ktx:1.9.0'
     implementation 'androidx.constraintlayout:constraintlayout:2.1.4'
     implementation 'androidx.activity:activity-ktx:1.6.1'
-    implementation 'androidx.fragment:fragment-ktx:1.5.5'
+    implementation 'androidx.fragment:fragment-ktx:1.5.4'
     api 'androidx.multidex:multidex:2.0.1'
     api 'com.android.volley:volley:1.2.1'
     api 'com.google.android.gms:play-services-maps:18.1.0'
-    api 'com.google.code.gson:gson:2.9.0'
+    api 'com.google.code.gson:gson:2.8.9'
     implementation 'com.google.android.flexbox:flexbox:3.0.0'
     implementation 'com.jakewharton:disklrucache:2.0.2'
     implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"
 
     implementation "androidx.lifecycle:lifecycle-livedata-ktx:2.5.1"
-    implementation 'androidx.webkit:webkit:1.6.0'
+    implementation 'androidx.webkit:webkit:1.5.0'
 
     final lifecycleLibraryVersion = '2.5.1'
     implementation "androidx.lifecycle:lifecycle-common-java8:$lifecycleLibraryVersion"
@@ -93,9 +92,12 @@ dependencies {
 
     implementation 'io.sentry:sentry-android:3.1.0'
 
-    testImplementation "junit:junit:4.13.2"
-    testImplementation "org.jetbrains.kotlinx:kotlinx-coroutines-test:1.6.1"
-    testImplementation "io.mockk:mockk:1.12.4"
+//    implementation 'com.google.firebase:firebase-messaging-ktx:23.1.0'
 
+    testApi "junit:junit:4.13.2"
+    testApi "org.jetbrains.kotlinx:kotlinx-coroutines-test:1.6.4"
+    testApi "io.mockk:mockk:1.12.4"
+
+    implementation 'androidx.core:core-splashscreen:1.0.0'
 }
 

@@ -6,6 +6,7 @@
 
 package de.deutschebahn.bahnhoflive.util
 
+import android.os.Build
 import android.view.View
 import android.view.accessibility.AccessibilityNodeInfo
 
@@ -18,8 +19,8 @@ import android.view.accessibility.AccessibilityNodeInfo
  * If text is empty, text is not replaced !
  */
 fun View.setAccessibilityText(text: String) {
-    if (text.isNotBlank()) {
         accessibilityDelegate = object : View.AccessibilityDelegate() {
+
             override fun onInitializeAccessibilityNodeInfo(
                 host: View,
                 info: AccessibilityNodeInfo
@@ -28,8 +29,39 @@ fun View.setAccessibilityText(text: String) {
                 info.text = text
             }
         }
+}
+
+fun View.setAccessibilityText(text: String, accessibilityNodeInfoId : Int, labelText:String) {
+
+    accessibilityDelegate = object : View.AccessibilityDelegate() {
+
+        override fun onInitializeAccessibilityNodeInfo(
+            host: View,
+            info: AccessibilityNodeInfo
+        ) {
+            super.onInitializeAccessibilityNodeInfo(host, info)
+            info.text = text
+
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+
+                val iterator: MutableIterator<AccessibilityNodeInfo.AccessibilityAction> =  info.actionList.iterator()
+                while (iterator.hasNext()) {
+                    val current : AccessibilityNodeInfo.AccessibilityAction = iterator.next()
+                    if (current.id == accessibilityNodeInfoId)
+                    {
+                        iterator.remove()
+                    }
+                }
+                info.actionList.add(
+                    AccessibilityNodeInfo.AccessibilityAction(
+                        accessibilityNodeInfoId,labelText
+                    )
+                )
+            }
+        }
     }
 }
+
 
 /**
  * Extension to replace the spoken text from ANY view
@@ -37,16 +69,11 @@ fun View.setAccessibilityText(text: String) {
  *
  * If text is empty, text is not replaced !
  */
+
 fun View.setAccessibilityText(text: CharSequence?) {
-    if (text != null) {
-        accessibilityDelegate = object : View.AccessibilityDelegate() {
-            override fun onInitializeAccessibilityNodeInfo(
-                host: View,
-                info: AccessibilityNodeInfo
-            ) {
-                super.onInitializeAccessibilityNodeInfo(host, info)
-                info.text = text
-            }
-        }
-    }
+    if (text == null)
+        setAccessibilityText("")
+    else
+        setAccessibilityText(text.toString())
+
 }

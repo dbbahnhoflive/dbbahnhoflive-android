@@ -12,7 +12,6 @@ import android.os.Bundle;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.lifecycle.Observer;
@@ -23,6 +22,7 @@ import org.jetbrains.annotations.NotNull;
 import java.util.ArrayList;
 import java.util.List;
 
+import de.deutschebahn.bahnhoflive.BaseActivity;
 import de.deutschebahn.bahnhoflive.R;
 import de.deutschebahn.bahnhoflive.analytics.TrackingManager;
 import de.deutschebahn.bahnhoflive.backend.hafas.HafasDepartures;
@@ -31,7 +31,7 @@ import de.deutschebahn.bahnhoflive.repository.InternalStation;
 import de.deutschebahn.bahnhoflive.repository.Station;
 import de.deutschebahn.bahnhoflive.ui.ToolbarViewHolder;
 
-public class DeparturesActivity extends AppCompatActivity implements TrackingManager.Provider {
+public class DeparturesActivity extends BaseActivity implements TrackingManager.Provider {
 
     public static final String ARG_HAFAS_LOADER_ARGUMENTS = "hafasLoaderArguments";
 

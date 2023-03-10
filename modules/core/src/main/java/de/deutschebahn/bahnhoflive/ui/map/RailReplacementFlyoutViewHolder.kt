@@ -9,9 +9,10 @@ import de.deutschebahn.bahnhoflive.view.inflate
 
 class RailReplacementFlyoutViewHolder(
     parent: ViewGroup,
-    stationActivityStarter: StationActivityStarter
+    stationActivityStarter: StationActivityStarter,
+    equipmentID: EquipmentID = EquipmentID.UNKNOWN
 ) :
-    FlyoutViewHolder(parent.inflate(R.layout.flyout_rail_replacement)) {
+    FlyoutViewHolder(parent.inflate(R.layout.flyout_rail_replacement), equipmentID) {
 
     private val binding = FlyoutRailReplacementBinding.bind(itemView).apply {
         externalLink.setOnClickListener {
@@ -19,7 +20,7 @@ class RailReplacementFlyoutViewHolder(
                 {
                     addFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT)
                 },
-                EquipmentID.RAIL_REPLACEMENT
+                equipmentID
             )
         }
     }
@@ -27,10 +28,10 @@ class RailReplacementFlyoutViewHolder(
     private val context: Context
         get() = itemView.context
 
-    override fun onBind(item: MarkerBinder?) {
+    override fun onBind(item: MarkerBinder) {
         super.onBind(item)
 
-        val description = item?.markerContent?.getDescription(context)
+        val description = item.markerContent.getDescription(context)
 
         binding.text.text = description
     }

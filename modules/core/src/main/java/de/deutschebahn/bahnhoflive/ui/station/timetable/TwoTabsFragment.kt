@@ -103,7 +103,7 @@ abstract class TwoTabsFragment protected constructor(
 
     protected fun installFragment(tag: String, fragment: androidx.fragment.app.Fragment) {
         childFragmentManager.beginTransaction().replace(R.id.fragment_container, fragment, tag)
-            .commit()
+            .commit() // async !!!!
     }
 
     override fun prepareMapIntent(intent: Intent): Boolean {

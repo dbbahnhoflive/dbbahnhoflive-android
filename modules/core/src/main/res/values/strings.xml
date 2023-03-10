@@ -15,6 +15,7 @@
     <string name="dlg_yes">Ja</string>
     <string name="dlg_no">Nein</string>
     <string name="dlg_cancel">Abbrechen</string>
+    <string name="dlg_ok">Ok</string>
 
     <!--<string name="dialog_stationNotAvailableTitle">Entschuldigung!</string>-->
 
@@ -147,6 +148,7 @@
     <string name="parking_details_button_reservation">Reservierung</string>
     <string name="parking_details_button_subscribe">Monatskarte beantragen</string>
     <string name="facility_bookmarked">Aufzug der Merkliste hinzugefügt</string>
+    <string name="facility_receive_push_notification">Bei Defekt Mitteilung erhalten</string>
     <string name="title_timetable_filter">Verkehrsmittel</string>
     <string name="apply">Übernehmen</string>
     <string name="title_station_features">Bahnhofsausstattung</string>
@@ -179,7 +181,10 @@
     <string name="rimap_category_service">Dienstleistungen</string>
     <string name="setting_station_favorite">Als Favorit hinzugefügt</string>
     <string name="setting_show_hints"><![CDATA[Tipps & Hinweise anzeigen]]></string>
+    <string name="setting_enable_push"><![CDATA[Push-Mitteilungen dieser App erhalten]]></string>
     <string name="settings_title_hints"><![CDATA[Tipps & Hinweise]]></string>
+    <string name="settings_title_push_notifications"><![CDATA[Push-Mitteilungen]]></string>
+    <string name="settings_manage_notifications"><![CDATA[Benachrichtigungen verwalten]]></string>
     <string name="template_level_overground">%1$d. Obergeschoss</string>
     <string name="template_level_underground">%1$d. Untergeschoss</string>
     <string name="level_base">Erdgeschoss</string>
@@ -258,6 +263,10 @@
     <string name="label_current_occupancy">Aktuell:</string>
     <string name="title_occupancy">Besucheraufkommen</string>
 
+    <string name="notification_channel_facility_state">Defektmeldungen</string>
+    <string name="default_notification_channel_id">Defektmeldungen</string> <!-- MUST BE SAME AS notification_channel_facility_state-->
+    <string name="notification_channel_facility_state_description">Betriebszustand von Fahrstühlen und Rolltreppen melden</string>
+
     <string name="today">Heute</string>
     <string name="mondays">Montags</string>
     <string name="tuesdays">Dienstags</string>
@@ -285,7 +294,6 @@
     <string name="occupancy_advice_copy">Bitte beachten Sie: Diese Info-Grafik gibt Auskunft über das aktuelle Besucheraufkommen im Vergleich zum durchschnittlichen Besucheraufkommen der vergangenen acht Wochen. Für diese Grafik werden Näherungswerte errechnet und keine absoluten Zahlen verwendet. Folglich sind Abweichungen zum tatsächlichen Besucheraufkommen vor Ort möglich. Diese Grafik gibt außerdem keine Auskunft hinsichtlich des Besucheraufkommens im Verhältnis zu den räumlichen Kapazitäten vor Ort. Alle Angaben sind ohne Gewähr.</string>
     <string name="occupancy_additional_info_title">Weiterführende Informationen</string>
     <string name="occupancy_additional_info_copy">Aktuelle Informationen und Service-Hinweise zum sicheren Aufenthalt am Bahnhof sowie Ihrer Reise finden Sie auf gemeinsamgehtdas.de.</string>
-    <string name="occupancy_external_link_button">gemeinsamgehtdas.de</string>
     <string name="consent_headline">Gemeinsam mit Ihnen wollen wir besser werden!</string>
     <string name="consent_option_dissent">Nein, Danke</string>
     <string name="consent_option_consent">Ich stimme zu</string>
@@ -298,7 +306,7 @@
     <string name="feedback_cost_notice">Dieser Service ist <b>kostenlos</b>. Es fällt ggf. das Datenentgelte Ihres Mobilfunkproviders an.</string>
     <string name="feedback_mail_alternative">E-Mail</string>
     <string name="feedback_phone_number">030 586020930</string>
-    <string name="feeback_disclaimer"><b>* Bitte beachten Sie,</b> dass die Benachrichtigung auf diesem Weg ein bestehendes Nutzerkonto beim Dienst „WhatsApp“ voraussetzt und über den Dienst „MessengerPeople“ weitergeleitet wird. Diese Dienste und deren Datenverarbeitung werden ausschließlich durch die jeweiligen Anbieter eigenverantwortlich angeboten, betrieben und ausgestaltet. Sofern Sie diese Dienste freiwillig und eigenständig nutzen, um uns eine Verschmutzung zu melden, sind die Erklärungen zum Datenschutz von „WhatsApp“ und „MessengerPeople GmbH“ zu beachten. Hinsichtlich der Verarbeitung Ihrer Daten bei der DB Station&amp;Service AG im Zuge einer Verschmutzungsmeldung über diese Dienste lesen Sie bitte vorab auch aufmerksam unsere Datenschutzerklärung: bahnhof.de/dbreiniger</string>
+    <string name="feeback_disclaimer"><b>* Bitte beachten Sie,</b> dass die Benachrichtigung auf diesem Weg ein bestehendes Nutzerkonto beim Dienst „WhatsApp“ voraussetzt und über den Dienst „MessengerPeople“ weitergeleitet wird. Diese Dienste und deren Datenverarbeitung werden ausschließlich durch die jeweiligen Anbieter eigenverantwortlich angeboten, betrieben und ausgestaltet. Sofern Sie diese Dienste freiwillig und eigenständig nutzen, um uns eine Verschmutzung zu melden, sind die Erklärungen zum Datenschutz von „WhatsApp“ und „MessengerPeople GmbH“ zu beachten. Hinsichtlich der Verarbeitung Ihrer Daten bei der DB Station&amp;Service AG im Zuge einer Verschmutzungsmeldung über diese Dienste lesen Sie bitte vorab auch aufmerksam unsere Datenschutzerklärung: bahnhof.de/service/db-reinigungsteam</string>
     <string name="feedback_whatsapp_unavailable">Sie benötigen ein bestehendes Nutzerkonto beim Dienst „WhatsApp“. Aktuell ist dieser Dienst nicht auf ihrem Gerät installiert.</string>
     <string name="feedback_headline_alternative_contacts">Alternative Kontaktmöglichkeiten</string>
 
@@ -341,11 +349,13 @@
     <string name="title_accessibility_key">Merkmale der Barrierefreiheit</string>
     <string name="accessibility_advice_elevators">Bitte beachten Sie, dass die Stufenfreiheit vor Ort durch Aufzugsanlagen oder Rampen ermöglicht werden kann. Eine Übersicht der Aufzugsanlagen und deren aktuelle Verfügbarkeit finden Sie hier:</string>
     <string name="accessibility_link_elevators">Übersicht Aufzüge</string>
+    <string name="accessibility_link_gruen_deutsche_bahn">zur externen Website www.gruen.deutschebahn.com</string>
     <string name="journey_stop_additional">Zusätzlicher Halt</string>
     <string name="journey_stop_platform_change">Gleiswechsel</string>
     <string name="template_journey_title">Zuglauf %s%s</string>
     <string name="template_journey_title_destination">nach %s</string>
     <string name="journeys_show_all">Gesamten Fahrtverlauf anzeigen</string>
+    <string name="template_hafas_journey_title">Haltestellen %s nach %s</string>
     <string name="wagon_feature_comfort">BahnComfort Bereich</string>
     <string name="wagon_feature_severely_disabled">Vorrangplätze für Reisende mit eingeschränkter Mobilität</string>
     <string name="wagon_feature_family">Familienbereich</string>
@@ -415,6 +425,10 @@
     <string name="date_hours">Stunden</string>
     <string name="date_minutes">Minuten</string>
     <string name="date_seconds">Sekunden</string>
+
+    <string name="notice_location_permissions_missing"><b>Hinweis:</b> Der Standort-Zugriff ist erst möglich, wenn Sie ihn erlauben.</string>
+    <string name="general_switch">Umschalten</string>
+
 
 </resources>
 

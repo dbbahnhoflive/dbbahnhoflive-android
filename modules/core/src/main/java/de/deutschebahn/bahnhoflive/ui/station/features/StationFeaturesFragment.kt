@@ -3,6 +3,11 @@
  *
  * SPDX-License-Identifier: Apache-2.0
  */
+/*
+ * SPDX-FileCopyrightText: 2020 DB Station&Service AG <bahnhoflive-opensource@deutschebahn.com>
+ *
+ * SPDX-License-Identifier: Apache-2.0
+ */
 
 package de.deutschebahn.bahnhoflive.ui.station.features
 
@@ -17,6 +22,7 @@ import de.deutschebahn.bahnhoflive.R
 import de.deutschebahn.bahnhoflive.analytics.TrackingManager
 import de.deutschebahn.bahnhoflive.ui.station.HistoryFragment
 import de.deutschebahn.bahnhoflive.ui.station.StationViewModel
+import de.deutschebahn.bahnhoflive.util.GoogleLocationPermissions
 import de.deutschebahn.bahnhoflive.view.BottomMarginLinker
 import de.deutschebahn.bahnhoflive.view.FullBottomSheetDialogFragment
 
@@ -24,15 +30,53 @@ class StationFeaturesFragment : FullBottomSheetDialogFragment() {
 
     private val stationFeaturesAdapter = StationFeaturesAdapter { item, adapterPosition ->
         item.stationFeatureTemplate.link?.also { link ->
-            link.createMapActivityIntent(requireContext(), item)?.let {
-                startActivity(it)
-            }
-                ?: link.createServiceContentFragment(requireContext(), item)?.let { serviceContentFragment ->
-                    dismiss()
-                    HistoryFragment.parentOf(this).push(serviceContentFragment)
+
+            val pois = link.getPois(item)
+
+            if (pois == null || pois.isEmpty()) {
+                // keine pois auf map
+                link.createServiceContentFragment(requireContext(), item)
+                    ?.let { serviceContentFragment ->
+                        dismiss()
+                        HistoryFragment.parentOf(this).push(serviceContentFragment)
+                    } ?: run {
+                    if (item.stationFeatureTemplate.fallbackLink != null) {
+                        item.stationFeatureTemplate.fallbackLink.createServiceContentFragment(
+                            requireContext(),
+                            item
+                        )?.let { serviceContentFragment ->
+                            dismiss()
+                            HistoryFragment.parentOf(this).push(serviceContentFragment)
+
+                        }
+                    }
                 }
+            } else {
+                // show map if consent ok
+                GoogleLocationPermissions.startMapActivityIfConsent(this) {
+                    link.createMapActivityIntent(requireContext(), item)
+                }
+
+            }
+
+
         }
     }
+
+
+
+
+//    private val stationFeaturesAdapter = StationFeaturesAdapter { item, adapterPosition ->
+//        item.stationFeatureTemplate.link?.also { link ->
+//            link.createMapActivityIntent(requireContext(), item)?.let {
+//                startActivity(it)
+//            }
+//                ?: link.createServiceContentFragment(requireContext(), item)?.let { serviceContentFragment ->
+//                    dismiss()
+//                    HistoryFragment.parentOf(this).push(serviceContentFragment)
+//                }
+//        }
+//    }
 
     private val stationViewModel by activityViewModels<StationViewModel>()
 

@@ -1,7 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="de.deutschebahn.bahnhoflive">
-
+    package="de.deutschebahn.bahnhoflive"
+xmlns:tools="http://schemas.android.com/tools"
+    >
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
@@ -10,9 +11,13 @@
     <uses-permission android:name="com.android.alarm.permission.SET_ALARM" />
     <uses-permission android:name="android.permission.WAKE_LOCK" />
     <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED" /> <!-- openGL 2 for maps -->
+    <uses-permission android:name="android.permission.SCHEDULE_EXACT_ALARM" />
+    <uses-permission android:name="android.permission.POST_NOTIFICATIONS"/>
     <uses-feature
         android:glEsVersion="0x00020000"
         android:required="true" />
+
+    <uses-sdk tools:overrideLibrary="androidx.core.splashscreen"/>
 
     <queries>
         <!-- Make WhatsApp installation detectable -->
@@ -34,7 +39,9 @@
         <activity
             android:exported="true"
             android:name=".ui.hub.HubActivity"
-            android:screenOrientation="portrait">
+            android:screenOrientation="portrait"
+            android:theme="@style/Theme.App.Starting"
+            >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 

@@ -31,6 +31,10 @@ class TrackDepartureSummaryViewHolder(
     override fun onBind(item: TrainInfo?) {
         super.onBind(item)
 
+        item?.let {
+          waggonOrderButton.visibility = if(it.supportsWagonOrder()) View.VISIBLE else View.GONE
+        }
+
         itemView.visibility = if (item == null) View.GONE else View.VISIBLE
     }
 }
