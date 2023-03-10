@@ -43,8 +43,11 @@ class DbTimetableFragment : Fragment(), FilterDialogFragment.Consumer, MapPreset
     private var dbTimetableResource: DbTimetableResource? = null
     private var disposable: CompositeDisposable? = CompositeDisposable()
     private var selectedTrainInfo: MutableLiveData<TrainInfo>? = null
+
+
     private var trainInfoFromMap: TrainInfo? = null
     private var trainInfoFromMapSimulateClick = false
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         val stationViewModel = ViewModelProvider(requireActivity()).get(
@@ -75,7 +78,8 @@ class DbTimetableFragment : Fragment(), FilterDialogFragment.Consumer, MapPreset
             Unit
         }
         stationLiveData.observe(this) { station: MergedStation? -> adapter!!.setStation(station) }
-        dbTimetableResource!!.data.observe(this, Observer { timetable ->
+
+        dbTimetableResource?.data?.observe(this, Observer { timetable ->
             if (timetable == null) {
                 return@Observer
             }
@@ -106,8 +110,7 @@ class DbTimetableFragment : Fragment(), FilterDialogFragment.Consumer, MapPreset
             )
         }))
 
-        // Observer fuer Wagenreihungs-Anzeige (kommt leider BEVOR die traininfos geladen sind...)
-        // kommt letztendlich aus der map
+
         disposable!!.add(stationViewModel.waggonOrderObservable.subscribe { trainInfo ->
             trainInfoFromMap = trainInfo
         })
@@ -139,7 +142,11 @@ class DbTimetableFragment : Fragment(), FilterDialogFragment.Consumer, MapPreset
             }
         })
         viewSwitcher = view.findViewById(R.id.switcher)
-        selectedTrainInfo!!.observe(viewLifecycleOwner) { trainInfo: TrainInfo? ->
+
+        // Observer fuer Wagenreihungs-Anzeige (kommt leider BEVOR die traininfos geladen sind...)
+        // kommt letztendlich aus der map
+
+        selectedTrainInfo?.observe(viewLifecycleOwner) { trainInfo: TrainInfo? ->
             if (trainInfo != null) {
                 val itemIndex = adapter!!.setSelectedItem(trainInfo)
                 if (itemIndex >= 0) {

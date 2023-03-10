@@ -574,7 +574,6 @@ public class StationActivity extends BaseActivity implements
             if(timeDiff<3L*1000L)
               stationViewModel.showWaggonOrder(trainInfo);
         }
-
         if (intent.hasExtra(ARG_RRT_POINT)) {
             stationViewModel.pendingRailReplacementPointLiveData.setValue(intent.getParcelableExtra(ARG_RRT_POINT));
         }
