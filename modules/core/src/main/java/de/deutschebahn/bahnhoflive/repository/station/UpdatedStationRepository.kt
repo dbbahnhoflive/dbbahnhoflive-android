@@ -1,5 +1,6 @@
 package de.deutschebahn.bahnhoflive.repository.station
 
+import android.util.Log
 import com.android.volley.VolleyError
 import de.deutschebahn.bahnhoflive.backend.VolleyRestListener
 import de.deutschebahn.bahnhoflive.backend.db.ris.model.StopPlace
@@ -16,8 +17,8 @@ class UpdatedStationRepository(
 ) {
 
     private val cache = mutableMapOf<String, Flow<Result<InternalStation>>>()
+    private val newCache = mutableMapOf<String, InternalStation>()
 
-    @OptIn(ExperimentalCoroutinesApi::class)
     suspend fun getUpdatedStation(station: Station) =
         try {
             newCache.getOrPut(station.id) {

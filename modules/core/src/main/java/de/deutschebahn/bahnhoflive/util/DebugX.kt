@@ -1,13 +1,12 @@
 package de.deutschebahn.bahnhoflive.util
 
+import android.content.Intent
+import android.os.Bundle
+import de.deutschebahn.bahnhoflive.repository.Station
+
 import android.util.Log
 import java.text.SimpleDateFormat
 import java.util.*
-import android.content.Intent
-import android.os.Bundle
-import android.util.Log
-import de.deutschebahn.bahnhoflive.repository.Station
-
 
 class DebugX {
 
@@ -36,8 +35,7 @@ class DebugX {
                         it.getBundle(key)?.let {
                             logBundle(newPreString + " ", it)
                         }
-                    }
-                    catch(e:Exception) {
+                    } catch (e: Exception) {
 
                     }
 
@@ -47,8 +45,7 @@ class DebugX {
                             Log.d("cr", newPreString + station.id.toString())
                             Log.d("cr", newPreString + station.title)
                         }
-                    }
-                    catch(e:Exception) {
+                    } catch (e: Exception) {
 
                     }
 
@@ -71,7 +68,11 @@ class DebugX {
 
 
             Log.d("cr", "end logIntent $className")
-        fun getFormattedDateTimeFromMillis(millis: Long, preText:String="", dateTimeFomat: String = "dd/MM/yyyy HH:mm:ss.SSS") : String {
+            fun getFormattedDateTimeFromMillis(
+                millis: Long,
+                preText: String = "",
+                dateTimeFomat: String = "dd/MM/yyyy HH:mm:ss.SSS"
+            ): String {
             val formatter = SimpleDateFormat(dateTimeFomat)
             val calendar: Calendar = Calendar.getInstance(Locale.GERMANY)
             calendar.timeZone = DateUtil.getGermanTimezone()
@@ -81,5 +82,6 @@ class DebugX {
 
         }
 
+        }
     }
 }

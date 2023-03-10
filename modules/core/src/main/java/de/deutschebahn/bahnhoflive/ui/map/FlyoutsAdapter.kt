@@ -8,7 +8,6 @@ package de.deutschebahn.bahnhoflive.ui.map
 import android.view.ViewGroup
 import androidx.lifecycle.LifecycleOwner
 import androidx.recyclerview.widget.RecyclerView
-import de.deutschebahn.bahnhoflive.push.FacilityPushManager
 import de.deutschebahn.bahnhoflive.push.FacilityPushManager.Companion.instance
 import de.deutschebahn.bahnhoflive.ui.ViewHolder
 import de.deutschebahn.bahnhoflive.ui.map.MarkerContent.ViewType
@@ -35,33 +34,17 @@ internal class FlyoutsAdapter(
             ViewType.STATION -> StationFlyoutViewHolder(parent, owner)
             ViewType.DB_STATION -> DbStationFlyoutViewHolder(parent, owner)
             ViewType.BOOKMARKABLE -> ElevatorFlyoutViewHolder(parent, facilityPushManager)
-            ViewType.TRACK -> TrackFlyoutViewHolder(parent, mapViewModel)
-            ViewType.RAIL_REPLACEMENT -> RailReplacementFlyoutViewHolder(
-                parent,
-                stationActivityStarter,
-                EquipmentID.RAIL_REPLACEMENT
-            )
-            ViewType.LOCKERS -> LockerFlyoutViewHolder(
-                parent,
-                stationActivityStarter,
-                EquipmentID.LOCKERS
-            )
-            else -> CommonFlyoutViewHolder(
-                parent,
-                mapViewModel,
-                stationActivityStarter,
-                EquipmentID.UNKNOWN
-            )
             ViewType.TRACK -> {
 //                startOrStopCyclicLoadingOfTimetable(mapViewModel.activeTimetableCollector, null, -1)
                 TrackFlyoutViewHolder(parent, mapViewModel, owner)
             }
             ViewType.RAIL_REPLACEMENT -> RailReplacementFlyoutViewHolder(
                 parent,
-                stationActivityStarter
+                stationActivityStarter,
+                EquipmentID.RAIL_REPLACEMENT
             )
-            ViewType.LOCKERS -> LockerFlyoutViewHolder(parent, stationActivityStarter)
-            else -> CommonFlyoutViewHolder(parent)
+            ViewType.LOCKERS -> LockerFlyoutViewHolder(parent, stationActivityStarter, EquipmentID.LOCKERS)
+            else -> CommonFlyoutViewHolder(parent, mapViewModel, stationActivityStarter,  EquipmentID.UNKNOWN)
         }
     }
 

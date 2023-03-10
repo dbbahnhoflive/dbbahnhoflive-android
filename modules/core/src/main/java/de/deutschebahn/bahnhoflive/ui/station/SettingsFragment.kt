@@ -54,10 +54,10 @@ class SettingsFragment : RecyclerFragment<SectionAdapter<*>?>(R.layout.fragment_
             // SelectableItemViewHolder checks if selectionManager=null and sets selected on true as default
             // if selectionManager is not null, behaviour is like before
             val selectionManager: SingleSelectionManager? = null //new SingleSelectionManager(null);
-            val favoritesAdapter = FavoritesAdapter(
+            val favoritesAdapter = SettingsFragmentFavoritesAdapter(
                 InternalStation.of(station),
                 get().applicationServices.favoriteDbStationStore, selectionManager,
-                StationImageResolver(getActivity()), get().applicationServices.evaIdsProvider
+                StationImageResolver(getActivity()) //, get().applicationServices.evaIdsProvider
             )
             val tutorialAdapter = TutorialAdapter(selectionManager)
 //            val pushAdapter: PushAdapter = PushAdapter(selectionManager)
