@@ -44,6 +44,7 @@ import de.deutschebahn.bahnhoflive.repository.MergedStation;
 import de.deutschebahn.bahnhoflive.repository.Resource;
 import de.deutschebahn.bahnhoflive.repository.ShopsResource;
 import de.deutschebahn.bahnhoflive.repository.Station;
+import de.deutschebahn.bahnhoflive.repository.timetable.Constants;
 import de.deutschebahn.bahnhoflive.tutorial.TutorialManager;
 import de.deutschebahn.bahnhoflive.tutorial.TutorialView;
 import de.deutschebahn.bahnhoflive.ui.ServiceContentFragment;
@@ -59,6 +60,7 @@ import de.deutschebahn.bahnhoflive.ui.station.shop.Shop;
 import de.deutschebahn.bahnhoflive.ui.station.shop.ShopCategory;
 import de.deutschebahn.bahnhoflive.ui.station.timetable.TimetablesFragment;
 import de.deutschebahn.bahnhoflive.ui.timetable.localtransport.ReducedDbDeparturesViewHolder;
+import de.deutschebahn.bahnhoflive.util.GeneralPurposeMillisecondsTimer;
 import de.deutschebahn.bahnhoflive.util.GoogleLocationPermissions;
 import de.deutschebahn.bahnhoflive.view.StatusPreviewButton;
 import kotlin.Unit;
@@ -104,6 +106,10 @@ public class StationFragment extends androidx.fragment.app.Fragment implements
     private View stationFeaturesButton;
     private StationDetailCardCoordinator stationDetailCardCoordinator;
 
+    private Long lastChangeRequest = 0L;
+
+    private final GeneralPurposeMillisecondsTimer lastChangeTimer = new GeneralPurposeMillisecondsTimer();
+
     @Override
     public void onStart() {
         super.onStart();
@@ -116,6 +122,7 @@ public class StationFragment extends androidx.fragment.app.Fragment implements
         }
 
         updateCards();
+        lastChangeTimer.restartTimer();
     }
 
     private void updateCards() {
@@ -129,7 +136,7 @@ public class StationFragment extends androidx.fragment.app.Fragment implements
     @Override
     public void onStop() {
         TutorialManager.getInstance(getActivity()).markTutorialAsIgnored(mTutorialView);
-
+        lastChangeTimer.cancelTimer();
         super.onStop();
     }
 
@@ -229,6 +236,24 @@ public class StationFragment extends androidx.fragment.app.Fragment implements
         localTransportViewModel.getHafasStationsResource().getError().observe(this, error -> {
             localTransportSummary.setError();
         });
+
+        lastChangeTimer.startTimer(() -> {
+                    final long aktTime = System.currentTimeMillis();
+                    if (Math.abs(aktTime - lastChangeRequest) > (Constants.TIMETABLE_REFRESH_INTERVAL_MILLISECONDS + 2000L) || // jitter
+                            lastChangeRequest == 0L) {
+                       stationViewModel.getTimetableCollector().refresh(true); // clear cache => load all
+                    } else {
+                        stationViewModel.getTimetableCollector().refresh(false);  // load recent changes only, hour-data from cache
+                    }
+
+                    lastChangeRequest = aktTime;
+                    return Unit.INSTANCE;
+                },
+                Constants.TIMETABLE_REFRESH_INTERVAL_MILLISECONDS,
+                0,
+                null
+
+        );
     }
 
     private void setStationName(String name) {
