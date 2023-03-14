@@ -98,8 +98,9 @@ class TimetableCollector(
 
                 try {
                     initialsCache.keys
-                        .filter { it < parameters.firstHourInMillis - hourInMillis }
+                        .filter { it < parameters.firstHourInMillisRounded - hourInMillis || force}
                         .forEach {
+                            Log.d("dbg", "initcache: remove ${it}")
                             initialsCache.remove(it)
                         }
 
@@ -122,12 +123,17 @@ class TimetableCollector(
                             async {
 
                                 kotlin.runCatching {
-                                    initialsCache.getOrPut(parameters.firstHourInMillis + hourOffset * hourInMillis ) {
+                                    Log.d("dbg", "evaid: ${evaId}, hours: ${parameters.firstHourInMillisRounded} , offset: ${hourOffset * hourInMillis}")
+                                    initialsCache.getOrPut(parameters.firstHourInMillisRounded + hourOffset * hourInMillis ) {
+//                                    initialsCache.getOrPut(parameters.firstHourInMillis + hourOffset * hourInMillis ) {
+                                        Log.d("dbg", "not found")
                                         mutableMapOf()
                                     }.getOrPut(evaId) {
+                                        Log.d("dbg", "tt request")
                                         timetableHourProvider(
                                             evaId,
-                                            parameters.firstHourInMillis + hourOffset * hourInMillis
+                                            parameters.firstHourInMillisRounded + hourOffset * hourInMillis
+//                                            parameters.firstHourInMillis + hourOffset * hourInMillis
                                         )
                                     }
                                 }
