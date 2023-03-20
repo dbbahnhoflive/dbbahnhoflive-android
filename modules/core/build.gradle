@@ -44,13 +44,19 @@ android {
     }
 
     compileOptions {
+        coreLibraryDesugaringEnabled true
+
         sourceCompatibility JavaVersion.VERSION_1_8
         targetCompatibility JavaVersion.VERSION_1_8
     }
 
-    kotlin {
-        jvmToolchain(8)
+    kotlinOptions {
+        jvmTarget = JavaVersion.VERSION_1_8
     }
+
+//    kotlin {
+//        jvmToolchain(8)
+//    }
 
 }
 
@@ -94,5 +100,6 @@ dependencies {
     testApi "io.mockk:mockk:1.12.4"
 
     implementation 'androidx.core:core-splashscreen:1.0.0'
+    coreLibraryDesugaring 'com.android.tools:desugar_jdk_libs:2.0.2'
 }
 
