@@ -65,22 +65,20 @@ class DebugX {
                 logBundle(" ", it.extras)
 
             }
-
-
             Log.d("cr", "end logIntent $className")
-            fun getFormattedDateTimeFromMillis(
-                millis: Long,
-                preText: String = "",
-                dateTimeFomat: String = "dd/MM/yyyy HH:mm:ss.SSS"
-            ): String {
+        }
+
+        fun getFormattedDateTimeFromMillis(
+            millis: Long,
+            preText: String = "",
+            dateTimeFomat: String = "dd.MM.yy HH:mm:ss.SSS"
+        ): String {
             val formatter = SimpleDateFormat(dateTimeFomat)
             val calendar: Calendar = Calendar.getInstance(Locale.GERMANY)
             calendar.timeZone = DateUtil.getGermanTimezone()
             calendar.timeInMillis = millis
 
-            return formatter.format(calendar.getTime())
-
-        }
+            return preText + formatter.format(calendar.time)
 
         }
     }
