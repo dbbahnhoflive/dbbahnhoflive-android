@@ -11,16 +11,16 @@ import android.text.TextUtils
 import android.util.Log
 import androidx.core.app.NotificationCompat
 import androidx.core.app.NotificationManagerCompat
-//import com.google.firebase.messaging.FirebaseMessaging
-//import com.google.firebase.messaging.FirebaseMessagingService
-//import com.google.firebase.messaging.RemoteMessage
+import com.google.android.gms.tasks.Task
+import com.google.firebase.messaging.FirebaseMessaging
+import com.google.firebase.messaging.FirebaseMessagingService
+import com.google.firebase.messaging.RemoteMessage
 import de.deutschebahn.bahnhoflive.BaseApplication.Companion.get
 import de.deutschebahn.bahnhoflive.R
 import de.deutschebahn.bahnhoflive.ui.hub.HubActivity
 import de.deutschebahn.bahnhoflive.util.PrefUtil
-import org.json.JSONObject
 
-/*
+
 class FacilityFirebaseService : FirebaseMessagingService() {
 
     override fun onNewToken(s: String) {
@@ -28,19 +28,22 @@ class FacilityFirebaseService : FirebaseMessagingService() {
         Log.d("cr", "Refreshed token: $s")
     }
 
-
-    fun isAppRunning(context: Context, packageName: String): Boolean {
-        val activityManager = context.getSystemService(Context.ACTIVITY_SERVICE) as ActivityManager
-        activityManager.runningAppProcesses?.apply {
-            for (processInfo in this) {
-                if (processInfo.processName == packageName) {
-                    return true
-
-                }
-            }
-        }
-        return false
+    override fun onStart(intent: Intent?, startId: Int) {
+        super.onStart(intent, startId)
+        facilityFirebaseService = this
     }
+//    fun isAppRunning(context: Context, packageName: String): Boolean {
+//        val activityManager = context.getSystemService(Context.ACTIVITY_SERVICE) as ActivityManager
+//        activityManager.runningAppProcesses?.apply {
+//            for (processInfo in this) {
+//                if (processInfo.processName == packageName) {
+//                    return true
+//
+//                }
+//            }
+//        }
+//        return false
+//    }
 
     // always called !!!! (in foreground AND in background !!!)
     // onMessageReceived is only called if in foreground
@@ -59,42 +62,107 @@ class FacilityFirebaseService : FirebaseMessagingService() {
 
     }
 
-        override fun onMessageReceived(remoteMessage: RemoteMessage) {
+    private fun getValueSafeString(remoteMessage: RemoteMessage, itemName:String) : String
+    {
+      var ret = ""
 
-            Log.d("cr", "-----------------------------------------------")
-            Log.d("cr", "FCM-Message received")
-            Log.d("cr", "From: ${remoteMessage.from}")
-            Log.d("cr", "------")
-            Log.d("cr", "msg: $remoteMessage")
-            Log.d("cr", "------")
+      try {
+          ret = remoteMessage.data[itemName].toString()
+      }
+      catch(e : Exception) {
+        Log.d("push", e.message.toString())
+      }
 
-            if (remoteMessage.data.isNotEmpty()) {
-                Log.d("cr", "Message data payload: ${remoteMessage.data}")
-                createAndSendNotification(remoteMessage.data.toString())
-            } else {
+      return ret
+    }
+
+    private fun getValueSafeString(itemList : Map<String, String>, itemName:String) : String
+    {
+        var ret = ""
+
+        try {
+            ret = itemList[itemName].toString()
+        }
+        catch(e : Exception) {
+            Log.d("push", e.message.toString())
+        }
+
+        return ret
+    }
+
+    private fun getValueSafeInt(itemList : Map<String, String>, itemName:String) : Int
+    {
+        var ret = 0
+
+        try {
+            ret = itemList[itemName].toString().toInt()
+        }
+        catch(e : Exception) {
+            Log.d("push", e.message.toString())
+        }
+
+        return ret
+    }
+
+
+
+    override fun onMessageReceived(remoteMessage: RemoteMessage) {
+
+        Log.d("cr", "FCM-Message received")
+
+        if (remoteMessage.data.isNotEmpty()) {
+
+            val itemList = mutableMapOf<String, String>()
+
+            with(remoteMessage) {
+                itemList["message"] = getValueSafeString(this, "message")
+                itemList["stationNumber"] = getValueSafeString(this, "stationNumber")
+                itemList["stationName"] = getValueSafeString(this, "stationName")
+                itemList["equipmentNumber"] =
+                    getValueSafeString(this, "facilityEquipmentNumber")
+                itemList["type"] = getValueSafeString(this, "facilityType")
+                itemList["state"] = getValueSafeString(this, "facilityState")
+                itemList["description"] = getValueSafeString(this, "facilityDescription")
+            }
+
+
+            createAndSendNotification(itemList)
+        } else {
+
+            // Test only (todo)
 
                     try {
                         val intent = remoteMessage.toIntent()
                         val bundle = intent.extras
                         val body: String? = bundle?.getString("gcm.notification.body")
 
-                        createAndSendNotification(body)
+                        val itemList = mutableMapOf<String, String>()
+
+                        createAndSendNotification(itemList)
+
+
+
+
+
                     } catch (_: Exception) {
                     }
-            }
         }
+    }
 
 
-        private fun createReceiverBundle(json: JSONObject, message: String): Bundle {
+        private fun createReceiverBundle(itemList : Map<String, String>, message: String): Bundle {
             val bundle = Bundle()
 
+
             bundle.putString("message", message)
-            bundle.putInt("stationNumber", json.getInt("stationNumber"))
-            bundle.putString("stationName", json.getString("stationName"))
-            bundle.putInt("equipmentNumber", json.getInt("facilityEquipmentNumber"))
-            bundle.putString("type", json.getString("facilityType"))
-            bundle.putString("state", json.getString("facilityState"))
-            bundle.putString("description", json.getString("facilityDescription"))
+            with(itemList) {
+                bundle.putInt("stationNumber", getValueSafeInt(this, "stationNumber"))
+                bundle.putString("stationName", getValueSafeString(this, "stationName"))
+                bundle.putInt("equipmentNumber", getValueSafeInt(this, "equipmentNumber"))
+                bundle.putString("type", getValueSafeString(this, "type"))
+                bundle.putString("state", getValueSafeString(this, "state"))
+                bundle.putString("description", getValueSafeString(this, "description"))
+            }
 
             get().applicationServices.mapConsentRepository.consented.value?.let {
                 bundle.putBoolean("mapconsent",
@@ -106,10 +174,12 @@ class FacilityFirebaseService : FirebaseMessagingService() {
         }
 
         @SuppressLint("LaunchActivityFromNotification")
-        private fun sendNotification(json: JSONObject, message: String) {
+        private fun sendNotification(itemList : Map<String, String>, message: String?) {
 
             if (!FacilityPushManager.isPushEnabled(this))
                 return
+
+            if(message.isNullOrBlank()) return
 
             val notificationManager = NotificationManagerCompat.from(this)
 
@@ -127,7 +197,7 @@ class FacilityFirebaseService : FirebaseMessagingService() {
             }
 
             // unique id to create multiple notifications
-            var id: Int = ((System.currentTimeMillis() / 1000L) % Int.MAX_VALUE).toInt()
+            val id: Int = ((System.currentTimeMillis() / 1000L) % Int.MAX_VALUE).toInt()
 
             val resultIntent = Intent(this, HubActivity::class.java)
 
@@ -142,7 +212,7 @@ class FacilityFirebaseService : FirebaseMessagingService() {
                 addNextIntentWithParentStack(resultIntent)
                 editIntentAt(0)?.putExtra(
                     BUNDLE_NAME_FACILITY_MESSAGE,
-                    createReceiverBundle(json, message)
+                    createReceiverBundle(itemList, message)
                 )
 
                 getPendingIntent(id, flags)
@@ -168,45 +238,36 @@ class FacilityFirebaseService : FirebaseMessagingService() {
 
         }
 
-        private fun createAndSendNotification(messagebody: String?) {
+        private fun createAndSendNotification( itemList : Map<String, String>) {
 
-            if (messagebody.isNullOrBlank()) return
+            if (itemList.isEmpty()) return
 
             try {
+                    val equipmentNumber : String? = itemList["facilityEquipmentNumber"]
+                    val msg : String? = itemList["message"]
 
-                val jsonString = messagebody.replace("properties=", "\"" + "properties" + "\":")
-                    .replace(", message=", ", " + "\"" + "message" + "\":" + "\"")
-                    .trim()
+                    Log.d("cr", "notification: $equipmentNumber")
 
-                val tmpJsonString = jsonString.removeSurrounding("{", "}")
-                val finalJsonString = "{" + tmpJsonString + "\"" + "}"
-                val json = JSONObject(finalJsonString)
-                val msg: String = json.getString("message")
-                val properties = json.getJSONObject("properties")
+                    equipmentNumber?.let {
 
-                try {
-                    val equipmentNumber = properties.getString("facilityEquipmentNumber")
+                        if (PrefUtil.getFacilityPushEnabled(
+                                this.applicationContext,
+                                it.toInt()
+                            )
+                        ) {
+                            sendNotification(itemList, msg)
+                        }
 
-                    Log.d("cr", "notification: " + equipmentNumber)
-
-                    if (PrefUtil.getFacilityPushEnabled(
-                            this.applicationContext,
-                            equipmentNumber.toInt()
-                        )
-                    ) {
-                        sendNotification(properties, msg)
                     }
+
+
 
                 }
                 catch(e : Exception) {
                     Log.d("cr", e.message.toString())
                 }
 
-
-            } catch (e: Exception) {
-                e.message?.let { Log.d("cr", it) }
-            }
-
+                // sendNotification(itemList, itemList["message"]) // todo: only for test-equipmentNumber (see BaseApplication, test-equips are not enabled)
         }
 
         companion object {
@@ -241,13 +302,28 @@ class FacilityFirebaseService : FirebaseMessagingService() {
                     }
                 }.addOnFailureListener { e: Exception? -> Log.d("cr", e.toString()) }
                     .addOnCanceledListener {}
-//                .addOnCompleteListener { task: Task<String> ->
-//                    Log.d(
-//                        "cr", "This is the token : $task.result"
-//                    )
-//                }
+                .addOnCompleteListener { task: Task<String> ->
+                    Log.d(
+                        "cr", "This is the token : $task.result"
+                    )
+                }
+            }
+
+
+            var facilityFirebaseService :  FacilityFirebaseService? = null
+
+            @JvmStatic fun test() {
+//            override fun onMessageReceived(remoteMessage: RemoteMessage) {
+
+                val bdl : Bundle  = Bundle()
+                val remoteMessage : RemoteMessage = RemoteMessage(bdl)
+
+                facilityFirebaseService?.let {
+                    it.onMessageReceived(remoteMessage)
+                }
+
             }
         }
-    }
 
- */
+
+}

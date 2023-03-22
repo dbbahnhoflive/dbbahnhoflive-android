@@ -51,9 +51,8 @@ abstract class FacilityStatusViewHolder(parent: ViewGroup, selectionManager: Sin
         val bookmarked = facilityPushManager.getBookmarked(itemView.context, item.equipmentNumber)
         bindBookmarkedIndicator(bookmarked)
 
-//        val subscribed = facilityPushManager.isPushMessageSubscribed(itemView.context, item.equipmentNumber)
-//        subscribePushSwitch.isChecked = subscribed
-        subscribePushSwitch.compoundButton.visibility=View.GONE
+        val subscribed = facilityPushManager.isPushMessageSubscribed(itemView.context, item.equipmentNumber)
+        subscribePushSwitch.isChecked = subscribed
 //        subscribePushSwitch.compoundButton.setAccessibilityText("", AccessibilityNodeInfo.ACTION_CLICK, itemView.context.getText(R.string.general_switch).toString())
 
         val status = Status.of(item)
@@ -66,7 +65,7 @@ abstract class FacilityStatusViewHolder(parent: ViewGroup, selectionManager: Sin
             val newBookmarkState = !facilityPushManager.getBookmarked(itemView.context, item.equipmentNumber)
             facilityPushManager.setBookmarked(itemView.context, facilityStatus, newBookmarkState)
             onBookmarkChanged(newBookmarkState)
-//            toggleSelection()
+            toggleSelection()
         }
     }
 
@@ -92,15 +91,15 @@ abstract class FacilityStatusViewHolder(parent: ViewGroup, selectionManager: Sin
     // callback from subscribePushSwitch
     override fun onCheckedChanged(buttonView: CompoundButton, isChecked: Boolean) {
         // enable/disable push
-//        val facilityStatus = item
-//
-//        facilityStatus?.let {
-//            facilityPushManager.subscribeOrUnsubscribePushMessage(
-//                buttonView.context,
-//                facilityStatus,
-//                isChecked
-//            )
-//        }
+        val facilityStatus = item
+
+        facilityStatus?.let {
+            facilityPushManager.subscribeOrUnsubscribePushMessage(
+                buttonView.context,
+                facilityStatus,
+                isChecked
+            )
+        }
 //        onSubscriptionChanged(isChecked)
     }
 
