@@ -148,7 +148,7 @@
     <string name="parking_details_button_reservation">Reservierung</string>
     <string name="parking_details_button_subscribe">Monatskarte beantragen</string>
     <string name="facility_bookmarked">Aufzug der Merkliste hinzugefügt</string>
-    <string name="facility_receive_push_notification">Bei Defekt Mitteilung erhalten</string>
+    <string name="facility_receive_push_notification">Mitteilung zur Verfügbarkeit erhalten</string>
     <string name="title_timetable_filter">Verkehrsmittel</string>
     <string name="apply">Übernehmen</string>
     <string name="title_station_features">Bahnhofsausstattung</string>
