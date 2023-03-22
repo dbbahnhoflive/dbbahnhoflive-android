@@ -20,6 +20,7 @@ import android.view.accessibility.AccessibilityEvent;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.StringRes;
+import androidx.core.splashscreen.SplashScreen;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
@@ -41,6 +42,7 @@ public class HubActivity extends BaseActivity implements TutorialFragment.Host {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
 
+        SplashScreen.installSplashScreen(this);
 //        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
 //            setTheme(R.style.Theme_App_Starting);
 //            SplashScreen splashScreen = SplashScreen.installSplashScreen(this);
@@ -52,7 +54,7 @@ public class HubActivity extends BaseActivity implements TutorialFragment.Host {
 //        }else{
 //            setTheme(R.style.App_Theme);
 //        }
-        setTheme(R.style.App_Theme);
+//        setTheme(R.style.App_Theme);
 
         super.onCreate(savedInstanceState);
 
