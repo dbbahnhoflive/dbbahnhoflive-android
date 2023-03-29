@@ -4,18 +4,27 @@
   ~ SPDX-License-Identifier: Apache-2.0
   -->
 
-<androidx.coordinatorlayout.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:id="@+id/fragment_container"
     android:layout_width="match_parent"
+    android:orientation="vertical"
     android:layout_height="match_parent">
 
-    <include layout="@layout/titlebar_common" />
+    <include
+        android:id="@+id/include"
+        layout="@layout/titlebar_common"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        />
 
-    <FrameLayout
+
+    <RelativeLayout
         android:id="@+id/framgent_container"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        app:layout_behavior="@string/appbar_scrolling_view_behavior" />
+        android:layout_height="0dp"
+        app:layout_behavior="@string/appbar_scrolling_view_behavior"
+        />
 
-</androidx.coordinatorlayout.widget.CoordinatorLayout>
+
+</LinearLayout>
