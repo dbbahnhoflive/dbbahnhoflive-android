@@ -3,7 +3,7 @@
 ### Aktuelle (Umsetzungs-)Themen
 Diese Inhalte (Funktionen, Anpassungen, Erweiterungen) befinden sich derzeit in der Umsetzung oder sind bereits für die nächsten Release-Zyklen eingeplant.
 
-##### Release 3.20.0 (Inhalte ohne Gewähr)
+##### Release 3.21.0 (Inhalte ohne Gewähr)
 • Push-Nachrichten für Statusänderungen von Aufzügen
 
 ##### Entwicklungsfelder
