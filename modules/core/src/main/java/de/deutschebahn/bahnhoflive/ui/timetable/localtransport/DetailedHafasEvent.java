@@ -23,6 +23,8 @@ public class DetailedHafasEvent {
 
     public void requestDetails() {
         if (loading || hafasDetail != null) {
+            if(hafasDetail!=null) // fix: if same stop is clicked second time
+              notifyListeners();
             return;
         }
         loading = true;
