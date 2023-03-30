@@ -38,6 +38,8 @@ class HafasDeparturesFragment : RecyclerFragment<HafasDeparturesAdapter>(R.layou
     private val hafasTimetableViewModel: HafasTimetableViewModel by activityViewModels()
     private val hafasTimetableResource get() = hafasTimetableViewModel.hafasTimetableResource
 
+    private var titleView : ViewGroup? = null
+
     val trackingManager: TrackingManager
         get() = TrackingManager.fromActivity(activity)
 
@@ -65,8 +67,7 @@ class HafasDeparturesFragment : RecyclerFragment<HafasDeparturesAdapter>(R.layou
                 run {
 
                     val hafasJourneyFragment = HafasJourneyFragment()
-                    hafasJourneyFragment.onDataReceived(details)
-
+                    hafasJourneyFragment.onDataReceived(details, titleView)
 
                     if(parentFragment!=null) {
 
@@ -135,6 +136,8 @@ class HafasDeparturesFragment : RecyclerFragment<HafasDeparturesAdapter>(R.layou
         swipeRefreshLayout!!.setOnRefreshListener { hafasTimetableResource.refresh() }
 
         loadingContentDecorationViewHolder = LoadingContentDecorationViewHolder(view)
+
+        titleView = container?.findViewById<ViewGroup>(R.id.include)
 
         return view
     }
