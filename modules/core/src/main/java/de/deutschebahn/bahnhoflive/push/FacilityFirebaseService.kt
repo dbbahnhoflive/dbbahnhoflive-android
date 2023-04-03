@@ -19,6 +19,10 @@ import de.deutschebahn.bahnhoflive.BaseApplication.Companion.get
 import de.deutschebahn.bahnhoflive.R
 import de.deutschebahn.bahnhoflive.ui.hub.HubActivity
 import de.deutschebahn.bahnhoflive.util.PrefUtil
+import org.json.JSONArray
+import org.json.JSONObject
+import java.text.SimpleDateFormat
+import java.util.*
 
 
 class FacilityFirebaseService : FirebaseMessagingService() {
@@ -136,12 +140,18 @@ class FacilityFirebaseService : FirebaseMessagingService() {
                         val bundle = intent.extras
                         val body: String? = bundle?.getString("gcm.notification.body")
 
+                        val json : JSONObject = JSONObject(body)
+
+                        Log.d("cr", json.toString())
+
                         val itemList = mutableMapOf<String, String>()
 
+                        for(key in json.keys()) {
+                            itemList[key] = json.getString(key)
+                        }
+
+
                         createAndSendNotification(itemList)
-
-
-
 
 
                     } catch (_: Exception) {
@@ -238,15 +248,45 @@ class FacilityFirebaseService : FirebaseMessagingService() {
 
         }
 
+    private fun createMsgFromData( itemList : Map<String, String>) : String {
+
+        var type = itemList["facilityType"]?.lowercase() ?: ""
+        val description = itemList["facilityDescription"] ?: ""
+        var state =  itemList["facilityState"] ?: ""
+        val station = itemList["stationName"] ?: ""
+
+//        val dateLong = Date(System.currentTimeMillis())
+//        val timeString = "(" + SimpleDateFormat("HH:mm", Locale.getDefault()).format(dateLong) + ")"
+
+        if (type == "elevator")
+            type = "Aufzug"
+        else if (type == "escalator")
+            type = "Rolltreppe"
+
+        if (state == "ACTIVE")
+            state = "in Betrieb"
+        else
+            if (state == "INACTIVE")
+                state = "außer Betrieb"
+            else
+                state = "Betriebsstatus unbekannt"
+
+        val msg = "Statusänderung: " + station + " " + type + " \"" + description + "\" " + state +"."
+
+        return msg
+
+    }
+
+
         private fun createAndSendNotification( itemList : Map<String, String>) {
 
             if (itemList.isEmpty()) return
 
             try {
                     val equipmentNumber : String? = itemList["facilityEquipmentNumber"]
-                    val msg : String? = itemList["message"]
-
-                    Log.d("cr", "notification: $equipmentNumber")
+//                    var msg : String? = itemList["message"]
+//                    if(msg.isNullOrBlank())
+                    val msg = createMsgFromData(itemList)
 
                     equipmentNumber?.let {
 
@@ -259,8 +299,6 @@ class FacilityFirebaseService : FirebaseMessagingService() {
                         }
 
                     }
-
-
 
                 }
                 catch(e : Exception) {
