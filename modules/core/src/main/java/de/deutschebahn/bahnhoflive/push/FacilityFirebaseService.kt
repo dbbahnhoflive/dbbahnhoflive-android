@@ -71,10 +71,10 @@ class FacilityFirebaseService : FirebaseMessagingService() {
       var ret = ""
 
       try {
-          ret = remoteMessage.data[itemName].toString()
+          ret = remoteMessage.data[itemName].toString().trim()
       }
       catch(e : Exception) {
-        Log.d("push", e.message.toString())
+          Log.d("cr", "Exception in getValueSafeString: " + e.message.toString())
       }
 
       return ret
@@ -85,10 +85,10 @@ class FacilityFirebaseService : FirebaseMessagingService() {
         var ret = ""
 
         try {
-            ret = itemList[itemName].toString()
+            ret = itemList[itemName].toString().trim()
         }
         catch(e : Exception) {
-            Log.d("push", e.message.toString())
+            Log.d("cr", "Exception in getValueSafeString2: " + e.message.toString())
         }
 
         return ret
@@ -102,7 +102,7 @@ class FacilityFirebaseService : FirebaseMessagingService() {
             ret = itemList[itemName].toString().toInt()
         }
         catch(e : Exception) {
-            Log.d("push", e.message.toString())
+            Log.d("cr", "Exception in getValueSafeInt: " + e.message.toString())
         }
 
         return ret
@@ -119,11 +119,10 @@ class FacilityFirebaseService : FirebaseMessagingService() {
             val itemList = mutableMapOf<String, String>()
 
             with(remoteMessage) {
-                itemList["message"] = getValueSafeString(this, "message")
+                itemList["message"] = "" //getValueSafeString(this, "message")
                 itemList["stationNumber"] = getValueSafeString(this, "stationNumber")
                 itemList["stationName"] = getValueSafeString(this, "stationName")
-                itemList["equipmentNumber"] =
-                    getValueSafeString(this, "facilityEquipmentNumber")
+                itemList["equipmentNumber"] = getValueSafeString(this, "facilityEquipmentNumber")
                 itemList["type"] = getValueSafeString(this, "facilityType")
                 itemList["state"] = getValueSafeString(this, "facilityState")
                 itemList["description"] = getValueSafeString(this, "facilityDescription")
@@ -140,21 +139,27 @@ class FacilityFirebaseService : FirebaseMessagingService() {
                         val bundle = intent.extras
                         val body: String? = bundle?.getString("gcm.notification.body")
 
-                        val json : JSONObject = JSONObject(body)
+                        body?.let {
+                            val parts = body.split(",")
 
-                        Log.d("cr", json.toString())
+                            val cleanBody =  body.toString().replace(':', '_').replace('{', ' ').replace('}', ' ')
 
-                        val itemList = mutableMapOf<String, String>()
 
-                        for(key in json.keys()) {
-                            itemList[key] = json.getString(key)
+                            val propertyValues = cleanBody.split(",")
+
+                            val propertyList = mutableMapOf<String, String>()
+                            for(item in propertyValues) {
+                                val pair = item.split("=")
+                                if(pair.size==2)
+                                    propertyList[pair[0].trim()] = pair[1].trim()
+                            }
+
+                            createAndSendNotification(propertyList)
+
                         }
 
-
-                        createAndSendNotification(itemList)
-
-
-                    } catch (_: Exception) {
+                    } catch (e: Exception) {
+                        Log.d("cr", "Exception: " + e.message.toString())
                     }
         }
     }
@@ -162,7 +167,6 @@ class FacilityFirebaseService : FirebaseMessagingService() {
 
         private fun createReceiverBundle(itemList : Map<String, String>, message: String): Bundle {
             val bundle = Bundle()
-
 
             bundle.putString("message", message)
             with(itemList) {

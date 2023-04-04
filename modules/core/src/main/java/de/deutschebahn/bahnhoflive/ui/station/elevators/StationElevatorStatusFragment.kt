@@ -34,7 +34,7 @@ class StationElevatorStatusFragment : Fragment(), MapPresetProvider {
     private var thisAdapter: ElevatorStatusAdapter? = null
 
     init {
-        thisAdapter = StationElevatorStatusAdapter()
+        thisAdapter = StationElevatorStatusAdapter(fromActivity(activity))
         applyAdapter()
     }
 
@@ -97,7 +97,7 @@ class StationElevatorStatusFragment : Fragment(), MapPresetProvider {
 //        applyAdapter()
 //    }
 
-    internal class StationElevatorStatusAdapter : ElevatorStatusAdapter(false)
+    internal class StationElevatorStatusAdapter(val trackingManager: TrackingManager) : ElevatorStatusAdapter(false)
     {
         override var data: List<FacilityStatus>?
             get() = super.data
@@ -119,7 +119,7 @@ class StationElevatorStatusFragment : Fragment(), MapPresetProvider {
             facilityPushManager: FacilityPushManager
         ): FacilityStatusViewHolder {
             return object :
-                FacilityStatusViewHolder(parent, selectionManager, facilityPushManager) {
+                FacilityStatusViewHolder(parent, selectionManager, trackingManager, facilityPushManager) {
 
                 override fun onBookmarkChanged(isBookmarked: Boolean) {
                     bindBookmarkedIndicator(isBookmarked)

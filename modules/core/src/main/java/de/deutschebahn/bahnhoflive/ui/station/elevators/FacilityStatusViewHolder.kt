@@ -17,6 +17,7 @@ import androidx.cardview.widget.CardView
 import androidx.constraintlayout.widget.Guideline
 
 import de.deutschebahn.bahnhoflive.R
+import de.deutschebahn.bahnhoflive.analytics.TrackingManager
 import de.deutschebahn.bahnhoflive.backend.db.fasta2.model.FacilityStatus
 import de.deutschebahn.bahnhoflive.push.FacilityPushManager
 import de.deutschebahn.bahnhoflive.ui.Status
@@ -25,7 +26,10 @@ import de.deutschebahn.bahnhoflive.util.setAccessibilityText
 import de.deutschebahn.bahnhoflive.view.CompoundButtonChecker
 import de.deutschebahn.bahnhoflive.view.SingleSelectionManager
 
-abstract class FacilityStatusViewHolder(parent: ViewGroup, selectionManager: SingleSelectionManager?, private val facilityPushManager: FacilityPushManager) :
+abstract class FacilityStatusViewHolder(parent: ViewGroup,
+                                        selectionManager: SingleSelectionManager?,
+                                        private val trackingManager : TrackingManager,
+                                        private val facilityPushManager: FacilityPushManager) :
     CommonDetailsCardViewHolder<FacilityStatus>(parent, R.layout.card_expandable_facility_status, selectionManager), CompoundButton.OnCheckedChangeListener {
 
     private val bookmarkedIndicator: ImageView = itemView.findViewById(R.id.bookmarked_indicator) // star
@@ -63,6 +67,11 @@ abstract class FacilityStatusViewHolder(parent: ViewGroup, selectionManager: Sin
             // toggle bookmarked-state
             val facilityStatus = item
             val newBookmarkState = !facilityPushManager.getBookmarked(itemView.context, item.equipmentNumber)
+            trackingManager.track(TrackingManager.TYPE_ACTION,
+                TrackingManager.Screen.D1,
+                TrackingManager.Category.AUFZUEGE,
+                "favorit",
+                if(newBookmarkState) "add" else "remove")
             facilityPushManager.setBookmarked(itemView.context, facilityStatus, newBookmarkState)
             onBookmarkChanged(newBookmarkState)
             toggleSelection()
@@ -94,6 +103,14 @@ abstract class FacilityStatusViewHolder(parent: ViewGroup, selectionManager: Sin
         val facilityStatus = item
 
         facilityStatus?.let {
+
+            trackingManager.track(TrackingManager.TYPE_ACTION,
+                TrackingManager.Screen.D1,
+                TrackingManager.Category.AUFZUEGE,
+                "favorit",
+                "push",
+                if(isChecked) "active" else "inactive")
+
             facilityPushManager.subscribeOrUnsubscribePushMessage(
                 buttonView.context,
                 facilityStatus,
