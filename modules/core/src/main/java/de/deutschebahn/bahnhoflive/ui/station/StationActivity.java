@@ -573,6 +573,8 @@ public class StationActivity extends BaseActivity implements
 
             if(timeDiff<3L*1000L)
               stationViewModel.showWaggonOrder(trainInfo);
+            else
+                Log.d("cr", "intent too old" );
         }
 
         if (intent.hasExtra(ARG_RRT_POINT)) {

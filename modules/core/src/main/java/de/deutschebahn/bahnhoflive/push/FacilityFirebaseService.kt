@@ -19,9 +19,7 @@ import de.deutschebahn.bahnhoflive.BaseApplication.Companion.get
 import de.deutschebahn.bahnhoflive.R
 import de.deutschebahn.bahnhoflive.ui.hub.HubActivity
 import de.deutschebahn.bahnhoflive.util.PrefUtil
-import org.json.JSONArray
-import org.json.JSONObject
-import java.text.SimpleDateFormat
+import de.deutschebahn.bahnhoflive.util.putExtraTimeStamp
 import java.util.*
 
 
@@ -116,51 +114,70 @@ class FacilityFirebaseService : FirebaseMessagingService() {
 
         if (remoteMessage.data.isNotEmpty()) {
 
+            Log.d("cr", " checking remoteMessage.data")
+
             val itemList = mutableMapOf<String, String>()
 
             with(remoteMessage) {
                 itemList["message"] = "" //getValueSafeString(this, "message")
                 itemList["stationNumber"] = getValueSafeString(this, "stationNumber")
                 itemList["stationName"] = getValueSafeString(this, "stationName")
-                itemList["equipmentNumber"] = getValueSafeString(this, "facilityEquipmentNumber")
-                itemList["type"] = getValueSafeString(this, "facilityType")
-                itemList["state"] = getValueSafeString(this, "facilityState")
-                itemList["description"] = getValueSafeString(this, "facilityDescription")
+                itemList["facilityEquipmentNumber"] = getValueSafeString(this, "facilityEquipmentNumber")
+                itemList["facilityType"] = getValueSafeString(this, "facilityType")
+                itemList["facilityState"] = getValueSafeString(this, "facilityState")
+                itemList["facilityDescription"] = getValueSafeString(this, "facilityDescription")
             }
+
+            Log.d("cr", " end checking remoteMessage.data")
+
+            Log.d("cr", "message: " + itemList["message"])
+            Log.d("cr", "stationNumber: " + itemList["stationNumber"])
+            Log.d("cr", "facilityEquipmentNumber: " + itemList["facilityEquipmentNumber"])
+            Log.d("cr", "stationName: " + itemList["stationName"])
+            Log.d("cr", "facilityType: " + itemList["facilityType"])
+            Log.d("cr", "facilityState: " + itemList["facilityState"])
+            Log.d("cr", "facilityDescription: " + itemList["facilityDescription"])
 
 
             createAndSendNotification(itemList)
         } else {
 
-            // Test only (todo)
+            // from manually created Testmessage in firebase-console
 
-                    try {
-                        val intent = remoteMessage.toIntent()
-                        val bundle = intent.extras
-                        val body: String? = bundle?.getString("gcm.notification.body")
+            Log.d("cr", " checking remoteMessage.intent")
 
-                        body?.let {
-                            val parts = body.split(",")
+            try {
+                val intent = remoteMessage.toIntent()
+                val bundle = intent.extras
+                val body: String? = bundle?.getString("gcm.notification.body")
 
-                            val cleanBody =  body.toString().replace(':', '_').replace('{', ' ').replace('}', ' ')
+                body?.let {
 
+                    val cleanBody =
+                        body.toString()
+                            .replace('\n', ' ')
+                            .replace('{', ' ')
+                            .replace('}', ' ')
 
-                            val propertyValues = cleanBody.split(",")
+                    val propertyValues = cleanBody.split(",")
 
-                            val propertyList = mutableMapOf<String, String>()
-                            for(item in propertyValues) {
-                                val pair = item.split("=")
-                                if(pair.size==2)
-                                    propertyList[pair[0].trim()] = pair[1].trim()
-                            }
-
-                            createAndSendNotification(propertyList)
-
-                        }
-
-                    } catch (e: Exception) {
-                        Log.d("cr", "Exception: " + e.message.toString())
+                    val propertyList = mutableMapOf<String, String>()
+                    for (item in propertyValues) {
+                        val pair = item.split(":")
+                        if (pair.size == 2) // todo : does not work for facilityStateKnownSince 2023-03-13T11:51:04.389+01:00 (not needed yet)
+                            propertyList[pair[0].trim().removeSurrounding("\"")] = pair[1].trim().removeSurrounding("\"")
                     }
+
+                    createAndSendNotification(propertyList)
+
+                }
+
+            } catch (e: Exception) {
+                Log.d("cr", "Exception: " + e.message.toString())
+            }
+
+            Log.d("cr", " end checking remoteMessage.intent")
+
         }
     }
 
@@ -172,10 +189,10 @@ class FacilityFirebaseService : FirebaseMessagingService() {
             with(itemList) {
                 bundle.putInt("stationNumber", getValueSafeInt(this, "stationNumber"))
                 bundle.putString("stationName", getValueSafeString(this, "stationName"))
-                bundle.putInt("equipmentNumber", getValueSafeInt(this, "equipmentNumber"))
-                bundle.putString("type", getValueSafeString(this, "type"))
-                bundle.putString("state", getValueSafeString(this, "state"))
-                bundle.putString("description", getValueSafeString(this, "description"))
+                bundle.putInt("facilityEquipmentNumber", getValueSafeInt(this, "facilityEquipmentNumber"))
+                bundle.putString("facilityType", getValueSafeString(this, "facilityType"))
+                bundle.putString("facilityState", getValueSafeString(this, "facilityState"))
+                bundle.putString("facilityDescription", getValueSafeString(this, "facilityDescription"))
             }
 
             get().applicationServices.mapConsentRepository.consented.value?.let {
@@ -228,6 +245,7 @@ class FacilityFirebaseService : FirebaseMessagingService() {
                     BUNDLE_NAME_FACILITY_MESSAGE,
                     createReceiverBundle(itemList, message)
                 )
+                editIntentAt(0)?.putExtraTimeStamp()
 
                 getPendingIntent(id, flags)
             }

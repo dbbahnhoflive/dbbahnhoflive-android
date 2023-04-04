@@ -6,6 +6,8 @@
 
 package de.deutschebahn.bahnhoflive.ui.hub;
 
+import static de.deutschebahn.bahnhoflive.BaseApplication.get;
+
 import android.annotation.TargetApi;
 import android.content.Context;
 import android.content.Intent;
@@ -23,6 +25,7 @@ import androidx.annotation.StringRes;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
+import androidx.lifecycle.ViewModelProvider;
 
 import de.deutschebahn.bahnhoflive.BaseActivity;
 import de.deutschebahn.bahnhoflive.R;
@@ -30,7 +33,14 @@ import de.deutschebahn.bahnhoflive.analytics.IssueTracker;
 import de.deutschebahn.bahnhoflive.analytics.TrackingManager;
 import de.deutschebahn.bahnhoflive.permission.Permission;
 //import de.deutschebahn.bahnhoflive.push.FacilityFirebaseService;
+import de.deutschebahn.bahnhoflive.push.FacilityFirebaseService;
+import de.deutschebahn.bahnhoflive.repository.InternalStation;
+import de.deutschebahn.bahnhoflive.ui.search.SearchResultResource;
+import de.deutschebahn.bahnhoflive.ui.search.StationSearchViewModel;
+import de.deutschebahn.bahnhoflive.ui.station.StationActivity;
 import de.deutschebahn.bahnhoflive.ui.tutorial.TutorialFragment;
+import de.deutschebahn.bahnhoflive.util.DebugX;
+import de.deutschebahn.bahnhoflive.util.IntentXKt;
 
 public class HubActivity extends BaseActivity implements TutorialFragment.Host {
 
@@ -57,12 +67,11 @@ public class HubActivity extends BaseActivity implements TutorialFragment.Host {
         super.onCreate(savedInstanceState);
 
         setContentView(R.layout.activity_hub);
-/*
         final Intent iintent = getIntent();
 
         DebugX.Companion.logIntent(this.getLocalClassName(), iintent);
 
-        if (iintent != null) {
+        if (iintent != null /* && !IntentXKt.isOlderThan(iintent,3) */) {
 
             // starts from notification -> search Station and start StationActivity -> showElevators()
             // station needs to be found, because FCM-notification does not contain the position-data, needed for map
@@ -91,7 +100,7 @@ public class HubActivity extends BaseActivity implements TutorialFragment.Host {
                             if (stations != null && !stations.isEmpty()) {
 
                                 final int size = stations.size();
-                                Station station;
+                                InternalStation station;
 
                                 // find station by id
                                 for (int i = 0; i < size; i++) {
