@@ -165,7 +165,8 @@ class FacilityFirebaseService : FirebaseMessagingService() {
                     for (item in propertyValues) {
                         val pair = item.split(":")
                         if (pair.size == 2) // todo : does not work for facilityStateKnownSince 2023-03-13T11:51:04.389+01:00 (not needed yet)
-                            propertyList[pair[0].trim().removeSurrounding("\"")] = pair[1].trim().removeSurrounding("\"")
+                            propertyList[pair[0].trim().removeSurrounding("\"")] =
+                                pair[1].trim().removeSurrounding("\"")
                     }
 
                     createAndSendNotification(propertyList)

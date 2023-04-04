@@ -71,7 +71,7 @@ public class HubActivity extends BaseActivity implements TutorialFragment.Host {
 
         DebugX.Companion.logIntent(this.getLocalClassName(), iintent);
 
-        if (iintent != null /* && !IntentXKt.isOlderThan(iintent,3) */) {
+        if (iintent != null  && !IntentXKt.isOlderThan(iintent,20) ) {
 
             // starts from notification -> search Station and start StationActivity -> showElevators()
             // station needs to be found, because FCM-notification does not contain the position-data, needed for map
