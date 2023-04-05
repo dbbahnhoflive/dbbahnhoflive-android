@@ -6,11 +6,13 @@
 
 package de.deutschebahn.bahnhoflive.ui.station.elevators
 
+import android.os.Build
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.activityViewModels
+import de.deutschebahn.bahnhoflive.BaseApplication.Companion.get
 import de.deutschebahn.bahnhoflive.R
 import de.deutschebahn.bahnhoflive.tutorial.TutorialManager
 import de.deutschebahn.bahnhoflive.tutorial.TutorialView
@@ -18,6 +20,7 @@ import de.deutschebahn.bahnhoflive.ui.ToolbarViewHolder
 import de.deutschebahn.bahnhoflive.ui.station.HistoryFragment
 import de.deutschebahn.bahnhoflive.ui.station.StationViewModel
 import de.deutschebahn.bahnhoflive.ui.station.timetable.TwoTabsFragment
+import de.deutschebahn.bahnhoflive.util.VersionManager
 
 class ElevatorStatusListsFragment : TwoTabsFragment(R.string.facilityStatus_overview_title, R.string.facilityStatus_saved_title) {
 
@@ -53,8 +56,30 @@ class ElevatorStatusListsFragment : TwoTabsFragment(R.string.facilityStatus_over
         }
 
         mTutorialView = requireActivity().findViewById(R.id.tab_tutorial_view)
+
         // Show tutorial
-        TutorialManager.getInstance(activity).showTutorialIfNecessary(mTutorialView, "d1_aufzuege")
+        // 2 possible d1_aufzuege (old) or new (2335) ELEVATORS_PUSH
+
+        val tutorialManager = TutorialManager.getInstance(activity)
+
+        val tutorial = tutorialManager.getTutorialForView(TutorialManager.Id.ELEVATORS_PUSH) // show only once
+
+        if (tutorial != null && !tutorial.closedByUser && VersionManager.getInstance(requireContext())
+                .isUpdate() &&
+            VersionManager.getInstance(requireContext()).actualVersion < VersionManager.SoftwareVersion(
+                "3.21.0"
+            )
+        ) {
+
+            tutorialManager.showTutorialIfNecessary(
+                mTutorialView,
+                TutorialManager.Id.ELEVATORS_PUSH
+            )
+
+            tutorialManager.markTutorialAsSeen(tutorial)
+
+        } else
+            tutorialManager.showTutorialIfNecessary(mTutorialView, "d1_aufzuege")
 
         val stationElevatorStatusFragment = StationElevatorStatusFragment.create()
         installFragment(tag, stationElevatorStatusFragment)
@@ -92,6 +117,9 @@ class ElevatorStatusListsFragment : TwoTabsFragment(R.string.facilityStatus_over
         if (stationViewModel.topInfoFragmentTag == TAG) {
             stationViewModel.topInfoFragmentTag = null
         }
+
+        if(mTutorialView?.currentlyVisibleTutorial?.id==TutorialManager.Id.ELEVATORS_PUSH)
+            mTutorialView?.currentlyVisibleTutorial?.closedByUser=true // show only 1 time
 
         TutorialManager.getInstance(activity).markTutorialAsIgnored(mTutorialView)
         super.onStop()

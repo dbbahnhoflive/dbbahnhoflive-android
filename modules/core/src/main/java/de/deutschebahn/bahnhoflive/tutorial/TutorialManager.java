@@ -35,6 +35,7 @@ public class TutorialManager {
         String MAP_TRACK_DEPARTURES = "track_departures";
         String POI_SEARCH = "poi_search";
         String COUPONS = "coupons";
+        String ELEVATORS_PUSH = "elevators_push";
     }
 
     private List<Tutorial> seedingList() {
@@ -76,6 +77,9 @@ public class TutorialManager {
         //tutorials.add(
         //        new Tutorial("f1_map", "Profi Tip für Filtereinstellungen", "Schieben Sie einzelne Kategorie-Einträge nach links, um schnell alle dazugehörigen Inhalte auf der Karte anzuzeigen.", 2));
 
+        tutorials.add(
+                new Tutorial(Id.ELEVATORS_PUSH, "Neu: Mitteilungen erhalten", "Aktivieren Sie die Push-Mitteilungen zur Verfügbarkeit gemerkter Aufzüge.", 0));
+
         return tutorials;
     }
 
@@ -86,8 +90,22 @@ public class TutorialManager {
         List<Tutorial> seedableTutorials = seedingList();
 
         // initialize configuration
+
+        // eliminate non-existing tutorials from tutorials
+
+        boolean removeTutorials = false;
+        for (Tutorial tutorial : tutorials) {
+            for (Tutorial seedingTutorial : seedableTutorials) {
+                if(seedingTutorial.id.compareToIgnoreCase(tutorial.id)==0) {
+                    tutorial.descriptionText="";
+                    removeTutorials = true;
+                    break;
+                }
+            }
+        }
+
         if (tutorials.isEmpty()
-                ||  seedableTutorials.size() > tutorials.size()) {
+                ||  seedableTutorials.size() > tutorials.size() || removeTutorials)  {
 
             // Seed tutorial configuration
             for (Tutorial tutorial : seedableTutorials) {

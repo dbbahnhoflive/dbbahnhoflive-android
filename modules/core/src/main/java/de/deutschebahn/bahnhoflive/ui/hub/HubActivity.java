@@ -41,6 +41,7 @@ import de.deutschebahn.bahnhoflive.ui.search.StationSearchViewModel;
 import de.deutschebahn.bahnhoflive.ui.station.StationActivity;
 import de.deutschebahn.bahnhoflive.ui.tutorial.TutorialFragment;
 import de.deutschebahn.bahnhoflive.util.DebugX;
+import de.deutschebahn.bahnhoflive.util.VersionManager;
 
 public class HubActivity extends BaseActivity implements TutorialFragment.Host {
 
@@ -65,6 +66,13 @@ public class HubActivity extends BaseActivity implements TutorialFragment.Host {
         setTheme(R.style.App_Theme);
 
         super.onCreate(savedInstanceState);
+
+        final VersionManager versionManager = VersionManager.Companion.getInstance(this); // IMPORTANT: has to be done BEFORE Tracking is initialized
+        final long version = versionManager.getActualVersion().asVersionLong();
+        if(versionManager.isFreshInstallation())
+            Log.d("cr", "FRESH");
+        else
+            Log.d("cr", "UPDATE");
 
         setContentView(R.layout.activity_hub);
         final Intent appIntent = getIntent();

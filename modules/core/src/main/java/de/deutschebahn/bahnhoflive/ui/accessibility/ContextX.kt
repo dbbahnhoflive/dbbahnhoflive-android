@@ -11,3 +11,10 @@ val Context.isSpokenFeedbackAccessibilityEnabled
     get() = accessibilityManager?.run {
         isEnabled && getEnabledAccessibilityServiceList(AccessibilityServiceInfo.FEEDBACK_SPOKEN).isNotEmpty()
     } == true
+
+val Context.GlobalPreferences
+    get() = getSharedPreferences("global_settings.prefs", Context.MODE_PRIVATE)
+
+val Context.TrackingPreferences
+    get() = getSharedPreferences("tracking.prefs", Context.MODE_PRIVATE)
+
