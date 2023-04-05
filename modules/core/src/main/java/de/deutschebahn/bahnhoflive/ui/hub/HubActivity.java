@@ -6,6 +6,8 @@
 
 package de.deutschebahn.bahnhoflive.ui.hub;
 
+import static android.content.Intent.FLAG_ACTIVITY_CLEAR_TASK;
+import static android.content.Intent.FLAG_ACTIVITY_TASK_ON_HOME;
 import static de.deutschebahn.bahnhoflive.BaseApplication.get;
 
 import android.annotation.TargetApi;
@@ -32,7 +34,6 @@ import de.deutschebahn.bahnhoflive.R;
 import de.deutschebahn.bahnhoflive.analytics.IssueTracker;
 import de.deutschebahn.bahnhoflive.analytics.TrackingManager;
 import de.deutschebahn.bahnhoflive.permission.Permission;
-//import de.deutschebahn.bahnhoflive.push.FacilityFirebaseService;
 import de.deutschebahn.bahnhoflive.push.FacilityFirebaseService;
 import de.deutschebahn.bahnhoflive.repository.InternalStation;
 import de.deutschebahn.bahnhoflive.ui.search.SearchResultResource;
@@ -40,7 +41,6 @@ import de.deutschebahn.bahnhoflive.ui.search.StationSearchViewModel;
 import de.deutschebahn.bahnhoflive.ui.station.StationActivity;
 import de.deutschebahn.bahnhoflive.ui.tutorial.TutorialFragment;
 import de.deutschebahn.bahnhoflive.util.DebugX;
-import de.deutschebahn.bahnhoflive.util.IntentXKt;
 
 public class HubActivity extends BaseActivity implements TutorialFragment.Host {
 
@@ -67,21 +67,31 @@ public class HubActivity extends BaseActivity implements TutorialFragment.Host {
         super.onCreate(savedInstanceState);
 
         setContentView(R.layout.activity_hub);
-        final Intent iintent = getIntent();
+        final Intent appIntent = getIntent();
 
-        DebugX.Companion.logIntent(this.getLocalClassName(), iintent);
+        DebugX.Companion.logIntent(this.getLocalClassName(), appIntent);
 
-        if (iintent != null  && !IntentXKt.isOlderThan(iintent,20) ) {
+//        if(iintent!=null)
+//            Log.d("cr", "start: intent-flag: " + String.format("0x%08X",iintent.getFlags()));
+//        else
+//            Log.d("cr", "start: intent-flag NULL");
+//
+//        if(savedInstanceState!=null)
+//            Log.d("cr", "start: savedInstanceState not null");
+//         else
+//            Log.d("cr", "start: savedInstanceState NULL");
+
+
+        if (appIntent != null ) {
 
             // starts from notification -> search Station and start StationActivity -> showElevators()
             // station needs to be found, because FCM-notification does not contain the position-data, needed for map
-            Bundle bundle = iintent.getBundleExtra(FacilityFirebaseService.BUNDLE_NAME_FACILITY_MESSAGE);
+            Bundle bundle = appIntent.getBundleExtra(FacilityFirebaseService.BUNDLE_NAME_FACILITY_MESSAGE);
 
-            if (bundle != null) {
+            if (bundle != null && (appIntent.getFlags() & (FLAG_ACTIVITY_CLEAR_TASK|FLAG_ACTIVITY_TASK_ON_HOME))!=0  ) {
 
                 final Integer stationNumber = bundle.getInt("stationNumber");
                 final String stationName = bundle.getString("stationName");
-
                 final Boolean mapconsent = bundle.getBoolean("mapconsent");
 
                 get().getApplicationServices().getMapConsentRepository().getConsented().setValue(mapconsent);
