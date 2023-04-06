@@ -14,6 +14,8 @@ import de.deutschebahn.bahnhoflive.BaseApplication.Companion.get
 import de.deutschebahn.bahnhoflive.R
 import de.deutschebahn.bahnhoflive.analytics.TrackingManager
 import de.deutschebahn.bahnhoflive.analytics.TrackingManager.Companion.fromActivity
+import de.deutschebahn.bahnhoflive.push.FacilityPushManager.Companion.isPushEnabled
+import de.deutschebahn.bahnhoflive.push.NotificationChannelManager
 import de.deutschebahn.bahnhoflive.repository.InternalStation
 import de.deutschebahn.bahnhoflive.tutorial.TutorialManager
 import de.deutschebahn.bahnhoflive.tutorial.TutorialPreferenceStore
@@ -60,7 +62,7 @@ class SettingsFragment : RecyclerFragment<SectionAdapter<*>?>(R.layout.fragment_
                 StationImageResolver(getActivity()) //, get().applicationServices.evaIdsProvider
             )
             val tutorialAdapter = TutorialAdapter(selectionManager)
-//            val pushAdapter: PushAdapter = PushAdapter(selectionManager)
+            val pushAdapter: PushAdapter = PushAdapter(selectionManager)
 
             val adapter: SectionAdapter<*> = SectionAdapter(
                 SectionAdapter.Section(
@@ -68,11 +70,10 @@ class SettingsFragment : RecyclerFragment<SectionAdapter<*>?>(R.layout.fragment_
                 ),
                 SectionAdapter.Section(
                     tutorialAdapter, 1, (activity as StationActivity).getText(R.string.settings_manage_notifications)
-                )
-                // #cr implement if push-feature comes back
-//                SectionAdapter.Section(
-//                    pushAdapter, 1, ""
-//                ) // no title, so it appears under the last
+                ),
+                SectionAdapter.Section(
+                    pushAdapter, 1, ""
+                ) // no title, so it appears under the last
             )
             selectionManager?.setAdapter(adapter)
             setAdapter(adapter)
@@ -168,8 +169,7 @@ class SettingsFragment : RecyclerFragment<SectionAdapter<*>?>(R.layout.fragment_
             return 1
         }
     }
-/*
-// cr:implent if push comes back
+
     private inner class PushSettingItemViewHolder(
         parent: ViewGroup?,
         selectionManager: SingleSelectionManager?
@@ -214,5 +214,4 @@ class SettingsFragment : RecyclerFragment<SectionAdapter<*>?>(R.layout.fragment_
             return 1
         }
     }
-    */
 }

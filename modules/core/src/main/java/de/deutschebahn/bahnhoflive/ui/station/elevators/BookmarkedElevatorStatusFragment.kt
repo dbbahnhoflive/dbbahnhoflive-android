@@ -26,7 +26,6 @@ import android.content.Intent
 import android.view.View
 import androidx.fragment.app.Fragment
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
-import de.deutschebahn.bahnhoflive.push.NotificationChannelManager
 import de.deutschebahn.bahnhoflive.ui.map.Content
 import de.deutschebahn.bahnhoflive.ui.map.content.rimap.RimapFilter
 
@@ -44,7 +43,7 @@ class BookmarkedElevatorStatusFragment : Fragment(), SwipeRefreshLayout.OnRefres
                 facilityPushManager: FacilityPushManager
             ): FacilityStatusViewHolder {
                 return object :
-                    FacilityStatusViewHolder(parent, selectionManager, facilityPushManager) {
+                    FacilityStatusViewHolder(parent, selectionManager, fromActivity(activity), facilityPushManager) {
 
                     override fun onBookmarkChanged(isChecked: Boolean) {
                         resetAdapter()
@@ -52,16 +51,16 @@ class BookmarkedElevatorStatusFragment : Fragment(), SwipeRefreshLayout.OnRefres
 
                     override fun isSelected(): Boolean {
                         // true: expanded
-//                        item?.let {
-//                            return FacilityPushManager.isPushEnabled(itemView.context)
-//                                    &&
-//                                    facilityPushManager.getBookmarked(
-//                                        itemView.context,
-//                                        it.equipmentNumber
-//                                    )
-//                        }
-//                        return true
-                        return false
+                        item?.let {
+                            return FacilityPushManager.isPushEnabled(itemView.context)
+                                    &&
+                                    facilityPushManager.getBookmarked(
+                                        itemView.context,
+                                        it.equipmentNumber
+                                    )
+                        }
+                        return true
+//                        return false
                     }
                 }
             }

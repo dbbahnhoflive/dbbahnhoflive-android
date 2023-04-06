@@ -148,7 +148,7 @@
     <string name="parking_details_button_reservation">Reservierung</string>
     <string name="parking_details_button_subscribe">Monatskarte beantragen</string>
     <string name="facility_bookmarked">Aufzug der Merkliste hinzugefügt</string>
-    <string name="facility_receive_push_notification">Bei Defekt Mitteilung erhalten</string>
+    <string name="facility_receive_push_notification">Mitteilung zur Verfügbarkeit erhalten</string>
     <string name="title_timetable_filter">Verkehrsmittel</string>
     <string name="apply">Übernehmen</string>
     <string name="title_station_features">Bahnhofsausstattung</string>
@@ -263,8 +263,8 @@
     <string name="label_current_occupancy">Aktuell:</string>
     <string name="title_occupancy">Besucheraufkommen</string>
 
-    <string name="notification_channel_facility_state">Defektmeldungen</string>
-    <string name="default_notification_channel_id">Defektmeldungen</string> <!-- MUST BE SAME AS notification_channel_facility_state-->
+    <string name="notification_channel_facility_state">Verfügbarkeitsmeldungen</string>
+    <string name="default_notification_channel_id">Verfügbarkeitsmeldungen</string> <!-- MUST BE SAME AS notification_channel_facility_state-->
     <string name="notification_channel_facility_state_description">Betriebszustand von Fahrstühlen und Rolltreppen melden</string>
 
     <string name="today">Heute</string>

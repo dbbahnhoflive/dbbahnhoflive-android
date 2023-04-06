@@ -18,6 +18,7 @@ import de.deutschebahn.bahnhoflive.ui.ToolbarViewHolder
 import de.deutschebahn.bahnhoflive.ui.station.HistoryFragment
 import de.deutschebahn.bahnhoflive.ui.station.StationViewModel
 import de.deutschebahn.bahnhoflive.ui.station.timetable.TwoTabsFragment
+import de.deutschebahn.bahnhoflive.util.VersionManager
 
 class ElevatorStatusListsFragment : TwoTabsFragment(R.string.facilityStatus_overview_title, R.string.facilityStatus_saved_title) {
 
@@ -53,8 +54,25 @@ class ElevatorStatusListsFragment : TwoTabsFragment(R.string.facilityStatus_over
         }
 
         mTutorialView = requireActivity().findViewById(R.id.tab_tutorial_view)
+
         // Show tutorial
-        TutorialManager.getInstance(activity).showTutorialIfNecessary(mTutorialView, "d1_aufzuege")
+        // 2 possible d1_aufzuege (old) or new (2335) ELEVATORS_PUSH
+
+        val tutorialManager = TutorialManager.getInstance(activity)
+
+        val tutorial = tutorialManager.getTutorialForView(TutorialManager.Id.PUSH_ELEVATORS) // show only once
+
+        val versionManager = VersionManager.getInstance(requireContext())
+
+        if (tutorial != null
+            && versionManager.isUpdate()
+            && versionManager.actualVersion < VersionManager.SoftwareVersion("3.21.0")
+            && !versionManager.pushWasEverUsed
+        ) {
+            tutorialManager.showTutorialIfNecessary(mTutorialView, tutorial.id)
+            tutorialManager.markTutorialAsSeen(tutorial)
+        } else
+            tutorialManager.showTutorialIfNecessary(mTutorialView, "d1_aufzuege")
 
         val stationElevatorStatusFragment = StationElevatorStatusFragment.create()
         installFragment(tag, stationElevatorStatusFragment)
@@ -92,6 +110,9 @@ class ElevatorStatusListsFragment : TwoTabsFragment(R.string.facilityStatus_over
         if (stationViewModel.topInfoFragmentTag == TAG) {
             stationViewModel.topInfoFragmentTag = null
         }
+
+        if(mTutorialView?.currentlyVisibleTutorial?.id==TutorialManager.Id.PUSH_ELEVATORS)
+            mTutorialView?.currentlyVisibleTutorial?.closedByUser=true // show only 1 time
 
         TutorialManager.getInstance(activity).markTutorialAsIgnored(mTutorialView)
         super.onStop()

@@ -44,12 +44,15 @@ import de.deutschebahn.bahnhoflive.analytics.IssueTracker;
 import de.deutschebahn.bahnhoflive.analytics.IssueTrackerKt;
 import de.deutschebahn.bahnhoflive.analytics.StationTrackingManager;
 import de.deutschebahn.bahnhoflive.analytics.TrackingManager;
+import de.deutschebahn.bahnhoflive.backend.db.fasta2.model.FacilityStatus;
 import de.deutschebahn.bahnhoflive.backend.local.model.RrtPoint;
 import de.deutschebahn.bahnhoflive.backend.local.model.ServiceContentType;
 import de.deutschebahn.bahnhoflive.backend.ris.model.TrainInfo;
+import de.deutschebahn.bahnhoflive.push.FacilityPushManager;
 import de.deutschebahn.bahnhoflive.repository.InternalStation;
 import de.deutschebahn.bahnhoflive.repository.Station;
 import de.deutschebahn.bahnhoflive.repository.StationResource;
+import de.deutschebahn.bahnhoflive.tutorial.Tutorial;
 import de.deutschebahn.bahnhoflive.tutorial.TutorialManager;
 import de.deutschebahn.bahnhoflive.tutorial.TutorialView;
 import de.deutschebahn.bahnhoflive.ui.hub.HubActivity;
@@ -71,6 +74,7 @@ import de.deutschebahn.bahnhoflive.ui.station.shop.ShopCategorySelectionFragment
 import de.deutschebahn.bahnhoflive.ui.station.timetable.TimetablesFragment;
 import de.deutschebahn.bahnhoflive.ui.timetable.localtransport.HafasTimetableViewModel;
 import de.deutschebahn.bahnhoflive.util.DebugX;
+import de.deutschebahn.bahnhoflive.util.VersionManager;
 import kotlin.Pair;
 import de.deutschebahn.bahnhoflive.util.GoogleLocationPermissions;
 
@@ -244,6 +248,69 @@ public class StationActivity extends BaseActivity implements
                 trackingManager.track(TrackingManager.TYPE_ACTION, objectMap, H1, TrackingManager.UiElement.POI_SEARCH, TrackingManager.UiElement.POI_SEARCH_QUERY);
             }
         });
+
+
+
+        // show push-tutorial if
+        // app is update to 3.21.0 or update > 3.21.0 from lower version
+        // station has elevators
+        // push not activated for any of the elevators after 5 different days of usage
+
+        // show max. 2 times
+
+        stationViewModel.getElevatorsResource().getData().observe(this, new Observer<List<FacilityStatus>>() {
+            @Override
+            public void onChanged(@Nullable List<FacilityStatus> facilityStatuses) {
+                if(facilityStatuses!=null) {
+
+
+                    List<FacilityStatus> listElevators = new ArrayList<FacilityStatus>();
+
+                    for(FacilityStatus item:facilityStatuses) {
+                         if(  item.getType().equals( FacilityStatus.ELEVATOR) ) {
+                             listElevators.add(item);
+                         }
+                    }
+
+                    final int countElevators = listElevators.size();
+
+                    if(countElevators>0) {
+
+                        final FacilityPushManager fpm = FacilityPushManager.Companion.getInstance();
+
+                        for (FacilityStatus item : facilityStatuses) {
+                            if (item.getType().equals(FacilityStatus.ELEVATOR)) {
+                                listElevators.add(item);
+                            }
+                        }
+
+                        final VersionManager versionManager = VersionManager.Companion.getInstance(StationActivity.this);
+                        final TutorialManager tutorialManager = TutorialManager.getInstance(StationActivity.this);
+                        final Tutorial tutorial = tutorialManager.getTutorialForView(TutorialManager.Id.PUSH_GENERAL); // show only once
+
+                        if (tutorial != null && !versionManager.getPushWasEverUsed()
+                        ) {
+                            int countPushTutorialGeneralSeen = versionManager.getPushTutorialGeneralShowCounter();
+
+                            final boolean isUpdate = versionManager.isUpdate() &&
+                                    versionManager.getActualVersion().compareTo(new VersionManager.SoftwareVersion("3.21.0")) < 0;
+
+                            if ((countPushTutorialGeneralSeen == 0 && isUpdate) || ( (countPushTutorialGeneralSeen == 1) && (versionManager.getUsageCountDays() > 5)) ) {
+                                tutorialManager.showTutorialIfNecessary(mTutorialView, tutorial.id);
+                                tutorialManager.markTutorialAsSeen(tutorial);
+                                countPushTutorialGeneralSeen++;
+                                versionManager.setPushTutorialGeneralShowCounter(countPushTutorialGeneralSeen);
+                            }
+
+
+                        }
+
+                    }
+
+                }
+            }
+        });
+
     }
 
     @Override
@@ -573,6 +640,8 @@ public class StationActivity extends BaseActivity implements
 
             if(timeDiff<3L*1000L)
               stationViewModel.showWaggonOrder(trainInfo);
+            else
+                Log.d("cr", "intent too old" );
         }
         if (intent.hasExtra(ARG_RRT_POINT)) {
             stationViewModel.pendingRailReplacementPointLiveData.setValue(intent.getParcelableExtra(ARG_RRT_POINT));

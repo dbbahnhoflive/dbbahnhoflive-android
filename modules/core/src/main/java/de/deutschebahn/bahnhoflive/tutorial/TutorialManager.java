@@ -30,11 +30,16 @@ public class TutorialManager {
         return mInstance;
     }
 
+    // idea is to use different Tutorials for same View, not sure its working
+    // todo: check and clear Id's, manual id's in seedingList()
+
     public interface Id {
         String MAP = "f3_map";
         String MAP_TRACK_DEPARTURES = "track_departures";
         String POI_SEARCH = "poi_search";
         String COUPONS = "coupons";
+        String PUSH_GENERAL = "push_general";
+        String PUSH_ELEVATORS = "push_elevators";
     }
 
     private List<Tutorial> seedingList() {
@@ -76,6 +81,12 @@ public class TutorialManager {
         //tutorials.add(
         //        new Tutorial("f1_map", "Profi Tip für Filtereinstellungen", "Schieben Sie einzelne Kategorie-Einträge nach links, um schnell alle dazugehörigen Inhalte auf der Karte anzuzeigen.", 2));
 
+        tutorials.add(
+                new Tutorial(Id.PUSH_GENERAL, "Neu: Mitteilungen erhalten", "Aktivieren Sie die Push-Mitteilungen zur Verfügbarkeit gemerkter Aufzüge.", 0));
+
+        tutorials.add(
+                new Tutorial(Id.PUSH_ELEVATORS, "Neu: Mitteilungen Aufzüge", "Erhalten Sie eine Nachricht, wenn Ihr Aufzug defekt oder wieder in Betrieb ist.", 0));
+
         return tutorials;
     }
 
@@ -86,8 +97,22 @@ public class TutorialManager {
         List<Tutorial> seedableTutorials = seedingList();
 
         // initialize configuration
+
+        // eliminate non-existing tutorials from tutorials
+
+        boolean removeTutorials = false;
+        for (Tutorial tutorial : tutorials) {
+            for (Tutorial seedingTutorial : seedableTutorials) {
+                if(seedingTutorial.id.compareToIgnoreCase(tutorial.id)==0) {
+                    tutorial.descriptionText="";
+                    removeTutorials = true;
+                    break;
+                }
+            }
+        }
+
         if (tutorials.isEmpty()
-                ||  seedableTutorials.size() > tutorials.size()) {
+                ||  seedableTutorials.size() > tutorials.size() || removeTutorials)  {
 
             // Seed tutorial configuration
             for (Tutorial tutorial : seedableTutorials) {
@@ -211,5 +236,7 @@ public class TutorialManager {
             TutorialPreferenceStore.getInstance(mContext).update(tutorial);
         }
     }
+
+
 
 }

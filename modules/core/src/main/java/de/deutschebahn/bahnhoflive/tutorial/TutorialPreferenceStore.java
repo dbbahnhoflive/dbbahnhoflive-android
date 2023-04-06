@@ -15,6 +15,7 @@ import com.google.gson.GsonBuilder;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 
 public class TutorialPreferenceStore {
 
@@ -42,6 +43,11 @@ public class TutorialPreferenceStore {
      */
     public void update(final Tutorial tutorial) {
         final Gson gson = this.gson;
+        if(Objects.equals(tutorial.descriptionText, ""))
+            tutorialsStore.edit()
+                    .remove(tutorial.id)
+                    .commit();
+        else
         tutorialsStore.edit()
                 .putString(tutorial.getId(), gson.toJson(tutorial))
                 .commit();
