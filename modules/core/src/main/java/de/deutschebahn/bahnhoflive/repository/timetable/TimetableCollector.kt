@@ -3,11 +3,9 @@ package de.deutschebahn.bahnhoflive.repository.timetable
 import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.asLiveData
-import androidx.lifecycle.liveData
 import de.deutschebahn.bahnhoflive.backend.local.model.EvaIds
 import de.deutschebahn.bahnhoflive.backend.ris.getCurrentHour
 import de.deutschebahn.bahnhoflive.backend.ris.model.TrainInfo
-import de.deutschebahn.bahnhoflive.util.DebugX
 import kotlinx.coroutines.*
 import kotlinx.coroutines.flow.*
 import java.util.concurrent.TimeUnit
@@ -97,10 +95,10 @@ class TimetableCollector(
                 progressFlow.value = true
 
                 try {
+                    // remove all tt's older 5 hours
                     initialsCache.keys
-                        .filter { it < parameters.firstHourInMillisRounded - hourInMillis || force}
+                        .filter { it < parameters.firstHourInMillisRounded - (hourInMillis * 5) || force }
                         .forEach {
-                            Log.d("dbg", "initcache: remove ${it}")
                             initialsCache.remove(it)
                         }
 
@@ -123,17 +121,15 @@ class TimetableCollector(
                             async {
 
                                 kotlin.runCatching {
-                                    Log.d("dbg", "evaid: ${evaId}, hours: ${parameters.firstHourInMillisRounded} , offset: ${hourOffset * hourInMillis}")
                                     initialsCache.getOrPut(parameters.firstHourInMillisRounded + hourOffset * hourInMillis ) {
-//                                    initialsCache.getOrPut(parameters.firstHourInMillis + hourOffset * hourInMillis ) {
-                                        Log.d("dbg", "not found")
                                         mutableMapOf()
                                     }.getOrPut(evaId) {
-                                        Log.d("dbg", "tt request")
+                                            val hour =
+                                                parameters.firstHourInMillisRounded + hourOffset * hourInMillis
+
                                         timetableHourProvider(
                                             evaId,
-                                            parameters.firstHourInMillisRounded + hourOffset * hourInMillis
-//                                            parameters.firstHourInMillis + hourOffset * hourInMillis
+                                                hour
                                         )
                                     }
                                 }
@@ -154,7 +150,15 @@ class TimetableCollector(
                                     nextTrainInfo
                                 )
                             }
-                        }
+                        } // .toMutableMap()
+
+//                    mergedInitials.remove("2686007473625185344-2303220001-18")// todo: cr test
+
+//                    Log.d("dbg", "--mergedInitials")
+//                    mergedInitials.forEach {
+//                        it.value.logDeparture(true)
+//                    }
+//                    Log.d("dbg", "--mergedInitials")
 
                     yield()
 
@@ -162,10 +166,21 @@ class TimetableCollector(
                         it.payload
                     }.flatMap { it.trainInfos }
 
+//                    Log.d("dbg", "--changes")
+//                    changes.forEach {
+//                        it.logDeparture(true)
+//                    }
+//                    Log.d("dbg", "--changes")
+
                     yield()
 
+                    // info's in changes, but no plandata
+                    val missingTrainInfos : MutableMap<String,TrainInfo>  =  mutableMapOf()
                     val mergedTrainInfos =
-                        TrainInfo.mergeChanges(mergedInitials.toMutableMap(), changes)
+                        TrainInfo.mergeChanges(mergedInitials.toMutableMap(), changes,
+                            System.currentTimeMillis(),
+                            (parameters.firstHourInMillis / hourInMillis + parameters.hourCount) * hourInMillis,
+                            missingTrainInfos)
 
                     yield()
 
@@ -174,16 +189,62 @@ class TimetableCollector(
 
                     if (allStationsHaveErrors) {
                         timetableStateFlow.value = null
-                        Log.d("dbg", "Timetable = NULL ")
-
                     }
                     else {
-                        val tt = Timetable(
+
+                        // find missingTrainInfos in older plandata
+                        // possibly called a lot of times, but data comes from cache after 1. call
+                        missingTrainInfos.map { it.value }.forEach { itMissingTrain ->
+
+                            var missingTrainFound=false
+
+                            for (i in -2 downTo -5) {
+
+                                val hour =
+                                    parameters.firstHourInMillisRounded + i * hourInMillis
+
+                                parameters.evaIds.ids.flatMap { evaId ->
+                                    (0 until 1).map {
+                                        async {
+                                            kotlin.runCatching {
+                                                initialsCache.getOrPut(hour) {
+                                                    mutableMapOf()
+                                                }.getOrPut(evaId) {
+                                                    timetableHourProvider(
+                                                        evaId, hour
+                                                    )
+                                                }
+                                            }
+                                        }
+                                    }.awaitAll()
+                                }
+
+                                initialsCache[hour]?.let { itExistingTrainInfos ->
+
+                                    // checken, ob Daten zu den verwaisten Zügen da sind
+                                    val existingTrainInfo =
+                                        itExistingTrainInfos.flatMap { it.value.trainInfos }
+                                            .find {
+                                                it.id == itMissingTrain.id
+                                            }
+
+                                    existingTrainInfo?.let {
+                                        mergedTrainInfos[itMissingTrain.id] = it.merge(itMissingTrain)
+                                        missingTrainFound=true
+                                        Log.d("dbg", "missing train-correction: ${itMissingTrain.id}")
+                                    }
+                    }
+
+                                if(missingTrainFound)
+                                    break // small optimization
+                            }
+                        }
+
+                        timetableStateFlow.value = Timetable(
                             mergedTrainInfos.values.toList(),
                             (parameters.firstHourInMillis / hourInMillis + parameters.hourCount) * hourInMillis,
                             parameters.hourCount
                         )
-                        timetableStateFlow.value = tt
                     }
 
                 } catch (cancellationException: CancellationException) {

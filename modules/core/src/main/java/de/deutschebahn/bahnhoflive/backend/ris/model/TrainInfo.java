@@ -14,6 +14,7 @@ import static de.deutschebahn.bahnhoflive.backend.ris.model.TrainInfo.Category.S
 import android.os.Parcel;
 import android.os.Parcelable;
 import android.text.TextUtils;
+import android.util.Log;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -32,6 +33,8 @@ import java.util.Arrays;
 import java.util.Collection;
 import java.util.List;
 import java.util.Map;
+
+import de.deutschebahn.bahnhoflive.util.DebugX;
 
 public class TrainInfo implements Parcelable {
 
@@ -245,14 +248,48 @@ public class TrainInfo implements Parcelable {
         return target;
     }
 
+    // target = plandaten = initials
+    // flatChanges = changes
     @NonNull
-    public static Map<String, TrainInfo> mergeChanges(@NonNull Map<String, TrainInfo> target, @NonNull Collection<TrainInfo> flatChanges) {
+    public static Map<String, TrainInfo> mergeChanges(@NonNull Map<String, TrainInfo> target,
+                                                      @NonNull Collection<TrainInfo> flatChanges,
+                                                      long actualTime,
+                                                      long endOfPlanTime,
+                                                      @NonNull Map<String,TrainInfo> missingTrainInfos) {
+
         for (TrainInfo sourceTrainInfo : flatChanges) {
             final TrainInfo targetTrainInfo = target.get(sourceTrainInfo.getId());
 
             if (targetTrainInfo == null) {
                 if (sourceTrainInfo.isReplacement() || sourceTrainInfo.isSpecial() || sourceTrainInfo.isAdditional()) {
                     target.put(sourceTrainInfo.getId(), sourceTrainInfo);
+                } else {
+
+                    // check departure
+                    if (sourceTrainInfo.departure != null &&
+                            !sourceTrainInfo.departure.isTrainMovementCancelled() &&
+                            sourceTrainInfo.departure.getCorrectedDateTime() > actualTime &&
+                            sourceTrainInfo.departure.getCorrectedDateTime() < endOfPlanTime
+                    ) {
+                        // missing train found
+                        missingTrainInfos.put(sourceTrainInfo.getId(), sourceTrainInfo);
+                    }
+
+                    // check arrival
+                    if (sourceTrainInfo.arrival != null &&
+                            !sourceTrainInfo.arrival.isTrainMovementCancelled() &&
+                            sourceTrainInfo.arrival.getCorrectedDateTime() > actualTime &&
+                            sourceTrainInfo.arrival.getCorrectedDateTime() < endOfPlanTime
+                    ) {
+                        if(sourceTrainInfo.departure != null &&  sourceTrainInfo.departure.getCorrectedDateTime() >= endOfPlanTime) {
+                            // special case: a train outside of our plan data in the future arrives early: ignore it!
+                        }
+                        else {
+                            // missing train found, possibly overwrite...
+                            missingTrainInfos.put(sourceTrainInfo.getId(), sourceTrainInfo);
+                        }
+                    }
+
                 }
             } else {
                 targetTrainInfo.merge(sourceTrainInfo);
@@ -658,6 +695,55 @@ public class TrainInfo implements Parcelable {
     public boolean shouldOfferWagenOrder() {
         final String trainCategory = getTrainCategory();
         return trainCategory != null && CATEGORIES_WITH_WAGON_ORDER.contains(trainCategory.toUpperCase());
+    }
+
+    public void logDeparture(Boolean withId) {
+
+        if (departure == null) return;
+
+        long plannedTime = departure.getPlannedDateTime();
+        long correctedTime = departure.getCorrectedDateTime();
+        String lineIdentifier = departure.getLineIdentifier();
+        if (lineIdentifier == null) {
+            lineIdentifier = this.trainCategory;
+            if (lineIdentifier == null)
+                lineIdentifier = "";
+            else
+                lineIdentifier += " " + this.trainName;
+        }
+
+        if (withId)
+            Log.d(
+                    "dbg",
+                    String.format("%-36s", getId()) +
+                            String.format("%-8s", lineIdentifier) +
+                            DebugX.Companion.getFormattedDateTimeFromMillis(
+                                    plannedTime,
+                                    " pl: ",
+                                    "HH:mm"
+                            ) +
+                            DebugX.Companion.getFormattedDateTimeFromMillis(
+                                    correctedTime,
+                                    " co: ",
+                                    "HH:mm"
+                            )
+
+            );
+        else
+            Log.d(
+                    "dbg",
+                    String.format("%-8s", lineIdentifier) +
+                            DebugX.Companion.getFormattedDateTimeFromMillis(
+                                    plannedTime,
+                                    " pl: ",
+                                    "HH:mm"
+                            ) +
+                            DebugX.Companion.getFormattedDateTimeFromMillis(
+                                    correctedTime,
+                                    " co: ",
+                                    "HH:mm"
+                            ));
+
     }
 
 }
