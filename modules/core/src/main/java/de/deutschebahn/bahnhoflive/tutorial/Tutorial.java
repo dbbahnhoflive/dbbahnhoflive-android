@@ -13,7 +13,7 @@ public class Tutorial {
     public String descriptionText;
 
     public int currentCount = Integer.MAX_VALUE;
-    public int countdown = Integer.MAX_VALUE;
+    public int countdown = Integer.MAX_VALUE; // until show...
 
     public boolean closedByUser = false;
 

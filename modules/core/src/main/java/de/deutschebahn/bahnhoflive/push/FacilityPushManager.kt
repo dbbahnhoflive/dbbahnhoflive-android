@@ -14,6 +14,7 @@ import com.google.firebase.ktx.Firebase
 import com.google.firebase.messaging.ktx.messaging
 import de.deutschebahn.bahnhoflive.util.PrefUtil
 import de.deutschebahn.bahnhoflive.backend.db.fasta2.model.FacilityStatus
+import de.deutschebahn.bahnhoflive.util.VersionManager
 import java.util.ArrayList
 
 class FacilityPushManager private constructor() {
@@ -46,8 +47,10 @@ class FacilityPushManager private constructor() {
 
     fun subscribeOrUnsubscribePushMessage(context: Context, facilityStatus: FacilityStatus, subscribe : Boolean) {
 
-        if(subscribe)
+        if(subscribe) {
             subscribePushMessage(context, facilityStatus.equipmentNumber)
+            VersionManager.getInstance(context).pushWasEverUsed=true
+        }
         else
             unsubscribePushMessage(context, facilityStatus.equipmentNumber)
 

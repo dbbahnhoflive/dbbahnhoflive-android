@@ -48,6 +48,7 @@ import de.deutschebahn.bahnhoflive.repository.ShopsResource;
 import de.deutschebahn.bahnhoflive.repository.Station;
 import de.deutschebahn.bahnhoflive.repository.timetable.Constants;
 import de.deutschebahn.bahnhoflive.repository.timetable.Timetable;
+import de.deutschebahn.bahnhoflive.tutorial.Tutorial;
 import de.deutschebahn.bahnhoflive.tutorial.TutorialManager;
 import de.deutschebahn.bahnhoflive.tutorial.TutorialView;
 import de.deutschebahn.bahnhoflive.ui.ServiceContentFragment;
@@ -145,6 +146,16 @@ public class StationFragment extends androidx.fragment.app.Fragment implements
 
     @Override
     public void onStop() {
+
+        if(mTutorialView!=null) {
+            final Tutorial tutorial = mTutorialView.getCurrentlyVisibleTutorial();
+
+            if (tutorial!=null) {
+              if(tutorial.id.equals(TutorialManager.Id.PUSH_GENERAL))
+                  tutorial.closedByUser = true; // show only 1 time
+            }
+        }
+
         TutorialManager.getInstance(getActivity()).markTutorialAsIgnored(mTutorialView);
 
         super.onStop();

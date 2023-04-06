@@ -7,11 +7,10 @@ import android.content.pm.PackageManager
 import android.os.Build
 import de.deutschebahn.bahnhoflive.ui.accessibility.GlobalPreferences
 import de.deutschebahn.bahnhoflive.ui.accessibility.TrackingPreferences
+import java.time.LocalDate
 
 
-
-
-class VersionManager private constructor(manager: PackageManager, packageName : String, global_preferences:SharedPreferences, tracking_preferences:SharedPreferences) {
+class VersionManager private constructor(manager: PackageManager, packageName : String, val global_preferences:SharedPreferences, tracking_preferences:SharedPreferences) {
 
     class SoftwareVersion(val versionName: String) : Comparable<SoftwareVersion> { // versionString can be rc3.20.1-demo or 3.20.1 or ...
 
@@ -61,9 +60,35 @@ class VersionManager private constructor(manager: PackageManager, packageName : 
     val isFreshInstallation : Boolean
         get() = _isFreshInstallation
 
+    val usageCountDays : Int
+        get() = _usageCountDays
+
+    var pushWasEverUsed : Boolean
+     get() = _pushWasEverUsed
+     set(value) {
+         if(value!=_pushWasEverUsed) {
+             global_preferences.edit()
+                 .putBoolean("PushWasEverUsed", value)
+                 .apply()
+         }
+         _pushWasEverUsed = value
+     }
+
+    var pushTutorialGeneralShowCounter: Int
+        get() = _pushTutorialGeneralShowCounter
+        set(value) {
+            if(value!=_pushTutorialGeneralShowCounter) {
+                global_preferences.edit()
+                    .putInt("PushTutorialGeneralShowCounter", value)
+                    .apply()
+            }
+            _pushTutorialGeneralShowCounter = value
+        }
+
+
     fun isUpdate() : Boolean  {
-        if(isFreshInstallation) return false
-        return (_lastVersion.asVersionLong()!=0L) && _actualVersion != _actualVersionFromFile
+        if(_isFreshInstallation) return false
+        return (_actualVersionFromFile.asVersionLong()!=0L) && _actualVersion != _actualVersionFromFile
     }
 
     private var _isFreshInstallation : Boolean = false
@@ -72,7 +97,10 @@ class VersionManager private constructor(manager: PackageManager, packageName : 
     private var _actualVersion : SoftwareVersion = SoftwareVersion("")
     private var _actualVersionFromFile : SoftwareVersion = SoftwareVersion("")
 
+    private var _usageCountDays : Int = 0
 
+    private var _pushWasEverUsed : Boolean = false
+    private var _pushTutorialGeneralShowCounter : Int = 0
 
     init {
 
@@ -97,7 +125,6 @@ class VersionManager private constructor(manager: PackageManager, packageName : 
         // actualVersion nach ActualVersion speichern
 
         // aktuelle Version in LastVersion speichern, wenn _actualVersion!=_actualVersionFromFile
-
         if(_actualVersion!=_actualVersionFromFile) {
 
             global_preferences.edit()
@@ -111,7 +138,32 @@ class VersionManager private constructor(manager: PackageManager, packageName : 
                 .apply()
         }
 
+        val restartedDayCount = global_preferences.getInt("restartedDayCount", 0 )
+        val lastDayStarted = global_preferences.getInt("lastStartedDay", 0 )
+
+        val today = LocalDate.now()
+
+        val usageLastDateInFile : String = global_preferences.getString("UsageLastDate", "") ?: ""
+        _usageCountDays = global_preferences.getInt("UsageCountDays", 0)
+
+//        val dayAsString = today.plusDays((_usageCountDays+1).toLong()).toString() // test only, simulate daychange every time the app restarts
+        val dayAsString = today.toString()
+
+        if(dayAsString != usageLastDateInFile) {
+            _usageCountDays++
+            global_preferences.edit()
+                .putString("UsageLastDate", dayAsString)
+                .putInt("UsageCountDays", _usageCountDays)
+                .apply()
+        }
+
+        _pushWasEverUsed = global_preferences.getBoolean("PushWasEverUsed", false)
+        _pushTutorialGeneralShowCounter = global_preferences.getInt("PushTutorialGeneralShowCounter", 0)
+
     }
+
+
+
 
     private fun getPackageInfoCompat(manager: PackageManager, packageName: String, flags: Int = 0): PackageInfo? =
 

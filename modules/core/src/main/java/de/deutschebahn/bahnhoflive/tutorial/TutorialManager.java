@@ -30,12 +30,16 @@ public class TutorialManager {
         return mInstance;
     }
 
+    // idea is to use different Tutorials for same View, not sure its working
+    // todo: check and clear Id's, manual id's in seedingList()
+
     public interface Id {
         String MAP = "f3_map";
         String MAP_TRACK_DEPARTURES = "track_departures";
         String POI_SEARCH = "poi_search";
         String COUPONS = "coupons";
-        String ELEVATORS_PUSH = "elevators_push";
+        String PUSH_GENERAL = "push_general";
+        String PUSH_ELEVATORS = "push_elevators";
     }
 
     private List<Tutorial> seedingList() {
@@ -78,7 +82,10 @@ public class TutorialManager {
         //        new Tutorial("f1_map", "Profi Tip für Filtereinstellungen", "Schieben Sie einzelne Kategorie-Einträge nach links, um schnell alle dazugehörigen Inhalte auf der Karte anzuzeigen.", 2));
 
         tutorials.add(
-                new Tutorial(Id.ELEVATORS_PUSH, "Neu: Mitteilungen erhalten", "Aktivieren Sie die Push-Mitteilungen zur Verfügbarkeit gemerkter Aufzüge.", 0));
+                new Tutorial(Id.PUSH_GENERAL, "Neu: Mitteilungen erhalten", "Aktivieren Sie die Push-Mitteilungen zur Verfügbarkeit gemerkter Aufzüge.", 0));
+
+        tutorials.add(
+                new Tutorial(Id.PUSH_ELEVATORS, "Neu: Mitteilungen Aufzüge", "Erhalten Sie eine Nachricht, wenn Ihr Aufzug defekt oder wieder in Betrieb ist.", 0));
 
         return tutorials;
     }
@@ -229,5 +236,7 @@ public class TutorialManager {
             TutorialPreferenceStore.getInstance(mContext).update(tutorial);
         }
     }
+
+
 
 }
