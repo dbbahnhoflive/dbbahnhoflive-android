@@ -89,13 +89,13 @@ abstract class BaseApplication(
                 throw java.lang.RuntimeException(e)
             }
 
-            FacilityFirebaseService.debugPrintFirebaseToken()
-
-            // todo !!!!!!!!! cr:test
-            if (FacilityPushManager.isPushEnabled(this)) {
-
-                val testEquipmentNumbers = arrayOf(
-
+//            FacilityFirebaseService.debugPrintFirebaseToken()
+//
+//            // todo !!!!!!!!! cr:test
+//            if (FacilityPushManager.isPushEnabled(this)) {
+//
+//                val testEquipmentNumbers = arrayOf(
+//
 //                    10315223, 10503244, 10315352, 10804843, 10491002, 10409032,
 //                    10464407, 10490981, 10801908, 10801910, 10569817, 10185526,
 //                    10315224, 10500157, 10015807, 10121792, 10316250, 10318903,
@@ -109,20 +109,16 @@ abstract class BaseApplication(
 //                    10028022, 10563638, 10315426, 10015812, 10316256, 10020636,
 //                    10318901, 10499260, 10020635, 10015813, 10316334, 10020637,
 //                    10408331, 10499261, 10020993, 10015806, 10315222, 10316332,
-                    10315425, 10315355, 10315353, 10316332, 10315425, 10315355,
-                    10315353, 10560984
-                )
-
-                val fpm: FacilityPushManager = FacilityPushManager.instance
-
-                testEquipmentNumbers.forEach {
-
-//                    val stat = FacilityStatus()
-//                    stat.equipmentNumber = it
-
-                    fpm.subscribePushMessage(this, it)
-                }
-            }
+//                    10315425, 10315355, 10315353, 10316332, 10315425, 10315355,
+//                    10315353, 10560984
+//                )
+//
+//                val fpm: FacilityPushManager = FacilityPushManager.instance
+//
+//                testEquipmentNumbers.forEach {
+//                    fpm.subscribePushMessage(this, it)
+//                }
+//            }
 
         }
     }
