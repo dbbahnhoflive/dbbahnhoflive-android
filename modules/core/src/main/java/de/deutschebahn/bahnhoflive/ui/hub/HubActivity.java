@@ -24,6 +24,7 @@ import android.view.accessibility.AccessibilityEvent;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.StringRes;
+import androidx.core.splashscreen.SplashScreen;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
@@ -33,6 +34,7 @@ import de.deutschebahn.bahnhoflive.BaseActivity;
 import de.deutschebahn.bahnhoflive.R;
 import de.deutschebahn.bahnhoflive.analytics.IssueTracker;
 import de.deutschebahn.bahnhoflive.analytics.TrackingManager;
+import de.deutschebahn.bahnhoflive.backend.ris.model.TrainInfo;
 import de.deutschebahn.bahnhoflive.permission.Permission;
 import de.deutschebahn.bahnhoflive.push.FacilityFirebaseService;
 import de.deutschebahn.bahnhoflive.repository.InternalStation;
@@ -43,55 +45,78 @@ import de.deutschebahn.bahnhoflive.ui.tutorial.TutorialFragment;
 import de.deutschebahn.bahnhoflive.util.DebugX;
 import de.deutschebahn.bahnhoflive.util.VersionManager;
 
+import de.deutschebahn.bahnhoflive.backend.wagenstand.WagenstandAlarm;
+
 public class HubActivity extends BaseActivity implements TutorialFragment.Host {
 
     private TrackingManager trackingManager = new TrackingManager(this);
 
-    boolean keep = true;
 
-    @Override
-    protected void onCreate(Bundle savedInstanceState) {
+    private Boolean checkWagenstandNotificationBundle(Intent appIntent) {
 
-//        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-//            setTheme(R.style.Theme_App_Starting);
-//            SplashScreen splashScreen = SplashScreen.installSplashScreen(this);
-//
-//            splashScreen.setKeepOnScreenCondition(() -> keep);
-//            Handler handler = new Handler();
-//            handler.postDelayed(() -> keep = false, 800L);
-//
-//        }else{
-//            setTheme(R.style.App_Theme);
-//        }
-        setTheme(R.style.App_Theme);
+        Bundle bundle = appIntent.getBundleExtra(WagenstandAlarm.DEFAULT_BUNDLE_NAME);
 
-        super.onCreate(savedInstanceState);
+        if (bundle != null && (appIntent.getFlags() & (FLAG_ACTIVITY_CLEAR_TASK|FLAG_ACTIVITY_TASK_ON_HOME))!=0  ) {
 
-        final VersionManager versionManager = VersionManager.Companion.getInstance(this); // IMPORTANT: has to be done BEFORE Tracking is initialized
-        final long version = versionManager.getActualVersion().asVersionLong();
-        if(versionManager.isFreshInstallation())
-            Log.d("cr", "FRESH");
-        else
-            Log.d("cr", "UPDATE");
+            Log.d("cr", "wagenStand");
+            final String  stationNumberAsString = bundle.getString("station");
+            if(stationNumberAsString==null) return false;
 
-        setContentView(R.layout.activity_hub);
-        final Intent appIntent = getIntent();
+            final int stationNumber = Integer.parseInt(stationNumberAsString);
+            final String stationName = bundle.getString("stationName");
 
-        DebugX.Companion.logIntent(this.getLocalClassName(), appIntent);
+            if (stationNumber != 0 && stationName != null) {
 
-//        if(iintent!=null)
-//            Log.d("cr", "start: intent-flag: " + String.format("0x%08X",iintent.getFlags()));
-//        else
-//            Log.d("cr", "start: intent-flag NULL");
-//
-//        if(savedInstanceState!=null)
-//            Log.d("cr", "start: savedInstanceState not null");
-//         else
-//            Log.d("cr", "start: savedInstanceState NULL");
+                if (!stationName.trim().isEmpty()) {
+
+                    final StationSearchViewModel stationSearchViewModel = new ViewModelProvider(this).get(StationSearchViewModel.class);
+                    final SearchResultResource searchResource = stationSearchViewModel.getSearchResource();
+                    searchResource.setQuery(stationName);
+                    final Context ctx = this;
+
+                    searchResource.getData().observe(this, stations -> {
+
+                        if (stations != null && !stations.isEmpty()) {
+
+                            final int size = stations.size();
+                            InternalStation station;
+
+                            // find station by id
+                            for (int i = 0; i < size; i++) {
+                                station = stations.get(i).getAsInternalStation();
+
+                                if (station != null) {
+                                    if (station.getId().equalsIgnoreCase(Integer.toString(stationNumber))) {
+                                        final TrainInfo trainInfo = bundle.getParcelable("trainInfo");
+                                        if(trainInfo!=null) {
+                                            final Intent intent = StationActivity.createIntent(ctx, station, trainInfo);
+                                            intent.putExtra("IS_NOTIFICATION", 1);
+                                            startActivity(intent);
+                                        }
+                                        break;
+                                    }
+
+                                }
+                            }
 
 
-        if (appIntent != null ) {
+                        }
 
+                    });
+
+                }
+
+                return true;
+
+            }
+
+        }
+
+        return false;
+    }
+
+    private Boolean checkElevatorNotificationBundle(Intent appIntent)
+    {
             // starts from notification -> search Station and start StationActivity -> showElevators()
             // station needs to be found, because FCM-notification does not contain the position-data, needed for map
             Bundle bundle = appIntent.getBundleExtra(FacilityFirebaseService.BUNDLE_NAME_FACILITY_MESSAGE);
@@ -139,9 +164,65 @@ public class HubActivity extends BaseActivity implements TutorialFragment.Host {
                             }
 
                         });
-                    }
+
+                    return true;
                 }
             }
+        }
+
+        return false;
+                    }
+
+        @Override
+    protected void onCreate(Bundle savedInstanceState) {
+
+        SplashScreen.installSplashScreen(this);
+//        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+//            setTheme(R.style.Theme_App_Starting);
+//            SplashScreen splashScreen = SplashScreen.installSplashScreen(this);
+//
+//            splashScreen.setKeepOnScreenCondition(() -> keep);
+//            Handler handler = new Handler();
+//            handler.postDelayed(() -> keep = false, 800L);
+//
+//        }else{
+//            setTheme(R.style.App_Theme);
+//        }
+//        setTheme(R.style.App_Theme);
+
+        super.onCreate(savedInstanceState);
+
+        final VersionManager versionManager = VersionManager.Companion.getInstance(this); // IMPORTANT: has to be done BEFORE Tracking is initialized
+        final long version = versionManager.getActualVersion().asVersionLong();
+        if(versionManager.isFreshInstallation())
+            Log.d("cr", "FRESH");
+        else
+            Log.d("cr", "UPDATE");
+
+        setContentView(R.layout.activity_hub);
+        final Intent appIntent = getIntent();
+
+        DebugX.Companion.logIntent(this.getLocalClassName(), appIntent);
+
+//        if(iintent!=null)
+//            Log.d("cr", "start: intent-flag: " + String.format("0x%08X",iintent.getFlags()));
+//        else
+//            Log.d("cr", "start: intent-flag NULL");
+//
+//        if(savedInstanceState!=null)
+//            Log.d("cr", "start: savedInstanceState not null");
+//         else
+//            Log.d("cr", "start: savedInstanceState NULL");
+
+
+        if (appIntent != null ) {
+
+            if(!checkWagenstandNotificationBundle(appIntent)) {
+                if(!checkElevatorNotificationBundle(appIntent)) {
+
+                }
+            }
+
         }
 /* cr: todo
 
