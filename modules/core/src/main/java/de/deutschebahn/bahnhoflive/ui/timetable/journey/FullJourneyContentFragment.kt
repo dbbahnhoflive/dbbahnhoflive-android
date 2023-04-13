@@ -1,5 +1,6 @@
 package de.deutschebahn.bahnhoflive.ui.timetable.journey
 
+import android.content.Intent
 import android.os.Bundle
 import android.util.Log
 import android.view.LayoutInflater
@@ -14,6 +15,8 @@ import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.LifecycleObserver
 import androidx.lifecycle.OnLifecycleEvent
 import de.deutschebahn.bahnhoflive.databinding.IncludeJourneyRecyclerBinding
+import de.deutschebahn.bahnhoflive.repository.InternalStation
+import de.deutschebahn.bahnhoflive.ui.station.StationActivity
 import de.deutschebahn.bahnhoflive.ui.station.StationViewModel
 
 class FullJourneyContentFragment : Fragment() {
@@ -64,7 +67,32 @@ class FullJourneyContentFragment : Fragment() {
 
         prepareCommons(viewLifecycleOwner, stationViewModel, journeyViewModel)
 
-        recycler.adapter = JourneyAdapter().apply {
+        recycler.adapter = JourneyAdapter { view, journeyStop ->
+
+            journeyStop.departure?.let { itStopEvent ->
+
+                val station =
+                    InternalStation(
+                        itStopEvent.evaNumber,
+                        itStopEvent.name, null, null
+                    )
+
+
+                val intent: Intent =
+                    StationActivity.createIntent(
+                        view.context,
+                        station,
+                        false
+                    )
+
+                activity?.let {
+                    it.finish()
+                    it.startActivity(intent)
+                }
+            }
+
+
+        }.apply {
 
             journeyViewModel.journeysByRelationLiveData.observe(viewLifecycleOwner) {
                 it.fold<Unit, List<JourneyStop>>({ journeyStops ->

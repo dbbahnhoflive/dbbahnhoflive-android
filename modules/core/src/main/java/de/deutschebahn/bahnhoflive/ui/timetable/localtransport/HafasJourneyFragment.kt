@@ -1,5 +1,6 @@
 package de.deutschebahn.bahnhoflive.ui.timetable.localtransport
 
+import android.content.DialogInterface
 import android.content.Intent
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -10,13 +11,16 @@ import androidx.fragment.app.Fragment
 import de.deutschebahn.bahnhoflive.R
 import de.deutschebahn.bahnhoflive.backend.hafas.model.HafasEvent
 import de.deutschebahn.bahnhoflive.databinding.FragmentHafasJourneyBinding
+import de.deutschebahn.bahnhoflive.repository.InternalStation
 import de.deutschebahn.bahnhoflive.repository.localtransport.AnyLocalTransportInitialPoi
 import de.deutschebahn.bahnhoflive.ui.map.Content
 import de.deutschebahn.bahnhoflive.ui.map.InitialPoiManager
 import de.deutschebahn.bahnhoflive.ui.map.MapPresetProvider
 import de.deutschebahn.bahnhoflive.ui.map.content.rimap.RimapFilter
+import de.deutschebahn.bahnhoflive.ui.station.StationActivity
 import de.deutschebahn.bahnhoflive.ui.timetable.RouteStop
 import de.deutschebahn.bahnhoflive.ui.timetable.journey.HafasRouteItemViewHolder
+import de.deutschebahn.bahnhoflive.ui.timetable.journey.JourneyStop
 import de.deutschebahn.bahnhoflive.util.TAG
 import de.deutschebahn.bahnhoflive.view.BaseListAdapter
 import de.deutschebahn.bahnhoflive.view.ListViewHolderDelegate
@@ -29,7 +33,12 @@ class HafasJourneyFragment() : Fragment()
 
     var hafasEvent : HafasEvent? = null
     var routeStops : ArrayList<RouteStop> = arrayListOf()
-    val adapter =  HafasRouteAdapter()
+    val adapter = HafasRouteAdapter { view, journeyStop ->
+        run {
+         // todo: later ?
+        }
+    }
+
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -83,7 +92,8 @@ class HafasJourneyFragment() : Fragment()
     }
 
 
-    inner class HafasRouteAdapter : BaseListAdapter<RouteStop, HafasRouteItemViewHolder>(
+    inner class HafasRouteAdapter(onClickStop: (view: View, stop : RouteStop)->Unit)
+    : BaseListAdapter<RouteStop, HafasRouteItemViewHolder>(
         object : ListViewHolderDelegate<RouteStop, HafasRouteItemViewHolder> {
             override fun onCreateViewHolder(
                 parent: ViewGroup,
@@ -96,6 +106,9 @@ class HafasJourneyFragment() : Fragment()
                 position: Int
             ) {
                 holder.bind(item)
+                holder.itemView.setOnClickListener {
+                    onClickStop(it, item )
+                }
             }
         }) {
 

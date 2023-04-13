@@ -2,6 +2,8 @@ package de.deutschebahn.bahnhoflive.ui.timetable.journey
 
 import android.app.AlertDialog
 import android.app.ProgressDialog
+import android.content.DialogInterface
+import android.content.Intent
 import android.os.Bundle
 import android.util.Log
 import android.view.LayoutInflater
@@ -11,18 +13,24 @@ import androidx.core.view.isGone
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.fragment.app.viewModels
+import androidx.lifecycle.ViewModel
 import androidx.recyclerview.widget.ConcatAdapter
 import com.android.volley.VolleyError
+import de.deutschebahn.bahnhoflive.BaseApplication
 import de.deutschebahn.bahnhoflive.R
 import de.deutschebahn.bahnhoflive.analytics.TrackingManager
 import de.deutschebahn.bahnhoflive.backend.BaseRestListener
+import de.deutschebahn.bahnhoflive.backend.local.model.EvaIds
 import de.deutschebahn.bahnhoflive.backend.ris.model.TrainEvent
 import de.deutschebahn.bahnhoflive.backend.ris.model.TrainInfo
 import de.deutschebahn.bahnhoflive.backend.wagenstand.WagenstandRequestManager
 import de.deutschebahn.bahnhoflive.databinding.FragmentJourneyRegularContentBinding
 import de.deutschebahn.bahnhoflive.databinding.ItemJourneyFilterRemoveBinding
+import de.deutschebahn.bahnhoflive.repository.InternalStation
 import de.deutschebahn.bahnhoflive.repository.Station
 import de.deutschebahn.bahnhoflive.repository.trainformation.TrainFormation
+import de.deutschebahn.bahnhoflive.ui.search.StationSearchViewModel
+import de.deutschebahn.bahnhoflive.ui.station.StationActivity
 import de.deutschebahn.bahnhoflive.ui.station.StationViewModel
 import de.deutschebahn.bahnhoflive.ui.station.timetable.IssueIndicatorBinder
 import de.deutschebahn.bahnhoflive.ui.station.timetable.IssuesBinder
@@ -34,7 +42,11 @@ class RegularJourneyContentFragment : Fragment() {
 
     val stationViewModel: StationViewModel by activityViewModels()
 
+    val stationSearchViewModel : StationSearchViewModel by activityViewModels()
+
     val journeyViewModel: JourneyViewModel by viewModels({ requireParentFragment() })
+
+    var journeyStops : List<JourneyStop> = listOf()
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -46,6 +58,7 @@ class RegularJourneyContentFragment : Fragment() {
             IssuesBinder(issueContainer, issueText, IssueIndicatorBinder(issueIcon))
 
         var shouldOfferWagenOrder = false
+
 
         journeyViewModel.essentialParametersLiveData.observe(viewLifecycleOwner) { (station, trainInfo, trainEvent) ->
 
@@ -74,8 +87,6 @@ class RegularJourneyContentFragment : Fragment() {
                 }
             }
 
-
-
             if(journeyViewModel.showWagonOrderLiveData.value==true) {
                 journeyViewModel.showWagonOrderLiveData.value=false
                 trainInfo.let { it1 -> trainEvent?.let { it2 -> showWaggonOrder(it1, it2) } }
@@ -86,7 +97,97 @@ class RegularJourneyContentFragment : Fragment() {
         with(contentLayout) {
             prepareCommons(viewLifecycleOwner, stationViewModel, journeyViewModel)
 
-            val journeyAdapter = JourneyAdapter()
+            val journeyAdapter = JourneyAdapter { view, journeyStop ->
+
+                var station : InternalStation? = null
+
+                if(journeyStop.departure!=null) {
+
+                    journeyStop.departure?.let {
+                        station = InternalStation(
+                            it.evaNumber,
+                            it.name,
+                            null, // todo
+                            null // todo
+                        )
+
+                    }
+                }
+                else
+                    if(journeyStop.arrival!=null) {
+                        journeyStop.arrival?.let {
+                            station = InternalStation(
+                                it.evaNumber,
+                                it.name,
+                                null, // todo
+                                null // todo
+                            )
+
+                        }
+                    }
+
+                station?.let { itInternalStation ->
+
+                    val stationIds: EvaIds? = stationViewModel.stationResource.data.value?.evaIds
+                    val itIsThisStation = stationIds?.ids?.contains(itInternalStation.id) ?: false
+
+                    if (!itIsThisStation) {
+
+                        val title = "Öffne " + journeyStop.name
+                        val message = "Sie werden zur ausgewählten Station weitergeleitet"
+                        val builder: android.app.AlertDialog.Builder =
+                            android.app.AlertDialog.Builder(context, R.style.App_Dialog_Theme)
+                        builder.setMessage(message)
+
+                            .setTitle(title)
+                            .setCancelable(false)
+                            .setPositiveButton(
+                                "Öffnen",
+                                DialogInterface.OnClickListener { dialog, id ->
+
+                                    stationSearchViewModel.searchResource.query =
+                                        journeyStop.name // todo (nach evaId suchen)
+
+                                    stationSearchViewModel.searchResource.data.observe(
+                                        viewLifecycleOwner
+                                    ) { stations ->
+
+                                        stations?.first()?.asInternalStation?.let { itFoundStation ->
+
+                                            TrackingManager.fromActivity(activity).track(
+                                                TrackingManager.TYPE_ACTION,
+                                                TrackingManager.Screen.H2,
+                                                "journey",
+                                                "openstation"
+                                            )
+
+                                            val intent: Intent =
+                                                StationActivity.createIntent(
+                                                    view.context,
+                                                    itFoundStation,
+                                                    false
+                                                )
+
+                                            activity?.let {
+                                                it.finish()
+                                                it.startActivity(intent)
+                                            }
+
+                                        }
+
+                                    }
+
+                                })
+                            .setNegativeButton(
+                                R.string.dlg_cancel,
+                                DialogInterface.OnClickListener { dialog, id ->
+                                })
+                        builder.create().show()
+                    }
+                }
+                }
+
+
             val filterAdapter = SimpleViewHolderAdapter { parent, _ ->
                 ItemJourneyFilterRemoveBinding.inflate(
                     inflater,
@@ -107,6 +208,8 @@ class RegularJourneyContentFragment : Fragment() {
 
                     filterAdapter.count = if (filtered) 1 else 0
                     journeyAdapter.submitList(journeyStops)
+
+                    this@RegularJourneyContentFragment.journeyStops = journeyStops
 
                     // hide buttonWagonOrder if Endbahnhof
                     if(journeyStops.firstOrNull() { it.current && it.last }!=null) {
