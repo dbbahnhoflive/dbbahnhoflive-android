@@ -59,10 +59,10 @@ class StopPlaceSearchResult(
     }
 
     override fun onClick(context: Context, details: Boolean) {
+        recentSearchesStore.put(internalStation)
         val intent =
             StationActivity.createIntent(context, internalStation, details)
         context.startActivity(intent)
-        recentSearchesStore.put(internalStation)
     }
 
     override fun isLocal(): Boolean {
