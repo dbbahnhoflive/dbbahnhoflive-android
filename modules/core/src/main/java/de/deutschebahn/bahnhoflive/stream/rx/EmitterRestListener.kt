@@ -15,7 +15,7 @@ import io.reactivex.MaybeEmitter
  * `null` values (`null` is interpreted as en empty stream).
  */
 class EmitterRestListener<T>(private val emitter: MaybeEmitter<T>) : VolleyRestListener<T> {
-    override fun onSuccess(payload: T?) {
+    override fun onSuccess(payload: T) {
         payload?.let { emitter.onSuccess(it) } ?: emitter.onComplete()
     }
 
