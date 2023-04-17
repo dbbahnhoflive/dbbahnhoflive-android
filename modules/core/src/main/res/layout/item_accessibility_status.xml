@@ -1,10 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+
     android:minHeight="?android:attr/listPreferredItemHeight"
     android:orientation="vertical"
-    android:layout_marginStart="@dimen/default_space"
-    android:layout_marginEnd="@dimen/default_space"
+    android:layout_marginHorizontal="@dimen/default_space"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:focusable="true">
@@ -14,10 +15,40 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:gravity="center_vertical|start"
-        android:padding="@dimen/default_space"
-        android:layout_marginTop="@dimen/default_space"
-        android:layout_marginBottom="@dimen/default_space"
+        android:paddingVertical="@dimen/default_space"
         tools:text="@tools:sample/lorem" />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:layout_marginBottom="@dimen/default_space"
+        >
+
+        <ImageView
+            android:id="@+id/statusImage"
+            android:layout_width="16dp"
+            android:layout_height="16dp"
+
+            android:src="@drawable/app_check"
+            android:layout_gravity="center"
+            />
+
+        <TextView
+            android:id="@+id/statusText"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="@dimen/default_space_half"
+            android:gravity="center_vertical"
+            android:textSize="@dimen/textsize_h3plus"
+            tools:text="@tools:sample/lorem"
+            tools:textColor="@color/green"
+            />
+
+    </LinearLayout>
+
+
+
 
     <include layout="@layout/include_divider" />
 </LinearLayout>

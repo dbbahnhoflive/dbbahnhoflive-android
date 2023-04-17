@@ -30,7 +30,7 @@ class AccessibilityFragment : Fragment(R.layout.fragment_accessibility), MapPres
 
     val viewModel by activityViewModels<StationViewModel>()
 
-    lateinit var includeAccessibilityHeaderBinding: IncludeAccessibilityHeaderBinding
+    private lateinit var includeAccessibilityHeaderBinding: IncludeAccessibilityHeaderBinding
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
@@ -131,9 +131,13 @@ class AccessibilityFragment : Fragment(R.layout.fragment_accessibility), MapPres
                 includeAccessibilityHeaderBinding.selectedPlatform.text = "Gleis ${platform.name}"
                 includeAccessibilityHeaderBinding.filter.filter.isSelected = true
                 includeAccessibilityHeaderBinding.selectPlatformInvitation.visibility = View.GONE
-                accessibilityAdapter.submitList(platform.accessibility.filter { accessibility ->
-                    accessibility.component2() == AccessibilityStatus.AVAILABLE
-                }.toList())
+
+//                accessibilityAdapter.submitList(platform.accessibility.filter { accessibility ->
+//                    accessibility.component2() == AccessibilityStatus.AVAILABLE
+//                }.toList())
+
+                accessibilityAdapter.submitList(platform.accessibility.toList())
+
             } ?: kotlin.run {
                 if (!platformsAndSelection?.first.isNullOrEmpty()) {
                     includeAccessibilityHeaderBinding.selectedPlatform.text =

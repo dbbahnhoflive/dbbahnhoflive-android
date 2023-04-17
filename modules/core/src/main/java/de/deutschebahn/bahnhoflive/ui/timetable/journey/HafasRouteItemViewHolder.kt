@@ -4,15 +4,9 @@ import android.graphics.Typeface
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.TextView
-import androidx.core.view.isGone
 import de.deutschebahn.bahnhoflive.databinding.ItemJourneyBinding
-import de.deutschebahn.bahnhoflive.databinding.ItemJourneyDetailedBinding
-import de.deutschebahn.bahnhoflive.ui.Status
 import de.deutschebahn.bahnhoflive.ui.ViewHolder
 import de.deutschebahn.bahnhoflive.ui.timetable.RouteStop
-import java.text.DateFormat
-import java.util.concurrent.TimeUnit
 
 class HafasRouteItemViewHolder(val itemJourneyBinding: ItemJourneyBinding) :
     ViewHolder<RouteStop>(itemJourneyBinding.root) {
