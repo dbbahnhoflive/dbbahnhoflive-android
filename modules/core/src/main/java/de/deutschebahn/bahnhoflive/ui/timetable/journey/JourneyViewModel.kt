@@ -82,8 +82,12 @@ class JourneyViewModel(app: Application, savedStateHandle: SavedStateHandle) :
                             trainInfo.trainGenericName,
                             object : VolleyRestListener<List<JourneyStop>> {
                                 override fun onSuccess(payload: List<JourneyStop>) {
-                                    value = Result.success(payload)
+                                    value = if (payload == null) {
+                                    Result.failure(Exception("Result was empty"))
+                                } else {
+                                    Result.success(payload)
                                 }
+                            }
 
                                 override fun onFail(reason: VolleyError) {
                                     value = Result.failure(reason)

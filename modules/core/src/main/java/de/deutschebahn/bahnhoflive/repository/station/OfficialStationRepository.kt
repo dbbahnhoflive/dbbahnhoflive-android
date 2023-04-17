@@ -12,14 +12,12 @@ import de.deutschebahn.bahnhoflive.analytics.TrackingManager
 import de.deutschebahn.bahnhoflive.backend.RestHelper
 import de.deutschebahn.bahnhoflive.backend.VolleyRestListener
 import de.deutschebahn.bahnhoflive.backend.db.DbAuthorizationTool
-import de.deutschebahn.bahnhoflive.backend.db.ris.RISPlatformsRequest
-import de.deutschebahn.bahnhoflive.backend.db.ris.RISStationsLocalServicesRequest
-import de.deutschebahn.bahnhoflive.backend.db.ris.RISStationsStationRequest
-import de.deutschebahn.bahnhoflive.backend.db.ris.RISStationsStopPlacesRequest
+import de.deutschebahn.bahnhoflive.backend.db.ris.*
 import de.deutschebahn.bahnhoflive.backend.db.ris.model.LocalServices
 import de.deutschebahn.bahnhoflive.backend.db.ris.model.Platform
 import de.deutschebahn.bahnhoflive.backend.db.ris.model.RISStation
 import de.deutschebahn.bahnhoflive.backend.db.ris.model.StopPlace
+import de.deutschebahn.bahnhoflive.repository.InternalStation
 import de.deutschebahn.bahnhoflive.util.Cancellable
 import de.deutschebahn.bahnhoflive.util.volley.VolleyRequestCancellable
 import de.deutschebahn.bahnhoflive.util.volley.cancellable
@@ -113,6 +111,29 @@ class OfficialStationRepository(
             )
         ).cancellable()
 
+    override fun queryStationByEvaId(
+        listener: VolleyRestListener<InternalStation?>,
+        evaId: String
+    ) = restHelper
+        .add(
+            RISStationsStopPlacesRequestByEvaId(
+                object :
+                    VolleyRestListener<InternalStation?> {
+                    override fun onSuccess(payload: InternalStation?) {
+                        listener.onSuccess(payload)
+                    }
+
+                    override fun onFail(reason: VolleyError) {
+                        listener.onFail(reason)
+                    }
+
+                },
+                dbAuthorizationTool,
+                evaId
+            )
+        )
+        .cancellable()
+
 
     override fun queryAccessibilityDetails(
         listener: VolleyRestListener<List<Platform>>,
@@ -125,5 +146,6 @@ class OfficialStationRepository(
             )
         )
         .cancellable()
+
 
 }

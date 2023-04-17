@@ -1,10 +1,11 @@
 package de.deutschebahn.bahnhoflive.ui.timetable.journey
 
+import android.view.View
 import android.view.ViewGroup
 import de.deutschebahn.bahnhoflive.view.BaseListAdapter
 import de.deutschebahn.bahnhoflive.view.ListViewHolderDelegate
 
-class JourneyAdapter : BaseListAdapter<JourneyStop, JourneyItemViewHolder>(
+class JourneyAdapter(onClickStop: (view: View, journeyStop : JourneyStop)->Unit) : BaseListAdapter<JourneyStop, JourneyItemViewHolder>(
     object : ListViewHolderDelegate<JourneyStop, JourneyItemViewHolder> {
         override fun onCreateViewHolder(
             parent: ViewGroup,
@@ -17,7 +18,11 @@ class JourneyAdapter : BaseListAdapter<JourneyStop, JourneyItemViewHolder>(
             position: Int
         ) {
             holder.bind(item)
+            holder.itemView.setOnClickListener {
+                onClickStop(it, item)
         }
+        }
+
     }) {
 
 }

@@ -1,5 +1,6 @@
 package de.deutschebahn.bahnhoflive.repository.timetable
 
+import android.util.Log
 import com.android.volley.VolleyError
 import de.deutschebahn.bahnhoflive.backend.RestHelper
 import de.deutschebahn.bahnhoflive.backend.VolleyRestListener
@@ -72,15 +73,20 @@ open class RisTimetableRepository(
                 dbAuthorizationTool,
                 object : VolleyRestListener<DepartureMatches> {
                     override fun onSuccess(payload: DepartureMatches) {
-                        payload.journeys.also {
-                            JourneyDetailsFetcher(
-                                listener,
-                                evaIds,
-                                scheduledTime,
-                                trainEvent,
-                                it,
-                                tryYesterdayListener
-                            ).processPendingJourney()
+                        try {
+                            payload.journeys.also {
+                                    JourneyDetailsFetcher(
+                                        listener,
+                                        evaIds,
+                                        scheduledTime,
+                                        trainEvent,
+                                        it,
+                                        tryYesterdayListener
+                                    ).processPendingJourney()
+                                }
+                    }
+                        catch(e: Exception) {
+                            Log.d("cr", e.message.toString())
                         }
                     }
 

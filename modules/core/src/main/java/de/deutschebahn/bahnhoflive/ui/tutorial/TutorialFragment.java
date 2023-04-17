@@ -150,12 +150,17 @@ public class TutorialFragment extends Fragment implements TransitionViewProvider
 
     @Override
     public View getPinView() {
-        return getView().findViewById(R.id.pin_icon);
+        View view = getView();
+        if(view!=null) return view.findViewById(R.id.pin_icon);
+        return null;
     }
 
     @Override
     public View getHomeLogoView() {
-        return getView().findViewById(R.id.header_background);
+        View view = getView();
+        if(view!=null)
+         return view.findViewById(R.id.header_background);
+        return null;
     }
 
     public static boolean isPending(Context context) {

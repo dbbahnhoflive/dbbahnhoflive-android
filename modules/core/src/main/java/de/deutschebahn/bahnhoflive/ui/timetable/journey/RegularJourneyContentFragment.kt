@@ -2,6 +2,8 @@ package de.deutschebahn.bahnhoflive.ui.timetable.journey
 
 import android.app.AlertDialog
 import android.app.ProgressDialog
+import android.content.DialogInterface
+import android.content.Intent
 import android.os.Bundle
 import android.util.Log
 import android.view.LayoutInflater
@@ -9,24 +11,33 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.core.view.isGone
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.FragmentActivity
 import androidx.fragment.app.activityViewModels
 import androidx.fragment.app.viewModels
 import androidx.recyclerview.widget.ConcatAdapter
 import com.android.volley.VolleyError
+import de.deutschebahn.bahnhoflive.BaseApplication.Companion.get
 import de.deutschebahn.bahnhoflive.R
 import de.deutschebahn.bahnhoflive.analytics.TrackingManager
 import de.deutschebahn.bahnhoflive.backend.BaseRestListener
+import de.deutschebahn.bahnhoflive.backend.VolleyRestListener
+import de.deutschebahn.bahnhoflive.backend.hafas.model.HafasStop
+import de.deutschebahn.bahnhoflive.backend.local.model.EvaIds
 import de.deutschebahn.bahnhoflive.backend.ris.model.TrainEvent
 import de.deutschebahn.bahnhoflive.backend.ris.model.TrainInfo
+import de.deutschebahn.bahnhoflive.backend.toHafasStation
 import de.deutschebahn.bahnhoflive.backend.wagenstand.WagenstandRequestManager
 import de.deutschebahn.bahnhoflive.databinding.FragmentJourneyRegularContentBinding
 import de.deutschebahn.bahnhoflive.databinding.ItemJourneyFilterRemoveBinding
+import de.deutschebahn.bahnhoflive.repository.InternalStation
 import de.deutschebahn.bahnhoflive.repository.Station
 import de.deutschebahn.bahnhoflive.repository.trainformation.TrainFormation
+import de.deutschebahn.bahnhoflive.ui.station.StationActivity
 import de.deutschebahn.bahnhoflive.ui.station.StationViewModel
 import de.deutschebahn.bahnhoflive.ui.station.timetable.IssueIndicatorBinder
 import de.deutschebahn.bahnhoflive.ui.station.timetable.IssuesBinder
 import de.deutschebahn.bahnhoflive.ui.station.timetable.TimetableViewHelper
+import de.deutschebahn.bahnhoflive.ui.timetable.localtransport.DeparturesActivity
 import de.deutschebahn.bahnhoflive.view.SimpleViewHolderAdapter
 import de.deutschebahn.bahnhoflive.view.toViewHolder
 
@@ -35,6 +46,85 @@ class RegularJourneyContentFragment : Fragment() {
     val stationViewModel: StationViewModel by activityViewModels()
 
     val journeyViewModel: JourneyViewModel by viewModels({ requireParentFragment() })
+
+
+    private fun xxopenJourneyStopStation(view:View, journeyStop : JourneyStop) {
+
+        val wantedEvaId: String? =
+
+            if (journeyStop.departure != null) {
+                journeyStop.departure?.evaNumber
+            } else
+                if (journeyStop.arrival != null) {
+                    journeyStop.arrival?.evaNumber
+                } else
+                    null
+
+        wantedEvaId?.let { itEvaId ->
+
+            val stationIds: EvaIds? = stationViewModel.stationResource.data.value?.evaIds
+            val itIsThisStation = stationIds?.ids?.contains(itEvaId) ?: false
+            val evaId = journeyStop.arrival?.evaNumber ?: journeyStop.departure?.evaNumber
+
+            if (!itIsThisStation && evaId != null) {
+
+                val title = "Öffne " + journeyStop.name
+                val message = "Sie werden zur ausgewählten Station weitergeleitet"
+                val builder: AlertDialog.Builder =
+                    AlertDialog.Builder(context, R.style.App_Dialog_Theme)
+
+                builder.setMessage(message)
+                    .setTitle(title)
+                    .setCancelable(false)
+                    .setPositiveButton(
+                        "Öffnen",
+                        DialogInterface.OnClickListener { dialog, id ->
+
+                            get().applicationServices.repositories.stationRepository.queryStationByEvaId(
+                                object : VolleyRestListener<InternalStation?> {
+
+                                    @Synchronized
+                                    override fun onSuccess(payload: InternalStation?) {
+
+                                        if (payload != null) {
+                                            TrackingManager.fromActivity(activity).track(
+                                                TrackingManager.TYPE_ACTION,
+                                                TrackingManager.Screen.H2,
+                                                "journey",
+                                                "openstation"
+                                            )
+
+                                            val intent: Intent =
+                                                StationActivity.createIntent(
+                                                    view.context,
+                                                    payload,
+                                                    false
+                                                )
+
+                                            activity?.let {
+                                                it.finish()
+                                                it.startActivity(intent)
+                                            }
+                                        }
+                                    }
+
+                                    @Synchronized
+                                    override fun onFail(reason: VolleyError) {
+                                    }
+                                },
+                                evaId
+                            )
+
+                        })
+                    .setNegativeButton(
+                        R.string.dlg_cancel,
+                        DialogInterface.OnClickListener { dialog, id ->
+                        })
+                builder.create().show()
+            }
+        }
+
+    }
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -46,6 +136,7 @@ class RegularJourneyContentFragment : Fragment() {
             IssuesBinder(issueContainer, issueText, IssueIndicatorBinder(issueIcon))
 
         var shouldOfferWagenOrder = false
+
 
         journeyViewModel.essentialParametersLiveData.observe(viewLifecycleOwner) { (station, trainInfo, trainEvent) ->
 
@@ -74,8 +165,6 @@ class RegularJourneyContentFragment : Fragment() {
                 }
             }
 
-
-
             if(journeyViewModel.showWagonOrderLiveData.value==true) {
                 journeyViewModel.showWagonOrderLiveData.value=false
                 trainInfo.let { it1 -> trainEvent?.let { it2 -> showWaggonOrder(it1, it2) } }
@@ -86,7 +175,10 @@ class RegularJourneyContentFragment : Fragment() {
         with(contentLayout) {
             prepareCommons(viewLifecycleOwner, stationViewModel, journeyViewModel)
 
-            val journeyAdapter = JourneyAdapter()
+            val journeyAdapter = JourneyAdapter { view, journeyStop ->
+                activity?.let { openJourneyStopStation(it,stationViewModel,view,journeyStop.evaId,journeyStop.name) }
+                                    }
+
             val filterAdapter = SimpleViewHolderAdapter { parent, _ ->
                 ItemJourneyFilterRemoveBinding.inflate(
                     inflater,
@@ -193,4 +285,102 @@ class RegularJourneyContentFragment : Fragment() {
         }
     }
 
+
+    companion object {
+
+        fun openJourneyStopStation(activity: FragmentActivity, stationViewModel: StationViewModel,
+                                   view: View, stopEvaId:String?, stopStationName:String?, hafasStop : HafasStop? = null) {
+
+            stopEvaId?.let {
+
+                val stationIds: EvaIds? = stationViewModel.stationResource.data.value?.evaIds
+                val itIsThisStation = stationIds?.ids?.contains(stopEvaId) ?: false
+
+                if (!itIsThisStation) {
+
+                    val title = "Öffne " + stopStationName
+                    val message = "Sie werden zur ausgewählten Station weitergeleitet"
+                    val builder: AlertDialog.Builder =
+                        AlertDialog.Builder(activity, R.style.App_Dialog_Theme)
+
+                    builder.setMessage(message)
+                        .setTitle(title)
+                        .setCancelable(false)
+                        .setPositiveButton(
+                            "Öffnen",
+                            DialogInterface.OnClickListener { dialog, id ->
+
+                                get().applicationServices.repositories.stationRepository.queryStationByEvaId(
+                                    object : VolleyRestListener<InternalStation?> {
+
+                                        @Synchronized
+                                        override fun onSuccess(payload: InternalStation?) {
+
+                                                TrackingManager.fromActivity(activity).track(
+                                                    TrackingManager.TYPE_ACTION,
+                                                    TrackingManager.Screen.H2,
+                                                    "journey",
+                                                    "openstation"
+                                                )
+
+                                            // payload=null, wenn station keine stadaId hat ! (meist ÖPNV)
+                                            // dann die normale Abfahrtstafel öffnen
+
+                                            var intent: Intent? = null
+
+                                            if (payload != null) {
+
+                                                intent = StationActivity.createIntent(
+                                                        view.context,
+                                                        payload,
+                                                        false
+                                                    )
+
+                                            } else {
+                                                hafasStop?.let {
+
+                                                    val hafasStation = it.toHafasStation()
+
+                                                    intent =
+                                                        DeparturesActivity.createIntent(
+                                                            view.context,
+                                                            hafasStation,
+                                                            null
+                                                        )
+
+                                                }
+                                            }
+
+                                            intent?.let {
+                                                activity.let {
+                                                    it.finish()
+                                                    it.startActivity(intent)
+                                                }
+                                            }
+
+
+
+                                        }
+
+                                        @Synchronized
+                                        override fun onFail(reason: VolleyError) {
+                                            Log.d("cr", reason.toString())
+                                        }
+                                    },
+                                    it
+                                )
+
+                            })
+                        .setNegativeButton(
+                            R.string.dlg_cancel,
+                            DialogInterface.OnClickListener { dialog, id ->
+                            })
+                    builder.create().show()
+                }
+            }
+
+        }
+
+
+    }
 }
