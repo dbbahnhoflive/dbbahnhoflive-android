@@ -1,41 +1,51 @@
 package de.deutschebahn.bahnhoflive.ui.timetable.localtransport
 
-import android.content.DialogInterface
 import android.content.Intent
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.view.accessibility.AccessibilityEvent
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.activityViewModels
 import de.deutschebahn.bahnhoflive.R
 import de.deutschebahn.bahnhoflive.backend.hafas.model.HafasEvent
+import de.deutschebahn.bahnhoflive.backend.hafas.model.HafasStop
 import de.deutschebahn.bahnhoflive.databinding.FragmentHafasJourneyBinding
-import de.deutschebahn.bahnhoflive.repository.InternalStation
 import de.deutschebahn.bahnhoflive.repository.localtransport.AnyLocalTransportInitialPoi
 import de.deutschebahn.bahnhoflive.ui.map.Content
 import de.deutschebahn.bahnhoflive.ui.map.InitialPoiManager
 import de.deutschebahn.bahnhoflive.ui.map.MapPresetProvider
 import de.deutschebahn.bahnhoflive.ui.map.content.rimap.RimapFilter
-import de.deutschebahn.bahnhoflive.ui.station.StationActivity
+import de.deutschebahn.bahnhoflive.ui.station.StationViewModel
 import de.deutschebahn.bahnhoflive.ui.timetable.RouteStop
 import de.deutschebahn.bahnhoflive.ui.timetable.journey.HafasRouteItemViewHolder
-import de.deutschebahn.bahnhoflive.ui.timetable.journey.JourneyStop
-import de.deutschebahn.bahnhoflive.util.TAG
+import de.deutschebahn.bahnhoflive.ui.timetable.journey.RegularJourneyContentFragment
 import de.deutschebahn.bahnhoflive.view.BaseListAdapter
 import de.deutschebahn.bahnhoflive.view.ListViewHolderDelegate
+
+class RouteStopConnector(val routeStop: RouteStop, val hafasStop: HafasStop)
 
 class HafasJourneyFragment() : Fragment()
     , MapPresetProvider
 {
+    val stationViewModel: StationViewModel by activityViewModels()
 
     lateinit var binding : FragmentHafasJourneyBinding
 
     var hafasEvent : HafasEvent? = null
-    var routeStops : ArrayList<RouteStop> = arrayListOf()
-    val adapter = HafasRouteAdapter { view, journeyStop ->
-        run {
-         // todo: later ?
+    var routeStops : ArrayList<RouteStopConnector> = arrayListOf()
+    val adapter = HafasRouteAdapter { view, stop ->
+        activity?.let {
+            RegularJourneyContentFragment.openJourneyStopStation(
+                it,
+                stationViewModel,
+                view,
+                stop.hafasStop.extId,
+                stop.hafasStop.name,
+                stop.hafasStop
+            )
         }
     }
 
@@ -77,24 +87,24 @@ class HafasJourneyFragment() : Fragment()
         hafasEvent = detailedHafasEvent.hafasEvent
 
         for (stop in hafasDetail.stops) {
-            routeStops.add(RouteStop(stop.name))
+            routeStops.add(RouteStopConnector(RouteStop(stop.name), stop))
         }
 
         if (routeStops.isNotEmpty()) {
             routeStops.first().apply {
-                isFirst = true
-                isCurrent = true
+                routeStop.isFirst = true
+                routeStop.isCurrent = true
             }
-            routeStops.last().isLast = true
+            routeStops.last().routeStop.isLast = true
         }
 
 
     }
 
 
-    inner class HafasRouteAdapter(onClickStop: (view: View, stop : RouteStop)->Unit)
-    : BaseListAdapter<RouteStop, HafasRouteItemViewHolder>(
-        object : ListViewHolderDelegate<RouteStop, HafasRouteItemViewHolder> {
+    inner class HafasRouteAdapter(onClickStop: (view: View, stop : RouteStopConnector)->Unit)
+    : BaseListAdapter<RouteStopConnector, HafasRouteItemViewHolder>(
+        object : ListViewHolderDelegate<RouteStopConnector, HafasRouteItemViewHolder> {
             override fun onCreateViewHolder(
                 parent: ViewGroup,
                 viewType: Int
@@ -102,7 +112,7 @@ class HafasJourneyFragment() : Fragment()
 
             override fun onBindViewHolder(
                 holder: HafasRouteItemViewHolder,
-                item: RouteStop,
+                item: RouteStopConnector,
                 position: Int
             ) {
                 holder.bind(item)

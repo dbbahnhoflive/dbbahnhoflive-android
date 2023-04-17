@@ -67,31 +67,18 @@ class FullJourneyContentFragment : Fragment() {
 
         prepareCommons(viewLifecycleOwner, stationViewModel, journeyViewModel)
 
-        recycler.adapter = JourneyAdapter { view, journeyStop ->
+        recycler.adapter =
 
-            journeyStop.departure?.let { itStopEvent ->
-
-                val station =
-                    InternalStation(
-                        itStopEvent.evaNumber,
-                        itStopEvent.name, null, null
-                    )
-
-
-                val intent: Intent =
-                    StationActivity.createIntent(
-                        view.context,
-                        station,
-                        false
-                    )
-
+            JourneyAdapter { view, journeyStop ->
                 activity?.let {
-                    it.finish()
-                    it.startActivity(intent)
+                    RegularJourneyContentFragment.openJourneyStopStation(
+                        it,
+                        stationViewModel,
+                        view,
+                        journeyStop.evaId,
+                        journeyStop.name
+                    )
                 }
-            }
-
-
         }.apply {
 
             journeyViewModel.journeysByRelationLiveData.observe(viewLifecycleOwner) {

@@ -4,18 +4,12 @@ import android.graphics.Typeface
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.TextView
-import androidx.core.view.isGone
 import de.deutschebahn.bahnhoflive.databinding.ItemJourneyBinding
-import de.deutschebahn.bahnhoflive.databinding.ItemJourneyDetailedBinding
-import de.deutschebahn.bahnhoflive.ui.Status
 import de.deutschebahn.bahnhoflive.ui.ViewHolder
-import de.deutschebahn.bahnhoflive.ui.timetable.RouteStop
-import java.text.DateFormat
-import java.util.concurrent.TimeUnit
+import de.deutschebahn.bahnhoflive.ui.timetable.localtransport.RouteStopConnector
 
-class HafasRouteItemViewHolder(val itemJourneyBinding: ItemJourneyBinding) :
-    ViewHolder<RouteStop>(itemJourneyBinding.root) {
+class HafasRouteItemViewHolder(private val itemJourneyBinding: ItemJourneyBinding) :
+    ViewHolder<RouteStopConnector>(itemJourneyBinding.root) {
 
     constructor(
         parent: ViewGroup,
@@ -28,19 +22,21 @@ class HafasRouteItemViewHolder(val itemJourneyBinding: ItemJourneyBinding) :
         )
     )
 
-    override fun onBind(item: RouteStop?) {
+    override fun onBind(item: RouteStopConnector?) {
         super.onBind(item)
 
         with(itemJourneyBinding) {
-            stopName.text = item?.name
 
-            val isLastOrFirst = item?.isLast == true || item?.isFirst == true
+            item?.routeStop.let {
+                stopName.text = it?.name
 
-            stopName.setTypeface(null, if(isLastOrFirst)Typeface.BOLD else Typeface.NORMAL)
-            upperTrack.visibility= if(item?.isFirst == true) View.GONE else View.VISIBLE
-            lowerTrack.visibility= if(item?.isLast == true) View.GONE else View.VISIBLE
+                val isLastOrFirst = it?.isLast == true || it?.isFirst == true
+
+                stopName.setTypeface(null, if (isLastOrFirst) Typeface.BOLD else Typeface.NORMAL)
+                upperTrack.visibility = if (it?.isFirst == true) View.GONE else View.VISIBLE
+                lowerTrack.visibility = if (it?.isLast == true) View.GONE else View.VISIBLE
             trackStop.isSelected = isLastOrFirst
-
+            }
         }
 
     }

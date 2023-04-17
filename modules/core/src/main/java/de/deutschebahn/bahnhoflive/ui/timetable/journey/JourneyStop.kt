@@ -19,5 +19,14 @@ class JourneyStop(
 
     val bestEffortArrival get() = arrival?.bestEffortTime
     val bestEffortDeparture get() = departure?.bestEffortTime
+
+    val evaId : String? =
+    if (departure != null) {
+        departure?.evaNumber
+    } else
+    if (arrival != null) {
+        arrival?.evaNumber
+    } else
+    null
 }
 

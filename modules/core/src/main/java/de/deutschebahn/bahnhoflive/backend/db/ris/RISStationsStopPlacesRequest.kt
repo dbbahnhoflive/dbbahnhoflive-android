@@ -32,12 +32,12 @@ class RISStationsStopPlacesRequest(
     private val collapseNeighbours: Boolean,
     private val pullUpFirstDbStation: Boolean,
     clientIdDbAuthorizationTool: DbAuthorizationTool?
-) : RISStationsRequest<List<StopPlace>>(
+) : RISStationsRequest<List<StopPlace>>( //         "https://apis.deutschebahn.com/db/apis/ris-stations/v1/$urlSuffix",
     "stop-places/" +
             (query?.trim()?.takeUnless { it.isEmpty() }
                 ?.let { "by-name/" + URLEncoder.encode(it, "UTF-8") }
-                ?: "by-position") + sequenceOf(
-        "size" to (limit).toString()
+                ?: "by-position")
+            + sequenceOf("size" to (limit).toString()
     ).let { sequence ->
         location?.let { location ->
             sequence.plus(
