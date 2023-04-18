@@ -23,12 +23,13 @@
         android:gravity="center"
         android:lines="1"
         android:padding="@dimen/default_space_half"
+        android:textSize="@dimen/textsize_h2"
         android:enabled="false"
         android:focusable="false"
-        android:textSize="@dimen/textsize_h2"
         tools:text="Title" />
 
     <ImageView
+        android:id="@+id/screen_red_line"
         android:layout_width="match_parent"
         android:layout_height="3dp"
         android:importantForAccessibility="no"

@@ -29,7 +29,8 @@ import de.deutschebahn.bahnhoflive.ui.map.MapPresetProvider
 import de.deutschebahn.bahnhoflive.ui.map.content.rimap.RimapFilter
 import de.deutschebahn.bahnhoflive.ui.station.HistoryFragment
 
-class HafasDeparturesFragment : RecyclerFragment<HafasDeparturesAdapter>(R.layout.recycler_linear_refreshable), HafasFilterDialogFragment.Consumer, MapPresetProvider {
+class HafasDeparturesFragment : RecyclerFragment<HafasDeparturesAdapter>(R.layout.recycler_linear_refreshable),
+    HafasFilterDialogFragment.Consumer, MapPresetProvider {
 
     private val restHelper = BaseApplication.get().restHelper
 
@@ -78,6 +79,9 @@ class HafasDeparturesFragment : RecyclerFragment<HafasDeparturesAdapter>(R.layou
                         // aufruf aus Favoriten OHNE vorher geladene Station !!!!!! (kein HistoryFragment)
                         // todo: besser Station ermitteln, laden, Abfahrtstafel laden, gewünschte ÖPNV-Haltestelle laden und dann
                         // das zugehörige HafasJourneyFragment anzeigen !
+
+//                        hafasJourneyFragment.binding
+                        hafasJourneyFragment.hideHeader=true
 
                         activity?.supportFragmentManager?.beginTransaction()
                         ?.replace(R.id.hafas_fragment_container, hafasJourneyFragment, HafasJourneyFragment.TAG)

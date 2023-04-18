@@ -2,7 +2,6 @@ package de.deutschebahn.bahnhoflive.ui.timetable.localtransport
 
 import android.content.Intent
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -36,6 +35,8 @@ class HafasJourneyFragment : Fragment()
     private val hafasStationViewModel : HafasTimetableViewModel by activityViewModels()
 
     lateinit var binding : FragmentHafasJourneyBinding
+
+    var hideHeader:Boolean=false
 
     var hafasEvent : HafasEvent? = null
     var routeStops : ArrayList<RouteStopConnector> = arrayListOf()
@@ -86,10 +87,11 @@ class HafasJourneyFragment : Fragment()
         if(hafasEvent!=null)
             binding.titleBar.screenTitle.setText(getString(R.string.template_hafas_journey_title, hafasEvent?.displayName, hafasEvent?.direction))
 
-        binding.titleBar.screenTitle.setOnClickListener {
-            Log.d("cr", "click")
-        }
 
+        if(hideHeader) {
+            binding.titleBar.screenTitle.visibility=View.GONE
+            binding.titleBar.screenRedLine.visibility=View.GONE
+        }
     }
 
     override fun prepareMapIntent(intent: Intent): Boolean {
