@@ -47,85 +47,6 @@ class RegularJourneyContentFragment : Fragment() {
 
     val journeyViewModel: JourneyViewModel by viewModels({ requireParentFragment() })
 
-
-    private fun xxopenJourneyStopStation(view:View, journeyStop : JourneyStop) {
-
-        val wantedEvaId: String? =
-
-            if (journeyStop.departure != null) {
-                journeyStop.departure?.evaNumber
-            } else
-                if (journeyStop.arrival != null) {
-                    journeyStop.arrival?.evaNumber
-                } else
-                    null
-
-        wantedEvaId?.let { itEvaId ->
-
-            val stationIds: EvaIds? = stationViewModel.stationResource.data.value?.evaIds
-            val itIsThisStation = stationIds?.ids?.contains(itEvaId) ?: false
-            val evaId = journeyStop.arrival?.evaNumber ?: journeyStop.departure?.evaNumber
-
-            if (!itIsThisStation && evaId != null) {
-
-                val title = "Öffne " + journeyStop.name
-                val message = "Sie werden zur ausgewählten Station weitergeleitet"
-                val builder: AlertDialog.Builder =
-                    AlertDialog.Builder(context, R.style.App_Dialog_Theme)
-
-                builder.setMessage(message)
-                    .setTitle(title)
-                    .setCancelable(false)
-                    .setPositiveButton(
-                        "Öffnen",
-                        DialogInterface.OnClickListener { dialog, id ->
-
-                            get().applicationServices.repositories.stationRepository.queryStationByEvaId(
-                                object : VolleyRestListener<InternalStation?> {
-
-                                    @Synchronized
-                                    override fun onSuccess(payload: InternalStation?) {
-
-                                        if (payload != null) {
-                                            TrackingManager.fromActivity(activity).track(
-                                                TrackingManager.TYPE_ACTION,
-                                                TrackingManager.Screen.H2,
-                                                "journey",
-                                                "openstation"
-                                            )
-
-                                            val intent: Intent =
-                                                StationActivity.createIntent(
-                                                    view.context,
-                                                    payload,
-                                                    false
-                                                )
-
-                                            activity?.let {
-                                                it.finish()
-                                                it.startActivity(intent)
-                                            }
-                                        }
-                                    }
-
-                                    @Synchronized
-                                    override fun onFail(reason: VolleyError) {
-                                    }
-                                },
-                                evaId
-                            )
-
-                        })
-                    .setNegativeButton(
-                        R.string.dlg_cancel,
-                        DialogInterface.OnClickListener { dialog, id ->
-                        })
-                builder.create().show()
-            }
-        }
-
-    }
-
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
@@ -176,8 +97,16 @@ class RegularJourneyContentFragment : Fragment() {
             prepareCommons(viewLifecycleOwner, stationViewModel, journeyViewModel)
 
             val journeyAdapter = JourneyAdapter { view, journeyStop ->
-                activity?.let { openJourneyStopStation(it,stationViewModel,view,journeyStop.evaId,journeyStop.name) }
-                                    }
+                activity?.let {
+                    openJourneyStopStation(
+                        it,
+                        view,
+                        stationViewModel.stationResource.data.value?.evaIds,
+                        journeyStop.evaId,
+                        journeyStop.name
+                    )
+                }
+            }
 
             val filterAdapter = SimpleViewHolderAdapter { parent, _ ->
                 ItemJourneyFilterRemoveBinding.inflate(
@@ -288,13 +217,14 @@ class RegularJourneyContentFragment : Fragment() {
 
     companion object {
 
-        fun openJourneyStopStation(activity: FragmentActivity, stationViewModel: StationViewModel,
-                                   view: View, stopEvaId:String?, stopStationName:String?, hafasStop : HafasStop? = null) {
+        fun openJourneyStopStation(activity: FragmentActivity,
+                                   view: View,
+                                   stationIds: EvaIds?,
+                                   stopEvaId:String?, stopStationName:String?, hafasStop : HafasStop? = null) {
 
             stopEvaId?.let {
 
-                val stationIds: EvaIds? = stationViewModel.stationResource.data.value?.evaIds
-                val itIsThisStation = stationIds?.ids?.contains(stopEvaId) ?: false
+                val itIsThisStation =  stationIds?.ids?.contains(stopEvaId) ?: false
 
                 if (!itIsThisStation) {
 

@@ -2,7 +2,6 @@ package de.deutschebahn.bahnhoflive.ui.timetable.localtransport
 
 import android.content.Intent
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -12,12 +11,14 @@ import androidx.fragment.app.activityViewModels
 import de.deutschebahn.bahnhoflive.R
 import de.deutschebahn.bahnhoflive.backend.hafas.model.HafasEvent
 import de.deutschebahn.bahnhoflive.backend.hafas.model.HafasStop
+import de.deutschebahn.bahnhoflive.backend.local.model.EvaIds
 import de.deutschebahn.bahnhoflive.databinding.FragmentHafasJourneyBinding
 import de.deutschebahn.bahnhoflive.repository.localtransport.AnyLocalTransportInitialPoi
 import de.deutschebahn.bahnhoflive.ui.map.Content
 import de.deutschebahn.bahnhoflive.ui.map.InitialPoiManager
 import de.deutschebahn.bahnhoflive.ui.map.MapPresetProvider
 import de.deutschebahn.bahnhoflive.ui.map.content.rimap.RimapFilter
+import de.deutschebahn.bahnhoflive.ui.station.StationActivity
 import de.deutschebahn.bahnhoflive.ui.station.StationViewModel
 import de.deutschebahn.bahnhoflive.ui.timetable.RouteStop
 import de.deutschebahn.bahnhoflive.ui.timetable.journey.HafasRouteItemViewHolder
@@ -27,25 +28,35 @@ import de.deutschebahn.bahnhoflive.view.ListViewHolderDelegate
 
 class RouteStopConnector(val routeStop: RouteStop, val hafasStop: HafasStop)
 
-class HafasJourneyFragment() : Fragment()
+class HafasJourneyFragment : Fragment()
     , MapPresetProvider
 {
-    val stationViewModel: StationViewModel by activityViewModels()
+    private val stationViewModel: StationViewModel by activityViewModels()
+    private val hafasStationViewModel : HafasTimetableViewModel by activityViewModels()
 
     lateinit var binding : FragmentHafasJourneyBinding
 
     var hafasEvent : HafasEvent? = null
     var routeStops : ArrayList<RouteStopConnector> = arrayListOf()
     val adapter = HafasRouteAdapter { view, stop ->
-        activity?.let {
-            RegularJourneyContentFragment.openJourneyStopStation(
-                it,
-                stationViewModel,
-                view,
-                stop.hafasStop.extId,
-                stop.hafasStop.name,
-                stop.hafasStop
-            )
+        run {
+
+            val evaIds: EvaIds? =
+            if (requireActivity() is StationActivity)
+                stationViewModel.stationResource.data.value?.evaIds
+            else
+                hafasStationViewModel.hafasStationResource?.data?.value?.getEvaIds()
+
+            activity?.let {
+                RegularJourneyContentFragment.openJourneyStopStation(
+                    it,
+                    view,
+                    evaIds,
+                    stop.hafasStop.extId,
+                    stop.hafasStop.name,
+                    stop.hafasStop
+                )
+            }
         }
     }
 
