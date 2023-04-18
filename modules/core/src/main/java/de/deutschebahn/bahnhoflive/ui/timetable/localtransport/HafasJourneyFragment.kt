@@ -2,6 +2,7 @@ package de.deutschebahn.bahnhoflive.ui.timetable.localtransport
 
 import android.content.Intent
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -43,21 +44,44 @@ class HafasJourneyFragment : Fragment()
     val adapter = HafasRouteAdapter { view, stop ->
         run {
 
-            val evaIds: EvaIds? =
+            var isThisStation=false
+
+            val evaIds: EvaIds?
+
             if (requireActivity() is StationActivity)
-                stationViewModel.stationResource.data.value?.evaIds
-            else
-                hafasStationViewModel.hafasStationResource?.data?.value?.getEvaIds()
+                evaIds = stationViewModel.stationResource.data.value?.evaIds
+            else {
+                evaIds = hafasStationViewModel.hafasStationResource?.data?.value?.getEvaIds()
+
+                val name = hafasStationViewModel.hafasStationResource?.data?.value?.name
+
+                // todo: id's different, but stations same
+                if (evaIds != null && name!=null) {
+                    if (stop.hafasStop.name.equals(name))
+                        isThisStation = true
+                }
+
+            }
+
+//            if (evaIds != null) {
+//                Log.d(
+//                    "cr",
+//                    "evaId-Station: ${evaIds.ids[0]}, eva-Id:Stop: ${stop.hafasStop.extId}, ${stop.hafasStop.name}  "
+//                )
+//            } else
+//                Log.d("cr", "evaId-Station: NULL")
+
 
             activity?.let {
-                RegularJourneyContentFragment.openJourneyStopStation(
-                    it,
-                    view,
-                    evaIds,
-                    stop.hafasStop.extId,
-                    stop.hafasStop.name,
-                    stop.hafasStop
-                )
+                if (!isThisStation)
+                    RegularJourneyContentFragment.openJourneyStopStation(
+                        it,
+                        view,
+                        evaIds,
+                        stop.hafasStop.extId,
+                        stop.hafasStop.name,
+                        stop.hafasStop
+                    )
             }
         }
     }
