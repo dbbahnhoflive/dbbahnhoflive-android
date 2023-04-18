@@ -36,6 +36,8 @@ class HafasJourneyFragment : Fragment()
 
     lateinit var binding : FragmentHafasJourneyBinding
 
+    var hideHeader:Boolean=false
+
     var hafasEvent : HafasEvent? = null
     var routeStops : ArrayList<RouteStopConnector> = arrayListOf()
     val adapter = HafasRouteAdapter { view, stop ->
@@ -85,7 +87,13 @@ class HafasJourneyFragment : Fragment()
         binding.titleBar.screenTitle.sendAccessibilityEvent(AccessibilityEvent.TYPE_VIEW_FOCUSED)
 
         if(hafasEvent!=null)
-         binding.titleBar.screenTitle.setText(getString(R.string.template_hafas_journey_title, hafasEvent?.displayName, hafasEvent?.direction))
+            binding.titleBar.screenTitle.setText(getString(R.string.template_hafas_journey_title, hafasEvent?.displayName, hafasEvent?.direction))
+
+
+        if(hideHeader) {
+            binding.titleBar.screenTitle.visibility=View.GONE
+            binding.titleBar.screenRedLine.visibility=View.GONE
+        }
     }
 
     override fun onStop() {
