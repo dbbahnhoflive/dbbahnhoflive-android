@@ -36,6 +36,7 @@ import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 import de.deutschebahn.bahnhoflive.BaseActivity;
 import de.deutschebahn.bahnhoflive.BuildConfig;
@@ -622,10 +623,10 @@ public class StationActivity extends BaseActivity implements
     }
 
     private boolean exploitIntent(Intent intent) {
+
         station = intent.getParcelableExtra(ARG_STATION);
         if (station == null) {
             finish();
-
             return true;
         }
 
@@ -635,11 +636,14 @@ public class StationActivity extends BaseActivity implements
         }
         if (intent.hasExtra(ARG_TRAIN_INFO)) {
             TrainInfo trainInfo = intent.getParcelableExtra(ARG_TRAIN_INFO);
-            long creationTime = intent.getLongExtra(ARG_INTENT_CREATION_TIME, 0);
-            long timeDiff = Math.abs(System.currentTimeMillis()-creationTime);
+            final long creationTime = intent.getLongExtra(ARG_INTENT_CREATION_TIME, 0);
+            final long timeDiff = Math.abs(System.currentTimeMillis()-creationTime);
 
-            if(timeDiff<3L*1000L)
+            final int isNotification = intent.getIntExtra("IS_NOTIFICATION", 0);
+
+            if(timeDiff<3L*1000L || isNotification==1 ) {
               stationViewModel.showWaggonOrder(trainInfo);
+            }
             else
                 Log.d("cr", "intent too old" );
         }
@@ -695,6 +699,7 @@ public class StationActivity extends BaseActivity implements
 
     @Override
     public void onBackPressed() {
+
         if (removeOverlayFragment()) {
             return;
         }

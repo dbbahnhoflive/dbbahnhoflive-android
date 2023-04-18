@@ -10,9 +10,11 @@ import android.content.Intent;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 
 import java.util.Objects;
 
+import de.deutschebahn.bahnhoflive.backend.ris.model.TrainInfo;
 import de.deutschebahn.bahnhoflive.repository.Station;
 import de.deutschebahn.bahnhoflive.repository.trainformation.TrainFormation;
 
@@ -29,8 +31,13 @@ public class WagenstandAlarm {
     final String stationId;
     final String stationTitle;
 
+
+    @Nullable
+    TrainInfo trainInfo;
+
     public WagenstandAlarm(TrainFormation trainFormation,
                            @NonNull String trainNumber,
+                           TrainInfo trainInfo,
                            String time,
                            String trainLabel,
                            String updateTimeStamp,
@@ -41,6 +48,7 @@ public class WagenstandAlarm {
         this.trainLabel = trainLabel;
         this.updateTimeStamp = updateTimeStamp;
 
+        this.trainInfo = trainInfo;
         stationId = station.getId();
         stationTitle = station.getTitle();
 
@@ -54,6 +62,7 @@ public class WagenstandAlarm {
         trainFormation = bundle.getParcelable("wagenstand");
         stationId = bundle.getString("station");
         stationTitle = bundle.getString("stationName");
+        trainInfo = bundle.getParcelable("trainInfo");
     }
 
     public static WagenstandAlarm from(Intent intent) {
@@ -70,6 +79,7 @@ public class WagenstandAlarm {
         bundle.putParcelable("wagenstand", trainFormation);
         bundle.putString("station", stationId);
         bundle.putString("stationName", stationTitle);
+        bundle.putParcelable("trainInfo", trainInfo);
 
         return bundle;
     }

@@ -74,6 +74,8 @@ public class WagenstandFragment extends Fragment implements View.OnLayoutChangeL
     private ListView waggonListview;
     private WagenstandSectionIndicator sectionIndicator;
 
+    @Nullable
+    private TrainInfo trainInfo;
     private TrainFormation trainFormation;
     private String title;
 
@@ -142,6 +144,8 @@ public class WagenstandFragment extends Fragment implements View.OnLayoutChangeL
             setTrainFormation(trainFormation);
             setTitle();
         }
+
+        trainInfo = args.getParcelable(ARG_TRAIN_INFO);
     }
 
     private void setTrainFormation(TrainFormation trainFormation) {
@@ -412,7 +416,7 @@ public class WagenstandFragment extends Fragment implements View.OnLayoutChangeL
 
                 if (isChecked) {
                     boolean success = wagenstandAlarmManager
-                            .addWagenstandAlarm(new WagenstandAlarm(trainFormation, trainNumber, time, trainLabel.toString(), timestamp, stationLiveData.getValue()));
+                            .addWagenstandAlarm(new WagenstandAlarm(trainFormation, trainNumber, trainInfo, time, trainLabel.toString(), timestamp, stationLiveData.getValue()));
 
                     if (!success) {
                         reminderCheckBox.setChecked(false);
