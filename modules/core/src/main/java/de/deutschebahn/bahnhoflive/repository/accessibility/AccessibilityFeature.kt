@@ -60,7 +60,11 @@ enum class AccessibilityFeature(
         "automaticDoor",
         R.string.accessibilityAutomaticDoor,
         R.string.accessibilityDescriptionAutomaticDoor
-    );
+    ),
+    BOARDING_AID(
+        "boardingAid",
+        R.string.accessibilityBoardingAid,
+        R.string.accessibilityDescriptionBoardingAid);
 
     companion object {
         val VALUES = values()
