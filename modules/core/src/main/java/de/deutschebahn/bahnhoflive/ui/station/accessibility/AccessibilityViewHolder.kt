@@ -44,9 +44,9 @@ class AccessibilityViewHolder(parent: ViewGroup) :
                 statusImage.setImageDrawable(ContextCompat.getDrawable(itemView.context, R.drawable.ic_unknown))
             }
             else-> {
-                //   NOT_APPLICABLE
-                statusView.text = ""
-                statusImage.setImageDrawable(null)
+                //   NOT_APPLICABLE ( per filter ausgeschlossen )
+//                statusView.text = ""
+//                statusImage.setImageDrawable(null)
 //                statusView.setCompoundDrawablesWithIntrinsicBounds(R.drawable.ic_unknown, 0, 0, 0)
             }
         }

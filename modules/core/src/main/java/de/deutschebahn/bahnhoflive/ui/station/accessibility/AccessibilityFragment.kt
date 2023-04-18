@@ -132,11 +132,11 @@ class AccessibilityFragment : Fragment(R.layout.fragment_accessibility), MapPres
                 includeAccessibilityHeaderBinding.filter.filter.isSelected = true
                 includeAccessibilityHeaderBinding.selectPlatformInvitation.visibility = View.GONE
 
-//                accessibilityAdapter.submitList(platform.accessibility.filter { accessibility ->
-//                    accessibility.component2() == AccessibilityStatus.AVAILABLE
-//                }.toList())
+                accessibilityAdapter.submitList(platform.accessibility.filter { accessibility ->
+                    accessibility.component2() != AccessibilityStatus.NOT_APPLICABLE
+                }.toList())
 
-                accessibilityAdapter.submitList(platform.accessibility.toList())
+//                accessibilityAdapter.submitList(platform.accessibility.toList())
 
             } ?: kotlin.run {
                 if (!platformsAndSelection?.first.isNullOrEmpty()) {
