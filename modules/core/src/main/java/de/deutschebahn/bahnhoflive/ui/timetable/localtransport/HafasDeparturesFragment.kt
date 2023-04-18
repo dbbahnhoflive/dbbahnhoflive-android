@@ -44,7 +44,7 @@ class HafasDeparturesFragment : RecyclerFragment<HafasDeparturesAdapter>(R.layou
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        adapter = HafasDeparturesAdapter(View.OnClickListener {
+        adapter = HafasDeparturesAdapter({
             trackingManager.track(
                 TrackingManager.TYPE_ACTION,
                 TrackingManager.Screen.H2,
@@ -58,7 +58,7 @@ class HafasDeparturesFragment : RecyclerFragment<HafasDeparturesAdapter>(R.layou
                 adapter?.getFilterOptions()
             )
             hafasFilterDialogFragment.show(childFragmentManager, "filter")
-        }, trackingManager, View.OnClickListener {
+        }, trackingManager, {
             hafasTimetableViewModel.loadMore()
         },
             hafasDataReceivedCallback = { view: View, details: DetailedHafasEvent ->

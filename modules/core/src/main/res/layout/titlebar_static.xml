@@ -23,6 +23,8 @@
         android:gravity="center"
         android:lines="1"
         android:padding="@dimen/default_space_half"
+        android:enabled="false"
+        android:focusable="false"
         android:textSize="@dimen/textsize_h2"
         tools:text="Title" />
 

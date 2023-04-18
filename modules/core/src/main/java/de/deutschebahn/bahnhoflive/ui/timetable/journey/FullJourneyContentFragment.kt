@@ -73,8 +73,8 @@ class FullJourneyContentFragment : Fragment() {
                 activity?.let {
                     RegularJourneyContentFragment.openJourneyStopStation(
                         it,
-                        stationViewModel.stationResource.data.value?.evaIds,
                         view,
+                        stationViewModel.stationResource.data.value?.evaIds,
                         journeyStop.evaId,
                         journeyStop.name
                     )
