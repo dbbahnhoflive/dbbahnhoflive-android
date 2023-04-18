@@ -63,8 +63,6 @@ class HafasJourneyFragment : Fragment()
     }
 
 
-    private var titleView : ViewGroup? = null
-
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
@@ -96,28 +94,13 @@ class HafasJourneyFragment : Fragment()
         }
     }
 
-    override fun onStop() {
-
-        titleView?.let {
-            it.visibility=View.VISIBLE
-        }
-
-        super.onStop()
-    }
-
     override fun prepareMapIntent(intent: Intent): Boolean {
         RimapFilter.putPreset(intent, RimapFilter.PRESET_LOCAL_TIMETABLE)
         InitialPoiManager.putInitialPoi(intent, Content.Source.RIMAP, AnyLocalTransportInitialPoi)
         return true
     }
 
-    fun onDataReceived(detailedHafasEvent : DetailedHafasEvent, titleView : ViewGroup?) {
-
-        this.titleView = titleView
-
-        titleView?.let {
-            it.visibility=View.GONE
-        }
+    fun onDataReceived(detailedHafasEvent : DetailedHafasEvent) {
 
         val hafasDetail = detailedHafasEvent.hafasDetail
         hafasEvent = detailedHafasEvent.hafasEvent
