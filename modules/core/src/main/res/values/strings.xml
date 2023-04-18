@@ -336,7 +336,7 @@
     <string name="accessibilityDescriptionStairsMarking">Die Kanten der Treppenstufen, mindestens der ersten und der letzten Stufe, sind kontrastreich markiert.</string>
     <string name="accessibilityDescriptionTactileHandrailLabel">Die Handläufe an den Treppen und Rampen zum Bahnsteig verfügen über ein Handlaufschild mit Kurzinformationen (z.B. zu Gleisen) in ertastbarer Schrift.</string>
     <string name="accessibilityDescriptionPlatformSign">Ein kontrastreiches und damit gut lesbares, modernes Wegeleitsystem ist vorhanden. (Gut erkennbare, kontrastreiche Schilder erleichtern die Orientierung. Dazu gehören blaue Schilder mit weißer oder gelber Schrift.)</string>
-    <string name="accessibilityDescriptionBoardingAid">Der Einstieg vom Bahnsteig in den Zug ist direkt (niveaugleich) oder über mobile Einstiegshilfen wie Hublifte oder mobile Rampen möglich. Unsere DB Service-Mitarbeiter und Mitarbeiterinnen sind speziell geschult, um mobilitätseingeschränkte Reisende beim Ein- und Aussteigen zu unterstützen.</string>
+    <string name="accessibilityDescriptionBoardingAid">Der Einstieg vom Bahnsteig in den Zug ist direkt oder über mobile Einstiegshilfen wie Hublifte oder mobile Rampen möglich. Unsere DB Service-Mitarbeiter und Mitarbeiterinnen sind speziell geschult, um mobilitätseingeschränkte Reisende beim Ein- und Aussteigen zu unterstützen.</string>
     <string name="accessibilityDescriptionAutomaticDoor">An diesem Bahnhof ist der Zugang zum Empfangsgebäude mit Automatiktüren ausgestattet.</string>
 
     <string name="accessibility_title">Barrierefreiheit</string>
