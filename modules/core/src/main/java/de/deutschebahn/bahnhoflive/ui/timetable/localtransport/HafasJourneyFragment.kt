@@ -42,7 +42,6 @@ class HafasJourneyFragment : Fragment()
             val evaIds = EvaIds(detailedHafasEvent?.hafasEvent?.stopExtId)
 
             activity?.let {
-                if (!isThisStation)
                     RegularJourneyContentFragment.openJourneyStopStation(
                         it,
                         view,
