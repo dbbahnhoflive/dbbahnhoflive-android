@@ -33,7 +33,7 @@ internal class FlyoutsAdapter(
         return when (contentViewType) {
             ViewType.STATION -> StationFlyoutViewHolder(parent, owner)
             ViewType.DB_STATION -> DbStationFlyoutViewHolder(parent, owner)
-            ViewType.BOOKMARKABLE -> ElevatorFlyoutViewHolder(parent, facilityPushManager)
+            ViewType.BOOKMARKABLE -> ElevatorFlyoutViewHolder(parent,  stationActivityStarter)
             ViewType.TRACK -> TrackFlyoutViewHolder(parent, mapViewModel)
             ViewType.RAIL_REPLACEMENT -> RailReplacementFlyoutViewHolder(
                 parent,

@@ -509,6 +509,18 @@ public class StationActivity extends BaseActivity implements
         }
     }
 
+    public void showElevators(boolean removeFeaturesFragment) {
+
+        if(removeFeaturesFragment)
+            removeFeaturesFragment();
+
+        showInfoFragment(false);
+
+        if (!ElevatorStatusListsFragment.Companion.getTAG().equals(stationViewModel.getTopInfoFragmentTag())) {
+            infoFragment.push(new ElevatorStatusListsFragment());
+        }
+    }
+
     void removeFeaturesFragment() {
         try {
             FragmentManager fm = overviewFragment.getChildFragmentManager();
@@ -602,6 +614,9 @@ public class StationActivity extends BaseActivity implements
                         break;
                     case DB_LOUNGE:
                         showInfo(ServiceContentType.Local.DB_LOUNGE, true);
+                        break;
+                    case ELEVATORS:
+                        showElevators(true);
                         break;
                     default:
                     case UNKNOWN:

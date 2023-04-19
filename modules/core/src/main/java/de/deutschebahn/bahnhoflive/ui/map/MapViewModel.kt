@@ -39,7 +39,8 @@ enum class EquipmentID(var code: Int) {
     DB_INFORMATION(3),
     RAILWAY_MISSION(4),
     DB_TRAVEL_CENTER(5),
-    DB_LOUNGE(6)
+    DB_LOUNGE(6),
+    ELEVATORS(7)
     ;
 }
 
