@@ -33,7 +33,7 @@ internal class FlyoutsAdapter(
         return when (contentViewType) {
             ViewType.STATION -> StationFlyoutViewHolder(parent, owner)
             ViewType.DB_STATION -> DbStationFlyoutViewHolder(parent, owner)
-            ViewType.BOOKMARKABLE -> ElevatorFlyoutViewHolder(parent, facilityPushManager)
+            ViewType.BOOKMARKABLE -> ElevatorFlyoutViewHolder(parent,  stationActivityStarter)
             ViewType.TRACK -> {
 //                startOrStopCyclicLoadingOfTimetable(mapViewModel.activeTimetableCollector, null, -1)
                 TrackFlyoutViewHolder(parent, mapViewModel, owner)
