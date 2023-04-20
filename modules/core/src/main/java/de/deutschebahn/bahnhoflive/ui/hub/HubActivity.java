@@ -176,8 +176,10 @@ public class HubActivity extends BaseActivity implements TutorialFragment.Host {
         @Override
     protected void onCreate(Bundle savedInstanceState) {
 
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
         SplashScreen.installSplashScreen(this);
-//        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+            } else
+                setTheme(R.style.App_Theme); // todo: google will remove support for 4.4 in 2023...
 //            setTheme(R.style.Theme_App_Starting);
 //            SplashScreen splashScreen = SplashScreen.installSplashScreen(this);
 //

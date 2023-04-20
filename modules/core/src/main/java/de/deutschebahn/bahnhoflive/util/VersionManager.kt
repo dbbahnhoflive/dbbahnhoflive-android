@@ -7,7 +7,9 @@ import android.content.pm.PackageManager
 import android.os.Build
 import de.deutschebahn.bahnhoflive.ui.accessibility.GlobalPreferences
 import de.deutschebahn.bahnhoflive.ui.accessibility.TrackingPreferences
-import java.time.LocalDate
+import java.text.SimpleDateFormat
+import java.util.Calendar
+import java.util.Locale
 
 
 class VersionManager private constructor(manager: PackageManager, packageName : String, val global_preferences:SharedPreferences, tracking_preferences:SharedPreferences) {
@@ -141,13 +143,14 @@ class VersionManager private constructor(manager: PackageManager, packageName : 
         val restartedDayCount = global_preferences.getInt("restartedDayCount", 0 )
         val lastDayStarted = global_preferences.getInt("lastStartedDay", 0 )
 
-        val today = LocalDate.now()
 
         val usageLastDateInFile : String = global_preferences.getString("UsageLastDate", "") ?: ""
         _usageCountDays = global_preferences.getInt("UsageCountDays", 0)
 
+        val cal = Calendar.getInstance()
+        val today = SimpleDateFormat("yyyy-MM-dd", Locale.GERMANY)
 //        val dayAsString = today.plusDays((_usageCountDays+1).toLong()).toString() // test only, simulate daychange every time the app restarts
-        val dayAsString = today.toString()
+        val dayAsString = today.format(cal.time)
 
         if(dayAsString != usageLastDateInFile) {
             _usageCountDays++
