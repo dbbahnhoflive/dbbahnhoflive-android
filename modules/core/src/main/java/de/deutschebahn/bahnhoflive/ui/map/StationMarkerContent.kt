@@ -44,12 +44,20 @@ internal class StationMarkerContent(private val station: Station, context: Conte
         return R.drawable.legacy_dbmappinicon
     }
 
-    override fun createMarkerOptions(): MarkerOptions? = super.createMarkerOptions()?.apply {
+    override fun createMarkerOptions(): MarkerOptions? {
+
+        var markerOptions = super.createMarkerOptions()?.apply {
         val location = station.location
         if (location != null) {
-            position(location)
+                try {
+                    position(location)  // can cause exception
+                } catch (e: Exception) {
+
+                }
         }
         zIndex(100f)
+        }
+        return markerOptions
     }
 
     override fun wraps(item: Parcelable?): Boolean {

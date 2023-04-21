@@ -177,7 +177,7 @@ public class HubActivity extends BaseActivity implements TutorialFragment.Host {
     protected void onCreate(Bundle savedInstanceState) {
 
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-        SplashScreen.installSplashScreen(this);
+                SplashScreen.installSplashScreen(this);
             } else
                 setTheme(R.style.App_Theme); // todo: google will remove support for 4.4 in 2023...
 //            setTheme(R.style.Theme_App_Starting);
@@ -206,17 +206,6 @@ public class HubActivity extends BaseActivity implements TutorialFragment.Host {
 
         DebugX.Companion.logIntent(this.getLocalClassName(), appIntent);
 
-//        if(iintent!=null)
-//            Log.d("cr", "start: intent-flag: " + String.format("0x%08X",iintent.getFlags()));
-//        else
-//            Log.d("cr", "start: intent-flag NULL");
-//
-//        if(savedInstanceState!=null)
-//            Log.d("cr", "start: savedInstanceState not null");
-//         else
-//            Log.d("cr", "start: savedInstanceState NULL");
-
-
         if (appIntent != null ) {
 
             if(!checkWagenstandNotificationBundle(appIntent)) {
@@ -226,7 +215,7 @@ public class HubActivity extends BaseActivity implements TutorialFragment.Host {
             }
 
         }
-/* cr: todo
+/* cr: todo (old splashscreen (for Android 4.4), google will remove support for android 4.4 in 2023...
 
         if (!splashWasSeen) {
             final FragmentManager fragmentManager = getSupportFragmentManager();

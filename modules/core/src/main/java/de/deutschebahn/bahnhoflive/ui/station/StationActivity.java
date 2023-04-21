@@ -125,7 +125,7 @@ public class StationActivity extends BaseActivity implements
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        DebugX.Companion.logIntent(this.getLocalClassName(), getIntent());
+        DebugX.Companion.logIntent("StationActivity:onCreate", getIntent());
 
         ViewModelProvider.AndroidViewModelFactory fac = new ViewModelProvider.AndroidViewModelFactory(getApplication()) {
             @NonNull
@@ -636,6 +636,8 @@ public class StationActivity extends BaseActivity implements
 
     private boolean exploitIntent(Intent intent) {
 
+        Log.d("cr", "StationActivity: exploitIntent");
+
         station = intent.getParcelableExtra(ARG_STATION);
         if (station == null) {
             finish();
@@ -797,6 +799,7 @@ public class StationActivity extends BaseActivity implements
     @Override
     protected void onNewIntent(Intent intent) {
         super.onNewIntent(intent);
+        DebugX.Companion.logIntent("StationActivity:onNewIntent", intent);
 
         exploitIntent(intent);
 
