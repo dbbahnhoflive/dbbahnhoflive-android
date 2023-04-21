@@ -101,9 +101,6 @@
       },
       {
         "title": "Ein -/ Ausgang",
-        "presets": [
-          "elevators"
-        ],
         "menucat": "Wegeleitung",
         "menusubcat": "Ein-/Ausgänge"
       }

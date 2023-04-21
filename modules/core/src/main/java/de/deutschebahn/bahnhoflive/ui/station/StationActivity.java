@@ -577,15 +577,39 @@ public class StationActivity extends BaseActivity implements
         }
     }
 
+
+    public Boolean isFragmentVisible(String tagName) {
+        FragmentManager fm = overviewFragment.getChildFragmentManager();
+
+        List<Fragment> fragments = fm.getFragments();
+        if(fragments != null){
+            for(Fragment fragment : fragments){
+                if(fragment != null && fragment.getTag()!=null && fragment.getTag().equals(tagName))
+                  return fragment.isVisible();
+            }
+        }
+        return false;
+    }
+
     public void showElevators(boolean removeFeaturesFragment) {
+
+        // can be opened from station
+        // can be opened from Bahnhofsausstattung (features)
+        // can be opened from info
+
+        if(isFragmentVisible(ElevatorStatusListsFragment.Companion.getTAG()))
+            return;
 
         if(removeFeaturesFragment)
             removeFeaturesFragment();
 
-        showInfoFragment(false);
+        showInfoFragment(true);
 
         if (!ElevatorStatusListsFragment.Companion.getTAG().equals(stationViewModel.getTopInfoFragmentTag())) {
             infoFragment.push(new ElevatorStatusListsFragment());
+        }
+        else {
+            Log.d("cr", "???");
         }
     }
 
