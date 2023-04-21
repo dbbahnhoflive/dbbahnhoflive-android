@@ -39,7 +39,12 @@ class HafasMarkerContent extends MarkerContent {
     public MarkerOptions createMarkerOptions() {
         final MarkerOptions markerOptions = super.createMarkerOptions();
 
-        markerOptions.position(getStation().getPosition());
+        try {
+            markerOptions.position(getStation().getPosition()); // can cause exception
+        }
+        catch(Exception e) {
+
+        }
 
         return markerOptions;
     }
