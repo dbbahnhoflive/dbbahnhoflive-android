@@ -30,9 +30,14 @@ public class FacilityStatusMarkerContent extends MarkerContent {
 
     @Override
     public MarkerOptions createMarkerOptions() {
-        return super.createMarkerOptions()
-                .position(facilityStatus.getPosition())
-                .visible(false);
+        MarkerOptions markerOptions = super.createMarkerOptions().visible(false);
+        try {
+            markerOptions.position(facilityStatus.getPosition()); // can cause exception
+        }
+        catch(Exception e) {
+
+        }
+        return markerOptions;
     }
 
     public FacilityStatus getFacilityStatus() {

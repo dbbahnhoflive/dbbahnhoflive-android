@@ -75,6 +75,12 @@ class MapConsentDialogFragment : DialogFragment() {
         dismiss()
     }
 
+    override fun onPause() {
+
+        dismiss()
+        super.onPause()
+    }
+
     fun setOnMapConsentDialogListener(_listener: OnMapConsentDialogListener) : MapConsentDialogFragment {
         listener = _listener
         return this

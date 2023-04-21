@@ -22,10 +22,19 @@ class ParkingFacilityMarkerContent(private val parkingFacility: ParkingFacility)
 
     override fun createMarkerOptions(): MarkerOptions? {
         val location = parkingFacility.location ?: return null
-        return super.createMarkerOptions()
-            ?.position(location)
+
+        val markerOptions : MarkerOptions? = super.createMarkerOptions()
             ?.zIndex(50f)
             ?.visible(true)
+
+        try {
+            markerOptions?.position(location) // can cause exception
+        }
+        catch(e:Exception) {
+
+        }
+
+        return markerOptions
     }
 
     override fun getMapIcon(): Int {
