@@ -597,6 +597,9 @@ public class StationActivity extends BaseActivity implements
         // can be opened from Bahnhofsausstattung (features)
         // can be opened from info
 
+
+//        Boolean isOnTop = ElevatorStatusListsFragment.Companion.getTAG().equals(stationViewModel.getTopInfoFragmentTag());
+
         if(isFragmentVisible(ElevatorStatusListsFragment.Companion.getTAG()))
             return;
 
@@ -605,12 +608,16 @@ public class StationActivity extends BaseActivity implements
 
         showInfoFragment(true);
 
-        if (!ElevatorStatusListsFragment.Companion.getTAG().equals(stationViewModel.getTopInfoFragmentTag())) {
+         // todo: figure out how to put an existing ElevatorStatusListsFragment into foreground
+
+//        if (ElevatorStatusListsFragment.Companion.getTAG().equals(stationViewModel.getTopInfoFragmentTag())) {
+        infoFragment.popEntireHistory();
             infoFragment.push(new ElevatorStatusListsFragment());
-        }
-        else {
-            Log.d("cr", "???");
-        }
+        Log.d("cr", "infoFragment.push(new ElevatorStatusListsFragment())");
+//        }
+//        else {
+//            Log.d("cr", "???");
+//        }
     }
 
     void removeFeaturesFragment() {
