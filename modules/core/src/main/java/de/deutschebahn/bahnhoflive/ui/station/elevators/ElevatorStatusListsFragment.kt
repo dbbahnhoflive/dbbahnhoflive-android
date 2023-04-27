@@ -66,7 +66,7 @@ class ElevatorStatusListsFragment : TwoTabsFragment(R.string.facilityStatus_over
 
         if (tutorial != null
             && versionManager.isUpdate()
-            && versionManager.actualVersion < VersionManager.SoftwareVersion("3.21.0")
+            && versionManager.lastVersion < VersionManager.SoftwareVersion("3.21.0")
             && !versionManager.pushWasEverUsed
         ) {
             tutorialManager.showTutorialIfNecessary(mTutorialView, tutorial.id)

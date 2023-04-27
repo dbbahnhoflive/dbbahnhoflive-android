@@ -12,7 +12,10 @@ import java.util.Calendar
 import java.util.Locale
 
 
-class VersionManager private constructor(manager: PackageManager, packageName : String, val global_preferences:SharedPreferences, tracking_preferences:SharedPreferences) {
+class VersionManager private constructor(private val manager: PackageManager,
+                                         private val packageName : String,
+                                         private val global_preferences:SharedPreferences,
+                                         private val tracking_preferences:SharedPreferences) {
 
     class SoftwareVersion(val versionName: String) : Comparable<SoftwareVersion> { // versionString can be rc3.20.1-demo or 3.20.1 or ...
 
@@ -30,7 +33,7 @@ class VersionManager private constructor(manager: PackageManager, packageName : 
 
         init {
             val parts = versionName.replace(Regex("[^0-9.]"), "").split(".")
-            if (parts.size == 3) {
+            if (parts.size >= 3) {
                 major = parts[0].toLongOrNull() ?: 0L
                 minor = parts[1].toLongOrNull() ?: 0L
                 patch = parts[2].toLongOrNull() ?: 0L
@@ -90,7 +93,8 @@ class VersionManager private constructor(manager: PackageManager, packageName : 
 
     fun isUpdate() : Boolean  {
         if(_isFreshInstallation) return false
-        return (_actualVersionFromFile.asVersionLong()!=0L) && _actualVersion != _actualVersionFromFile
+//        return (_actualVersionFromFile.asVersionLong()!=0L) && _actualVersion != _actualVersionFromFile
+        return ( _actualVersion != _actualVersionFromFile)
     }
 
     private var _isFreshInstallation : Boolean = false
@@ -105,6 +109,10 @@ class VersionManager private constructor(manager: PackageManager, packageName : 
     private var _pushTutorialGeneralShowCounter : Int = 0
 
     init {
+        doInit()
+    }
+
+    fun doInit() {
 
         // get actual version from package
         val packageInfo : PackageInfo? = getPackageInfoCompat(manager, packageName, PackageManager.GET_META_DATA)

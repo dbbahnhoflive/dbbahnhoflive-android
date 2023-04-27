@@ -294,7 +294,7 @@ public class StationActivity extends BaseActivity implements
                             int countPushTutorialGeneralSeen = versionManager.getPushTutorialGeneralShowCounter();
 
                             final boolean isUpdate = versionManager.isUpdate() &&
-                                    versionManager.getActualVersion().compareTo(new VersionManager.SoftwareVersion("3.21.0")) < 0;
+                                    versionManager.getLastVersion().compareTo(new VersionManager.SoftwareVersion("3.21.0")) < 0;
 
                             if ((countPushTutorialGeneralSeen == 0 && isUpdate) || ( (countPushTutorialGeneralSeen == 1) && (versionManager.getUsageCountDays() > 5)) ) {
                                 tutorialManager.showTutorialIfNecessary(mTutorialView, tutorial.id);
