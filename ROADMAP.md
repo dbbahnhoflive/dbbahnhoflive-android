@@ -4,7 +4,7 @@
 Diese Inhalte (Funktionen, Anpassungen, Erweiterungen) befinden sich derzeit in der Umsetzung oder sind bereits für die nächsten Release-Zyklen eingeplant.
 
 ##### Release 3.21.0 (Inhalte ohne Gewähr)
-• Push-Nachrichten für Statusänderungen von Aufzügen
+• AdHox-Box zur Kommunikation der Streckensperrung zwischen Nürnberg Hbf und Würzburg Hbf
 
 ##### Entwicklungsfelder
 Folgenden Themen werden als Entwicklungsfelder betrachtet und befinden sich entweder in der Ideenphase und unterliegen aktuell einer rechtlichen und/oder technischen Evaluation. Eine kurz- bis mittelfristige Umsetzung kann derzeit nicht garantiert werden.
