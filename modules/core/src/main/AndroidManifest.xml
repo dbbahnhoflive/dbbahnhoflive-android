@@ -96,6 +96,11 @@ xmlns:tools="http://schemas.android.com/tools"
         <meta-data
             android:name="io.sentry.auto-init"
             android:value="false" />
+
+        <meta-data
+            android:name="firebase_analytics_collection_deactivated"
+            android:value="true" />
+
     </application>
 
 </manifest>
