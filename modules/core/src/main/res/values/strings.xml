@@ -28,7 +28,7 @@
 
     <string name="settings_tracking_not_active_msg">Das Tracking ist derzeit nicht aktiviert. Möchten Sie die Datenerfassung erlauben?</string>
     <string name="settings_tracking_active_msg">Das Tracking ist derzeit aktiviert. Möchten Sie die Datenerfassung weiterhin erlauben?</string>
-    <string name="settings_tracking_dlg_title">"E-Tracker Analytics"</string>
+    <string name="settings_tracking_dlg_title">"Adobe-Tracker Analytics"</string>
 
     <string name="venue_open">Geöffnet</string>
     <string name="venue_closed">Geschlossen</string>
