@@ -47,7 +47,7 @@ class OfficialStationRepository(
             RISStationsStopPlacesRequest(
                 object :
                     VolleyRestListener<List<de.deutschebahn.bahnhoflive.backend.db.ris.model.StopPlace>> {
-                    override fun onSuccess(payload: List<de.deutschebahn.bahnhoflive.backend.db.ris.model.StopPlace>?) {
+                    override fun onSuccess(payload: List<de.deutschebahn.bahnhoflive.backend.db.ris.model.StopPlace>) {
                         listener.onSuccess(payload)
 
                         track("success")

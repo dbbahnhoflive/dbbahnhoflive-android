@@ -45,10 +45,10 @@ class StopPlaceSearchResult(
     }
 
     override fun onClick(context: Context, details: Boolean) {
+        recentSearchesStore.put(dbTimetableResource.internalStation)
         val intent =
             StationActivity.createIntent(context, dbTimetableResource.getInternalStation(), details)
         context.startActivity(intent)
-        recentSearchesStore.put(dbTimetableResource.internalStation)
     }
 
     override fun isLocal(): Boolean {

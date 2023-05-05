@@ -111,6 +111,7 @@ class GoogleMapsMapInterface extends MapInterface {
         }
 
         final Marker marker = markerBinder.getMarker();
+        try {
         if (marker != null) {
             final LatLngBounds bounds = null; // markerBinder.getBounds();
             final CameraUpdate cameraUpdate = bounds == null ?
@@ -128,6 +129,10 @@ class GoogleMapsMapInterface extends MapInterface {
 
                 }
             });
+            }
+        }
+        catch(Exception e) {
+
         }
     }
 

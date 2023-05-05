@@ -14,10 +14,19 @@ class RrtPointMarkerContent(
     val stationProvider: StationProvider
 ) : MarkerContent(R.drawable.rimap_sev_new) {
 
-    override fun createMarkerOptions(): MarkerOptions? = super.createMarkerOptions()?.run {
+    override fun createMarkerOptions(): MarkerOptions? {
+        var markerOptions: MarkerOptions? = super.createMarkerOptions()
+
+        try {
+            markerOptions?.run {
         rrtPoint.coordinates?.let {
-            position(it)
+                    position(it) // can cause exception
         }
+            }
+        } catch (e: Exception) {
+
+        }
+        return markerOptions
     }
 
     override fun getTitle(): String = "Schienenersatzverkehr"

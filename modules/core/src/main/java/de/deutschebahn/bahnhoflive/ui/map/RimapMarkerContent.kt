@@ -33,9 +33,15 @@ private val mapIcon: Int, @field:DrawableRes
     }
 
     override fun createMarkerOptions(): MarkerOptions? {
-        return super.createMarkerOptions()
-            ?.position(LatLng(rimapPOI.displayY, rimapPOI.displayX))
+        val markerOptions = super.createMarkerOptions()
             ?.visible(false)
+        try {
+            markerOptions?.position(LatLng(rimapPOI.displayY, rimapPOI.displayX)) // can cause exception
+        }
+        catch(e:Exception) {
+
+        }
+        return markerOptions
     }
 
     override fun acceptsZoom(zoom: Float): Boolean {

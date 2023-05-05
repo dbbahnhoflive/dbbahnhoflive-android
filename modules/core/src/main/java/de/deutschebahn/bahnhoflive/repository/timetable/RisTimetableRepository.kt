@@ -1,5 +1,6 @@
 package de.deutschebahn.bahnhoflive.repository.timetable
 
+import android.util.Log
 import com.android.volley.VolleyError
 import de.deutschebahn.bahnhoflive.backend.RestHelper
 import de.deutschebahn.bahnhoflive.backend.VolleyRestListener
@@ -71,16 +72,21 @@ open class RisTimetableRepository(
                 ),
                 dbAuthorizationTool,
                 object : VolleyRestListener<DepartureMatches> {
-                    override fun onSuccess(payload: DepartureMatches?) {
-                        payload?.journeys?.also {
-                            JourneyDetailsFetcher(
-                                listener,
-                                evaIds,
-                                scheduledTime,
-                                trainEvent,
-                                it,
-                                tryYesterdayListener
-                            ).processPendingJourney()
+                    override fun onSuccess(payload: DepartureMatches) {
+                        try {
+                            payload.journeys.also {
+                                    JourneyDetailsFetcher(
+                                        listener,
+                                        evaIds,
+                                        scheduledTime,
+                                        trainEvent,
+                                        it,
+                                        tryYesterdayListener
+                                    ).processPendingJourney()
+                                }
+                    }
+                        catch(e: Exception) {
+                            Log.d("cr", e.message.toString())
                         }
                     }
 
@@ -112,8 +118,8 @@ open class RisTimetableRepository(
                         it.journeyID,
                         dbAuthorizationTool,
                         object : VolleyRestListener<JourneyEventBased> {
-                            override fun onSuccess(payload: JourneyEventBased?) {
-                                payload?.apply {
+                            override fun onSuccess(payload: JourneyEventBased) {
+                                payload.apply {
                                     events.firstOrNull { arrivalDepartureEvent ->
                                         arrivalDepartureEvent.station.evaNumber in evaIds.ids
                                                 && arrivalDepartureEvent.eventType == trainEvent.correspondingEventType
@@ -155,7 +161,7 @@ open class RisTimetableRepository(
                                                 }
                                         }
                                     } ?: processPendingJourney()
-                                } ?: processPendingJourney()
+                                }
                             }
 
                             override fun onFail(reason: VolleyError) {

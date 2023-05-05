@@ -1291,7 +1291,7 @@ class StationViewModel(
                 application.appRepositories.newsRepository.queryNews(
                     stationId,
                     object : VolleyRestListener<List<News>> {
-                        override fun onSuccess(payload: List<News>?) {
+                        override fun onSuccess(payload: List<News>) {
                             value = payload
                         }
 
