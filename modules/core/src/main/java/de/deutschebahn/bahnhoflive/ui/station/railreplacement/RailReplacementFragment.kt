@@ -1,6 +1,7 @@
 package de.deutschebahn.bahnhoflive.ui.station.railreplacement
 
 import android.content.Intent
+import android.net.Uri
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -15,6 +16,7 @@ import de.deutschebahn.bahnhoflive.databinding.IncludeItemRailReplacementBinding
 import de.deutschebahn.bahnhoflive.ui.map.MapPresetProvider
 import de.deutschebahn.bahnhoflive.ui.map.content.rimap.RimapFilter
 import de.deutschebahn.bahnhoflive.ui.station.StationViewModel
+import de.deutschebahn.bahnhoflive.util.startSafely
 
 class RailReplacementFragment : Fragment(), MapPresetProvider {
 
@@ -30,8 +32,23 @@ class RailReplacementFragment : Fragment(), MapPresetProvider {
 
         contentList.removeAllViews()
 
+
         refresher.setOnRefreshListener {
             stationViewModel.railReplacementResource.load()
+        }
+
+        stationViewModel.newsLiveData.observe(viewLifecycleOwner) {
+            railReplacementNev.visibility = View.VISIBLE
+            railReplacementNev2.visibility = View.VISIBLE
+            linkReplacementTraffic.visibility = View.VISIBLE
+            linkReplacementTraffic.setOnClickListener {
+                context?.let { it1 ->
+                    Intent(
+                        Intent.ACTION_VIEW,
+                        Uri.parse("https://www.bahnhof.de/ersatzverkehr")
+                    ).startSafely(it1)
+                }
+            }
         }
 
         stationViewModel.railReplacementSummaryLiveData.observe(viewLifecycleOwner) {
@@ -72,9 +89,7 @@ class RailReplacementFragment : Fragment(), MapPresetProvider {
 
     }.root
 
-    companion object {
-        val TAG: String = RailReplacementFragment::class.java.simpleName
-    }
+
 
     override fun onStart() {
         super.onStart()
@@ -101,4 +116,9 @@ class RailReplacementFragment : Fragment(), MapPresetProvider {
 
         return true
     }
-}
+
+    companion object {
+        val TAG: String = RailReplacementFragment::class.java.simpleName
+    }
+
+ }

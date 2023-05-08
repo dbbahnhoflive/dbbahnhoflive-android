@@ -1401,4 +1401,8 @@ class StationViewModel(
             }
         }
     }
+
+    fun hasElevators() : Boolean = !elevatorsResource.data.value.isNullOrEmpty()
+    fun hasSEV() : Boolean = !railReplacementSummaryLiveData.value.isNullOrEmpty()
+
 }

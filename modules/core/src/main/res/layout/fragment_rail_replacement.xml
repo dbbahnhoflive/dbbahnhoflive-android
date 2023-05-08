@@ -9,6 +9,7 @@
 
 <androidx.coordinatorlayout.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/services_details_container"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
@@ -54,6 +55,17 @@
                 </FrameLayout>
 
                 <TextView
+                    android:id="@+id/rail_replacement_nev"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    tools:visibility="visible"
+                    android:visibility="gone"
+                    android:layout_marginTop="@dimen/default_space_double"
+                    android:layout_marginHorizontal="@dimen/default_space_double"
+                    android:text="Aufgrund von Bauarbeiten kommt es zwischen Würzburg und Nürnberg vom 26. Mai bis zum 11. September 2023 zu Einschränkungen im Zugverkehr.\n\nEin Ersatzverkehr mit Bussen ist eingerichtet."
+                    android:textSize="@dimen/textsize_28" />
+
+                <TextView
                     android:id="@+id/rail_replacement_entry_label"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
@@ -72,7 +84,36 @@
                     <include layout="@layout/include_item_rail_replacement" />
 
                     <include layout="@layout/include_item_rail_replacement" />
+
+
+
                 </LinearLayout>
+
+                <TextView
+                    android:id="@+id/rail_replacement_nev2"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    tools:visibility="visible"
+                    android:visibility="gone"
+                    android:layout_marginHorizontal="@dimen/default_space_double"
+                    android:text="Die Sanierung erfolgt in zwei Abschnitten. Zun�chst wird die Strecke zwischen Rottendorf und Neustadt (Aisch) Bahnhof vom 26. Mai bis 06. August 2023 f�r den Zugverkehr komplett gesperrt. Anschlie�end erfolgt eine Sperrung der Strecke zwischen Neustadt (Aisch) Bahnhof und F�rth Hauptbahnhof vom 06. August bis 11. September 2023. Durch die Sperrung in dem zweiten genannten Zeitraum erfolgt auf der Strecke Markt Erlbach � Siegelsdorf � F�rth Hauptbahnhof zudem ebenfalls kein Zugverkehr.\n\nAusf�hrlicher Information finden Sie auf bahnhof.de"
+                    android:textSize="@dimen/textsize_28" />
+
+                <TextView
+                    android:id="@+id/linkReplacementTraffic"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    tools:visibility="visible"
+                    android:visibility="gone"
+                    android:gravity="center_vertical"
+                    android:textStyle="bold"
+                    android:layout_marginTop="@dimen/default_space"
+                    android:layout_marginHorizontal="@dimen/default_space_double"
+                    android:text="bahnhof.de �ffnen"
+                    android:textSize="@dimen/textsize_28"
+                    android:drawablePadding="4dp"
+                    android:drawableTint="@android:color/holo_red_light"
+                    app:drawableLeftCompat="@drawable/app_extern_link" />
 
             </LinearLayout>
         </ScrollView>

@@ -49,6 +49,14 @@ class RegularJourneyContentFragment : Fragment() {
 
         journeyViewModel.essentialParametersLiveData.observe(viewLifecycleOwner) { (station, trainInfo, trainEvent) ->
 
+            sev.visibility = if(stationViewModel.hasSEV()) View.VISIBLE else View.GONE
+
+            sev.setOnClickListener{
+                stationViewModel.stationNavigation?.showRailReplacement()
+            }
+
+
+
             issueBinder.bindIssues(
                 trainInfo,
                 trainEvent.movementRetriever.getTrainMovementInfo(trainInfo)

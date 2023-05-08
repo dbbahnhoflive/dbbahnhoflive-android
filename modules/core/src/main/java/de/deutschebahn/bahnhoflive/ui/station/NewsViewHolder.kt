@@ -19,6 +19,10 @@ import de.deutschebahn.bahnhoflive.ui.ViewHolder
 import de.deutschebahn.bahnhoflive.ui.station.news.groupIcon
 import de.deutschebahn.bahnhoflive.view.ItemClickListener
 
+data class NewsHeadline(
+ var text : String
+)
+
 class NewsViewHolder(
     itemNewsBinding: ItemNewsBinding,
     itemClickListener: ItemClickListener<News?>? = null
@@ -29,12 +33,21 @@ class NewsViewHolder(
     val linkButton: View = itemNewsBinding.btnLink
     val iconView: ImageView = itemNewsBinding.icon
 
+    val newsTopHeadline : NewsHeadline = NewsHeadline("")
+
     init {
         itemClickListener?.also { itemClickListener ->
             itemNewsBinding.root.setOnClickListener {
                 itemClickListener(item, adapterPosition)
             }
         }
+
+        itemNewsBinding.line1.headline = newsTopHeadline
+        itemNewsBinding.line2.headline = newsTopHeadline
+        itemNewsBinding.line3.headline = newsTopHeadline
+        itemNewsBinding.line4.headline = newsTopHeadline
+        itemNewsBinding.line5.headline = newsTopHeadline
+        itemNewsBinding.line6.headline = newsTopHeadline
 
         itemNewsBinding.animatedHeadlineScroller.also { scroller ->
             val container = itemNewsBinding.animatedHeadlineContainer
@@ -106,6 +119,8 @@ class NewsViewHolder(
         newsHeadline.text = item?.title
 
         newsCopy.text = item?.summary
+
+        newsTopHeadline.text = item?.group?.title?:""
 
         iconView.setImageResource(item?.groupIcon()?.icon ?: 0)
     }

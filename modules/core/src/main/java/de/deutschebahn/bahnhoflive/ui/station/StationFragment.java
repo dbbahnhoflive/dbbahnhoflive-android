@@ -495,6 +495,10 @@ public class StationFragment extends androidx.fragment.app.Fragment implements
                     stationNavigation.showShopsFragment();
                     stationViewModel.getSelectedNews().setValue(news);
                 } else {
+                    if(GroupId.REPLACEMENT_ANNOUNCEMENT.appliesTo(news) || GroupId.REPLACEMENT.appliesTo(news)) {
+                        stationNavigation.showRailReplacement();
+                    }
+                    else
                     stationNavigation.showNewsDetails(index);
                 }
             }

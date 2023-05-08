@@ -32,17 +32,17 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content">
 
-                <include layout="@layout/item_news_headline" />
+                <include android:id="@+id/line1"  layout="@layout/item_news_headline" />
 
-                <include layout="@layout/item_news_headline" />
+                <include android:id="@+id/line2" layout="@layout/item_news_headline" />
 
-                <include layout="@layout/item_news_headline" />
+                <include android:id="@+id/line3" layout="@layout/item_news_headline" />
 
-                <include layout="@layout/item_news_headline" />
+                <include android:id="@+id/line4" layout="@layout/item_news_headline" />
 
-                <include layout="@layout/item_news_headline" />
+                <include android:id="@+id/line5" layout="@layout/item_news_headline" />
 
-                <include layout="@layout/item_news_headline" />
+                <include android:id="@+id/line6" layout="@layout/item_news_headline" />
             </LinearLayout>
         </de.deutschebahn.bahnhoflive.view.ProgrammaticHorozontalScrollView>
 
