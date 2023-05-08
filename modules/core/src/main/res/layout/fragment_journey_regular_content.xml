@@ -44,13 +44,31 @@
                 android:layout_marginStart="@dimen/default_space_half"
                 android:textColor="?attr/colorAccent"
                 android:textSize="@dimen/textsize_h3"
-                app:layout_constraintBottom_toBottomOf="parent"
+                android:layout_marginTop="4dp"
                 app:layout_constraintLeft_toRightOf="@+id/issue_icon"
                 app:layout_constraintRight_toRightOf="parent"
                 app:layout_constraintTop_toTopOf="parent"
                 tools:text="ICE 1630: At vero eos et accusam et justo duo dolores et a rebum, stet clita kasd." />
 
+
         </androidx.constraintlayout.widget.ConstraintLayout>
+
+        <TextView
+            android:id="@+id/sev"
+            android:layout_marginTop="@dimen/default_space"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="@dimen/default_space_half"
+            android:textSize="@dimen/textsize_h3"
+            android:textStyle="bold"
+            tools:text="@string/info_sev"
+            android:text="@string/info_sev"
+            tools:visibility="visible"
+            android:visibility="gone"
+            app:drawableTint="@android:color/holo_red_light"
+            app:drawableLeftCompat="@drawable/app_links_pfeil"
+            android:drawablePadding="@dimen/default_space"
+            />
 
         <androidx.cardview.widget.CardView
             android:id="@+id/button_wagon_order"

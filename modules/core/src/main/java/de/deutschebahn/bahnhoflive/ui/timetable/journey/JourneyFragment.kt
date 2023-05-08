@@ -24,6 +24,7 @@ import de.deutschebahn.bahnhoflive.ui.timetable.WagenstandFragment
 
 class JourneyFragment() : Fragment(), MapPresetProvider {
 
+    private lateinit var trainEvent : TrainEvent
     constructor(
         trainInfo: TrainInfo,
         trainEvent: TrainEvent,
@@ -34,6 +35,7 @@ class JourneyFragment() : Fragment(), MapPresetProvider {
             putSerializable(JourneyViewModel.ARG_TRAIN_EVENT, trainEvent)
         }
         this.showWagonOrderFromExtern = showWagonOrderFromExtern
+        this.trainEvent = trainEvent
     }
 
     val stationViewModel: StationViewModel by activityViewModels()
@@ -56,6 +58,16 @@ class JourneyFragment() : Fragment(), MapPresetProvider {
     ): View = FragmentJourneyBinding.inflate(inflater).apply {
 
         journeyViewModel.essentialParametersLiveData.observe(viewLifecycleOwner) { (station, trainInfo, trainEvent) ->
+           if(trainEvent==TrainEvent.ARRIVAL) {
+               titleBar.screenTitle.text = getString(
+                   R.string.template_journey_title,
+                   TimetableViewHelper.composeName(trainInfo, trainInfo.arrival),
+                   trainInfo.arrival?.getDestinationStop(true)?.let {
+                       " ${getString(R.string.template_journey_title_destination, it)}"
+                   } ?: ""
+               )
+           }
+           else
             titleBar.screenTitle.text = getString(
                 R.string.template_journey_title,
                 TimetableViewHelper.composeName(trainInfo, trainInfo.departure),
@@ -68,6 +80,9 @@ class JourneyFragment() : Fragment(), MapPresetProvider {
                 journeyViewModel.showWagonOrderLiveData.value = true
 
             showWagonOrderFromExtern = false
+
+            journeyViewModel.showSEVLiveData.value =
+                titleBar.screenTitle.text.contains("SEV", true)
 
         }
 
