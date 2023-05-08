@@ -60,24 +60,6 @@
 
                 />
 
-            <TextView
-                android:id="@+id/sev"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="@dimen/default_space_half"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/spc"
-                android:textSize="@dimen/textsize_h3"
-                android:textStyle="bold"
-                tools:text="Übersicht Schienenersatzverkehr"
-                android:text="Übersicht Schienenersatzverkehr"
-
-                app:drawableTint="@android:color/holo_red_light"
-                app:drawableLeftCompat="@drawable/app_links_pfeil"
-                android:drawablePadding="@dimen/default_space"
-                />
-
         </androidx.constraintlayout.widget.ConstraintLayout>
 
         <androidx.cardview.widget.CardView

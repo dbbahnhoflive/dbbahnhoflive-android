@@ -62,7 +62,7 @@
                     android:visibility="gone"
                     android:layout_marginTop="@dimen/default_space_double"
                     android:layout_marginHorizontal="@dimen/default_space_double"
-                    android:text="Aufgrund von Bauarbeiten kommt es zwischen Würzburg und Nürnberg vom 26. Mai bis zum 11. September 2023 zu Einschränkungen im Zugverkehr.\n\nEin Ersatzverkehr mit Bussen ist eingerichtet."
+                    android:text="@string/construction_text_1"
                     android:textSize="@dimen/textsize_28" />
 
                 <TextView
@@ -96,7 +96,7 @@
                     tools:visibility="visible"
                     android:visibility="gone"
                     android:layout_marginHorizontal="@dimen/default_space_double"
-                    android:text="Die Sanierung erfolgt in zwei Abschnitten. Zun�chst wird die Strecke zwischen Rottendorf und Neustadt (Aisch) Bahnhof vom 26. Mai bis 06. August 2023 f�r den Zugverkehr komplett gesperrt. Anschlie�end erfolgt eine Sperrung der Strecke zwischen Neustadt (Aisch) Bahnhof und F�rth Hauptbahnhof vom 06. August bis 11. September 2023. Durch die Sperrung in dem zweiten genannten Zeitraum erfolgt auf der Strecke Markt Erlbach � Siegelsdorf � F�rth Hauptbahnhof zudem ebenfalls kein Zugverkehr.\n\nAusf�hrlicher Information finden Sie auf bahnhof.de"
+                    android:text="@string/construction_text_2"
                     android:textSize="@dimen/textsize_28" />
 
                 <TextView
@@ -109,10 +109,10 @@
                     android:textStyle="bold"
                     android:layout_marginTop="@dimen/default_space"
                     android:layout_marginHorizontal="@dimen/default_space_double"
-                    android:text="bahnhof.de �ffnen"
+                    android:text="@string/open_link_bahnhof_de"
                     android:textSize="@dimen/textsize_28"
                     android:drawablePadding="4dp"
-                    android:drawableTint="@android:color/holo_red_light"
+                    app:drawableTint="@android:color/holo_red_light"
                     app:drawableLeftCompat="@drawable/app_extern_link" />
 
             </LinearLayout>
