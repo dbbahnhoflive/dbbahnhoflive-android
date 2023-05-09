@@ -33,6 +33,7 @@ class RailReplacementFragment : Fragment(), MapPresetProvider {
             if(railReplacementNev.visibility==View.VISIBLE)
               fullText += railReplacementNev.text?:""
 
+            if(railReplacementEntryLabel.visibility==View.VISIBLE)
             fullText += railReplacementEntryLabel.text?:""
 
             fullText += railReplacementText
@@ -110,7 +111,7 @@ class RailReplacementFragment : Fragment(), MapPresetProvider {
             setScreenReaderText(this)
         }
 
-        stationViewModel.railReplacementSummaryLiveData.observe(viewLifecycleOwner) {
+        stationViewModel.railReplacementSummaryLiveData.observe(viewLifecycleOwner) { it ->
             contentList.removeAllViews()
 
             railReplacementEntryLabel.setText(
@@ -122,12 +123,18 @@ class RailReplacementFragment : Fragment(), MapPresetProvider {
 
 
             railReplacementText=""
+
             it?.let { railReplacements ->
 
                 railReplacements.forEach { (directions, texts) ->
                     IncludeItemRailReplacementBinding.inflate(inflater, contentList, true).apply {
                         railReplacementDirections.text = directions
 
+                        if (railReplacements.size == 1 && texts.mapNotNull { itText -> itText?.isNotEmpty() }
+                                .isEmpty()) {
+                            railReplacementTexts.text = ""
+                            railReplacementEntryLabel.visibility = View.GONE
+                        } else
                         railReplacementTexts.text =
                             texts.mapNotNull {
                                 "• " + (it.takeUnless { it.isNullOrBlank() }
