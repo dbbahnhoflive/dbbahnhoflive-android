@@ -65,7 +65,7 @@
                     android:layout_marginHorizontal="@dimen/default_space_double"
                     android:text="@string/construction_text_1"
                     android:importantForAccessibility="yes"
-                 
+                    android:paddingBottom="@dimen/default_space_half"
                     android:textSize="@dimen/textsize_28" />
 
                 <TextView
@@ -73,6 +73,8 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_margin="@dimen/default_space_double"
+                    tools:visibility="visible"
+                    android:visibility="gone"
                     android:text="@string/rail_replacement_entry_label_plural"
                     android:textSize="@dimen/textsize_28" />
 

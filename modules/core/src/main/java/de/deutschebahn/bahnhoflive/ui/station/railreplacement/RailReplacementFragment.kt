@@ -74,6 +74,7 @@ class RailReplacementFragment : Fragment(), MapPresetProvider {
             }
 
 
+            titleBar.staticTitleBar.screenTitle.sendAccessibilityEvent(AccessibilityEvent.TYPE_VIEW_FOCUSED)
         }
 
 
@@ -134,12 +135,14 @@ class RailReplacementFragment : Fragment(), MapPresetProvider {
                                 .isEmpty()) {
                             railReplacementTexts.text = ""
                             railReplacementEntryLabel.visibility = View.GONE
-                        } else
+                        } else {
                         railReplacementTexts.text =
                             texts.mapNotNull {
                                 "• " + (it.takeUnless { it.isNullOrBlank() }
                                     ?: getString(R.string.rail_replacement_additional))
                             }.joinToString("\n")
+                            railReplacementEntryLabel.visibility = View.VISIBLE
+                        }
 
                         railReplacementText += railReplacementTexts.text
                         railReplacementText += getString(R.string.rail_replacement_directions)
@@ -153,7 +156,7 @@ class RailReplacementFragment : Fragment(), MapPresetProvider {
             refresher.isRefreshing = false
             setScreenReaderText(this)
 
-            titleBar.staticTitleBar.screenTitle.sendAccessibilityEvent(AccessibilityEvent.TYPE_VIEW_FOCUSED);
+            titleBar.staticTitleBar.screenTitle.sendAccessibilityEvent(AccessibilityEvent.TYPE_VIEW_FOCUSED)
         }
 
         stationViewModel.pendingRailReplacementPointLiveData.observe(viewLifecycleOwner) { rrtPoint ->
