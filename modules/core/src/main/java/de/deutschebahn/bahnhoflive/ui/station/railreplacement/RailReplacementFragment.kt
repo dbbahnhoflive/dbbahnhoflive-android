@@ -6,6 +6,7 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.view.accessibility.AccessibilityEvent
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import de.deutschebahn.bahnhoflive.R
@@ -23,20 +24,26 @@ class RailReplacementFragment : Fragment(), MapPresetProvider {
     val stationViewModel by activityViewModels<StationViewModel>()
 
     var railReplacementText : String = ""
-    fun setScreenReaderText(binding : FragmentRailReplacementBinding )  {
+    private fun setScreenReaderText(binding : FragmentRailReplacementBinding )  {
 
         binding.apply {
             var fullText : String = (titleBar.staticTitleBar.screenTitle.text?:"") as String
 
+            if(railReplacementNev.visibility==View.VISIBLE)
             fullText += railReplacementNev.text?:""
+
             fullText += railReplacementEntryLabel.text?:""
 
             fullText += railReplacementText
 
+            if(railReplacementNev2.visibility==View.VISIBLE)
             fullText += railReplacementNev2.text?:""
 
+            binding.servicesDetails.contentDescription = fullText.replace("26. Mai", "26.5.2023")
+                .replace("11. September 2023", "11.9.2023")
+                .replace("06. August 2023", "6.8.2023")
+                .replace("06. August", "6.8.2023")
 
-            binding.servicesDetails.contentDescription = fullText
 
         }
 
@@ -111,6 +118,8 @@ class RailReplacementFragment : Fragment(), MapPresetProvider {
 
             refresher.isRefreshing = false
             setScreenReaderText(this)
+
+            servicesDetails.sendAccessibilityEvent(AccessibilityEvent.TYPE_VIEW_FOCUSED);
         }
 
         stationViewModel.pendingRailReplacementPointLiveData.observe(viewLifecycleOwner) { rrtPoint ->
