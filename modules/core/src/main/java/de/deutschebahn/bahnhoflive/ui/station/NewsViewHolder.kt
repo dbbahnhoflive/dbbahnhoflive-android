@@ -17,6 +17,7 @@ import de.deutschebahn.bahnhoflive.backend.db.newsapi.model.News
 import de.deutschebahn.bahnhoflive.databinding.ItemNewsBinding
 import de.deutschebahn.bahnhoflive.ui.ViewHolder
 import de.deutschebahn.bahnhoflive.ui.station.news.groupIcon
+import de.deutschebahn.bahnhoflive.util.setAccessibilityText
 import de.deutschebahn.bahnhoflive.view.ItemClickListener
 
 data class NewsHeadline(
@@ -116,12 +117,15 @@ class NewsViewHolder(
     override fun onBind(item: News?) {
         super.onBind(item)
 
+        newsTopHeadline.text = item?.group?.title?:"" // animierte Überschrift
+
         newsHeadline.text = item?.title
+        if(item?.titleForScreenReader!=null)
+         newsHeadline.contentDescription = item?.titleForScreenReader
 
         newsCopy.text = item?.summary
 
-        newsTopHeadline.text = item?.group?.title?:""
-
         iconView.setImageResource(item?.groupIcon()?.icon ?: 0)
+        iconView.contentDescription = item?.group?.title?:""
     }
 }

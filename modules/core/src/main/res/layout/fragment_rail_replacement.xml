@@ -79,7 +79,9 @@
                     android:layout_height="wrap_content"
                     android:divider="@drawable/shape_divider_occupancy"
                     android:orientation="vertical"
-                    android:showDividers="middle">
+                    android:showDividers="middle"
+                    android:importantForAccessibility="no"
+                    >
 
                     <include layout="@layout/include_item_rail_replacement" />
 

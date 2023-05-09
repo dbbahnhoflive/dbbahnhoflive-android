@@ -22,6 +22,27 @@ class RailReplacementFragment : Fragment(), MapPresetProvider {
 
     val stationViewModel by activityViewModels<StationViewModel>()
 
+    var railReplacementText : String = ""
+    fun setScreenReaderText(binding : FragmentRailReplacementBinding )  {
+
+        binding.apply {
+            var fullText : String = (titleBar.staticTitleBar.screenTitle.text?:"") as String
+
+            fullText += railReplacementNev.text?:""
+            fullText += railReplacementEntryLabel.text?:""
+
+            fullText += railReplacementText
+
+            fullText += railReplacementNev2.text?:""
+
+
+            binding.servicesDetails.contentDescription = fullText
+
+        }
+
+
+    }
+
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
@@ -29,6 +50,7 @@ class RailReplacementFragment : Fragment(), MapPresetProvider {
     ): View = FragmentRailReplacementBinding.inflate(inflater, container, false).apply {
 
         titleBar.staticTitleBar.screenTitle.setText(R.string.rail_replacement)
+//        titleBar.staticTitleBar.screenTitle.contentDescription = titleBar.staticTitleBar.screenTitle.text
 
         contentList.removeAllViews()
 
@@ -49,6 +71,9 @@ class RailReplacementFragment : Fragment(), MapPresetProvider {
                     ).startSafely(it1)
                 }
             }
+
+
+            setScreenReaderText(this)
         }
 
         stationViewModel.railReplacementSummaryLiveData.observe(viewLifecycleOwner) {
@@ -61,6 +86,8 @@ class RailReplacementFragment : Fragment(), MapPresetProvider {
                         } == 1
                     } == false) R.string.rail_replacement_entry_label_plural else R.string.rail_replacement_entry_label_singular)
 
+
+            railReplacementText=""
             it?.let { railReplacements ->
 
                 railReplacements.forEach { (directions, texts) ->
@@ -72,12 +99,18 @@ class RailReplacementFragment : Fragment(), MapPresetProvider {
                                 "• " + (it.takeUnless { it.isNullOrBlank() }
                                     ?: getString(R.string.rail_replacement_additional))
                             }.joinToString("\n")
+
+                        railReplacementText += railReplacementTexts.text
+                        railReplacementText += getString(R.string.rail_replacement_directions)
+                        railReplacementText += directions
+
                     }
                 }
 
             }
 
             refresher.isRefreshing = false
+            setScreenReaderText(this)
         }
 
         stationViewModel.pendingRailReplacementPointLiveData.observe(viewLifecycleOwner) { rrtPoint ->
