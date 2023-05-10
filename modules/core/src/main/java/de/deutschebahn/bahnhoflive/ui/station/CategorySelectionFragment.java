@@ -7,6 +7,8 @@
 package de.deutschebahn.bahnhoflive.ui.station;
 
 import android.view.LayoutInflater;
+import android.view.accessibility.AccessibilityEvent;
+import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.DividerItemDecoration;
@@ -34,6 +36,7 @@ public abstract class CategorySelectionFragment extends RecyclerFragment<Categor
         setTitle(title);
 
         setAdapter(categoryAdapter);
+
     }
 
     @Override

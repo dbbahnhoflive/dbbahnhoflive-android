@@ -16,7 +16,7 @@ import androidx.fragment.app.activityViewModels
 import de.deutschebahn.bahnhoflive.analytics.TrackingManager
 import de.deutschebahn.bahnhoflive.databinding.FragmentContentSearchBinding
 import de.deutschebahn.bahnhoflive.ui.station.StationViewModel
-import de.deutschebahn.bahnhoflive.util.closeIme
+import de.deutschebahn.bahnhoflive.util.hideKeyboard
 import de.deutschebahn.bahnhoflive.view.ConfirmationDialog
 
 class ContentSearchFragment : Fragment() {
@@ -52,6 +52,7 @@ class ContentSearchFragment : Fragment() {
             }
 
             inputQuery.let { searchView ->
+//                searchView.requestFocus()
                 viewModel.contentQuery.observe(viewLifecycleOwner) {
                     searchView.setQuery(it.first, true)
                 }
@@ -84,8 +85,7 @@ class ContentSearchFragment : Fragment() {
         }.root
 
     override fun onStop() {
-        context.closeIme()
-
+        hideKeyboard()
         super.onStop()
     }
 }

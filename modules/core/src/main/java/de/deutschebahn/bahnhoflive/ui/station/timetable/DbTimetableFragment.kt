@@ -179,7 +179,7 @@ class DbTimetableFragment : Fragment(), FilterDialogFragment.Consumer, MapPreset
         }
     }
 
-    override fun setFilter(trainCategory: String, track: String) {
+    override fun setFilter(trainCategory: String?, track: String?) {
         adapter!!.setFilter(trainCategory, track)
     }
 
