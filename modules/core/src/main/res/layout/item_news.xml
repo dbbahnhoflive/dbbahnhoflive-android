@@ -24,6 +24,7 @@
             android:id="@+id/animatedHeadlineScroller"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:importantForAccessibility="no"
             android:scrollbars="none">
 
             <LinearLayout
@@ -101,6 +102,7 @@
 
             <ImageButton
                 android:visibility="gone"
+                tools:visibility="visible"
                 android:layout_margin="@dimen/default_space"
                 android:id="@+id/btnLink"
                 android:layout_width="@dimen/round_button_size"

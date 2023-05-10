@@ -430,15 +430,19 @@
     <string name="general_switch">Umschalten</string>
 
 
-    <string name="construction_announcement_headline">Ankündigung Ersatzverkehr</string>
-    <string name="construction_phase_headline">Ersatzverkehr beachten</string>
-    <string name="construction_copy">Ersatzverkehr auf der Strecke Würzburg – Nürnberg aufgrund von Baumaßnahmen.</string>
-    <string name="construction_text_1">Aufgrund von Bauarbeiten kommt es zwischen Würzburg und Nürnberg vom 26. Mai bis zum 11. September 2023 zu Einschränkungen im Zugverkehr.\n\nEin Ersatzverkehr mit Bussen ist eingerichtet.</string>
-    <string name="construction_text_2">Die Sanierung erfolgt in zwei Abschnitten. Zunächst wird die Strecke zwischen Rottendorf und Neustadt (Aisch) Bahnhof vom 26. Mai bis 06. August 2023 für den Zugverkehr komplett gesperrt. Anschließend erfolgt eine Sperrung der Strecke zwischen Neustadt (Aisch) Bahnhof und Fürth Hauptbahnhof vom 06. August bis 11. September 2023. Durch die Sperrung in dem zweiten genannten Zeitraum erfolgt auf der Strecke Markt Erlbach - Siegelsdorf - Fürth Hauptbahnhof zudem ebenfalls kein Zugverkehr.\n\nWeiterführende Informationen finden Sie unter bahnhof.de"</string>
+    <string name="nev_announcement_headline">Ankündigung Ersatzverkehr</string>
+    <string name="nev_phase_headline">Ersatzverkehr beachten</string>
+    <string name="nev_copy">Ersatzverkehr auf der Strecke Würzburg – Nürnberg aufgrund von Baumaßnahmen.</string>
+    <string name="nev_text_1">Aufgrund von Bauarbeiten kommt es zwischen Würzburg und Nürnberg vom 26. Mai bis zum 11. September 2023 zu Einschränkungen im Zugverkehr.\n\nEin Ersatzverkehr mit Bussen ist eingerichtet.</string>
+    <string name="nev_text_2">Die Sanierung erfolgt in zwei Abschnitten. Zunächst wird die Strecke zwischen Rottendorf und Neustadt (Aisch) Bahnhof vom 26. Mai bis 06. August 2023 für den Zugverkehr komplett gesperrt. Anschließend erfolgt eine Sperrung der Strecke zwischen Neustadt (Aisch) Bahnhof und Fürth Hauptbahnhof vom 06. August bis 11. September 2023. Durch die Sperrung in dem zweiten genannten Zeitraum erfolgt auf der Strecke Markt Erlbach - Siegelsdorf - Fürth Hauptbahnhof zudem ebenfalls kein Zugverkehr.\n\nWeiterführende Informationen finden Sie unter bahnhof.de"</string>
+
+    <string name="nev_date_range">26.05. - 11.09.2023</string>
+    <string name="sr_nev_date_range">vom 26.5.2023 bis 11.9.2023</string>
 
     <string name="open_link_bahnhof_de">"bahnhof.de öffnen"</string>
 
 
 
+    <string name="info_sev">Übersicht Schienenersatzverkehr</string>
 </resources>
 

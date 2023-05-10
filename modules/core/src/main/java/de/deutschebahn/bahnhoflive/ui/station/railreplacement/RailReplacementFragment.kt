@@ -97,6 +97,12 @@ class RailReplacementFragment : Fragment(), MapPresetProvider {
         }
 
         stationViewModel.newsLiveData.observe(viewLifecycleOwner) {
+
+            nevInfoTop.visibility = View.VISIBLE
+            icon.visibility = View.VISIBLE
+            newsHeadline.visibility = View.VISIBLE
+            newsCopy.visibility = View.VISIBLE
+
             railReplacementNev.visibility = View.VISIBLE
             railReplacementNev2.visibility = View.VISIBLE
             linkReplacementTraffic.visibility = View.VISIBLE
@@ -156,7 +162,6 @@ class RailReplacementFragment : Fragment(), MapPresetProvider {
             refresher.isRefreshing = false
             setScreenReaderText(this)
 
-            titleBar.staticTitleBar.screenTitle.sendAccessibilityEvent(AccessibilityEvent.TYPE_VIEW_FOCUSED)
         }
 
         stationViewModel.pendingRailReplacementPointLiveData.observe(viewLifecycleOwner) { rrtPoint ->
