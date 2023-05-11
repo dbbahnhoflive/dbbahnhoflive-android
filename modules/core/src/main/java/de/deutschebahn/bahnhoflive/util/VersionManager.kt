@@ -56,6 +56,19 @@ class VersionManager private constructor(private val manager: PackageManager,
         }
     }
 
+
+    object PreferenceName {
+       object TypeBool {
+           const val PushWasEverUsed = "PushWasEverUsed"
+           const val JourneyLinkWasUsed = "JourneyLinkWasUsed"
+       }
+        object TypeInt {
+            const val PushTutorialGeneralShowCounter = "PushTutorialGeneralShowCounter"
+            const val JourneyLinkTappedTutorialCounter = "JourneyLinkTappedTutorialCounter"
+        }
+
+    }
+
     val actualVersion : SoftwareVersion
         get() = _actualVersion
 
@@ -65,31 +78,52 @@ class VersionManager private constructor(private val manager: PackageManager,
     val isFreshInstallation : Boolean
         get() = _isFreshInstallation
 
-    val usageCountDays : Int
-        get() = _usageCountDays
+    val appUsageCountDays : Int
+        get() = _appUsageCountDays
 
     var pushWasEverUsed : Boolean
      get() = _pushWasEverUsed
      set(value) {
          if(value!=_pushWasEverUsed) {
              global_preferences.edit()
-                 .putBoolean("PushWasEverUsed", value)
+                 .putBoolean(PreferenceName.TypeBool.PushWasEverUsed, value)
                  .apply()
          }
          _pushWasEverUsed = value
      }
+
+    var journeyLinkWasEverUsed : Boolean
+        get() = _journeyLinkWasEverUsed
+        set(value) {
+            if(value!=_journeyLinkWasEverUsed) {
+                global_preferences.edit()
+                    .putBoolean(PreferenceName.TypeBool.JourneyLinkWasUsed, value)
+                    .apply()
+            }
+            _journeyLinkWasEverUsed = value
+        }
 
     var pushTutorialGeneralShowCounter: Int
         get() = _pushTutorialGeneralShowCounter
         set(value) {
             if(value!=_pushTutorialGeneralShowCounter) {
                 global_preferences.edit()
-                    .putInt("PushTutorialGeneralShowCounter", value)
+                    .putInt(PreferenceName.TypeInt.PushTutorialGeneralShowCounter, value)
                     .apply()
             }
             _pushTutorialGeneralShowCounter = value
         }
 
+    var journeyLinkTappedTutorialCounter: Int
+        get() = _journeyLinkTappedTutorialCounter
+        set(value) {
+            if(value!=_journeyLinkTappedTutorialCounter) {
+                global_preferences.edit()
+                    .putInt(PreferenceName.TypeInt.JourneyLinkTappedTutorialCounter, value)
+                    .apply()
+            }
+            _journeyLinkTappedTutorialCounter = value
+        }
 
     fun isUpdate() : Boolean  {
         if(_isFreshInstallation) return false
@@ -103,10 +137,12 @@ class VersionManager private constructor(private val manager: PackageManager,
     private var _actualVersion : SoftwareVersion = SoftwareVersion("")
     private var _actualVersionFromFile : SoftwareVersion = SoftwareVersion("")
 
-    private var _usageCountDays : Int = 0
+    private var _appUsageCountDays : Int = 0
 
     private var _pushWasEverUsed : Boolean = false
+    private var _journeyLinkWasEverUsed : Boolean = false
     private var _pushTutorialGeneralShowCounter : Int = 0
+    private var _journeyLinkTappedTutorialCounter : Int = 0
 
     init {
         doInit()
@@ -153,7 +189,7 @@ class VersionManager private constructor(private val manager: PackageManager,
 
 
         val usageLastDateInFile : String = global_preferences.getString("UsageLastDate", "") ?: ""
-        _usageCountDays = global_preferences.getInt("UsageCountDays", 0)
+        _appUsageCountDays = global_preferences.getInt("UsageCountDays", 0)
 
         val cal = Calendar.getInstance()
         val today = SimpleDateFormat("yyyy-MM-dd", Locale.GERMANY)
@@ -161,16 +197,16 @@ class VersionManager private constructor(private val manager: PackageManager,
         val dayAsString = today.format(cal.time)
 
         if(dayAsString != usageLastDateInFile) {
-            _usageCountDays++
+            _appUsageCountDays++
             global_preferences.edit()
                 .putString("UsageLastDate", dayAsString)
-                .putInt("UsageCountDays", _usageCountDays)
+                .putInt("UsageCountDays", _appUsageCountDays)
                 .apply()
         }
 
-        _pushWasEverUsed = global_preferences.getBoolean("PushWasEverUsed", false)
-        _pushTutorialGeneralShowCounter = global_preferences.getInt("PushTutorialGeneralShowCounter", 0)
-
+        _pushWasEverUsed = global_preferences.getBoolean(PreferenceName.TypeBool.PushWasEverUsed, false)
+        _pushTutorialGeneralShowCounter = global_preferences.getInt(PreferenceName.TypeInt.PushTutorialGeneralShowCounter, 0)
+        _journeyLinkTappedTutorialCounter = global_preferences.getInt(PreferenceName.TypeInt.JourneyLinkTappedTutorialCounter, 0)
     }
 
 

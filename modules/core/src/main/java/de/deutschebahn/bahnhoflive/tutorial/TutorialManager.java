@@ -40,6 +40,8 @@ public class TutorialManager {
         String COUPONS = "coupons";
         String PUSH_GENERAL = "push_general";
         String PUSH_ELEVATORS = "push_elevators";
+
+        String JOURNEY = "journey";
     }
 
     private List<Tutorial> seedingList() {
@@ -86,6 +88,10 @@ public class TutorialManager {
 
         tutorials.add(
                 new Tutorial(Id.PUSH_ELEVATORS, "Neu: Mitteilungen Aufzüge", "Erhalten Sie eine Nachricht, wenn Ihr Aufzug defekt oder wieder in Betrieb ist.", 0));
+
+        tutorials.add(
+                new Tutorial(Id.JOURNEY, "So wechseln Sie den Bahnhof", "Wählen Sie einen Halt im Fahrtverlauf, um den Bahnhof zu wechseln.", 0));
+
 
         return tutorials;
     }

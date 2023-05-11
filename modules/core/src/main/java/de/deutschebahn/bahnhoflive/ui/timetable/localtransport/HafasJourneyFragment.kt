@@ -19,14 +19,15 @@ import de.deutschebahn.bahnhoflive.ui.map.MapPresetProvider
 import de.deutschebahn.bahnhoflive.ui.map.content.rimap.RimapFilter
 import de.deutschebahn.bahnhoflive.ui.timetable.RouteStop
 import de.deutschebahn.bahnhoflive.ui.timetable.journey.HafasRouteItemViewHolder
+import de.deutschebahn.bahnhoflive.ui.timetable.journey.JourneyCoreFragment
 import de.deutschebahn.bahnhoflive.ui.timetable.journey.RegularJourneyContentFragment
+import de.deutschebahn.bahnhoflive.util.VersionManager
 import de.deutschebahn.bahnhoflive.view.BaseListAdapter
 import de.deutschebahn.bahnhoflive.view.ListViewHolderDelegate
 
 class RouteStopConnector(val routeStop: RouteStop, val hafasStop: HafasStop)
 
-class HafasJourneyFragment : Fragment()
-    , MapPresetProvider
+class HafasJourneyFragment : JourneyCoreFragment(), MapPresetProvider
 {
     private lateinit var binding : FragmentHafasJourneyBinding
 
@@ -75,22 +76,25 @@ class HafasJourneyFragment : Fragment()
 
         adapter.submitList(routeStops)
 
-        binding.titleBar.screenTitle.sendAccessibilityEvent(AccessibilityEvent.TYPE_VIEW_FOCUSED)
-
-        detailedHafasEvent?.also { itDetails ->
-
-            itDetails.hafasEvent?.also {
-                binding.titleBar.screenTitle.text =
-                    getString(R.string.template_hafas_journey_title, it.displayName, it.direction)
-            }
-
-        }
-
 
         if(hideHeader) {
             binding.titleBar.screenTitle.visibility=View.GONE
             binding.titleBar.screenRedLine.visibility=View.GONE
         }
+        else {
+
+        detailedHafasEvent?.also { itDetails ->
+            itDetails.hafasEvent?.also {
+                binding.titleBar.screenTitle.text =
+                    getString(R.string.template_hafas_journey_title, it.displayName, it.direction)
+            }
+        }
+
+            binding.titleBar.screenTitle.sendAccessibilityEvent(AccessibilityEvent.TYPE_VIEW_FOCUSED)
+
+        }
+
+        showTutorialIfNecessary()
     }
 
     override fun prepareMapIntent(intent: Intent): Boolean {
@@ -135,6 +139,7 @@ class HafasJourneyFragment : Fragment()
             ) {
                 holder.bind(item)
                 holder.itemView.setOnClickListener {
+                    VersionManager.getInstance(it.context).journeyLinkWasEverUsed = true
                     onClickStop(it, item )
                 }
             }

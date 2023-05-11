@@ -36,7 +36,6 @@ import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Objects;
 
 import de.deutschebahn.bahnhoflive.BaseActivity;
 import de.deutschebahn.bahnhoflive.BuildConfig;
@@ -296,7 +295,8 @@ public class StationActivity extends BaseActivity implements
                             final boolean isUpdate = versionManager.isUpdate() &&
                                     versionManager.getLastVersion().compareTo(new VersionManager.SoftwareVersion("3.22.0")) < 0;
 
-                            if ((countPushTutorialGeneralSeen == 0 && isUpdate) || ( (countPushTutorialGeneralSeen == 1) && (versionManager.getUsageCountDays() > 5)) ) {
+                            if ((countPushTutorialGeneralSeen == 0 && isUpdate) ||
+                                    ( (countPushTutorialGeneralSeen == 1) && (versionManager.getAppUsageCountDays() >= 5)) ) {
                                 tutorialManager.showTutorialIfNecessary(mTutorialView, tutorial.id);
                                 tutorialManager.markTutorialAsSeen(tutorial);
                                 countPushTutorialGeneralSeen++;

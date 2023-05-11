@@ -2,6 +2,7 @@ package de.deutschebahn.bahnhoflive.ui.timetable.journey
 
 import android.view.View
 import android.view.ViewGroup
+import de.deutschebahn.bahnhoflive.util.VersionManager
 import de.deutschebahn.bahnhoflive.view.BaseListAdapter
 import de.deutschebahn.bahnhoflive.view.ListViewHolderDelegate
 
@@ -19,6 +20,7 @@ class JourneyAdapter(onClickStop: (view: View, journeyStop : JourneyStop)->Unit)
         ) {
             holder.bind(item)
             holder.itemView.setOnClickListener {
+                VersionManager.getInstance(it.context).journeyLinkWasEverUsed = true
                 onClickStop(it, item)
         }
         }

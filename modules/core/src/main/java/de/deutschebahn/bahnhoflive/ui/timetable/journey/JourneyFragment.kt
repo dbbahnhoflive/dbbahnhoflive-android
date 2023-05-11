@@ -13,6 +13,8 @@ import de.deutschebahn.bahnhoflive.R
 import de.deutschebahn.bahnhoflive.backend.ris.model.TrainEvent
 import de.deutschebahn.bahnhoflive.backend.ris.model.TrainInfo
 import de.deutschebahn.bahnhoflive.databinding.FragmentJourneyBinding
+import de.deutschebahn.bahnhoflive.tutorial.TutorialManager
+import de.deutschebahn.bahnhoflive.tutorial.TutorialView
 import de.deutschebahn.bahnhoflive.ui.map.Content
 import de.deutschebahn.bahnhoflive.ui.map.InitialPoiManager
 import de.deutschebahn.bahnhoflive.ui.map.MapPresetProvider
@@ -21,8 +23,9 @@ import de.deutschebahn.bahnhoflive.ui.station.HistoryFragment
 import de.deutschebahn.bahnhoflive.ui.station.StationViewModel
 import de.deutschebahn.bahnhoflive.ui.station.timetable.TimetableViewHelper
 import de.deutschebahn.bahnhoflive.ui.timetable.WagenstandFragment
+import de.deutschebahn.bahnhoflive.util.VersionManager
 
-class JourneyFragment() : Fragment(), MapPresetProvider {
+class JourneyFragment() : JourneyCoreFragment(), MapPresetProvider {
 
     constructor(
         trainInfo: TrainInfo,
@@ -64,7 +67,7 @@ class JourneyFragment() : Fragment(), MapPresetProvider {
                 } ?: ""
             )
 
-            if (showWagonOrderFromExtern)
+            if (showWagonOrderFromExtern) // trick: eigentlich soll Wagenreihung angezeigt werden... (dieses Fragment wird gleich überdeckkt)
                 journeyViewModel.showWagonOrderLiveData.value = true
 
             showWagonOrderFromExtern = false
@@ -92,6 +95,15 @@ class JourneyFragment() : Fragment(), MapPresetProvider {
         }
 
     }.root
+
+
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+
+        if(!showWagonOrderFromExtern)
+            showTutorialIfNecessary()
+
+    }
 
 
     override fun prepareMapIntent(intent: Intent): Boolean {
