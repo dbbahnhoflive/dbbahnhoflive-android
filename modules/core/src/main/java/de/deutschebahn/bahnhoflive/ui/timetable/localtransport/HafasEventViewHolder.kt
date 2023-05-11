@@ -8,13 +8,10 @@ package de.deutschebahn.bahnhoflive.ui.timetable.localtransport
 
 import android.view.View
 import android.view.ViewGroup
-import android.widget.ViewSwitcher
 import de.deutschebahn.bahnhoflive.R
 import de.deutschebahn.bahnhoflive.ui.ViewHolder
-import de.deutschebahn.bahnhoflive.ui.station.HistoryFragment
 import de.deutschebahn.bahnhoflive.ui.timetable.RouteStop
 import de.deutschebahn.bahnhoflive.ui.timetable.RouteStopsAdapter
-import de.deutschebahn.bahnhoflive.ui.timetable.journey.JourneyFragment
 import de.deutschebahn.bahnhoflive.view.SingleSelectionManager
 
 internal class HafasEventViewHolder(

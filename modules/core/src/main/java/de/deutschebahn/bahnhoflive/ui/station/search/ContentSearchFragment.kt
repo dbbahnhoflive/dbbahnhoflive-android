@@ -52,6 +52,7 @@ class ContentSearchFragment : Fragment() {
             }
 
             inputQuery.let { searchView ->
+//                searchView.requestFocus()
                 viewModel.contentQuery.observe(viewLifecycleOwner) {
                     searchView.setQuery(it.first, true)
                 }
