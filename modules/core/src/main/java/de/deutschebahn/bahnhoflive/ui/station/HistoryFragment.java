@@ -13,12 +13,15 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.accessibility.AccessibilityEvent;
+import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
+import androidx.lifecycle.Lifecycle;
 
 import java.util.Objects;
 
@@ -30,6 +33,20 @@ public class HistoryFragment extends Fragment implements MapPresetProvider {
 
     @RimapFilter.Preset
     private String defaultPreset;
+
+    public void onShow() {
+
+        View view = getView();
+        if(view!=null) {
+            TextView titleView = view.findViewById(R.id.screen_title);
+            if(titleView!=null) {
+                titleView.sendAccessibilityEvent(AccessibilityEvent.TYPE_VIEW_FOCUSED);
+            }
+        }
+
+    }
+
+
 
     @Override
     public boolean prepareMapIntent(@NonNull Intent intent) {

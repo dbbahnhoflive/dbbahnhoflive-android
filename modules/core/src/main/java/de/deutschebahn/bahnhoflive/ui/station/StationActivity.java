@@ -411,20 +411,22 @@ public class StationActivity extends BaseActivity implements
         tutorialManager.markTutorialAsIgnored(mTutorialView);
 
         switch (index) {
-            case 0:
+            case 0: // Bahnhofsübersicht overviewFragment
                 trackingManager.track(TrackingManager.TYPE_STATE, H1, station.getId(), StationTrackingManager.tagOfName(station.getTitle()));
                 break;
-            case 1:
+            case 1: // Abfahrten und Ankünfte timetablesFragment
                 tutorialManager.showTutorialIfNecessary(mTutorialView, "h2_departure");
                 trackingManager.track(TrackingManager.TYPE_STATE, TrackingManager.Screen.H2);
                 break;
-            case 2:
+            case 2: // Bahnhofsinformationen infoFragment
                 trackingManager.track(TrackingManager.TYPE_STATE, TrackingManager.Screen.H3, TrackingManager.Source.INFO);
                 break;
-            case 3:
+            case 3: // Shoppen und Schlemmen shoppingFragment
                 trackingManager.track(TrackingManager.TYPE_STATE, TrackingManager.Screen.H3, TrackingManager.Source.SHOPS);
                 break;
         }
+
+        historyFragments.get(index).onShow();
 
         for (int i = 0; i < navigationButtons.size(); i++) {
             Checkable navigationButton = navigationButtons.get(i);

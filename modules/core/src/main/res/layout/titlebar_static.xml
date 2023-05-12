@@ -11,6 +11,8 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
+    android:importantForAccessibility="yes"
+    android:focusable="true"
     android:orientation="vertical">
 
     <TextView
@@ -25,7 +27,8 @@
         android:padding="@dimen/default_space_half"
         android:textSize="@dimen/textsize_h2"
         android:enabled="false"
-        android:focusable="false"
+        android:importantForAccessibility="yes"
+        android:focusable="true"
         tools:text="Title" />
 
     <ImageView
