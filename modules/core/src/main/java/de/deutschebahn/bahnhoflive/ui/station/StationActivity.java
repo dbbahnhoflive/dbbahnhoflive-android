@@ -411,10 +411,10 @@ public class StationActivity extends BaseActivity implements
         tutorialManager.markTutorialAsIgnored(mTutorialView);
 
         switch (index) {
-            case 0: // Bahnhofsübersicht overviewFragment
+            case 0: // BahnhofsÃ¼bersicht overviewFragment
                 trackingManager.track(TrackingManager.TYPE_STATE, H1, station.getId(), StationTrackingManager.tagOfName(station.getTitle()));
                 break;
-            case 1: // Abfahrten und Ankünfte timetablesFragment
+            case 1: // Abfahrten und AnkÃ¼nfte timetablesFragment
                 tutorialManager.showTutorialIfNecessary(mTutorialView, "h2_departure");
                 trackingManager.track(TrackingManager.TYPE_STATE, TrackingManager.Screen.H2);
                 break;
