@@ -474,10 +474,15 @@ public class StationActivity extends BaseActivity implements
 
     @Override
     public void showContentSearch() {
-        getSupportFragmentManager()
-                .beginTransaction()
-                .replace(R.id.overlayFrame, new ContentSearchFragment())
-                .commit();
+        showTab(0);
+        overviewFragment.push(new ContentSearchFragment());
+
+//        showBottomSheetFragment(new ContentSearchFragment(), "content_search");
+//
+//        getSupportFragmentManager()
+//                .beginTransaction()
+//                .replace(R.id.overlayFrame, new ContentSearchFragment())
+//                .commit();
     }
 
     @Override

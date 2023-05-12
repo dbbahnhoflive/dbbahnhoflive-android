@@ -10,6 +10,7 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.view.accessibility.AccessibilityEvent
 import androidx.appcompat.widget.SearchView
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
@@ -35,6 +36,7 @@ class ContentSearchFragment : Fragment() {
 
             viewModel.stationResource.data.observe(viewLifecycleOwner) {
                 stationTitle.text = it?.title
+                stationTitle.sendAccessibilityEvent(AccessibilityEvent.TYPE_VIEW_FOCUSED)
             }
 
             val clearHistoryButton = clearHistory
