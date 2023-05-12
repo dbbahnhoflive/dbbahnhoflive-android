@@ -18,7 +18,6 @@ import de.deutschebahn.bahnhoflive.analytics.TrackingManager
 import de.deutschebahn.bahnhoflive.analytics.TrackingManager.Companion.fromActivity
 import de.deutschebahn.bahnhoflive.backend.db.fasta2.model.FacilityStatus
 import de.deutschebahn.bahnhoflive.push.FacilityPushManager
-import de.deutschebahn.bahnhoflive.push.NotificationChannelManager
 import de.deutschebahn.bahnhoflive.ui.Status
 import de.deutschebahn.bahnhoflive.ui.map.Content
 import de.deutschebahn.bahnhoflive.ui.map.InitialPoiManager.Companion.putInitialPoi
@@ -28,7 +27,7 @@ import de.deutschebahn.bahnhoflive.ui.station.StationViewModel
 import de.deutschebahn.bahnhoflive.view.SingleSelectionManager
 import java.util.*
 
-class StationElevatorStatusFragment : Fragment(), MapPresetProvider {
+class OverviewElevatorStatusFragment : Fragment(), MapPresetProvider {
 
     private var recyclerView: RecyclerView? = null
     private var thisAdapter: ElevatorStatusAdapter? = null
@@ -143,9 +142,9 @@ class StationElevatorStatusFragment : Fragment(), MapPresetProvider {
     }
 
     companion object {
-        val TAG = StationElevatorStatusFragment::class.java.simpleName
-        fun create(): StationElevatorStatusFragment {
-            return StationElevatorStatusFragment()
+        val TAG = OverviewElevatorStatusFragment::class.java.simpleName
+        fun create(): OverviewElevatorStatusFragment {
+            return OverviewElevatorStatusFragment()
         }
     }
 

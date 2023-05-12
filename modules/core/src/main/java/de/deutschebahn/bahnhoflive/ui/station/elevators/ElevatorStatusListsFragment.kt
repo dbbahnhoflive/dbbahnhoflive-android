@@ -29,7 +29,7 @@ class ElevatorStatusListsFragment : TwoTabsFragment(R.string.facilityStatus_over
 
     override fun showFragment(position: Int) {
         when (position) {
-            0 -> showStationFragment()
+            0 -> showOverviewFragment()
             else -> showBookmarkFragment()
         }
     }
@@ -46,10 +46,10 @@ class ElevatorStatusListsFragment : TwoTabsFragment(R.string.facilityStatus_over
 
     }
 
-    protected fun showStationFragment() {
-        val tag = StationElevatorStatusFragment.TAG
+    private fun showOverviewFragment() {
+        val tag = OverviewElevatorStatusFragment.TAG
 
-        if (setFragment(tag, StationElevatorStatusFragment::class.java)) {
+        if (setFragment(tag, OverviewElevatorStatusFragment::class.java)) {
             return
         }
 
@@ -74,8 +74,8 @@ class ElevatorStatusListsFragment : TwoTabsFragment(R.string.facilityStatus_over
         } else
             tutorialManager.showTutorialIfNecessary(mTutorialView, "d1_aufzuege")
 
-        val stationElevatorStatusFragment = StationElevatorStatusFragment.create()
-        installFragment(tag, stationElevatorStatusFragment)
+        val overviewElevatorStatusFragment = OverviewElevatorStatusFragment.create()
+        installFragment(tag, overviewElevatorStatusFragment)
     }
 
     override fun onCreateView(

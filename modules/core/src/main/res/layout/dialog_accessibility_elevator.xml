@@ -1,0 +1,87 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.appcompat.widget.LinearLayoutCompat
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+
+    android:background="@color/white"
+    android:layout_marginTop="@dimen/default_space"
+    android:layout_marginHorizontal="@dimen/default_space_triple"
+
+    >
+
+
+    <TextView
+        android:id="@+id/title"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+
+        tools:text="Titel"
+        android:layout_marginHorizontal="@dimen/default_space_triple"
+        android:layout_marginVertical="@dimen/default_space_double"
+        android:gravity="center_horizontal"
+        android:textSize="@dimen/textsize_h1"
+        android:textStyle="bold"
+        android:importantForAccessibility="yes"
+        android:focusable="true"
+        />
+
+    <TextView
+        android:id="@+id/main_text"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        tools:text="Text Zeile1\nZeile2"
+        android:layout_marginHorizontal="@dimen/default_space_triple"
+        android:layout_marginBottom="@dimen/default_space_double"
+        android:gravity="center_horizontal"
+        android:textSize="@dimen/textsize_h1"
+        android:importantForAccessibility="yes"
+
+        />
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:background="@android:color/darker_gray"/>
+
+    <Button
+        android:id="@+id/buttonOption1"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        tools:text="Merken aus"
+
+        android:layout_marginVertical="@dimen/default_space"
+
+        android:background="@android:color/transparent"
+        android:textAllCaps="false"
+        android:textColor="@color/blue_400"
+        android:textSize="@dimen/textsize_h1"
+    />
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:background="@android:color/darker_gray"/>
+
+    <Button
+        android:id="@+id/buttonOption2"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        tools:text="Mitteilungen an"
+        android:textAllCaps="false"
+        android:background="@android:color/transparent"
+        android:layout_marginVertical="@dimen/default_space"
+        android:textSize="@dimen/textsize_h1"
+        android:textColor="@color/blue_400"
+
+        />
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:background="@android:color/darker_gray"/>
+
+
+</androidx.appcompat.widget.LinearLayoutCompat>

@@ -11,26 +11,27 @@ import android.view.ViewGroup
 import android.view.accessibility.AccessibilityNodeInfo
 import android.widget.CompoundButton
 import android.widget.ImageView
-import android.widget.LinearLayout
 import android.widget.Space
-import androidx.cardview.widget.CardView
 import androidx.constraintlayout.widget.Guideline
-
 import de.deutschebahn.bahnhoflive.R
 import de.deutschebahn.bahnhoflive.analytics.TrackingManager
 import de.deutschebahn.bahnhoflive.backend.db.fasta2.model.FacilityStatus
 import de.deutschebahn.bahnhoflive.push.FacilityPushManager
+import de.deutschebahn.bahnhoflive.push.NotificationChannelManager
 import de.deutschebahn.bahnhoflive.ui.Status
+import de.deutschebahn.bahnhoflive.ui.accessibility.isSpokenFeedbackAccessibilityEnabled
 import de.deutschebahn.bahnhoflive.ui.station.CommonDetailsCardViewHolder
 import de.deutschebahn.bahnhoflive.util.setAccessibilityText
 import de.deutschebahn.bahnhoflive.view.CompoundButtonChecker
 import de.deutschebahn.bahnhoflive.view.SingleSelectionManager
 
+
 abstract class FacilityStatusViewHolder(parent: ViewGroup,
                                         selectionManager: SingleSelectionManager?,
                                         private val trackingManager : TrackingManager,
                                         private val facilityPushManager: FacilityPushManager) :
-    CommonDetailsCardViewHolder<FacilityStatus>(parent, R.layout.card_expandable_facility_status, selectionManager), CompoundButton.OnCheckedChangeListener {
+    CommonDetailsCardViewHolder<FacilityStatus>(parent, R.layout.card_expandable_facility_status, selectionManager),
+    CompoundButton.OnCheckedChangeListener {
 
     private val bookmarkedIndicator: ImageView = itemView.findViewById(R.id.bookmarked_indicator) // star
     private val subscribePushSwitch: CompoundButtonChecker =
@@ -55,7 +56,7 @@ abstract class FacilityStatusViewHolder(parent: ViewGroup,
         val bookmarked = facilityPushManager.getBookmarked(itemView.context, item.equipmentNumber)
         bindBookmarkedIndicator(bookmarked)
 
-        val subscribed = facilityPushManager.isPushMessageSubscribed(itemView.context, item.equipmentNumber)
+        var subscribed = facilityPushManager.isPushMessageSubscribed(itemView.context, item.equipmentNumber)
         subscribePushSwitch.isChecked = subscribed
 //        subscribePushSwitch.compoundButton.setAccessibilityText("", AccessibilityNodeInfo.ACTION_CLICK, itemView.context.getText(R.string.general_switch).toString())
 
@@ -65,17 +66,119 @@ abstract class FacilityStatusViewHolder(parent: ViewGroup,
 
         itemView.setOnClickListener{
             // toggle bookmarked-state
-            val facilityStatus = item
-            val newBookmarkState = !facilityPushManager.getBookmarked(itemView.context, item.equipmentNumber)
-            trackingManager.track(TrackingManager.TYPE_ACTION,
-                TrackingManager.Screen.D1,
-                TrackingManager.Category.AUFZUEGE,
-                "favorit",
-                if(newBookmarkState) "add" else "remove")
-            facilityPushManager.setBookmarked(itemView.context, facilityStatus, newBookmarkState)
-            onBookmarkChanged(newBookmarkState)
-            toggleSelection()
+
+            if(it.context.isSpokenFeedbackAccessibilityEnabled) {
+
+                AccessibilityDialog.execDialog(it.context,
+                    "Optionen",
+                    item.description,
+                    if (!bookmarked) "Zur Merkliste hinzufügen" else {
+                        if (!subscribed) "Aus der Merkliste entfernen" else "Mitteilungen deaktivieren"
+                    }, // Option1 Text
+                    if (!bookmarked)
+                        "Zur Merkliste hinzufügen und Mitteilungen aktivieren"
+                    else {
+                        if (!subscribed)
+                            "Mitteilungen aktivieren"
+                        else
+                            "Aus der Merkliste entfernen und Mitteilungen deaktivieren"
+                    }, // Option2 Text
+
+                    buttonOption1Clicked = {
+                        if (!bookmarked)
+                            toggleBookmarked(item)
+                        else {
+                            if (!subscribed) {
+                                toggleBookmarked(item)
+                            }
+                            else  {
+                              if(FacilityPushManager.isPushEnabled(itemView.context)) {
+                                  onCheckedChanged(subscribePushSwitch.compoundButton, false)
+                                  subscribePushSwitch.isChecked = false
+                                  subscribed=false
+                              }
+                              else {
+                                  showPushSystemDialog(it)
+                              }
+                            }
+
+                        }
+                    },
+
+                    buttonOption2Clicked = {
+                        if(!bookmarked) {
+                            toggleBookmarked(item)
+                            if(!FacilityPushManager.isPushEnabled(itemView.context)) {
+                                showPushSystemDialog(it)
+                            }
+                            else {
+                                onCheckedChanged(subscribePushSwitch.compoundButton, true)
+                                subscribePushSwitch.isChecked = true
+                                subscribed=true
+                            }
+                        }
+                        else {
+                            if (!subscribed) {
+                                if (!FacilityPushManager.isPushEnabled(itemView.context)) {
+                                    showPushSystemDialog(it)
+                                } else {
+                                    onCheckedChanged(subscribePushSwitch.compoundButton, true)
+                                    subscribePushSwitch.isChecked = true
+                                    subscribed = true
+                                }
+                            }
+                            else {
+                                // "Aus der Merkliste entfernen und Mitteilungen deaktivieren"
+
+                                toggleBookmarked(item)
+                                onCheckedChanged(subscribePushSwitch.compoundButton, false)
+                                subscribePushSwitch.isChecked = false
+                                subscribed = false
+                            }
+                        }
+                    }
+                ) {
+
+                }
+
+            }
+            else {
+
+                toggleBookmarked(item)
+            }
         }
+    }
+
+    private fun showPushSystemDialog(it: View) {
+        AccessibilityDialog.execDialog(it.context, "Hinweis",
+            "Mitteilungen für diese App müssen in den Systemeinstellungen zugelassen werden.",
+            "", "",
+            buttonOption1Clicked = null,
+            buttonOption2Clicked = null,
+            "Einstellungen", buttonPositiveClicked = {
+                NotificationChannelManager.showNotificationSettingsDialog(
+                    itemView.context
+                )
+            }
+        )
+    }
+
+    private fun toggleBookmarked(item: FacilityStatus) {
+
+        val newBookmarkState =
+            !facilityPushManager.getBookmarked(itemView.context, item.equipmentNumber)
+
+        trackingManager.track(
+            TrackingManager.TYPE_ACTION,
+            TrackingManager.Screen.D1,
+            TrackingManager.Category.AUFZUEGE,
+            "favorit",
+            if (newBookmarkState) "add" else "remove"
+        )
+
+        facilityPushManager.setBookmarked(itemView.context, item, newBookmarkState)
+        onBookmarkChanged(newBookmarkState)
+        toggleSelection()
     }
 
     private fun renderDescription(status: Status, description: String): CharSequence {
@@ -117,6 +220,8 @@ abstract class FacilityStatusViewHolder(parent: ViewGroup,
                 isChecked
             )
         }
+
+
 //        onSubscriptionChanged(isChecked)
     }
 
