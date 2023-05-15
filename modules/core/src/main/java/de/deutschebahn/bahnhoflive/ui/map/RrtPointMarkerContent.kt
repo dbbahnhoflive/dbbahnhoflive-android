@@ -29,7 +29,7 @@ class RrtPointMarkerContent(
         return markerOptions
     }
 
-    override fun getTitle(): String = "Schienenersatzverkehr"
+    override fun getTitle(): String = "Ersatzverkehr"
 
     override fun getMapIcon(): Int = R.drawable.rimap_sev_new
 

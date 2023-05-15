@@ -24,7 +24,7 @@
         "menusubcat": "Tram"
       },
       {
-        "title": "Schienenersatzverkehr",
+        "title": "Ersatzverkehr",
         "presets": [
           "local_timetable SEV"
         ],

@@ -1013,18 +1013,18 @@ class StationViewModel(
                             } else null
                             )
 
-                            .append(if (railReplacement.value?.takeUnless { it.isEmpty() } != null && matchingKeys.contains(
-                                    "Bahnhofsinformation Schienenersatzverkehr"
-                                )) {
-                                ContentSearchResult(
-                                    "Schienenersatzverkehr",
-                                    R.drawable.app_rail_replacement,
-                                    currentRawQuery,
-                                    {
-                                        stationNavigation?.showRailReplacement()
-                                    })
-                            } else null
-                            )
+                        .append(if (railReplacement.value?.takeUnless { it.isEmpty() } != null && matchingKeys.contains(
+                                "Bahnhofsinformation Ersatzverkehr"
+                            )) {
+                            ContentSearchResult(
+                                "Ersatzverkehr",
+                                R.drawable.app_rail_replacement,
+                                currentRawQuery,
+                                {
+                                    stationNavigation?.showRailReplacement()
+                                })
+                        } else null
+                        )
 
                             .append(dbTimetable.value?.let { timetable ->
                                 emptySequence<ContentSearchResult>()
@@ -1458,4 +1458,7 @@ class StationViewModel(
     fun hasElevators() : Boolean = !elevatorsResource.data.value.isNullOrEmpty()
     fun hasSEV() : Boolean = !railReplacementSummaryLiveData.value.isNullOrEmpty()
 
+
+    fun hasElevators() : Boolean = !elevatorsResource.data.value.isNullOrEmpty()
+    fun hasSEV() : Boolean = !railReplacementSummaryLiveData.value.isNullOrEmpty()
 }

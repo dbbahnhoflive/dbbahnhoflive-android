@@ -58,8 +58,21 @@ class RegularJourneyContentFragment : Fragment() {
 
         var shouldOfferWagenOrder = false
 
-
         journeyViewModel.essentialParametersLiveData.observe(viewLifecycleOwner) { (station, trainInfo, trainEvent) ->
+
+            journeyViewModel.showSEVLiveData.observe(viewLifecycleOwner) {itShowSEV->
+
+                if(itShowSEV && stationViewModel.hasSEV()) {
+                    sev.setOnClickListener {
+                        stationViewModel.stationNavigation?.showRailReplacement()
+                    }
+                    sev.visibility = View.VISIBLE
+                }
+                else
+                    sev.visibility = View.GONE
+            }
+
+
 
             issueBinder.bindIssues(
                 trainInfo,
@@ -141,7 +154,7 @@ class RegularJourneyContentFragment : Fragment() {
 
 
                 }, {
-                    Log.d(JourneyFragment::class.java.simpleName, "Error: $it")
+                    Log.d(RegularJourneyContentFragment::class.java.simpleName, "Error: $it")
                 })
             }
 

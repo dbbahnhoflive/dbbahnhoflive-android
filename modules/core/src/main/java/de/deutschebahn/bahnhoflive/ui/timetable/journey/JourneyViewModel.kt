@@ -23,6 +23,7 @@ class JourneyViewModel(app: Application, savedStateHandle: SavedStateHandle) :
     }
 
     val showWagonOrderLiveData = MutableLiveData<Boolean>()
+    val showSEVLiveData = MutableLiveData<Boolean>()
 
     val showFullDeparturesLiveData = MutableLiveData<Boolean>()
     val trainFormationInputLiveData = MutableLiveData<TrainFormation?>()

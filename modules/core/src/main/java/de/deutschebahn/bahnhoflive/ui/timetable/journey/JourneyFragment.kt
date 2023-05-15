@@ -84,6 +84,9 @@ class JourneyFragment() : JourneyCoreFragment(), MapPresetProvider {
 
             showWagonOrderFromExtern = false
 
+            journeyViewModel.showSEVLiveData.value =
+                titleBar.screenTitle.text.contains("SEV", true)
+
         }
 
         journeyViewModel.trainFormationOutputLiveData.observe(viewLifecycleOwner) { (trainFormation, trainInfo, trainEvent) ->

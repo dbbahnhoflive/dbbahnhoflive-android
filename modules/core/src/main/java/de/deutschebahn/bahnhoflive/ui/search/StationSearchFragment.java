@@ -248,7 +248,7 @@ public class StationSearchFragment extends Fragment {
 
 
     private void closeKeyboard() {
-        hideKeyboard(this);
+        KeyboardXKt.hideKeyboard(this);
     }
 
     @Override
