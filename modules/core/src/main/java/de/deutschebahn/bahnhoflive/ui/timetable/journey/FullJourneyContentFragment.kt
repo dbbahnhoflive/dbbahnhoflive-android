@@ -85,7 +85,7 @@ class FullJourneyContentFragment : Fragment() {
                 it.fold<Unit, List<JourneyStop>>({ journeyStops ->
                     submitList(journeyStops)
                 }, {
-                    Log.d(JourneyFragment::class.java.simpleName, "Error: $it")
+                    Log.d(FullJourneyContentFragment::class.java.simpleName, "Error: $it")
                 })
             }
 

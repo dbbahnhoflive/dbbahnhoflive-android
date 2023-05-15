@@ -17,6 +17,7 @@ class News {
     lateinit var id: String
 
     lateinit var title: String
+    var titleForScreenReader: String? = null
 
     var subtitle: String? = null
 

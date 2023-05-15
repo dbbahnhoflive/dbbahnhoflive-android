@@ -8,12 +8,16 @@ package de.deutschebahn.bahnhoflive.backend.db.newsapi
 
 import de.deutschebahn.bahnhoflive.backend.db.newsapi.model.News
 
+// should be in sync with NewsGroupPresentation
 enum class GroupId {
     COUPON,
     STATION_ISSUE,
     SURVEY,
     PRODUCTS_AND_SERVICES,
-    MAJOR_DISRUPTION;
+    MAJOR_DISRUPTION,
+    REPLACEMENT_ANNOUNCEMENT,
+    REPLACEMENT
+    ;
 
     fun appliesTo(news: News): Boolean = news.group.id == id
 

@@ -1,8 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
 
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools">
 
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
+    <data>
+        <variable name="headline" type="de.deutschebahn.bahnhoflive.ui.station.NewsHeadline"/>
+    </data>
+
+<LinearLayout
     android:orientation="horizontal"
     android:layout_width="wrap_content"
     android:layout_height="match_parent"
@@ -16,19 +21,23 @@
         android:textColor="@color/red"
         android:contentDescription="@null"
         android:maxLines="1"
+        android:importantForAccessibility="no"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content" />
 
     <TextView
         android:layout_margin="@dimen/default_space"
-        android:text="@string/newsHeadline"
+        android:text='@{headline!=null ? headline.text : ""}'
         android:textStyle="bold"
         android:textSize="@dimen/textsize_h2"
-        android:contentDescription="@string/sr_news_title"
+        android:contentDescription="@{headline.text}"
         android:maxLines="1"
+        android:importantForAccessibility="no"
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content" />
+        android:layout_height="wrap_content"
+        tools:text="Aktuelle Information"
+        />
 
 </LinearLayout>
 
-        
+</layout>

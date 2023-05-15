@@ -17,7 +17,12 @@ import de.deutschebahn.bahnhoflive.backend.db.newsapi.model.News
 import de.deutschebahn.bahnhoflive.databinding.ItemNewsBinding
 import de.deutschebahn.bahnhoflive.ui.ViewHolder
 import de.deutschebahn.bahnhoflive.ui.station.news.groupIcon
+import de.deutschebahn.bahnhoflive.util.setAccessibilityText
 import de.deutschebahn.bahnhoflive.view.ItemClickListener
+
+data class NewsHeadline(
+ var text : String
+)
 
 class NewsViewHolder(
     itemNewsBinding: ItemNewsBinding,
@@ -29,12 +34,21 @@ class NewsViewHolder(
     val linkButton: View = itemNewsBinding.btnLink
     val iconView: ImageView = itemNewsBinding.icon
 
+    val newsTopHeadline : NewsHeadline = NewsHeadline("")
+
     init {
         itemClickListener?.also { itemClickListener ->
             itemNewsBinding.root.setOnClickListener {
                 itemClickListener(item, adapterPosition)
             }
         }
+
+        itemNewsBinding.line1.headline = newsTopHeadline
+        itemNewsBinding.line2.headline = newsTopHeadline
+        itemNewsBinding.line3.headline = newsTopHeadline
+        itemNewsBinding.line4.headline = newsTopHeadline
+        itemNewsBinding.line5.headline = newsTopHeadline
+        itemNewsBinding.line6.headline = newsTopHeadline
 
         itemNewsBinding.animatedHeadlineScroller.also { scroller ->
             val container = itemNewsBinding.animatedHeadlineContainer
@@ -103,10 +117,15 @@ class NewsViewHolder(
     override fun onBind(item: News?) {
         super.onBind(item)
 
+        newsTopHeadline.text = item?.group?.title?:"" // animierte Überschrift
+
         newsHeadline.text = item?.title
+        if(item?.titleForScreenReader!=null)
+         newsHeadline.contentDescription = item?.titleForScreenReader
 
         newsCopy.text = item?.summary
 
         iconView.setImageResource(item?.groupIcon()?.icon ?: 0)
+        iconView.contentDescription = item?.group?.title?:""
     }
 }

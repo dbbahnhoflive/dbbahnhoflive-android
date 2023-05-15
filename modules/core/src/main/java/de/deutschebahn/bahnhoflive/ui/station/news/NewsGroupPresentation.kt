@@ -19,7 +19,11 @@ enum class NewsGroupPresentation(
     COUPON(R.drawable.app_news_coupon),
     MALFUNCTION(R.drawable.app_news_malfunction),
     SURVEY(R.drawable.app_news_survey, R.string.button_news_external_link_survey),
-    PRODUCTS_AND_SERVICES(R.drawable.app_news_neuambahnhof);
+    PRODUCTS_AND_SERVICES(R.drawable.app_news_neuambahnhof),
+    MAJOR_DISRUPTION(R.drawable.app_news_malfunction),
+    REPLACEMENT_ANNOUNCEMENT(R.drawable.app_nev_icon_round),
+    REPLACEMENT(R.drawable.app_nev_icon_round),
+    ;
 
     companion object {
         val VALUES by lazy { values() }

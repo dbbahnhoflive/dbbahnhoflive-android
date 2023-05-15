@@ -44,6 +44,7 @@ import de.deutschebahn.bahnhoflive.repository.LoadingStatus;
 import de.deutschebahn.bahnhoflive.repository.timetable.CyclicTimetableCollector;
 import de.deutschebahn.bahnhoflive.repository.timetable.TimetableCollector;
 import de.deutschebahn.bahnhoflive.ui.hub.LocationFragment;
+import de.deutschebahn.bahnhoflive.util.KeyboardXKt;
 import de.deutschebahn.bahnhoflive.view.BaseTextWatcher;
 import de.deutschebahn.bahnhoflive.view.ConfirmationDialog;
 

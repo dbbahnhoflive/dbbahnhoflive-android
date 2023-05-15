@@ -57,6 +57,8 @@ class HafasJourneyFragment : JourneyCoreFragment(), MapPresetProvider
     }
 
 
+    private var titleView : ViewGroup? = null
+
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
@@ -97,13 +99,28 @@ class HafasJourneyFragment : JourneyCoreFragment(), MapPresetProvider
         showTutorialIfNecessary()
     }
 
+    override fun onStop() {
+
+        titleView?.let {
+            it.visibility=View.VISIBLE
+        }
+
+        super.onStop()
+    }
+
     override fun prepareMapIntent(intent: Intent): Boolean {
         RimapFilter.putPreset(intent, RimapFilter.PRESET_LOCAL_TIMETABLE)
         InitialPoiManager.putInitialPoi(intent, Content.Source.RIMAP, AnyLocalTransportInitialPoi)
         return true
     }
 
-    fun onDataReceived(detailedHafasEvent : DetailedHafasEvent) {
+    fun onDataReceived(detailedHafasEvent : DetailedHafasEvent, titleView : ViewGroup?) {
+
+        this.titleView = titleView
+
+        titleView?.let {
+            it.visibility=View.GONE
+        }
 
         this.detailedHafasEvent = detailedHafasEvent
         val hafasDetail = detailedHafasEvent.hafasDetail
