@@ -213,7 +213,6 @@ abstract class FacilityStatusViewHolder(parent: ViewGroup,
         if(!isPushEnabled) {
             showPushSystemDialog(itemView) {
                 subscribePushSwitch.isChecked=!isChecked
-                return@showPushSystemDialog // kein tracking
             }
 
 //            AlertX.execAlert(itemView.context,
@@ -230,6 +229,9 @@ abstract class FacilityStatusViewHolder(parent: ViewGroup,
 //                    return@execAlert // kein tracking
 //                }
 //            )
+
+            return
+
         }
 
         facilityStatus?.let {
