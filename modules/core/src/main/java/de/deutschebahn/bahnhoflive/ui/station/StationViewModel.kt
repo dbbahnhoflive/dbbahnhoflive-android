@@ -987,10 +987,10 @@ class StationViewModel(
                         )
 
                         .append(if (railReplacement.value?.takeUnless { it.isEmpty() } != null && matchingKeys.contains(
-                                "Bahnhofsinformation Schienenersatzverkehr"
+                                "Bahnhofsinformation Ersatzverkehr"
                             )) {
                             ContentSearchResult(
-                                "Schienenersatzverkehr",
+                                "Ersatzverkehr",
                                 R.drawable.app_rail_replacement,
                                 currentRawQuery,
                                 {
