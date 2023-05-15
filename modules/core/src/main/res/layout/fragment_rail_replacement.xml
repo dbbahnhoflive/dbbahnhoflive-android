@@ -60,6 +60,8 @@
                     android:id="@+id/nev_info_top"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
+                    tools:visibility="visible"
+                    android:visibility="gone"
                     >
 
 

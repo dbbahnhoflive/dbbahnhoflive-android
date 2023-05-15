@@ -110,7 +110,7 @@ class RailReplacementFragment : Fragment(), MapPresetProvider {
                 context?.let { it1 ->
                     Intent(
                         Intent.ACTION_VIEW,
-                        Uri.parse("https://www.bahnhof.de/ersatzverkehr")
+                        Uri.parse("http://bahnhof.de/bfl/ev-nw")
                     ).startSafely(it1)
                 }
             }
