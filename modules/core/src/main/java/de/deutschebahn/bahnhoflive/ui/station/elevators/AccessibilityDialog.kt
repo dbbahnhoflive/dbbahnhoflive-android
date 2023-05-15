@@ -27,7 +27,7 @@ class AccessibilityDialog {
 
         ) {
 
-            val builder: AlertDialog.Builder = androidx.appcompat.app.AlertDialog.Builder(context)
+            val builder: AlertDialog.Builder = androidx.appcompat.app.AlertDialog.Builder(context, R.style.App_Dialog_Theme)
 
 
             val layout: View = View.inflate(context, R.layout.dialog_accessibility_elevator, null)

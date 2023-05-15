@@ -32,6 +32,7 @@
         android:layout_height="wrap_content"
         tools:text="Text Zeile1\nZeile2"
         android:layout_marginHorizontal="@dimen/default_space_triple"
+        android:layout_marginTop="@dimen/default_space"
         android:layout_marginBottom="@dimen/default_space_double"
         android:gravity="center_horizontal"
         android:textSize="@dimen/textsize_h1"

@@ -31,10 +31,12 @@ import androidx.fragment.app.FragmentTransaction;
 import androidx.lifecycle.ViewModelProvider;
 
 import de.deutschebahn.bahnhoflive.BaseActivity;
+import de.deutschebahn.bahnhoflive.BuildConfig;
 import de.deutschebahn.bahnhoflive.R;
 import de.deutschebahn.bahnhoflive.analytics.IssueTracker;
 import de.deutschebahn.bahnhoflive.analytics.TrackingManager;
 import de.deutschebahn.bahnhoflive.backend.ris.model.TrainInfo;
+import de.deutschebahn.bahnhoflive.debug.BhfLiveUtilHandler;
 import de.deutschebahn.bahnhoflive.permission.Permission;
 import de.deutschebahn.bahnhoflive.push.FacilityFirebaseService;
 import de.deutschebahn.bahnhoflive.repository.InternalStation;
@@ -205,6 +207,9 @@ public class HubActivity extends BaseActivity implements TutorialFragment.Host {
         final Intent appIntent = getIntent();
 
         DebugX.Companion.logIntent(this.getLocalClassName(), appIntent);
+
+        if(BuildConfig.DEBUG)
+          BhfLiveUtilHandler.Companion.init(this.getApplicationContext());
 
         if (appIntent != null ) {
 

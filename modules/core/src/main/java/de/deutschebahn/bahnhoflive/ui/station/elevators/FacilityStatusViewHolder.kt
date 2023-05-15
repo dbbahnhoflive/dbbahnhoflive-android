@@ -157,6 +157,7 @@ abstract class FacilityStatusViewHolder(parent: ViewGroup,
     private fun showPushSystemDialog(it: View, onNegativeAnswer : (()->Unit)? = null) {
         AlertX.execAlert(it.context, "Hinweis",
             "Mitteilungen für diese App müssen in den Systemeinstellungen zugelassen werden.",
+            AlertX.Companion.AlertDefaultButton.BUTTON_NEGATIVE,
             "Einstellungen", buttonPositiveClicked = {
                 NotificationChannelManager.showNotificationSettingsDialog(
                     itemView.context
