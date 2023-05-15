@@ -373,7 +373,7 @@
     <string name="filter_content_hint_tracks">Bediente Gleise</string>
     <string name="filter_content_hint_local_transport">Verkehrsmittel</string>
 
-    <string name="rail_replacement">Schienenersatzverkehr</string>
+    <string name="rail_replacement">Ersatzverkehr</string>
     <string name="rail_replacement_directions">Lagebeschreibung:</string>
     <string name="rail_replacement_additional">Weitere Ersatzhaltestelle</string>
     <string name="rail_replacement_map_link">Eine Wegbeschreibung finden Sie unter Bahnhofsinformationen.</string>
@@ -430,6 +430,6 @@
     <string name="general_switch">Umschalten</string>
 
 
-    <string name="info_sev">Übersicht Schienenersatzverkehr</string>
+    <string name="info_sev">Übersicht Ersatzverkehr</string>
 </resources>
 
