@@ -8,7 +8,7 @@ import androidx.core.content.getSystemService
 
 val Context.accessibilityManager get() = getSystemService<AccessibilityManager>()
 
-val Context.isSpokenFeedbackAccessibilityEnabled
+val Context.isSpokenFeedbackAccessibilityEnabled // talkback
     get() = accessibilityManager?.run {
         isEnabled && getEnabledAccessibilityServiceList(AccessibilityServiceInfo.FEEDBACK_SPOKEN).isNotEmpty()
     } == true

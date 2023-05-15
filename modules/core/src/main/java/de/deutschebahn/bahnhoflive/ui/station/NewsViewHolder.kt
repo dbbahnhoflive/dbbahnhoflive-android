@@ -16,8 +16,8 @@ import androidx.core.view.get
 import de.deutschebahn.bahnhoflive.backend.db.newsapi.model.News
 import de.deutschebahn.bahnhoflive.databinding.ItemNewsBinding
 import de.deutschebahn.bahnhoflive.ui.ViewHolder
+import de.deutschebahn.bahnhoflive.ui.accessibility.isSpokenFeedbackAccessibilityEnabled
 import de.deutschebahn.bahnhoflive.ui.station.news.groupIcon
-import de.deutschebahn.bahnhoflive.util.setAccessibilityText
 import de.deutschebahn.bahnhoflive.view.ItemClickListener
 
 data class NewsHeadline(
@@ -50,6 +50,14 @@ class NewsViewHolder(
         itemNewsBinding.line5.headline = newsTopHeadline
         itemNewsBinding.line6.headline = newsTopHeadline
 
+        if (itemView.context.isSpokenFeedbackAccessibilityEnabled) {
+            itemNewsBinding.line2.root.visibility = View.GONE
+            itemNewsBinding.line3.root.visibility = View.GONE
+            itemNewsBinding.line4.root.visibility = View.GONE
+            itemNewsBinding.line5.root.visibility = View.GONE
+            itemNewsBinding.line6.root.visibility = View.GONE
+        }
+        else {
         itemNewsBinding.animatedHeadlineScroller.also { scroller ->
             val container = itemNewsBinding.animatedHeadlineContainer
 
@@ -78,7 +86,7 @@ class NewsViewHolder(
                     }
                 }
             }
-
+            }
 
 //            scroller.addOnLayoutChangeListener { v, left, top, right, bottom, oldLeft, oldTop, oldRight, oldBottom ->
 //                val newWidth = right - left
