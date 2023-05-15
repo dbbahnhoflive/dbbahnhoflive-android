@@ -21,6 +21,7 @@ import de.deutschebahn.bahnhoflive.push.NotificationChannelManager
 import de.deutschebahn.bahnhoflive.ui.Status
 import de.deutschebahn.bahnhoflive.ui.accessibility.isSpokenFeedbackAccessibilityEnabled
 import de.deutschebahn.bahnhoflive.ui.station.CommonDetailsCardViewHolder
+import de.deutschebahn.bahnhoflive.util.AlertX
 import de.deutschebahn.bahnhoflive.util.setAccessibilityText
 import de.deutschebahn.bahnhoflive.view.CompoundButtonChecker
 import de.deutschebahn.bahnhoflive.view.SingleSelectionManager
@@ -52,17 +53,21 @@ abstract class FacilityStatusViewHolder(parent: ViewGroup,
 
         titleView.rootView.setAccessibilityText("", AccessibilityNodeInfo.ACTION_CLICK, itemView.context.getText(R.string.general_switch).toString())
 
-
         val bookmarked = facilityPushManager.getBookmarked(itemView.context, item.equipmentNumber)
         bindBookmarkedIndicator(bookmarked)
 
         var subscribed = facilityPushManager.isPushMessageSubscribed(itemView.context, item.equipmentNumber)
-        subscribePushSwitch.isChecked = subscribed
+        subscribePushSwitch.isChecked = if(FacilityPushManager.isPushEnabled(itemView.context)) subscribed else {
+//            subscribePushSwitch.compoundButton.isEnabled=false
+            false
+        }
 //        subscribePushSwitch.compoundButton.setAccessibilityText("", AccessibilityNodeInfo.ACTION_CLICK, itemView.context.getText(R.string.general_switch).toString())
 
         val status = Status.of(item)
         val accessibilityText = item.description + "  " + iconView.context.getText(item.stateDescription)
         setStatus(status, item.description, renderDescription(status, item.description), accessibilityText) // ex.: 'von Gleis 1/2 (S-Bahn)
+
+        val isPushEnabled = FacilityPushManager.isPushEnabled(itemView.context)
 
         itemView.setOnClickListener{
             // toggle bookmarked-state
@@ -92,7 +97,7 @@ abstract class FacilityStatusViewHolder(parent: ViewGroup,
                                 toggleBookmarked(item)
                             }
                             else  {
-                              if(FacilityPushManager.isPushEnabled(itemView.context)) {
+                              if(isPushEnabled) {
                                   onCheckedChanged(subscribePushSwitch.compoundButton, false)
                                   subscribePushSwitch.isChecked = false
                                   subscribed=false
@@ -119,7 +124,7 @@ abstract class FacilityStatusViewHolder(parent: ViewGroup,
                         }
                         else {
                             if (!subscribed) {
-                                if (!FacilityPushManager.isPushEnabled(itemView.context)) {
+                                if (!isPushEnabled) {
                                     showPushSystemDialog(it)
                                 } else {
                                     onCheckedChanged(subscribePushSwitch.compoundButton, true)
@@ -149,17 +154,15 @@ abstract class FacilityStatusViewHolder(parent: ViewGroup,
         }
     }
 
-    private fun showPushSystemDialog(it: View) {
-        AccessibilityDialog.execDialog(it.context, "Hinweis",
+    private fun showPushSystemDialog(it: View, onNegativeAnswer : (()->Unit)? = null) {
+        AlertX.execAlert(it.context, "Hinweis",
             "Mitteilungen für diese App müssen in den Systemeinstellungen zugelassen werden.",
-            "", "",
-            buttonOption1Clicked = null,
-            buttonOption2Clicked = null,
             "Einstellungen", buttonPositiveClicked = {
                 NotificationChannelManager.showNotificationSettingsDialog(
                     itemView.context
                 )
-            }
+            },
+            "Abbrechen", onNegativeAnswer
         )
     }
 
@@ -204,6 +207,30 @@ abstract class FacilityStatusViewHolder(parent: ViewGroup,
     override fun onCheckedChanged(buttonView: CompoundButton, isChecked: Boolean) {
         // enable/disable push
         val facilityStatus = item
+
+        val isPushEnabled = FacilityPushManager.isPushEnabled(itemView.context)
+
+        if(!isPushEnabled) {
+            showPushSystemDialog(itemView) {
+                subscribePushSwitch.isChecked=!isChecked
+                return@showPushSystemDialog // kein tracking
+            }
+
+//            AlertX.execAlert(itemView.context,
+//                "Push-Mitteilungen",
+//                "Push-Mitteilungen sind deaktiviert.\nMöchten Sie Benachrichtigungen  aktivieren ?",
+//                "Ja",  {
+//                    NotificationChannelManager.showNotificationSettingsDialog(
+//                        itemView.context
+//                    )
+//
+//                },
+//                "Nein" ,  {
+//                    subscribePushSwitch.isChecked=!isChecked
+//                    return@execAlert // kein tracking
+//                }
+//            )
+        }
 
         facilityStatus?.let {
 

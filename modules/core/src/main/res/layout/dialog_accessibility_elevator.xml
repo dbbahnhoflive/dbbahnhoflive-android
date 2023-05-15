@@ -12,7 +12,6 @@
 
     >
 
-
     <TextView
         android:id="@+id/title"
         android:layout_width="match_parent"
@@ -20,7 +19,6 @@
 
         tools:text="Titel"
         android:layout_marginHorizontal="@dimen/default_space_triple"
-        android:layout_marginVertical="@dimen/default_space_double"
         android:gravity="center_horizontal"
         android:textSize="@dimen/textsize_h1"
         android:textStyle="bold"

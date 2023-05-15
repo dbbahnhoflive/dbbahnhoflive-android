@@ -125,17 +125,14 @@ class OverviewElevatorStatusFragment : Fragment(), MapPresetProvider {
                 }
 
                 override fun isSelected(): Boolean {
-                    // true: expanded
+//                     true: expanded
                     item?.let {
-                        return FacilityPushManager.isPushEnabled(itemView.context)
-                                &&
-                                facilityPushManager.getBookmarked(
+                        return  facilityPushManager.getBookmarked(
                                     itemView.context,
                                     it.equipmentNumber
                                 )
                     }
                     return true
-//                    return false
                 }
             }
         }

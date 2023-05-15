@@ -52,15 +52,15 @@ class BookmarkedElevatorStatusFragment : Fragment(), SwipeRefreshLayout.OnRefres
                     override fun isSelected(): Boolean {
                         // true: expanded
                         item?.let {
-                            return FacilityPushManager.isPushEnabled(itemView.context)
-                                    &&
+                            return if(FacilityPushManager.isPushEnabled(itemView.context))
                                     facilityPushManager.getBookmarked(
                                         itemView.context,
                                         it.equipmentNumber
                                     )
+                            else
+                                true
                         }
                         return true
-//                        return false
                     }
                 }
             }
