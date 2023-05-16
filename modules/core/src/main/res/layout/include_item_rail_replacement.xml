@@ -10,13 +10,14 @@
     android:paddingLeft="@dimen/default_space_double"
     android:paddingRight="@dimen/default_space_double"
     tools:showIn="@layout/fragment_rail_replacement"
-    android:layout_marginBottom="@dimen/default_space_double">
+    android:layout_marginBottom="@dimen/default_space_double"
+    >
 
     <TextView
         android:id="@+id/rail_replacement_texts"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="@dimen/default_space_double"
+
         android:textSize="@dimen/textsize_28"
         android:textStyle="bold"
         tools:text="Richtung Ostbahnhof/Gesundbrunnen\nErsatzhaltestelle Fernverkehr" />

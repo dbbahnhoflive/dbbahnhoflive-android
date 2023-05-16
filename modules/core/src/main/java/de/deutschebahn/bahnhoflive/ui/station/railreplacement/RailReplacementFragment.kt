@@ -30,16 +30,16 @@ class RailReplacementFragment : Fragment(), MapPresetProvider {
         binding.apply {
             var fullText = "" //(titleBar.staticTitleBar.screenTitle.text?:"") as String
 
-            if(railReplacementNev.visibility==View.VISIBLE)
-              fullText += railReplacementNev.text?:""
+            if (railReplacementNev.visibility == View.VISIBLE)
+                fullText += railReplacementNev.text ?: ""
 
-            if(railReplacementEntryLabel.visibility==View.VISIBLE)
-            fullText += railReplacementEntryLabel.text?:""
+            if (railReplacementEntryLabel.visibility == View.VISIBLE)
+                fullText += railReplacementEntryLabel.text ?: ""
 
             fullText += railReplacementText
 
-            if(railReplacementNev2.visibility==View.VISIBLE)
-             fullText += railReplacementNev2.text?:""
+            if (railReplacementNev2.visibility == View.VISIBLE)
+                fullText += railReplacementNev2.text ?: ""
 
 
 //           val cleanedFullText = fullText.replace("26. Mai", "26.5.2023")
