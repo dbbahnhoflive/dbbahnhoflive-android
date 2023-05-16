@@ -139,7 +139,7 @@ class RailReplacementFragment : Fragment(), MapPresetProvider {
 
                         if (railReplacements.size == 1 && texts.mapNotNull { itText -> itText?.isNotEmpty() }
                                 .isEmpty()) {
-                            railReplacementTexts.text = ""
+                            railReplacementTexts.visibility = View.GONE
                             railReplacementEntryLabel.visibility = View.GONE
                         } else {
                         railReplacementTexts.text =
