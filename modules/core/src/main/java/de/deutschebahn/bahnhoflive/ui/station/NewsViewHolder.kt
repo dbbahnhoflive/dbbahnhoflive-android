@@ -56,6 +56,9 @@ class NewsViewHolder(
             itemNewsBinding.line4.root.visibility = View.GONE
             itemNewsBinding.line5.root.visibility = View.GONE
             itemNewsBinding.line6.root.visibility = View.GONE
+
+
+            itemNewsBinding.line1.crosses.visibility=View.GONE
         }
         else {
         itemNewsBinding.animatedHeadlineScroller.also { scroller ->
