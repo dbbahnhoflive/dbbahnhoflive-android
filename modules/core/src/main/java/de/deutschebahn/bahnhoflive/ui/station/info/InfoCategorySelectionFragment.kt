@@ -27,6 +27,7 @@ import de.deutschebahn.bahnhoflive.ui.station.features.RISServicesAndCategory
 import de.deutschebahn.bahnhoflive.ui.station.locker.LockerFragment
 import de.deutschebahn.bahnhoflive.ui.station.parking.ParkingListFragment
 import de.deutschebahn.bahnhoflive.ui.station.railreplacement.RailReplacementFragment
+import de.deutschebahn.bahnhoflive.ui.station.railreplacement.SEV_Static
 import de.deutschebahn.bahnhoflive.util.Collections
 
 class InfoCategorySelectionFragment : CategorySelectionFragment(
@@ -66,12 +67,16 @@ class InfoCategorySelectionFragment : CategorySelectionFragment(
             accessibilityCategory = addAccessibility()
             parkingsCategory = addParkings()
 
-            if (!railReplacementSummaryLiveData.value.isNullOrEmpty()) {
-                railReplacementCategory = addRailReplacement()
-            }
+            if (station != null) {
+                if (!railReplacementSummaryLiveData.value.isNullOrEmpty() ||  SEV_Static.contains(
+                        station.station?.stationID
+                    )) {
+                        railReplacementCategory = addRailReplacement()
+                    }
 
-            if (Collections.hasContent(elevatorsDataResource.value)) {
-                elevatorsCategory = addElevators()
+                    if (Collections.hasContent(elevatorsDataResource.value)) {
+                        elevatorsCategory = addElevators()
+                    }
             }
 
             lockerCategory = addLockers()
