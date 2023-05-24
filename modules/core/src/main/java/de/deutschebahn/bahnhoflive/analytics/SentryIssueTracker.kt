@@ -11,6 +11,9 @@ class SentryIssueTracker(app: BaseApplication, dsn: String) : IssueTracker(app) 
         SentryAndroid.init(app) { sentryAndroidOptions ->
             sentryAndroidOptions.dsn = dsn
             sentryAndroidOptions.isDebug = BuildConfig.DEBUG
+
+//            sentryAndroidOptions.setDiagnosticLevel(SentryLevel.DEBUG)
+            sentryAndroidOptions.environment = if(BuildConfig.DEBUG) "debug" else "production"
         }
 
         TaloTracing.addTraceIdListener {

@@ -105,7 +105,11 @@ internal class TrackFlyoutViewHolder(
 
                     val trainInfos: List<TrainInfo> =
                         itTimetable.departures.filter { trainInfo ->
-                            trainInfo.departure?.purePlatform == markerContent.track
+                             val platForm : String = trainInfo.departure?.purePlatform ?: ""
+
+                             platForm.length>=markerContent.track.length && platForm.startsWith(markerContent.track)
+
+//                             trainInfo.departure?.purePlatform == markerContent.track
                         }
 
                     if(trainInfos.isNotEmpty()) {
