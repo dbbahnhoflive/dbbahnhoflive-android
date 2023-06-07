@@ -115,7 +115,7 @@ public class ImprintFragment extends Fragment {
                         AlertDialog analyticsDialog = new AlertDialog.Builder(getActivity())
                                 .setTitle(R.string.settings_tracking_dlg_title)
                                 .setMessage(alertMessage)
-                                .setCancelable(true)
+                                .setCancelable(false)
                                 .setPositiveButton(R.string.dlg_yes, new DialogInterface.OnClickListener() {
                                     @Override
                                     public void onClick(DialogInterface dialog, int which) {
@@ -123,26 +123,29 @@ public class ImprintFragment extends Fragment {
 
                                         dialog.dismiss();
                                     }
-                                }).setNeutralButton(R.string.dlg_no, new DialogInterface.OnClickListener() {
+                                })
+                                .setNeutralButton(R.string.dlg_no, new DialogInterface.OnClickListener() {
                                     @Override
                                     public void onClick(DialogInterface dialog, int which) {
                                         trackingManager.setConsented(false);
 
                                         dialog.dismiss();
                                     }
-                                }).
-                                        setNegativeButton(R.string.dlg_cancel, new DialogInterface.OnClickListener() {
-                                            @Override
-                                            public void onClick(DialogInterface dialog, int which) {
-                                                dialog.dismiss();
-                                            }
-                                        })
-                                .setOnCancelListener(new DialogInterface.OnCancelListener() {
-                                    @Override
-                                    public void onCancel(DialogInterface dialog) {
-                                        dialog.dismiss();
-                                    }
                                 })
+//                                .setNegativeButton(R.string.dlg_cancel, new DialogInterface.OnClickListener() {
+//                                    @Override
+//                                    public void onClick(DialogInterface dialog, int which) {
+//                                        trackingManager.setConsented(false);
+//                                        dialog.dismiss();
+//                                    }
+//                                })
+//                                .setOnCancelListener(new DialogInterface.OnCancelListener() {
+//                                    @Override
+//                                    public void onCancel(DialogInterface dialog) {
+//                                        trackingManager.setConsented(false);
+//                                        dialog.dismiss();
+//                                    }
+//                                })
                                 .create();
 
                         analyticsDialog.show();

@@ -26,9 +26,10 @@
     <string name="menu_feedback">Feedback</string>
     <string name="title_feedback">@string/menu_feedback</string>
 
-    <string name="settings_tracking_not_active_msg">Das Tracking ist derzeit nicht aktiviert. Möchten Sie die Datenerfassung erlauben?</string>
-    <string name="settings_tracking_active_msg">Das Tracking ist derzeit aktiviert. Möchten Sie die Datenerfassung weiterhin erlauben?</string>
-    <string name="settings_tracking_dlg_title">"Adobe-Tracker Analytics"</string>
+    // Adobe-Tracker
+    <string name="settings_tracking_not_active_msg">Adobe Analytics zur Erstellung von Fehleranalysen und Statistiken ist derzeit nicht aktiviert. Möchten Sie die anonymisierte Datenerfassung erlauben?</string>
+    <string name="settings_tracking_active_msg">Adobe Analytics zur Erstellung von Fehleranalysen und Statistiken ist derzeit aktiviert. Möchten Sie die anonymisierte Datenerfassung weiterhin erlauben?</string>
+    <string name="settings_tracking_dlg_title">"Datenschutz DB Bahnhof live"</string>
 
     <string name="venue_open">Geöffnet</string>
     <string name="venue_closed">Geschlossen</string>
