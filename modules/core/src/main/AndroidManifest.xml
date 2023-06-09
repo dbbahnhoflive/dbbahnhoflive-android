@@ -114,15 +114,7 @@ xmlns:tools="http://schemas.android.com/tools"
         </service>
 
 
-        <provider
-            android:label="BhfLiveDebugProvider"
-            android:authorities="de.deutschebahn.bahnhoflive.debug.provider"
-            android:name="de.deutschebahn.bahnhoflive.debug.InMemoryDbProvider"
-            android:enabled="true"
-            android:exported="true"
-            android:multiprocess="true"
-            >
-        </provider>
+
     </application>
 
 </manifest>

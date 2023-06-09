@@ -21,7 +21,11 @@ abstract class BaseRequest<T>(
     }
 
     override fun parseNetworkError(volleyError: VolleyError): VolleyError {
-        Log.d("cr","request: " + url +  " error")
+        if(volleyError.message!=null)
+            Log.d("cr","request: " + url +  " error (" + volleyError.message + ")")
+        else
+            Log.d("cr","request: " + url +  " error ()")
+
         return volleyError as? DetailedVolleyError
             ?: DetailedVolleyError(
                 this,

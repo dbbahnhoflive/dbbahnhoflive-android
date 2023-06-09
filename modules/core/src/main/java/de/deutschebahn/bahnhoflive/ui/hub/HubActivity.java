@@ -208,7 +208,9 @@ public class HubActivity extends BaseActivity implements TutorialFragment.Host {
 
         DebugX.Companion.logIntent(this.getLocalClassName(), appIntent);
 
-        if(BuildConfig.DEBUG)
+
+        final String packageName = getPackageName();
+        if(BuildConfig.DEBUG && !packageName.contains("community"))
           BhfLiveUtilHandler.Companion.init(this.getApplicationContext());
 
         if (appIntent != null ) {
