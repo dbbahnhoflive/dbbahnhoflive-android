@@ -15,6 +15,7 @@ class CancellableContinuationVolleyRestListener<T>(
         cancellableContinuation.resume(payload)
     }
 
+
     override fun onFail(reason: VolleyError) {
         cancellableContinuation.cancel(reason)
     }
