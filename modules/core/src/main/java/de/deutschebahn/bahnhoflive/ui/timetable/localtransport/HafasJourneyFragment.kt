@@ -2,12 +2,12 @@ package de.deutschebahn.bahnhoflive.ui.timetable.localtransport
 
 import android.content.Intent
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.view.accessibility.AccessibilityEvent
-import androidx.fragment.app.Fragment
+import androidx.fragment.app.activityViewModels
+import androidx.lifecycle.Observer
 import de.deutschebahn.bahnhoflive.R
 import de.deutschebahn.bahnhoflive.backend.hafas.model.HafasStop
 import de.deutschebahn.bahnhoflive.backend.local.model.EvaIds
@@ -17,6 +17,8 @@ import de.deutschebahn.bahnhoflive.ui.map.Content
 import de.deutschebahn.bahnhoflive.ui.map.InitialPoiManager
 import de.deutschebahn.bahnhoflive.ui.map.MapPresetProvider
 import de.deutschebahn.bahnhoflive.ui.map.content.rimap.RimapFilter
+import de.deutschebahn.bahnhoflive.ui.station.BackNavigationData
+import de.deutschebahn.bahnhoflive.ui.station.StationViewModel
 import de.deutschebahn.bahnhoflive.ui.timetable.RouteStop
 import de.deutschebahn.bahnhoflive.ui.timetable.journey.HafasRouteItemViewHolder
 import de.deutschebahn.bahnhoflive.ui.timetable.journey.JourneyCoreFragment
@@ -37,19 +39,23 @@ class HafasJourneyFragment : JourneyCoreFragment(), MapPresetProvider
 
     private var routeStops : ArrayList<RouteStopConnector> = arrayListOf()
 
+    val stationViewModel by activityViewModels<StationViewModel>()
+
     val adapter = HafasRouteAdapter { view, stop ->
+        // ocClickStop
         run {
 
             val evaIds = EvaIds(detailedHafasEvent?.hafasEvent?.stopExtId)
-
             activity?.let {
-                    RegularJourneyContentFragment.openJourneyStopStation(
+                    RegularJourneyContentFragment.openJourneyStopStation( // erzeugt DeparturesActivity
                         it,
+                        stationViewModel,
                         view,
                         evaIds,
                         stop.hafasStop.extId,
-                        stop.hafasStop.name,
-                        stop.hafasStop
+                        stop.hafasStop.name, // ziel
+                        stop.hafasStop,
+                        detailedHafasEvent?.hafasEvent
                     )
             }
 
@@ -58,6 +64,13 @@ class HafasJourneyFragment : JourneyCoreFragment(), MapPresetProvider
 
 
     private var titleView : ViewGroup? = null
+
+    private val backToLastStationClickListener =
+        View.OnClickListener { v: View? ->
+            stationViewModel.navigateBack(
+                requireActivity()
+            )
+        }
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -69,8 +82,22 @@ class HafasJourneyFragment : JourneyCoreFragment(), MapPresetProvider
             recycler.adapter = adapter
         }
 
+        stationViewModel.backNavigationLiveData.observe(
+            viewLifecycleOwner,
+            Observer<BackNavigationData> { stationToNavigateBack: BackNavigationData? ->
+                binding.titleBar.btnBackToLaststation.visibility = if(
+                    stationToNavigateBack != null && stationToNavigateBack.showChevron)
+                    View.VISIBLE
+                else
+                    View.GONE
+            }
+        )
+
+        binding.titleBar.btnBackToLaststation.setOnClickListener(backToLastStationClickListener)
+
         return binding.root
     }
+
 
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -78,17 +105,19 @@ class HafasJourneyFragment : JourneyCoreFragment(), MapPresetProvider
 
         adapter.submitList(routeStops)
 
-
-        if(hideHeader) {
-            binding.titleBar.screenTitle.visibility=View.GONE
-            binding.titleBar.screenRedLine.visibility=View.GONE
-        }
-        else {
+        if (hideHeader) {
+            binding.titleBar.screenTitle.visibility = View.GONE
+            binding.titleBar.screenRedLine.visibility = View.GONE
+        } else {
 
         detailedHafasEvent?.also { itDetails ->
             itDetails.hafasEvent?.also {
                 binding.titleBar.screenTitle.text =
-                    getString(R.string.template_hafas_journey_title, it.displayName, it.direction)
+                        getString(
+                            R.string.template_hafas_journey_title,
+                            it.displayName,
+                            it.direction
+                        )
             }
         }
 
@@ -125,8 +154,10 @@ class HafasJourneyFragment : JourneyCoreFragment(), MapPresetProvider
         this.detailedHafasEvent = detailedHafasEvent
         val hafasDetail = detailedHafasEvent.hafasDetail
 
-        for (stop in hafasDetail.stops) {
+        hafasDetail?.let {
+            for (stop in it.stops) {
             routeStops.add(RouteStopConnector(RouteStop(stop.name), stop))
+            }
         }
 
         if (routeStops.isNotEmpty()) {

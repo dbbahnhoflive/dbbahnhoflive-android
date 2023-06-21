@@ -40,6 +40,8 @@ public class TrainInfo implements Parcelable {
 
     private boolean replacement = false;
     private boolean special = false;
+
+    private boolean showWagonOrder = false;
     @NonNull
     private String genuineName;
 
@@ -69,6 +71,13 @@ public class TrainInfo implements Parcelable {
 
     public boolean isSpecial() {
         return special;
+    }
+
+    public void setShowWagonOrder(boolean show) {
+        this.showWagonOrder = show;
+    }
+    public boolean getShowWagonOrder() {
+        return this.showWagonOrder;
     }
 
     public interface Category {
@@ -333,6 +342,7 @@ public class TrainInfo implements Parcelable {
         genuineName = in.readString();
         replacement = ParcelCompat.readBoolean(in);
         special = ParcelCompat.readBoolean(in);
+        showWagonOrder=ParcelCompat.readBoolean(in);
     }
 
     public TrainInfo() {
@@ -358,6 +368,7 @@ public class TrainInfo implements Parcelable {
         dest.writeString(genuineName);
         ParcelCompat.writeBoolean(dest, replacement);
         ParcelCompat.writeBoolean(dest, special);
+        ParcelCompat.writeBoolean(dest, showWagonOrder);
     }
 
     public static final Creator<TrainInfo> CREATOR = new Creator<TrainInfo>() {

@@ -6,6 +6,7 @@
 
 package de.deutschebahn.bahnhoflive.ui.station
 
+import android.app.Activity
 import android.app.Application
 import android.content.Context
 import android.util.Log
@@ -22,6 +23,8 @@ import de.deutschebahn.bahnhoflive.backend.VolleyRestListener
 import de.deutschebahn.bahnhoflive.backend.db.newsapi.GroupId
 import de.deutschebahn.bahnhoflive.backend.db.newsapi.model.News
 import de.deutschebahn.bahnhoflive.backend.db.ris.model.Platform
+import de.deutschebahn.bahnhoflive.backend.hafas.model.HafasEvent
+import de.deutschebahn.bahnhoflive.backend.hafas.model.HafasStation
 import de.deutschebahn.bahnhoflive.backend.hafas.model.ProductCategory
 import de.deutschebahn.bahnhoflive.backend.local.model.EvaIds
 import de.deutschebahn.bahnhoflive.backend.local.model.ServiceContentType
@@ -73,6 +76,14 @@ import java.io.InputStreamReader
 import java.text.Collator
 import java.util.*
 import java.util.concurrent.Executors
+
+class BackNavigationData(var navigateTo: Boolean,
+                         val stationToShow : Station,
+                         val stationToNavigateTo : Station,
+                         val trainInfo:TrainInfo?,
+                         val hafasStation: HafasStation?,
+                         val hafasEvent: HafasEvent?,
+                         var showChevron:Boolean)
 
 
 class StationViewModel(
@@ -279,6 +290,7 @@ class StationViewModel(
         }
     }
 
+    val backNavigationLiveData = MutableLiveData<BackNavigationData>()
 
     private val queryAndParts = "[\\p{L}-]+|\\d+".toRegex().let { pattern ->
         Transformations.map(contentQuery) { rawQuery ->
@@ -445,6 +457,7 @@ class StationViewModel(
 
             railReplacementResource.initialize(station)
             accessibilityFeaturesResource.initialize(station)
+            this.station = station
         }
 
         stationResource.refresh()
@@ -1360,6 +1373,40 @@ class StationViewModel(
     fun navigateToInfo(serviceContentType: String) {
         selectedServiceContentType.value = serviceContentType
         stationNavigation?.showInfoFragment(false)
+    }
+
+    fun navigateBack(this_activity:Activity) {
+        val backNavigationData: BackNavigationData? = backNavigationLiveData.value
+
+        if (backNavigationData != null) {
+            // Rücksprung-Daten aus stationViewModel holen und in neues Intent verpacken
+
+            val intent = StationActivity.createIntentForBackNavigation(
+                this_activity,
+                backNavigationData.stationToNavigateTo,
+                backNavigationData.stationToShow,
+                null,
+                null,
+                backNavigationData.trainInfo,
+                true
+            )
+
+            intent?.let {
+                this_activity.finish()
+                this_activity.startActivity(intent)
+            }
+        }
+
+        finishBackNavigation()
+    }
+
+    fun finishBackNavigation() {
+        val backNavigationData: BackNavigationData? = backNavigationLiveData.value
+        backNavigationData?.let {
+            it.navigateTo=false
+            it.showChevron=false
+            backNavigationLiveData.postValue(it)
+        }
     }
 
     fun setSelectedAccessibilityPlatform(platform: Platform?) {

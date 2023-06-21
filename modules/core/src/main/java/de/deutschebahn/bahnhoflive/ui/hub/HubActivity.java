@@ -53,6 +53,14 @@ public class HubActivity extends BaseActivity implements TutorialFragment.Host {
 
     private TrackingManager trackingManager = new TrackingManager(this);
 
+    private Boolean checkSelectStationBundle(Intent appIntent) {
+
+        if(appIntent.hasExtra(StationActivity.ARG_STATION_TO_NAVIGATE_BACK)) {
+            return true;
+        }
+
+        return false;
+    }
 
     private Boolean checkWagenstandNotificationBundle(Intent appIntent) {
 
@@ -178,21 +186,13 @@ public class HubActivity extends BaseActivity implements TutorialFragment.Host {
         @Override
     protected void onCreate(Bundle savedInstanceState) {
 
+        Log.d("cr", "HubActivity.onCreate");
+
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
                 SplashScreen.installSplashScreen(this);
             } else
                 setTheme(R.style.App_Theme); // todo: google will remove support for 4.4 in 2023...
-//            setTheme(R.style.Theme_App_Starting);
-//            SplashScreen splashScreen = SplashScreen.installSplashScreen(this);
-//
-//            splashScreen.setKeepOnScreenCondition(() -> keep);
-//            Handler handler = new Handler();
-//            handler.postDelayed(() -> keep = false, 800L);
-//
-//        }else{
-//            setTheme(R.style.App_Theme);
-//        }
-//        setTheme(R.style.App_Theme);
+
 
         super.onCreate(savedInstanceState);
 
@@ -217,7 +217,9 @@ public class HubActivity extends BaseActivity implements TutorialFragment.Host {
 
             if(!checkWagenstandNotificationBundle(appIntent)) {
                 if(!checkElevatorNotificationBundle(appIntent)) {
+                  if(!checkSelectStationBundle(appIntent)) {
 
+                  }
                 }
             }
 

@@ -42,6 +42,9 @@ internal class HafasEventViewHolder(
         }
     }
 
+    fun performClick() {
+        overviewViewHolder.itemView.performClick()
+    }
     override fun onUnbind(item: DetailedHafasEvent) {
         super.onUnbind(item)
         item.setListener(null)

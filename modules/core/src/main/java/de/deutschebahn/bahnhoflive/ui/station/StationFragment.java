@@ -15,6 +15,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -25,6 +26,8 @@ import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 import com.android.volley.VolleyError;
 import com.google.android.material.appbar.AppBarLayout;
+
+import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -109,6 +112,8 @@ public class StationFragment extends androidx.fragment.app.Fragment implements
     private Long lastChangeRequest = 0L;
 
     private final GeneralPurposeMillisecondsTimer lastChangeTimer = new GeneralPurposeMillisecondsTimer();
+
+    private View btnBackToLaststation;
 
     @Override
     public void onStart() {
@@ -442,6 +447,28 @@ public class StationFragment extends androidx.fragment.app.Fragment implements
             stationViewModel.getStationNavigation().showSettingsFragment();
         });
 
+        final View.OnClickListener backToLastStationClickListener = v -> {
+            stationViewModel.navigateBack(getActivity());
+        };
+
+        btnBackToLaststation = view.findViewById(R.id.btn_back_to_laststation);
+        btnBackToLaststation.setOnClickListener(backToLastStationClickListener);
+        toolbarViewHolder.setImageButtonClickListener(backToLastStationClickListener);
+
+        stationViewModel.getBackNavigationLiveData().observe(getViewLifecycleOwner(),
+                backNavigationData -> {
+
+                  if(backNavigationData!=null && backNavigationData.getShowChevron()) {
+                      btnBackToLaststation.setVisibility(View.VISIBLE);
+                      toolbarViewHolder.showImageButton(true);
+                  }
+                  else {
+                      btnBackToLaststation.setVisibility(View.GONE);
+                      toolbarViewHolder.showImageButton(false);
+                  }
+                }
+        );
+
         return view;
     }
 
@@ -486,7 +513,7 @@ public class StationFragment extends androidx.fragment.app.Fragment implements
                     if (GroupId.REPLACEMENT_ANNOUNCEMENT.appliesTo(news) || GroupId.REPLACEMENT.appliesTo(news)) {
                         stationNavigation.showRailReplacement();
                     } else
-                    stationNavigation.showNewsDetails(index);
+                        stationNavigation.showNewsDetails(index);
                 }
             }
 

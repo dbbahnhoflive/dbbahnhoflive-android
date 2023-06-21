@@ -6,11 +6,14 @@
 
 package de.deutschebahn.bahnhoflive.ui.timetable.localtransport
 
+import android.app.Activity
 import android.content.Intent
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.ImageButton
 import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.Observer
 import androidx.lifecycle.Transformations
@@ -27,10 +30,15 @@ import de.deutschebahn.bahnhoflive.ui.map.Content
 import de.deutschebahn.bahnhoflive.ui.map.InitialPoiManager
 import de.deutschebahn.bahnhoflive.ui.map.MapPresetProvider
 import de.deutschebahn.bahnhoflive.ui.map.content.rimap.RimapFilter
+import de.deutschebahn.bahnhoflive.ui.station.BackNavigationData
 import de.deutschebahn.bahnhoflive.ui.station.HistoryFragment
+import de.deutschebahn.bahnhoflive.ui.station.StationActivity
+import de.deutschebahn.bahnhoflive.ui.station.StationViewModel
 
 class HafasDeparturesFragment : RecyclerFragment<HafasDeparturesAdapter>(R.layout.recycler_linear_refreshable),
     HafasFilterDialogFragment.Consumer, MapPresetProvider {
+
+    private val stationViewModel by activityViewModels<StationViewModel>()
 
     private val restHelper = BaseApplication.get().restHelper
 
@@ -64,7 +72,9 @@ class HafasDeparturesFragment : RecyclerFragment<HafasDeparturesAdapter>(R.layou
         }, trackingManager, {
             hafasTimetableViewModel.loadMore()
         },
-            hafasDataReceivedCallback = { view: View, details: DetailedHafasEvent ->
+            hafasDataReceivedCallback = {
+                    // click item
+                    _: View?, details: DetailedHafasEvent ->
                 run {
 
                     val hafasJourneyFragment = HafasJourneyFragment()
@@ -117,6 +127,34 @@ class HafasDeparturesFragment : RecyclerFragment<HafasDeparturesAdapter>(R.layou
             adapter?.setData(detailedHafasEvents, hafasDepartures.intervalEnd, hafasDepartures.intervalInMinutes / 60)
 
             loadingContentDecorationViewHolder!!.showContent()
+
+            val backNavigationData : BackNavigationData? = stationViewModel.backNavigationLiveData.value
+
+            backNavigationData?.hafasStation?.let {
+                Log.d("cr", "back")
+
+                if(backNavigationData.navigateTo) {
+                    recyclerView.post {
+
+                        backNavigationData.hafasEvent?.let {
+
+                            Log.d("cr", "item to find: ${it.direction} ${it.displayName}")
+
+                            val index : Int? = adapter?.findItemIndex(backNavigationData.hafasEvent)
+
+                            if(index!=null && index>=0) {
+                                val vh = recyclerView.findViewHolderForAdapterPosition(index+1) as? HafasEventViewHolder
+                                vh?.performClick()
+                            }
+                        }
+                    }
+
+                    stationViewModel.finishBackNavigation()
+                }
+
+            }
+
+
         })
         hafasTimetableResource.loadingStatus.observe(this, Observer { loadingStatus ->
             if (loadingStatus == LoadingStatus.IDLE) {
@@ -130,8 +168,50 @@ class HafasDeparturesFragment : RecyclerFragment<HafasDeparturesAdapter>(R.layou
                 loadingContentDecorationViewHolder!!.showError()
             }
         })
+
     }
 
+
+    fun navigateBack(this_activity: Activity) {
+
+        (this_activity as DeparturesActivity)?.let {
+            var intent : Intent? = null
+
+            if(it.station!=null) {
+                intent = StationActivity.createIntentForBackNavigation(
+                    this_activity,
+                    it.station,
+                    it.station,
+                    it.hafasStation,
+                    it.hafasEvent,
+                    null,
+                    true
+                )
+            }
+            else {
+
+                intent = DeparturesActivity.createIntent(
+                    context,
+                    it.hafasStation,
+                    null  //hafasTimetable.getDepartures()
+                )
+
+    }
+
+
+            intent?.let {
+                this_activity.finish()
+                this_activity.startActivity(intent)
+            }
+        }
+    }
+
+    val backToLastStationClickListener =
+        View.OnClickListener { v: View? ->
+            navigateBack(
+                requireActivity()
+            )
+        }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
         val view = super.onCreateView(inflater, container, savedInstanceState)
@@ -142,6 +222,9 @@ class HafasDeparturesFragment : RecyclerFragment<HafasDeparturesAdapter>(R.layou
         loadingContentDecorationViewHolder = LoadingContentDecorationViewHolder(view)
 
         titleView = container?.findViewById<ViewGroup>(R.id.include)
+
+        val imageButton : ImageButton? = container?.findViewById<ImageButton>(R.id.btn_back_to_laststation)
+        imageButton?.setOnClickListener(backToLastStationClickListener)
 
         return view
     }
@@ -157,6 +240,7 @@ class HafasDeparturesFragment : RecyclerFragment<HafasDeparturesAdapter>(R.layou
                 hafasTimetableViewModel.selectedHafasStationProduct
             }
         }.observe(viewLifecycleOwner, Observer { hafasStationProduct ->
+
             if (hafasStationProduct != null) {
                 adapter?.preselect(hafasStationProduct)?.also {
                     recyclerView?.scrollToPosition(it)
@@ -164,6 +248,7 @@ class HafasDeparturesFragment : RecyclerFragment<HafasDeparturesAdapter>(R.layou
                 hafasTimetableViewModel.selectedHafasStationProduct.value = null
             }
         })
+
 
     }
 

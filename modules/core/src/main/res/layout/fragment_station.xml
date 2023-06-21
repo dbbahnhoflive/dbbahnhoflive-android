@@ -186,6 +186,21 @@
                     app:layout_constraintLeft_toLeftOf="parent"
                     app:layout_constraintRight_toRightOf="parent" />
 
+                <ImageButton
+                    android:id="@+id/btn_back_to_laststation"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    app:layout_constraintTop_toTopOf="parent"
+                    app:layout_constraintLeft_toLeftOf="parent"
+                    android:layout_marginTop="@dimen/default_space_double"
+                    android:layout_marginStart="@dimen/default_space"
+                    android:src="@drawable/chevron_white_left_32dp"
+                    android:background="@null"
+                    android:visibility="gone"
+                    tools:visibility="visible"
+                    android:contentDescription="@string/sr_backtolaststation"
+                    />
+
                 <ImageView
                     android:layout_width="0dp"
                     android:layout_height="0dp"

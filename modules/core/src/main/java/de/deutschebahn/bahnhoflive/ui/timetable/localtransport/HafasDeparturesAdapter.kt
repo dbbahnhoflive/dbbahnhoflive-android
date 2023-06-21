@@ -6,6 +6,7 @@
 
 package de.deutschebahn.bahnhoflive.ui.timetable.localtransport
 
+import android.util.Log
 import android.view.View
 import android.view.ViewGroup
 import de.deutschebahn.bahnhoflive.R
@@ -26,7 +27,7 @@ class HafasDeparturesAdapter(
     private val onFilterClickListener: View.OnClickListener,
     trackingManager: TrackingManager,
     private val loadMoreCallback: View.OnClickListener,
-    private val hafasDataReceivedCallback : (view:View, item:DetailedHafasEvent)->Unit
+    private val hafasDataReceivedCallback : (view:View?, item:DetailedHafasEvent)->Unit
 ) : androidx.recyclerview.widget.RecyclerView.Adapter<ViewHolder<out Any>>() {
 
     private val singleSelectionManager = SingleSelectionManager(this)
@@ -172,6 +173,36 @@ class HafasDeparturesAdapter(
         }.plus(filterItemOffset).also {
             singleSelectionManager.selection = it
         }
+    }
+
+    private fun isEqual(h1: HafasEvent, h2: HafasEvent) : Boolean {
+
+        return h1.displayName==h2.displayName &&
+                h1.trainNumber==h2.trainNumber &&
+                h1.time == h2.time
+    }
+    fun findItemIndex(hafasEvent: HafasEvent): Int {
+
+        if (filteredEvents.isNotEmpty()) {
+            for (i in filteredEvents.indices) {
+                if (isEqual(hafasEvent, filteredEvents[i].hafasEvent )) {
+                    Log.d("cr", "item fi foud: $i ${hafasEvent.direction} ${hafasEvent.displayName}")
+                    return i
+                }
+            }
+        } else {
+            hafasEvents?.let {
+                for (i in it.indices) {
+                    if (isEqual(hafasEvent, it[i].hafasEvent)) {
+                        Log.d("cr", "item foud: $i ${hafasEvent.direction}  ${hafasEvent.displayName}")
+                        return i
+                    }
+                }
+            }
+
+        }
+
+        return -1
     }
 
     fun preselect(hafasStationProduct: HafasStationProduct): Int? {

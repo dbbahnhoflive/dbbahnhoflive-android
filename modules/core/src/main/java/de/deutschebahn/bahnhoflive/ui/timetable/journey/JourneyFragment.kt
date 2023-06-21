@@ -13,8 +13,6 @@ import de.deutschebahn.bahnhoflive.R
 import de.deutschebahn.bahnhoflive.backend.ris.model.TrainEvent
 import de.deutschebahn.bahnhoflive.backend.ris.model.TrainInfo
 import de.deutschebahn.bahnhoflive.databinding.FragmentJourneyBinding
-import de.deutschebahn.bahnhoflive.tutorial.TutorialManager
-import de.deutschebahn.bahnhoflive.tutorial.TutorialView
 import de.deutschebahn.bahnhoflive.ui.map.Content
 import de.deutschebahn.bahnhoflive.ui.map.InitialPoiManager
 import de.deutschebahn.bahnhoflive.ui.map.MapPresetProvider
@@ -23,8 +21,8 @@ import de.deutschebahn.bahnhoflive.ui.station.HistoryFragment
 import de.deutschebahn.bahnhoflive.ui.station.StationViewModel
 import de.deutschebahn.bahnhoflive.ui.station.timetable.TimetableViewHelper
 import de.deutschebahn.bahnhoflive.ui.timetable.WagenstandFragment
-import de.deutschebahn.bahnhoflive.util.VersionManager
 
+// fragment_journey_regular_content bzw. RegularJourneyContentFragment wird aus dem layout erzeugt !
 class JourneyFragment() : JourneyCoreFragment(), MapPresetProvider {
 
     private lateinit var trainEvent : TrainEvent

@@ -71,12 +71,17 @@ class FullJourneyContentFragment : Fragment() {
 
             JourneyAdapter { view, journeyStop ->
                 activity?.let {
+                    val trainInfo = journeyViewModel.essentialParametersLiveData.value?.second
                     RegularJourneyContentFragment.openJourneyStopStation(
                         it,
+                        stationViewModel,
                         view,
                         stationViewModel.stationResource.data.value?.evaIds,
                         journeyStop.evaId,
-                        journeyStop.name
+                        journeyStop.name,
+                        null,
+                        null,
+                        trainInfo
                     )
                 }
         }.apply {

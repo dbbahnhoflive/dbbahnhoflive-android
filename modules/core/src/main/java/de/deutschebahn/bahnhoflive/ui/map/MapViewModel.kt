@@ -180,6 +180,7 @@ class MapViewModel(
 
     fun openWaggonOrder(context: Context, trainInfo: TrainInfo) {
         stationResource.data.value?.let {
+            trainInfo.setShowWagonOrder(true)
             context.startActivity(StationActivity.createIntent(context, it, trainInfo))
         }
     }
