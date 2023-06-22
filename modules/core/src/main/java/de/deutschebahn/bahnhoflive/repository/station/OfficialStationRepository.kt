@@ -18,6 +18,7 @@ import de.deutschebahn.bahnhoflive.backend.db.ris.model.Platform
 import de.deutschebahn.bahnhoflive.backend.db.ris.model.RISStation
 import de.deutschebahn.bahnhoflive.backend.db.ris.model.StopPlace
 import de.deutschebahn.bahnhoflive.repository.InternalStation
+import de.deutschebahn.bahnhoflive.ui.station.railreplacement.SEV_Static
 import de.deutschebahn.bahnhoflive.util.Cancellable
 import de.deutschebahn.bahnhoflive.util.volley.VolleyRequestCancellable
 import de.deutschebahn.bahnhoflive.util.volley.cancellable
@@ -46,6 +47,12 @@ class OfficialStationRepository(
                 object :
                     VolleyRestListener<List<de.deutschebahn.bahnhoflive.backend.db.ris.model.StopPlace>> {
                     override fun onSuccess(payload: List<de.deutschebahn.bahnhoflive.backend.db.ris.model.StopPlace>) {
+
+//payload[0].evaIds.ids.add("1234")
+                        if(payload.isNotEmpty()) {
+                            SEV_Static.addEvaIds(payload[0].stationID, payload[0].evaIds.ids)
+                        }
+
                         listener.onSuccess(payload)
 
                         track("success")

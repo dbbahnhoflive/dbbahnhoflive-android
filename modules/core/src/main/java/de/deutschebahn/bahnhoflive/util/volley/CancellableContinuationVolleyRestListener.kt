@@ -1,5 +1,6 @@
 package de.deutschebahn.bahnhoflive.util.volley
 
+import android.util.Log
 import com.android.volley.Request
 import com.android.volley.VolleyError
 import de.deutschebahn.bahnhoflive.backend.RestHelper
@@ -22,10 +23,13 @@ class CancellableContinuationVolleyRestListener<T>(
 }
 
 suspend fun <T> RestHelper.submitSuspending(requestFactory: (VolleyRestListener<T>) -> Request<T>) =
-    suspendCancellableCoroutine {
+    suspendCancellableCoroutine { it ->
         val request = requestFactory(CancellableContinuationVolleyRestListener(it))
-
         add(request)
+
+        request.url?.let {itUrl->
+            Log.d("cr", "request: $itUrl")
+        }
 
         it.invokeOnCancellation {
             cancel(request)
