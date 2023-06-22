@@ -486,7 +486,7 @@ public class StationFragment extends androidx.fragment.app.Fragment implements
                     if (GroupId.REPLACEMENT_ANNOUNCEMENT.appliesTo(news) || GroupId.REPLACEMENT.appliesTo(news)) {
                         stationNavigation.showRailReplacement();
                     } else
-                    stationNavigation.showNewsDetails(index);
+                        stationNavigation.showNewsDetails(index);
                 }
             }
 
