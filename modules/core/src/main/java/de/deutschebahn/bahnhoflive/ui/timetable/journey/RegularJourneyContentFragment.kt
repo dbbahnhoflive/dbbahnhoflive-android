@@ -94,10 +94,15 @@ class RegularJourneyContentFragment : Fragment() {
                     sev.visibility = View.GONE
             }
 
+            try {
             issueBinder.bindIssues(
                 trainInfo,
                 trainEvent.movementRetriever.getTrainMovementInfo(trainInfo)
             )
+            }
+            catch(_:Exception) {
+
+            }
 
             with(buttonWagonOrder) {
                 shouldOfferWagenOrder = trainInfo.shouldOfferWagenOrder()
@@ -317,8 +322,8 @@ class RegularJourneyContentFragment : Fragment() {
                                                         view.context,
                                                         payload,
                                                         stationViewModel?.station,
-                                                    null,
-                                                    null,
+                                                    hafasStop?.toHafasStation(),
+                                                    hafasEvent,
                                                         trainInfo,
                                                         false
                                                     )

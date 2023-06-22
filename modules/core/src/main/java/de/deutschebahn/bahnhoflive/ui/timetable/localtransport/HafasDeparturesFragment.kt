@@ -74,31 +74,38 @@ class HafasDeparturesFragment : RecyclerFragment<HafasDeparturesAdapter>(R.layou
         },
             hafasDataReceivedCallback = {
                     // click item
-                    _: View?, details: DetailedHafasEvent ->
+                    _: View?, details: DetailedHafasEvent, success:Boolean ->
                 run {
 
+                    if(success) {
                     val hafasJourneyFragment = HafasJourneyFragment()
                     hafasJourneyFragment.onDataReceived(details, titleView)
 
-                    if(parentFragment!=null) {
+                        if (parentFragment != null) {
 
                         val historyFragment = HistoryFragment.parentOf(this)
                         historyFragment.push(hafasJourneyFragment)
-                    }
-                    else
-                    {
+                        } else {
                         // aufruf aus Favoriten OHNE vorher geladene Station !!!!!! (kein HistoryFragment)
                         // todo: besser Station ermitteln, laden, Abfahrtstafel laden, gewünschte ÖPNV-Haltestelle laden und dann
                         // das zugehörige HafasJourneyFragment anzeigen !
 
 //                        hafasJourneyFragment.binding
-                        hafasJourneyFragment.hideHeader=true
+                            hafasJourneyFragment.hideHeader = true
 
                         activity?.supportFragmentManager?.beginTransaction()
-                        ?.replace(R.id.hafas_fragment_container, hafasJourneyFragment, HafasJourneyFragment.TAG)
+                                ?.replace(
+                                    R.id.hafas_fragment_container,
+                                    hafasJourneyFragment,
+                                    HafasJourneyFragment.TAG
+                                )
                         ?.addToBackStack(null)
                         ?.commit()
 
+                    }
+                    }
+                    else {
+                        // todo: Fehlermeldung
                     }
 
                 }

@@ -153,21 +153,6 @@ public class StationActivity extends BaseActivity implements
 
         final ViewModelProvider viewModelProvider = new ViewModelProvider(this, (ViewModelProvider.Factory) fac);
 
-//        final ViewModelProvider viewModelProvider = new ViewModelProvider(this, (ViewModelProvider.Factory) new ViewModelProvider.AndroidViewModelFactory(getApplication()) {
-//            @NonNull
-//            @Override
-//            public <T extends ViewModel> T create(@NonNull Class<T> modelClass) {
-//                if (modelClass == LocalTransportViewModel.class) {
-//                    return (T) stationViewModel.getLocalTransportViewModel();
-//                }
-//                if (modelClass == HafasTimetableViewModel.class) {
-//                    return (T) stationViewModel.getHafasTimetableViewModel();
-//                }
-//                return super.create(modelClass);
-//            }
-//        });
-
-
         stationViewModel = viewModelProvider.get(StationViewModel.class);
         stationViewModel.setStationNavigation(this);
 
@@ -705,6 +690,12 @@ public class StationActivity extends BaseActivity implements
         final HafasEvent hafasEvent = intent.getParcelableExtra(ARG_HAFAS_EVENT);
 
         if (stationToNavigateBack != null) {
+            if (station != null &&
+                    station.getId().equals(stationToNavigateBack.getId()) && hafasStation == null
+            ) {
+                // something went wrong
+                stationViewModel.getBackNavigationLiveData().postValue(null);
+            } else
             stationViewModel.getBackNavigationLiveData().postValue(new BackNavigationData(doNavigateBack,
                     station,
                     stationToNavigateBack,
@@ -712,8 +703,8 @@ public class StationActivity extends BaseActivity implements
                     hafasStation,
                     hafasEvent,
                     true));
-        }
-        else {
+
+        } else {
             stationViewModel.getBackNavigationLiveData().postValue(null);
         }
 
@@ -728,11 +719,12 @@ public class StationActivity extends BaseActivity implements
 
             final int isNotification = intent.getIntExtra("IS_NOTIFICATION", 0);
 
-            if (timeDiff < 3L * 1000L || isNotification == 1) {
-                if (trainInfo.getShowWagonOrder())
+            if(timeDiff<3L*1000L || isNotification==1 ) {
+              if(trainInfo.getShowWagonOrder())
                     stationViewModel.showWaggonOrder(trainInfo);
-            } else
-                Log.d("cr", "intent too old");
+            }
+            else
+                Log.d("cr", "intent too old" );
         }
         if (intent.hasExtra(ARG_RRT_POINT)) {
             stationViewModel.pendingRailReplacementPointLiveData.setValue(intent.getParcelableExtra(ARG_RRT_POINT));

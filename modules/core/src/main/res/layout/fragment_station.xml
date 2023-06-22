@@ -187,7 +187,7 @@
                     app:layout_constraintRight_toRightOf="parent" />
 
                 <ImageButton
-                    android:id="@+id/btn_back_to_laststation"
+                    android:id="@+id/btn_back_to_laststation_station"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     app:layout_constraintTop_toTopOf="parent"

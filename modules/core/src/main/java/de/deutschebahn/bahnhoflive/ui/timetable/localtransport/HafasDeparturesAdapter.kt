@@ -27,7 +27,7 @@ class HafasDeparturesAdapter(
     private val onFilterClickListener: View.OnClickListener,
     trackingManager: TrackingManager,
     private val loadMoreCallback: View.OnClickListener,
-    private val hafasDataReceivedCallback : (view:View?, item:DetailedHafasEvent)->Unit
+    private val hafasDataReceivedCallback : (view:View?, item:DetailedHafasEvent, success:Boolean)->Unit
 ) : androidx.recyclerview.widget.RecyclerView.Adapter<ViewHolder<out Any>>() {
 
     private val singleSelectionManager = SingleSelectionManager(this)
@@ -62,8 +62,8 @@ class HafasDeparturesAdapter(
                 run {
                     details.requestDetails()
                 }
-            }, hafasDataReceivedEvent = { view,details -> run {
-                hafasDataReceivedCallback(view,details)
+            }, hafasDataReceivedEvent = { view,details, success -> run {
+                hafasDataReceivedCallback(view,details, success)
             }}
                 , singleSelectionManager)
         }

@@ -1385,8 +1385,8 @@ class StationViewModel(
                 this_activity,
                 backNavigationData.stationToNavigateTo,
                 backNavigationData.stationToShow,
-                null,
-                null,
+                backNavigationData.hafasStation,
+                backNavigationData.hafasEvent,
                 backNavigationData.trainInfo,
                 true
             )
