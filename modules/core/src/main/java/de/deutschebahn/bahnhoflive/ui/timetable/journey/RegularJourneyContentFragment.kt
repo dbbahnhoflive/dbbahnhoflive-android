@@ -136,7 +136,10 @@ class RegularJourneyContentFragment : Fragment() {
         with(contentLayout) {
             prepareCommons(viewLifecycleOwner, stationViewModel, journeyViewModel)
 
-            val journeyAdapter = JourneyAdapter { view, journeyStop ->
+            val journeyAdapter = JourneyAdapter {
+                // onClickStop
+                    view, journeyStop ->
+                val trainInfo = journeyViewModel.essentialParametersLiveData.value?.second
                 activity?.let {
 
                     val staticStopData =
@@ -145,25 +148,29 @@ class RegularJourneyContentFragment : Fragment() {
                     if (staticStopData != null) {
                         openJourneyStopStation(
                             it,
+                            stationViewModel,
                             view,
                             stationViewModel.stationResource.data.value?.evaIds,
                             staticStopData.first,
-                            journeyStop.name
+                            journeyStop.name,
+                            null,
+                            null,
+                            trainInfo
                         )
 
                     } else
-                    openJourneyStopStation(
-                        it,
-                        stationViewModel,
-                        view,
-                        stationViewModel.stationResource.data.value?.evaIds,
-                        journeyStop.evaId,
-                        journeyStop.name,
-                        null,
-                        null,
-                        trainInfo
+                        openJourneyStopStation(
+                            it,
+                            stationViewModel,
+                            view,
+                            stationViewModel.stationResource.data.value?.evaIds,
+                            journeyStop.evaId,
+                            journeyStop.name,
+                            null,
+                            null,
+                            trainInfo
 
-                    )
+                        )
                 }
             }
 
@@ -193,19 +200,19 @@ class RegularJourneyContentFragment : Fragment() {
                     scrollRecyclerToStation(recycler, journeyAdapter.currentList)
 
                     // hide buttonWagonOrder if Endbahnhof
-                    if(journeyStops.firstOrNull() { it.current && it.last }!=null) {
+                    if (journeyStops.firstOrNull() { it.current && it.last } != null) {
                         buttonWagonOrder.isGone = true
-                    }
-                    else {
+                    } else {
                         buttonWagonOrder.isGone = !shouldOfferWagenOrder
                     }
 
-                    textWagonOrder.isGone =  buttonWagonOrder.isGone
+                    textWagonOrder.isGone = buttonWagonOrder.isGone
 
 
                     val lastStation = journeyStops.last()
 
-                    sev.visibility = if(SEV_Static.isReplacementStopFrom(lastStation.evaId)) View.VISIBLE else View.GONE
+                    sev.visibility =
+                        if (SEV_Static.isReplacementStopFrom(lastStation.evaId)) View.VISIBLE else View.GONE
 
 
                 }, {
