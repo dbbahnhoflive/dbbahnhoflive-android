@@ -7,6 +7,8 @@
 package de.deutschebahn.bahnhoflive.ui.station;
 
 import static de.deutschebahn.bahnhoflive.analytics.TrackingManager.Screen.H1;
+import static de.deutschebahn.bahnhoflive.ui.timetable.localtransport.DeparturesActivity.ARG_HAFAS_EVENT;
+import static de.deutschebahn.bahnhoflive.ui.timetable.localtransport.DeparturesActivity.ARG_HAFAS_STATION;
 
 import android.content.Context;
 import android.content.Intent;
@@ -45,6 +47,8 @@ import de.deutschebahn.bahnhoflive.analytics.IssueTrackerKt;
 import de.deutschebahn.bahnhoflive.analytics.StationTrackingManager;
 import de.deutschebahn.bahnhoflive.analytics.TrackingManager;
 import de.deutschebahn.bahnhoflive.backend.db.fasta2.model.FacilityStatus;
+import de.deutschebahn.bahnhoflive.backend.hafas.model.HafasEvent;
+import de.deutschebahn.bahnhoflive.backend.hafas.model.HafasStation;
 import de.deutschebahn.bahnhoflive.backend.local.model.RrtPoint;
 import de.deutschebahn.bahnhoflive.backend.local.model.ServiceContentType;
 import de.deutschebahn.bahnhoflive.backend.ris.model.TrainInfo;
@@ -79,12 +83,19 @@ import kotlin.Pair;
 import de.deutschebahn.bahnhoflive.util.GoogleLocationPermissions;
 
 public class StationActivity extends BaseActivity implements
-        StationProvider, HistoryFragment.RootProvider,
-        TrackingManager.Provider, StationNavigation {
+        StationProvider,
+        HistoryFragment.RootProvider,
+        TrackingManager.Provider,
+        StationNavigation
+{
 
     public static final String ARG_INTENT_CREATION_TIME = "intent_creation_time";
 
     public static final String ARG_STATION = "station";
+    public static final String ARG_STATION_TO_NAVIGATE_BACK = "station_to_navigate_back";
+    public static final String ARG_STATION_DO_NAVIGATE_BACK = "station_to_navigate_back_do_navigate";
+
+
     public static final String TAG = StationActivity.class.getSimpleName();
     private static final String ARG_SHOW_DEPARTURES = "showDepartures";
     private static final String ARG_TRACK_FILTER = "trackFilter";
@@ -142,25 +153,11 @@ public class StationActivity extends BaseActivity implements
 
         final ViewModelProvider viewModelProvider = new ViewModelProvider(this, (ViewModelProvider.Factory) fac);
 
-//        final ViewModelProvider viewModelProvider = new ViewModelProvider(this, (ViewModelProvider.Factory) new ViewModelProvider.AndroidViewModelFactory(getApplication()) {
-//            @NonNull
-//            @Override
-//            public <T extends ViewModel> T create(@NonNull Class<T> modelClass) {
-//                if (modelClass == LocalTransportViewModel.class) {
-//                    return (T) stationViewModel.getLocalTransportViewModel();
-//                }
-//                if (modelClass == HafasTimetableViewModel.class) {
-//                    return (T) stationViewModel.getHafasTimetableViewModel();
-//                }
-//                return super.create(modelClass);
-//            }
-//        });
-
-
         stationViewModel = viewModelProvider.get(StationViewModel.class);
         stationViewModel.setStationNavigation(this);
 
         if (exploitIntent(getIntent())) return;
+
         if (savedInstanceState != null) {
             initializeShowingDepartures = savedInstanceState.getBoolean(ARG_SHOW_DEPARTURES);
         } else {
@@ -228,6 +225,7 @@ public class StationActivity extends BaseActivity implements
         navigationButtons.get(0).setChecked(true);
 
         mapButton = findViewById(R.id.btn_map);
+
         mapButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -239,7 +237,8 @@ public class StationActivity extends BaseActivity implements
         });
 
         final StationResource stationResource = stationViewModel.getStationResource();
-        stationViewModel.getMapAvailableLiveData().observe(this, aBoolean -> mapButton.setVisibility(aBoolean ? View.VISIBLE : View.GONE));
+        stationViewModel.getMapAvailableLiveData().observe(this,
+                aBoolean -> mapButton.setVisibility(aBoolean ? View.VISIBLE : View.GONE));
 
         hafasTimetableViewModel.initialize(stationResource);
 
@@ -682,6 +681,33 @@ public class StationActivity extends BaseActivity implements
             return true;
         }
 
+
+        // Daten zur Rücknavigation ins stationViewModel packen
+        final Station stationToNavigateBack = intent.getParcelableExtra(ARG_STATION_TO_NAVIGATE_BACK);
+        final boolean doNavigateBack = intent.getBooleanExtra(ARG_STATION_DO_NAVIGATE_BACK, false);
+        final TrainInfo trainInfo2 = intent.getParcelableExtra(ARG_TRAIN_INFO);
+        final HafasStation hafasStation = intent.getParcelableExtra(ARG_HAFAS_STATION);
+        final HafasEvent hafasEvent = intent.getParcelableExtra(ARG_HAFAS_EVENT);
+
+        if (stationToNavigateBack != null) {
+            if (station != null &&
+                    station.getId().equals(stationToNavigateBack.getId()) && hafasStation == null
+            ) {
+                // something went wrong
+                stationViewModel.getBackNavigationLiveData().postValue(null);
+            } else
+            stationViewModel.getBackNavigationLiveData().postValue(new BackNavigationData(doNavigateBack,
+                    station,
+                    stationToNavigateBack,
+                    trainInfo2,
+                    hafasStation,
+                    hafasEvent,
+                    true));
+
+        } else {
+            stationViewModel.getBackNavigationLiveData().postValue(null);
+        }
+
         initializeShowingDepartures = intent.getBooleanExtra(ARG_SHOW_DEPARTURES, false);
         if (intent.hasExtra(ARG_TRACK_FILTER)) {
             stationViewModel.setTrackFilter(intent.getStringExtra(ARG_TRACK_FILTER));
@@ -694,7 +720,8 @@ public class StationActivity extends BaseActivity implements
             final int isNotification = intent.getIntExtra("IS_NOTIFICATION", 0);
 
             if(timeDiff<3L*1000L || isNotification==1 ) {
-              stationViewModel.showWaggonOrder(trainInfo);
+              if(trainInfo.getShowWagonOrder())
+                    stationViewModel.showWaggonOrder(trainInfo);
             }
             else
                 Log.d("cr", "intent too old" );
@@ -806,7 +833,10 @@ public class StationActivity extends BaseActivity implements
         return HubActivity.createIntent(context);
     }
 
-    public static Intent createIntent(Context context, Station station, boolean details) {
+
+    public static Intent createIntent(Context context,
+                                                     Station station,
+                                                     boolean details) {
         final Intent intent = createIntent(context, station, EquipmentID.UNKNOWN);
         intent.putExtra(ARG_SHOW_DEPARTURES, details);
         return intent;
@@ -819,7 +849,54 @@ public class StationActivity extends BaseActivity implements
         return intent;
     }
 
-    // wird aus MapViewModel.kt aufgerufen !!!
+    @Nullable
+    public static Intent createIntentForBackNavigation(Context context,
+                                                       Station stationToGoTo,
+                                                       Station actualStation,
+                                                       @Nullable HafasStation hafasStation,
+                                                       @Nullable HafasEvent hafasEvent,
+                                                       @Nullable TrainInfo trainInfo,
+                                                       boolean doNavigateBack) {
+
+        Intent intent = null;
+
+        if(stationToGoTo!=null) {
+            if (trainInfo != null) {
+                if (trainInfo.getDeparture() != null)
+                    intent = createIntent(context, stationToGoTo, trainInfo.getDeparture().getPurePlatform());
+                else if (trainInfo.getArrival() != null)
+                    intent = createIntent(context, stationToGoTo, trainInfo.getArrival().getPurePlatform());
+            } else
+                intent = createIntent(context, stationToGoTo, true);
+        }
+
+        if (intent == null)
+            return null;
+
+        if (actualStation != null) {
+            intent.putExtra(ARG_STATION_TO_NAVIGATE_BACK, actualStation instanceof Parcelable ?
+                    (Parcelable) actualStation : new InternalStation(actualStation));
+
+            intent.putExtra(ARG_STATION_DO_NAVIGATE_BACK, doNavigateBack);
+
+            if (trainInfo != null) {
+                trainInfo.setShowWagonOrder(false);
+                intent.putExtra(ARG_TRAIN_INFO, trainInfo);
+            }
+
+            if(hafasStation!=null) {
+                intent.putExtra(ARG_HAFAS_STATION, hafasStation);
+            }
+
+            if(hafasEvent!=null) {
+                intent.putExtra(ARG_HAFAS_EVENT, hafasEvent);
+            }
+        }
+        return intent;
+    }
+
+
+    // wird u.a. aus MapViewModel.kt aufgerufen !!!
     @NotNull
     public static Intent createIntent(@NotNull Context context, @NotNull Station station, @NotNull TrainInfo trainInfo) {
         final Intent intent = createIntent(context, station, trainInfo.getDeparture().getPurePlatform());

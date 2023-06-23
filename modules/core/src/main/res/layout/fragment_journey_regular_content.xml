@@ -54,20 +54,19 @@
 
         <TextView
             android:id="@+id/sev"
-            android:layout_marginTop="@dimen/default_space"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginStart="@dimen/default_space_half"
+            android:layout_marginTop="@dimen/default_space"
+            android:drawablePadding="@dimen/default_space"
+            android:text="@string/info_sev"
             android:textSize="@dimen/textsize_h3"
             android:textStyle="bold"
-            tools:text="@string/info_sev"
-            android:text="@string/info_sev"
-            tools:visibility="visible"
             android:visibility="gone"
-            app:drawableTint="@android:color/holo_red_light"
             app:drawableLeftCompat="@drawable/app_links_pfeil"
-            android:drawablePadding="@dimen/default_space"
-            />
+            app:drawableTint="@android:color/holo_red_light"
+            tools:text="@string/info_sev"
+            tools:visibility="visible" />
 
         <androidx.cardview.widget.CardView
             android:id="@+id/button_wagon_order"

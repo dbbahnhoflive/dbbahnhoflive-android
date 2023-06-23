@@ -50,7 +50,9 @@ public class HafasStationSearchResult extends StationSearchResult<HafasStation, 
             recentSearchesStore.putHafasStation(hafasTimetable.station);
         }
 
-        final Intent intent = DeparturesActivity.createIntent(context, hafasTimetable.getStation(), hafasTimetable.getDepartures());
+        final Intent intent = DeparturesActivity.createIntent(context,
+                hafasTimetable.getStation(),
+                hafasTimetable.getDepartures());
         context.startActivity(intent);
     }
 

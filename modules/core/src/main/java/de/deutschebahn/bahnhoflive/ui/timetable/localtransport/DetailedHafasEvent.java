@@ -21,10 +21,14 @@ public class DetailedHafasEvent {
     private final LocalTransportRepository localTransportRepository;
     private boolean loading = false;
 
+    private boolean success = false;
+
     public void requestDetails() {
         if (loading || hafasDetail != null) {
-            if(hafasDetail!=null) // fix: if same stop is clicked second time
+            if(hafasDetail!=null) { // fix: if same stop is clicked second time
+                success=true;
               notifyListeners();
+            }
             return;
         }
         loading = true;
@@ -32,6 +36,7 @@ public class DetailedHafasEvent {
         localTransportRepository.queryTimetableDetails(hafasEvent, new BaseRestListener<HafasDetail>() {
             @Override
             public void onSuccess(@NonNull HafasDetail payload) {
+                success=true;
                 setHafasDetail(payload);
                 loading = false;
             }
@@ -40,17 +45,19 @@ public class DetailedHafasEvent {
             public void onFail(VolleyError reason) {
                 super.onFail(reason);
                 loading = false;
+                success = false;
+                notifyListeners();
                 //TODO notify client
             }
         }, ORIGIN_TIMETABLE);
 
     }
 
-    public interface Listener {
-        void onDetailUpdated(DetailedHafasEvent detailedHafasEvent);
+    public interface HafasDetailListener {
+        void onDetailUpdated(DetailedHafasEvent detailedHafasEvent, boolean success);
     }
 
-    private Listener listener;
+    private HafasDetailListener listener;
 
     public final HafasEvent hafasEvent;
     private HafasDetail hafasDetail;
@@ -70,13 +77,13 @@ public class DetailedHafasEvent {
         notifyListeners();
     }
 
-    public void setListener(Listener listener) {
+    public void setListener(HafasDetailListener listener) {
         this.listener = listener;
     }
 
     private void notifyListeners() {
         if (listener != null) {
-            listener.onDetailUpdated(this);
+            listener.onDetailUpdated(this, success);
         }
     }
 }

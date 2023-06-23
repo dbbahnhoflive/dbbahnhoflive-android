@@ -110,6 +110,8 @@ public class StationFragment extends androidx.fragment.app.Fragment implements
 
     private final GeneralPurposeMillisecondsTimer lastChangeTimer = new GeneralPurposeMillisecondsTimer();
 
+    private View btnBackToLaststation;
+
     @Override
     public void onStart() {
         super.onStart();
@@ -441,6 +443,29 @@ public class StationFragment extends androidx.fragment.app.Fragment implements
             getTrackingManager().track(TrackingManager.TYPE_ACTION, TrackingManager.Screen.H1, TrackingManager.Action.TAP, TrackingManager.UiElement.EINSTELLUNGEN);
             stationViewModel.getStationNavigation().showSettingsFragment();
         });
+
+        final View.OnClickListener backToLastStationClickListener = v -> {
+            stationViewModel.navigateBack(getActivity());
+        };
+
+        btnBackToLaststation = view.findViewById(R.id.btn_back_to_laststation_station);
+        btnBackToLaststation.setOnClickListener(backToLastStationClickListener);
+        toolbarViewHolder.setImageButtonClickListener(backToLastStationClickListener);
+
+        stationViewModel.getBackNavigationLiveData().observe(getViewLifecycleOwner(),
+                backNavigationData -> {
+
+                  if(backNavigationData!=null && backNavigationData.getShowChevron()) {
+                      btnBackToLaststation.setVisibility(View.VISIBLE);
+                      toolbarViewHolder.showImageButton(true);
+                  }
+                  else {
+                      btnBackToLaststation.setVisibility(View.GONE);
+                      toolbarViewHolder.showImageButton(false);
+                  }
+
+                }
+        );
 
         return view;
     }

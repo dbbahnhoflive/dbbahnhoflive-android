@@ -117,4 +117,6 @@
     <drawable name="app_occupancy_arrow_down">@drawable/missing</drawable>
     <drawable name="app_occupancy_information">@drawable/missing</drawable>
     <drawable name="app_analytics_poi_icon">@drawable/missing</drawable>
+    <drawable name="chevron_black_left_32dp">@drawable/missing</drawable>
+    <drawable name="chevron_white_left_32dp">@drawable/missing</drawable>
 </resources>

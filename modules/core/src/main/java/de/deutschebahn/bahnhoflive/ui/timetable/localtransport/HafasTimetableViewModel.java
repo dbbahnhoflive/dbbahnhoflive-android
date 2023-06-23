@@ -31,6 +31,7 @@ import de.deutschebahn.bahnhoflive.repository.StationResource;
 import de.deutschebahn.bahnhoflive.util.ManagedObserver;
 import de.deutschebahn.bahnhoflive.util.Token;
 
+
 public class HafasTimetableViewModel extends AndroidViewModel {
 
     public static final String ORIGIN_STATION = "station";
@@ -55,7 +56,9 @@ public class HafasTimetableViewModel extends AndroidViewModel {
     private StationResource stationResource;
 
     private final Token initializationPending = new Token();
-    private Station station;
+    protected Station station;
+    protected Station last_station = null;
+
     private List<HafasStation> hafasStations;
 
     public String filterName = null;

@@ -173,7 +173,7 @@ public class WagenstandFragment extends Fragment implements View.OnLayoutChangeL
             setUIArguments(savedInstanceState);
         }
 
-        new ToolbarViewHolder(v, getActionBarTitle()).setContentDescription(titleDescription);
+        new ToolbarViewHolder(v, getActionBarTitle()).setTitleContentDescription(titleDescription);
 
         waggonListview = v.findViewById(R.id.waggon_list);
 

@@ -6,6 +6,7 @@
 package de.deutschebahn.bahnhoflive.ui
 
 import android.view.View
+import android.widget.ImageButton
 import android.widget.TextView
 import androidx.annotation.StringRes
 import androidx.recyclerview.widget.RecyclerView
@@ -14,6 +15,7 @@ import de.deutschebahn.bahnhoflive.R
 class ToolbarViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
 
     private val titleView: TextView? = itemView.findViewById(R.id.screen_title)
+    private val btnBackToLastStation : ImageButton? = itemView.findViewById(R.id.btn_back_to_laststation)
 
     constructor(itemView: View, title: CharSequence?) : this(itemView) {
         setTitle(title)
@@ -31,8 +33,16 @@ class ToolbarViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
         titleView?.text = title
     }
 
-    fun setContentDescription(contentDescription: CharSequence?) {
+    fun setTitleContentDescription(contentDescription: CharSequence?) {
         titleView?.contentDescription = contentDescription
+    }
+
+    fun showImageButton(show:Boolean) {
+        btnBackToLastStation?.visibility = if(show) View.VISIBLE else View.GONE
+    }
+
+    fun setImageButtonClickListener(listener:View.OnClickListener) {
+        btnBackToLastStation?.setOnClickListener(listener)
     }
 
 }

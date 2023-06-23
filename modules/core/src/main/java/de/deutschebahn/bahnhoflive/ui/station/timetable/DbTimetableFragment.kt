@@ -7,6 +7,7 @@ package de.deutschebahn.bahnhoflive.ui.station.timetable
 
 import android.content.Intent
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -46,8 +47,8 @@ class DbTimetableFragment : Fragment(), MapPresetProvider {
     val trackingManager: TrackingManager
         get() = fromActivity(activity)
 
-    private var trainInfoFromMap: TrainInfo? = null
-    private var trainInfoFromMapSimulateClick = false
+    private var trainInfoFromIntent: TrainInfo? = null
+    private var trainInfoFromIntentSimulateClick = false
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -68,10 +69,17 @@ class DbTimetableFragment : Fragment(), MapPresetProvider {
                 filterDialogFragment.show(childFragmentManager, "filterDialog")
             },
             trackingManager,
-            { view: View? -> timetableCollector.loadMore() }) { trainInfo: TrainInfo?, trainEvent: TrainEvent?, integer: Int? ->
+            { // loadMoreListener
+                    view: View? ->
+                timetableCollector.loadMore()
+            })
+        { // onClick
+                trainInfo: TrainInfo?, trainEvent: TrainEvent?, integer: Int? ->
+            run {
             val historyFragment = HistoryFragment.parentOf(this)
             historyFragment.push(JourneyFragment(trainInfo!!, trainEvent!!))
             Unit
+        }
         }
         this.adapter = adapter
 
@@ -108,10 +116,10 @@ class DbTimetableFragment : Fragment(), MapPresetProvider {
             }
             adapter.setTimetable(timetable)
             viewSwitcher.displayedChild = 0
-            if (trainInfoFromMap != null) {
-                trainInfoFromMapSimulateClick = true
-                selectedTrainInfo.setValue(trainInfoFromMap)
-                trainInfoFromMap = null;
+            trainInfoFromIntent?.let {
+                    trainInfoFromIntentSimulateClick = true
+                    selectedTrainInfo.value = trainInfoFromIntent
+                    trainInfoFromIntent = null;
             }
         }
         stationViewModel.timetableErrorsLiveData.observe(viewLifecycleOwner) { volleyError ->
@@ -127,20 +135,48 @@ class DbTimetableFragment : Fragment(), MapPresetProvider {
             }
         }
 
+        // used for show wagon order from map
         selectedTrainInfo.observe(viewLifecycleOwner) { trainInfo: TrainInfo? ->
             if (trainInfo != null) {
                 val itemIndex = adapter.setSelectedItem(trainInfo)
                 if (itemIndex >= 0) {
                     recyclerView.scrollToPosition(itemIndex)
-                    if (trainInfoFromMapSimulateClick) {
-                        trainInfoFromMapSimulateClick = false
+                    if (trainInfoFromIntentSimulateClick) {
+                        trainInfoFromIntentSimulateClick = false
                         val trainEvent = TrainEvent.DEPARTURE
                         val historyFragment = HistoryFragment.parentOf(this)
-                        historyFragment.push(JourneyFragment(trainInfo, trainEvent, true))
+                        historyFragment.push(JourneyFragment(trainInfo, trainEvent, trainInfo.showWagonOrder))
                     }
                 }
                 selectedTrainInfo.value = null
-                trainInfoFromMapSimulateClick = false
+                trainInfoFromIntentSimulateClick = false
+            }
+        }
+
+        stationViewModel.backNavigationLiveData.observe(viewLifecycleOwner) {
+            if(it!=null && it.navigateTo) {
+                Log.d("cr", "navigate back from dbtimetablefragment ")
+
+                if(it.trainInfo!=null) {
+
+                    val itemIndex = adapter.setSelectedItem(it.trainInfo)
+                    if (itemIndex >= 0) {
+                        recyclerView.scrollToPosition(itemIndex)
+                    }
+
+                    val trainEvent = TrainEvent.DEPARTURE
+                    val historyFragment = HistoryFragment.parentOf(this)
+                    historyFragment.push(
+                        JourneyFragment(
+                            it.trainInfo,
+                            trainEvent,
+                            false
+                        )
+                    )
+
+                    stationViewModel.finishBackNavigation()
+                }
+
             }
         }
 
@@ -153,7 +189,7 @@ class DbTimetableFragment : Fragment(), MapPresetProvider {
 
         stationViewModel.waggonOrderObservable.subscribe(
             Consumer<TrainInfo>() {
-                trainInfoFromMap=it
+                trainInfoFromIntent=it
             }
         );
 

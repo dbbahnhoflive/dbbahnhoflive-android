@@ -24,6 +24,7 @@ import java.util.List;
 
 import de.deutschebahn.bahnhoflive.R;
 import de.deutschebahn.bahnhoflive.analytics.TrackingManager;
+import de.deutschebahn.bahnhoflive.backend.hafas.model.HafasStation;
 import de.deutschebahn.bahnhoflive.backend.ris.model.RISTimetable;
 import de.deutschebahn.bahnhoflive.backend.ris.model.TrainEvent;
 import de.deutschebahn.bahnhoflive.backend.ris.model.TrainInfo;
@@ -179,11 +180,35 @@ public class TimetablesFragment extends TwoTabsFragment {
 
             final ToolbarViewHolder toolbarViewHolder = new ToolbarViewHolder(view);
 
+            final View.OnClickListener backToLastStationClickListener = v -> {
+                stationViewModel.navigateBack(activity);
+            };
+
+            toolbarViewHolder.setImageButtonClickListener(backToLastStationClickListener);
+
             stationViewModel.getStationResource().getData().observe(getViewLifecycleOwner(), station -> {
                 if (station != null) {
                     toolbarViewHolder.setTitle(station.getTitle());
                 }
             });
+
+            stationViewModel.getBackNavigationLiveData().observe(getViewLifecycleOwner(),
+                    backNavigationData -> {
+                        toolbarViewHolder.showImageButton(backNavigationData != null && backNavigationData.getShowChevron());
+
+                        if(backNavigationData!=null) {
+
+                             final HafasStation hafasStation = backNavigationData.getHafasStation();
+
+                             if(hafasStation!=null) {
+                                 switchTo(true,false,""); // ruft indirekt        showLocalTransportFragment(); auf (aus TwoTab,,,)
+                             }
+
+                        }
+
+                    }
+            );
+
         }
 
         return view;

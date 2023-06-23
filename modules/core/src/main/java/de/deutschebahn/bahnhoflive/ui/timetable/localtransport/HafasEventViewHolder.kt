@@ -17,14 +17,15 @@ import de.deutschebahn.bahnhoflive.view.SingleSelectionManager
 internal class HafasEventViewHolder(
     parent: ViewGroup,
     hafasDetailsClickEvent : (View, DetailedHafasEvent)->Unit,
-    hafasDataReceivedEvent : (View, DetailedHafasEvent)->Unit,
+    hafasDataReceivedEvent : (View, DetailedHafasEvent, Boolean)->Unit,
     singleSelectionManager: SingleSelectionManager
 )
     : ViewHolder<DetailedHafasEvent>(parent,R.layout.card_expandable_hafas_event )
-    , DetailedHafasEvent.Listener {
+    ,
+    DetailedHafasEvent.HafasDetailListener {
 
     private val onHafasDetailsClickEvent :  (View, DetailedHafasEvent)->Unit = hafasDetailsClickEvent
-    private val onHafasDataReceivedEvent :  (View, DetailedHafasEvent)->Unit = hafasDataReceivedEvent
+    private val onHafasDataReceivedEvent :  (View, DetailedHafasEvent, Boolean)->Unit = hafasDataReceivedEvent
 
     private val overviewViewHolder: HafasEventOverviewViewHolder =
         HafasEventOverviewViewHolder(this@HafasEventViewHolder.itemView.findViewById(R.id.overview))
@@ -42,14 +43,17 @@ internal class HafasEventViewHolder(
         }
     }
 
+    fun performClick() {
+        overviewViewHolder.itemView.performClick()
+    }
     override fun onUnbind(item: DetailedHafasEvent) {
         super.onUnbind(item)
         item.setListener(null)
     }
 
-    override fun onDetailUpdated(detailedHafasEvent: DetailedHafasEvent) {
+    override fun onDetailUpdated(detailedHafasEvent: DetailedHafasEvent, success : Boolean ) {
         if (detailedHafasEvent === item) {
-            onHafasDataReceivedEvent(itemView,detailedHafasEvent)
+            onHafasDataReceivedEvent(itemView,detailedHafasEvent,success)
         }
     }
 
@@ -76,7 +80,7 @@ internal class HafasEventViewHolder(
 
             adapter.setRouteStops(routeStops)
 
-            onHafasDataReceivedEvent(itemView,detailedHafasEvent)
+            onHafasDataReceivedEvent(itemView,detailedHafasEvent, true)
 
         }
     }

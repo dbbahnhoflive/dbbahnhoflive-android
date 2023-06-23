@@ -15,21 +15,44 @@
     android:focusable="true"
     android:orientation="vertical">
 
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        >
+
+
+        <ImageButton
+            android:id="@+id/btn_back_to_laststation"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_vertical"
+            android:src="@drawable/chevron_black_left_32dp"
+            android:background="@null"
+            android:visibility="gone"
+            tools:visibility="visible"
+            android:contentDescription="@string/sr_backtolaststation"
+            />
+
+
     <TextView
         android:id="@+id/screen_title"
         android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:layout_weight="1"
+        android:layout_height="wrap_content"
         android:ellipsize="end"
         android:minHeight="@dimen/title_bar_min_height"
         android:gravity="center"
+        android:layout_gravity="center"
         android:lines="1"
         android:padding="@dimen/default_space_half"
         android:textSize="@dimen/textsize_h2"
         android:enabled="false"
         android:importantForAccessibility="yes"
         android:focusable="true"
-        tools:text="Title" />
+        tools:text="Title"
+        />
+
+    </LinearLayout>
 
     <ImageView
         android:id="@+id/screen_red_line"

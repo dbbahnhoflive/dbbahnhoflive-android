@@ -16,19 +16,38 @@
         android:layout_height="wrap_content"
         android:background="@color/white">
 
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            >
+
+            <ImageButton
+                android:id="@+id/btn_back_to_laststation"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_vertical"
+                android:src="@drawable/chevron_black_left_32dp"
+                android:background="@null"
+                android:visibility="gone"
+                tools:visibility="visible"
+                android:contentDescription="@string/sr_backtolaststation"
+                />
+
         <TextView
             android:id="@+id/screen_title"
             android:layout_width="match_parent"
-            android:layout_height="0dp"
-            android:layout_weight="1"
+            android:layout_height="wrap_content"
             android:ellipsize="end"
             android:gravity="center"
             android:lines="1"
             android:padding="@dimen/tiny_space"
             android:textSize="@dimen/textsize_h2"
-            app:layout_scrollFlags="scroll"
-            tools:text="Title" />
+            app:layout_scrollFlags="noScroll"
+            tools:text="Title"
+            />
 
+        </LinearLayout>
 
         <com.google.android.material.tabs.TabLayout
             android:id="@+id/tabs"

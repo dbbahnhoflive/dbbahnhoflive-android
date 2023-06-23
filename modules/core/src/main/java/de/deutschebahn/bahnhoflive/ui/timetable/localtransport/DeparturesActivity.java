@@ -26,7 +26,9 @@ import de.deutschebahn.bahnhoflive.BaseActivity;
 import de.deutschebahn.bahnhoflive.R;
 import de.deutschebahn.bahnhoflive.analytics.TrackingManager;
 import de.deutschebahn.bahnhoflive.backend.hafas.HafasDepartures;
+import de.deutschebahn.bahnhoflive.backend.hafas.model.HafasEvent;
 import de.deutschebahn.bahnhoflive.backend.hafas.model.HafasStation;
+import de.deutschebahn.bahnhoflive.backend.ris.model.TrainInfo;
 import de.deutschebahn.bahnhoflive.repository.InternalStation;
 import de.deutschebahn.bahnhoflive.repository.Station;
 import de.deutschebahn.bahnhoflive.ui.ToolbarViewHolder;
@@ -35,20 +37,32 @@ public class DeparturesActivity extends BaseActivity implements TrackingManager.
 
     public static final String ARG_HAFAS_LOADER_ARGUMENTS = "hafasLoaderArguments";
 
-    public static final String ARG_HAFAS_EVENTS = "hafasEvents";
+    public static final String ARG_HAFAS_DEPARTURES = "hafasDepartures";
     public static final String ARG_HAFAS_STATION = "hafasStation";
     public static final String ARG_FILTER_STRICTLY = "departuresFilterStrictly";
     public static final String ARG_DB_STATION = "dbStation";
     public static final String ARG_DB_STATION_HAFAS_STATIONS = "dbStationHafasStations";
 
+    public static final String ARG_NAVIGATE_BACK = "navigate_back";
+    public static final String ARG_HAFAS_EVENT = "hafas_event";
+
     private final TrackingManager trackingManager = new TrackingManager(this);
     private ToolbarViewHolder toolbarViewHolder;
 
-    public static Bundle createArguments(HafasStation hafasStation, HafasDepartures departures, boolean filterStrictly, Station station, List<HafasStation> hafasStations) {
+    public Station station;
+    public HafasStation hafasStation;
+    public HafasEvent hafasEvent;
+    public Boolean navigateBack;
+
+    public static Bundle createArguments(HafasStation hafasStation,
+                                         HafasDepartures departures,
+                                         boolean filterStrictly,
+                                         Station station,
+                                         List<HafasStation> hafasStations) {
         final Bundle bundle = new Bundle();
 
         bundle.putParcelable(ARG_HAFAS_STATION, hafasStation);
-        bundle.putParcelable(ARG_HAFAS_EVENTS, departures);
+        bundle.putParcelable(ARG_HAFAS_DEPARTURES, departures);
         bundle.putBoolean(ARG_FILTER_STRICTLY, filterStrictly);
         if (station != null) {
             bundle.putParcelable(ARG_DB_STATION, InternalStation.of(station));
@@ -68,12 +82,18 @@ public class DeparturesActivity extends BaseActivity implements TrackingManager.
 
         final Intent intent = getIntent();
         final Bundle arguments = intent.getBundleExtra(ARG_HAFAS_LOADER_ARGUMENTS);
-        final HafasStation hafasStation = arguments.getParcelable(ARG_HAFAS_STATION);
-        final HafasDepartures departures = arguments.getParcelable(ARG_HAFAS_EVENTS);
+        hafasStation = arguments.getParcelable(ARG_HAFAS_STATION);
+//        final HafasStation hafasStation = arguments.getParcelable(ARG_HAFAS_STATION);
+        final HafasDepartures departures = arguments.getParcelable(ARG_HAFAS_DEPARTURES);
         final List<HafasStation> hafasStations = arguments.getParcelableArrayList(ARG_DB_STATION_HAFAS_STATIONS);
-        final Station station = arguments.getParcelable(ARG_DB_STATION);
+        station = arguments.getParcelable(ARG_DB_STATION);
+//        final Station station = arguments.getParcelable(ARG_DB_STATION);
+        hafasEvent = intent.getParcelableExtra(ARG_HAFAS_EVENT);
         final boolean filterStrictly = arguments.getBoolean(ARG_FILTER_STRICTLY, true);
         hafasTimetableViewModel.initialize(hafasStation, departures, filterStrictly, station, hafasStations);
+
+
+        navigateBack = intent.getBooleanExtra(ARG_NAVIGATE_BACK, false);
 
         setContentView(R.layout.activity_departures);
 
@@ -85,6 +105,7 @@ public class DeparturesActivity extends BaseActivity implements TrackingManager.
             public void onChanged(@Nullable HafasStation hafasStation) {
                 if (hafasStation != null) {
                     toolbarViewHolder.setTitle(hafasStation.name);
+                    toolbarViewHolder.showImageButton(navigateBack);
                 }
             }
         });
@@ -101,7 +122,13 @@ public class DeparturesActivity extends BaseActivity implements TrackingManager.
                 .commit();
     }
 
-    public static Intent createIntent(Context context, HafasStation hafasStation, HafasDepartures departures, boolean filterStrictly, Station station, List<HafasStation> hafasStations) {
+    public static Intent createIntent(Context context,
+                                      HafasStation hafasStation,
+                                      HafasDepartures departures,
+                                      boolean filterStrictly,
+                                      Station station,
+                                      List<HafasStation> hafasStations) {
+
         final Intent intent = new Intent(context, DeparturesActivity.class);
 
         intent.putExtra(ARG_HAFAS_LOADER_ARGUMENTS, createArguments(
@@ -114,6 +141,20 @@ public class DeparturesActivity extends BaseActivity implements TrackingManager.
     public static Intent createIntent(Context context, HafasStation hafasStation, HafasDepartures departures) {
         return createIntent(context, hafasStation, departures, true, null, null);
     }
+
+    @Nullable
+    public static Intent createIntentForBackNavigation(Context context,
+                                                       Station actualStation, // db
+                                                       HafasStation stationToGoTo,
+                                                       HafasEvent hafasEvent) {
+        final Intent intent = createIntent(context, stationToGoTo, null, true, actualStation, null);
+
+        intent.putExtra(ARG_NAVIGATE_BACK, true);
+        intent.putExtra(ARG_HAFAS_EVENT, hafasEvent);
+
+        return intent;
+    }
+
 
     @Override
     protected void onStart() {

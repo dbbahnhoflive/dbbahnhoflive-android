@@ -15,12 +15,15 @@ import androidx.fragment.app.FragmentActivity
 import androidx.fragment.app.activityViewModels
 import androidx.fragment.app.viewModels
 import androidx.recyclerview.widget.ConcatAdapter
+import androidx.recyclerview.widget.RecyclerView
+import androidx.recyclerview.widget.RecyclerView.Recycler
 import com.android.volley.VolleyError
 import de.deutschebahn.bahnhoflive.BaseApplication.Companion.get
 import de.deutschebahn.bahnhoflive.R
 import de.deutschebahn.bahnhoflive.analytics.TrackingManager
 import de.deutschebahn.bahnhoflive.backend.BaseRestListener
 import de.deutschebahn.bahnhoflive.backend.VolleyRestListener
+import de.deutschebahn.bahnhoflive.backend.hafas.model.HafasEvent
 import de.deutschebahn.bahnhoflive.backend.hafas.model.HafasStop
 import de.deutschebahn.bahnhoflive.backend.local.model.EvaIds
 import de.deutschebahn.bahnhoflive.backend.ris.model.TrainEvent
@@ -47,6 +50,25 @@ class RegularJourneyContentFragment : Fragment() {
 
     val journeyViewModel: JourneyViewModel by viewModels({ requireParentFragment() })
 
+    private fun scrollRecyclerToStation(recycler: RecyclerView, stops:List<JourneyStop>) {
+
+        val destStation = stationViewModel.backNavigationLiveData.value?.stationToNavigateTo
+
+        try {
+            if (destStation != null) {
+                for (i in stops.indices) {
+                    if (stops[i].evaId.equals(destStation.evaIds?.main)) {
+                        recycler.scrollToPosition(i)
+                        break
+                    }
+                }
+            }
+        }
+        catch(_:Exception) {
+
+        }
+    }
+
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
@@ -72,12 +94,15 @@ class RegularJourneyContentFragment : Fragment() {
                     sev.visibility = View.GONE
             }
 
-
-
+            try {
             issueBinder.bindIssues(
                 trainInfo,
                 trainEvent.movementRetriever.getTrainMovementInfo(trainInfo)
             )
+            }
+            catch(_:Exception) {
+
+            }
 
             with(buttonWagonOrder) {
                 shouldOfferWagenOrder = trainInfo.shouldOfferWagenOrder()
@@ -95,7 +120,7 @@ class RegularJourneyContentFragment : Fragment() {
                     }
 //                    isGone = false
                 } else {
-//                    isGone = true
+//                    isGone = trued
                 }
             }
 
@@ -109,14 +134,22 @@ class RegularJourneyContentFragment : Fragment() {
         with(contentLayout) {
             prepareCommons(viewLifecycleOwner, stationViewModel, journeyViewModel)
 
-            val journeyAdapter = JourneyAdapter { view, journeyStop ->
+            val journeyAdapter = JourneyAdapter {
+                    //onClickStop
+                    view, journeyStop ->
+                val trainInfo = journeyViewModel.essentialParametersLiveData.value?.second
                 activity?.let {
                     openJourneyStopStation(
                         it,
+                        stationViewModel,
                         view,
                         stationViewModel.stationResource.data.value?.evaIds,
                         journeyStop.evaId,
-                        journeyStop.name
+                        journeyStop.name,
+                        null,
+                        null,
+                        trainInfo
+
                     )
                 }
             }
@@ -141,6 +174,7 @@ class RegularJourneyContentFragment : Fragment() {
 
                     filterAdapter.count = if (filtered) 1 else 0
                     journeyAdapter.submitList(journeyStops)
+                    scrollRecyclerToStation(recycler, journeyAdapter.currentList)
 
                     // hide buttonWagonOrder if Endbahnhof
                     if(journeyStops.firstOrNull() { it.current && it.last }!=null) {
@@ -167,10 +201,15 @@ class RegularJourneyContentFragment : Fragment() {
                         }
 
                         reducedJourneyAdapter.submitList(routeStops)
+
+
                     }
                 }
             }
         }
+
+
+
 
     }.root
 
@@ -231,9 +270,15 @@ class RegularJourneyContentFragment : Fragment() {
     companion object {
 
         fun openJourneyStopStation(activity: FragmentActivity,
+                                   stationViewModel:StationViewModel?,
                                    view: View,
                                    stationIds: EvaIds?,
-                                   stopEvaId:String?, stopStationName:String?, hafasStop : HafasStop? = null) {
+                                   stopEvaId:String?,
+                                   stopStationName:String?,
+                                   hafasStop : HafasStop? = null, // ziel
+                                   hafasEvent : HafasEvent? = null, // quelle
+                                   trainInfo:TrainInfo?=null
+        ) {
 
             stopEvaId?.let {
 
@@ -273,9 +318,13 @@ class RegularJourneyContentFragment : Fragment() {
 
                                             if (payload != null) {
 
-                                                intent = StationActivity.createIntent(
+                                                intent = StationActivity.createIntentForBackNavigation(
                                                         view.context,
                                                         payload,
+                                                        stationViewModel?.station,
+                                                    hafasStop?.toHafasStation(),
+                                                    hafasEvent,
+                                                        trainInfo,
                                                         false
                                                     )
 
@@ -285,10 +334,11 @@ class RegularJourneyContentFragment : Fragment() {
                                                     val hafasStation = it.toHafasStation()
 
                                                     intent =
-                                                        DeparturesActivity.createIntent(
+                                                        DeparturesActivity.createIntentForBackNavigation(
                                                             view.context,
+                                                            stationViewModel?.station,
                                                             hafasStation,
-                                                            null
+                                                            hafasEvent
                                                         )
 
                                                 }
@@ -308,6 +358,7 @@ class RegularJourneyContentFragment : Fragment() {
                                         @Synchronized
                                         override fun onFail(reason: VolleyError) {
                                             Log.d("cr", reason.toString())
+                                            // todo: Meldung oder wiederholen
                                         }
                                     },
                                     it
