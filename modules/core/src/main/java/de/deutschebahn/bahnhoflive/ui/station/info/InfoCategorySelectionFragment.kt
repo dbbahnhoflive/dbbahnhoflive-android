@@ -68,7 +68,7 @@ class InfoCategorySelectionFragment : CategorySelectionFragment(
             parkingsCategory = addParkings()
 
             if (station != null) {
-                if (!railReplacementSummaryLiveData.value.isNullOrEmpty() ||  SEV_Static.contains(
+                if (!railReplacementSummaryLiveData.value.isNullOrEmpty() ||  SEV_Static.containsStationId(
                         station.station?.stationID
                     )) {
                         railReplacementCategory = addRailReplacement()
