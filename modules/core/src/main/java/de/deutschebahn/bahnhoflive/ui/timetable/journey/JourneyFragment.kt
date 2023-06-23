@@ -60,9 +60,14 @@ class JourneyFragment() : JourneyCoreFragment(), MapPresetProvider {
         savedInstanceState: Bundle?
     ): View = FragmentJourneyBinding.inflate(inflater).apply {
 
+        var isSEV=false
+
         journeyViewModel.essentialParametersLiveData.observe(viewLifecycleOwner) { (station, trainInfo, trainEvent) ->
+
+           var screenTitle = ""
+
            if(trainEvent==TrainEvent.ARRIVAL) {
-               titleBar.screenTitle.text = getString(
+               screenTitle = getString(
                    R.string.template_journey_title,
                    TimetableViewHelper.composeName(trainInfo, trainInfo.arrival),
                    trainInfo.arrival?.getDestinationStop(true)?.let {
@@ -70,8 +75,14 @@ class JourneyFragment() : JourneyCoreFragment(), MapPresetProvider {
                    } ?: ""
                )
            }
-           else
-            titleBar.screenTitle.text = getString(
+           else {
+
+               trainInfo.departure?.let {
+                 isSEV = it.lineIdentifier.equals("ev", true) ||
+                         it.lineIdentifier.equals("sev", true)
+               }
+
+               screenTitle = getString(
                 R.string.template_journey_title,
                 TimetableViewHelper.composeName(trainInfo, trainInfo.departure),
                 trainInfo.departure?.getDestinationStop(true)?.let {
@@ -79,13 +90,20 @@ class JourneyFragment() : JourneyCoreFragment(), MapPresetProvider {
                 } ?: ""
             )
 
+
+
+           }
+
+            if(screenTitle.contains("SEV", true))
+                isSEV = true
+
+
             if (showWagonOrderFromExtern) // trick: eigentlich soll Wagenreihung angezeigt werden... (dieses Fragment wird gleich überdeckkt)
                 journeyViewModel.showWagonOrderLiveData.value = true
 
             showWagonOrderFromExtern = false
-
-            journeyViewModel.showSEVLiveData.value =
-                titleBar.screenTitle.text.contains("SEV", true)
+            titleBar.screenTitle.text = screenTitle
+            journeyViewModel.showSEVLiveData.value = isSEV
 
         }
 

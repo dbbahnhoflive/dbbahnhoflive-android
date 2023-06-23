@@ -1,5 +1,7 @@
 package de.deutschebahn.bahnhoflive.backend.db.ris
 
+import android.util.Log
+import com.android.volley.DefaultRetryPolicy
 import com.android.volley.NetworkResponse
 import com.android.volley.Response
 import com.android.volley.toolbox.HttpHeaderParser
@@ -19,7 +21,12 @@ class RISJourneysEventbasedRequest(
     dbAuthorizationTool,
     restListener
 ) {
+// RIS-API kostet Geld !!!!!!!!!!!
 
+    init {
+        // default-timeout is 2500ms, backoffMult:1.0
+        retryPolicy = DefaultRetryPolicy(20 * 1000, 1, 1.0f)
+    }
 
     override fun parseNetworkResponse(networkResponse: NetworkResponse): Response<JourneyEventBased> {
         super.parseNetworkResponse(networkResponse)

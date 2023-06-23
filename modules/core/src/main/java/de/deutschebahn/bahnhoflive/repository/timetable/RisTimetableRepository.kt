@@ -13,6 +13,7 @@ import de.deutschebahn.bahnhoflive.backend.db.ris.model.EventType
 import de.deutschebahn.bahnhoflive.backend.db.ris.model.JourneyEventBased
 import de.deutschebahn.bahnhoflive.backend.local.model.EvaIds
 import de.deutschebahn.bahnhoflive.backend.ris.model.TrainEvent
+import de.deutschebahn.bahnhoflive.ui.station.railreplacement.SEV_Static
 import de.deutschebahn.bahnhoflive.ui.timetable.journey.JourneyStop
 import de.deutschebahn.bahnhoflive.ui.timetable.journey.toJourneyStopEvent
 import java.util.*
@@ -128,8 +129,13 @@ open class RisTimetableRepository(
                             override fun onSuccess(payload: JourneyEventBased) {
                                 payload.apply {
                                     events.firstOrNull { arrivalDepartureEvent ->
-                                        arrivalDepartureEvent.station.evaNumber in evaIds.ids
-                                                && arrivalDepartureEvent.eventType == trainEvent.correspondingEventType
+                                        arrivalDepartureEvent.eventType == trainEvent.correspondingEventType &&
+                                                ((arrivalDepartureEvent.station.evaNumber in evaIds.ids) || (
+                                                        SEV_Static.isReplacementStopFrom(
+                                                            arrivalDepartureEvent.station.evaNumber,
+                                                            evaIds.ids
+                                                        )
+                                                        ))
                                     }?.also {
                                         if (it.toJourneyStopEvent()?.parsedScheduledTime != scheduledTime) {
                                             tryYesterdayListener?.invoke() ?: listener.onFail(
@@ -147,6 +153,7 @@ open class RisTimetableRepository(
                                                         EventType.ARRIVAL -> journeyStopEvent
                                                             .wrapJourneyStop(evaIds)
                                                             .also { acc.add(it) }
+
                                                         EventType.DEPARTURE -> acc.lastOrNull()
                                                             ?.takeIf { journeyStop ->
                                                                 journeyStop.departure == null
@@ -172,6 +179,7 @@ open class RisTimetableRepository(
                             }
 
                             override fun onFail(reason: VolleyError) {
+                                Log.d("cr", "RISJourneysEventbasedRequest: VolleyError ${reason.message}")
                                 listener.onFail(reason)
                             }
                         }

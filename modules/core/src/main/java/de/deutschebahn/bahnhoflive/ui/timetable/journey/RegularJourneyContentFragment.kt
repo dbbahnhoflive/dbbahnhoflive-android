@@ -34,6 +34,7 @@ import de.deutschebahn.bahnhoflive.repository.Station
 import de.deutschebahn.bahnhoflive.repository.trainformation.TrainFormation
 import de.deutschebahn.bahnhoflive.ui.station.StationActivity
 import de.deutschebahn.bahnhoflive.ui.station.StationViewModel
+import de.deutschebahn.bahnhoflive.ui.station.railreplacement.SEV_Static
 import de.deutschebahn.bahnhoflive.ui.station.timetable.IssueIndicatorBinder
 import de.deutschebahn.bahnhoflive.ui.station.timetable.IssuesBinder
 import de.deutschebahn.bahnhoflive.ui.station.timetable.TimetableViewHelper
@@ -58,20 +59,20 @@ class RegularJourneyContentFragment : Fragment() {
 
         var shouldOfferWagenOrder = false
 
+        sev.setOnClickListener {
+            stationViewModel.stationNavigation?.showRailReplacement()
+        }
+
         journeyViewModel.essentialParametersLiveData.observe(viewLifecycleOwner) { (station, trainInfo, trainEvent) ->
 
             journeyViewModel.showSEVLiveData.observe(viewLifecycleOwner) {itShowSEV->
 
                 if(itShowSEV && stationViewModel.hasSEV()) {
-                    sev.setOnClickListener {
-                        stationViewModel.stationNavigation?.showRailReplacement()
-                    }
                     sev.visibility = View.VISIBLE
                 }
                 else
                     sev.visibility = View.GONE
             }
-
 
 
             issueBinder.bindIssues(
@@ -110,7 +111,22 @@ class RegularJourneyContentFragment : Fragment() {
             prepareCommons(viewLifecycleOwner, stationViewModel, journeyViewModel)
 
             val journeyAdapter = JourneyAdapter { view, journeyStop ->
+                // onClickStop
                 activity?.let {
+
+                    val staticStopData =
+                        SEV_Static.getStationEvaIdByReplacementId(journeyStop.evaId)
+
+                    if (staticStopData != null) {
+                        openJourneyStopStation(
+                            it,
+                            view,
+                            stationViewModel.stationResource.data.value?.evaIds,
+                            staticStopData.first,
+                            journeyStop.name
+                        )
+
+                    } else
                     openJourneyStopStation(
                         it,
                         view,
@@ -132,7 +148,10 @@ class RegularJourneyContentFragment : Fragment() {
                     }
                 }.root.toViewHolder()
             }
+
+
             val journeyConcatAdapter = ConcatAdapter(journeyAdapter, filterAdapter)
+
             journeyViewModel.eventuallyFilteredJourneysLiveData.observe(viewLifecycleOwner) { pairResult ->
                 pairResult.fold({ (filtered, journeyStops) ->
                     if (recycler.adapter != journeyConcatAdapter) {
@@ -151,6 +170,11 @@ class RegularJourneyContentFragment : Fragment() {
                     }
 
                     textWagonOrder.isGone =  buttonWagonOrder.isGone
+
+
+                    val lastStation = journeyStops.last()
+
+                    sev.visibility = if(SEV_Static.isReplacementStopFrom(lastStation.evaId)) View.VISIBLE else View.GONE
 
 
                 }, {
@@ -233,7 +257,9 @@ class RegularJourneyContentFragment : Fragment() {
         fun openJourneyStopStation(activity: FragmentActivity,
                                    view: View,
                                    stationIds: EvaIds?,
-                                   stopEvaId:String?, stopStationName:String?, hafasStop : HafasStop? = null) {
+                                   stopEvaId:String?,
+                                   stopStationName:String?,
+                                   hafasStop : HafasStop? = null) {
 
             stopEvaId?.let {
 
