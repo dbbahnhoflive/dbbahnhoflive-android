@@ -836,15 +836,15 @@ public class StationActivity extends BaseActivity implements
 
     public static Intent createIntent(Context context,
                                                      Station station,
-                                                     boolean details) {
+                                                     boolean showDepartures) {
         final Intent intent = createIntent(context, station, EquipmentID.UNKNOWN);
-        intent.putExtra(ARG_SHOW_DEPARTURES, details);
+        intent.putExtra(ARG_SHOW_DEPARTURES, showDepartures);
         return intent;
     }
 
     @NotNull
-    public static Intent createIntent(@NotNull Context context, @NotNull Station station, @Nullable String track) {
-        final Intent intent = createIntent(context, station, true);
+    public static Intent createIntent(@NotNull Context context, @NotNull Station station, @Nullable String track, boolean showDepartures) {
+        final Intent intent = createIntent(context, station, showDepartures);
         intent.putExtra(ARG_TRACK_FILTER, track);
         return intent;
     }
@@ -863,11 +863,11 @@ public class StationActivity extends BaseActivity implements
         if(stationToGoTo!=null) {
             if (trainInfo != null) {
                 if (trainInfo.getDeparture() != null)
-                    intent = createIntent(context, stationToGoTo, trainInfo.getDeparture().getPurePlatform());
+                    intent = createIntent(context, stationToGoTo, trainInfo.getDeparture().getPurePlatform(), doNavigateBack);
                 else if (trainInfo.getArrival() != null)
-                    intent = createIntent(context, stationToGoTo, trainInfo.getArrival().getPurePlatform());
+                    intent = createIntent(context, stationToGoTo, trainInfo.getArrival().getPurePlatform(), doNavigateBack);
             } else
-                intent = createIntent(context, stationToGoTo, true);
+                intent = createIntent(context, stationToGoTo, false);
         }
 
         if (intent == null)
@@ -899,7 +899,7 @@ public class StationActivity extends BaseActivity implements
     // wird u.a. aus MapViewModel.kt aufgerufen !!!
     @NotNull
     public static Intent createIntent(@NotNull Context context, @NotNull Station station, @NotNull TrainInfo trainInfo) {
-        final Intent intent = createIntent(context, station, trainInfo.getDeparture().getPurePlatform());
+        final Intent intent = createIntent(context, station, trainInfo.getDeparture().getPurePlatform(), true);
         intent.putExtra(ARG_TRAIN_INFO, trainInfo);
         return intent;
     }

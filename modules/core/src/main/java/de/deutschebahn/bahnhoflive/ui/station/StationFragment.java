@@ -455,15 +455,25 @@ public class StationFragment extends androidx.fragment.app.Fragment implements
         stationViewModel.getBackNavigationLiveData().observe(getViewLifecycleOwner(),
                 backNavigationData -> {
 
-                  if(backNavigationData!=null && backNavigationData.getShowChevron()) {
+                    if (backNavigationData != null && backNavigationData.getNavigateTo()) {
+
+                        if(backNavigationData.getHafasStation()!=null) {
+                            final Object host = getHost();
+                            if(host!=null) {
+                                ((TimetablesFragment.Host) host).showTimetablesFragment(true, false, null);
+                            }
+                        }
+
+                    } else {
+                        if (backNavigationData != null && backNavigationData.getShowChevron()) {
                       btnBackToLaststation.setVisibility(View.VISIBLE);
                       toolbarViewHolder.showImageButton(true);
-                  }
-                  else {
+                        } else {
                       btnBackToLaststation.setVisibility(View.GONE);
                       toolbarViewHolder.showImageButton(false);
                   }
 
+                    }
                 }
         );
 

@@ -1,5 +1,6 @@
 package de.deutschebahn.bahnhoflive.backend.db.ris
 
+import com.android.volley.DefaultRetryPolicy
 import com.android.volley.NetworkResponse
 import com.android.volley.Response
 import com.google.gson.Gson
@@ -23,6 +24,10 @@ class RISJourneysByRelationRequest(
     dbAuthorizationTool,
     restListener
 ) {
+
+    init {
+        retryPolicy = DefaultRetryPolicy(30000, 1, 1.0f)
+    }
 
     class Parameters(
         val number: String?,

@@ -123,7 +123,7 @@ class JourneyItemViewHolder(val itemJourneyDetailedBinding: ItemJourneyDetailedB
                     ).joinToString("; ", postfix = ".")
                 ).joinToString(separator = " ")
             }.also {
-                Log.d(JourneyItemViewHolder::class.java.simpleName, "Content description:\n$it")
+//                Log.d(JourneyItemViewHolder::class.java.simpleName, "Content description:\n$it")
             }
         }
 

@@ -6,6 +6,7 @@
 
 package de.deutschebahn.bahnhoflive.backend.db.ris
 
+import com.android.volley.DefaultRetryPolicy
 import com.android.volley.NetworkResponse
 import com.android.volley.Response
 import com.android.volley.VolleyError
@@ -28,6 +29,7 @@ class RISStationsStopPlacesRequestByEvaId(
 
     init {
         setShouldCache(false)
+        retryPolicy = DefaultRetryPolicy(35000,1,1.0f)
     }
 
     override fun getCountKey() = "RIS/stations/stop-places"

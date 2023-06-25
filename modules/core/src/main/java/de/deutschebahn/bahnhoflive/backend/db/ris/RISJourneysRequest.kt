@@ -1,5 +1,7 @@
 package de.deutschebahn.bahnhoflive.backend.db.ris
 
+import com.android.volley.DefaultRetryPolicy
+import com.android.volley.RetryPolicy
 import de.deutschebahn.bahnhoflive.BuildConfig
 import de.deutschebahn.bahnhoflive.backend.VolleyRestListener
 import de.deutschebahn.bahnhoflive.backend.db.DbAuthorizationTool
@@ -16,6 +18,8 @@ open class RISJourneysRequest<T>(
     restListener,
     "db-api-key"
 ) {
-
+    init {
+        retryPolicy = DefaultRetryPolicy(30000, 1, 1.0f)
+    }
     override fun getCountKey(): String = "ris-journeys"
 }

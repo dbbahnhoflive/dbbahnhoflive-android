@@ -174,7 +174,7 @@ class MapViewModel(
 
     fun openDepartures(context: Context, track: String) {
         stationResource.data.value?.let {
-            context.startActivity(StationActivity.createIntent(context, it, track))
+            context.startActivity(StationActivity.createIntent(context, it, track, true))
         }
     }
 
