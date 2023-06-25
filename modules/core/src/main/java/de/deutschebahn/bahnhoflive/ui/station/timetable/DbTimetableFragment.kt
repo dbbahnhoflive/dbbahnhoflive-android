@@ -176,6 +176,10 @@ class DbTimetableFragment : Fragment(), MapPresetProvider {
 
                     stationViewModel.finishBackNavigation()
                 }
+                else {
+
+
+                }
 
             }
         }

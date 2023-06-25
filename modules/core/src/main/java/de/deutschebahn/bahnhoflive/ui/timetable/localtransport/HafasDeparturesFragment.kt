@@ -106,6 +106,7 @@ class HafasDeparturesFragment : RecyclerFragment<HafasDeparturesAdapter>(R.layou
                     }
                     else {
                         // todo: Fehlermeldung
+                        Log.d("cr", "HafasDeparturesFragment::ERROR")
                     }
 
                 }
@@ -232,6 +233,19 @@ class HafasDeparturesFragment : RecyclerFragment<HafasDeparturesAdapter>(R.layou
 
         val imageButton : ImageButton? = container?.findViewById<ImageButton>(R.id.btn_back_to_laststation)
         imageButton?.setOnClickListener(backToLastStationClickListener)
+
+        stationViewModel.backNavigationLiveData.observe(viewLifecycleOwner) {
+
+            if(it!=null && it.navigateTo) {
+                Log.d("cr", "navigate back from hafasdeparturesfragment ")
+
+                if (it.trainInfo == null) {
+
+                }
+            }
+
+
+        }
 
         return view
     }
