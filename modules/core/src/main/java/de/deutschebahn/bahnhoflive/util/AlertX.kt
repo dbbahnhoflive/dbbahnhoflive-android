@@ -28,11 +28,11 @@ class AlertX {
             titleText:String,
             mainText:String,
             defaultButton : AlertDefaultButton=AlertDefaultButton.BUTTON_POSITIVE,
-            buttonPositiveText:String="",
+            buttonPositiveText:String="", // right
             buttonPositiveClicked: (() -> Unit)? = null,
-            buttonNegativText:String="",
+            buttonNegativText:String="", // left
             buttonNegativeClicked: (() -> Unit)? = null,
-            buttonNeutralText:String="",
+            buttonNeutralText:String="", // middle
             buttonNeutralClicked: (() -> Unit)? = null
 
         ) {
@@ -53,15 +53,15 @@ class AlertX {
             }
 
             if (buttonNegativText.isNotEmpty()) {
-                builder.setNegativeButton(buttonNegativText) { dialog, which ->
-                    buttonNegativeClicked?.invoke()
+                builder.setNeutralButton(buttonNegativText) { dialog, which ->
+                    buttonNeutralClicked?.invoke()
                     dialog.dismiss()
                 }
             }
 
             if (buttonNeutralText.isNotEmpty()) {
-                builder.setNeutralButton(buttonNegativText) { dialog, which ->
-                    buttonNeutralClicked?.invoke()
+                builder.setNegativeButton(buttonNegativText) { dialog, which ->
+                    buttonNegativeClicked?.invoke()
                     dialog.dismiss()
                 }
             }

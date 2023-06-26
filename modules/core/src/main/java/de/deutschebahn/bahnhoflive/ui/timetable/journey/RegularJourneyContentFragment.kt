@@ -393,7 +393,7 @@ class RegularJourneyContentFragment : Fragment() {
                                 )
 
                             })
-                        .setNegativeButton(
+                        .setNeutralButton(
                             R.string.dlg_cancel,
                             DialogInterface.OnClickListener { dialog, id ->
                             })
