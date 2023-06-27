@@ -6,6 +6,8 @@ import java.util.GregorianCalendar
 
 object SEV_Static {
 
+
+
 class SEV_Item(
     val stationId:Int=0,
     val evaId:Int=0,
