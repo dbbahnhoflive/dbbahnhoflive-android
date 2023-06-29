@@ -139,15 +139,30 @@ class AccessibilityFragment : Fragment(R.layout.fragment_accessibility), MapPres
 //                }
 
                 accessibilityAdapter.submitList(platform.accessibility.filter { accessibility ->
-                    if(accessibility.component2() != AccessibilityStatus.NOT_APPLICABLE) {
-                        if((accessibility.component1()!=AccessibilityFeature.BOARDING_AID  ||
-                                    accessibility.component1()!=AccessibilityFeature.AUTOMATIC_DOOR))
-                            true
+                    if(accessibility.component2() == AccessibilityStatus.NOT_APPLICABLE) {
+                        false
+                    }
+                    else {
+                        if((accessibility.component1()==AccessibilityFeature.BOARDING_AID  ||
+                                    accessibility.component1()==AccessibilityFeature.AUTOMATIC_DOOR)) {
                          (accessibility.component2()==AccessibilityStatus.AVAILABLE || accessibility.component2()==AccessibilityStatus.PARTIAL )
                     }
                     else
-                         false
+                         true
+                    }
                 }.toList())
+
+
+//                accessibilityAdapter.submitList(platform.accessibility.filter { accessibility ->
+//                    if(accessibility.component2() != AccessibilityStatus.NOT_APPLICABLE) {
+//                        if((accessibility.component1()!=AccessibilityFeature.BOARDING_AID  ||
+//                                    accessibility.component1()!=AccessibilityFeature.AUTOMATIC_DOOR))
+//                            true
+//                         (accessibility.component2()==AccessibilityStatus.AVAILABLE || accessibility.component2()==AccessibilityStatus.PARTIAL )
+//                    }
+//                    else
+//                         false
+//                }.toList())
 
             } ?: kotlin.run {
                 if (!platformsAndSelection?.first.isNullOrEmpty()) {
