@@ -209,11 +209,13 @@ class RegularJourneyContentFragment : Fragment() {
                     textWagonOrder.isGone = buttonWagonOrder.isGone
 
 
-                    val lastStation = journeyStops.last()
+                    if(journeyStops.isNotEmpty()) { // empty happens if train is cancelled !!
+                        val lastStation = journeyStops.last()
 
-                    sev.visibility =
-                        if (SEV_Static.isReplacementStopFrom(lastStation.evaId)) View.VISIBLE else View.GONE
+                        sev.visibility =
+                            if (SEV_Static.isReplacementStopFrom(lastStation.evaId)) View.VISIBLE else View.GONE // default=gone
 
+                    }
 
                 }, {
                     Log.d(RegularJourneyContentFragment::class.java.simpleName, "Error: $it")
