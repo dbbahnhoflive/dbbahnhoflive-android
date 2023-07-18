@@ -111,6 +111,8 @@ public class TrainMovementInfo implements Parcelable {
 
         TrainMovementInfo result = new TrainMovementInfo();
         result.setPlatform(parser.getAttributeValue(null, _platform));
+        if(result.getPlatform()==null || result.getPlatform().isEmpty())
+            result.setPlatform("k.A.");
         result.setVia(parser.getAttributeValue(null, _via));
         result.setDistantEndpoint(parser.getAttributeValue(null, _distantEndpoint));
         result.setWings(parser.getAttributeValue(null, _wings));
