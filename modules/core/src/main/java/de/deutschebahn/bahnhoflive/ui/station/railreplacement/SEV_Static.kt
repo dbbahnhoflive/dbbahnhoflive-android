@@ -11,8 +11,8 @@ object SEV_Static {
 class SEV_Item(
     val stationId:Int=0,
     val evaId:Int=0,
-    val additionalStop_evaId:Int=0,
-    val additionalStop_stationName:String="",
+    val sev_evaId:Int=0,
+    val sev_stationName:String="",
     val isInConstructionPhase1:Boolean=false,
     val isInConstructionPhase2:Boolean=false,
     val showCompanionAppLink:Boolean=false // ab 6.8.
@@ -59,7 +59,7 @@ private val sev_items = arrayOf<SEV_Item>(
               if(it.isInConstructionPhase1 && isInConstructionPhase1 ||
                   it.isInConstructionPhase2 && isInConstructionPhase2
                       )
-                list.add(it.additionalStop_evaId.toString())
+                list.add(it.sev_evaId.toString())
             }
         }
     }
@@ -168,6 +168,18 @@ private val sev_items = arrayOf<SEV_Item>(
         return false
     }
 
+    fun hasSEVStationWebAppCompanionLink(evaId: String?): Boolean { // webApp DB Wegbegleitung
+        // ab 6.8. bis 12.9.
+        val evaIdAsInt = evaId?.toIntOrNull() ?: 0
+        if (isInConstructionPhase2()) {
+            sev_items.forEach {
+                if (it.sev_evaId == evaIdAsInt)
+                    return it.showCompanionAppLink
+            }
+        }
+        return false
+    }
+
     fun hasStationArAppLink(stationId: String?): Boolean { // AR-App link to playstore
         // spezial, nur 2 Stationen:
         // Würzburg (6945) ab 29.5. und
@@ -197,7 +209,7 @@ private val sev_items = arrayOf<SEV_Item>(
         if (!isInConstructionPhase1() && !isInConstructionPhase2()) return false
 
         for (item in sev_items) {
-            if (item.additionalStop_evaId.toString().equals(evaId))
+            if (item.sev_evaId.toString().equals(evaId))
                 if (evaIds.contains(item.evaId.toString()) && isStationInConstructionPhase(item.stationId.toString()))
                     return true
         }
@@ -209,7 +221,7 @@ private val sev_items = arrayOf<SEV_Item>(
         if (!isInConstructionPhase1() && !isInConstructionPhase2() || evaId==null) return false
 
         for (item in sev_items) {
-            if(evaId==item.additionalStop_evaId.toString())
+            if(evaId==item.sev_evaId.toString())
                 return true
         }
         return false
@@ -220,8 +232,8 @@ private val sev_items = arrayOf<SEV_Item>(
         if (evaId==null || (!isInConstructionPhase1() && !isInConstructionPhase2())) return null
 
         for (item in sev_items) {
-            if (item.additionalStop_evaId.toString() == evaId) {
-                return Triple(item.evaId.toString(), item.additionalStop_stationName, null)
+            if (item.sev_evaId.toString() == evaId) {
+                return Triple(item.evaId.toString(), item.sev_stationName, null)
             }
         }
         return null

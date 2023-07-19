@@ -4,6 +4,7 @@ import android.app.AlertDialog
 import android.app.ProgressDialog
 import android.content.DialogInterface
 import android.content.Intent
+import android.net.Uri
 import android.os.Bundle
 import android.util.Log
 import android.view.LayoutInflater
@@ -16,7 +17,6 @@ import androidx.fragment.app.activityViewModels
 import androidx.fragment.app.viewModels
 import androidx.recyclerview.widget.ConcatAdapter
 import androidx.recyclerview.widget.RecyclerView
-import androidx.recyclerview.widget.RecyclerView.Recycler
 import com.android.volley.VolleyError
 import de.deutschebahn.bahnhoflive.BaseApplication.Companion.get
 import de.deutschebahn.bahnhoflive.R
@@ -83,6 +83,15 @@ class RegularJourneyContentFragment : Fragment() {
 
         sev.setOnClickListener {
             stationViewModel.stationNavigation?.showRailReplacement()
+        }
+
+        sevLinkDbCompanion.setOnClickListener {
+            startActivity(
+                Intent(
+                    Intent.ACTION_VIEW,
+                    Uri.parse(getString(R.string.teaser_db_companion_url))
+                )
+            )
         }
 
         journeyViewModel.essentialParametersLiveData.observe(viewLifecycleOwner) { (station, trainInfo, trainEvent) ->
@@ -209,11 +218,16 @@ class RegularJourneyContentFragment : Fragment() {
                     textWagonOrder.isGone = buttonWagonOrder.isGone
 
 
-                    if(journeyStops.isNotEmpty()) { // empty happens if train is cancelled !!
+                    if (journeyStops.isNotEmpty()) { // empty happens if train is cancelled !!
                         val lastStation = journeyStops.last()
 
                         sev.visibility =
                             if (SEV_Static.isReplacementStopFrom(lastStation.evaId)) View.VISIBLE else View.GONE // default=gone
+
+                        sevLinkDbCompanion.visibility =
+                            if ((stationViewModel.mapAvailableLiveData.value != true) &&
+                                SEV_Static.hasSEVStationWebAppCompanionLink(lastStation.evaId)
+                            ) sev.visibility else View.GONE
 
                     }
 

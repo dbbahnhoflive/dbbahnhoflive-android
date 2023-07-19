@@ -54,7 +54,7 @@
                     android:layout_height="wrap_content"
                     android:gravity="bottom"
                     android:text="@string/teaser_ar_headline"
-                    android:textSize="@dimen/textsize_h1"
+                    android:textSize="18sp"
                     android:textStyle="bold" />
 
                 <TextView
@@ -62,7 +62,8 @@
                     android:layout_height="wrap_content"
                     android:layout_marginTop="18dp"
                     android:gravity="start"
-                    android:text="@string/teaser_ar_subheadline" />
+                    android:textSize="14sp"
+                    android:text="@string/teaser_ar_copy" />
 
                 <ImageButton
                     android:id="@+id/arTeaserButton"

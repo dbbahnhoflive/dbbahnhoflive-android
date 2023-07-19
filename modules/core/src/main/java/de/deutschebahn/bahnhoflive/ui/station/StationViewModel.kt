@@ -1321,10 +1321,6 @@ class StationViewModel(
         it?.isEco ?: false
     }
 
-    val showAugmentedRealityTeaser = Transformations.map(stationResource.data) {
-        SEV_Static.hasStationArAppLink(it.id)
-    }
-
     private val stationIdLiveData = Transformations.distinctUntilChanged(
         Transformations.map(stationResource.data) { station ->
             station.id
@@ -1474,6 +1470,13 @@ class StationViewModel(
                 !(spokenFeedbackAccessibilityEnabled || mergedStation.location == null)
             }
         }
+
+
+    val showAugmentedRealityTeaser : LiveData<Boolean> = mapAvailableLiveData.switchMap {itMapAvailable->
+        stationResource.data.map {itStation ->
+            itMapAvailable && SEV_Static.hasStationArAppLink(itStation.id)
+        }
+    }
 
     val pendingRrtPointAndStationNavigationLiveData = stationNavigationLiveData.switchMap { it ->
         it?.let { stationNavigation ->

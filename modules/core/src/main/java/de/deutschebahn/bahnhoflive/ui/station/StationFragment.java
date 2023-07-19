@@ -516,7 +516,7 @@ public class StationFragment extends androidx.fragment.app.Fragment implements
         });
 
         arTeaser.findViewById(R.id.arTeaserButton).setOnClickListener(v -> {
-                    startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse("https://play.google.com/store/apps/details?id=com.DBSystelGmbH.SEV.WbNacht&hl=de_DE")));
+                    startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse(getString(R.string.teaser_ar_url_playstore))));
                 }
         );
 

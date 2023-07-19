@@ -105,6 +105,7 @@
     <drawable name="app_pfeil_oben">@drawable/missing</drawable>
     <drawable name="pin_mit_bahnhof">@drawable/missing</drawable>
     <drawable name="app_links_pfeil">@drawable/missing</drawable>
+    <drawable name="app_link_external_red">@drawable/missing</drawable>
     <drawable name="ic_arrow_right">@drawable/missing</drawable>
     <drawable name="splash_screen_image">@drawable/missing</drawable>
     <drawable name="db_logobox_rechts">@drawable/missing</drawable>
