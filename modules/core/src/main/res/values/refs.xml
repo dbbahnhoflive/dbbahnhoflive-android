@@ -27,7 +27,6 @@
     <drawable name="rimap_sev_new">@drawable/missing</drawable>
     <drawable name="app_zugang_wege">@drawable/missing</drawable>
     <drawable name="chatbot_card">@drawable/missing</drawable>
-    <drawable name="teaser_ar_card">@drawable/missing</drawable>
     <drawable name="app_news_coupon">@drawable/missing</drawable>
     <drawable name="app_news_malfunction">@drawable/missing</drawable>
     <drawable name="app_news_survey">@drawable/missing</drawable>
@@ -121,4 +120,8 @@
     <drawable name="app_analytics_poi_icon">@drawable/missing</drawable>
     <drawable name="chevron_black_left_32dp">@drawable/missing</drawable>
     <drawable name="chevron_white_left_32dp">@drawable/missing</drawable>
+
+    <drawable name="teaser_ar_card">@drawable/missing</drawable>
+    <drawable name="teaser_db_companion_card">@drawable/missing</drawable>
+
 </resources>

@@ -10,74 +10,71 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="0dp"
-    android:layout_height="match_parent"
     android:layout_weight="@integer/single_cell_weight"
+    android:layout_height="match_parent"
     style="@style/App.Widget.CardContainer"
-    tools:showIn="@layout/dynamic_card_layout"
-    android:padding="@dimen/card_margin">
+    tools:showIn="@layout/fragment_station"
+    >
 
     <androidx.cardview.widget.CardView
         style="@style/App.Widget.Card"
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
-
         <LinearLayout
             android:orientation="horizontal"
             android:layout_width="match_parent"
-            android:layout_height="match_parent">
+            android:layout_height="match_parent"
+            android:layout_marginTop="@dimen/default_space"
 
+            >
 
             <ImageView
-                android:id="@+id/arImage"
 
                 android:layout_width="0dp"
                 android:layout_weight="0.8"
-                android:layout_height="match_parent"
-                android:paddingVertical="10dp"
-                android:paddingHorizontal="4dp"
-                android:src="@drawable/teaser_ar_card"
-                android:layout_gravity="center"
+                android:layout_height="wrap_content"
+                android:layout_gravity="top"
+                android:paddingVertical="12dp"
+                android:src="@drawable/teaser_db_companion_card"
 
                 />
 
             <LinearLayout
                 android:layout_width="0dp"
-                android:layout_height="match_parent"
+                android:layout_height="wrap_content"
                 android:layout_weight="2"
                 android:orientation="vertical"
-                android:paddingTop="24dp"
-                android:paddingBottom="8dp">
+                android:paddingVertical="14dp"
+                >
 
                 <TextView
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:text="@string/teaser_ar_headline"
+                    android:text="@string/teaser_db_companion_headline"
                     android:textSize="18sp"
                     android:textStyle="bold" />
 
                 <TextView
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="18dp"
+                    android:layout_marginTop="@dimen/default_space"
                     android:textSize="14sp"
-                    android:text="@string/teaser_ar_copy" />
-
-                <ImageButton
-                    android:id="@+id/arTeaserButton"
-                    android:layout_width="@dimen/round_button_size"
-                    android:layout_height="@dimen/round_button_size"
-                    android:layout_gravity="end"
-                    android:layout_marginTop="@dimen/default_space_half"
-                    android:layout_marginEnd="@dimen/default_space"
-                    android:background="@drawable/shape_circle_button"
-                    android:elevation="@dimen/default_elevation"
-                    android:scaleType="center"
-                    android:src="@drawable/app_extern_link"
-                    app:elevation="@dimen/default_elevation" />
+                    android:text="@string/teaser_db_companion_copy" />
 
             </LinearLayout>
 
+            <ImageButton
+                android:id="@+id/arTeaserButton"
+                android:layout_width="@dimen/round_button_size"
+                android:layout_height="@dimen/round_button_size"
+                android:layout_gravity="end"
+                android:layout_marginEnd="@dimen/default_space"
+                android:background="@drawable/shape_circle_button"
+                android:elevation="@dimen/default_elevation"
+                android:scaleType="center"
+                android:src="@drawable/app_extern_link"
+                app:elevation="@dimen/default_elevation" />
 
         </LinearLayout>
     </androidx.cardview.widget.CardView>

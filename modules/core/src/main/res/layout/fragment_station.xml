@@ -56,6 +56,9 @@
                     tools:listitem="@layout/item_news" />
 
                 <com.google.android.material.tabs.TabLayout
+                    android:id="@+id/newsPagerIndicator"
+                    android:layout_width="match_parent"
+                    android:layout_height="24dp"
                     android:visibility="gone"
                     tools:visibility="visible"
                     app:tabIndicatorHeight="0dp"
@@ -66,15 +69,33 @@
                     app:tabPaddingEnd="0dp"
                     app:tabIndicator="@null"
                     app:tabGravity="center"
-                    android:id="@+id/newsPagerIndicator"
                     android:paddingBottom="@dimen/default_space"
+                    />
+
+                <LinearLayout
+                    android:id="@+id/rowDbCompanionTeaser"
+
                     android:layout_width="match_parent"
-                    android:layout_height="24dp" />
+                    android:layout_height="110dp"
+                    android:layout_marginTop="@dimen/default_space"
+                    android:layout_marginBottom="@dimen/default_space"
+                    android:layout_marginHorizontal="@dimen/default_space"
+
+                    style="@style/App.Widget.CardContainer.Row">
+
+                    <include
+                        android:id="@+id/dbCompanionTeaser"
+                        layout="@layout/card_db_companion_teaser"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        />
+
+                </LinearLayout>
+
 
                 <androidx.cardview.widget.CardView
-                    android:layout_marginStart="@dimen/default_space"
-                    android:layout_marginEnd="@dimen/default_space"
                     android:id="@+id/db_departures"
+                    android:layout_marginHorizontal="@dimen/default_space"
                     android:contentDescription="@string/sr_station_departures"
                     app:layout_constraintLeft_toLeftOf="parent"
                     app:layout_constraintRight_toRightOf="parent"
