@@ -108,12 +108,35 @@
     </LinearLayout>
 
     <LinearLayout
-        android:id="@+id/rowChatbot"
+        android:id="@+id/rowArTeaser"
 
         app:layout_constraintDimensionRatio="2"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/rowStatic"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:layout_marginTop="@dimen/card_divider"
+
+        style="@style/App.Widget.CardContainer.Row">
+
+        <include
+            layout="@layout/card_ar_teaser"
+            android:id="@+id/arTeaser"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="@integer/double_cell_weight" />
+
+    </LinearLayout>
+
+
+    <LinearLayout
+        android:id="@+id/rowChatbot"
+
+        app:layout_constraintDimensionRatio="2"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/rowArTeaser"
         android:layout_width="0dp"
         android:layout_height="0dp"
         android:layout_marginTop="@dimen/card_divider"

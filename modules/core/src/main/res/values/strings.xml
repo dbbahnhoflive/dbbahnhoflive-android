@@ -248,6 +248,10 @@
     <string name="button_website">Webseite</string>
     <string name="chatbot_subheadline">Ich helfe Ihnen gerne weiter.</string>
     <string name="chatbot_headline">Sie haben Fragen?</string>
+
+    <string name="teaser_ar_headline">Augmented Reality App\nfür den Ersatzverkehr</string>
+    <string name="teaser_ar_subheadline">Mit „AR EV Navigation“ zur\nErsatzhaltestelle leiten lassen</string>
+
     <string name="empty" />
     <string name="parking_feature_charging_station">Ladestation</string>
     <string name="parking_feature_lighted">Beleuchtung</string>

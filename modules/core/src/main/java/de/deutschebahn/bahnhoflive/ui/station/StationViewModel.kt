@@ -56,6 +56,7 @@ import de.deutschebahn.bahnhoflive.ui.station.info.ServiceNumbersLiveData
 import de.deutschebahn.bahnhoflive.ui.station.localtransport.LocalTransportViewModel
 import de.deutschebahn.bahnhoflive.ui.station.locker.LockerFragment
 import de.deutschebahn.bahnhoflive.ui.station.parking.ParkingListFragment
+import de.deutschebahn.bahnhoflive.ui.station.railreplacement.SEV_Static
 import de.deutschebahn.bahnhoflive.ui.station.search.ContentSearchResult
 import de.deutschebahn.bahnhoflive.ui.station.search.QueryPart
 import de.deutschebahn.bahnhoflive.ui.station.search.ResultSetType
@@ -1318,6 +1319,10 @@ class StationViewModel(
 
     val isEcoStation = Transformations.map(stationResource.data) {
         it?.isEco ?: false
+    }
+
+    val showAugmentedRealityTeaser = Transformations.map(stationResource.data) {
+        SEV_Static.hasStationArAppLink(it.id)
     }
 
     private val stationIdLiveData = Transformations.distinctUntilChanged(

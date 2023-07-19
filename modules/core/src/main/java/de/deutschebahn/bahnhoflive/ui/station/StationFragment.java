@@ -509,6 +509,18 @@ public class StationFragment extends androidx.fragment.app.Fragment implements
                 }
         );
 
+        final View arTeaser = view.findViewById(R.id.rowArTeaser);
+
+        stationViewModel.getShowAugmentedRealityTeaser().observe(getViewLifecycleOwner(), hasAugmentedRealityLink -> {
+            arTeaser.setVisibility(hasAugmentedRealityLink ? View.VISIBLE : View.GONE);
+        });
+
+        arTeaser.findViewById(R.id.arTeaserButton).setOnClickListener(v -> {
+                    startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse("https://play.google.com/store/apps/details?id=com.DBSystelGmbH.SEV.WbNacht&hl=de_DE")));
+                }
+        );
+
+
         stationViewModel.getNewsLiveData().observe(getViewLifecycleOwner(), new NewsViewManager(view, new NewsAdapter((news, index) -> {
             final boolean isCoupon = GroupId.COUPON.appliesTo(news);
 
