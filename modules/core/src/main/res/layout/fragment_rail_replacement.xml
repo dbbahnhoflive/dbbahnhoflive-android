@@ -193,9 +193,24 @@
 
                     <include layout="@layout/include_item_rail_replacement" />
 
-
-
                 </LinearLayout>
+
+
+                <include
+                    android:id="@+id/ar_teaser_nev"
+                    layout="@layout/card_ar_teaser_nev"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginHorizontal="@dimen/default_space" />
+
+                <include
+                    android:id="@+id/db_companion_teaser_nev"
+                    layout="@layout/card_db_companion_teaser_nev"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="@dimen/default_space"
+                    android:layout_marginHorizontal="@dimen/default_space_double" />
+
 
                 <TextView
                     android:id="@+id/rail_replacement_nev2"

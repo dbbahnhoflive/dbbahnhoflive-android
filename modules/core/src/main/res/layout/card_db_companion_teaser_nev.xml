@@ -1,0 +1,80 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<!--
+  ~ SPDX-FileCopyrightText: 2020 DB Station&Service AG <bahnhoflive-opensource@deutschebahn.com>
+  ~
+  ~ SPDX-License-Identifier: Apache-2.0
+  -->
+
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:showIn="@layout/fragment_rail_replacement"
+    android:orientation="vertical"
+    >
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="DB Wegbegleitung -\nUnterstützung per Videoanruf für blinde und sehbeeinträchtigte Reisende"
+        android:textSize="18sp"
+        android:textStyle="bold" />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_marginTop="@dimen/default_space"
+        android:orientation="horizontal">
+
+        <ImageView
+
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_gravity="top|left"
+
+            android:layout_weight="0.8"
+            android:paddingVertical="12dp"
+            android:src="@drawable/teaser_db_companion_card"
+
+            />
+
+        <TextView
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/default_space"
+            android:layout_weight="2"
+            android:textSize="@dimen/textsize_28"
+            android:text="Während des Ersatzverkehrs an den Bahnhöfen zwischen Würzburg und Nürnberg begleitet unser geschultes Personal Sie sicher vom Gleis zur Ersatzhaltestelle und zurück."
+            />
+
+    </LinearLayout>
+
+    <android.widget.Space
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/default_space"
+    />
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:textSize="@dimen/textsize_28"
+        android:text="Sie können uns unter folgendem Link einfach per Videoanruf kontaktieren und Unterstützung erhalten."
+        />
+
+    <TextView
+        android:id="@+id/linkDbCompanion"
+        android:layout_marginTop="@dimen/default_space"
+        android:importantForAccessibility="yes"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@drawable/shape_round_button_grey"
+        android:gravity="center"
+        android:minHeight="64dp"
+        android:text="DB Wegbegleitung öffnen"
+        android:textColor="@color/white"
+        android:textStyle="bold" />
+
+</LinearLayout>

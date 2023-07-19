@@ -116,6 +116,7 @@
     <dimen name="card_divider">6dp</dimen>
 
     <dimen name="card_elevation">4dp</dimen>
+    <dimen name="card_elevation_large">8dp</dimen>
     <dimen name="chatbot_service_image_height">104dp</dimen>
 
     <dimen name="occupancy_headline_space">10dp</dimen>
