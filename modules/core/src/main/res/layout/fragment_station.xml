@@ -73,7 +73,7 @@
                     />
 
                 <LinearLayout
-                    android:id="@+id/rowDbCompanionTeaser"
+                    android:id="@+id/dbCompanionTeaser"
 
                     android:layout_width="match_parent"
                     android:layout_height="110dp"
@@ -81,10 +81,12 @@
                     android:layout_marginBottom="@dimen/default_space"
                     android:layout_marginHorizontal="@dimen/default_space"
 
+                    android:visibility="gone"
+                    tools:visibility="visible"
+
                     style="@style/App.Widget.CardContainer.Row">
 
                     <include
-                        android:id="@+id/dbCompanionTeaser"
                         layout="@layout/card_db_companion_teaser"
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
@@ -92,6 +94,10 @@
 
                 </LinearLayout>
 
+                <androidx.legacy.widget.Space
+                    android:layout_width="match_parent"
+                    android:layout_height="@dimen/default_space">
+                </androidx.legacy.widget.Space>
 
                 <androidx.cardview.widget.CardView
                     android:id="@+id/db_departures"

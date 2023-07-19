@@ -1478,6 +1478,12 @@ class StationViewModel(
         }
     }
 
+    val showDbCompanionTeaser : LiveData<Boolean> =
+        stationResource.data.map {itStation ->
+            SEV_Static.hasStationWebAppCompanionLink(itStation.id)
+    }
+
+
     val pendingRrtPointAndStationNavigationLiveData = stationNavigationLiveData.switchMap { it ->
         it?.let { stationNavigation ->
             pendingRailReplacementPointLiveData.map { rrtPoint ->

@@ -65,7 +65,7 @@
             </LinearLayout>
 
             <ImageButton
-                android:id="@+id/arTeaserButton"
+                android:id="@+id/dbCompanionButton"
                 android:layout_width="@dimen/round_button_size"
                 android:layout_height="@dimen/round_button_size"
                 android:layout_gravity="end"

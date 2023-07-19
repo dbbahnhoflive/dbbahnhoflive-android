@@ -126,7 +126,7 @@ private val sev_items = arrayOf<SEV_Item>(
         val now = cal.timeInMillis
 
         // start 6.8.23
-        cal.set(2023, 6 - 1, 8, 0, 0, 0)
+        cal.set(2022, 8 - 1, 6, 0, 0, 0)
         val start = cal.timeInMillis
 
         // end : 12.09.2023

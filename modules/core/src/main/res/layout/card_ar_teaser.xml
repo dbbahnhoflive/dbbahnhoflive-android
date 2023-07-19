@@ -32,10 +32,9 @@
                 android:id="@+id/arImage"
 
                 android:layout_width="0dp"
-                android:layout_weight="0.8"
+                android:layout_weight="1"
                 android:layout_height="match_parent"
-                android:paddingVertical="10dp"
-                android:paddingHorizontal="4dp"
+                android:paddingHorizontal="@dimen/default_space_double"
                 android:src="@drawable/teaser_ar_card"
                 android:layout_gravity="center"
 
@@ -44,10 +43,13 @@
             <LinearLayout
                 android:layout_width="0dp"
                 android:layout_height="match_parent"
-                android:layout_weight="2"
+                android:layout_weight="2.2"
                 android:orientation="vertical"
-                android:paddingTop="24dp"
-                android:paddingBottom="8dp">
+                android:paddingStart="@dimen/default_space_half"
+                android:paddingEnd="@dimen/default_space"
+                android:layout_gravity="center_vertical"
+                android:paddingTop="36dp"
+                >
 
                 <TextView
                     android:layout_width="match_parent"
@@ -60,7 +62,6 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="18dp"
-                    android:textSize="14sp"
                     android:text="@string/teaser_ar_copy" />
 
                 <ImageButton
@@ -68,11 +69,13 @@
                     android:layout_width="@dimen/round_button_size"
                     android:layout_height="@dimen/round_button_size"
                     android:layout_gravity="end"
-                    android:layout_marginTop="@dimen/default_space_half"
-                    android:layout_marginEnd="@dimen/default_space"
+
+                    android:layout_marginTop="@dimen/default_space"
                     android:background="@drawable/shape_circle_button"
                     android:elevation="@dimen/default_elevation"
                     android:scaleType="center"
+                    android:scaleY="0.9"
+                    android:scaleX="0.9"
                     android:src="@drawable/app_extern_link"
                     app:elevation="@dimen/default_elevation" />
 

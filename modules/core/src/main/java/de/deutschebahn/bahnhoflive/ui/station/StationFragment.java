@@ -55,6 +55,7 @@ import de.deutschebahn.bahnhoflive.ui.station.elevators.ElevatorStatusListsFragm
 import de.deutschebahn.bahnhoflive.ui.station.info.StaticInfo;
 import de.deutschebahn.bahnhoflive.ui.station.localtransport.LocalTransportViewModel;
 import de.deutschebahn.bahnhoflive.ui.station.occupancy.OccupancyViewBinder;
+import de.deutschebahn.bahnhoflive.ui.station.railreplacement.SEV_Static;
 import de.deutschebahn.bahnhoflive.ui.station.shop.CategorizedShops;
 import de.deutschebahn.bahnhoflive.ui.station.shop.Shop;
 import de.deutschebahn.bahnhoflive.ui.station.shop.ShopCategory;
@@ -520,6 +521,16 @@ public class StationFragment extends androidx.fragment.app.Fragment implements
                 }
         );
 
+        final View dbCompanionTeaser = view.findViewById(R.id.dbCompanionTeaser);
+
+        stationViewModel.getShowDbCompanionTeaser().observe(getViewLifecycleOwner(), it -> {
+            dbCompanionTeaser.setVisibility(it ? View.VISIBLE : View.GONE);
+        });
+
+        dbCompanionTeaser.findViewById(R.id.dbCompanionButton).setOnClickListener(v -> {
+                    startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse(getString(R.string.teaser_db_companion_url))));
+                }
+        );
 
         stationViewModel.getNewsLiveData().observe(getViewLifecycleOwner(), new NewsViewManager(view, new NewsAdapter((news, index) -> {
             final boolean isCoupon = GroupId.COUPON.appliesTo(news);
