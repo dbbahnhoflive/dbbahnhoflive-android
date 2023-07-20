@@ -15,7 +15,7 @@
     <string name="dlg_yes">Ja</string>
     <string name="dlg_no">Nein</string>
     <string name="dlg_cancel">Abbrechen</string>
-    <string name="dlg_ok">Ok</string>
+    <string name="dlg_ok">OK</string>
 
     <!--<string name="dialog_stationNotAvailableTitle">Entschuldigung!</string>-->
 
@@ -448,11 +448,18 @@
 
     <string name="teaser_ar_headline">Augmented Reality App\nfür den Ersatzverkehr</string>
     <string name="teaser_ar_copy">Mit „AR EV Navigation“ zur\nErsatzhaltestelle leiten lassen</string>
-    <string name="teaser_ar_url_playstore">https://play.google.com/store/apps/details?id=com.DBSystelGmbH.SEV.WbNacht&amp;hl=de_DE</string>
+    <string name="teaser_ar_url">https://play.google.com/store/apps/details?id=com.DBSystelGmbH.SEV.WbNacht&amp;hl=de</string>
+    <string name="teaser_ar_linkbutton_text">zum playstore</string>
 
     <string name="teaser_db_companion_headline">DB Wegbegleitung</string>
     <string name="teaser_db_companion_copy">Orientierungshilfe für blinde\nund sehbeeinträchtigte Reisende</string>
-    <string name="teaser_db_companion_url">https://zugportal.de/ersatzverkehr</string> // todo
+    <string name="teaser_db_companion_url">https://db.de/wegbegleitung</string>
+
+    <string name="nev_db_companion_headline">DB Wegbegleitung -\nUnterstützung per Videoanruf für blinde und sehbeeinträchtigte Reisende.</string>
+    <string name="nev_db_companion_copy">Während des Ersatzverkehrs an den Bahnhöfen zwischen Würzburg und Nürnberg begleitet unser geschultes Personal Sie sicher vom Gleis zur Ersatzhaltestelle und zurück.</string>
+    <string name="nev_db_companion_link_description">Sie können uns unter folgendem Link einfach per Videoanruf kontaktieren und Unterstützung erhalten.</string>
+    <string name="nev_db_companion_button_text">DB Wegbegleitung öffnen</string>
+
 
 </resources>
 

@@ -47,10 +47,10 @@
                 </androidx.constraintlayout.widget.ConstraintLayout>
 
                 <androidx.viewpager2.widget.ViewPager2
+                    android:id="@+id/newsPager"
                     android:visibility="gone"
                     tools:visibility="visible"
                     style="@style/App.Widget.CardContainer"
-                    android:id="@+id/newsPager"
                     android:layout_width="match_parent"
                     android:layout_height="144sp"
                     tools:listitem="@layout/item_news" />

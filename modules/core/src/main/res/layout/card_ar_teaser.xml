@@ -36,7 +36,7 @@
                 android:src="@drawable/teaser_ar_card"
                 android:layout_gravity="center"
 
-                />
+                android:contentDescription="@string/teaser_ar_headline" />
 
             <RelativeLayout
                 android:layout_width="0dp"
@@ -65,7 +65,7 @@
                     android:text="@string/teaser_ar_copy" />
 
                 <ImageButton
-                    android:id="@+id/arTeaserButton"
+                    android:id="@+id/webLink_ar"
                     android:layout_width="@dimen/round_button_size"
                     android:layout_height="@dimen/round_button_size"
 
@@ -81,7 +81,8 @@
                     android:scaleY="0.9"
                     android:scaleX="0.9"
                     android:src="@drawable/app_extern_link"
-                    app:elevation="@dimen/default_elevation" />
+                    app:elevation="@dimen/default_elevation"
+                    android:contentDescription="@string/teaser_ar_linkbutton_text" />
 
             </RelativeLayout>
 

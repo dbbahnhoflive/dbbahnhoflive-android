@@ -86,13 +86,10 @@ class RegularJourneyContentFragment : Fragment() {
         }
 
         sevLinkDbCompanion.setOnClickListener {
-            startActivity(
-                Intent(
-                    Intent.ACTION_VIEW,
-                    Uri.parse(getString(R.string.teaser_db_companion_url))
-                )
-            )
+            stationViewModel.startDbCompanionWebSite(requireContext())
         }
+
+
 
         journeyViewModel.essentialParametersLiveData.observe(viewLifecycleOwner) { (station, trainInfo, trainEvent) ->
 
@@ -216,7 +213,6 @@ class RegularJourneyContentFragment : Fragment() {
                     }
 
                     textWagonOrder.isGone = buttonWagonOrder.isGone
-
 
                     if (journeyStops.isNotEmpty()) { // empty happens if train is cancelled !!
                         val lastStation = journeyStops.last()

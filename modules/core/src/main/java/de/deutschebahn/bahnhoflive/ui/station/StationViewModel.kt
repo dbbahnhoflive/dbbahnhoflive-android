@@ -64,6 +64,7 @@ import de.deutschebahn.bahnhoflive.ui.station.shop.Shop
 import de.deutschebahn.bahnhoflive.ui.station.shop.ShopCategory
 import de.deutschebahn.bahnhoflive.ui.station.timetable.TimetableViewHelper
 import de.deutschebahn.bahnhoflive.ui.timetable.localtransport.HafasTimetableViewModel
+import de.deutschebahn.bahnhoflive.util.ContextX
 import de.deutschebahn.bahnhoflive.util.Token
 import de.deutschebahn.bahnhoflive.util.append
 import de.deutschebahn.bahnhoflive.util.openhours.OpenHoursParser
@@ -1519,4 +1520,12 @@ class StationViewModel(
     fun hasElevators() : Boolean = !elevatorsResource.data.value.isNullOrEmpty()
     fun hasSEV() : Boolean = !railReplacementSummaryLiveData.value.isNullOrEmpty()
 
+    fun startDbCompanionWebSite(context: Context) {
+        ContextX.execBrowser(context, R.string.teaser_db_companion_url)
+    }
+
+
+    fun startAugmentedRealityWebSite(context: Context) {
+        ContextX.execBrowser(context, R.string.teaser_ar_url)
+    }
 }

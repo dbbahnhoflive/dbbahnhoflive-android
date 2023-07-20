@@ -17,7 +17,6 @@ import de.deutschebahn.bahnhoflive.databinding.IncludeItemRailReplacementBinding
 import de.deutschebahn.bahnhoflive.ui.map.MapPresetProvider
 import de.deutschebahn.bahnhoflive.ui.map.content.rimap.RimapFilter
 import de.deutschebahn.bahnhoflive.ui.station.StationViewModel
-import de.deutschebahn.bahnhoflive.util.setAccessibilityText
 import de.deutschebahn.bahnhoflive.util.startSafely
 
 class RailReplacementFragment : Fragment(), MapPresetProvider {
@@ -114,8 +113,22 @@ class RailReplacementFragment : Fragment(), MapPresetProvider {
                     ).startSafely(it1)
                 }
             }
-
             setScreenReaderText(this)
+        }
+
+
+        stationViewModel.showAugmentedRealityTeaser.observe(viewLifecycleOwner) { itShow ->
+            arTeaserNev.root.visibility = if(itShow) View.VISIBLE else View.GONE
+            arTeaserNev.webLinkAr.setOnClickListener {
+                stationViewModel.startAugmentedRealityWebSite(requireContext())
+            }
+        }
+
+        stationViewModel.showDbCompanionTeaser.observe(viewLifecycleOwner) {itShowDbCompanionTeaser ->
+            dbCompanionTeaserNev.root.visibility = if(itShowDbCompanionTeaser) View.VISIBLE else View.GONE
+            dbCompanionTeaserNev.weblinkDbCompanion.setOnClickListener {
+                stationViewModel.startDbCompanionWebSite(requireContext())
+            }
         }
 
         stationViewModel.railReplacementSummaryLiveData.observe(viewLifecycleOwner) { it ->

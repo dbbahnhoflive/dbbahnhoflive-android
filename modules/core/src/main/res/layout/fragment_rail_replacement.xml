@@ -115,10 +115,10 @@
                         tools:text="@tools:sample/lorem/random" />
 
                     <ImageButton
+                        android:id="@+id/btnLink"
                         android:visibility="gone"
                         tools:visibility="visible"
                         android:layout_margin="@dimen/default_space"
-                        android:id="@+id/btnLink"
                         android:layout_width="@dimen/round_button_size"
                         android:layout_height="@dimen/round_button_size"
                         android:scaleType="center"
@@ -209,7 +209,9 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginBottom="@dimen/default_space"
-                    android:layout_marginHorizontal="@dimen/default_space_double" />
+                    android:layout_marginHorizontal="@dimen/default_space_double"
+                    android:layout_marginTop="@dimen/default_space"
+                    />
 
 
                 <TextView
