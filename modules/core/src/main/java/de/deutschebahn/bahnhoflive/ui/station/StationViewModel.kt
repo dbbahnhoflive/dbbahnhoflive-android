@@ -56,6 +56,7 @@ import de.deutschebahn.bahnhoflive.ui.station.info.ServiceNumbersLiveData
 import de.deutschebahn.bahnhoflive.ui.station.localtransport.LocalTransportViewModel
 import de.deutschebahn.bahnhoflive.ui.station.locker.LockerFragment
 import de.deutschebahn.bahnhoflive.ui.station.parking.ParkingListFragment
+import de.deutschebahn.bahnhoflive.ui.station.railreplacement.SEV_Static
 import de.deutschebahn.bahnhoflive.ui.station.search.ContentSearchResult
 import de.deutschebahn.bahnhoflive.ui.station.search.QueryPart
 import de.deutschebahn.bahnhoflive.ui.station.search.ResultSetType
@@ -63,6 +64,7 @@ import de.deutschebahn.bahnhoflive.ui.station.shop.Shop
 import de.deutschebahn.bahnhoflive.ui.station.shop.ShopCategory
 import de.deutschebahn.bahnhoflive.ui.station.timetable.TimetableViewHelper
 import de.deutschebahn.bahnhoflive.ui.timetable.localtransport.HafasTimetableViewModel
+import de.deutschebahn.bahnhoflive.util.ContextX
 import de.deutschebahn.bahnhoflive.util.Token
 import de.deutschebahn.bahnhoflive.util.append
 import de.deutschebahn.bahnhoflive.util.openhours.OpenHoursParser
@@ -1470,6 +1472,19 @@ class StationViewModel(
             }
         }
 
+
+    val showAugmentedRealityTeaser : LiveData<Boolean> = mapAvailableLiveData.switchMap {itMapAvailable->
+        stationResource.data.map {itStation ->
+            itMapAvailable && SEV_Static.hasStationArAppLink(itStation.id)
+        }
+    }
+
+    val showDbCompanionTeaser : LiveData<Boolean> =
+        stationResource.data.map {itStation ->
+            SEV_Static.hasStationWebAppCompanionLink(itStation.id)
+    }
+
+
     val pendingRrtPointAndStationNavigationLiveData = stationNavigationLiveData.switchMap { it ->
         it?.let { stationNavigation ->
             pendingRailReplacementPointLiveData.map { rrtPoint ->
@@ -1505,4 +1520,12 @@ class StationViewModel(
     fun hasElevators() : Boolean = !elevatorsResource.data.value.isNullOrEmpty()
     fun hasSEV() : Boolean = !railReplacementSummaryLiveData.value.isNullOrEmpty()
 
+    fun startDbCompanionWebSite(context: Context) {
+        ContextX.execBrowser(context, R.string.teaser_db_companion_url)
+    }
+
+
+    fun startAugmentedRealityWebSite(context: Context) {
+        ContextX.execBrowser(context, R.string.teaser_ar_url)
+    }
 }

@@ -13,6 +13,8 @@ import com.google.android.material.tabs.TabLayout
 import com.google.android.material.tabs.TabLayoutMediator
 import de.deutschebahn.bahnhoflive.R
 import de.deutschebahn.bahnhoflive.backend.db.newsapi.model.News
+import de.deutschebahn.bahnhoflive.util.DimensionX
+
 
 class NewsViewManager(
     containerView: View,
@@ -38,6 +40,11 @@ class NewsViewManager(
             1 -> View.INVISIBLE
             else -> View.VISIBLE
         }
+
+        val layoutParams = pageIndicator.layoutParams
+        layoutParams.height = if(pageIndicator.visibility==View.VISIBLE) DimensionX.dp2px(pageIndicator.resources, 24) else 0
+        pageIndicator.layoutParams = layoutParams
+
     }
 
 }
