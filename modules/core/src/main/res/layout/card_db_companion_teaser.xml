@@ -25,57 +25,72 @@
             android:orientation="horizontal"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:layout_marginTop="@dimen/default_space"
-
             >
 
             <ImageView
 
                 android:layout_width="0dp"
                 android:layout_weight="0.8"
-                android:layout_height="wrap_content"
-                android:layout_gravity="top"
-                android:paddingVertical="12dp"
+                android:layout_height="match_parent"
+                android:layout_marginBottom="@dimen/default_space"
+                android:layout_gravity="top|center_horizontal"
                 android:src="@drawable/teaser_db_companion_card"
+                android:paddingHorizontal="@dimen/default_space"
 
+                />
+
+            <androidx.legacy.widget.Space
+                android:layout_width="0dp"
+                android:layout_weight="0.1"
+                android:layout_height="match_parent"
                 />
 
             <LinearLayout
                 android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_weight="2"
+                android:layout_weight="3"
+                android:layout_height="match_parent"
+                android:paddingEnd="24dp"
                 android:orientation="vertical"
-                android:paddingVertical="14dp"
                 >
+
+                <androidx.legacy.widget.Space
+                    android:layout_width="match_parent"
+                    android:layout_height="0dp"
+                    android:layout_weight="0.5"
+                    />
 
                 <TextView
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
+                    android:layout_height="0dp"
+                    android:layout_weight="1"
                     android:text="@string/teaser_db_companion_headline"
                     android:textSize="18sp"
                     android:textStyle="bold" />
 
                 <TextView
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="@dimen/default_space"
+                    android:layout_height="0dp"
+                    android:layout_weight="2"
                     android:textSize="14sp"
                     android:text="@string/teaser_db_companion_copy" />
 
             </LinearLayout>
 
-            <ImageButton
-                android:id="@+id/dbCompanionButton"
-                android:layout_width="@dimen/round_button_size"
-                android:layout_height="@dimen/round_button_size"
-                android:layout_gravity="end"
-                android:layout_marginEnd="@dimen/default_space"
-                android:background="@drawable/shape_circle_button"
-                android:elevation="@dimen/default_elevation"
-                android:scaleType="center"
-                android:src="@drawable/app_extern_link"
-                app:elevation="@dimen/default_elevation" />
-
         </LinearLayout>
+
+        <ImageButton
+            android:id="@+id/dbCompanionButton"
+            android:layout_width="@dimen/round_button_size"
+            android:layout_height="@dimen/round_button_size"
+            android:layout_gravity="end|top"
+            android:layout_marginTop="@dimen/default_space"
+            android:layout_marginEnd="@dimen/default_space"
+            android:background="@drawable/shape_circle_button"
+            android:elevation="@dimen/default_elevation"
+            android:scaleType="center"
+            android:src="@drawable/app_extern_link"
+            app:elevation="@dimen/default_elevation" />
+
+
     </androidx.cardview.widget.CardView>
 </FrameLayout>

@@ -475,15 +475,15 @@ public class StationActivity extends BaseActivity implements
 
     @Override
     public void showContentSearch() {
-        showTab(0);
-        overviewFragment.push(new ContentSearchFragment());
+//        showTab(0);
+//        overviewFragment.push(new ContentSearchFragment());
 
 //        showBottomSheetFragment(new ContentSearchFragment(), "content_search");
 //
-//        getSupportFragmentManager()
-//                .beginTransaction()
-//                .replace(R.id.overlayFrame, new ContentSearchFragment())
-//                .commit();
+        getSupportFragmentManager()
+                .beginTransaction()
+                .replace(R.id.overlayFrame, new ContentSearchFragment())
+                .commit();
     }
 
     @Override
@@ -696,13 +696,13 @@ public class StationActivity extends BaseActivity implements
                 // something went wrong
                 stationViewModel.getBackNavigationLiveData().postValue(null);
             } else
-            stationViewModel.getBackNavigationLiveData().postValue(new BackNavigationData(doNavigateBack,
-                    station,
-                    stationToNavigateBack,
-                    trainInfo2,
-                    hafasStation,
-                    hafasEvent,
-                    true));
+                stationViewModel.getBackNavigationLiveData().postValue(new BackNavigationData(doNavigateBack,
+                        station,
+                        stationToNavigateBack,
+                        trainInfo2,
+                        hafasStation,
+                        hafasEvent,
+                        true));
 
         } else {
             stationViewModel.getBackNavigationLiveData().postValue(null);

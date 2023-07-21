@@ -28,29 +28,35 @@
         <LinearLayout
             android:orientation="horizontal"
             android:layout_width="match_parent"
-            android:layout_height="match_parent">
+            android:layout_height="wrap_content">
 
             <ImageView
                 android:id="@+id/arImage"
 
                 android:layout_width="0dp"
-                android:layout_weight="1"
+                android:layout_weight="0.6"
                 android:layout_height="match_parent"
-                android:paddingHorizontal="@dimen/default_space_double"
+                android:paddingHorizontal="@dimen/default_space"
                 android:src="@drawable/teaser_ar_card"
                 android:layout_gravity="center"
 
                 android:contentDescription="@string/teaser_ar_headline" />
 
-            <RelativeLayout
+            <LinearLayout
                 android:layout_width="0dp"
                 android:layout_height="match_parent"
-                android:layout_weight="2.2"
+                android:layout_weight="2"
                 android:orientation="vertical"
-                android:paddingStart="@dimen/default_space_half"
-                android:paddingEnd="@dimen/default_space"
-                android:paddingTop="32dp"
+
+                android:layout_gravity="center_vertical"
+                android:gravity="center_vertical"
+
                 >
+
+                <androidx.legacy.widget.Space
+                    android:layout_width="match_parent"
+                    android:layout_height="@dimen/default_space"
+                    />
 
                 <TextView
                     android:id="@+id/headline"
@@ -60,37 +66,49 @@
                     android:textSize="18sp"
                     android:textStyle="bold" />
 
+                <androidx.legacy.widget.Space
+                    android:layout_width="match_parent"
+                    android:layout_height="@dimen/default_space"
+                    />
                 <TextView
                     android:id="@+id/copy"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_below="@+id/headline"
-                    android:layout_marginTop="18dp"
+                    android:paddingEnd="@dimen/default_space_half"
                     android:text="@string/teaser_ar_copy" />
 
-                <ImageButton
-                    android:id="@+id/webLink_ar"
-                    android:layout_width="@dimen/round_button_size"
-                    android:layout_height="@dimen/round_button_size"
+                <androidx.legacy.widget.Space
+                    android:layout_width="match_parent"
+                    android:layout_height="@dimen/default_space_triple"
+                    />
 
+            </LinearLayout>
 
-                    android:layout_alignParentEnd="true"
-                    android:layout_below="@+id/copy"
-                    android:layout_marginTop="@dimen/default_space"
-
-                    android:layout_marginBottom="@dimen/default_space"
-                    android:background="@drawable/shape_circle_button"
-                    android:elevation="@dimen/default_elevation"
-                    android:scaleType="center"
-                    android:scaleY="0.9"
-                    android:scaleX="0.9"
-                    android:src="@drawable/app_extern_link"
-                    app:elevation="@dimen/default_elevation"
-                    android:contentDescription="@string/teaser_ar_linkbutton_text" />
-
-            </RelativeLayout>
-
+            <androidx.legacy.widget.Space
+                android:layout_width="0dp"
+                android:layout_weight="0.2"
+                android:layout_height="match_parent"
+                />
 
         </LinearLayout>
+
+        <ImageButton
+            android:id="@+id/webLink_ar"
+            android:layout_width="@dimen/round_button_size"
+            android:layout_height="@dimen/round_button_size"
+
+            android:layout_gravity="bottom|end"
+            android:layout_marginBottom="@dimen/default_space"
+            android:layout_marginEnd="@dimen/default_space"
+
+            android:background="@drawable/shape_circle_button"
+            android:elevation="@dimen/default_elevation"
+            android:scaleType="center"
+            android:scaleY="0.9"
+            android:scaleX="0.9"
+            android:src="@drawable/app_extern_link"
+            app:elevation="@dimen/default_elevation"
+            android:contentDescription="@string/teaser_ar_linkbutton_text" />
+
     </androidx.cardview.widget.CardView>
 </FrameLayout>
