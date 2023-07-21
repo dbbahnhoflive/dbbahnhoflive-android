@@ -117,7 +117,7 @@ private val sev_items = arrayOf<SEV_Item>(
         cal.set(endYear, endMonth - 1, endDay, 23, 59, 59)
         val end = cal.timeInMillis
 
-        val isInRange = now > start && now < end
+        val isInRange = now > start && now <= end
 
         return isInRange
     }
@@ -141,7 +141,7 @@ private val sev_items = arrayOf<SEV_Item>(
     }
 
     fun isInConstructionPhase2() : Boolean {
-// 6.8.23 bis 12.9.23
+// 6.8.23 bis 11.9.23 23.59
         val cal = GregorianCalendar.getInstance()
         val now = cal.timeInMillis
 
@@ -150,10 +150,10 @@ private val sev_items = arrayOf<SEV_Item>(
         val start = cal.timeInMillis
 
         // end : 12.09.2023
-        cal.set(2023, 9 - 1, 12, 23, 59, 59)
+        cal.set(2023, 9 - 1, 11, 23, 59, 59)
         val end = cal.timeInMillis
 
-        val isInConstructionPhase = now > start && now < end
+        val isInConstructionPhase = now > start && now <= end
 
         return isInConstructionPhase
     }
@@ -209,11 +209,11 @@ private val sev_items = arrayOf<SEV_Item>(
         when (stationIdAsInt) {
             6945 -> {
                 // Würzburg ab 29.5.
-                return isActualDateInRange(2023, 5, 29, 2023, 9, 12)
+                return isActualDateInRange(2023, 5, 29, 2023, 9, 11)
             }
-            4953 -> {
+            4593 -> {
                 // Nürnberg ab 4.8.
-                return isActualDateInRange(2023, 8, 4, 2023, 9, 12)
+                return isActualDateInRange(2023, 8, 4, 2023, 9, 11)
 
             }
             else -> return false
@@ -258,5 +258,10 @@ private val sev_items = arrayOf<SEV_Item>(
         }
         return null
 
+    }
+
+    // Box auch abzeigen wenn Bauphase noch nicht begonnen hat !
+    fun shouldShowAdhocBox() : Boolean {
+        return isActualDateInRange(2023, 5, 29, 2023, 9, 11)
     }
 }

@@ -122,6 +122,9 @@ class RailReplacementFragment : Fragment(), MapPresetProvider {
             arTeaserNev.webLinkAr.setOnClickListener {
                 stationViewModel.startAugmentedRealityWebSite(requireContext())
             }
+            arTeaserNev.root.setOnClickListener {
+                stationViewModel.startAugmentedRealityWebSite(requireContext())
+            }
         }
 
         stationViewModel.showDbCompanionTeaser.observe(viewLifecycleOwner) {itShowDbCompanionTeaser ->

@@ -518,6 +518,9 @@ public class StationFragment extends androidx.fragment.app.Fragment implements
         arTeaser.findViewById(R.id.webLink_ar).setOnClickListener(v ->
             stationViewModel.startAugmentedRealityWebSite(requireContext())
         );
+        arTeaser.setOnClickListener(v ->
+                stationViewModel.startAugmentedRealityWebSite(requireContext())
+        );
 
         final View dbCompanionTeaser = view.findViewById(R.id.dbCompanionTeaser);
 
@@ -527,6 +530,9 @@ public class StationFragment extends androidx.fragment.app.Fragment implements
 
         dbCompanionTeaser.findViewById(R.id.dbCompanionButton).setOnClickListener(v ->
             stationViewModel.startDbCompanionWebSite(requireContext())
+        );
+        dbCompanionTeaser.setOnClickListener(v ->
+                stationViewModel.startDbCompanionWebSite(requireContext())
         );
 
         stationViewModel.getNewsLiveData().observe(getViewLifecycleOwner(), new NewsViewManager(view, new NewsAdapter((news, index) -> {

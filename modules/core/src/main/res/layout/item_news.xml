@@ -119,7 +119,7 @@
             <TextView
                 android:id="@+id/newsCopy"
                 android:layout_width="0dp"
-                android:layout_height="0dp"
+                android:layout_height="wrap_content"
                 android:layout_marginStart="@dimen/default_space"
                 android:layout_marginTop="@dimen/default_space_half"
                 android:layout_marginEnd="@dimen/default_space"
@@ -132,7 +132,7 @@
             android:textSize="@dimen/textsize_h3"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toStartOf="@+id/btnLink"
-            app:layout_constraintHeight_default="wrap"
+                app:layout_constrainedHeight="true"
                 app:layout_constraintStart_toEndOf="@+id/icon"
                 app:layout_constraintTop_toBottomOf="@+id/newsHeadline"
                 tools:text="@tools:sample/lorem/random" />
