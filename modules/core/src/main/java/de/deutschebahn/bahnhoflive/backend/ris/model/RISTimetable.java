@@ -242,6 +242,31 @@ public class RISTimetable implements Parcelable {
         return traintypes;
     }
 
+    public static Boolean hasMoreThan1Platform(List<TrainInfo> trainInfos) {
+        final LinkedList<String> platformList = getTracks(trainInfos);
+        return platformList.size()>1;
+    }
+
+    public static Boolean hasMoreThan1TrainCategory(Collection<TrainInfo> trainInfos) {
+
+        String firstTrainType=null;
+
+        for (TrainInfo trainInfo : trainInfos) {
+            final String traintype = trainInfo.getTrainCategory();
+            if (traintype != null) {
+               if(firstTrainType!=null) {
+                   if (!traintype.equals(firstTrainType))
+                       return true;
+               }
+               else
+                 firstTrainType = traintype;
+            }
+        }
+
+        return false;
+    }
+
+
     public static <T extends Collection<TrainInfo>> T determineSplitMessages(final T trainInfos, TrainEvent trainEvent) {
         for (TrainInfo trainInfo : trainInfos) {
 
