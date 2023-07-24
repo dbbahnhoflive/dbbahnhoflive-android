@@ -29,6 +29,7 @@ import de.deutschebahn.bahnhoflive.repository.timetable.Constants;
 import de.deutschebahn.bahnhoflive.repository.timetable.Timetable;
 import de.deutschebahn.bahnhoflive.ui.ViewHolder;
 import de.deutschebahn.bahnhoflive.ui.map.content.rimap.Track;
+import de.deutschebahn.bahnhoflive.util.ListHelper;
 import de.deutschebahn.bahnhoflive.view.SingleSelectionManager;
 import kotlin.Unit;
 import kotlin.jvm.functions.Function3;
@@ -54,7 +55,10 @@ class DbTimetableAdapter extends RecyclerView.Adapter<ViewHolder<?>> implements 
     @Nullable
     private String track;
 
-    private TrackingManager trackingManager;
+    private Boolean hasMoreThan1Track=true;
+    private Boolean hasMoreThan1TrainType=true;
+
+    private final TrackingManager trackingManager;
     private final View.OnClickListener loadMoreListener;
 
     @NonNull
@@ -137,14 +141,19 @@ class DbTimetableAdapter extends RecyclerView.Adapter<ViewHolder<?>> implements 
     public void setTimetable(@NonNull Timetable timetable) {
         this.timetable = timetable;
 
+        if (!applyFilters()) {
+            // fallback old solution (todo: check if necessaray)
         trainCategories.clear();
         trainCategories.addAll(RISTimetable.getTrainCategories(
                 timetable.getTrainInfos()));
 
         tracks.clear();
         tracks.addAll(RISTimetable.getTracksForFilter(getSelectedTrainInfos()));
+        }
 
-        applyFilters();
+        hasMoreThan1Track = RISTimetable.hasMoreThan1Platform(getSelectedTrainInfos());
+        hasMoreThan1TrainType = RISTimetable.hasMoreThan1TrainCategory( timetable.getTrainInfos());
+
     }
 
     @Nullable
@@ -226,10 +235,30 @@ class DbTimetableAdapter extends RecyclerView.Adapter<ViewHolder<?>> implements 
                                 ITEM_TYPE_CONTENT;
     }
 
-    public void applyFilters() {
+    private void addPlatformAndTrainCategoryToUiFilter(@NonNull TrainInfo trainInfo,
+                                                       @Nullable TrainMovementInfo trainMovementInfo)
+    {
+     if(trainMovementInfo!=null) {
+         final String platform = trainMovementInfo.getPlatform();
+         ListHelper.addToStringList(tracks,platform, false, true );
+
+         final String category = trainInfo.getTrainCategory();
+         ListHelper.addToStringList(trainCategories,category, false, true );
+     }
+    }
+
+    public boolean applyFilters() { // nach gleis (track,platform) und/oder Zugtyp(category) filtern
         selectionManager.clearSelection();
 
-        final List<TrainInfo> selectedTrainInfos = getSelectedTrainInfos();
+        final List<TrainInfo> selectedTrainInfos = getSelectedTrainInfos(); // alle im Zeitbereich (akt. zeit bis (+ n Stunden))
+
+        trainCategories.clear();
+        tracks.clear();
+
+        for (TrainInfo trainInfo : selectedTrainInfos) {
+            addPlatformAndTrainCategoryToUiFilter(trainInfo, trainInfo.getArrival());
+            addPlatformAndTrainCategoryToUiFilter (trainInfo, trainInfo.getDeparture());
+        }
 
         if (selectedTrainInfos != null) {
 
@@ -244,12 +273,20 @@ class DbTimetableAdapter extends RecyclerView.Adapter<ViewHolder<?>> implements 
                 }
 
                 filteredTrainInfos.add(selectedTrainInfo);
+
             }
 
             this.filteredTrainInfos = filteredTrainInfos;
+
+
         }
 
+        trainCategories.add(0, "Alle");
+        tracks.add(0, "Alle");
+
         notifyDataSetChanged();
+
+        return selectedTrainInfos!=null;
     }
 
     private List<TrainInfo> getSelectedTrainInfos() {
@@ -283,9 +320,8 @@ class DbTimetableAdapter extends RecyclerView.Adapter<ViewHolder<?>> implements 
                     twoAlternateButtonsViewHolder.checkRightButton();
                     break;
             }
-            filterButton.setVisibility(
-                    trainCategories.size() > 2 || tracks.size() > 2 ? View.VISIBLE : View.INVISIBLE
-            );
+            filterButton.setVisibility(hasMoreThan1Track || hasMoreThan1TrainType
+                    ? View.VISIBLE : View.INVISIBLE);
             filterButton.setSelected(trainCategory != null || track != null);
         }
 
