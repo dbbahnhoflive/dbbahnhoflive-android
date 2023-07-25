@@ -239,25 +239,37 @@ class DbTimetableAdapter extends RecyclerView.Adapter<ViewHolder<?>> implements 
                                                        @Nullable TrainMovementInfo trainMovementInfo)
     {
      if(trainMovementInfo!=null) {
-         final String platform = trainMovementInfo.getPlatform();
-         ListHelper.addToStringList(tracks,platform, false, true );
+         final String platformRaw = trainMovementInfo.getPlatform();
+         String platform = ""; //""k.A.";
+
+         try {
+           int value = Integer.parseInt(platformRaw.replaceAll("[^0-9]", "").trim());
+           platform = Integer.toString(value);
+         }
+         catch(Exception e) {
+             platform = platformRaw;
+         }
+
+         ListHelper.addToStringList(tracks, platform, false, true );
 
          final String category = trainInfo.getTrainCategory();
          ListHelper.addToStringList(trainCategories,category, false, true );
      }
     }
 
-    public boolean applyFilters() { // nach gleis (track,platform) und/oder Zugtyp(category) filtern
+    public boolean applyFilters() { // nach Gleis (track,platform) und/oder Zugtyp(category) filtern
         selectionManager.clearSelection();
 
         final List<TrainInfo> selectedTrainInfos = getSelectedTrainInfos(); // alle im Zeitbereich (akt. zeit bis (+ n Stunden))
 
+        // fuer ui Filter bzw. FilterDialogFragment
         trainCategories.clear();
         tracks.clear();
-
         for (TrainInfo trainInfo : selectedTrainInfos) {
-            addPlatformAndTrainCategoryToUiFilter(trainInfo, trainInfo.getArrival());
-            addPlatformAndTrainCategoryToUiFilter (trainInfo, trainInfo.getDeparture());
+            if (this.trainEvent == TrainEvent.DEPARTURE)
+                addPlatformAndTrainCategoryToUiFilter(trainInfo, trainInfo.getDeparture());
+            else
+                addPlatformAndTrainCategoryToUiFilter(trainInfo, trainInfo.getArrival());
         }
 
         if (selectedTrainInfos != null) {
