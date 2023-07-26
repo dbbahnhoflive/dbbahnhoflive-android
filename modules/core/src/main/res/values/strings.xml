@@ -457,7 +457,7 @@
     <string name="teaser_db_companion_sr_content_description">DB Wegbegleitung\n Für blinde und stark sehbeeinträchtigte Reisende bieten wir an diesem Bahnhof, für den Zeitraum des Ersatzverkehrs, Unterstützung bei der Orientierung vor Ort per Videoanruf.</string>
     <string name="teaser_db_companion_link_to_external_website">Zur externen Website www.db.de/wegbegleitung</string>
 
-    <string name="nev_db_companion_headline">DB Wegbegleitung -\nUnterstützung per Videoanruf für blinde und sehbeeinträchtigte Reisende</string>
+    <string name="nev_db_companion_headline">DB Wegbegleitung - Unterstützung per Videoanruf für blinde und sehbeeinträchtigte Reisende</string>
     <string name="nev_db_companion_copy">Während des Ersatzverkehrs an den Bahnhöfen zwischen Würzburg und Nürnberg begleitet unser geschultes Personal Sie sicher vom Gleis zur Ersatzhaltestelle und zurück.</string>
     <string name="nev_db_companion_link_description">Sie können uns unter folgendem Link einfach per Videoanruf kontaktieren und Unterstützung erhalten.</string>
     <string name="nev_db_companion_button_text">DB Wegbegleitung öffnen</string>

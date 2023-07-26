@@ -13,7 +13,7 @@
     android:layout_height="match_parent"
     android:layout_weight="@integer/single_cell_weight"
     style="@style/App.Widget.CardContainer"
-    tools:showIn="@layout/dynamic_card_layout"
+    tools:showIn="@layout/test_card_layout"
     android:padding="@dimen/card_margin">
 
     <androidx.cardview.widget.CardView
@@ -30,13 +30,14 @@
                 android:id="@+id/arImage"
 
                 android:layout_width="0dp"
-                android:layout_weight="0.8"
+                android:layout_weight="0.5"
                 android:layout_height="match_parent"
-                android:paddingHorizontal="@dimen/default_space_half"
+                android:paddingHorizontal="@dimen/default_space"
                 android:src="@drawable/teaser_ar_card"
                 android:layout_gravity="center"
 
                 android:contentDescription="@string/teaser_ar_headline" />
+
 
             <LinearLayout
                 android:layout_width="0dp"
@@ -44,24 +45,24 @@
                 android:layout_weight="2"
                 android:orientation="vertical"
 
+                android:paddingEnd="@dimen/default_space"
                 android:layout_gravity="center_vertical"
                 android:gravity="center_vertical"
-                android:paddingStart="@dimen/default_space_half"
-                android:paddingEnd="@dimen/default_space"
                 >
 
                 <androidx.legacy.widget.Space
                     android:layout_width="match_parent"
                     android:layout_height="0dp"
-                    android:layout_weight="0.3"
+                    android:layout_weight="0.5"
                     />
 
                 <TextView
                     android:id="@+id/headline"
                     android:layout_width="match_parent"
                     android:layout_height="0dp"
-                    android:layout_weight="1"
+                    android:layout_weight="0.8"
                     android:text="@string/teaser_ar_headline"
+                    android:textSize="16sp"
                     android:textStyle="bold"
                     />
 
@@ -70,6 +71,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="0dp"
                     android:layout_weight="1.5"
+                    android:textSize="14sp"
                     android:text="@string/teaser_ar_copy" />
 
             </LinearLayout>
@@ -82,14 +84,15 @@
             android:layout_height="@dimen/round_button_size"
 
             android:layout_gravity="bottom|end"
-            android:layout_marginBottom="@dimen/default_space"
-            android:layout_marginEnd="@dimen/default_space"
+            android:layout_marginBottom="11dp"
+            android:layout_marginEnd="11dp"
 
             android:background="@drawable/shape_circle_button"
             android:elevation="@dimen/default_elevation"
             app:elevation="@dimen/default_elevation"
             android:scaleType="center"
             android:src="@drawable/app_extern_link"
+
             android:contentDescription="@string/teaser_ar_linkbutton_text" />
 
     </androidx.cardview.widget.CardView>

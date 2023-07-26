@@ -108,8 +108,8 @@
 
         <TextView
             android:layout_marginTop="@dimen/card_container_padding"
-            android:layout_marginStart="@dimen/default_space"
-            android:layout_marginEnd="@dimen/default_space"
+            android:layout_marginStart="@dimen/tiny_space"
+            android:layout_marginEnd="@dimen/tiny_space"
             android:textSize="@dimen/textsize_h3"
             android:textStyle="bold"
             android:padding="@dimen/default_space"

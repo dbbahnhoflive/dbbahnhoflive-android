@@ -19,6 +19,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:text="@string/nev_db_companion_headline"
+        android:textSize="@dimen/textsize_28"
         android:textStyle="bold" />
 
     <LinearLayout
