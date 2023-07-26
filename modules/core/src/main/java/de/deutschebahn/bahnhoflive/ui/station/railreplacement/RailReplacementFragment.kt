@@ -40,26 +40,14 @@ class RailReplacementFragment : Fragment(), MapPresetProvider {
             if (railReplacementNev2.visibility == View.VISIBLE)
                 fullText += railReplacementNev2.text ?: ""
 
-
-//           val cleanedFullText = fullText.replace("26. Mai", "26.5.2023")
-//                .replace("11. September 2023", "11.9.2023")
-//                .replace("06. August 2023", "6.8.2023")
-//                .replace("06. August", "6.8.2023")
-//
-//            if(railReplacementNev.visibility!=View.VISIBLE)
-//               railReplacementEntryLabel.contentDescription = cleanedFullText
-//
-//            servicesDetails.contentDescription = fullText.replace("26. Mai", "26.5.2023")
-//                .replace("11. September 2023", "11.9.2023")
-//                .replace("06. August 2023", "6.8.2023")
-//                .replace("06. August", "6.8.2023")
-
             railReplacementNev.apply {
                 if (visibility == View.VISIBLE) {
                     contentDescription = text.toString().replace("26. Mai", "26.5.2023")
                         .replace("11. September 2023", "11.9.2023")
                         .replace("06. August 2023", "6.8.2023")
                         .replace("06. August", "6.8.2023")
+                        .replace("05. August 2023", "5.8.2023")
+                        .replace("05. August", "5.8.2023")
                 }
             }
 
@@ -67,6 +55,8 @@ class RailReplacementFragment : Fragment(), MapPresetProvider {
                 if (visibility == View.VISIBLE) {
                     contentDescription = text.toString().replace("26. Mai", "26.5.2023")
                 .replace("11. September 2023", "11.9.2023")
+                        .replace("05. August 2023", "5.8.2023")
+                        .replace("05. August", "5.8.2023")
                 .replace("06. August 2023", "6.8.2023")
                 .replace("06. August", "6.8.2023")
                 }
