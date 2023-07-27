@@ -452,7 +452,7 @@
     <string name="teaser_ar_linkbutton_text">zum playstore</string>
 
     <string name="teaser_db_companion_headline">DB Wegbegleitung</string>
-    <string name="teaser_db_companion_copy">Orientierungshilfe für blinde und sehbeeinträchtigte Reisende</string>
+    <string name="teaser_db_companion_copy">Orientierungshilfe für blinde und sehbeeinträchtigte Reisende.</string>
     <string name="teaser_db_companion_url">https://db.de/wegbegleitung</string>
     <string name="teaser_db_companion_sr_content_description">DB Wegbegleitung\n Für blinde und stark sehbeeinträchtigte Reisende bieten wir an diesem Bahnhof, für den Zeitraum des Ersatzverkehrs, Unterstützung bei der Orientierung vor Ort per Videoanruf.</string>
     <string name="teaser_db_companion_link_to_external_website">Zur externen Website www.db.de/wegbegleitung</string>

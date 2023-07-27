@@ -1,0 +1,142 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<!--
+  ~ SPDX-FileCopyrightText: 2020 DB Station&Service AG <bahnhoflive-opensource@deutschebahn.com>
+  ~
+  ~ SPDX-License-Identifier: Apache-2.0
+  -->
+
+<androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    style="@style/App.Widget.Card"
+    android:layout_marginStart="@dimen/default_space"
+    android:layout_marginEnd="@dimen/default_space"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <LinearLayout
+        android:orientation="vertical"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <de.deutschebahn.bahnhoflive.view.ProgrammaticHorozontalScrollView
+            android:id="@+id/animatedHeadlineScroller"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:importantForAccessibility="no"
+            android:scrollbars="none">
+
+            <LinearLayout
+                android:orientation="horizontal"
+                android:id="@+id/animatedHeadlineContainer"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                >
+
+                <include android:id="@+id/line1"  layout="@layout/item_news_headline" />
+
+                <include android:id="@+id/line2" layout="@layout/item_news_headline" />
+
+                <include android:id="@+id/line3" layout="@layout/item_news_headline" />
+
+                <include android:id="@+id/line4" layout="@layout/item_news_headline" />
+
+                <include android:id="@+id/line5" layout="@layout/item_news_headline" />
+
+                <include android:id="@+id/line6" layout="@layout/item_news_headline" />
+            </LinearLayout>
+        </de.deutschebahn.bahnhoflive.view.ProgrammaticHorozontalScrollView>
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+
+            <View
+                android:id="@+id/divider"
+                android:layout_marginTop="@dimen/default_space"
+                android:layout_marginBottom="@dimen/default_space"
+                android:background="@color/filter_header_divider"
+                app:layout_constraintTop_toTopOf="parent"
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:importantForAccessibility="no"
+                />
+
+            <ImageView
+                android:id="@+id/icon"
+                android:padding="@dimen/default_space_double"
+                tools:src="@drawable/app_news_malfunction"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/divider"
+
+                android:contentDescription="@null"
+                android:importantForAccessibility="yes"
+                />
+
+            <TextView
+                android:id="@+id/newsHeadline"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="@dimen/tiny_space"
+                android:layout_marginTop="@dimen/default_space"
+                android:layout_marginEnd="@dimen/default_space"
+            android:layout_marginBottom="@dimen/default_space_half"
+                android:ellipsize="end"
+                android:gravity="bottom"
+            android:lineSpacingMultiplier="1.2"
+                android:maxLines="2"
+                android:paddingEnd="@dimen/default_space_double"
+            android:textSize="@dimen/textsize_h3"
+            android:textStyle="bold"
+                app:layout_constraintBottom_toTopOf="@+id/newsCopy"
+                app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toEndOf="@+id/icon"
+                app:layout_constraintTop_toBottomOf="@id/divider"
+                app:layout_constraintVertical_chainStyle="packed"
+                tools:text="@tools:sample/lorem/random" />
+
+            <ImageButton
+                android:visibility="gone"
+                tools:visibility="visible"
+                android:layout_margin="@dimen/default_space"
+                android:id="@+id/btnLink"
+                android:layout_width="@dimen/round_button_size"
+                android:layout_height="@dimen/round_button_size"
+                android:scaleType="center"
+                android:elevation="@dimen/default_elevation"
+                app:elevation="@dimen/default_elevation"
+                android:background="@drawable/shape_circle_button"
+                android:src="@drawable/app_extern_link"
+                app:layout_constraintTop_toBottomOf="@+id/newsHeadline"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent" />
+
+            <TextView
+                android:id="@+id/newsCopy"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="@dimen/tiny_space"
+                android:layout_marginTop="@dimen/default_space_half"
+                android:layout_marginEnd="@dimen/default_space"
+                android:layout_marginBottom="@dimen/default_space"
+                android:ellipsize="end"
+                android:importantForAccessibility="yes"
+                android:lineSpacingMultiplier="1.2"
+                android:maxLines="3"
+                android:paddingEnd="@dimen/default_space"
+                android:textSize="@dimen/textsize_h3"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toStartOf="@+id/btnLink"
+                app:layout_constrainedHeight="true"
+                app:layout_constraintStart_toEndOf="@+id/icon"
+                app:layout_constraintTop_toBottomOf="@+id/newsHeadline"
+                tools:text="@tools:sample/lorem/random" />
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+    </LinearLayout>
+</androidx.cardview.widget.CardView>

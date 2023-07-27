@@ -88,8 +88,8 @@
                     android:src="@drawable/teaser_db_companion_card"
                     android:paddingHorizontal="12dp"
                     android:layout_marginBottom="@dimen/default_space"
-                    android:scaleX="1.0"
-                    android:scaleY="1.0"
+                    android:scaleX="0.9"
+                    android:scaleY="0.9"
                     android:layout_gravity="top|center_horizontal"
 
                     />
@@ -133,7 +133,7 @@
                         app:layout_constraintEnd_toStartOf="@+id/btnLink"
                         app:layout_constraintTop_toBottomOf="@+id/newsHeadline"
 
-                        android:paddingEnd="30dp"
+                        android:paddingEnd="70dp"
 
                         android:ellipsize="end"
                         android:maxLines="3"
