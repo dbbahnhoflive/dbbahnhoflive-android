@@ -67,7 +67,7 @@ internal class HafasEventViewHolder(
             val routeStops = ArrayList<RouteStop>()
 
             for (stop in hafasDetail.stops) {
-                routeStops.add(RouteStop(stop.name))
+                routeStops.add(RouteStop(stop))
             }
 
             if (routeStops.isNotEmpty()) {

@@ -85,6 +85,9 @@ public class HafasEvent implements Parcelable {
     public String trainNumber;
     public String trainCategory;
 
+    public boolean partCancelled;
+    public String track;
+
     private static final DateFormat DATE_TIME_FORMAT = new SimpleDateFormat("yyyy-MM-ddHH:mm:ss", Locale.GERMANY);
 
     protected HafasEvent(Parcel in) {
@@ -107,6 +110,8 @@ public class HafasEvent implements Parcelable {
         direction = in.readString();
         trainNumber = in.readString();
         trainCategory = in.readString();
+        partCancelled = in.readByte() == 1;
+        track = in.readString();
     }
 
     @Override
@@ -134,6 +139,8 @@ public class HafasEvent implements Parcelable {
         dest.writeString(direction);
         dest.writeString(trainNumber);
         dest.writeString(trainCategory);
+        dest.writeByte((byte) (partCancelled ? 1 : 0));
+        dest.writeString(track);
     }
 
     public static final Creator<HafasEvent> CREATOR = new Creator<HafasEvent>() {
@@ -220,6 +227,8 @@ public class HafasEvent implements Parcelable {
                 ", direction='" + direction + '\'' +
                 ", trainNumber='" + trainNumber + '\'' +
                 ", trainCategory='" + trainCategory + '\'' +
+                ", partCancelled=" + partCancelled +
+                ", track=" + track +
                 '}';
     }
 

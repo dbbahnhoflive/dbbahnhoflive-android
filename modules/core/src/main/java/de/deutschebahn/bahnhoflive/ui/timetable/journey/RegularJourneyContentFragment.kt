@@ -16,7 +16,6 @@ import androidx.fragment.app.activityViewModels
 import androidx.fragment.app.viewModels
 import androidx.recyclerview.widget.ConcatAdapter
 import androidx.recyclerview.widget.RecyclerView
-import androidx.recyclerview.widget.RecyclerView.Recycler
 import com.android.volley.VolleyError
 import de.deutschebahn.bahnhoflive.BaseApplication.Companion.get
 import de.deutschebahn.bahnhoflive.R
@@ -77,7 +76,7 @@ class RegularJourneyContentFragment : Fragment() {
     ): View = FragmentJourneyRegularContentBinding.inflate(inflater).apply {
 
         val issueBinder =
-            IssuesBinder(issueContainer, issueText, IssueIndicatorBinder(issueIcon))
+            IssuesBinder(journeyIssue.issueContainer, journeyIssue.issueText, IssueIndicatorBinder(journeyIssue.issueIcon))
 
         var shouldOfferWagenOrder = false
 
@@ -101,8 +100,7 @@ class RegularJourneyContentFragment : Fragment() {
                 trainInfo,
                 trainEvent.movementRetriever.getTrainMovementInfo(trainInfo)
             )
-            }
-            catch(_:Exception) {
+            } catch (_: Exception) {
 
             }
 

@@ -1,7 +1,6 @@
 package de.deutschebahn.bahnhoflive.ui.timetable.journey
 
 import android.graphics.Typeface
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import android.widget.TextView
@@ -15,7 +14,7 @@ import de.deutschebahn.bahnhoflive.ui.ViewHolder
 import java.text.DateFormat
 import java.util.concurrent.TimeUnit
 
-class JourneyItemViewHolder(val itemJourneyDetailedBinding: ItemJourneyDetailedBinding) :
+class JourneyItemViewHolder(private val itemJourneyDetailedBinding: ItemJourneyDetailedBinding) :
     ViewHolder<JourneyStop>(itemJourneyDetailedBinding.root) {
 
     private val dateFormat = java.text.SimpleDateFormat.getTimeInstance(DateFormat.SHORT)
@@ -31,7 +30,7 @@ class JourneyItemViewHolder(val itemJourneyDetailedBinding: ItemJourneyDetailedB
         )
     )
 
-    val highlightableTextViews = itemJourneyDetailedBinding.run {
+    private val highlightableTextViews = itemJourneyDetailedBinding.run {
         listOf(stopName, scheduledArrival, expectedArrival, scheduledDeparture, expectedDeparture)
     }
 

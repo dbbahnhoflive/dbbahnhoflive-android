@@ -5,14 +5,40 @@
  */
 package de.deutschebahn.bahnhoflive.ui.timetable
 
+import de.deutschebahn.bahnhoflive.backend.hafas.model.HafasStop
 import de.deutschebahn.bahnhoflive.backend.ris.model.TrainMovementInfo
 import java.util.*
 
-class RouteStop constructor(val name: String, var isCurrent: Boolean = false) {
+class RouteStop() {
+//    val stop: HafasStop?, var title:String?=null, var isCurrent: Boolean = false)
+
+    var isCurrent: Boolean = false
+    var hafasStop: HafasStop? = null
+    var name : String? = null
+
     var isFirst = false
     var isLast = false
+
+    init {
+        name = null
+        hafasStop = null
+    }
+    constructor(stop: HafasStop?, isCurrent: Boolean = false) : this() {
+        this.hafasStop=stop
+        this.name=stop?.name
+        this.isCurrent=isCurrent
+    }
+
+    constructor(name:String?=null, isCurrent: Boolean = false) : this() {
+        this.hafasStop=null
+        this.name=name
+        this.isCurrent=isCurrent
+    }
+
 }
 
+// Extension, wird benutzt, wenn keine detailierten Informationen vorliegen,
+// sondern nur die Zuglauf-Stations-Namen
 fun TrainMovementInfo.routeStops(currentStopName: String?, isDeparture: Boolean): List<RouteStop> {
     val routeStops = ArrayList<RouteStop>()
     val stopNames = correctedViaAsArray
@@ -21,10 +47,10 @@ fun TrainMovementInfo.routeStops(currentStopName: String?, isDeparture: Boolean)
         routeStops.add(RouteStop(stopName))
     }
 
-    currentStopName?.also { title ->
+    currentStopName?.also { itTitle ->
         routeStops.add(
             if (isDeparture) 0 else routeStops.size,
-            RouteStop(title, true)
+            RouteStop(itTitle, true)
         )
     }
 

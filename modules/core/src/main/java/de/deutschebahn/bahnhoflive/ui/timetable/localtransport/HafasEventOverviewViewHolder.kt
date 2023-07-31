@@ -35,6 +35,9 @@ class HafasEventOverviewViewHolder(view: View) : TimetableItemOverviewViewHolder
 
             val resources = itemView.resources
 
+            platformView?.text = item.track?.let { "Gl. $it" }
+
+
             itemView.contentDescription = resources.getString(
                 R.string.sr_template_local_departure_overview,
                 item.displayName, item.direction, time,

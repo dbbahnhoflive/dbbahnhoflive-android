@@ -29,6 +29,32 @@ public class HafasStop implements Parcelable {
         "rtBoarding": true
     }*/
 
+    /*
+      {
+        "name": "Behoerdenzentrum Gutleut, Frankfurt a.M.",
+        "id": "A=1@O=Behoerdenzentrum Gutleut, Frankfurt a.M.@X=8660702@Y=50104632@U=80@L=103930@",
+        "extId": "103930",
+        "routeIdx": 1,
+        "lon": 8.660702,
+        "lat": 50.104632,
+        "arrPrognosisType": "PROGNOSED",
+        "depPrognosisType": "PROGNOSED",
+        "depTime": "19:33:00",
+        "depDate": "2023-07-28",
+        "depTz": 120,
+        "arrTime": "19:33:00",
+        "arrDate": "2023-07-28",
+        "arrTz": 120,
+        "rtDepTime": "19:33:00",
+        "rtDepDate": "2023-07-28",
+        "rtArrTime": "19:33:00",
+        "rtArrDate": "2023-07-28",
+        "rtAlighting": true,
+        "rtBoarding": true
+      },
+*/
+
+
     public String name;
     public String id;
     public String extId;
@@ -40,8 +66,27 @@ public class HafasStop implements Parcelable {
     public String depPrognosisType;
     public String depTime;
     public String depDate;
-    public String depTz;
+    public String depTz; // Departure time zone information in the format +/- hours
+
     public boolean rtBoarding;
+
+    public String rtDepTime;
+    public String rtDepDate;
+
+    public String rtArrTime;
+    public String rtArrDate;
+
+
+    public String arrPrognosisType;
+    public String arrTime;
+    public String arrDate;
+    public String arrTz;
+
+    public boolean rtAlighting;
+    public boolean cancelled;
+
+    public String arrTrack;
+    public String depTrack;
 
     protected HafasStop(Parcel in) {
         name = in.readString();

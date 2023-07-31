@@ -15,42 +15,11 @@
         android:layout_height="wrap_content"
         android:showDividers="beginning|end">
 
-        <androidx.constraintlayout.widget.ConstraintLayout
-            android:id="@+id/issue_container"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="@dimen/default_space_double"
-            android:layout_marginEnd="@dimen/default_space_double"
-            android:minHeight="34dp"
-            android:paddingStart="@dimen/default_space"
-            android:paddingEnd="@dimen/default_space"
-            android:visibility="gone"
-            tools:visibility="visible">
 
-            <ImageView
-                android:id="@+id/issue_icon"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:baseline="17.5dp"
-                android:importantForAccessibility="no"
-                android:src="@drawable/app_warndreieck"
-                app:layout_constraintBaseline_toBaselineOf="@+id/issue_text"
-                app:layout_constraintLeft_toLeftOf="parent" />
+        <include android:id="@+id/journey_issue"
+            layout="@layout/fragment_journey_issue">
+        </include>
 
-            <TextView
-                android:id="@+id/issue_text"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="@dimen/default_space_half"
-                android:textColor="?attr/colorAccent"
-                android:textSize="@dimen/textsize_h3"
-                android:layout_marginTop="4dp"
-                app:layout_constraintLeft_toRightOf="@+id/issue_icon"
-                app:layout_constraintRight_toRightOf="parent"
-                app:layout_constraintTop_toTopOf="parent"
-                tools:text="ICE 1630: At vero eos et accusam et justo duo dolores et a rebum, stet clita kasd." />
-
-        </androidx.constraintlayout.widget.ConstraintLayout>
 
         <TextView
             android:id="@+id/sev"
@@ -90,7 +59,9 @@
                 android:gravity="center"
                 android:minHeight="64dp"
                 android:text="@string/btn_wagon_order"
-                android:textColor="@color/white" />
+                android:textColor="@color/white"
+                tools:visibility="visible"
+                />
 
         </androidx.cardview.widget.CardView>
 
