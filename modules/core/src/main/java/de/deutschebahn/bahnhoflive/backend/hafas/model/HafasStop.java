@@ -66,7 +66,7 @@ public class HafasStop implements Parcelable {
     public String depPrognosisType;
     public String depTime;
     public String depDate;
-    public String depTz; // Departure time zone information in the format +/- hours
+    public String depTz; // Departure time zone information in the format +/- minutes
 
     public boolean rtBoarding;
 
@@ -87,6 +87,8 @@ public class HafasStop implements Parcelable {
 
     public String arrTrack;
     public String depTrack;
+
+    public Boolean additional; // Zusatzhalt
 
     protected HafasStop(Parcel in) {
         name = in.readString();

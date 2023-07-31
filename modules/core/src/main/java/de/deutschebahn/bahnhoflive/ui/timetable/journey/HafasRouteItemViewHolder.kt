@@ -59,8 +59,15 @@ class HafasRouteItemViewHolder(private val itemJourneyBinding: ItemJourneyDetail
                     bindTimes(scheduledArrival, itHafasStop.arrTime, expectedArrival, itHafasStop.rtArrTime)
                     bindTimes(scheduledDeparture,  itHafasStop.depTime, expectedDeparture, itHafasStop.rtDepTime)
 
+                    if(itHafasStop.cancelled) {
                     advice.text = "Halt fällt aus"
-                    advice.isGone = !itHafasStop.cancelled
+                    }
+//                    else
+//                    if(itHafasStop.additional) {
+//                        advice.text = "Zusätzlicher Halt"
+//                    }
+
+                    advice.visibleElseGone(itHafasStop.cancelled)// || itHafasStop.additional)
 
                     var track = itHafasStop.arrTrack
                     if(track==null || itHafasStop.depTrack!=null)

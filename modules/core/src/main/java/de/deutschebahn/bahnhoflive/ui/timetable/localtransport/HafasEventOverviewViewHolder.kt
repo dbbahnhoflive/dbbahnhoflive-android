@@ -7,13 +7,17 @@
 package de.deutschebahn.bahnhoflive.ui.timetable.localtransport
 
 import android.view.View
+import android.widget.ImageView
 import de.deutschebahn.bahnhoflive.R
 import de.deutschebahn.bahnhoflive.backend.hafas.model.HafasEvent
 import de.deutschebahn.bahnhoflive.ui.TimetableItemOverviewViewHolder
+import de.deutschebahn.bahnhoflive.util.visibleElseGone
 import java.text.SimpleDateFormat
 import java.util.*
 
 class HafasEventOverviewViewHolder(view: View) : TimetableItemOverviewViewHolder<HafasEvent>(view) {
+
+    private val issueIndicator : ImageView? = itemView.findViewById<ImageView>(R.id.issue_indicator)
 
     override fun onBind(item: HafasEvent?) {
         super.onBind(item)
@@ -43,6 +47,8 @@ class HafasEventOverviewViewHolder(view: View) : TimetableItemOverviewViewHolder
                 item.displayName, item.direction, time,
                 if (item.delay > 0) resources.getString(R.string.sr_template_estimated, estimatedTime) else ""
             )
+
+            issueIndicator?.visibleElseGone(item.partCancelled)
         }
     }
 
