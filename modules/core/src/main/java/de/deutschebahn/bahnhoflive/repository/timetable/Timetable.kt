@@ -8,12 +8,9 @@ package de.deutschebahn.bahnhoflive.repository.timetable
 
 import android.os.Parcel
 import android.os.Parcelable
-import android.util.Log
 import de.deutschebahn.bahnhoflive.backend.ris.model.RISTimetable
 import de.deutschebahn.bahnhoflive.backend.ris.model.TrainEvent
 import de.deutschebahn.bahnhoflive.backend.ris.model.TrainInfo
-import de.deutschebahn.bahnhoflive.util.DebugX
-import java.util.*
 
 
 class Timetable(private val trainInfos: List<TrainInfo>, val endTime: Long, val duration: Int = 2) :
@@ -30,14 +27,22 @@ class Timetable(private val trainInfos: List<TrainInfo>, val endTime: Long, val 
         .prepare(TrainEvent.ARRIVAL)
 
     fun List<TrainInfo>.prepare(trainEvent: TrainEvent) =
-        filter {
-            trainEvent.movementRetriever.getTrainMovementInfo(it).let { it.plannedDateTime.before(endTime) || it.correctedDateTime.before(endTime) }
-        }
-            .sortedBy {
-                trainEvent.movementRetriever.getTrainMovementInfo(it).let {
-                    it.plannedDateTime.takeUnless { it < 0 }
-                        ?: it.correctedDateTime
+        filter { itTrainInfo ->
+            trainEvent.movementRetriever.getTrainMovementInfo(itTrainInfo)
+                .let { itTrainMovementInfo ->
+                    if (itTrainMovementInfo != null)
+                        itTrainMovementInfo.plannedDateTime.before(endTime) || itTrainMovementInfo.correctedDateTime.before(
+                            endTime
+                        )
+                    else false
                 }
+        }
+            .sortedBy {itTrainInfo->
+                trainEvent.movementRetriever.getTrainMovementInfo(itTrainInfo)
+                    ?.let { itTrainMovementInfo ->
+                        itTrainMovementInfo.plannedDateTime.takeUnless { it < 0 }
+                            ?: itTrainMovementInfo.correctedDateTime
+                    }
             }
 
     protected constructor(`in`: Parcel) : this(

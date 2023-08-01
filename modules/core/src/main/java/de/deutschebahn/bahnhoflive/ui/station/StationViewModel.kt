@@ -1175,6 +1175,7 @@ class StationViewModel(
             }
         }.mapNotNull { trainInfo ->
             trainEvent.movementRetriever.getTrainMovementInfo(trainInfo)?.let { trainMovementInfo ->
+
                 ContentSearchResult(
                     "${trainEvent.timeLabel} ${trainMovementInfo.formattedTime} / ${
                         TimetableViewHelper.composeName(
