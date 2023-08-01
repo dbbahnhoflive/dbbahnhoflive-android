@@ -1274,11 +1274,19 @@ class StationViewModel(
         recentContentQueriesStore.clear()
     }
 
-    val contentSearchResults = Transformations.switchMap(resultSetType) {
-        when (it) {
+    val contentSearchResults = Transformations.switchMap(resultSetType) { itResultType ->
+        when (itResultType) {
             ResultSetType.HISTORY -> recentContentSearchesAsResults
             ResultSetType.SUGGESTIONS -> contentSearchSuggestionsAsResults
-            else -> Transformations.map(genuineContentSearchResults) { it.second }
+            else -> Transformations.map(genuineContentSearchResults) {
+                try {
+                    it?.second
+                }
+                catch(e:Exception) {
+                    Log.d("cr", "Exception in contentSearchResults : " + e.message)
+                    null
+                }
+            }
         }
     }
 
