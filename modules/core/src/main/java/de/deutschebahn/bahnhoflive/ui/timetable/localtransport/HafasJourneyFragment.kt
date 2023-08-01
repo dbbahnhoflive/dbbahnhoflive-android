@@ -18,7 +18,7 @@ import de.deutschebahn.bahnhoflive.ui.map.MapPresetProvider
 import de.deutschebahn.bahnhoflive.ui.map.content.rimap.RimapFilter
 import de.deutschebahn.bahnhoflive.ui.station.BackNavigationData
 import de.deutschebahn.bahnhoflive.ui.station.StationViewModel
-import de.deutschebahn.bahnhoflive.ui.timetable.RouteStop
+import de.deutschebahn.bahnhoflive.ui.timetable.HafasRouteStop
 import de.deutschebahn.bahnhoflive.ui.timetable.journey.HafasRouteItemViewHolder
 import de.deutschebahn.bahnhoflive.ui.timetable.journey.JourneyCoreFragment
 import de.deutschebahn.bahnhoflive.ui.timetable.journey.RegularJourneyContentFragment
@@ -26,8 +26,6 @@ import de.deutschebahn.bahnhoflive.util.VersionManager
 import de.deutschebahn.bahnhoflive.util.visibleElseGone
 import de.deutschebahn.bahnhoflive.view.BaseListAdapter
 import de.deutschebahn.bahnhoflive.view.ListViewHolderDelegate
-
-//class RouteStopConnector(val routeStop: RouteStop, val hafasStop: HafasStop)
 
 class HafasJourneyFragment : JourneyCoreFragment(), MapPresetProvider
 {
@@ -70,27 +68,25 @@ class HafasJourneyFragment : JourneyCoreFragment(), MapPresetProvider
             viewLifecycleOwner
         ) {
 
-            val station = stationViewModel.station
-
             it?.let { itDetailedHafasEvent ->
                 var partCancelled = itDetailedHafasEvent.hafasEvent.partCancelled
 
-                val routeStops : ArrayList<RouteStop> = arrayListOf()
+                val hafasRouteStops : ArrayList<HafasRouteStop> = arrayListOf()
 
                 itDetailedHafasEvent.hafasDetail?.let {itHafasDetail->
                     if(itHafasDetail.partCancelled)
                         partCancelled=true
                     for (stop in itHafasDetail.stops) {
-                        routeStops.add(RouteStop(stop))
+                        hafasRouteStops.add(HafasRouteStop(stop, itDetailedHafasEvent.hafasEvent))
                     }
                 }
 
-                if (routeStops.isNotEmpty()) {
-                    routeStops.first().apply {
+                if (hafasRouteStops.isNotEmpty()) {
+                    hafasRouteStops.first().apply {
                         isFirst = true
                         isCurrent = true
                     }
-                    routeStops.last().isLast = true
+                    hafasRouteStops.last().isLast = true
                 }
 
 
@@ -137,7 +133,7 @@ class HafasJourneyFragment : JourneyCoreFragment(), MapPresetProvider
 
                 binding.recycler.adapter = adapter
 
-                adapter.submitList(routeStops)
+                adapter.submitList(hafasRouteStops)
             }
         }
 
@@ -157,9 +153,9 @@ class HafasJourneyFragment : JourneyCoreFragment(), MapPresetProvider
         return true
     }
 
-    inner class HafasRouteAdapter(onClickStop: (view: View, stop : RouteStop)->Unit)
-    : BaseListAdapter<RouteStop, HafasRouteItemViewHolder>(
-        object : ListViewHolderDelegate<RouteStop, HafasRouteItemViewHolder> {
+    inner class HafasRouteAdapter(onClickStop: (view: View, stop : HafasRouteStop)->Unit)
+    : BaseListAdapter<HafasRouteStop, HafasRouteItemViewHolder>(
+        object : ListViewHolderDelegate<HafasRouteStop, HafasRouteItemViewHolder> {
             override fun onCreateViewHolder(
                 parent: ViewGroup,
                 viewType: Int
@@ -167,7 +163,7 @@ class HafasJourneyFragment : JourneyCoreFragment(), MapPresetProvider
 
             override fun onBindViewHolder(
                 holder: HafasRouteItemViewHolder,
-                item: RouteStop,
+                item: HafasRouteStop,
                 position: Int
             ) {
                 holder.bind(item)

@@ -179,7 +179,7 @@ class HafasDeparturesAdapter(
 
         return h1.displayName==h2.displayName &&
                 h1.trainNumber==h2.trainNumber &&
-                h1.time == h2.time
+                h1.scheduledTime == h2.scheduledTime
     }
     fun findItemIndex(hafasEvent: HafasEvent): Int {
 

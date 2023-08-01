@@ -246,12 +246,12 @@ public class HafasEvent implements Parcelable {
     }
 
     @Nullable
-    public Date getActualTime() {
+    public Date getEstimatedTime() { // mit (geschätzter) Verspätung
         return getTime(rtDate, rtTime);
     }
 
     @Nullable
-    public Date getTime() {
+    public Date getScheduledTime() { // geplant
         return getTime(date, time);
     }
 
@@ -270,4 +270,16 @@ public class HafasEvent implements Parcelable {
     public boolean isValid() {
         return product != null;
     }
+
+
+
+    public String getPrettyTrackName() {
+        if (track != null && product != null) {
+            if (product.onTrack())
+                return "Gleis " + track;
+            else return "Platform " + track;
+        }
+        return "";
+    }
+
 }

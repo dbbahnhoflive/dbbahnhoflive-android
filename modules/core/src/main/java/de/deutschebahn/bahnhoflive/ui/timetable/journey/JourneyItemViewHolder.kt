@@ -105,6 +105,7 @@ class JourneyItemViewHolder(private val itemJourneyDetailedBinding: ItemJourneyD
                 }
             }
 
+            // for screenreader !
             root.contentDescription = item?.run {
                 listOfNotNull(
                     listOfNotNull(
@@ -128,6 +129,7 @@ class JourneyItemViewHolder(private val itemJourneyDetailedBinding: ItemJourneyD
 
     }
 
+    // for screenreader
     private fun JourneyStopEvent.formatContentDescription(prefix: String, past: Boolean) =
         listOfNotNull(
             prefix,

@@ -11,8 +11,8 @@ import android.widget.ImageView
 import de.deutschebahn.bahnhoflive.R
 import de.deutschebahn.bahnhoflive.backend.hafas.model.HafasEvent
 import de.deutschebahn.bahnhoflive.ui.TimetableItemOverviewViewHolder
+import de.deutschebahn.bahnhoflive.util.formatShortTime
 import de.deutschebahn.bahnhoflive.util.visibleElseGone
-import java.text.SimpleDateFormat
 import java.util.*
 
 class HafasEventOverviewViewHolder(view: View) : TimetableItemOverviewViewHolder<HafasEvent>(view) {
@@ -30,30 +30,42 @@ class HafasEventOverviewViewHolder(view: View) : TimetableItemOverviewViewHolder
             transportationNameView?.text = item.displayName
             directionView?.text = item.direction
 
-            val time = item.time?.let { DATE_FORMAT.format(it) } ?: "?"
-            timeView?.text = time
+            val scheduledTimeString = item.scheduledTime?.let { (it.time).formatShortTime() } ?: "?"
+            timeView?.text = scheduledTimeString
 
-            val estimatedTime: CharSequence = item.actualTime?.let { DATE_FORMAT.format(it) }
-                ?: time
-            bindDelay(item.delay.toLong(), estimatedTime)
+            val estimatedTimeString: CharSequence = item.estimatedTime?.let { (it.time).formatShortTime() }
+                ?: scheduledTimeString
+            bindDelay(item.delay.toLong(), estimatedTimeString)
 
             val resources = itemView.resources
 
-            platformView?.text = item.track?.let { "Gl. $it" }
+            val platform: String? =
+                if (item.product.onTrack()) {
+                    item.track?.let { "Gl. $it" }
+                } else {
+                    item.track?.let { "Pl. $it" }
+                }
 
+            platformView?.text = platform
+            platformView?.visibleElseGone(!platform.isNullOrEmpty())
+
+            issueIndicator?.visibleElseGone(item.partCancelled)
 
             itemView.contentDescription = resources.getString(
                 R.string.sr_template_local_departure_overview,
-                item.displayName, item.direction, time,
-                if (item.delay > 0) resources.getString(R.string.sr_template_estimated, estimatedTime) else ""
+                item.displayName, item.direction, estimatedTimeString,
+                item.prettyTrackName,
+                if (item.delay > 0)
+                    resources.getString(R.string.sr_template_estimated, estimatedTimeString)
+                else ""
             )
 
-            issueIndicator?.visibleElseGone(item.partCancelled)
         }
     }
 
-    companion object {
 
-        val DATE_FORMAT = SimpleDateFormat("HH:mm", Locale.GERMANY)
-    }
+
+//    companion object {
+//        val DATE_FORMAT = SimpleDateFormat("HH:mm", Locale.GERMANY)
+//    }
 }

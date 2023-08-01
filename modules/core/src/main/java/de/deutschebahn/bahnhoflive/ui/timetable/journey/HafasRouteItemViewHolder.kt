@@ -5,11 +5,13 @@ import android.view.LayoutInflater
 import android.view.ViewGroup
 import android.widget.TextView
 import androidx.core.content.ContextCompat
-import androidx.core.view.isGone
+import de.deutschebahn.bahnhoflive.R
+import de.deutschebahn.bahnhoflive.backend.hafas.model.HafasEvent
 import de.deutschebahn.bahnhoflive.databinding.ItemJourneyDetailedBinding
 import de.deutschebahn.bahnhoflive.ui.Status
 import de.deutschebahn.bahnhoflive.ui.ViewHolder
-import de.deutschebahn.bahnhoflive.ui.timetable.RouteStop
+import de.deutschebahn.bahnhoflive.ui.timetable.HafasRouteStop
+import de.deutschebahn.bahnhoflive.util.formatShortTime
 import de.deutschebahn.bahnhoflive.util.time.EpochParser
 import de.deutschebahn.bahnhoflive.util.visibleElseGone
 import java.text.DateFormat
@@ -21,7 +23,7 @@ import java.util.concurrent.TimeUnit
 
 
 class HafasRouteItemViewHolder(private val itemJourneyBinding: ItemJourneyDetailedBinding) :
-    ViewHolder<RouteStop>(itemJourneyBinding.root) {
+    ViewHolder<HafasRouteStop>(itemJourneyBinding.root) {
 
     companion object {
         val TIME_PARSER = EpochParser.getInstance()
@@ -40,7 +42,7 @@ class HafasRouteItemViewHolder(private val itemJourneyBinding: ItemJourneyDetail
         )
     )
 
-    override fun onBind(item: RouteStop?) {
+    override fun onBind(item: HafasRouteStop?) {
         super.onBind(item)
 
         with(itemJourneyBinding) {
@@ -62,26 +64,62 @@ class HafasRouteItemViewHolder(private val itemJourneyBinding: ItemJourneyDetail
                     if(itHafasStop.cancelled) {
                     advice.text = "Halt fällt aus"
                     }
-//                    else
-//                    if(itHafasStop.additional) {
-//                        advice.text = "Zusätzlicher Halt"
-//                    }
+                    else
+                    if(itHafasStop.additional) {
+                        advice.text = "Zusätzlicher Halt"
+                    }
 
-                    advice.visibleElseGone(itHafasStop.cancelled)// || itHafasStop.additional)
+                    advice.setCompoundDrawablesWithIntrinsicBounds(if(itHafasStop.cancelled) R.drawable.app_warndreieck else 0,0,0,0)
+                    advice.visibleElseGone(itHafasStop.cancelled || itHafasStop.additional)
 
                     var track = itHafasStop.arrTrack
                     if(track==null || itHafasStop.depTrack!=null)
                         track = itHafasStop.depTrack
 
-                    platform.text = "Gl. " + track
+                    track?.let {
+                        if (item.hafasEvent?.product?.onTrack() == true) {
+                            platform.text = "Gl. $it"
+                        } else {
+                            platform.text = "Pl. $it"
+                        }
+                    }
+//                    platform.text = "Gl. " + track
                     platform.visibleElseGone(track!=null)
+
+                    // for screenreader
+//                    val contentDescription = item?.run {
+//                        listOfNotNull(
+//                            listOfNotNull(
+//                                name,
+//                                platform?.let { "Gleis $it " }
+//                            ).joinToString(", ", postfix = "."),
+//                            listOfNotNull(
+////                        when {
+////                            this.additional -> "(Hinweis: \"Zusätzlicher Halt\")"
+////                            else -> null
+////                        },
+//                                arrival?.formatContentDescription("Ankunft", progress >= 0),
+//                                departure?.formatContentDescription("Abfahrt", progress > 0)
+//                            ).joinToString("; ", postfix = ".")
+//                        ).joinToString(separator = " ")
+//                    }.also {
+////                Log.d(JourneyItemViewHolder::class.java.simpleName, "Content description:\n$it")
+//                    }
                 }
-
-
+            }
             }
         }
 
+    private fun HafasEvent.formatContentDescription(prefix: String, past: Boolean) =
+        listOfNotNull(
+            prefix,
+            scheduledTime?.run {
+                "${this.time.formatShortTime()} Uhr"
+            },
+            estimatedTime?.takeUnless { it == scheduledTime }?.run {
+                "(heute ${if (!past) "voraussichtlich " else ""}${this.time.formatShortTime()} Uhr)"
     }
+        ).joinToString(" ")
 
     private fun bindTimes(
         scheduledTimeView: TextView,
