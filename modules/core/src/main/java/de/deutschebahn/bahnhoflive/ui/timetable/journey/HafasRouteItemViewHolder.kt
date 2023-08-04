@@ -6,7 +6,6 @@ import android.view.ViewGroup
 import android.widget.TextView
 import androidx.core.content.ContextCompat
 import de.deutschebahn.bahnhoflive.R
-import de.deutschebahn.bahnhoflive.backend.hafas.model.HafasEvent
 import de.deutschebahn.bahnhoflive.databinding.ItemJourneyDetailedBinding
 import de.deutschebahn.bahnhoflive.ui.Status
 import de.deutschebahn.bahnhoflive.ui.ViewHolder
@@ -15,10 +14,7 @@ import de.deutschebahn.bahnhoflive.util.formatShortTime
 import de.deutschebahn.bahnhoflive.util.time.EpochParser
 import de.deutschebahn.bahnhoflive.util.visibleElseGone
 import java.text.DateFormat
-import java.text.ParseException
-import java.text.SimpleDateFormat
-import java.util.Calendar
-import java.util.Locale
+import java.util.Date
 import java.util.concurrent.TimeUnit
 
 
@@ -42,24 +38,36 @@ class HafasRouteItemViewHolder(private val itemJourneyBinding: ItemJourneyDetail
         )
     )
 
+    private val highlightableTextViews = itemJourneyBinding.run {
+        listOf(stopName, scheduledArrival, expectedArrival, scheduledDeparture, expectedDeparture)
+    }
+
     override fun onBind(item: HafasRouteStop?) {
         super.onBind(item)
 
         with(itemJourneyBinding) {
 
-            item?.let {
+            item?.let { it ->
                 stopName.text = it.name
 
                 val isLastOrFirst = it.isLast || it.isFirst
 
-                stopName.setTypeface(null, if (isLastOrFirst) Typeface.BOLD else Typeface.NORMAL)
+                (if (it.highlight) Typeface.BOLD else Typeface.NORMAL).let { textStyle ->
+                    highlightableTextViews.forEach { textView ->
+                        textView.setTypeface(
+                            Typeface.create(textView.typeface, textStyle),
+                            textStyle
+                        )
+                    }
+                }
+
                 upperTrack.visibleElseGone(!it.isFirst)
                 lowerTrack.visibleElseGone(!it.isLast)
                 trackStop.isSelected = isLastOrFirst
 
                 item.hafasStop?.let {itHafasStop->
-                    bindTimes(scheduledArrival, itHafasStop.arrTime, expectedArrival, itHafasStop.rtArrTime)
-                    bindTimes(scheduledDeparture,  itHafasStop.depTime, expectedDeparture, itHafasStop.rtDepTime)
+                    bindTimes(scheduledArrival,  expectedArrival, itHafasStop.arrivalTime())
+                    bindTimes(scheduledDeparture,  expectedDeparture, itHafasStop.departureTime())
 
                     if(itHafasStop.cancelled) {
                     advice.text = "Halt fällt aus"
@@ -72,87 +80,90 @@ class HafasRouteItemViewHolder(private val itemJourneyBinding: ItemJourneyDetail
                     advice.setCompoundDrawablesWithIntrinsicBounds(if(itHafasStop.cancelled) R.drawable.app_warndreieck else 0,0,0,0)
                     advice.visibleElseGone(itHafasStop.cancelled || itHafasStop.additional)
 
+                    var platformText = ""
+                    var sr_platformText : String? = null
+
                     var track = itHafasStop.arrTrack
                     if(track==null || itHafasStop.depTrack!=null)
                         track = itHafasStop.depTrack
 
                     track?.let {
                         if (item.hafasEvent?.product?.onTrack() == true) {
-                            platform.text = "Gl. $it"
+                            platformText = "Gl. $it"
+                            sr_platformText = "Gleis $it"
                         } else {
-                            platform.text = "Pl. $it"
+                            platformText = "Pl. $it"
+                            sr_platformText = "Plattform $it"
                         }
+                        platform.text = platformText
                     }
-//                    platform.text = "Gl. " + track
+
                     platform.visibleElseGone(track!=null)
 
                     // for screenreader
-//                    val contentDescription = item?.run {
-//                        listOfNotNull(
-//                            listOfNotNull(
-//                                name,
-//                                platform?.let { "Gleis $it " }
-//                            ).joinToString(", ", postfix = "."),
-//                            listOfNotNull(
-////                        when {
-////                            this.additional -> "(Hinweis: \"Zusätzlicher Halt\")"
-////                            else -> null
-////                        },
-//                                arrival?.formatContentDescription("Ankunft", progress >= 0),
-//                                departure?.formatContentDescription("Abfahrt", progress > 0)
-//                            ).joinToString("; ", postfix = ".")
-//                        ).joinToString(separator = " ")
-//                    }.also {
-////                Log.d(JourneyItemViewHolder::class.java.simpleName, "Content description:\n$it")
-//                    }
+                    root.contentDescription = item.run {
+                        listOfNotNull(
+                            listOfNotNull(
+                                name,
+                                sr_platformText
+                            ).joinToString(", ", postfix = "."),
+                            listOfNotNull(
+                                when {
+                                    this.hafasStop?.additional == true -> "(Hinweis: \"Zusätzlicher Halt\")"
+                                    this.hafasStop?.cancelled == true -> "(Hinweis: \"Halt fällt aus\")"
+                                    else -> null
+                                },
+                                formatContentDescription(
+                                    hafasStop?.arrivalTime(),
+                                    "Ankunft",
+                                    hafasStop?.let { it.progress >= 0.0 }),
+                                formatContentDescription(
+                                    hafasStop?.departureTime(),
+                                    "Abfahrt",
+                                    hafasStop?.let { it.progress > 0.0 })
+                            ).joinToString("; ", postfix = ".")
+                        ).joinToString(separator = " ")
+                    }.also {
+//                     Log.d(JourneyItemViewHolder::class.java.simpleName, "Content description:\n$it")
                 }
             }
             }
         }
+    }
 
-    private fun HafasEvent.formatContentDescription(prefix: String, past: Boolean) =
+
+    /**
+     * Formatiert eine Zeitangabe.
+     *
+     * @param time   time.first : scheduled geplante Zeit,  time.second : estimated Zeit mit Verspätung
+     * @param prefix Startstring
+     * @param past   true = hat Verspätung -> vorraussichtlich
+     * @return       Formatted string.
+     */
+
+    private fun formatContentDescription(time : Pair<Date?, Date?>?, prefix: String, past: Boolean?) =
         listOfNotNull(
             prefix,
-            scheduledTime?.run {
+            time?.first?.run {
                 "${this.time.formatShortTime()} Uhr"
             },
-            estimatedTime?.takeUnless { it == scheduledTime }?.run {
-                "(heute ${if (!past) "voraussichtlich " else ""}${this.time.formatShortTime()} Uhr)"
+            time?.second?.takeUnless { it == time.first }?.run {
+                "(heute ${if (past!=null && !past) "voraussichtlich " else ""}${this.time.formatShortTime()} Uhr)"
     }
         ).joinToString(" ")
 
     private fun bindTimes(
         scheduledTimeView: TextView,
-        scheduledTime:String?,
-
         estimatedTimeView: TextView,
-        estimatedTime : String?
+        time: Pair<Date?, Date?>
     ) {
-        var parsedScheduledTime: Long? = null
-        var parsedEstimatedTime: Long? = null
-
-        val formatter: DateFormat = SimpleDateFormat("HH:mm:ss", Locale.GERMANY)
-        val cal = Calendar.getInstance()
-
-        if(scheduledTime!=null) {
-            try {
-                cal.time = formatter.parse(scheduledTime)!!
-                parsedScheduledTime = cal.timeInMillis
-            } catch (_: ParseException) {
-            }
-        }
+        val parsedScheduledTime: Long? = time.first?.time
+        var parsedEstimatedTime: Long? = time.second?.time
 
         scheduledTimeView.text =
             parsedScheduledTime?.let { dateFormat.format(it) }
 
-        if(estimatedTime!=null) {
-            try {
-                cal.time = formatter.parse(estimatedTime)!!
-                parsedEstimatedTime = cal.timeInMillis
-            } catch (_: ParseException) {
-            }
-        }
-        else
+        if (parsedEstimatedTime == null)
             parsedEstimatedTime = parsedScheduledTime
 
         estimatedTimeView.text =

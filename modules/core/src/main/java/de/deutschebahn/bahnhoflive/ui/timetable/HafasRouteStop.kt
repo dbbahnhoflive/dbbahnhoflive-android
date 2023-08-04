@@ -40,6 +40,7 @@ class HafasRouteStop() {
         this.isCurrent=isCurrent
     }
 
+    val highlight get() = isCurrent || isFirst || isLast
 }
 
 // Extension, wird benutzt, wenn keine detailierten Informationen vorliegen,

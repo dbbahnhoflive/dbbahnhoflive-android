@@ -13,7 +13,6 @@ import de.deutschebahn.bahnhoflive.backend.hafas.model.HafasEvent
 import de.deutschebahn.bahnhoflive.ui.TimetableItemOverviewViewHolder
 import de.deutschebahn.bahnhoflive.util.formatShortTime
 import de.deutschebahn.bahnhoflive.util.visibleElseGone
-import java.util.*
 
 class HafasEventOverviewViewHolder(view: View) : TimetableItemOverviewViewHolder<HafasEvent>(view) {
 
@@ -40,7 +39,7 @@ class HafasEventOverviewViewHolder(view: View) : TimetableItemOverviewViewHolder
             val resources = itemView.resources
 
             val platform: String? =
-                if (item.product.onTrack()) {
+                if (item.product?.onTrack() == true) {
                     item.track?.let { "Gl. $it" }
                 } else {
                     item.track?.let { "Pl. $it" }

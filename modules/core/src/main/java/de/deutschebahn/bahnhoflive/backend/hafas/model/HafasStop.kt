@@ -8,9 +8,15 @@ package de.deutschebahn.bahnhoflive.backend.hafas.model
 import android.os.Parcel
 import android.os.Parcelable
 import android.os.Parcelable.Creator
+import android.util.Log
 import com.google.gson.annotations.SerializedName
+import java.text.DateFormat
+import java.text.ParseException
+import java.text.SimpleDateFormat
+import java.util.Date
+import java.util.Locale
 
-class HafasStop protected constructor(`in`: Parcel) : Parcelable {
+open class HafasStop protected constructor(`in`: Parcel) : Parcelable {
     /*{
         "name": "Tunnelstr., Berlin",
         "id": "A=1@O=Tunnelstr., Berlin@X=13480664@Y=52490441@U=80@L=732673@",
@@ -65,19 +71,23 @@ class HafasStop protected constructor(`in`: Parcel) : Parcelable {
     var depTz // Departure time zone information in the format +/- minutes
             : String?
     var rtBoarding: Boolean
+
+
     var rtDepTime: String? = null
     var rtDepDate: String? = null
-    var rtArrTime: String? = null
-    var rtArrDate: String? = null
+    var rtArrTime: String? = null // Realtime arrival time if available (mit Verspaetung)
+    var rtArrDate: String? = null // Realtime arrival time if available (mit Verspaetung)
     var arrPrognosisType: String? = null
-    var arrTime: String? = null
-    var arrDate: String? = null
+    var arrTime: String? = null // arrival time (laut Fahrplan)
+    var arrDate: String? = null // arrival time (laut Fahrplan)
     var arrTz: String? = null
     var rtAlighting = false
     var cancelled = false
     var arrTrack: String? = null
     var depTrack: String? = null
     var additional: Boolean = false // Zusatzhalt
+
+    var progress: Double = -1.0
     override fun describeContents(): Int {
         return 0
     }
@@ -93,6 +103,22 @@ class HafasStop protected constructor(`in`: Parcel) : Parcelable {
         dest.writeString(depTime)
         dest.writeString(depTz)
         dest.writeByte((if (rtBoarding) 1 else 0).toByte())
+
+        dest.writeString(rtDepTime)
+        dest.writeString(rtDepDate)
+        dest.writeString(rtArrTime)
+        dest.writeString(rtArrDate)
+        dest.writeString(arrPrognosisType)
+        dest.writeString(arrTime)
+        dest.writeString(arrDate)
+        dest.writeString(arrTz)
+        dest.writeByte((if (rtAlighting) 1 else 0).toByte())
+        dest.writeByte((if (cancelled) 1 else 0).toByte())
+        dest.writeString(arrTrack)
+        dest.writeString(depTrack)
+        dest.writeByte((if (additional) 1 else 0).toByte())
+
+        dest.writeDouble(progress)
     }
 
     init {
@@ -106,6 +132,24 @@ class HafasStop protected constructor(`in`: Parcel) : Parcelable {
         depTime = `in`.readString()
         depTz = `in`.readString()
         rtBoarding = `in`.readByte().toInt() == 1
+
+
+        rtDepTime = `in`.readString()
+        rtDepDate = `in`.readString()
+        rtArrTime = `in`.readString()
+        rtArrDate = `in`.readString()
+        arrPrognosisType = `in`.readString()
+        arrTime = `in`.readString()
+        arrDate = `in`.readString()
+        arrTz = `in`.readString()
+        rtAlighting = `in`.readByte().toInt() == 1
+        cancelled = `in`.readByte().toInt() == 1
+        arrTrack = `in`.readString()
+        depTrack = `in`.readString()
+        additional = `in`.readByte().toInt() == 1
+
+        progress = `in`.readDouble()
+
     }
 
     override fun toString(): String {
@@ -121,10 +165,46 @@ class HafasStop protected constructor(`in`: Parcel) : Parcelable {
                 ", depDate='" + depDate + '\'' +
                 ", depTz='" + depTz + '\'' +
                 ", rtBoarding=" + rtBoarding +
+
+                ", rtDepTime=" + rtDepTime +
+                ", rtDepDate=" + rtDepDate +
+                ", rtArrTime=" + rtArrTime +
+                ", rtArrDate=" + rtArrDate +
+                ", arrPrognosisType=" + arrPrognosisType +
+                ", arrTime=" + arrTime +
+                ", arrDate=" + arrDate +
+                ", arrTz=" + arrTz +
+                ", rtAlighting=" + rtAlighting +
+                ", cancelled=" + cancelled +
+                ", arrTrack=" + arrTrack +
+                ", depTrack=" + depTrack +
+                ", additional=" + additional +
+                ", progress=" + progress +
                 '}'
+
     }
 
+    private fun getTime(date: String?, time: String?): Date? {
+        if (date != null && time != null) {
+            try {
+                return HafasStop.DATE_TIME_FORMAT.parse(date + time)
+            } catch (e: ParseException) {
+                Log.w(HafasStop.TAG, e)
+            }
+        }
+        return null
+    }
+
+    fun arrivalTime() : Pair<Date?, Date?> = getTime(arrDate, arrTime) to getTime(rtArrDate, rtArrTime)
+    fun departureTime() : Pair<Date?, Date?> = getTime(depDate, depTime) to getTime(rtDepDate, rtDepTime)
+
+    fun bestEffortArrivalTime() : Date? = arrivalTime().second ?: arrivalTime().first
+    fun bestEffortDepartureTime() : Date? = departureTime().second ?: departureTime().first
+
     companion object {
+
+        val TAG = HafasStop::class.java.simpleName
+
         @JvmField
         val CREATOR: Creator<HafasStop> = object : Creator<HafasStop> {
             override fun createFromParcel(`in`: Parcel): HafasStop {
@@ -135,5 +215,8 @@ class HafasStop protected constructor(`in`: Parcel) : Parcelable {
                 return arrayOfNulls(size)
             }
         }
+
+        private val DATE_TIME_FORMAT: DateFormat =
+            SimpleDateFormat("yyyy-MM-ddHH:mm:ss", Locale.GERMANY)
     }
 }
