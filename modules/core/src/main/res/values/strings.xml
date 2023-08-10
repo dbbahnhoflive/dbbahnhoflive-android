@@ -88,7 +88,7 @@
 
     <!-- Wagenreihung Ausstattungsarten -->
     <string name="wagon_feature_bicycle_spaces">Stellplätze für Fahrräder</string>
-    <string name="wagon_feature_wheelchair_spaces">Plätze für Rollstuhlfahrer</string>
+    <string name="wagon_feature_wheelchair_spaces">Plätze für Menschen mit Rollstuhl</string>
     <string name="wagon_feature_disabled_toilet">Toilette für mobilitätseingeschränkte Personen</string>
     <string name="wagon_feature_airconditioning">Klimaanlage</string>
     <string name="status_defective">defekt</string>
@@ -263,7 +263,7 @@
     <string name="notification_channel_arrival_name">Einfahrt</string>
     <string name="notification_channel_arrival_description">Erinnerungen vor Einfahrt eines Zuges</string>
     <string name="label_current_occupancy">Aktuell:</string>
-    <string name="title_occupancy">Besucheraufkommen</string>
+    <string name="title_occupancy">Besuchendenaufkommen</string>
 
     <string name="notification_channel_facility_state">Verfügbarkeitsmeldungen</string>
     <string name="default_notification_channel_id">Verfügbarkeitsmeldungen</string> <!-- MUST BE SAME AS notification_channel_facility_state-->
@@ -284,16 +284,16 @@
     <string name="friday">Freitag</string>
     <string name="saturday">Samstag</string>
     <string name="sunday">Sonntag</string>
-    <string name="title_occupancy_explanation">Besucheraufkommen</string>
+    <string name="title_occupancy_explanation">Besuchendenaufkommen</string>
     <string name="occupancy_level_unknown">Es liegt keine aktuelle Information vor.</string>
-    <string name="occupancy_level_low">Weniger Besucher als üblich</string>
-    <string name="occupancy_explanation_low">Vor Ort ist aktuell mit weniger Besuchern als gewöhnlich zu rechnen. In der Regel ist das Besucheraufkommen zu dieser Uhrzeit an diesem Wochentag höher.</string>
-    <string name="occupancy_level_average">Übliches Besucheraufkommen</string>
-    <string name="occupancy_explanation_average">Die Anzahl der Besucher vor Ort entspricht dem gewöhnlichen Besucheraufkommen zu dieser Uhrzeit an diesem Wochentag.</string>
-    <string name="occupancy_level_high">Mehr Besucher als üblich</string>
-    <string name="occupancy_explanation_high">Vor Ort ist aktuell mit mehr Besuchern als gewöhnlich zu rechnen. In der Regel ist das Besucheraufkommen zu dieser Uhrzeit an diesem Wochentag geringer.</string>
+    <string name="occupancy_level_low">Weniger Besuchende als üblich</string>
+    <string name="occupancy_explanation_low">Vor Ort ist aktuell mit weniger Besuchenden als gewöhnlich zu rechnen. In der Regel ist das Publikumsaufkommen zu dieser Uhrzeit an diesem Wochentag höher.</string>
+    <string name="occupancy_level_average">Übliches Besuchendenaufkommen</string>
+    <string name="occupancy_explanation_average">Die Anzahl der Besuchenden vor Ort entspricht dem gewöhnlichen Publikumsaufkommen zu dieser Uhrzeit an diesem Wochentag.</string>
+    <string name="occupancy_level_high">Mehr Besuchende als üblich</string>
+    <string name="occupancy_explanation_high">Vor Ort ist aktuell mit mehr Besuchenden als gewöhnlich zu rechnen. In der Regel ist das Publikumsaufkommen zu dieser Uhrzeit an diesem Wochentag geringer.</string>
     <string name="occupancy_advice_title">Hinweise</string>
-    <string name="occupancy_advice_copy">Bitte beachten Sie: Diese Info-Grafik gibt Auskunft über das aktuelle Besucheraufkommen im Vergleich zum durchschnittlichen Besucheraufkommen der vergangenen acht Wochen. Für diese Grafik werden Näherungswerte errechnet und keine absoluten Zahlen verwendet. Folglich sind Abweichungen zum tatsächlichen Besucheraufkommen vor Ort möglich. Diese Grafik gibt außerdem keine Auskunft hinsichtlich des Besucheraufkommens im Verhältnis zu den räumlichen Kapazitäten vor Ort. Alle Angaben sind ohne Gewähr.</string>
+    <string name="occupancy_advice_copy">Bitte beachten Sie: Diese Info-Grafik gibt Auskunft über das aktuelle Besuchendenaufkommen im Vergleich zum durchschnittlichen Besuchendenaufkommen der vergangenen acht Wochen. Für diese Grafik werden Näherungswerte errechnet und keine absoluten Zahlen verwendet. Folglich sind Abweichungen zum tatsächlichen Publikumsaufkommen vor Ort möglich. Diese Grafik gibt außerdem keine Auskunft hinsichtlich des Besuchendenaufkommens im Verhältnis zu den räumlichen Kapazitäten vor Ort. Alle Angaben sind ohne Gewähr.</string>
     <string name="occupancy_additional_info_title">Weiterführende Informationen</string>
     <string name="occupancy_additional_info_copy">Aktuelle Informationen und Service-Hinweise zum sicheren Aufenthalt am Bahnhof sowie Ihrer Reise finden Sie auf gemeinsamgehtdas.de.</string>
     <string name="consent_headline">Gemeinsam mit Ihnen wollen wir besser werden!</string>
