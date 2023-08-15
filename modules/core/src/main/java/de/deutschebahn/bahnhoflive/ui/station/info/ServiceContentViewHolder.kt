@@ -180,8 +180,10 @@ open class ServiceContentViewHolder(
                         dbActionButtonCallback(DbActionButton(DbActionButton.Type.ACTION, url))
                     }
                 }
-            }
+                renderAdditionalText(item)
+                renderDescriptionText(item)
 
+            }
             else -> {
                 defaultRender(item)
             }
