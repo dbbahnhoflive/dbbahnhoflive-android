@@ -184,6 +184,12 @@ open class ServiceContentViewHolder(
                 renderDescriptionText(item)
 
             }
+
+            ServiceContentType.Local.DB_LOUNGE -> {
+                renderDescriptionText(item)
+                renderAdditionalText(item)
+            }
+
             else -> {
                 defaultRender(item)
             }
