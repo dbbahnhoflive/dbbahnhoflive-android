@@ -29,7 +29,7 @@ public interface ServiceContentType {
     String ELEVATION_AIDS = "aufzuegeundfahrtreppen";
     String SERVICE_STORE = "service_store";
     String PRIVACY = "datenschutz";
-    String ACCESSIBLE = "stufenfreier_zugang";
+    String ACCESSIBLE = "barrierefreiheit";
     String LOCAL_MAP = "lageplan";
 
     interface Local {
@@ -38,8 +38,8 @@ public interface ServiceContentType {
         String LOST_AND_FOUND = "local_lostfound";
         String CHATBOT = "chatbot";
         String STATION_COMPLAINT = "station_complaint";
-        String APP_ISSUE = "app_issue";
-        String RATE_APP = "rate_app";
+        String APP_ISSUE = "problemmelden";
+        String RATE_APP = "bewertung";
         String RAIL_REPLACEMENT = "rail_replacement";
     }
 

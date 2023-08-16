@@ -176,7 +176,7 @@ open class ServiceContentViewHolder(
             ServiceContentType.MOBILE_SERVICE -> {
                 val partTextView = addHtmlPart(item.descriptionText)
                 partTextView.handleUrlClicks { url ->
-                    if(url == "showServiceNrMobi") {
+                    if(url == "mobilitaetsservice") {
                         dbActionButtonCallback(DbActionButton(DbActionButton.Type.ACTION, url))
                     }
                 }
