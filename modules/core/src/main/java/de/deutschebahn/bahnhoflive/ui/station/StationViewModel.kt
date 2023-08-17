@@ -1098,7 +1098,7 @@ class StationViewModel(
                                 products.asSequence().filter { product ->
                                     ProductCategory.of(product)?.isExtendedLocal ?: false && (
                                             acceptedProducts.any {
-                                                it.bitMask() and product.catCode != 0
+                                                it.bitMask() and product.categoryBitMask != 0
                                             } ||
                                                     listOfNotNull(product.name).let { candidates ->
                                                         queryParts.all { queryPart ->

@@ -64,7 +64,7 @@ public class HafasEvent implements Parcelable {
 
     @SerializedName("JourneyDetailRef")
     public HafasDetailReference detailReference;
-    @SerializedName("Product")
+    @SerializedName("ProductAtStop") // vorher Product
     public HafasEventProduct product;
     @SerializedName("JourneyStatus")
     public String journeyStatus;
