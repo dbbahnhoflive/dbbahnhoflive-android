@@ -4,9 +4,9 @@
 Diese Inhalte (Funktionen, Anpassungen, Erweiterungen) befinden sich derzeit in der Umsetzung oder sind bereits für die nächsten Release-Zyklen eingeplant.
 
 ##### Release 3.24.0 (Inhalte ohne Gewähr)
-• Erweiterung der Gleisinformationen
-• Anpassung von App-Texten hinsichtlich gendergerechter Kommunikation
-• Ergänzung der Anzeige von Halte-Ausfällen im Zuglauf von ÖPNV-Verbindungen
+•	Erweiterung der Gleisinformationen  <br>
+•	Anpassung von App-Texten hinsichtlich gendergerechter Kommunikation  <br>
+•	Ergänzung der Anzeige von Halte-Ausfällen im Zuglauf von ÖPNV-Verbindungen  <br>
 
 
 ##### Entwicklungsfelder
