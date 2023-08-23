@@ -48,7 +48,7 @@
 		},
 
 		{
-             "descriptionText": "<p>In unseren DB Lounges finden Reisende der 1.Klasse und bahn.bonus comfort-Kund:innen alles, was den Aufenthalt so angenehm wie möglich macht: elegante Sitzlandschaften, stilvolles Ambiente und aufmerksamen Service. Die Öffnungszeiten der DB Lounges finden Sie <a href=\"https://www.bahn.de/p/view/service/bahnhof/db_lounge.shtml\">hier</a>.</p>",
+             "descriptionText": "<p>In unseren DB Lounges finden Reisende der 1.Klasse und BahnBonus Kund:innen alles, was den Aufenthalt so angenehm wie möglich macht: elegante Sitzlandschaften, stilvolles Ambiente und aufmerksamen Service. Die Öffnungszeiten der DB Lounges finden Sie <a href=\"https://www.bahn.de/p/view/service/bahnhof/db_lounge.shtml\">hier</a>.</p>",
 			"title": "DB Lounge",
 			"type": "local_db_lounge"
 		},
