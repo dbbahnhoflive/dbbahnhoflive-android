@@ -4,20 +4,44 @@ import de.deutschebahn.bahnhoflive.repository.accessibility.AccessibilityFeature
 import java.text.Collator
 import java.util.*
 
+fun List<Platform>.findLinkedPlatform(platform:String) : Int? {
+    val platformNumber : Int? = kotlin.runCatching { platform.toInt() }.getOrNull()
+
+    platformNumber?.let {
+        return this.filter { it.number == platformNumber }.firstOrNull()?.linkedPlatformNumber
+    }
+
+    return null
+}
+
+
 class Platform(
     val name: String,
-    val accessibility: EnumMap<AccessibilityFeature, AccessibilityStatus>
+    val accessibility: EnumMap<AccessibilityFeature, AccessibilityStatus>,
+    private val linkedPlatform : String?=null
 ) : Comparable<Platform> {
 
     companion object {
         val numberPattern = Regex("\\d+")
 
         val collator = Collator.getInstance(Locale.GERMAN)
+
+        fun platformNumber(platformString: String, defaultValue: Int = 0): Int {
+            val ret = runCatching {
+                numberPattern.find(platformString)?.value?.toInt()
+            }.getOrNull()
+
+            return ret ?: defaultValue
+        }
     }
 
-    protected val number = runCatching {
+    val number : Int? = runCatching {
         numberPattern.find(name)?.value?.toInt()
     }.getOrNull()
+
+    val linkedPlatformNumber : Int? = linkedPlatform?.runCatching {
+        numberPattern.find(linkedPlatform)?.value?.toInt()
+    }?.getOrNull()
 
     override fun compareTo(other: Platform): Int =
         if (number != null && other.number != null) {

@@ -61,6 +61,39 @@
         tools:text="@tools:sample/cities" />
 
     <TextView
+        android:id="@+id/platformindicatorLeft"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/default_space_half"
+        android:maxLines="1"
+        android:textSize="@dimen/textsize_h3"
+        android:gravity="center"
+        android:text="\u25bc"
+        tools:visibility="visible"
+        android:visibility="gone"
+        app:layout_constraintBaseline_toBaselineOf="@+id/direction"
+        app:layout_constraintLeft_toLeftOf="@+id/platform"
+        app:layout_constraintRight_toLeftOf="@+id/platformsplitter"
+        />
+
+    <TextView
+        android:id="@+id/platformindicatorRight"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/default_space_half"
+        android:maxLines="1"
+        android:textSize="@dimen/textsize_h3"
+        android:text="\u25bc"
+        tools:visibility="visible"
+        android:visibility="gone"
+        app:layout_constraintBaseline_toBaselineOf="@+id/direction"
+
+        app:layout_constraintLeft_toRightOf="@+id/platformsplitter"
+        app:layout_constraintRight_toRightOf="parent"
+        />
+
+
+    <TextView
         android:id="@+id/transportationName"
         android:textSize="@dimen/textsize_h3"
         android:layout_width="wrap_content"
@@ -105,19 +138,61 @@
         android:contentDescription="@string/sr_indicator_issue"/>
 
     <TextView
-        android:id="@+id/platform"
-        android:layout_width="0dp"
+        android:id="@+id/platformType"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="@dimen/default_space_half"
-        android:ellipsize="end"
-        android:gravity="right"
+        android:gravity="center"
         android:maxLines="1"
         android:textSize="@dimen/textsize_h3"
 
         app:layout_constraintBaseline_toBaselineOf="@+id/delay"
-        app:layout_constraintLeft_toRightOf="@+id/issue_indicator"
+        app:layout_constraintRight_toLeftOf="@+id/platform"
+        android:text="Gl. "
+        tools:text="Gl." />
+
+    <TextView
+        android:id="@+id/platform"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/default_space_half"
+        android:gravity="center"
+        android:maxLines="1"
+        android:textSize="@dimen/textsize_h3"
+
+        app:layout_constraintBaseline_toBaselineOf="@+id/delay"
+        app:layout_constraintRight_toLeftOf="@+id/platformsplitter"
+        tools:text="1" />
+
+    <TextView
+        android:id="@+id/platformsplitter"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/default_space_half"
+        android:maxLines="1"
+        android:textSize="@dimen/textsize_h3"
+        android:text=" | "
+        tools:visibility="visible"
+        android:visibility="gone"
+        app:layout_constraintBaseline_toBaselineOf="@+id/delay"
+        app:layout_constraintRight_toLeftOf="@+id/linkedplatform"
+        />
+
+
+    <TextView
+        android:id="@+id/linkedplatform"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/default_space_half"
+        android:gravity="start"
+        android:maxLines="1"
+        android:textSize="@dimen/textsize_h3"
+        tools:visibility="visible"
+        android:visibility="gone"
+        app:layout_constraintBaseline_toBaselineOf="@+id/delay"
         app:layout_constraintRight_toRightOf="parent"
-        tools:text="Gl. 16 A-G" />
+        tools:text="2" />
+
 
 </androidx.constraintlayout.widget.ConstraintLayout>
         

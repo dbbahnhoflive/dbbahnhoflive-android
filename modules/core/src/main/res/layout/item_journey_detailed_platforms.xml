@@ -1,0 +1,109 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+
+    android:layout_width="wrap_content"
+    android:layout_height="match_parent"
+
+    android:id="@+id/layout"
+
+    app:contentPaddingLeft="@dimen/default_space"
+    app:contentPaddingRight="@dimen/default_space"
+    android:paddingBottom="@dimen/default_space_half"
+    app:cardCornerRadius="32dp"
+    app:cardBackgroundColor="@color/white"
+    tools:showIn="@layout/item_journey_detailed"
+    >
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            >
+
+            <TextView
+                android:id="@+id/platformindicatorLeft"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:maxLines="1"
+                android:textSize="@dimen/textsize_h3"
+                android:text="\u25bc"
+                android:visibility="visible"
+                app:layout_constraintBottom_toTopOf="@+id/platformType"
+                app:layout_constraintLeft_toLeftOf="@+id/platformLeft"
+                app:layout_constraintRight_toLeftOf="@+id/platformsplitter"
+                />
+
+            <TextView
+                android:id="@+id/platformindicatorRight"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:maxLines="1"
+                android:textSize="@dimen/textsize_h3"
+                android:text="\u25bc"
+                android:visibility="visible"
+                app:layout_constraintBottom_toTopOf="@+id/platformType"
+                app:layout_constraintLeft_toRightOf="@+id/platformsplitter"
+                app:layout_constraintRight_toRightOf="parent"
+                />
+
+        <TextView
+            android:id="@+id/platformType"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:maxLines="1"
+            android:layout_marginBottom="@dimen/default_space"
+            android:textSize="@dimen/textsize_h3"
+
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintRight_toLeftOf="@+id/platformLeft"
+            app:layout_constraintLeft_toLeftOf="parent"
+            android:text="Gl. "
+            />
+
+        <TextView
+            android:id="@+id/platformLeft"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:maxLines="1"
+            android:textSize="@dimen/textsize_h3"
+
+            app:layout_constraintBaseline_toBaselineOf="@+id/platformType"
+            app:layout_constraintRight_toLeftOf="@+id/platformsplitter"
+            tools:text="1" />
+
+        <TextView
+            android:id="@+id/platformsplitter"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:maxLines="1"
+            android:textSize="@dimen/textsize_h3"
+            android:text=" | "
+            tools:visibility="visible"
+            android:visibility="gone"
+            app:layout_constraintBaseline_toBaselineOf="@+id/platformType"
+            app:layout_constraintLeft_toRightOf="@+id/platformLeft"
+
+            />
+
+
+        <TextView
+            android:id="@+id/linkedplatform"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:gravity="start"
+            android:maxLines="1"
+            android:textSize="@dimen/textsize_h3"
+            tools:visibility="visible"
+            android:visibility="gone"
+            app:layout_constraintBaseline_toBaselineOf="@+id/platformType"
+            app:layout_constraintLeft_toRightOf="@+id/platformsplitter"
+            app:layout_constraintRight_toRightOf="parent"
+            tools:text="2" />
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+</androidx.cardview.widget.CardView>

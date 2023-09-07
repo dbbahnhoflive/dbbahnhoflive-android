@@ -11,6 +11,7 @@ import android.view.ViewGroup;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.RecyclerView;
 
 import java.util.ArrayList;
@@ -20,15 +21,18 @@ import java.util.List;
 
 import de.deutschebahn.bahnhoflive.R;
 import de.deutschebahn.bahnhoflive.analytics.TrackingManager;
+import de.deutschebahn.bahnhoflive.backend.db.ris.model.Platform;
 import de.deutschebahn.bahnhoflive.backend.ris.model.RISTimetable;
 import de.deutschebahn.bahnhoflive.backend.ris.model.TrainEvent;
 import de.deutschebahn.bahnhoflive.backend.ris.model.TrainInfo;
 import de.deutschebahn.bahnhoflive.backend.ris.model.TrainMovementInfo;
 import de.deutschebahn.bahnhoflive.repository.Station;
+import de.deutschebahn.bahnhoflive.repository.accessibility.AccessibilityFeaturesResource;
 import de.deutschebahn.bahnhoflive.repository.timetable.Constants;
 import de.deutschebahn.bahnhoflive.repository.timetable.Timetable;
 import de.deutschebahn.bahnhoflive.ui.ViewHolder;
 import de.deutschebahn.bahnhoflive.ui.map.content.rimap.Track;
+import de.deutschebahn.bahnhoflive.ui.station.StationViewModel;
 import de.deutschebahn.bahnhoflive.util.ListHelper;
 import de.deutschebahn.bahnhoflive.view.SingleSelectionManager;
 import kotlin.Unit;
@@ -67,9 +71,13 @@ class DbTimetableAdapter extends RecyclerView.Adapter<ViewHolder<?>> implements 
     private final List<String> trainCategories = new LinkedList<>();
 
     private Timetable timetable;
+
+    private List<Platform> platforms = null;
+
     private final Function3<? super TrainInfo, ? super TrainEvent, ? super Integer, Unit> itemClickListener;
 
-    DbTimetableAdapter(@Nullable Station station, FilterUI filterUI,
+    DbTimetableAdapter(@Nullable Station station,
+                       FilterUI filterUI,
                        @NonNull final TrackingManager trackingManager,
                        View.OnClickListener loadMoreListener, Function3<? super TrainInfo, ? super TrainEvent, ? super Integer, Unit> itemClickListener) {
         this.station = station;
@@ -91,7 +99,11 @@ class DbTimetableAdapter extends RecyclerView.Adapter<ViewHolder<?>> implements 
             case ITEM_TYPE_EMPTY:
                 return createEmptyMessageViewHolder(parent);
             default:
-                return new TrainInfoViewHolder(parent, this, station, selectionManager, (trainInfo, integer) ->
+                return new TrainInfoViewHolder(parent,
+                        this,
+                        station,
+                        selectionManager,
+                        (trainInfo, integer) ->
                         itemClickListener.invoke(trainInfo, trainEvent, integer)
                 );
         }
@@ -156,6 +168,11 @@ class DbTimetableAdapter extends RecyclerView.Adapter<ViewHolder<?>> implements 
 
     }
 
+    public void setPlatforms(@NonNull List<Platform> platforms) {
+        this.platforms = platforms;
+        notifyDataSetChanged();
+    }
+
     @Nullable
     public Track getCurrentTrack() {
         final TrainMovementInfo selectedItem = getSelectedItem();
@@ -210,6 +227,8 @@ class DbTimetableAdapter extends RecyclerView.Adapter<ViewHolder<?>> implements 
         } else if (filteredTrainInfos != null && position <= filteredTrainInfos.size() && holder instanceof TrainInfoViewHolder) {
             final TrainInfoViewHolder trainInfoViewHolder = (TrainInfoViewHolder) holder;
             trainInfoViewHolder.setStation(station);
+            if(platforms!=null)
+              trainInfoViewHolder.setPlatforms(platforms);
             trainInfoViewHolder.bind(filteredTrainInfos.get(position - 1));
         } else if (holder instanceof TimetableTrailingItemViewHolder) {
             if (timetable == null) {

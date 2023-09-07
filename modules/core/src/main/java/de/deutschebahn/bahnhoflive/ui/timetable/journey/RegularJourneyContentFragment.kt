@@ -142,7 +142,7 @@ class RegularJourneyContentFragment : Fragment() {
         with(contentLayout) {
             prepareCommons(viewLifecycleOwner, stationViewModel, journeyViewModel)
 
-            val journeyAdapter = JourneyAdapter {
+            val journeyAdapter = JourneyAdapter( {
                 // onClickStop
                     view, journeyStop ->
                 val trainInfo = journeyViewModel.essentialParametersLiveData.value?.second
@@ -178,7 +178,7 @@ class RegularJourneyContentFragment : Fragment() {
 
                         )
                 }
-            }
+            })
 
             val filterAdapter = SimpleViewHolderAdapter { parent, _ ->
                 ItemJourneyFilterRemoveBinding.inflate(
@@ -245,10 +245,15 @@ class RegularJourneyContentFragment : Fragment() {
 
                     }
                 }
+
+                stationViewModel.accessibilityFeaturesResource.data.observe(viewLifecycleOwner) {
+                    it?.let {
+                        journeyAdapter.setPlatforms(it)
             }
         }
 
-
+            }
+        }
 
 
     }.root

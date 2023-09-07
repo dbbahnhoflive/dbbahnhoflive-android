@@ -6,6 +6,7 @@
 
 package de.deutschebahn.bahnhoflive.backend.db.ris
 
+import androidx.core.text.isDigitsOnly
 import com.android.volley.NetworkResponse
 import com.android.volley.Response
 import com.android.volley.VolleyError
@@ -16,6 +17,7 @@ import de.deutschebahn.bahnhoflive.backend.db.ris.model.AccessibilityStatus
 import de.deutschebahn.bahnhoflive.backend.db.ris.model.Platform
 import de.deutschebahn.bahnhoflive.repository.accessibility.AccessibilityFeature
 import de.deutschebahn.bahnhoflive.util.json.asJSONObjectSequence
+import de.deutschebahn.bahnhoflive.util.json.toStringList
 import org.json.JSONObject
 import java.util.*
 
@@ -49,7 +51,7 @@ class RISPlatformsRequest(
                         platformJsonObject.takeUnless { it.has("parentPlatform") }
                             ?.optString("name")?.let { name ->
                                 platformJsonObject.optJSONObject("accessibility")
-                                    ?.let { accessibilityJsonObject ->
+                                    .let { accessibilityJsonObject ->
                                         Platform(
                                             name,
                                             AccessibilityFeature.VALUES.fold(
@@ -60,7 +62,7 @@ class RISPlatformsRequest(
                                                 acc[accessibilityFeature] =
                                                     accessibilityJsonObject.optString(
                                                         accessibilityFeature.tag
-                                                    )?.let {
+                                                    ).let {
                                                         try {
                                                             AccessibilityStatus.valueOf(it)
                                                         } catch (e: Exception) {
@@ -68,7 +70,8 @@ class RISPlatformsRequest(
                                                         }
                                                     } ?: AccessibilityStatus.UNKNOWN
                                                 acc
-                                            }
+                                            },
+                                            platformJsonObject.optJSONArray("linkedPlatforms")?.toStringList()?.filter { it.isDigitsOnly() }?.firstOrNull()
                                         )
                                     }
                             }

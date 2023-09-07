@@ -20,7 +20,13 @@ open class TimetableItemOverviewViewHolder<T>(view: View) : ViewHolder<T>(view) 
     protected val directionView: TextView? = itemView.findViewById(R.id.direction)
 
     protected val platformView: TextView? = itemView.findViewById(R.id.platform)
+    protected val linkedPlatformView: TextView? = itemView.findViewById(R.id.linkedplatform)
+    protected val platformSplitterView: TextView? = itemView.findViewById(R.id.platformsplitter)
     protected val transportationNameView: TextView? = itemView.findViewById(R.id.transportationName)
+
+    protected val platformindicatorLeft: TextView? = itemView.findViewById(R.id.platformindicatorLeft)
+    protected val platformindicatorRight: TextView? = itemView.findViewById(R.id.platformindicatorRight)
+
 
     protected fun bindDelay(delayInMinutes: Long, actualTime: CharSequence) {
         delayView?.apply {

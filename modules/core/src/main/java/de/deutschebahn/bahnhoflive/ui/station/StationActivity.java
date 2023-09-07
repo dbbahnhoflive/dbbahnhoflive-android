@@ -449,6 +449,10 @@ public class StationActivity extends BaseActivity implements
         final TimetablesFragment timetablesFragment = TimetablesFragment.findIn(this.timetablesFragment);
 
         if (timetablesFragment != null) {
+
+            if(!localTransport)
+                stationViewModel.getAccessibilityFeaturesResource().loadIfNecessary();
+
             this.timetablesFragment.popEntireHistory();
             timetablesFragment.switchTo(localTransport, arrivals, trackFilter);
         }

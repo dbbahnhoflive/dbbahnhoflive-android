@@ -9,6 +9,8 @@ import androidx.core.view.isGone
 import androidx.core.view.isVisible
 import androidx.core.widget.TextViewCompat
 import de.deutschebahn.bahnhoflive.R
+import de.deutschebahn.bahnhoflive.backend.db.ris.model.Platform
+import de.deutschebahn.bahnhoflive.backend.db.ris.model.findLinkedPlatform
 import de.deutschebahn.bahnhoflive.databinding.ItemJourneyDetailedBinding
 import de.deutschebahn.bahnhoflive.ui.Status
 import de.deutschebahn.bahnhoflive.ui.ViewHolder
@@ -35,8 +37,10 @@ class JourneyItemViewHolder(val itemJourneyDetailedBinding: ItemJourneyDetailedB
         listOf(stopName, scheduledArrival, expectedArrival, scheduledDeparture, expectedDeparture)
     }
 
-    companion object {
-        const val MAX_LEVEL = 10000
+    private var platforms : List<Platform>? = null
+
+    fun setPlatforms(platforms : List<Platform> ) {
+        this.platforms = platforms
     }
 
     override fun onBind(item: JourneyStop?) {
@@ -47,8 +51,72 @@ class JourneyItemViewHolder(val itemJourneyDetailedBinding: ItemJourneyDetailedB
 
             platform.text = item?.platform?.let { "Gl. $it" }
             platform.isSelected = item?.isPlatformChange == true
+            platform.isVisible = item?.current!=true
+
+            item?.let {
+                platformButton.layout.isVisible = it.current==true
+
+                if(it.current) {
+
+                    // platforms
+                    val platformList : MutableList<String> = mutableListOf() // gleis + gegenueberliegendes gleis
+
+                    val displayPlatform: String = it.platform?:"" // kann auch 15 D-F sein !
+                    val linkedPlatformAsInt: Int = platforms?.findLinkedPlatform(displayPlatform) ?: 0
+                    val displayPlatformAsInt: Int = Platform.platformNumber(displayPlatform, 0)
+
+                    var rightPlatformAsInt : Int = 0
+
+                    platformList.add(displayPlatform)
+                    if(linkedPlatformAsInt!=0) {
+                        if(linkedPlatformAsInt<displayPlatformAsInt)
+                            platformList.add(0, linkedPlatformAsInt.toString())
+                        else
+                            platformList.add(linkedPlatformAsInt.toString())
+                        rightPlatformAsInt = Platform.platformNumber(platformList[1])
+                    }
+                    val leftPlatformAsInt = Platform.platformNumber(platformList[0])
+
+                    platformButton.apply {
+                        platformLeft.run {
+                            text = platformList[0]
+                        }
+
+                        if (linkedPlatformAsInt != 0) {
+                            linkedplatform.run {
+                                text = platformList[1]
+                                isVisible = true
+                            }
+                        } else {
+                            linkedplatform?.run {
+                                isVisible = false
+                            }
+                        }
+
+                        platformsplitter.run {
+                            isVisible = linkedPlatformAsInt != 0
+                        }
+
+                        platformindicatorLeft.run {
+                            isVisible =
+                                linkedPlatformAsInt != 0 && displayPlatformAsInt == leftPlatformAsInt
+                        }
+
+                        platformindicatorRight.run {
+                            isVisible =
+                                linkedPlatformAsInt != 0 && displayPlatformAsInt == rightPlatformAsInt
+                        }
+
+
+                    }
+                }
+
+
+
+            }
 
             when {
+
                 item?.isAdditional == true -> {
                     advice.setText(R.string.journey_stop_additional)
                     TextViewCompat.setCompoundDrawablesRelativeWithIntrinsicBounds(
@@ -61,6 +129,7 @@ class JourneyItemViewHolder(val itemJourneyDetailedBinding: ItemJourneyDetailedB
                     advice.isSelected = false
                     advice.isGone = false
                 }
+
                 item?.isPlatformChange == true -> {
                     advice.setText(R.string.journey_stop_platform_change)
                     TextViewCompat.setCompoundDrawablesRelativeWithIntrinsicBounds(
@@ -77,6 +146,7 @@ class JourneyItemViewHolder(val itemJourneyDetailedBinding: ItemJourneyDetailedB
                     advice.text = null
                     advice.isGone = true
                 }
+
             }
 
             bindTimes(scheduledArrival, expectedArrival, item?.arrival)
@@ -170,4 +240,9 @@ class JourneyItemViewHolder(val itemJourneyDetailedBinding: ItemJourneyDetailedB
         scheduledTimeView.isGone = viewsGone
         estimatedTimeView.isGone = viewsGone
     }
-}
+
+    companion object {
+        const val MAX_LEVEL = 10000
+    }
+
+    }

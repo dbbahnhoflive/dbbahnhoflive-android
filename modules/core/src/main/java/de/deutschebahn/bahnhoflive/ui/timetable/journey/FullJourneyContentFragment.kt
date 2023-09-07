@@ -69,7 +69,7 @@ class FullJourneyContentFragment : Fragment() {
 
         recycler.adapter =
 
-            JourneyAdapter { view, journeyStop ->
+            JourneyAdapter( { view, journeyStop ->
                 activity?.let {
                     val trainInfo = journeyViewModel.essentialParametersLiveData.value?.second
                     RegularJourneyContentFragment.openJourneyStopStation(
@@ -84,7 +84,8 @@ class FullJourneyContentFragment : Fragment() {
                         trainInfo
                     )
                 }
-        }.apply {
+
+        }).apply {
 
             journeyViewModel.journeysByRelationLiveData.observe(viewLifecycleOwner) {
                 it.fold<Unit, List<JourneyStop>>({ journeyStops ->
@@ -94,7 +95,15 @@ class FullJourneyContentFragment : Fragment() {
                 })
             }
 
+                stationViewModel.accessibilityFeaturesResource.data.observe(viewLifecycleOwner) {
+                    it?.let {
+                        setPlatforms(it)
         }
+                }
+
+            }
+
+
 
     }.root
 
