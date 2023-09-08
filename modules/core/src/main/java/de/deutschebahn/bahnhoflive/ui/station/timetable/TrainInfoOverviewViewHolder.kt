@@ -111,6 +111,9 @@ open class TrainInfoOverviewViewHolder(view: View,
                     isVisible = linkedPlatformAsInt != 0 && displayPlatformAsInt==rightPlatformAsInt
                 }
 
+                platformType?.run {
+                   text = "Gl. "
+                }
 
 //                platformView?.run {
 //                    val displayPlatform: String = trainMovementInfo.displayPlatform
