@@ -51,7 +51,7 @@ class RISPlatformsRequest(
                         platformJsonObject.takeUnless { it.has("parentPlatform") }
                             ?.optString("name")?.let { name ->
                                 platformJsonObject.optJSONObject("accessibility")
-                                    .let { accessibilityJsonObject ->
+                                    ?.let { accessibilityJsonObject ->
                                         Platform(
                                             name,
                                             AccessibilityFeature.VALUES.fold(
