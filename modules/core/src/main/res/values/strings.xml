@@ -190,6 +190,10 @@
     <string name="template_level_overground">%1$d. Obergeschoss</string>
     <string name="template_level_underground">%1$d. Untergeschoss</string>
     <string name="level_base">Erdgeschoss</string>
+    <string name="level_base_shortcut">EG</string>
+    <string name="template_level_underground_shortcut">%d. UG</string>
+    <string name="template_level_overground_shortcut">%d. OG</string>
+    <string name="level_unknown">Unbekanntes Stockwerk</string>
     <string name="template_remaining_open_hours">Noch %1$d:%2$02d Std. geöffnet.</string>
     <string name="error_data_unavailable">Daten derzeit nicht verfügbar</string>
     <string name="empty_departures">Keine Abfahrt in den nächsten zwei Stunden</string>
@@ -461,6 +465,18 @@
     <string name="nev_db_companion_copy">Während des Ersatzverkehrs an den Bahnhöfen zwischen Würzburg und Nürnberg begleitet unser geschultes Personal Sie sicher vom Gleis zur Ersatzhaltestelle und zurück.</string>
     <string name="nev_db_companion_link_description">Sie können uns unter folgendem Link einfach per Videoanruf kontaktieren und Unterstützung erhalten.</string>
     <string name="nev_db_companion_button_text">DB Wegbegleitung öffnen</string>
+
+    <string name="platform_information">Gleisinformationen</string>
+    <string name="platform_information_headline">Informationen zu den Gleisen vor Ort</string>
+    <string name="platform_information_body">Bitte beachten Sie, dass ein Bahnsteigwechsel ggf. über eine andere Ebene erfolgt und die Nutzung von Treppen oder Aufzugsanlagen erfordert. Eine Übersicht der Aufzugsanlagen und deren aktuelle Verfügbarkeit finden Sie hier:</string>
+    <string name="platform_information_body_without_elevators">Bitte beachten Sie, dass ein Bahnsteigwechsel ggf. über eine andere Ebene erfolgt und die Nutzung von Treppen oder Aufzugsanlagen erfordert.</string>
+    <string name="information_accessibility">Informationen zur Barrierefreiheit</string>
+    <string name="information_accessibility_hint">Weitere Informationen zur Barrierefreiheit finden Sie hier:</string>
+
+    <string name="platform_head">Kopfgleis</string>
+    <string name="platform_name">Bahnsteig</string>
+    <string name="template_platform_level_linkedplatform">"%d. %s, Bahnsteig %d | %d"</string>
+    <string name="template_platform_level">"%d. %s, Bahnsteig %d"</string>
 
 
 </resources>

@@ -20,6 +20,7 @@ open class TimetableItemOverviewViewHolder<T>(view: View) : ViewHolder<T>(view) 
     protected val directionView: TextView? = itemView.findViewById(R.id.direction)
 
     protected val platformView: TextView? = itemView.findViewById(R.id.platform)
+    protected val platformType: TextView? = itemView.findViewById(R.id.platformType)
     protected val linkedPlatformView: TextView? = itemView.findViewById(R.id.linkedplatform)
     protected val platformSplitterView: TextView? = itemView.findViewById(R.id.platformsplitter)
     protected val transportationNameView: TextView? = itemView.findViewById(R.id.transportationName)

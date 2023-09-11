@@ -1,6 +1,5 @@
 package de.deutschebahn.bahnhoflive.ui.timetable.journey
 
-import android.content.Intent
 import android.os.Bundle
 import android.util.Log
 import android.view.LayoutInflater
@@ -14,9 +13,9 @@ import androidx.fragment.app.viewModels
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.LifecycleObserver
 import androidx.lifecycle.OnLifecycleEvent
+import de.deutschebahn.bahnhoflive.backend.db.ris.model.Platform
 import de.deutschebahn.bahnhoflive.databinding.IncludeJourneyRecyclerBinding
-import de.deutschebahn.bahnhoflive.repository.InternalStation
-import de.deutschebahn.bahnhoflive.ui.station.StationActivity
+import de.deutschebahn.bahnhoflive.ui.station.HistoryFragment
 import de.deutschebahn.bahnhoflive.ui.station.StationViewModel
 
 class FullJourneyContentFragment : Fragment() {
@@ -69,7 +68,9 @@ class FullJourneyContentFragment : Fragment() {
 
         recycler.adapter =
 
-            JourneyAdapter( { view, journeyStop ->
+            JourneyAdapter(
+                // onClickStop
+                { view, journeyStop ->
                 activity?.let {
                     val trainInfo = journeyViewModel.essentialParametersLiveData.value?.second
                     RegularJourneyContentFragment.openJourneyStopStation(
@@ -84,8 +85,19 @@ class FullJourneyContentFragment : Fragment() {
                         trainInfo
                     )
                 }
+                },
+                //     onClickPlatformInformation: (view: View, journeyStop: JourneyStop, platforms:List<Platform>) -> Unit
+                { view: View, journeyStop: JourneyStop, platforms: List<Platform> ->
 
-        }).apply {
+                    run {
+                        val trainEvent = journeyViewModel.essentialParametersLiveData.value?.third
+                        val trainInfo = journeyViewModel.essentialParametersLiveData.value?.second
+                        val fragment = JourneyPlatformInformationFragment.create(trainInfo, trainEvent, journeyStop, platforms)
+                        HistoryFragment.parentOf(this@FullJourneyContentFragment).push(fragment)
+                    }
+                }
+
+            ).apply {
 
             journeyViewModel.journeysByRelationLiveData.observe(viewLifecycleOwner) {
                 it.fold<Unit, List<JourneyStop>>({ journeyStops ->
@@ -95,13 +107,16 @@ class FullJourneyContentFragment : Fragment() {
                 })
             }
 
-                stationViewModel.accessibilityFeaturesResource.data.observe(viewLifecycleOwner) {
+                stationViewModel.platformsWithLevelResource.observe(viewLifecycleOwner) {
                     it?.let {
                         setPlatforms(it)
         }
                 }
 
             }
+
+
+
 
 
 

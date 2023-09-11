@@ -8,7 +8,6 @@ package de.deutschebahn.bahnhoflive.ui.station.timetable
 
 import android.view.ViewGroup
 import de.deutschebahn.bahnhoflive.R
-import de.deutschebahn.bahnhoflive.backend.db.ris.model.Platform
 import de.deutschebahn.bahnhoflive.backend.ris.model.TrainEvent
 import de.deutschebahn.bahnhoflive.backend.ris.model.TrainInfo
 import de.deutschebahn.bahnhoflive.backend.ris.model.TrainMovementInfo
@@ -16,7 +15,6 @@ import de.deutschebahn.bahnhoflive.repository.Station
 import de.deutschebahn.bahnhoflive.view.ItemClickListener
 import de.deutschebahn.bahnhoflive.view.SelectableItemViewHolder
 import de.deutschebahn.bahnhoflive.view.SingleSelectionManager
-
 
 class TrainInfoViewHolder internal constructor(
     parent: ViewGroup,
@@ -29,6 +27,7 @@ class TrainInfoViewHolder internal constructor(
     R.layout.card_expandable_timetable_db,
     selectionManager
 ), TrainInfo.ChangeListener {
+
     private val trainInfoOverviewViewHolder =
         TrainInfoOverviewViewHolder(itemView, timetableAdapter)
 
@@ -40,12 +39,6 @@ class TrainInfoViewHolder internal constructor(
     override fun onTrainInfoChanged(trainInfo: TrainInfo) {
         if (item === trainInfo) {
             updateWagonOrderViews(trainInfo)
-        }
-    }
-
-    fun setPlatforms(platforms : List<Platform>? ) {
-        platforms?.also {
-            trainInfoOverviewViewHolder.setPlatforms(platforms)
         }
     }
 
@@ -63,7 +56,6 @@ class TrainInfoViewHolder internal constructor(
 
     override fun onBind(item: TrainInfo?) {
         super.onBind(item)
-
 
         trainInfoOverviewViewHolder.bind(item)
 

@@ -1,0 +1,156 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+
+<!--
+  ~ SPDX-FileCopyrightText: 2020 DB Station&Service AG <bahnhoflive-opensource@deutschebahn.com>
+  ~
+  ~ SPDX-License-Identifier: Apache-2.0
+  -->
+
+<androidx.coordinatorlayout.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/services_details_container"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:overScrollMode="never">
+
+    <include
+        android:id="@+id/title_bar"
+        layout="@layout/titlebar_common" app:title = "fkfkfk"/>
+
+    <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
+        android:id="@+id/refresher"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        app:layout_behavior="@string/appbar_scrolling_view_behavior">
+
+        <ScrollView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:fillViewport="true">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:layout_marginTop="@dimen/default_space_half"
+                android:layout_marginHorizontal="@dimen/default_space_double"
+                >
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:layout_marginVertical="@dimen/default_space"
+                    >
+
+                    <TextView
+                        android:id="@+id/stop_time"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        tools:text = "13:20"
+                        android:textSize="@dimen/textsize_h2" />
+
+                    <TextView
+                        android:id="@+id/stop_delay"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="@dimen/default_space_half"
+                        tools:text = "+4"
+                        android:textColor="@color/green"
+                        android:textSize="@dimen/textsize_h2" />
+
+                    <TextView
+                        android:id="@+id/train_name"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="@dimen/default_space_half"
+                        tools:text = "ICE 567"
+                        android:textSize="@dimen/textsize_h2" />
+
+
+                </LinearLayout>
+
+                <TextView
+                    android:id="@+id/platform"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    tools:text = "Gleis 7 im 2 UG"
+                    android:textSize="@dimen/textsize_h3" />
+
+                <TextView
+                    android:id="@+id/platform_other_side"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginVertical="@dimen/default_space_half"
+                    tools:text = "Gegenüberliegend Gleis 9"
+                    android:textColor="@color/outline_grey"
+                    android:textSize="@dimen/textsize_h3" />
+
+                <TextView
+                    android:id="@+id/platform_change_infotext"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginVertical="@dimen/default_space"
+                    android:text="@string/platform_information_headline"
+                    android:textStyle="bold"
+                    android:textSize="@dimen/textsize_h3" />
+
+                <LinearLayout
+                    android:id="@+id/content_list"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:divider="@drawable/shape_divider_occupancy"
+                    android:orientation="vertical"
+                    android:showDividers="middle">
+
+                    <include
+                        layout="@layout/include_platforms" />
+
+                </LinearLayout>
+
+                <TextView
+                    android:id="@+id/platform_station_infos"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginVertical="@dimen/default_space"
+                    android:text="@string/platform_information_body"
+                    android:textSize="@dimen/textsize_28" />
+
+                    <TextView
+                        android:id="@+id/linkElevators"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:drawablePadding="@dimen/default_space_half"
+                        android:gravity="center_vertical"
+                        android:text="@string/accessibility_link_elevators"
+                        android:textSize="@dimen/textsize_h3"
+                        android:textStyle="bold"
+                        tools:visibility="visible"
+                        android:visibility="gone"
+                        app:drawableLeftCompat="@drawable/ic_arrow_right" />
+
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginVertical="@dimen/default_space"
+                        android:text="@string/information_accessibility_hint"
+                        android:textSize="@dimen/textsize_28" />
+
+                    <TextView
+                        android:id="@+id/linkAccessibility"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginBottom="@dimen/default_space_double"
+                        android:drawablePadding="@dimen/default_space_half"
+                        android:gravity="center_vertical"
+                        android:text="@string/information_accessibility"
+                        android:textSize="@dimen/textsize_h3"
+                        android:textStyle="bold"
+                        app:drawableLeftCompat="@drawable/ic_arrow_right" />
+
+            </LinearLayout>
+        </ScrollView>
+    </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
+</androidx.coordinatorlayout.widget.CoordinatorLayout>

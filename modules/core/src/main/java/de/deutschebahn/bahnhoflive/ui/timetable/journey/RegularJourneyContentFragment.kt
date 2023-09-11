@@ -4,7 +4,6 @@ import android.app.AlertDialog
 import android.app.ProgressDialog
 import android.content.DialogInterface
 import android.content.Intent
-import android.net.Uri
 import android.os.Bundle
 import android.util.Log
 import android.view.LayoutInflater
@@ -15,6 +14,9 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentActivity
 import androidx.fragment.app.activityViewModels
 import androidx.fragment.app.viewModels
+import androidx.lifecycle.LiveData
+import androidx.lifecycle.MediatorLiveData
+import androidx.lifecycle.map
 import androidx.recyclerview.widget.ConcatAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.android.volley.VolleyError
@@ -23,9 +25,13 @@ import de.deutschebahn.bahnhoflive.R
 import de.deutschebahn.bahnhoflive.analytics.TrackingManager
 import de.deutschebahn.bahnhoflive.backend.BaseRestListener
 import de.deutschebahn.bahnhoflive.backend.VolleyRestListener
+import de.deutschebahn.bahnhoflive.backend.db.ris.model.Platform
 import de.deutschebahn.bahnhoflive.backend.hafas.model.HafasEvent
 import de.deutschebahn.bahnhoflive.backend.hafas.model.HafasStop
 import de.deutschebahn.bahnhoflive.backend.local.model.EvaIds
+import de.deutschebahn.bahnhoflive.backend.rimap.model.LevelMapping
+import de.deutschebahn.bahnhoflive.backend.rimap.model.MenuMapping
+import de.deutschebahn.bahnhoflive.backend.rimap.model.RimapPOI
 import de.deutschebahn.bahnhoflive.backend.ris.model.TrainEvent
 import de.deutschebahn.bahnhoflive.backend.ris.model.TrainInfo
 import de.deutschebahn.bahnhoflive.backend.toHafasStation
@@ -35,6 +41,7 @@ import de.deutschebahn.bahnhoflive.databinding.ItemJourneyFilterRemoveBinding
 import de.deutschebahn.bahnhoflive.repository.InternalStation
 import de.deutschebahn.bahnhoflive.repository.Station
 import de.deutschebahn.bahnhoflive.repository.trainformation.TrainFormation
+import de.deutschebahn.bahnhoflive.ui.station.HistoryFragment
 import de.deutschebahn.bahnhoflive.ui.station.StationActivity
 import de.deutschebahn.bahnhoflive.ui.station.StationViewModel
 import de.deutschebahn.bahnhoflive.ui.station.railreplacement.SEV_Static
@@ -42,6 +49,7 @@ import de.deutschebahn.bahnhoflive.ui.station.timetable.IssueIndicatorBinder
 import de.deutschebahn.bahnhoflive.ui.station.timetable.IssuesBinder
 import de.deutschebahn.bahnhoflive.ui.station.timetable.TimetableViewHelper
 import de.deutschebahn.bahnhoflive.ui.timetable.localtransport.DeparturesActivity
+import de.deutschebahn.bahnhoflive.util.combine2LifeData
 import de.deutschebahn.bahnhoflive.view.SimpleViewHolderAdapter
 import de.deutschebahn.bahnhoflive.view.toViewHolder
 
@@ -142,7 +150,7 @@ class RegularJourneyContentFragment : Fragment() {
         with(contentLayout) {
             prepareCommons(viewLifecycleOwner, stationViewModel, journeyViewModel)
 
-            val journeyAdapter = JourneyAdapter( {
+            val journeyAdapter = JourneyAdapter({
                 // onClickStop
                     view, journeyStop ->
                 val trainInfo = journeyViewModel.essentialParametersLiveData.value?.second
@@ -178,7 +186,19 @@ class RegularJourneyContentFragment : Fragment() {
 
                         )
                 }
-            })
+            },
+                {
+                    // onClickPlatformInformation
+                        view: View, journeyStop: JourneyStop, platforms: List<Platform> ->
+                    run {
+                        val trainInfo = journeyViewModel.essentialParametersLiveData.value?.second
+                        val trainEvent = journeyViewModel.essentialParametersLiveData.value?.third
+                        val fragment = JourneyPlatformInformationFragment.create(trainInfo, trainEvent, journeyStop, platforms)
+                        HistoryFragment.parentOf(this@RegularJourneyContentFragment).push(fragment)
+                    }
+                }
+
+            )
 
             val filterAdapter = SimpleViewHolderAdapter { parent, _ ->
                 ItemJourneyFilterRemoveBinding.inflate(
@@ -232,7 +252,6 @@ class RegularJourneyContentFragment : Fragment() {
                 })
             }
 
-
             ReducedJourneyAdapter().also { reducedJourneyAdapter ->
                 journeyViewModel.routeStopsLiveData.observe(viewLifecycleOwner) { routeStops ->
                     if (routeStops != null) {
@@ -246,7 +265,7 @@ class RegularJourneyContentFragment : Fragment() {
                     }
                 }
 
-                stationViewModel.accessibilityFeaturesResource.data.observe(viewLifecycleOwner) {
+                stationViewModel.platformsWithLevelResource.observe(viewLifecycleOwner) {
                     it?.let {
                         journeyAdapter.setPlatforms(it)
             }

@@ -30,6 +30,9 @@ import de.deutschebahn.bahnhoflive.backend.local.model.EvaIds
 import de.deutschebahn.bahnhoflive.backend.local.model.ServiceContentType
 import de.deutschebahn.bahnhoflive.backend.local.model.isEco
 import de.deutschebahn.bahnhoflive.backend.rimap.RimapConfig
+import de.deutschebahn.bahnhoflive.backend.rimap.model.LevelMapping
+import de.deutschebahn.bahnhoflive.backend.rimap.model.MenuMapping
+import de.deutschebahn.bahnhoflive.backend.rimap.model.RimapPOI
 import de.deutschebahn.bahnhoflive.backend.rimap.model.RimapStationInfo
 import de.deutschebahn.bahnhoflive.backend.ris.model.RISTimetable
 import de.deutschebahn.bahnhoflive.backend.ris.model.TrainEvent
@@ -67,6 +70,7 @@ import de.deutschebahn.bahnhoflive.ui.timetable.localtransport.HafasTimetableVie
 import de.deutschebahn.bahnhoflive.util.ContextX
 import de.deutschebahn.bahnhoflive.util.Token
 import de.deutschebahn.bahnhoflive.util.append
+import de.deutschebahn.bahnhoflive.util.combine2LifeData
 import de.deutschebahn.bahnhoflive.util.openhours.OpenHoursParser
 import de.deutschebahn.bahnhoflive.util.then
 import de.deutschebahn.bahnhoflive.util.toLiveData
@@ -391,6 +395,8 @@ class StationViewModel(
 
     val occupancyResource = StationOccupancyResource(repositories.occupancyRepository)
 
+    val platformLevels = PlatformLevelResource()
+
     private val initializationPending = Token()
 
     private val rimapStationFeatureCollectionResource = RimapStationFeatureCollectionResource()
@@ -445,6 +451,8 @@ class StationViewModel(
             shopsResource.initialize(station)
             parking.parkingsResource.initialize(station)
             lockers.lockerResource.initialize(station)
+
+            platformLevels.initialize(station)
 
             viewModelScope.launch {
                 stationStateFlow.emit(station)
@@ -1473,6 +1481,64 @@ class StationViewModel(
 
     val accessibilityFeaturesResource =
         AccessibilityFeaturesResource(this.application.repositories.stationRepository)
+
+    val platformsWithLevelResource =
+
+        combine2LifeData(accessibilityFeaturesResource.data,
+            platformLevels.data
+        ) { apiPlatformList: List<Platform>?, poiPlatformList: List<RimapPOI>? ->
+
+            val platformList : MutableList<Platform> = mutableListOf()
+
+            if(apiPlatformList!=null)
+                platformList.addAll(apiPlatformList)
+
+            val poiPlatforms = poiPlatformList?.filter {
+                it.type == MenuMapping.PLATFORM
+            }
+
+            platformList.forEach { itPlatform ->
+                val platformNr: Int = Platform.platformNumber(itPlatform.name)
+
+                val poi: RimapPOI? = poiPlatforms?.firstOrNull { itRimapPoi ->
+                    Platform.platformNumber(itRimapPoi.name) == platformNr
+                }
+
+                if (poi != null)
+                    itPlatform.level = LevelMapping.codeToLevel(poi.level) ?: 0
+
+                itPlatform.linkedPlatforms?.let {
+                    val iter = it.iterator()
+
+                    while(iter.hasNext()) {
+                        val value = iter.next()
+
+                        if(itPlatform.number.toString()==value)
+                            iter.remove()
+
+                    }
+
+                }
+            }
+
+            // Gleise suchen, für die kein Level ermittelt wurde, da in rimapPoi nicht enthalten
+            // wenn so eins existiert, in der liste nach einem Gleis suchen, dessen Gegenüber dieses Gleis ist
+//            platformList.filter { it.level==UNKNOWN_LEVEL }.forEach { itPlatform->
+//                itPlatform.level =
+//                    platformList.firstOrNull{it.linkedPlatformNumber()==itPlatform.number}?.level ?: UNKNOWN_LEVEL
+//            }
+
+//            platformList.forEach { itPlatform ->
+//                itPlatform.linkedPlatforms?.sortBy{it} // todo: dient nur dazu 'komische' Gleisnummern nach unten zu schieben
+//                                                       // (so das etwas brauchbares bei linkedPlatform zurückgegeben wird)
+//            }
+
+
+
+            platformList.sortedBy { it.level }
+
+            platformList.toList()
+        }
 
     val mapAvailableLiveData =
         SpokenFeedbackAccessibilityLiveData(application).switchMap { spokenFeedbackAccessibilityEnabled ->

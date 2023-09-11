@@ -1,8 +1,8 @@
 package de.deutschebahn.bahnhoflive.ui.timetable.journey
 
 import android.graphics.Typeface
-import android.util.Log
 import android.view.LayoutInflater
+import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
 import androidx.core.view.isGone
@@ -10,37 +10,43 @@ import androidx.core.view.isVisible
 import androidx.core.widget.TextViewCompat
 import de.deutschebahn.bahnhoflive.R
 import de.deutschebahn.bahnhoflive.backend.db.ris.model.Platform
-import de.deutschebahn.bahnhoflive.backend.db.ris.model.findLinkedPlatform
+import de.deutschebahn.bahnhoflive.backend.db.ris.model.Platform.Companion.UNKNOWN_LEVEL
+import de.deutschebahn.bahnhoflive.backend.db.ris.model.findPlatform
 import de.deutschebahn.bahnhoflive.databinding.ItemJourneyDetailedBinding
 import de.deutschebahn.bahnhoflive.ui.Status
 import de.deutschebahn.bahnhoflive.ui.ViewHolder
 import java.text.DateFormat
 import java.util.concurrent.TimeUnit
 
-class JourneyItemViewHolder(val itemJourneyDetailedBinding: ItemJourneyDetailedBinding) :
+class JourneyItemViewHolder(
+    private val itemJourneyDetailedBinding: ItemJourneyDetailedBinding,
+    private val onClickPlatformInformation: (view: View, journeyStop: JourneyStop, platforms:List<Platform>) -> Unit) :
     ViewHolder<JourneyStop>(itemJourneyDetailedBinding.root) {
 
     private val dateFormat = java.text.SimpleDateFormat.getTimeInstance(DateFormat.SHORT)
 
     constructor(
         parent: ViewGroup,
-        inflater: LayoutInflater = LayoutInflater.from(parent.context)
+        inflater: LayoutInflater = LayoutInflater.from(parent.context),
+        onClickPlatformInformation: (view: View, journeyStop: JourneyStop, platforms:List<Platform>) -> Unit
     ) : this(
         ItemJourneyDetailedBinding.inflate(
             inflater,
             parent,
             false
-        )
+        ),
+        onClickPlatformInformation
     )
 
-    val highlightableTextViews = itemJourneyDetailedBinding.run {
+    private val highlightableTextViews = itemJourneyDetailedBinding.run {
         listOf(stopName, scheduledArrival, expectedArrival, scheduledDeparture, expectedDeparture)
     }
 
-    private var platforms : List<Platform>? = null
+    private var platformList : MutableList<Platform> = mutableListOf()
 
-    fun setPlatforms(platforms : List<Platform> ) {
-        this.platforms = platforms
+    fun setPlatforms(platformList : List<Platform> ) {
+        this.platformList.clear()
+        this.platformList.addAll(platformList)
     }
 
     override fun onBind(item: JourneyStop?) {
@@ -51,68 +57,48 @@ class JourneyItemViewHolder(val itemJourneyDetailedBinding: ItemJourneyDetailedB
 
             platform.text = item?.platform?.let { "Gl. $it" }
             platform.isSelected = item?.isPlatformChange == true
-            platform.isVisible = item?.current!=true
 
             item?.let {
-                platformButton.layout.isVisible = it.current==true
 
-                if(it.current) {
-
-                    // platforms
-                    val platformList : MutableList<String> = mutableListOf() // gleis + gegenueberliegendes gleis
-
-                    val displayPlatform: String = it.platform?:"" // kann auch 15 D-F sein !
-                    val linkedPlatformAsInt: Int = platforms?.findLinkedPlatform(displayPlatform) ?: 0
+                val displayPlatform: String = it.platform?:"" // kann auch 15 D-F sein !
                     val displayPlatformAsInt: Int = Platform.platformNumber(displayPlatform, 0)
+//                val linkedPlatformAsInt: Int = platformList.findLinkedPlatformNumber(displayPlatform) ?: 0
+                val thisPlatform : Platform? = platformList.findPlatform(displayPlatform)
 
-                    var rightPlatformAsInt : Int = 0
+                linkPlatform.isVisible = it.current==true && thisPlatform!=null && ((platformList.size>1) || thisPlatform.isHeadPlatform)
 
-                    platformList.add(displayPlatform)
-                    if(linkedPlatformAsInt!=0) {
-                        if(linkedPlatformAsInt<displayPlatformAsInt)
-                            platformList.add(0, linkedPlatformAsInt.toString())
-                        else
-                            platformList.add(linkedPlatformAsInt.toString())
-                        rightPlatformAsInt = Platform.platformNumber(platformList[1])
-                    }
-                    val leftPlatformAsInt = Platform.platformNumber(platformList[0])
+                if (linkPlatform.isVisible) {
 
-                    platformButton.apply {
-                        platformLeft.run {
-                            text = platformList[0]
-                        }
-
-                        if (linkedPlatformAsInt != 0) {
-                            linkedplatform.run {
-                                text = platformList[1]
-                                isVisible = true
+                    linkPlatform.setOnClickListener {
+                        platformList?.let { it1 ->
+                                    onClickPlatformInformation(
+                                        it,
+                                        item,
+                                it1
+                                    )
+                                }
                             }
-                        } else {
-                            linkedplatform?.run {
-                                isVisible = false
-                            }
+
+                    thisPlatform?.let {itPlatform->
+
+                        val levelMask = when  {
+                            itPlatform.level<0 -> "%d. UG, Bahnsteig " + itPlatform.formatLinkedPlatformString()
+                            itPlatform.level==0 -> "EG, Bahnsteig " + itPlatform.formatLinkedPlatformString()
+                            itPlatform.level==UNKNOWN_LEVEL -> "Bahnsteig " + itPlatform.formatLinkedPlatformString()
+                            else -> "%d. OG, Bahnsteig " + itPlatform.formatLinkedPlatformString()
                         }
 
-                        platformsplitter.run {
-                            isVisible = linkedPlatformAsInt != 0
-                        }
-
-                        platformindicatorLeft.run {
-                            isVisible =
-                                linkedPlatformAsInt != 0 && displayPlatformAsInt == leftPlatformAsInt
-                        }
-
-                        platformindicatorRight.run {
-                            isVisible =
-                                linkedPlatformAsInt != 0 && displayPlatformAsInt == rightPlatformAsInt
-                        }
-
+                        when {
+                            itPlatform.level<0 -> linkPlatform.text = String.format(levelMask,  Math.abs(itPlatform.level))
+                            itPlatform.level==0 -> linkPlatform.text = levelMask
+                            itPlatform.level==UNKNOWN_LEVEL -> linkPlatform.text = String.format(levelMask)
+                            else -> linkPlatform.text = String.format(levelMask, Math.abs(itPlatform.level))
 
                     }
                 }
 
 
-
+                }
             }
 
             when {

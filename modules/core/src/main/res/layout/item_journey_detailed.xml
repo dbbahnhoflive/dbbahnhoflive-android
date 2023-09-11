@@ -14,23 +14,6 @@
         android:orientation="vertical"
         app:layout_constraintGuide_begin="48dp" />
 
-    <androidx.constraintlayout.widget.Guideline
-        android:id="@+id/platform_top_guide"
-        android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:orientation="horizontal"
-        app:layout_constraintGuide_percent="0.15"
-        />
-
-    <androidx.constraintlayout.widget.Guideline
-        android:id="@+id/platform_bottom_guide"
-        android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:orientation="horizontal"
-        app:layout_constraintGuide_percent="0.85"
-        />
-
-
     <View
         android:id="@+id/track_anchor"
         android:layout_width="1dp"
@@ -103,19 +86,6 @@
         app:layout_constraintEnd_toEndOf="@+id/track_guide"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="@+id/track_anchor" />
-
-    <include
-        android:id="@+id/platform_button"
-        android:layout_width="wrap_content"
-        android:layout_height="0dp"
-        app:layout_constraintTop_toTopOf="@+id/platform_top_guide"
-        app:layout_constraintBottom_toBottomOf="@+id/platform_bottom_guide"
-        app:layout_constraintEnd_toEndOf="parent"
-        android:layout_marginEnd="@dimen/default_space"
-        layout = "@layout/item_journey_detailed_platforms"
-        >
-    </include>
-
 
     <TextView
         android:id="@+id/platform"
@@ -204,5 +174,23 @@
         app:layout_constraintTop_toBottomOf="@+id/stop_name"
         app:drawableStartCompat="@drawable/app_warndreieck"
         tools:text="@tools:sample/lorem" />
+
+    <TextView
+        android:id="@+id/linkPlatform"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:lines="1"
+        android:ellipsize="end"
+
+        app:layout_constraintStart_toEndOf="@+id/track_guide"
+        app:layout_constraintTop_toBottomOf="@+id/expectedDeparture"
+
+        android:drawablePadding="@dimen/default_space_half"
+        android:layout_marginTop="@dimen/default_space"
+        android:gravity="center_vertical"
+        android:textSize="@dimen/textsize_h3"
+        android:textStyle="bold"
+        tools:text="2.UG, Bahnsteig 7 | 8"
+        app:drawableLeftCompat="@drawable/ic_arrow_right" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

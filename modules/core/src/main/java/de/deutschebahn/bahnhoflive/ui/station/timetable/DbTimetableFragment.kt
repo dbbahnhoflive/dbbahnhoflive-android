@@ -89,12 +89,6 @@ class DbTimetableFragment : Fragment(), MapPresetProvider {
             )
         }
 
-        stationViewModel.accessibilityFeaturesResource.data.observe(viewLifecycleOwner) {
-            it?.also {itPlatforms->
-                adapter.setPlatforms(itPlatforms)
-            }
-        }
-
         val view = inflater.inflate(R.layout.fragment_timetable_db, container, false)
         val swipeRefreshLayout = view.findViewById<SwipeRefreshLayout>(R.id.refresher)
         swipeRefreshLayout.setOnRefreshListener {

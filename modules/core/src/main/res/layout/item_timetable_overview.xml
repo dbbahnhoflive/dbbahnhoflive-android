@@ -148,7 +148,6 @@
 
         app:layout_constraintBaseline_toBaselineOf="@+id/delay"
         app:layout_constraintRight_toLeftOf="@+id/platform"
-        android:text="Gl. "
         tools:text="Gl." />
 
     <TextView

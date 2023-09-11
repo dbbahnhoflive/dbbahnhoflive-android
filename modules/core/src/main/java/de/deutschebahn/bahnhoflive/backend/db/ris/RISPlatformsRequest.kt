@@ -71,7 +71,11 @@ class RISPlatformsRequest(
                                                     } ?: AccessibilityStatus.UNKNOWN
                                                 acc
                                             },
-                                            platformJsonObject.optJSONArray("linkedPlatforms")?.toStringList()?.filter { it.isDigitsOnly() }?.firstOrNull()
+                                            platformJsonObject.optJSONArray("linkedPlatforms")?.toStringList()?.filter { it.isDigitsOnly() }?.toMutableList(),
+                                            platformJsonObject.optBoolean("headPlatform"),
+                                            platformJsonObject.optDouble("start", -1.0),
+                                            platformJsonObject.optDouble("end", 0.0),
+                                            platformJsonObject.optDouble("length", 0.0)
                                         )
                                     }
                             }

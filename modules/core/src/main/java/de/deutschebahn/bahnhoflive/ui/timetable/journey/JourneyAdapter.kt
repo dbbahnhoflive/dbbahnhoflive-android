@@ -1,5 +1,6 @@
 package de.deutschebahn.bahnhoflive.ui.timetable.journey
 
+import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import de.deutschebahn.bahnhoflive.backend.db.ris.model.Platform
@@ -9,6 +10,7 @@ import de.deutschebahn.bahnhoflive.view.ListViewHolderDelegate
 
 class JourneyAdapter(
     onClickStop: (view: View, journeyStop: JourneyStop) -> Unit,
+    onClickPlatformInformation: (view: View, journeyStop: JourneyStop, platforms:List<Platform>) -> Unit,
     var platformList: MutableList<Platform> = mutableListOf()
 ) :
 
@@ -18,14 +20,14 @@ class JourneyAdapter(
         override fun onCreateViewHolder(
             parent: ViewGroup,
             viewType: Int
-        ): JourneyItemViewHolder = JourneyItemViewHolder(parent)
+            ): JourneyItemViewHolder = JourneyItemViewHolder(parent, LayoutInflater.from(parent.context), onClickPlatformInformation)
 
         override fun onBindViewHolder(
             holder: JourneyItemViewHolder,
             item: JourneyStop,
             position: Int
         ) {
-                if(platformList.isNotEmpty())
+                if (platformList.isNotEmpty())
                     platformList.let { holder.setPlatforms(it) }
             holder.bind(item)
             holder.itemView.setOnClickListener {
