@@ -106,4 +106,8 @@
     <string name="sr_accessibility_link_elevators">Zur Übersicht der Aufzüge wechseln</string>
     <string name="sr_accessibility_hotline">Telefon 030 6521 2888</string>
 
+    <string name = "sr_open_platform_information">Öffnen von Gleisinformationen</string>
+    <string name = "sr_open_station">"Öffnen des Bahnhofs"</string>
+
+
 </resources>

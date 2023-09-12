@@ -20,6 +20,7 @@ import java.util.List;
 
 import de.deutschebahn.bahnhoflive.R;
 import de.deutschebahn.bahnhoflive.analytics.TrackingManager;
+import de.deutschebahn.bahnhoflive.backend.db.ris.model.Platform;
 import de.deutschebahn.bahnhoflive.backend.ris.model.RISTimetable;
 import de.deutschebahn.bahnhoflive.backend.ris.model.TrainEvent;
 import de.deutschebahn.bahnhoflive.backend.ris.model.TrainInfo;
@@ -67,6 +68,8 @@ class DbTimetableAdapter extends RecyclerView.Adapter<ViewHolder<?>> implements 
     private final List<String> trainCategories = new LinkedList<>();
 
     private Timetable timetable;
+    private List<Platform> platforms = null;
+
     private final Function3<? super TrainInfo, ? super TrainEvent, ? super Integer, Unit> itemClickListener;
 
     DbTimetableAdapter(@Nullable Station station, FilterUI filterUI,
@@ -156,6 +159,11 @@ class DbTimetableAdapter extends RecyclerView.Adapter<ViewHolder<?>> implements 
 
     }
 
+    public void setPlatforms(List<Platform> platforms) {
+        this.platforms=platforms;
+        notifyDataSetChanged();
+    }
+
     @Nullable
     public Track getCurrentTrack() {
         final TrainMovementInfo selectedItem = getSelectedItem();
@@ -210,6 +218,8 @@ class DbTimetableAdapter extends RecyclerView.Adapter<ViewHolder<?>> implements 
         } else if (filteredTrainInfos != null && position <= filteredTrainInfos.size() && holder instanceof TrainInfoViewHolder) {
             final TrainInfoViewHolder trainInfoViewHolder = (TrainInfoViewHolder) holder;
             trainInfoViewHolder.setStation(station);
+            if(platforms!=null)
+             trainInfoViewHolder.setPlatforms(platforms);
             trainInfoViewHolder.bind(filteredTrainInfos.get(position - 1));
         } else if (holder instanceof TimetableTrailingItemViewHolder) {
             if (timetable == null) {

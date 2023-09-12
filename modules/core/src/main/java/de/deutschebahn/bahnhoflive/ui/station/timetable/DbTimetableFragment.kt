@@ -191,6 +191,13 @@ class DbTimetableFragment : Fragment(), MapPresetProvider {
             adapter.setTrainCategoryFilter(it)
         }
 
+        stationViewModel.accessibilityFeaturesResource.data.observe(viewLifecycleOwner) {
+            it?.let {
+               adapter.setPlatforms(it)
+            }
+        }
+
+
         stationViewModel.waggonOrderObservable.subscribe(
             Consumer<TrainInfo>() {
                 trainInfoFromIntent=it

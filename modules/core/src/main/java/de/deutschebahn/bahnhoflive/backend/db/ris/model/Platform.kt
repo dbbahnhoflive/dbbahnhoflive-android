@@ -167,3 +167,15 @@ fun List<Platform>.containsPlatform(platformNumber:Int?) : Boolean {
     }
     return false
 }
+
+fun List<Platform>.firstLinkedPlatform(platformName:String?) : Platform? {
+    this.forEach { itPlatform ->
+        if (itPlatform.number == Platform.platformNumber(platformName)) {
+            return if(itPlatform.linkedPlatformNumbers.size>0)
+                this.firstOrNull {itPlatform.linkedPlatformNumbers[0] == it.number }
+            else
+                null
+        }
+    }
+    return null
+}
