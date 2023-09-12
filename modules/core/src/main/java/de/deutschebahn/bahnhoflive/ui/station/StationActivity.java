@@ -685,6 +685,7 @@ public class StationActivity extends BaseActivity implements
             return true;
         }
 
+        Log.d("cr", "Station: " + station.getTitle() + ", " + station.getId() + ", " + station.getLocation().latitude + ", " + station.getLocation().longitude + ", " + station.getEvaIds().getIds().toString());
 
         // Daten zur Rücknavigation ins stationViewModel packen
         final Station stationToNavigateBack = intent.getParcelableExtra(ARG_STATION_TO_NAVIGATE_BACK);

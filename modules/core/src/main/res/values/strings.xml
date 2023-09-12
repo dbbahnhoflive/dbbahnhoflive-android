@@ -478,6 +478,6 @@
     <string name="template_platform_level_linkedplatform">"%d. %s, Bahnsteig %d | %d"</string>
     <string name="template_platform_level">"%d. %s, Bahnsteig %d"</string>
 
-
+    <string name="journey_stop_canceled">Halt fällt aus</string>
 </resources>
 

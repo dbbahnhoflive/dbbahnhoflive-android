@@ -10,6 +10,7 @@ import android.content.Context
 import android.view.View
 import android.widget.TextView
 import androidx.annotation.ColorRes
+import androidx.core.content.ContextCompat
 import de.deutschebahn.bahnhoflive.R
 
 open class TimetableItemOverviewViewHolder<T>(view: View) : ViewHolder<T>(view) {
@@ -20,14 +21,7 @@ open class TimetableItemOverviewViewHolder<T>(view: View) : ViewHolder<T>(view) 
     protected val directionView: TextView? = itemView.findViewById(R.id.direction)
 
     protected val platformView: TextView? = itemView.findViewById(R.id.platform)
-    protected val platformType: TextView? = itemView.findViewById(R.id.platformType)
-    protected val linkedPlatformView: TextView? = itemView.findViewById(R.id.linkedplatform)
-    protected val platformSplitterView: TextView? = itemView.findViewById(R.id.platformsplitter)
     protected val transportationNameView: TextView? = itemView.findViewById(R.id.transportationName)
-
-    protected val platformindicatorLeft: TextView? = itemView.findViewById(R.id.platformindicatorLeft)
-    protected val platformindicatorRight: TextView? = itemView.findViewById(R.id.platformindicatorRight)
-
 
     protected fun bindDelay(delayInMinutes: Long, actualTime: CharSequence) {
         delayView?.apply {
@@ -43,7 +37,8 @@ open class TimetableItemOverviewViewHolder<T>(view: View) : ViewHolder<T>(view) 
     }
 
     private fun getColor(@ColorRes colorResource: Int): Int {
-        return itemView.context.resources.getColor(colorResource)
+      return ContextCompat.getColor(itemView.context, colorResource)
+//        return itemView.context.resources.getColor(colorResource)
     }
 
 }

@@ -12,7 +12,10 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import de.deutschebahn.bahnhoflive.R
 import de.deutschebahn.bahnhoflive.backend.db.ris.model.Platform
+import de.deutschebahn.bahnhoflive.backend.db.ris.model.Platform.Companion.LEVEL_UNKNOWN
+import de.deutschebahn.bahnhoflive.backend.db.ris.model.containsPlatform
 import de.deutschebahn.bahnhoflive.backend.db.ris.model.findPlatform
+import de.deutschebahn.bahnhoflive.backend.db.ris.model.hasLinkedPlatform
 import de.deutschebahn.bahnhoflive.backend.ris.model.TrainEvent
 import de.deutschebahn.bahnhoflive.backend.ris.model.TrainInfo
 import de.deutschebahn.bahnhoflive.backend.ris.model.TrainMovementInfo
@@ -47,8 +50,17 @@ class JourneyPlatformInformationFragment : Fragment() {
             stationViewModel.platformsWithLevelResource.observe(viewLifecycleOwner) {itPlatforms->
                 itPlatforms?.let {
 
+                    platformsPerLevel.clear()
+
+                    val reducedList : MutableList<Platform> = itPlatforms.filter { it.hasLinkedPlatforms }.toMutableList()
+
+                    itPlatforms.forEach {
+                        if(!reducedList.containsPlatform(it.number))
+                            reducedList.add(it)
+                    }
+
                     var lastLevel = -10000
-                    it.forEach {itPlatform->
+                    reducedList.sortedBy { it.level }.forEach {itPlatform->
 
                         if(itPlatform.level!=lastLevel) {
                             lastLevel=itPlatform.level
@@ -57,7 +69,7 @@ class JourneyPlatformInformationFragment : Fragment() {
                             platformsPerLevel.add(Pair(itPlatform.level, lst)) // neue Ebene
                         }
                         else {
-//                            if(!platformsPerLevel[platformsPerLevel.size-1].second.contains(itPlatform.name))
+                            if(!platformsPerLevel[platformsPerLevel.size-1].second.hasLinkedPlatform(itPlatform.number))
                               platformsPerLevel[platformsPerLevel.size-1].second.add(itPlatform)
                         }
 
@@ -120,17 +132,28 @@ class JourneyPlatformInformationFragment : Fragment() {
 
                 val platform = platforms.findPlatform(trainMovementInfo.displayPlatform)
 
-                itBinding.platform.text = if(platformsPerLevel.size<=1 || platform==null)
+                itBinding.platform.text = if (platform == null)
+                    "Gleis ${trainMovementInfo.displayPlatform}"
+                else {
+                    if (platform.level == LEVEL_UNKNOWN)
                     "Gleis ${trainMovementInfo.displayPlatform}"
                 else
-                    "Gleis ${trainMovementInfo.displayPlatform} im ${platform.levelToText(requireContext())}"
+                        "Gleis ${trainMovementInfo.displayPlatform} im ${
+                            platform.levelToText(
+                                requireContext()
+                            )
+                        }"
+                }
 
                 platform?.let {
+                   if(it.linkedPlatformNumbers.size==1)
                       itBinding.platformOtherSide.text = "Gegenüberliegend Gleis " + it.formatLinkedPlatformString(false)
+                   else
+                       itBinding.platformOtherSide.isVisible=false
                 }
 
 
-                // Infos pro level
+                // Infos für alle levels
                 itBinding.contentList.removeAllViews()
                 platformsPerLevel.forEach {
 
@@ -140,12 +163,12 @@ class JourneyPlatformInformationFragment : Fragment() {
 
                     layoutLevel.platformItemsContainer.let { itPlatformContainer ->
 
+                        // Infos pro level
                         itPlatformContainer.removeAllViews()
-
                         it.second.forEach { itPlatform ->
 
                             val textView = TextView(requireContext())
-                            var text: String = "Gleis ${itPlatform.formatLinkedPlatformString(true)}"
+                            var text: String = "Gleis ${itPlatform.formatLinkedPlatformString(true, false )}"
 
                             if (itPlatform.isHeadPlatform)
                                 text += ", Kopfgleis"

@@ -10,7 +10,7 @@ import androidx.core.view.isVisible
 import androidx.core.widget.TextViewCompat
 import de.deutschebahn.bahnhoflive.R
 import de.deutschebahn.bahnhoflive.backend.db.ris.model.Platform
-import de.deutschebahn.bahnhoflive.backend.db.ris.model.Platform.Companion.UNKNOWN_LEVEL
+import de.deutschebahn.bahnhoflive.backend.db.ris.model.Platform.Companion.LEVEL_UNKNOWN
 import de.deutschebahn.bahnhoflive.backend.db.ris.model.findPlatform
 import de.deutschebahn.bahnhoflive.databinding.ItemJourneyDetailedBinding
 import de.deutschebahn.bahnhoflive.ui.Status
@@ -61,13 +61,21 @@ class JourneyItemViewHolder(
             item?.let {
 
                 val displayPlatform: String = it.platform?:"" // kann auch 15 D-F sein !
-                    val displayPlatformAsInt: Int = Platform.platformNumber(displayPlatform, 0)
-//                val linkedPlatformAsInt: Int = platformList.findLinkedPlatformNumber(displayPlatform) ?: 0
                 val thisPlatform : Platform? = platformList.findPlatform(displayPlatform)
 
                 linkPlatform.isVisible = it.current==true && thisPlatform!=null && ((platformList.size>1) || thisPlatform.isHeadPlatform)
 
                 if (linkPlatform.isVisible) {
+
+                    layout.setOnClickListener {
+                        platformList?.let { it1 ->
+                            onClickPlatformInformation(
+                                it,
+                                item,
+                                it1
+                            )
+                        }
+                    }
 
                     linkPlatform.setOnClickListener {
                         platformList?.let { it1 ->
@@ -82,16 +90,16 @@ class JourneyItemViewHolder(
                     thisPlatform?.let {itPlatform->
 
                         val levelMask = when  {
-                            itPlatform.level<0 -> "%d. UG, Bahnsteig " + itPlatform.formatLinkedPlatformString()
-                            itPlatform.level==0 -> "EG, Bahnsteig " + itPlatform.formatLinkedPlatformString()
-                            itPlatform.level==UNKNOWN_LEVEL -> "Bahnsteig " + itPlatform.formatLinkedPlatformString()
-                            else -> "%d. OG, Bahnsteig " + itPlatform.formatLinkedPlatformString()
+                            itPlatform.level<0 -> "%d. UG, Bahnsteig " + itPlatform.formatLinkedPlatformString(true,true)
+                            itPlatform.level==0 -> "EG, Bahnsteig " + itPlatform.formatLinkedPlatformString(true,true)
+                            itPlatform.level==LEVEL_UNKNOWN -> "Bahnsteig " + itPlatform.formatLinkedPlatformString(true,true)
+                            else -> "%d. OG, Bahnsteig " + itPlatform.formatLinkedPlatformString(true,true)
                         }
 
                         when {
                             itPlatform.level<0 -> linkPlatform.text = String.format(levelMask,  Math.abs(itPlatform.level))
                             itPlatform.level==0 -> linkPlatform.text = levelMask
-                            itPlatform.level==UNKNOWN_LEVEL -> linkPlatform.text = String.format(levelMask)
+                            itPlatform.level==LEVEL_UNKNOWN -> linkPlatform.text = String.format(levelMask)
                             else -> linkPlatform.text = String.format(levelMask, Math.abs(itPlatform.level))
 
                     }
@@ -128,6 +136,22 @@ class JourneyItemViewHolder(
                     advice.isSelected = true
                     advice.isGone = false
                 }
+
+                (item?.departure?.canceled == true || item?.arrival?.canceled == true) -> {
+                    advice.setText(R.string.journey_stop_canceled)
+                    TextViewCompat.setCompoundDrawablesRelativeWithIntrinsicBounds(
+                        advice,
+                        R.drawable.app_warndreieck,
+                        0,
+                        0,
+                        0
+                    )
+                    advice.isSelected = true
+                    advice.isGone = false
+
+                }
+
+
                 else -> {
                     advice.text = null
                     advice.isGone = true

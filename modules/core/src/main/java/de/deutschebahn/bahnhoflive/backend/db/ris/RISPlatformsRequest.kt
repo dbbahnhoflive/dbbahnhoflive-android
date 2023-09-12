@@ -50,17 +50,22 @@ class RISPlatformsRequest(
                     ?.mapNotNull { platformJsonObject ->
                         platformJsonObject.takeUnless { it.has("parentPlatform") }
                             ?.optString("name")?.let { name ->
-                                platformJsonObject.optJSONObject("accessibility")
-                                    ?.let { accessibilityJsonObject ->
-                                        Platform(
-                                            name,
-                                            AccessibilityFeature.VALUES.fold(
+
+                                val accJson =  platformJsonObject.optJSONObject("accessibility")
+
+                                var emap = EnumMap(
+                                    EnumSet.allOf(AccessibilityFeature::class.java)
+                                        .associateWith { AccessibilityStatus.UNKNOWN })
+
+                                if(accJson!=null) {
+
+                                    emap = AccessibilityFeature.VALUES.fold(
                                                 EnumMap<AccessibilityFeature, AccessibilityStatus>(
                                                     AccessibilityFeature::class.java
                                                 )
                                             ) { acc, accessibilityFeature ->
                                                 acc[accessibilityFeature] =
-                                                    accessibilityJsonObject.optString(
+                                            accJson.optString(
                                                         accessibilityFeature.tag
                                                     ).let {
                                                         try {
@@ -70,14 +75,21 @@ class RISPlatformsRequest(
                                                         }
                                                     } ?: AccessibilityStatus.UNKNOWN
                                                 acc
-                                            },
-                                            platformJsonObject.optJSONArray("linkedPlatforms")?.toStringList()?.filter { it.isDigitsOnly() }?.toMutableList(),
+                                    }
+                                }
+
+                                Platform(
+                                    name,
+                                    emap,
+                                    platformJsonObject.optJSONArray("linkedPlatforms")
+                                        ?.toStringList()?.toMutableList(),
                                             platformJsonObject.optBoolean("headPlatform"),
                                             platformJsonObject.optDouble("start", -1.0),
                                             platformJsonObject.optDouble("end", 0.0),
                                             platformJsonObject.optDouble("length", 0.0)
                                         )
-                                    }
+
+
                             }
                     }?.toList()
             } ?: emptyList()

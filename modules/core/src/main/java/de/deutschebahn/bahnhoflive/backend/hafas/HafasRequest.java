@@ -62,7 +62,7 @@ public abstract class HafasRequest<T> extends Request<T> implements Countable, T
     }
 
     public String getTrackingTag() {
-        return "request:hafas:" + getLegacyTrackingTag();
+        return "request : hafas:" + getLegacyTrackingTag();
     }
 
     protected Cache.Entry getCacheEntry(NetworkResponse response) {

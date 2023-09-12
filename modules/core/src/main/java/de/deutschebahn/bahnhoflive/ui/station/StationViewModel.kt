@@ -11,6 +11,7 @@ import android.app.Application
 import android.content.Context
 import android.util.Log
 import android.view.View
+import androidx.core.text.isDigitsOnly
 import androidx.lifecycle.*
 import androidx.lifecycle.Observer
 import com.android.volley.VolleyError
@@ -452,7 +453,6 @@ class StationViewModel(
             parking.parkingsResource.initialize(station)
             lockers.lockerResource.initialize(station)
 
-            platformLevels.initialize(station)
 
             viewModelScope.launch {
                 stationStateFlow.emit(station)
@@ -467,6 +467,10 @@ class StationViewModel(
 
             railReplacementResource.initialize(station)
             accessibilityFeaturesResource.initialize(station)
+
+//            platformResource.initialize(station)
+            platformLevels.initialize(station)
+
             this.station = station
         }
 
@@ -1478,14 +1482,13 @@ class StationViewModel(
             }
         }
 
-
     val accessibilityFeaturesResource =
         AccessibilityFeaturesResource(this.application.repositories.stationRepository)
 
     val platformsWithLevelResource =
 
-        combine2LifeData(accessibilityFeaturesResource.data,
-            platformLevels.data
+            combine2LifeData(accessibilityFeaturesResource.data, // apiPlatformList
+            platformLevels.data // poiPlatformList
         ) { apiPlatformList: List<Platform>?, poiPlatformList: List<RimapPOI>? ->
 
             val platformList : MutableList<Platform> = mutableListOf()
@@ -1501,19 +1504,19 @@ class StationViewModel(
                 val platformNr: Int = Platform.platformNumber(itPlatform.name)
 
                 val poi: RimapPOI? = poiPlatforms?.firstOrNull { itRimapPoi ->
-                    Platform.platformNumber(itRimapPoi.name) == platformNr
+                    itRimapPoi.name == platformNr.toString()
                 }
 
                 if (poi != null)
                     itPlatform.level = LevelMapping.codeToLevel(poi.level) ?: 0
 
-                itPlatform.linkedPlatforms?.let {
+                itPlatform.linkedPlatformNumbers.let {
                     val iter = it.iterator()
 
                     while(iter.hasNext()) {
                         val value = iter.next()
 
-                        if(itPlatform.number.toString()==value)
+                        if(itPlatform.number==value)
                             iter.remove()
 
                     }
@@ -1535,9 +1538,9 @@ class StationViewModel(
 
 
 
-            platformList.sortedBy { it.level }
+            platformList.sortBy { it.level }
 
-            platformList.toList()
+            platformList.filter { it.name!=null && it.name.isDigitsOnly() }.toList()
         }
 
     val mapAvailableLiveData =

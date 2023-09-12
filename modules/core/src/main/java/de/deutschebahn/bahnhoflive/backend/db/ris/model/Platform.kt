@@ -11,17 +11,17 @@ import kotlin.math.abs
 class Platform(
     val name: String,
     val accessibility: EnumMap<AccessibilityFeature, AccessibilityStatus>,
-    val linkedPlatforms : MutableList<String>? = null,
+    private val linkedPlatforms : MutableList<String>? = null,
     val isHeadPlatform : Boolean,
     val start : Double,
     val end : Double,
     val length : Double,
-    var level : Int = UNKNOWN_LEVEL // wird erst bei Bedarf gesetzt
+    var level : Int = LEVEL_UNKNOWN // wird erst bei Bedarf gesetzt
 
 ) : Comparable<Platform> {
 
     companion object {
-        const val UNKNOWN_LEVEL = 100
+        const val LEVEL_UNKNOWN = 100
         val numberPattern = Regex("\\d+")
 
         val collator = Collator.getInstance(Locale.GERMAN)
@@ -45,14 +45,14 @@ class Platform(
                             R.string.template_level_underground, it
                         )
 
-                        level == UNKNOWN_LEVEL -> return context.resources.getString(R.string.level_unknown)
+                        level == LEVEL_UNKNOWN -> return context.resources.getString(R.string.level_unknown)
                         level > 0 -> return context.resources.getString(R.string.template_level_overground, it)
                         else -> return context.resources.getString(R.string.level_base_shortcut)
                     }
                 } else {
                     when {
                         level < 0 -> return context.resources.getString(R.string.template_level_underground_shortcut, it)
-                        level == UNKNOWN_LEVEL -> return context.resources.getString(R.string.level_unknown)
+                        level == LEVEL_UNKNOWN -> return context.resources.getString(R.string.level_unknown)
                         level > 0 -> return context.resources.getString(R.string.template_level_overground_shortcut, it)
                         else -> return context.resources.getString(R.string.level_base_shortcut)
                     }
@@ -61,29 +61,49 @@ class Platform(
         }
     }
 
+    val hasLinkedPlatforms : Boolean
+        get() = linkedPlatforms!=null
+    val linkedPlatformNumbers : MutableList<Int>
+        get() {
+           val fullmap = linkedPlatforms?.map { platformNumber(it) }?.toMutableList() ?: mutableListOf()
+
+           val resultMap : MutableList<Int> = mutableListOf()
+
+            val iter = fullmap.iterator()
+            while(iter.hasNext()) {
+              val value = iter.next()
+              if(!resultMap.contains(value) && value!=number)
+                  resultMap.add(value)
+            }
+            return resultMap
+        }
+
     val number : Int? = runCatching {
         numberPattern.find(name)?.value?.toInt()
     }.getOrNull()
 
     fun levelToText(context: Context, fullText: Boolean = false): String = staticLevelToText(context, level, fullText)
 
-    fun formatLinkedPlatformString(includePlatform: Boolean = true) : String {
+    fun formatLinkedPlatformString(includePlatform: Boolean = true, sort:Boolean=true) : String {
 
         val platformAsInt = this.number ?: 0
 
-        val arrangedPlatforms: MutableList<Int> =
-            linkedPlatforms?.map { it.toInt() }?.toMutableList() ?: mutableListOf()
+        val tmpLinkedPlatformsAsInts  = linkedPlatformNumbers
+
 
         if (includePlatform)
-            if (!arrangedPlatforms.contains(platformAsInt))
-                arrangedPlatforms.add(0, platformAsInt)
+            if (!tmpLinkedPlatformsAsInts.contains(platformAsInt))
+                tmpLinkedPlatformsAsInts.add(0, platformAsInt)
+
+        if(sort)
+            tmpLinkedPlatformsAsInts.sort()
 
         var s = ""
 
-        arrangedPlatforms.indices.forEach {
+        tmpLinkedPlatformsAsInts.indices.forEach {
             if (s != "")
                 s += " | "
-            s += arrangedPlatforms[it]
+            s += tmpLinkedPlatformsAsInts[it]
         }
 
         return s
@@ -92,7 +112,17 @@ class Platform(
     override fun compareTo(other: Platform): Int =
         if (number != null && other.number != null) {
             when (val numericalDifference = number - other.number) {
-                0 -> collator.compare(name, other.name)
+                0 -> {
+                   val result = collator.compare(name, other.name)
+                   if(result==0) {
+                       if (linkedPlatforms == null)
+                            1
+                       else
+                           -1
+                   }
+                   else
+                    result
+                }
                 else -> numericalDifference
             }
         } else {
@@ -110,57 +140,30 @@ class Platform(
 
 }
 
-
-//fun List<Platform>.findLinkedPlatformNumber(platform:String) : Int? {
-//    val platformNumber : Int? = kotlin.runCatching { Platform.platformNumber(platform) }.getOrNull()
-//
-//    if(platformNumber==null || platformNumber==0)
-//        return null
-//
-//    val linkedNr : Int? = this.filter { it.number == platformNumber }.firstOrNull()?.linkedPlatformNumber()
-//    if(linkedNr!=null) return linkedNr
-//
-//    // eventuell fehler im api, suchen, ob ein anderes gleis auf dieses verweist
-//    return this.filter { it.linkedPlatformNumber() == platformNumber }.firstOrNull()?.number
-//}
-
 fun List<Platform>.findPlatform(platformName:String) : Platform? {
     val platformNumber : Int = Platform.platformNumber(platformName)
 
-    (platformNumber>0).let {
+    if(platformNumber>0) {
         return this.firstOrNull { it.number == platformNumber }
     }
 
     return null
 }
 
-//fun List<Platform>.contains(platformName:String, includeLinkedPlatform:Boolean=true) : Boolean {
-//    val platformNumber : Int = Platform.platformNumber(platformName)
-//    this.forEach {if(it.number==platformNumber || (if(includeLinkedPlatform) it.linkedPlatformNumber()==platformNumber else false)) return true}
-//    return false
-//}
-
-fun List<Platform>.countLinkedPlatforms(platformName:String) : Int {
-    val platformNumber : Int = Platform.platformNumber(platformName)
-
-    var n = 0
+fun List<Platform>.hasLinkedPlatform(platformNumber:Int?) : Boolean {
     this.forEach {
-        it.linkedPlatforms?.forEach {
-            if(Platform.platformNumber(it) == platformNumber)
-                n++
+        if (it.number != platformNumber) {
+            if (it.linkedPlatformNumbers.contains(platformNumber)) return true
         }
     }
-    return n
+    return false
 }
 
-
-fun List<Platform>.findLevel(platformName:String) : Int {
-    val platformNumber : Int = Platform.platformNumber(platformName)
-
-    (platformNumber>0).let {
-        return this.first { it.number == platformNumber }.level
+fun List<Platform>.containsPlatform(platformNumber:Int?) : Boolean {
+    this.forEach {
+        if (it.number == platformNumber) {
+            return true
     }
-
-    return Platform.UNKNOWN_LEVEL
+    }
+    return false
 }
-
