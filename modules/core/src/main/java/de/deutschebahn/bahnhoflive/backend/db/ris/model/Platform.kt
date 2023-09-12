@@ -37,27 +37,21 @@ class Platform(
             return ret ?: defaultValue
         }
 
-        fun staticLevelToText(context: Context, level:Int, fullText: Boolean = false): String {
+        fun staticLevelToText(context: Context, level: Int): String {
             (abs(level)).let {
-                if (fullText) {
                     when {
                         level < 0 -> return context.resources.getString(
                             R.string.template_level_underground, it
                         )
-
                         level == LEVEL_UNKNOWN -> return context.resources.getString(R.string.level_unknown)
-                        level > 0 -> return context.resources.getString(R.string.template_level_overground, it)
-                        else -> return context.resources.getString(R.string.level_base_shortcut)
-                    }
-                } else {
-                    when {
-                        level < 0 -> return context.resources.getString(R.string.template_level_underground_shortcut, it)
-                        level == LEVEL_UNKNOWN -> return context.resources.getString(R.string.level_unknown)
-                        level > 0 -> return context.resources.getString(R.string.template_level_overground_shortcut, it)
-                        else -> return context.resources.getString(R.string.level_base_shortcut)
-                    }
+                    level > 0 -> return context.resources.getString(
+                        R.string.template_level_overground,
+                        it
+                    )
+                    else -> return context.resources.getString(R.string.level_base)
                 }
             }
+
         }
     }
 
@@ -82,7 +76,7 @@ class Platform(
         numberPattern.find(name)?.value?.toInt()
     }.getOrNull()
 
-    fun levelToText(context: Context, fullText: Boolean = false): String = staticLevelToText(context, level, fullText)
+    fun levelToText(context: Context): String = staticLevelToText(context, level)
 
     fun formatLinkedPlatformString(includePlatform: Boolean = true, sort:Boolean=true) : String {
 

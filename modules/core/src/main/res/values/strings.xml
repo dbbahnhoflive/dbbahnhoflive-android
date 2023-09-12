@@ -190,9 +190,6 @@
     <string name="template_level_overground">%1$d. Obergeschoss</string>
     <string name="template_level_underground">%1$d. Untergeschoss</string>
     <string name="level_base">Erdgeschoss</string>
-    <string name="level_base_shortcut">EG</string>
-    <string name="template_level_underground_shortcut">%d. UG</string>
-    <string name="template_level_overground_shortcut">%d. OG</string>
     <string name="level_unknown">Unbekanntes Stockwerk</string>
     <string name="template_remaining_open_hours">Noch %1$d:%2$02d Std. geöffnet.</string>
     <string name="error_data_unavailable">Daten derzeit nicht verfügbar</string>

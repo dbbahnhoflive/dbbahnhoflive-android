@@ -95,10 +95,10 @@ class JourneyItemViewHolder(
                     thisPlatform?.let {itPlatform->
 
                         val levelMask = when  {
-                            itPlatform.level<0 -> "%d. UG, Gleis " + itPlatform.formatLinkedPlatformString(true,true)
-                            itPlatform.level==0 -> "EG, Gleis " + itPlatform.formatLinkedPlatformString(true,true)
+                            itPlatform.level<0 -> "%d. Untergeschoss, Gleis " + itPlatform.formatLinkedPlatformString(true,true)
+                            itPlatform.level==0 -> "Erdgeschoss, Gleis " + itPlatform.formatLinkedPlatformString(true,true)
                             itPlatform.level==LEVEL_UNKNOWN -> "Gleis " + itPlatform.formatLinkedPlatformString(true,true)
-                            else -> "%d. OG, Gleis " + itPlatform.formatLinkedPlatformString(true,true)
+                            else -> "%d. Obergeschoss, Gleis " + itPlatform.formatLinkedPlatformString(true,true)
                         }
 
                         when {

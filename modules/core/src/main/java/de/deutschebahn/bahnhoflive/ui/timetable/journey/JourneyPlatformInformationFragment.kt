@@ -77,7 +77,6 @@ class JourneyPlatformInformationFragment : Fragment() {
 
                     platformsPerLevel.sortBy { it.first } // nach Ebenen sortieren
 
-
                     createContent(inflater)
 
                 }
@@ -93,7 +92,6 @@ class JourneyPlatformInformationFragment : Fragment() {
         binding.also {
 
             it.stopTime.text = actualTime
-            it.stopTime.contentDescription = requireContext().getString(R.string.sr_template_estimated, actualTime)
 
             if(delayInMinutes==0L)
                 it.stopDelay.isVisible=false
@@ -122,14 +120,36 @@ class JourneyPlatformInformationFragment : Fragment() {
 
             if (trainMovementInfo != null) {
 
+                // Abfahrtszeit + Verspätung
+
+
+                itBinding.arrivalOrDeparture.text = if(trainEvent==TrainEvent.ARRIVAL) resources.getText(R.string.sr_arrival) else resources.getText(R.string.sr_departure)
+
                 val delayInMinutes =
                     if (trainMovementInfo.isTrainMovementCancelled) -1 else trainMovementInfo.delayInMinutes()
                 bindTimeAndDelay(delayInMinutes, trainMovementInfo.formattedTime)
 
+                // Zugname
                 val trainName =
                     trainInfo?.let { it1 -> TimetableViewHelper.composeName(it1, trainMovementInfo) }
                 itBinding.trainName.text = "| " + trainName
 
+                val screenReaderText = listOfNotNull(
+                    trainName,
+                    " .",
+                    if(trainEvent==TrainEvent.ARRIVAL) resources.getText(R.string.sr_arrival) else resources.getText(R.string.sr_departure),
+                    trainMovementInfo.formattedTime,
+                    " .",
+                    if(delayInMinutes>0)
+                     resources.getQuantityString(R.plurals.sr_template_estimated_delay_minutes,
+                        delayInMinutes.toInt(), delayInMinutes.toInt())
+                    else null
+                    ).toString()
+
+                itBinding.layoutTrainAndDeparture.contentDescription = screenReaderText
+
+
+                // Gleis mit Ebene
                 val platform = platforms.findPlatform(trainMovementInfo.displayPlatform)
 
                 itBinding.platform.text = if (platform == null)

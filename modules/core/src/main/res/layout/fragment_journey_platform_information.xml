@@ -39,6 +39,7 @@
                 >
 
                 <LinearLayout
+                    android:id="@+id/layout_train_and_departure"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:orientation="horizontal"
@@ -46,10 +47,20 @@
                     >
 
                     <TextView
+                        android:id="@+id/arrival_or_departure"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        tools:text = "Ankunft"
+                        android:importantForAccessibility="no"
+                        android:textSize="@dimen/textsize_h2" />
+
+                    <TextView
                         android:id="@+id/stop_time"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
+                        android:layout_marginStart="@dimen/default_space_half"
                         tools:text = "13:20"
+                        android:importantForAccessibility="no"
                         android:textSize="@dimen/textsize_h2" />
 
                     <TextView
@@ -58,6 +69,8 @@
                         android:layout_height="wrap_content"
                         android:layout_marginStart="@dimen/default_space_half"
                         tools:text = "+4"
+                        android:importantForAccessibility="no"
+
                         android:textColor="@color/green"
                         android:textSize="@dimen/textsize_h2" />
 
@@ -67,6 +80,7 @@
                         android:layout_height="wrap_content"
                         android:layout_marginStart="@dimen/default_space_half"
                         tools:text = "ICE 567"
+                        android:importantForAccessibility="no"
                         android:textSize="@dimen/textsize_h2" />
 
 
