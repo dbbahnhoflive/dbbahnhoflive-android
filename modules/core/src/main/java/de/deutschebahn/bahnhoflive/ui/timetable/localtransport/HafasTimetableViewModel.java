@@ -163,6 +163,8 @@ public class HafasTimetableViewModel extends AndroidViewModel {
 
     public final MutableLiveData<HafasStationProduct> selectedHafasStationProduct = new MutableLiveData<>();
 
+    public final MutableLiveData<DetailedHafasEvent> selectedHafasJourney = new MutableLiveData<>();
+
     @Nullable
     public Station getStation() {
         return station;

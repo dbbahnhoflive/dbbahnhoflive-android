@@ -33,7 +33,7 @@ public abstract class HafasRequest<T> extends Request<T> implements Countable, T
 
     public HafasRequest(int method, String endpoint, String parameters, String origin, Response.ErrorListener listener, boolean shouldCache, int minimumCacheTime) {
         super(method, (endpoint + parameters).replaceAll(" ", "%20"), listener);
-        Log.d("dbg", "HafasRequest");
+        Log.d("cr", "HafasRequest ep:" + endpoint + " params:" + parameters + " origin:" +origin);
         setShouldCache(shouldCache);
         setRetryPolicy(new DefaultRetryPolicy(
                 10*1000,

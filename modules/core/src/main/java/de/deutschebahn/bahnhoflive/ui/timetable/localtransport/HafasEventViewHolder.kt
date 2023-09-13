@@ -10,7 +10,6 @@ import android.view.View
 import android.view.ViewGroup
 import de.deutschebahn.bahnhoflive.R
 import de.deutschebahn.bahnhoflive.ui.ViewHolder
-import de.deutschebahn.bahnhoflive.ui.timetable.RouteStop
 import de.deutschebahn.bahnhoflive.ui.timetable.RouteStopsAdapter
 import de.deutschebahn.bahnhoflive.view.SingleSelectionManager
 
@@ -37,9 +36,7 @@ internal class HafasEventViewHolder(
         bindStops(item)
         item.setListener(this)
         overviewViewHolder.itemView.setOnClickListener {
-
             onHafasDetailsClickEvent(it, item)
-
         }
     }
 
@@ -58,30 +55,30 @@ internal class HafasEventViewHolder(
     }
 
     private fun bindStops(detailedHafasEvent: DetailedHafasEvent) {
-        val hafasDetail = detailedHafasEvent.hafasDetail
-        if (hafasDetail == null) {
-            adapter.setRouteStops(null)
-            itemView.contentDescription = null
-        } else {
-
-            val routeStops = ArrayList<RouteStop>()
-
-            for (stop in hafasDetail.stops) {
-                routeStops.add(RouteStop(stop.name))
-            }
-
-            if (routeStops.isNotEmpty()) {
-                routeStops.first().apply {
-                    isFirst = true
-                    isCurrent = true
-                }
-                routeStops.last().isLast = true
-            }
-
-            adapter.setRouteStops(routeStops)
-
-            onHafasDataReceivedEvent(itemView,detailedHafasEvent, true)
-
-        }
+//        val hafasDetail = detailedHafasEvent.hafasDetail
+//        if (hafasDetail == null) {
+//            adapter.setRouteStops(null)
+//            itemView.contentDescription = null
+//        } else {
+//
+//            val routeStops = ArrayList<RouteStop>()
+//
+//            for (stop in hafasDetail.stops) {
+//                routeStops.add(RouteStop(stop))
+//            }
+//
+//            if (routeStops.isNotEmpty()) {
+//                routeStops.first().apply {
+//                    isFirst = true
+//                    isCurrent = true
+//                }
+//                routeStops.last().isLast = true
+//            }
+//
+//            adapter.setRouteStops(routeStops)
+//
+//            onHafasDataReceivedEvent(itemView,detailedHafasEvent, true)
+//
+//        }
     }
 }

@@ -75,5 +75,9 @@ fun View.setAccessibilityText(text: CharSequence?) {
         setAccessibilityText("")
     else
         setAccessibilityText(text.toString())
+}
 
+
+fun View.visibleElseGone(visible:Boolean) {
+    this.visibility = if(visible) View.VISIBLE else View.GONE
 }

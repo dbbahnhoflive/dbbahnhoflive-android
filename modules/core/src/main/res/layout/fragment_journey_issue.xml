@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+
+    android:id="@+id/issue_container"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_marginHorizontal="@dimen/default_space_double"
+    android:layout_marginVertical="@dimen/default_space_half"
+    android:minHeight="34dp"
+    android:paddingStart="@dimen/default_space"
+    android:paddingEnd="@dimen/default_space"
+    android:visibility="gone"
+    tools:visibility="visible">
+
+    <ImageView
+        android:id="@+id/issue_icon"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:baseline="17.5dp"
+        android:importantForAccessibility="no"
+        android:src="@drawable/app_warndreieck"
+        app:layout_constraintBaseline_toBaselineOf="@+id/issue_text"
+        app:layout_constraintLeft_toLeftOf="parent" />
+
+    <TextView
+        android:id="@+id/issue_text"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="@dimen/default_space_half"
+        android:layout_marginTop="4dp"
+        android:textColor="?attr/colorAccent"
+        android:textSize="@dimen/textsize_h3"
+        app:layout_constraintLeft_toRightOf="@+id/issue_icon"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        tools:text="ICE 1630: At vero eos et accusam et justo duo dolores et a rebum, stet clita kasd." />
+
+</androidx.constraintlayout.widget.ConstraintLayout>

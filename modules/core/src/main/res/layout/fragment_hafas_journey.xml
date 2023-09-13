@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    xmlns:tools="http://schemas.android.com/tools"
     android:clipChildren="false"
     android:background="@color/white"
     android:orientation="vertical">
@@ -14,7 +14,13 @@
 
 <LinearLayout
     android:layout_width="match_parent"
-    android:layout_height="wrap_content">
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    >
+
+    <include android:id="@+id/journey_issue"
+        layout="@layout/fragment_journey_issue">
+    </include>
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/recycler"
@@ -22,9 +28,8 @@
         android:layout_height="match_parent"
         android:clipToPadding="false"
         android:paddingBottom="@dimen/overscroll_height"
-        android:paddingTop="@dimen/default_space"
         app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
-        tools:listitem="@layout/item_journey" />
+        tools:listitem="@layout/item_journey_detailed" />
 
 </LinearLayout>
 

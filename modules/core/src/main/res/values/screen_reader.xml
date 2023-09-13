@@ -69,7 +69,7 @@
     <string name="sr_map_no_accessibility">Umgebungskarte. Dieser Inhalt ist nicht für das Vorlesen optimiert.</string>
     <string name="sr_template_local_departure_prefix">%1$s nach %2$s %3$s</string>
     <string name="sr_template_local_departure_stops">über %1$s</string>
-    <string name="sr_template_local_departure_overview">%1$s nach %2$s um %3$s %4$s</string>
+    <string name="sr_template_local_departure_overview">%1$s nach %2$s um %3$s %4$s %5$s</string>
     <string name="sr_station_departures">Abfahrtstafel Bahnhof</string>
     <string name="sr_station_local_transport">ÖPNV</string>
     <string name="sr_tab_timetable_station">Abfahrten des Fernverkehrs, Regionalverkehrs und gegebenenfalls S-Bahnen</string>
