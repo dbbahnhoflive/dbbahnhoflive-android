@@ -6,7 +6,6 @@
 
 package de.deutschebahn.bahnhoflive.ui.hub
 
-import android.R
 import android.content.Context
 import android.content.Intent
 import android.graphics.drawable.ColorDrawable
@@ -49,7 +48,7 @@ class SearchStarterFragment : androidx.fragment.app.Fragment() {
         button.isAllCaps = false
 
         button.background =
-            ColorDrawable(ContextCompat.getColor(requireContext(), R.color.white))
+            ColorDrawable(ContextCompat.getColor(requireContext(), android.R.color.white))
 
         val param = button.layoutParams as ViewGroup.MarginLayoutParams
         param.setMargins(0, 0, 0, 20)
@@ -91,7 +90,7 @@ class SearchStarterFragment : androidx.fragment.app.Fragment() {
         inflater: LayoutInflater,
         container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View? =
+    ): View =
         FragmentSearchStarterBinding.inflate(inflater, container, false).apply {
             search.setOnClickListener { searchView ->
                 trackingManager.track(

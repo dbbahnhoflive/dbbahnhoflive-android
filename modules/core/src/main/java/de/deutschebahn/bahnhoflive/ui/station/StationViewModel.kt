@@ -11,6 +11,7 @@ import android.app.Application
 import android.content.Context
 import android.util.Log
 import android.view.View
+import androidx.core.text.isDigitsOnly
 import androidx.lifecycle.*
 import androidx.lifecycle.Observer
 import com.android.volley.VolleyError
@@ -30,6 +31,9 @@ import de.deutschebahn.bahnhoflive.backend.local.model.EvaIds
 import de.deutschebahn.bahnhoflive.backend.local.model.ServiceContentType
 import de.deutschebahn.bahnhoflive.backend.local.model.isEco
 import de.deutschebahn.bahnhoflive.backend.rimap.RimapConfig
+import de.deutschebahn.bahnhoflive.backend.rimap.model.LevelMapping
+import de.deutschebahn.bahnhoflive.backend.rimap.model.MenuMapping
+import de.deutschebahn.bahnhoflive.backend.rimap.model.RimapPOI
 import de.deutschebahn.bahnhoflive.backend.rimap.model.RimapStationInfo
 import de.deutschebahn.bahnhoflive.backend.ris.model.RISTimetable
 import de.deutschebahn.bahnhoflive.backend.ris.model.TrainEvent
@@ -67,6 +71,7 @@ import de.deutschebahn.bahnhoflive.ui.timetable.localtransport.HafasTimetableVie
 import de.deutschebahn.bahnhoflive.util.ContextX
 import de.deutschebahn.bahnhoflive.util.Token
 import de.deutschebahn.bahnhoflive.util.append
+import de.deutschebahn.bahnhoflive.util.combine2LifeData
 import de.deutschebahn.bahnhoflive.util.openhours.OpenHoursParser
 import de.deutschebahn.bahnhoflive.util.then
 import de.deutschebahn.bahnhoflive.util.toLiveData
@@ -391,6 +396,8 @@ class StationViewModel(
 
     val occupancyResource = StationOccupancyResource(repositories.occupancyRepository)
 
+    val platformLevels = PlatformLevelResource()
+
     private val initializationPending = Token()
 
     private val rimapStationFeatureCollectionResource = RimapStationFeatureCollectionResource()
@@ -418,7 +425,7 @@ class StationViewModel(
 
     private val waggonOrderSubject = BehaviorSubject.create<TrainInfo>()
 
-    val waggonOrderObservable = waggonOrderSubject.distinctUntilChanged()
+//    val waggonOrderObservable = waggonOrderSubject.distinctUntilChanged()
 
     fun log(msg: String) {
         Log.d(StationViewModel::class.java.simpleName, msg)
@@ -446,6 +453,7 @@ class StationViewModel(
             parking.parkingsResource.initialize(station)
             lockers.lockerResource.initialize(station)
 
+
             viewModelScope.launch {
                 stationStateFlow.emit(station)
             }
@@ -459,6 +467,10 @@ class StationViewModel(
 
             railReplacementResource.initialize(station)
             accessibilityFeaturesResource.initialize(station)
+
+//            platformResource.initialize(station)
+            platformLevels.initialize(station)
+
             this.station = station
         }
 
@@ -1470,9 +1482,66 @@ class StationViewModel(
             }
         }
 
-
     val accessibilityFeaturesResource =
         AccessibilityFeaturesResource(this.application.repositories.stationRepository)
+
+    val platformsWithLevelResource =
+
+            combine2LifeData(accessibilityFeaturesResource.data, // apiPlatformList
+            platformLevels.data // poiPlatformList
+        ) { apiPlatformList: List<Platform>?, poiPlatformList: List<RimapPOI>? ->
+
+            val platformList : MutableList<Platform> = mutableListOf()
+
+            if(apiPlatformList!=null)
+                platformList.addAll(apiPlatformList)
+
+            val poiPlatforms = poiPlatformList?.filter {
+                it.type == MenuMapping.PLATFORM
+            }
+
+            platformList.forEach { itPlatform ->
+                val platformNr: Int = Platform.platformNumber(itPlatform.name)
+
+                val poi: RimapPOI? = poiPlatforms?.firstOrNull { itRimapPoi ->
+                    itRimapPoi.name == platformNr.toString()
+                }
+
+                if (poi != null)
+                    itPlatform.level = LevelMapping.codeToLevel(poi.level) ?: 0
+
+                itPlatform.linkedPlatformNumbers.let {
+                    val iter = it.iterator()
+
+                    while(iter.hasNext()) {
+                        val value = iter.next()
+
+                        if(itPlatform.number==value)
+                            iter.remove()
+
+                    }
+
+                }
+            }
+
+            // Gleise suchen, für die kein Level ermittelt wurde, da in rimapPoi nicht enthalten
+            // wenn so eins existiert, in der liste nach einem Gleis suchen, dessen Gegenüber dieses Gleis ist
+//            platformList.filter { it.level==UNKNOWN_LEVEL }.forEach { itPlatform->
+//                itPlatform.level =
+//                    platformList.firstOrNull{it.linkedPlatformNumber()==itPlatform.number}?.level ?: UNKNOWN_LEVEL
+//            }
+
+//            platformList.forEach { itPlatform ->
+//                itPlatform.linkedPlatforms?.sortBy{it} // todo: dient nur dazu 'komische' Gleisnummern nach unten zu schieben
+//                                                       // (so das etwas brauchbares bei linkedPlatform zurückgegeben wird)
+//            }
+
+
+
+            platformList.sortBy { it.level }
+
+            platformList.filter { it.name!=null && it.name.isDigitsOnly() }.toList()
+        }
 
     val mapAvailableLiveData =
         SpokenFeedbackAccessibilityLiveData(application).switchMap { spokenFeedbackAccessibilityEnabled ->

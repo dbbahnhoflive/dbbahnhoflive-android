@@ -6,6 +6,7 @@
 
 package de.deutschebahn.bahnhoflive.backend.db.ris
 
+import androidx.core.text.isDigitsOnly
 import com.android.volley.NetworkResponse
 import com.android.volley.Response
 import com.android.volley.VolleyError
@@ -16,6 +17,7 @@ import de.deutschebahn.bahnhoflive.backend.db.ris.model.AccessibilityStatus
 import de.deutschebahn.bahnhoflive.backend.db.ris.model.Platform
 import de.deutschebahn.bahnhoflive.repository.accessibility.AccessibilityFeature
 import de.deutschebahn.bahnhoflive.util.json.asJSONObjectSequence
+import de.deutschebahn.bahnhoflive.util.json.toStringList
 import org.json.JSONObject
 import java.util.*
 
@@ -48,19 +50,24 @@ class RISPlatformsRequest(
                     ?.mapNotNull { platformJsonObject ->
                         platformJsonObject.takeUnless { it.has("parentPlatform") }
                             ?.optString("name")?.let { name ->
-                                platformJsonObject.optJSONObject("accessibility")
-                                    ?.let { accessibilityJsonObject ->
-                                        Platform(
-                                            name,
-                                            AccessibilityFeature.VALUES.fold(
+
+                                val accJson =  platformJsonObject.optJSONObject("accessibility")
+
+                                var emap = EnumMap(
+                                    EnumSet.allOf(AccessibilityFeature::class.java)
+                                        .associateWith { AccessibilityStatus.UNKNOWN })
+
+                                if(accJson!=null) {
+
+                                    emap = AccessibilityFeature.VALUES.fold(
                                                 EnumMap<AccessibilityFeature, AccessibilityStatus>(
                                                     AccessibilityFeature::class.java
                                                 )
                                             ) { acc, accessibilityFeature ->
                                                 acc[accessibilityFeature] =
-                                                    accessibilityJsonObject.optString(
+                                            accJson.optString(
                                                         accessibilityFeature.tag
-                                                    )?.let {
+                                                    ).let {
                                                         try {
                                                             AccessibilityStatus.valueOf(it)
                                                         } catch (e: Exception) {
@@ -68,9 +75,21 @@ class RISPlatformsRequest(
                                                         }
                                                     } ?: AccessibilityStatus.UNKNOWN
                                                 acc
-                                            }
-                                        )
                                     }
+                                }
+
+                                Platform(
+                                    name,
+                                    emap,
+                                    platformJsonObject.optJSONArray("linkedPlatforms")
+                                        ?.toStringList()?.toMutableList(),
+                                            platformJsonObject.optBoolean("headPlatform"),
+                                            platformJsonObject.optDouble("start", -1.0),
+                                            platformJsonObject.optDouble("end", 0.0),
+                                            platformJsonObject.optDouble("length", 0.0)
+                                        )
+
+
                             }
                     }?.toList()
             } ?: emptyList()

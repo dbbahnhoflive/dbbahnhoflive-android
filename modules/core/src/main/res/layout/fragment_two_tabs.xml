@@ -68,4 +68,14 @@
         app:layout_behavior="@string/appbar_scrolling_view_behavior"
         tools:layout="@layout/fragment_timetable_db" />
 
+    <de.deutschebahn.bahnhoflive.tutorial.TutorialView
+        android:id="@+id/tab_tutorial_view"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="bottom"
+        android:visibility="gone"
+        tools:visibility="visible"
+        android:elevation="10dp" />
+
+
 </androidx.coordinatorlayout.widget.CoordinatorLayout>

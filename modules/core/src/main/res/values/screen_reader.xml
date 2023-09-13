@@ -106,4 +106,19 @@
     <string name="sr_accessibility_link_elevators">Zur Übersicht der Aufzüge wechseln</string>
     <string name="sr_accessibility_hotline">Telefon 030 6521 2888</string>
 
+    <string name = "sr_open_platform_information">Öffnen von Gleisinformationen</string>
+    <string name = "sr_open_station">"Öffnen des Bahnhofs"</string>
+    <string name = "sr_arrival">"Ankunft"</string>
+    <string name = "sr_departure">"Abfahrt"</string>
+
+    <plurals name="sr_template_estimated_delay_minutes">
+        <item quantity="one">"circa %d Minute später"</item>
+        <item quantity="other">"circa %d Minuten später"</item>
+    </plurals>
+
+    <string name = "sr_open_elevators">Wechseln in die Übersicht Aufzüge</string>
+    <string name = "sr_open_accessibility">Wechseln in die Informationen zur Barrierefreiheit</string>
+
+
+
 </resources>

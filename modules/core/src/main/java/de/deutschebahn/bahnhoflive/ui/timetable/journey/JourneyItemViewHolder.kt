@@ -1,6 +1,7 @@
 package de.deutschebahn.bahnhoflive.ui.timetable.journey
 
 import android.graphics.Typeface
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import android.widget.TextView
@@ -8,34 +9,46 @@ import androidx.core.view.isGone
 import androidx.core.view.isVisible
 import androidx.core.widget.TextViewCompat
 import de.deutschebahn.bahnhoflive.R
+import de.deutschebahn.bahnhoflive.backend.db.ris.model.Platform
+import de.deutschebahn.bahnhoflive.backend.db.ris.model.Platform.Companion.LEVEL_UNKNOWN
+import de.deutschebahn.bahnhoflive.backend.db.ris.model.findPlatform
+import de.deutschebahn.bahnhoflive.backend.db.ris.model.firstLinkedPlatform
 import de.deutschebahn.bahnhoflive.databinding.ItemJourneyDetailedBinding
 import de.deutschebahn.bahnhoflive.ui.Status
 import de.deutschebahn.bahnhoflive.ui.ViewHolder
+import de.deutschebahn.bahnhoflive.util.changeAccessibilityActionClickText
 import java.text.DateFormat
 import java.util.concurrent.TimeUnit
 
-class JourneyItemViewHolder(private val itemJourneyDetailedBinding: ItemJourneyDetailedBinding) :
+class JourneyItemViewHolder(
+    private val itemJourneyDetailedBinding: ItemJourneyDetailedBinding,
+    private val onClickPlatformInformation: (view: View, journeyStop: JourneyStop, platforms:List<Platform>) -> Unit) :
     ViewHolder<JourneyStop>(itemJourneyDetailedBinding.root) {
 
     private val dateFormat = java.text.SimpleDateFormat.getTimeInstance(DateFormat.SHORT)
 
     constructor(
         parent: ViewGroup,
-        inflater: LayoutInflater = LayoutInflater.from(parent.context)
+        inflater: LayoutInflater = LayoutInflater.from(parent.context),
+        onClickPlatformInformation: (view: View, journeyStop: JourneyStop, platforms:List<Platform>) -> Unit
     ) : this(
         ItemJourneyDetailedBinding.inflate(
             inflater,
             parent,
             false
-        )
+        ),
+        onClickPlatformInformation
     )
 
     private val highlightableTextViews = itemJourneyDetailedBinding.run {
         listOf(stopName, scheduledArrival, expectedArrival, scheduledDeparture, expectedDeparture)
     }
 
-    companion object {
-        const val MAX_LEVEL = 10000
+    private var platformList : MutableList<Platform> = mutableListOf()
+
+    fun setPlatforms(platformList : List<Platform> ) {
+        this.platformList.clear()
+        this.platformList.addAll(platformList)
     }
 
     override fun onBind(item: JourneyStop?) {
@@ -47,7 +60,63 @@ class JourneyItemViewHolder(private val itemJourneyDetailedBinding: ItemJourneyD
             platform.text = item?.platform?.let { "Gl. $it" }
             platform.isSelected = item?.isPlatformChange == true
 
+            item?.let {
+
+                val displayPlatform: String = it.platform?:"" // kann auch 15 D-F sein !
+                val thisPlatform : Platform? = platformList.findPlatform(displayPlatform)
+
+                linkPlatform.isVisible = it.current==true && thisPlatform!=null && ((platformList.size>1) || thisPlatform.isHeadPlatform)
+
+                if (linkPlatform.isVisible) {
+
+                    layout.setOnClickListener {
+                        platformList?.let { it1 ->
+                            onClickPlatformInformation(
+                                it,
+                                item,
+                                it1
+                            )
+                        }
+                    }
+
+                    linkPlatform.setOnClickListener {
+                        platformList?.let { it1 ->
+                                    onClickPlatformInformation(
+                                        it,
+                                        item,
+                                it1
+                                    )
+                                }
+                            }
+
+                    thisPlatform?.let {itPlatform->
+
+                        val levelMask = when  {
+                            itPlatform.level<0 -> "%d. Untergeschoss, Gleis " + itPlatform.formatLinkedPlatformString(true,false)
+                            itPlatform.level==0 -> "Erdgeschoss, Gleis " + itPlatform.formatLinkedPlatformString(true,false)
+                            itPlatform.level==LEVEL_UNKNOWN -> "Gleis " + itPlatform.formatLinkedPlatformString(true,false)
+                            else -> "%d. Obergeschoss, Gleis " + itPlatform.formatLinkedPlatformString(true,false)
+                        }
+
+                        when {
+                            itPlatform.level<0 -> linkPlatform.text = String.format(levelMask,  Math.abs(itPlatform.level))
+                            itPlatform.level==0 -> linkPlatform.text = levelMask
+                            itPlatform.level==LEVEL_UNKNOWN -> linkPlatform.text = String.format(levelMask)
+                            else -> linkPlatform.text = String.format(levelMask, Math.abs(itPlatform.level))
+
+                    }
+
+                        linkPlatform.contentDescription= linkPlatform.text
+
+                }
+                    root.changeAccessibilityActionClickText(itemView.resources.getString(R.string.sr_open_platform_information))
+                }
+                else
+                    root.changeAccessibilityActionClickText(itemView.resources.getString(R.string.sr_open_station))
+            }
+
             when {
+
                 item?.isAdditional == true -> {
                     advice.setText(R.string.journey_stop_additional)
                     TextViewCompat.setCompoundDrawablesRelativeWithIntrinsicBounds(
@@ -60,6 +129,7 @@ class JourneyItemViewHolder(private val itemJourneyDetailedBinding: ItemJourneyD
                     advice.isSelected = false
                     advice.isGone = false
                 }
+
                 item?.isPlatformChange == true -> {
                     advice.setText(R.string.journey_stop_platform_change)
                     TextViewCompat.setCompoundDrawablesRelativeWithIntrinsicBounds(
@@ -72,10 +142,25 @@ class JourneyItemViewHolder(private val itemJourneyDetailedBinding: ItemJourneyD
                     advice.isSelected = true
                     advice.isGone = false
                 }
+
+                (item?.departure?.canceled == true || item?.arrival?.canceled == true) -> {
+                    advice.setText(R.string.journey_stop_canceled)
+                    TextViewCompat.setCompoundDrawablesRelativeWithIntrinsicBounds(
+                        advice,
+                        R.drawable.app_warndreieck,
+                        0,
+                        0,
+                        0
+                    )
+                    advice.isSelected = true
+                    advice.isGone = false
+
+                }
                 else -> {
                     advice.text = null
                     advice.isGone = true
                 }
+
             }
 
             bindTimes(scheduledArrival, expectedArrival, item?.arrival)
@@ -105,31 +190,71 @@ class JourneyItemViewHolder(private val itemJourneyDetailedBinding: ItemJourneyD
                 }
             }
 
-            // for screenreader !
-            root.contentDescription = item?.run {
+            item?.let {
+                root.contentDescription = renderContentDescription(it)
+            }
+
+        }
+
+    }
+
+    private fun renderContentDescription(journeyStop: JourneyStop): String {
+
+        with(itemView.resources) {
+
+            val platform =
+                platformList.firstOrNull { it.number == Platform.platformNumber(journeyStop.platform) }
+
+            return journeyStop.let { itStop ->
                 listOfNotNull(
                     listOfNotNull(
-                        name,
-                        platform?.let { "Gleis $it " }
+                        itStop.name,
+                        itStop.platform?.let { "Gleis $it " },
+
+                        platform?.let {
+                            platformList.firstLinkedPlatform(journeyStop.platform)
+                                ?.let { itLinkedPlatform ->
+                                    listOfNotNull(
+                                        if (it.linkedPlatformNumbers.size == 1) {
+                                            listOfNotNull(
+                                                " .${
+                                                    getString(
+                                                        R.string.template_linkplatform,
+                                                        itLinkedPlatform.number
+                                                    )
+                                                }",
+                                                if (itLinkedPlatform.isHeadPlatform)
+                                                    " .${getString(R.string.platform_head)}."
+                                                else
+                                                    null
+                                            )
+
+                                        } else
+                                            null
+                                    )
+                                }
+                        }
+
+
                     ).joinToString(", ", postfix = "."),
                     listOfNotNull(
                         when {
-                            isAdditional -> "(Hinweis: \"Zusätzlicher Halt\")"
-                            isPlatformChange -> "(Hinweis: \"Gleiswechsel\")"
+                            itStop.isAdditional -> "(Hinweis: \"Zusätzlicher Halt\")"
+                            itStop.isPlatformChange -> "(Hinweis: \"Gleiswechsel\")"
                             else -> null
                         },
-                        arrival?.formatContentDescription("Ankunft", progress >= 0),
-                        departure?.formatContentDescription("Abfahrt", progress > 0)
+                        itStop.arrival?.formatContentDescription("Ankunft", itStop.progress >= 0),
+                        itStop.departure?.formatContentDescription("Abfahrt", itStop.progress > 0)
                     ).joinToString("; ", postfix = ".")
                 ).joinToString(separator = " ")
             }.also {
 //                Log.d(JourneyItemViewHolder::class.java.simpleName, "Content description:\n$it")
             }
+
         }
 
     }
 
-    // for screenreader
     private fun JourneyStopEvent.formatContentDescription(prefix: String, past: Boolean) =
         listOfNotNull(
             prefix,
@@ -171,4 +296,9 @@ class JourneyItemViewHolder(private val itemJourneyDetailedBinding: ItemJourneyD
         scheduledTimeView.isGone = viewsGone
         estimatedTimeView.isGone = viewsGone
     }
-}
+
+    companion object {
+        const val MAX_LEVEL = 10000
+    }
+
+    }

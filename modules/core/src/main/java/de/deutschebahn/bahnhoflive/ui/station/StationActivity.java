@@ -449,6 +449,10 @@ public class StationActivity extends BaseActivity implements
         final TimetablesFragment timetablesFragment = TimetablesFragment.findIn(this.timetablesFragment);
 
         if (timetablesFragment != null) {
+
+            if(!localTransport) // kam mit ticket 2453, dient dazu Gleis(platform)-Informationen zu laden, da die ab 2453 mit angezeigt werden
+                stationViewModel.getAccessibilityFeaturesResource().loadIfNecessary();
+
             this.timetablesFragment.popEntireHistory();
             timetablesFragment.switchTo(localTransport, arrivals, trackFilter);
         }
@@ -681,6 +685,7 @@ public class StationActivity extends BaseActivity implements
             return true;
         }
 
+        Log.d("cr", "Station: " + station.getTitle() + ", " + station.getId() + ", " + station.getLocation().latitude + ", " + station.getLocation().longitude + ", " + station.getEvaIds().getIds().toString());
 
         // Daten zur Rücknavigation ins stationViewModel packen
         final Station stationToNavigateBack = intent.getParcelableExtra(ARG_STATION_TO_NAVIGATE_BACK);

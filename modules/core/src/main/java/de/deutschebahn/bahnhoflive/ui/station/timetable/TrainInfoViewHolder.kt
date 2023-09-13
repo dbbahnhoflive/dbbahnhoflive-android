@@ -8,6 +8,8 @@ package de.deutschebahn.bahnhoflive.ui.station.timetable
 
 import android.view.ViewGroup
 import de.deutschebahn.bahnhoflive.R
+import de.deutschebahn.bahnhoflive.backend.db.ris.model.Platform
+import de.deutschebahn.bahnhoflive.backend.db.ris.model.firstLinkedPlatform
 import de.deutschebahn.bahnhoflive.backend.ris.model.TrainEvent
 import de.deutschebahn.bahnhoflive.backend.ris.model.TrainInfo
 import de.deutschebahn.bahnhoflive.backend.ris.model.TrainMovementInfo
@@ -54,6 +56,8 @@ class TrainInfoViewHolder internal constructor(
     private val trainEvent: TrainEvent
         get() = timetableAdapter.trainEvent
 
+    private var platformList : List<Platform>? = null
+
     override fun onBind(item: TrainInfo?) {
         super.onBind(item)
 
@@ -78,13 +82,35 @@ class TrainInfoViewHolder internal constructor(
         trainInfo: TrainInfo,
         trainMovementInfo: TrainMovementInfo
     ) = with(itemView.resources) {
+
+        var platformText =
+            getString(R.string.sr_template_platform, trainMovementInfo.displayPlatform)
+
+        val platform =
+            platformList?.firstOrNull { it.number == Platform.platformNumber(trainMovementInfo.platform) }
+
+        platform?.let {
+            platformList?.firstLinkedPlatform(trainMovementInfo.platform)?.let { itLinkedPlatform ->
+                if (it.linkedPlatformNumbers.size == 1) {
+                    platformText += " .${
+                        getString(
+                            R.string.template_linkplatform,
+                            itLinkedPlatform.number
+                        )
+                    }"
+                    if (itLinkedPlatform.isHeadPlatform)
+                        platformText += " .${getString(R.string.platform_head)}."
+                }
+            }
+        }
+
         val trainEvent = trainEvent
         getString(R.string.sr_template_db_timetable_item,
             TimetableViewHelper.composeName(trainInfo, trainMovementInfo),
             getText(trainEvent.contentDescriptionPhrase),
             trainMovementInfo.getDestinationStop(trainEvent.isDeparture),
             trainMovementInfo.formattedTime,
-            getString(R.string.sr_template_platform, trainMovementInfo.displayPlatform),
+            platformText,
             trainMovementInfo.delayInMinutes().takeIf { it > 0 }?.let {
                 getString(
                     R.string.sr_template_estimated,
@@ -97,9 +123,9 @@ class TrainInfoViewHolder internal constructor(
         )
     }
 
-
-
-
+    fun setPlatforms(platforms: List<Platform>) {
+        this.platformList = platforms
+    }
     private fun updateWagonOrderViews(item: TrainInfo?) {
         trainInfoOverviewViewHolder.bind(item)
     }

@@ -28,10 +28,14 @@ import de.deutschebahn.bahnhoflive.backend.hafas.model.HafasStation;
 import de.deutschebahn.bahnhoflive.backend.ris.model.RISTimetable;
 import de.deutschebahn.bahnhoflive.backend.ris.model.TrainEvent;
 import de.deutschebahn.bahnhoflive.backend.ris.model.TrainInfo;
+import de.deutschebahn.bahnhoflive.tutorial.Tutorial;
+import de.deutschebahn.bahnhoflive.tutorial.TutorialManager;
+import de.deutschebahn.bahnhoflive.tutorial.TutorialView;
 import de.deutschebahn.bahnhoflive.ui.ToolbarViewHolder;
 import de.deutschebahn.bahnhoflive.ui.station.HistoryFragment;
 import de.deutschebahn.bahnhoflive.ui.station.StationViewModel;
 import de.deutschebahn.bahnhoflive.ui.timetable.localtransport.HafasDeparturesFragment;
+import de.deutschebahn.bahnhoflive.util.VersionManager;
 
 public class TimetablesFragment extends TwoTabsFragment {
 
@@ -81,12 +85,14 @@ public class TimetablesFragment extends TwoTabsFragment {
     }
 
     public void switchTo(boolean localTransport, boolean arrivals, String trackFilter) {
+       // erst jetzt wird das Fragment sichtbar !
         if (localTransport) {
             setTab(1);
         } else {
             stationViewModel.setTrackFilter(trackFilter);
             stationViewModel.setShowArrivals(arrivals);
             setTab(0);
+            showTutorialIfNecessary();
         }
     }
 
@@ -212,5 +218,38 @@ public class TimetablesFragment extends TwoTabsFragment {
         }
 
         return view;
+    }
+
+    void showTutorialIfNecessary() {
+
+        final VersionManager versionManager = VersionManager.Companion.getInstance(requireActivity());
+        final TutorialManager tutorialManager = TutorialManager.getInstance(requireActivity());
+        final Tutorial tutorial = tutorialManager.getTutorialForView(TutorialManager.Id.TIMETABLE);
+        final TutorialView mTutorialView =  requireView().findViewById(R.id.tab_tutorial_view);
+
+        if (tutorial != null ) {
+
+            int countLinkedPlatformsTutorialGeneralSeen = versionManager.getLinkedPlatformsTutorialGeneralShowCounter();
+
+            final boolean isUpdate = versionManager.isUpdate() &&
+                    versionManager.getLastVersion().compareTo(new VersionManager.SoftwareVersion("3.24.0")) < 0;
+            final boolean isFreshInstallation = versionManager.isFreshInstallation();
+
+            if (countLinkedPlatformsTutorialGeneralSeen <= 3 && (
+                    isFreshInstallation ||
+                            (countLinkedPlatformsTutorialGeneralSeen == 0 && isUpdate) ||
+                            ((countLinkedPlatformsTutorialGeneralSeen == 1) && (versionManager.getAppUsageCountDays() >= 5)) ||
+                            ((countLinkedPlatformsTutorialGeneralSeen == 2) && (versionManager.getAppUsageCountDays() >= 10))
+            )) {
+
+                tutorialManager.showTutorialIfNecessary(mTutorialView, tutorial.id);
+                tutorialManager.markTutorialAsSeen(tutorial);
+                countLinkedPlatformsTutorialGeneralSeen++;
+                versionManager.setLinkedPlatformsTutorialGeneralShowCounter(countLinkedPlatformsTutorialGeneralSeen);
+
+            }
+
+        }
+
     }
 }

@@ -31,7 +31,6 @@ import de.deutschebahn.bahnhoflive.ui.map.MapPresetProvider
 import de.deutschebahn.bahnhoflive.ui.station.HistoryFragment
 import de.deutschebahn.bahnhoflive.ui.station.StationViewModel
 import de.deutschebahn.bahnhoflive.ui.timetable.journey.JourneyFragment
-import io.reactivex.functions.Consumer
 
 
 class DbTimetableFragment : Fragment(), MapPresetProvider {
@@ -119,7 +118,7 @@ class DbTimetableFragment : Fragment(), MapPresetProvider {
             trainInfoFromIntent?.let {
                     trainInfoFromIntentSimulateClick = true
                     selectedTrainInfo.value = trainInfoFromIntent
-                    trainInfoFromIntent = null;
+                    trainInfoFromIntent = null
             }
         }
         stationViewModel.timetableErrorsLiveData.observe(viewLifecycleOwner) { volleyError ->
@@ -176,11 +175,6 @@ class DbTimetableFragment : Fragment(), MapPresetProvider {
 
                     stationViewModel.finishBackNavigation()
                 }
-                else {
-
-
-                }
-
             }
         }
 
@@ -191,11 +185,11 @@ class DbTimetableFragment : Fragment(), MapPresetProvider {
             adapter.setTrainCategoryFilter(it)
         }
 
-        stationViewModel.waggonOrderObservable.subscribe(
-            Consumer<TrainInfo>() {
-                trainInfoFromIntent=it
+        stationViewModel.accessibilityFeaturesResource.data.observe(viewLifecycleOwner) {
+            it?.let {
+               adapter.setPlatforms(it)
             }
-        );
+        }
 
         return view
     }
