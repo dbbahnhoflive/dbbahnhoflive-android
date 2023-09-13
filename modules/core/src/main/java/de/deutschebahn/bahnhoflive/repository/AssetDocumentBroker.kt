@@ -16,7 +16,7 @@ class AssetDocumentBroker(
 ) {
 
     companion object {
-        const val FILE_NAME_LEGAL_NOTICE = "imprint.html"
+        const val FILE_NAME_LEGAL_NOTICE = "impressum.html"
         const val FILE_NAME_PRIVACY_POLICY = "datenschutz.html"
     }
 

@@ -88,7 +88,7 @@
 
     <!-- Wagenreihung Ausstattungsarten -->
     <string name="wagon_feature_bicycle_spaces">Stellplätze für Fahrräder</string>
-    <string name="wagon_feature_wheelchair_spaces">Plätze für Rollstuhlfahrer</string>
+    <string name="wagon_feature_wheelchair_spaces">Plätze für Menschen mit Rollstuhl</string>
     <string name="wagon_feature_disabled_toilet">Toilette für mobilitätseingeschränkte Personen</string>
     <string name="wagon_feature_airconditioning">Klimaanlage</string>
     <string name="status_defective">defekt</string>
@@ -263,7 +263,7 @@
     <string name="notification_channel_arrival_name">Einfahrt</string>
     <string name="notification_channel_arrival_description">Erinnerungen vor Einfahrt eines Zuges</string>
     <string name="label_current_occupancy">Aktuell:</string>
-    <string name="title_occupancy">Besucheraufkommen</string>
+    <string name="title_occupancy">Besuchendenaufkommen</string>
 
     <string name="notification_channel_facility_state">Verfügbarkeitsmeldungen</string>
     <string name="default_notification_channel_id">Verfügbarkeitsmeldungen</string> <!-- MUST BE SAME AS notification_channel_facility_state-->
@@ -284,16 +284,16 @@
     <string name="friday">Freitag</string>
     <string name="saturday">Samstag</string>
     <string name="sunday">Sonntag</string>
-    <string name="title_occupancy_explanation">Besucheraufkommen</string>
-    <string name="occupancy_level_unknown">Es liegt keine aktuelle Information vor.</string>
-    <string name="occupancy_level_low">Weniger Besucher als üblich</string>
-    <string name="occupancy_explanation_low">Vor Ort ist aktuell mit weniger Besuchern als gewöhnlich zu rechnen. In der Regel ist das Besucheraufkommen zu dieser Uhrzeit an diesem Wochentag höher.</string>
-    <string name="occupancy_level_average">Übliches Besucheraufkommen</string>
-    <string name="occupancy_explanation_average">Die Anzahl der Besucher vor Ort entspricht dem gewöhnlichen Besucheraufkommen zu dieser Uhrzeit an diesem Wochentag.</string>
-    <string name="occupancy_level_high">Mehr Besucher als üblich</string>
-    <string name="occupancy_explanation_high">Vor Ort ist aktuell mit mehr Besuchern als gewöhnlich zu rechnen. In der Regel ist das Besucheraufkommen zu dieser Uhrzeit an diesem Wochentag geringer.</string>
+    <string name="title_occupancy_explanation">Besuchendenaufkommen</string>
+    <string name="occupancy_level_unknown">Es liegen zur Zeit keine Informationen über das Besuchendenaufkommen vor.</string>
+    <string name="occupancy_level_low">Weniger Besuchende als üblich</string>
+    <string name="occupancy_explanation_low">Vor Ort ist aktuell mit weniger Besuchenden als gewöhnlich zu rechnen. In der Regel ist das Publikumsaufkommen zu dieser Uhrzeit an diesem Wochentag höher.</string>
+    <string name="occupancy_level_average">Übliches Besuchendenaufkommen</string>
+    <string name="occupancy_explanation_average">Die Anzahl der Besuchenden vor Ort entspricht dem gewöhnlichen Publikumsaufkommen zu dieser Uhrzeit an diesem Wochentag.</string>
+    <string name="occupancy_level_high">Mehr Besuchende als üblich</string>
+    <string name="occupancy_explanation_high">Vor Ort ist aktuell mit mehr Besuchenden als gewöhnlich zu rechnen. In der Regel ist das Publikumsaufkommen zu dieser Uhrzeit an diesem Wochentag geringer.</string>
     <string name="occupancy_advice_title">Hinweise</string>
-    <string name="occupancy_advice_copy">Bitte beachten Sie: Diese Info-Grafik gibt Auskunft über das aktuelle Besucheraufkommen im Vergleich zum durchschnittlichen Besucheraufkommen der vergangenen acht Wochen. Für diese Grafik werden Näherungswerte errechnet und keine absoluten Zahlen verwendet. Folglich sind Abweichungen zum tatsächlichen Besucheraufkommen vor Ort möglich. Diese Grafik gibt außerdem keine Auskunft hinsichtlich des Besucheraufkommens im Verhältnis zu den räumlichen Kapazitäten vor Ort. Alle Angaben sind ohne Gewähr.</string>
+    <string name="occupancy_advice_copy">Bitte beachten Sie: Diese Info-Grafik gibt Auskunft über das aktuelle Besuchendenaufkommen im Vergleich zum durchschnittlichen Besuchendenaufkommen der vergangenen acht Wochen. Für diese Grafik werden Näherungswerte errechnet und keine absoluten Zahlen verwendet. Folglich sind Abweichungen zum tatsächlichen Publikumsaufkommen vor Ort möglich. Diese Grafik gibt außerdem keine Auskunft hinsichtlich des Besuchendenaufkommens im Verhältnis zu den räumlichen Kapazitäten vor Ort. Alle Angaben sind ohne Gewähr.</string>
     <string name="occupancy_additional_info_title">Weiterführende Informationen</string>
     <string name="occupancy_additional_info_copy">Aktuelle Informationen und Service-Hinweise zum sicheren Aufenthalt am Bahnhof sowie Ihrer Reise finden Sie auf gemeinsamgehtdas.de.</string>
     <string name="consent_headline">Gemeinsam mit Ihnen wollen wir besser werden!</string>
@@ -308,8 +308,8 @@
     <string name="feedback_cost_notice">Dieser Service ist <b>kostenlos</b>. Es fällt ggf. das Datenentgelte Ihres Mobilfunkproviders an.</string>
     <string name="feedback_mail_alternative">E-Mail</string>
     <string name="feedback_phone_number">030 586020930</string>
-    <string name="feeback_disclaimer"><b>* Bitte beachten Sie,</b> dass die Benachrichtigung auf diesem Weg ein bestehendes Nutzerkonto beim Dienst „WhatsApp“ voraussetzt und über den Dienst „MessengerPeople“ weitergeleitet wird. Diese Dienste und deren Datenverarbeitung werden ausschließlich durch die jeweiligen Anbieter eigenverantwortlich angeboten, betrieben und ausgestaltet. Sofern Sie diese Dienste freiwillig und eigenständig nutzen, um uns eine Verschmutzung zu melden, sind die Erklärungen zum Datenschutz von „WhatsApp“ und „MessengerPeople GmbH“ zu beachten. Hinsichtlich der Verarbeitung Ihrer Daten bei der DB Station&amp;Service AG im Zuge einer Verschmutzungsmeldung über diese Dienste lesen Sie bitte vorab auch aufmerksam unsere Datenschutzerklärung: bahnhof.de/service/db-reinigungsteam</string>
-    <string name="feedback_whatsapp_unavailable">Sie benötigen ein bestehendes Nutzerkonto beim Dienst „WhatsApp“. Aktuell ist dieser Dienst nicht auf ihrem Gerät installiert.</string>
+    <string name="feeback_disclaimer"><b>* Bitte beachten Sie,</b> dass die Benachrichtigung auf diesem Weg ein bestehendes Konto beim Dienst „WhatsApp“ voraussetzt und über den Dienst „MessengerPeople“ weitergeleitet wird. Diese Dienste und deren Datenverarbeitung werden ausschließlich durch die jeweiligen Anbietenden eigenverantwortlich angeboten, betrieben und ausgestaltet. Sofern Sie diese Dienste freiwillig und eigenständig nutzen, um uns eine Verschmutzung zu melden, sind die Erklärungen zum Datenschutz von „WhatsApp“ und „MessengerPeople GmbH“ zu beachten. Hinsichtlich der Verarbeitung Ihrer Daten bei der DB Station&amp;Service AG im Zuge einer Verschmutzungsmeldung über diese Dienste lesen Sie bitte vorab auch aufmerksam unsere Datenschutzerklärung: bahnhof.de/service/db-reinigungsteam</string>
+    <string name="feedback_whatsapp_unavailable">Sie benötigen ein bestehendes Konto beim Dienst „WhatsApp“. Aktuell ist dieser Dienst nicht auf ihrem Gerät installiert.</string>
     <string name="feedback_headline_alternative_contacts">Alternative Kontaktmöglichkeiten</string>
 
     <string name="accessibilityStepFreeAll">Dieser Bahnhof bietet Ihnen einen stufenfreien Zugang zu den Bahnsteigen.</string>
@@ -337,7 +337,7 @@
     <string name="accessibilityDescriptionStairsMarking">Die Kanten der Treppenstufen, mindestens der ersten und der letzten Stufe, sind kontrastreich markiert.</string>
     <string name="accessibilityDescriptionTactileHandrailLabel">Die Handläufe an den Treppen und Rampen zum Bahnsteig verfügen über ein Handlaufschild mit Kurzinformationen (z.B. zu Gleisen) in ertastbarer Schrift.</string>
     <string name="accessibilityDescriptionPlatformSign">Ein kontrastreiches und damit gut lesbares, modernes Wegeleitsystem ist vorhanden. (Gut erkennbare, kontrastreiche Schilder erleichtern die Orientierung. Dazu gehören blaue Schilder mit weißer oder gelber Schrift.)</string>
-    <string name="accessibilityDescriptionBoardingAid">Der Einstieg vom Bahnsteig in den Zug ist direkt oder über mobile Einstiegshilfen wie Hublifte oder mobile Rampen möglich. Unsere DB Service-Mitarbeiter und Mitarbeiterinnen sind speziell geschult, um mobilitätseingeschränkte Reisende beim Ein- und Aussteigen zu unterstützen.</string>
+    <string name="accessibilityDescriptionBoardingAid">Der Einstieg vom Bahnsteig in den Zug ist direkt oder über mobile Einstiegshilfen wie Hublifte oder mobile Rampen möglich. Unsere DB Service-Servicemitarbeitenden sind speziell geschult, um mobilitätseingeschränkte Reisende beim Ein- und Aussteigen zu unterstützen.</string>
     <string name="accessibilityDescriptionAutomaticDoor">An diesem Bahnhof ist der Zugang zum Empfangsgebäude mit Automatiktüren ausgestattet.</string>
 
     <string name="accessibility_title">Barrierefreiheit</string>

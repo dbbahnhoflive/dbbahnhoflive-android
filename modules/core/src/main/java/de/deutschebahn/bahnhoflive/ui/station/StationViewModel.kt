@@ -950,7 +950,7 @@ class StationViewModel(
                                         "Bahnhofsinformation Info & Services DB Information" -> eventuallyGenerateInfoResult(
                                             ServiceContentType.DB_INFORMATION
                                         )
-                                        "Bahnhofsinformation Info & Services Mobiler Service" -> eventuallyGenerateInfoResult(
+                                        "Bahnhofsinformation Info & Services Mobile Servicemitarbeitende" -> eventuallyGenerateInfoResult(
                                             ServiceContentType.MOBILE_SERVICE
                                         )
                                         "Bahnhofsinformation Info & Services Bahnhofsmission" -> eventuallyGenerateInfoResult(

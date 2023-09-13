@@ -82,7 +82,7 @@ object MenuMapping {
         DB_INFORMATION to (ShopCategory.Menucat.TICKETSREISEAUSKUNFT to "DB Information"),
         DB_TRAVEL_CENTER to (ShopCategory.Menucat.TICKETSREISEAUSKUNFT to "DB Reisezentrum"),
         TICKETS to (ShopCategory.Menucat.TICKETSREISEAUSKUNFT to "Fahrkarten"),
-        TOURIST_INFORMATION to (ShopCategory.Menucat.TICKETSREISEAUSKUNFT to "Touristeninformation"),
+        TOURIST_INFORMATION to (ShopCategory.Menucat.TICKETSREISEAUSKUNFT to "touristische Information"),
         PLATFROM to (ShopCategory.Menucat.BAHNGLEISEFERNVERKEHR to "Bahngleise"),
         PLATFORM to (ShopCategory.Menucat.BAHNGLEISEFERNVERKEHR to "Bahngleise"),
         PLATFORM_SECTOR_CUBE to (ShopCategory.Menucat.BAHNGLEISEFERNVERKEHR to "Abschnittswürfel"),

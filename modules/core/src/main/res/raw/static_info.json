@@ -1,25 +1,28 @@
 {
-	"staticInfo": [
-		{
-			"descriptionText": "<p>Die DB Information ist die zentrale Anlaufstelle für Auskünfte rund um Ihre Bahnreise, Touristeninformationen und Treffpunkt für alle Reisenden und Bahnhofsbesucher.</p>",
+	"staticInfo": [{
+			"descriptionText": "<p>Die DB Information ist die zentrale Anlaufstelle für Auskünfte rund um Ihre Bahnreise, touristische Informationen und Treffpunkt für alle Reisenden und Bahnhofsbesuchende.</p>",
 			"title": "DB Information",
 			"type": "db_information"
 		},
+
 		{
-			"descriptionText": "<p>Auf dem Bahnhof stehen Ihnen unsere mobilen Service-Mitarbeiter mit Rat und Tat zur Seite.<br>Die mobilen Service-Mitarbeitenden unterstützen Sie mit aktuellen Informationen und beantworten Ihnen Fragen auf Ihrer Reise. Bei Abweichungen, wie beispielsweise Verspätungen, erhalten Sie Reisealternativen und weiterführende Details.<br>Darüber hinaus unterstützt der mobile Service mobilitätseingeschränkte Reisende beim Ein-, Um- oder Aussteigen. Hierzu erhalten sie weitere Informationen unter <a href=\"showServiceNrMobi\">Mobilitätsservice</a>.<br></p>",
-			"title": "Mobiler Service",
+			"descriptionText": "<p>Auf dem Bahnhof stehen Ihnen unsere mobilen Servicemitarbeitenden mit Rat und Tat zur Seite.<br>Die mobilen Servicemitarbeitenden unterstützen Sie mit aktuellen Informationen und beantworten Ihnen Fragen auf Ihrer Reise. Bei Abweichungen, wie beispielsweise Verspätungen, erhalten Sie Reisealternativen und weiterführende Details.<br>Darüber hinaus unterstützen die mobilen Servicemitarbeitenden mobilitätseingeschränkte Reisende beim Ein-, Um- oder Aussteigen. Hierzu erhalten sie weitere Informationen unter <a href=\"mobilitaetsservice\">Mobilitätsservice</a>.</p>",
+			"title": "Mobile Servicemitarbeitende",
 			"type": "mobiler_service"
 		},
+
 		{
-			"descriptionText": "<p>Die Bahnhofsmission bietet Rat und Informationen in Notsituationen und vermittelt Fachstellen für weitergehende Hilfen. Außerdem betreut sie allein reisende Kinder und mobilitätseingeschränkte Reisende.<br><a href=\"http://www.bahnhofsmission.de\">Hier</a> finden Sie eine Übersicht sämtlicher Bahnhofsmissionen in Deutschland und deren Leistungsangebote. Näheres erfahren Sie auch von den Service-Mitarbeitern an der DB Information vor Ort.</p>",
+			"descriptionText": "<p>Die Bahnhofsmission bietet Rat und Informationen in Notsituationen und vermittelt Fachstellen für weitergehende Hilfen. Außerdem betreut sie allein reisende Kinder und mobilitätseingeschränkte Reisende.<br><a href=\"https://www.bahnhofsmission.de\">Hier</a> finden Sie eine Übersicht sämtlicher Bahnhofsmissionen in Deutschland und deren Leistungsangebote. Näheres erfahren Sie auch von den Servicemitarbeitenden an der DB Information vor Ort.</p>",
 			"title": "Bahnhofsmission",
 			"type": "bahnhofsmission"
 		},
+
 		{
-			"descriptionText": "<p>Die Mobilitätsservice-Zentrale organisiert alles Notwendige, wenn Sie Hilfe beim Ein-, Um- oder Aussteigen benötigen. Damit wir Sie optimal betreuen können bitten wir Sie, sich bis spätestens bis <b>20:00 Uhr des Vortages</b> Ihrer Reise anzumelden. Bei Internationalen Reisen <b>spätestens 48 Stunden</b> im Voraus.</p><dbactionbutton href=\"https://msz-bahn.de/\">Online-Formular</dbactionbutton><p><b><br>Weitere Kontaktmöglichkeiten</b></p><dbactionbutton href=\"tel:03065212888\">030 6521 2888</dbactionbutton><dbactionbutton href=\"mailto:msz@deutschebahn.com\">E-Mail</dbactionbutton>",
+            "descriptionText": "<p>Die Mobilitätsservice-Zentrale organisiert alles Notwendige, wenn Sie Hilfe beim Ein-, Um- oder Aussteigen benötigen. Damit wir Sie optimal betreuen können bitten wir Sie, sich bis spätestens bis <b>20:00 Uhr des Vortages</b> Ihrer Reise anzumelden. Bei Internationalen Reisen <b>spätestens 48 Stunden</b> im Voraus.</p><dbactionbutton href=\"https://msz-bahn.de\">Online-Formular</dbactionbutton><p><b><br>Weitere Kontaktmöglichkeiten</b></p><dbactionbutton href=\"tel:03065212888\">030 6521 2888</dbactionbutton><dbactionbutton href=\"mailto:msz@deutschebahn.com\">E-Mail</dbactionbutton>",
 			"title": "Mobilitätsservice",
 			"type": "mobilitaetsservice"
 		},
+
 		{
 			"descriptionText": "<p>Das 3-S-Konzept (Service, Sicherheit und Sauberkeit) steht für den sicheren und kundenorientierten Betrieb des Bahnhofs.<br><br>In der 3-S-Zentrale laufen rund um die Uhr alle wichtigen Informationen zum Betriebsablauf im Bahnhof zusammen. Über vorhandene Notruf- und Informationssäulen können Sie jederzeit direkt Kontakt zu der 3-S-Zentrale aufnehmen.<br><br>Zusätzlich sind unsere Sicherheits-Teams im Bahnhof präsent. Für polizeiliche Aufgaben ist auf dem Gebiet der Bahnanlagen des Bundes die Bundespolizei zuständig.</p> [PHONENUMBER]",
 			"title": "3-S-Zentrale",
@@ -27,7 +30,7 @@
 		},
 
 		{
-			"descriptionText": "<p>An diesem Bahnhof bieten wir Ihnen kostenloses WLAN an. Damit können Sie mit dem Smartphone oder Laptop surfen, E-Mails bearbeiten und vieles mehr.</p><p>Informationen zu den verschiedenen WLAN-Angeboten an unseren Bahnhöfen finden Sie <a href=\"https://www.bahnhof.de/bahnhof-de/service/wlan\">hier</a></p>",
+			"descriptionText": "<p>An diesem Bahnhof bieten wir Ihnen kostenloses WLAN an. Damit können Sie mit dem Smartphone oder Laptop surfen, E-Mails bearbeiten und vieles mehr.</p><p>Informationen zu den verschiedenen WLAN-Angeboten an unseren Bahnhöfen finden Sie <a href=\"https://www.bahnhof.de/service/wlan\">hier</a></p>",
 			"title": "WLAN",
 			"type": "wlan"
 		},
@@ -35,37 +38,42 @@
 		{
           "descriptionText": "<p>Dieser Bahnhof bietet Ihnen stufenfreien Zugang.</p><p>Bei Fragen wenden Sie sich bitte an die Mobilitätsservice-Zentrale unter 030 6521 2888.</p>",
           "title": "Barrierefreiheit",
-          "type": "stufenfreier_zugang"
+          "type": "barrierefreiheit"
         },
+
 		{
 			"descriptionText": "<p>Im DB Reisezentrum erhalten Sie bei persönlicher Beratung dieses Leistungsangebot:<p>◾ Fahrkarten und Reservierungen bis kurz vor Abfahrt</p><p>◾ Zeitkarten und DB Monatskarten im Abo</p><p>◾ Nationale und internationale Fahrplan- und Tarifauskünfte im Verbund, Nahverkehr und Fernverkehr</p><p>◾ Angebote rund um die BahnCard</p><p>◾ Ergänzende Leistungen und Angebote rund um Ihre Bahnreise (z.B. Gepäckbeförderung, Parkplätze am Bahnhof, Mietwagen, Carsharing, Reiseschutz, Hotels uvm.)</p>",
 			"title": "DB Reisezentrum",
 			"type": "local_travelcenter"
 		},
+
 		{
-			"descriptionText": "<p>In unseren DB Lounges finden Reisende der 1.Klasse und bahn.bonus comfort-Kunden alles, was den Aufenthalt so angenehm wie möglich macht: elegante Sitzlandschaften, stilvolles Ambiente und aufmerksamen Service. Die Öffnungszeiten der DB Lounges finden Sie <a href=\"https://www.bahn.de/p/view/service/bahnhof/db_lounge.shtml\">hier</a>.</p>",
+             "descriptionText": "<p>In unseren DB Lounges finden Reisende der 1.Klasse und BahnBonus Kund:innen alles, was den Aufenthalt so angenehm wie möglich macht: elegante Sitzlandschaften, stilvolles Ambiente und aufmerksamen Service. Die Öffnungszeiten der DB Lounges finden Sie <a href=\"https://www.bahn.de/p/view/service/bahnhof/db_lounge.shtml\">hier</a>.</p>",
 			"title": "DB Lounge",
 			"type": "local_db_lounge"
 		},
+                   
 		{
 			"descriptionText": "<p>Sie haben im Zug oder Bahnhof etwas verloren oder gefunden? Teilen Sie uns dies einfach und kostenlos unter <a href=\"https://www.bahn.de/p/view/service/fundservice.shtml\">https://www.bahn.de/p/view/service/fundservice.shtml</a> mit. Telefonisch erreichen Sie uns unter 030 586020909 Dieser Weg steht Ihnen rund um die Uhr zur Verfügung. An einigen Bahnhöfen gibt es darüber hinaus weitere Fundservices.</p>",
 			"title": "Fundservice",
 			"type": "local_lostfound"
 		},
+         
 		{
 			"descriptionText": "<p>Hallo, mein Name ist DB Smile. Ich bin Ihr digitaler Assistent und helfe bei Fragen zum Bahnhof.</p> <dbactionbutton>Chatten Sie mit mir</dbactionbutton> <p>Ich bin <b>Montag bis Sonntag von 07:00 - 22:00 Uhr</b> in vollem Umfang für Sie da.</p><p><b>Alternative Kontaktmöglichkeiten</b><dbactionbutton href=\"mailto:feedback@bahnhof.de\">E-Mail</dbactionbutton> <dbactionbutton href=\"tel:030 586020930\">030 586020930</dbactionbutton>Montag bis Sonntag von 07:00 - 22:00 Uhr</p>",
 			"title": "Fragen & Feedback zum Bahnhof",
 			"type": "chatbot"
 		},
 		{
-			"descriptionText": "<p><b>Zufrieden mit der App?</b></p>Unterstützen Sie uns mit einer positiven Bewertung im Play Store.<dbactionbutton action=\"rateApp\">App bewerten</dbactionbutton>",
-			"title": "App bewerten",
-			"type": "rate_app"
-		},
-		{
 			"descriptionText": "<p><b>Kontakt</b></p>Schreiben Sie uns, sollten Ihnen Unstimmigkeiten in der App auffallen.<dbactionbutton action=\"appIssue\">Kontakt aufnehmen</dbactionbutton>",
 			"title": "Probleme mit der App melden",
-			"type": "app_issue"
-		}
+			"type": "problemmelden"
+		},
+		{
+			"descriptionText": "<p><b>Zufrieden mit der App?</b></p>Unterstützen Sie uns mit einer positiven Bewertung im Play Store.<dbactionbutton action=\"rateApp\">App bewerten</dbactionbutton>",
+			"title": "App bewerten",
+			"type": "bewertung"
+         }
+
 	]
 }
