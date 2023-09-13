@@ -194,6 +194,8 @@
         android:textSize="@dimen/textsize_h3"
         android:textStyle="bold"
         tools:text="2.UG, Bahnsteig 7 | 8"
+        tools:visibility="visible"
+        android:visibility="gone"
         app:drawableLeftCompat="@drawable/ic_arrow_right" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
