@@ -425,7 +425,7 @@ class StationViewModel(
 
     private val waggonOrderSubject = BehaviorSubject.create<TrainInfo>()
 
-    val waggonOrderObservable = waggonOrderSubject.distinctUntilChanged()
+//    val waggonOrderObservable = waggonOrderSubject.distinctUntilChanged()
 
     fun log(msg: String) {
         Log.d(StationViewModel::class.java.simpleName, msg)

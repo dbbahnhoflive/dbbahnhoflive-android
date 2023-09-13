@@ -73,7 +73,8 @@ public class TutorialView extends FrameLayout {
             public void onClick(View view) {
                 setVisibility(View.GONE);
 
-                mTutorial.closedByUser = true;
+                if (mTutorial != null)
+                    mTutorial.closedByUser = true;
                 mIsVisible = false;
 
                 if (mDelegate != null) {

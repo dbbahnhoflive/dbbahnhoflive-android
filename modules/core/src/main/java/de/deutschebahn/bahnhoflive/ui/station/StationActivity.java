@@ -450,7 +450,7 @@ public class StationActivity extends BaseActivity implements
 
         if (timetablesFragment != null) {
 
-            if(!localTransport)
+            if(!localTransport) // kam mit ticket 2453, dient dazu Gleis(platform)-Informationen zu laden, da die ab 2453 mit angezeigt werden
                 stationViewModel.getAccessibilityFeaturesResource().loadIfNecessary();
 
             this.timetablesFragment.popEntireHistory();
