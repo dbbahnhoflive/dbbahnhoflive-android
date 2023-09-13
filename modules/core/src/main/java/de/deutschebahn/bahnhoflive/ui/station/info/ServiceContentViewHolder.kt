@@ -180,6 +180,14 @@ open class ServiceContentViewHolder(
                         dbActionButtonCallback(DbActionButton(DbActionButton.Type.ACTION, url))
                     }
                 }
+                renderAdditionalText(item)
+                renderDescriptionText(item)
+
+            }
+
+            ServiceContentType.Local.DB_LOUNGE -> {
+                renderDescriptionText(item)
+                renderAdditionalText(item)
             }
 
             else -> {

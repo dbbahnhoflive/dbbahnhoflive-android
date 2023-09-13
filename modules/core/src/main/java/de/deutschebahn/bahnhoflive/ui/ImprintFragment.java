@@ -13,6 +13,7 @@ import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 import android.provider.Settings;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -55,14 +56,7 @@ public class ImprintFragment extends Fragment {
         url = args.getString(FragmentArgs.URL);
     }
 
-    @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                             Bundle savedInstanceState) {
-        View v = inflater.inflate(R.layout.fragment_webview, container, false);
-
-        if (savedInstanceState != null) {
-            setUIArguments(savedInstanceState);
-        }
+    private void createWebViewAndLoadContent(View v) {
 
         webview = v.findViewById(R.id.webview);
         headerIcon = v.findViewById(R.id.webview_icon);
@@ -187,6 +181,28 @@ public class ImprintFragment extends Fragment {
         } catch (IOException e) {
             e.printStackTrace();
         }
+    }
+    @Override
+    public View onCreateView(LayoutInflater inflater, ViewGroup container,
+                             Bundle savedInstanceState) {
+
+        View v = null;
+
+        try {
+            v = inflater.inflate(R.layout.fragment_webview, container, false);
+        }
+        catch(Exception e) {
+            Log.e("ImprintFragment", "Exception: " + e.getMessage());
+        }
+
+        if (savedInstanceState != null) {
+            setUIArguments(savedInstanceState);
+        }
+
+        if(v!=null)
+            createWebViewAndLoadContent(v);
+        else
+            v = inflater.inflate(R.layout.include_error, container, false);
 
         new ToolbarViewHolder(v, title);
 

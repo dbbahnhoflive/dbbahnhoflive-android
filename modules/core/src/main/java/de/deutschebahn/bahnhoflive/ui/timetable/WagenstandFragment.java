@@ -66,7 +66,7 @@ public class WagenstandFragment extends Fragment implements View.OnLayoutChangeL
 
     public static final String ARG_TRAIN_INFO = "trainInfo";
     public static final String ARG_TRAIN_EVENT = "trainEvent";
-    private static String TAG = WagenstandFragment.class.getSimpleName();
+    private static final String TAG = WagenstandFragment.class.getSimpleName();
 
     private final static SimpleDateFormat FORMAT_UPDATED_TIME = new SimpleDateFormat("dd.MM.yyyy',' HH:mm", Locale.GERMANY);
     private final static SimpleDateFormat FORMATTERDATE = new SimpleDateFormat("yyyyMMdd", Locale.GERMANY);
@@ -299,19 +299,24 @@ public class WagenstandFragment extends Fragment implements View.OnLayoutChangeL
             @Override
             public void run() {
 
-                DisplayMetrics displayMetrics = getActivity().getResources().getDisplayMetrics();
-                float dpHeight = displayMetrics.heightPixels;
+                try {
+                    DisplayMetrics displayMetrics = getActivity().getResources().getDisplayMetrics();
+                    float dpHeight = displayMetrics.heightPixels;
 
-                // add extra space to make scrolling to the last section possible
-                ViewGroup.LayoutParams params = waggonListview.getLayoutParams();
-                params.height = params.height + (int) (dpHeight / 2);
+                    // add extra space to make scrolling to the last section possible
+                    ViewGroup.LayoutParams params = waggonListview.getLayoutParams();
+                    params.height = params.height + (int) (dpHeight / 2);
 
 
-                waggonListview.setLayoutParams(params);
-                waggonListview.requestLayout();
+                    waggonListview.setLayoutParams(params);
+                    waggonListview.requestLayout();
 
-                if (getResources().getBoolean(R.bool.isTablet)) {
-                    sectionIndicator.centerContent();
+                    if (getResources().getBoolean(R.bool.isTablet)) {
+                        sectionIndicator.centerContent();
+                    }
+                }
+                catch(Exception e) {
+                    Log.e("WagenstandFragment", "Exception " + e.getMessage());
                 }
             }
         });
