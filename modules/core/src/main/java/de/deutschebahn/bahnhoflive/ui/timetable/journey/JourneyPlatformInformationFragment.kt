@@ -236,6 +236,13 @@ class JourneyPlatformInformationFragment : Fragment() {
 
                 itBinding.linkAccessibility.changeAccessibilityActionClickText(getString(R.string.sr_open_accessibility))
                 itBinding.linkAccessibility.setOnClickListener {
+                    // ggf. akt. Gleis vorwählen, wird im Accessibilitfragment observed
+                    trainMovementInfo?.let {
+                        val platform = platforms.findPlatform(it.displayPlatform)
+                        platform?.let {
+                            stationViewModel.setSelectedAccessibilityPlatform(platform)
+                        }
+                    }
                     stationViewModel.stationNavigation?.showAccessibility()
                 }
             }
