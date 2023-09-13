@@ -1,8 +1,8 @@
 package de.deutschebahn.bahnhoflive.ui.timetable.journey
 
 import android.graphics.Typeface
-import android.util.Log
 import android.view.LayoutInflater
+import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
 import androidx.core.view.isGone
