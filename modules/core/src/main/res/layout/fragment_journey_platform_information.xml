@@ -90,7 +90,7 @@
                     android:id="@+id/platform"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    tools:text = "Gleis 7 im 2 UG"
+                    tools:text = "Gleis 7 im 2. Untergeschoss"
                     android:textSize="@dimen/textsize_h3" />
 
                 <TextView
@@ -112,15 +112,15 @@
                     android:textSize="@dimen/textsize_h3" />
 
                 <LinearLayout
-                    android:id="@+id/content_list"
+                    android:id="@+id/levelInformationContainer"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:divider="@drawable/shape_divider_occupancy"
                     android:orientation="vertical"
-                    android:showDividers="middle">
+                    >
 
                     <include
                         layout="@layout/include_platforms" />
+
 
                 </LinearLayout>
 
@@ -128,7 +128,7 @@
                     android:id="@+id/platform_station_infos"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginVertical="@dimen/default_space"
+                    android:layout_marginBottom="@dimen/default_space"
                     android:text="@string/platform_information_body"
                     android:textSize="@dimen/textsize_28" />
 

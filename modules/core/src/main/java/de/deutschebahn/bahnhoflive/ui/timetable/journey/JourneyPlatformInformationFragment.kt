@@ -23,6 +23,7 @@ import de.deutschebahn.bahnhoflive.databinding.FragmentJourneyPlatformInformatio
 import de.deutschebahn.bahnhoflive.databinding.IncludePlatformsBinding
 import de.deutschebahn.bahnhoflive.ui.station.StationViewModel
 import de.deutschebahn.bahnhoflive.ui.station.timetable.TimetableViewHelper
+import de.deutschebahn.bahnhoflive.util.changeAccessibilityActionClickText
 
 
 class JourneyPlatformInformationFragment : Fragment() {
@@ -52,7 +53,7 @@ class JourneyPlatformInformationFragment : Fragment() {
 
                     platformsPerLevel.clear()
 
-                    val reducedList : MutableList<Platform> = itPlatforms.filter { it.hasLinkedPlatforms }.toMutableList()
+                    val reducedList : MutableList<Platform> = itPlatforms.filter { it.hasLinkedPlatforms }.distinct().toMutableList()
 
                     itPlatforms.forEach {
                         if(!reducedList.containsPlatform(it.number))
@@ -122,7 +123,6 @@ class JourneyPlatformInformationFragment : Fragment() {
 
                 // Abfahrtszeit + Verspätung
 
-
                 itBinding.arrivalOrDeparture.text = if(trainEvent==TrainEvent.ARRIVAL) resources.getText(R.string.sr_arrival) else resources.getText(R.string.sr_departure)
 
                 val delayInMinutes =
@@ -166,6 +166,19 @@ class JourneyPlatformInformationFragment : Fragment() {
                 }
 
                 platform?.let {
+                    itBinding.platform.contentDescription =
+                            itBinding.platform.text.toString()
+                                .replace("1.", "Ersten")
+                                .replace("2.", "Zweiten")
+                                .replace("3.", "Dritten")
+                                .replace("4.", "Vierten")
+                                .replace("5.", "Fünften")
+                                .replace("6.", "Sechsten")
+                }
+
+
+                // Gegenüberliegendes Gleis
+                platform?.let {
                    if(it.linkedPlatformNumbers.size==1)
                       itBinding.platformOtherSide.text = "Gegenüberliegend Gleis " + it.formatLinkedPlatformString(false)
                    else
@@ -174,7 +187,7 @@ class JourneyPlatformInformationFragment : Fragment() {
 
 
                 // Infos für alle levels
-                itBinding.contentList.removeAllViews()
+                itBinding.levelInformationContainer.removeAllViews()
                 platformsPerLevel.forEach {
 
                     val layoutLevel = IncludePlatformsBinding.inflate(inflater)
@@ -188,19 +201,21 @@ class JourneyPlatformInformationFragment : Fragment() {
                         it.second.forEach { itPlatform ->
 
                             val textView = TextView(requireContext())
-                            var text: String = "Gleis ${itPlatform.formatLinkedPlatformString(true, false )}"
+                            var text: String =
+                                "Gleis ${itPlatform.formatLinkedPlatformString(true, false)}"
 
                             if (itPlatform.isHeadPlatform)
                                 text += ", Kopfgleis"
 
                             textView.text = text
+                            textView.contentDescription = text.replace("|", "gegenüber")
 
                             itPlatformContainer.addView(textView)
                         }
 
                     }
 
-                    itBinding.contentList.addView(layoutLevel.root)
+                    itBinding.levelInformationContainer.addView(layoutLevel.root)
 
                 }
 
@@ -208,7 +223,8 @@ class JourneyPlatformInformationFragment : Fragment() {
 
                 if (stationViewModel.hasElevators()) {
 
-                    itBinding.linkElevators.isVisible = true
+                    itBinding.linkElevators.isVisible = true // default=gone
+                    itBinding.linkElevators.changeAccessibilityActionClickText(getString(R.string.sr_open_elevators))
 
                     itBinding.linkElevators.setOnClickListener {
                         stationViewModel.stationNavigation?.showElevators()
@@ -218,6 +234,7 @@ class JourneyPlatformInformationFragment : Fragment() {
                     itBinding.platformStationInfos.text = getText(R.string.platform_information_body_without_elevators)
 
 
+                itBinding.linkAccessibility.changeAccessibilityActionClickText(getString(R.string.sr_open_accessibility))
                 itBinding.linkAccessibility.setOnClickListener {
                     stationViewModel.stationNavigation?.showAccessibility()
                 }

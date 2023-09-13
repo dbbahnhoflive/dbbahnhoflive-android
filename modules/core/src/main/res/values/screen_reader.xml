@@ -116,5 +116,9 @@
         <item quantity="other">"circa %d Minuten später"</item>
     </plurals>
 
+    <string name = "sr_open_elevators">Wechseln in die Übersicht Aufzüge</string>
+    <string name = "sr_open_accessibility">Wechseln in die Informationen zur Barrierefreiheit</string>
+
+
 
 </resources>
