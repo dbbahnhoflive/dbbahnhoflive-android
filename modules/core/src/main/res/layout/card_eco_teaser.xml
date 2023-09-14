@@ -90,6 +90,7 @@
                 android:textStyle="bold"
                 android:layout_marginTop="20dp"
                 android:text="Nr. 147"
+                android:importantForAccessibility="no"
                 android:lastBaselineToBottomHeight="0dp"
                 app:lastBaselineToBottomHeight="0dp"
                 app:layout_constraintTop_toBottomOf="@+id/teaserText2"
