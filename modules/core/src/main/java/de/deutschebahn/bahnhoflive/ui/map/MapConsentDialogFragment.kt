@@ -22,6 +22,10 @@ class MapConsentDialogFragment : DialogFragment() {
 
     private var listener: OnMapConsentDialogListener? = null
 
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        setStyle(STYLE_NO_TITLE, 0)
+    }
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
