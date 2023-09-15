@@ -93,7 +93,7 @@ class TrainInfoViewHolder internal constructor(
         platform?.let {
 
             if (it.isHeadPlatform)
-                platformText += " ${getString(R.string.platform_head)}."
+                platformText += ", ${getString(R.string.platform_head)}."
 
             platformList?.firstLinkedPlatform(trainMovementInfo.platform)?.let { itLinkedPlatform ->
                 if (it.linkedPlatformNumbers.size == 1) {
@@ -114,7 +114,7 @@ class TrainInfoViewHolder internal constructor(
             getText(trainEvent.contentDescriptionPhrase),
             trainMovementInfo.getDestinationStop(trainEvent.isDeparture),
             trainMovementInfo.formattedTime,
-            platformText,
+            platformText + ", ",
             trainMovementInfo.delayInMinutes().takeIf { it > 0 }?.let {
                 getString(
                     R.string.sr_template_estimated,

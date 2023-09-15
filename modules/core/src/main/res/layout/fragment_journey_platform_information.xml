@@ -51,6 +51,9 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         tools:text = "Ankunft"
+                        android:visibility="gone"
+                        tools:visibility="visible"
+                        android:layout_marginEnd="@dimen/default_space"
                         android:importantForAccessibility="no"
                         android:textSize="@dimen/textsize_h2" />
 
@@ -58,7 +61,6 @@
                         android:id="@+id/stop_time"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_marginStart="@dimen/default_space_half"
                         tools:text = "13:20"
                         android:importantForAccessibility="no"
                         android:textSize="@dimen/textsize_h2" />

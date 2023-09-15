@@ -208,8 +208,7 @@ class JourneyPlatformInformationFragment : Fragment() {
                                 text += ", " + getString(R.string.platform_head)
 
                             textView.text = text
-                            textView.contentDescription = text.replace("|", "gegenüber")
-
+                            textView.contentDescription = text.replace("|", getString(R.string.sr_opposite_track))
                             itPlatformContainer.addView(textView)
                         }
 
