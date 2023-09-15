@@ -81,7 +81,7 @@ class TrainInfoViewHolder internal constructor(
     private fun renderContentDescription(
         trainInfo: TrainInfo,
         trainMovementInfo: TrainMovementInfo
-    ) = with(itemView.resources) {
+    ) : String = with(itemView.resources) {
 
         var platformText =
             getString(R.string.sr_template_platform, trainMovementInfo.displayPlatform)
@@ -89,7 +89,12 @@ class TrainInfoViewHolder internal constructor(
         val platform =
             platformList?.firstOrNull { it.number == Platform.platformNumber(trainMovementInfo.platform) }
 
+
         platform?.let {
+
+            if (it.isHeadPlatform)
+                platformText += " ${getString(R.string.platform_head)}."
+
             platformList?.firstLinkedPlatform(trainMovementInfo.platform)?.let { itLinkedPlatform ->
                 if (it.linkedPlatformNumbers.size == 1) {
                     platformText += " .${
@@ -98,13 +103,12 @@ class TrainInfoViewHolder internal constructor(
                             itLinkedPlatform.number
                         )
                     }"
-                    if (itLinkedPlatform.isHeadPlatform)
-                        platformText += " .${getString(R.string.platform_head)}."
+
                 }
             }
         }
 
-        val trainEvent = trainEvent
+//        val trainEvent = trainEvent
         getString(R.string.sr_template_db_timetable_item,
             TimetableViewHelper.composeName(trainInfo, trainMovementInfo),
             getText(trainEvent.contentDescriptionPhrase),

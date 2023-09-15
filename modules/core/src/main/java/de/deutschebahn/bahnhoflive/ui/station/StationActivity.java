@@ -725,8 +725,10 @@ public class StationActivity extends BaseActivity implements
             final int isNotification = intent.getIntExtra("IS_NOTIFICATION", 0);
 
             if(timeDiff<3L*1000L || isNotification==1 ) {
-              if(trainInfo.getShowWagonOrder())
-                    stationViewModel.showWaggonOrder(trainInfo);
+              if(trainInfo.getShowWagonOrder()) {
+//                  stationViewModel.showWaggonOrder(trainInfo);
+                  stationViewModel.getSelectedTrainInfo().postValue(trainInfo);
+              }
             }
             else
                 Log.d("cr", "intent too old" );

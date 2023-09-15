@@ -45,9 +45,9 @@ class DbTimetableFragment : Fragment(), MapPresetProvider {
 
     val trackingManager: TrackingManager
         get() = fromActivity(activity)
-
-    private var trainInfoFromIntent: TrainInfo? = null
-    private var trainInfoFromIntentSimulateClick = false
+//
+//    private var trainInfoFromIntent: TrainInfo? = null
+//    private var trainInfoFromIntentSimulateClick = false
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -115,11 +115,11 @@ class DbTimetableFragment : Fragment(), MapPresetProvider {
             }
             adapter.setTimetable(timetable)
             viewSwitcher.displayedChild = 0
-            trainInfoFromIntent?.let {
-                    trainInfoFromIntentSimulateClick = true
-                    selectedTrainInfo.value = trainInfoFromIntent
-                    trainInfoFromIntent = null
-            }
+//            trainInfoFromIntent?.let {
+//                    trainInfoFromIntentSimulateClick = true
+//                    selectedTrainInfo.value = trainInfoFromIntent
+//                    trainInfoFromIntent = null
+//            }
         }
         stationViewModel.timetableErrorsLiveData.observe(viewLifecycleOwner) { volleyError ->
             if (volleyError == true) {
@@ -140,15 +140,15 @@ class DbTimetableFragment : Fragment(), MapPresetProvider {
                 val itemIndex = adapter.setSelectedItem(trainInfo)
                 if (itemIndex >= 0) {
                     recyclerView.scrollToPosition(itemIndex)
-                    if (trainInfoFromIntentSimulateClick) {
-                        trainInfoFromIntentSimulateClick = false
+//                    if (trainInfoFromIntentSimulateClick) {
+//                        trainInfoFromIntentSimulateClick = false
                         val trainEvent = TrainEvent.DEPARTURE
                         val historyFragment = HistoryFragment.parentOf(this)
                         historyFragment.push(JourneyFragment(trainInfo, trainEvent, trainInfo.showWagonOrder))
-                    }
+//                    }
                 }
                 selectedTrainInfo.value = null
-                trainInfoFromIntentSimulateClick = false
+//                trainInfoFromIntentSimulateClick = false
             }
         }
 

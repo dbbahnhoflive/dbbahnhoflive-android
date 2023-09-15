@@ -205,7 +205,7 @@ class JourneyPlatformInformationFragment : Fragment() {
                                 "Gleis ${itPlatform.formatLinkedPlatformString(true, false)}"
 
                             if (itPlatform.isHeadPlatform)
-                                text += ", Kopfgleis"
+                                text += ", " + getString(R.string.platform_head)
 
                             textView.text = text
                             textView.contentDescription = text.replace("|", "gegenüber")

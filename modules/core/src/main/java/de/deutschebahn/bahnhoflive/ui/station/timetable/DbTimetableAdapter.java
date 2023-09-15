@@ -134,7 +134,7 @@ class DbTimetableAdapter extends RecyclerView.Adapter<ViewHolder<?>> implements 
     }
 
     public void setFilter(@Nullable String track) {
-        this.track = track;
+        this.track = track;//track witout extension, statt (Gleis) 1a -> (Gleis) 1
 
         notifyItemChanged(0);
 
@@ -290,7 +290,7 @@ class DbTimetableAdapter extends RecyclerView.Adapter<ViewHolder<?>> implements 
                     continue;
                 }
 
-                if (track != null && !track.equals(trainEvent.movementRetriever.getTrainMovementInfo(selectedTrainInfo).getPurePlatform())) {
+                if (track != null && !track.equals(trainEvent.movementRetriever.getTrainMovementInfo(selectedTrainInfo).getPlatformWithoutExtensions())) {
                     continue;
                 }
 

@@ -423,7 +423,7 @@ class StationViewModel(
     val trainCategoryFilterFlow = MutableStateFlow<String?>(null)
     val showArrivalsStateFlow = MutableStateFlow<Boolean>(false)
 
-    private val waggonOrderSubject = BehaviorSubject.create<TrainInfo>()
+//    private val waggonOrderSubject = BehaviorSubject.create<TrainInfo>()
 
 //    val waggonOrderObservable = waggonOrderSubject.distinctUntilChanged()
 
@@ -517,9 +517,9 @@ class StationViewModel(
         }
     }
 
-    fun showWaggonOrder(trainInfo: TrainInfo) {
-        waggonOrderSubject.onNext(trainInfo)
-    }
+//    fun showWaggonOrder(trainInfo: TrainInfo) {
+//        waggonOrderSubject.onNext(trainInfo)
+//    }
 
     fun clearStationNavigation(stationNavigation: StationNavigation) {
         if (stationNavigation == this.stationNavigation) {
