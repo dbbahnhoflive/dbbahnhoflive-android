@@ -186,7 +186,7 @@ public enum ProductCategory {
     @Nullable
     public static ProductCategory of(@NonNull HafasStationProduct hafasProduct) {
         for (ProductCategory productCategory : VALUES) {
-            if ((productCategory.bitMask() & hafasProduct.catCode) != 0) {
+            if ((productCategory.bitMask() & hafasProduct.getCategoryBitMask()) != 0) {
                 return productCategory;
             }
         }

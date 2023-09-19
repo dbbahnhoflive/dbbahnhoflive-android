@@ -44,6 +44,7 @@ public class HafasEventProduct implements Parcelable {
      * @see ProductCategory
      */
     protected int catCode;
+    public int cls;
     public String catOutS;
     public String catOutL;
     public String operatorCode;
@@ -63,6 +64,7 @@ public class HafasEventProduct implements Parcelable {
         operatorCode = in.readString();
         operator = in.readString();
         admin = in.readString();
+        cls = in.readInt();
     }
 
     @Override
@@ -84,6 +86,7 @@ public class HafasEventProduct implements Parcelable {
         dest.writeString(operatorCode);
         dest.writeString(operator);
         dest.writeString(admin);
+        dest.writeInt(cls);
     }
 
     public static final Creator<HafasEventProduct> CREATOR = new Creator<HafasEventProduct>() {
@@ -113,6 +116,7 @@ public class HafasEventProduct implements Parcelable {
                 ", operatorCode='" + operatorCode + '\'' +
                 ", operator='" + operator + '\'' +
                 ", admin='" + admin + '\'' +
+                ", cls='" + cls + '\'' +
                 '}';
     }
 
