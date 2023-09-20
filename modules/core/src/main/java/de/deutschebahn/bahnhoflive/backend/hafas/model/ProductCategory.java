@@ -196,7 +196,7 @@ public enum ProductCategory {
 
     @Nullable
     public static ProductCategory of(@NonNull HafasEvent hafasEvent) {
-        final HafasEventProduct product = hafasEvent.product;
+        final HafasEventProduct product = hafasEvent.getProduct();
         if (product == null) {
             return null;
         }
