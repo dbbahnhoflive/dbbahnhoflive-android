@@ -13,6 +13,7 @@ import com.android.volley.DefaultRetryPolicy;
 import com.android.volley.NetworkResponse;
 import com.android.volley.Request;
 import com.android.volley.Response;
+import com.android.volley.VolleyError;
 
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
@@ -36,7 +37,6 @@ public abstract class HafasRequest<T> extends Request<T> implements Countable, T
         super(method, (endpoint + parameters).replaceAll(" ", "%20"), listener);
         Log.d("cr", "hafas request: " + endpoint + parameters);
         setShouldCache(shouldCache);
-
         setRetryPolicy(new DefaultRetryPolicy(
                 10*1000,
                 3,

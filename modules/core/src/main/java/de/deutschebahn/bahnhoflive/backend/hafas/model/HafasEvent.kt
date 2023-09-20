@@ -56,8 +56,8 @@ open class HafasEvent protected constructor(`in`: Parcel) : Parcelable {
     @SerializedName("JourneyDetailRef")
     var detailReference: HafasDetailReference?
 
-    @JvmField
-    @SerializedName("Product")
+    @SerializedName("ProductAtStop") // vorher Product
+
     var product: HafasEventProduct?
 
     @SerializedName("JourneyStatus")
