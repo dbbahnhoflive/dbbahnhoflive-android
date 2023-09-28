@@ -79,9 +79,9 @@ class HafasStationsResource(val maxStationDistance: Int) : RemoteResource<List<H
                         nonMainDbStation.products?.removeAll(possiblyDuplicateLines)
                     }
 
-                    return dbStations.asSequence().plus(nearbyStations.asSequence()).filter {
-                        it.products?.any {
-                            !it.lineId.isNullOrBlank() && (ProductCategory.BITMASK_EXTENDED_LOCAL_TRANSPORT and it.categoryBitMask > 0)
+                    return dbStations.asSequence().plus(nearbyStations.asSequence()).filter {itHafasStation->
+                        itHafasStation.products?.any {itProduct->
+                            !itProduct.lineId.isNullOrBlank() && (ProductCategory.BITMASK_EXTENDED_LOCAL_TRANSPORT and itProduct.categoryBitMask > 0)
                         } ?: false
                     }.toList()
                 }

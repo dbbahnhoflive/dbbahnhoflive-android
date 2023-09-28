@@ -31,10 +31,12 @@ public abstract class HafasRequest<T> extends Request<T> implements Countable, T
     private final Map<String, Object> trackingContextVariables = new HashMap<>();
     private final ForcedCacheEntryFactory cacheOverrider;
 
-    public HafasRequest(int method, String endpoint, String parameters, String origin, Response.ErrorListener listener, boolean shouldCache, int minimumCacheTime) {
+    public HafasRequest(int method, String endpoint, String parameters, String origin,
+                        Response.ErrorListener listener, boolean shouldCache, int minimumCacheTime) {
         super(method, (endpoint + parameters).replaceAll(" ", "%20"), listener);
-        Log.d("cr", "HafasRequest ep:" + endpoint + " params:" + parameters + " origin:" +origin);
+        Log.d("cr", "hafas request: " + endpoint + parameters);
         setShouldCache(shouldCache);
+
         setRetryPolicy(new DefaultRetryPolicy(
                 10*1000,
                 3,

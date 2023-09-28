@@ -37,12 +37,17 @@ public class HafasStationProduct implements Parcelable {
      * Category bitmask
      * @see ProductCategory
      */
-    public int catCode;
+
+    @Deprecated
+    private int catCode;
+
     public String catOutS;
     public String catOutL;
     public String operatorCode;
     public String operator;
     public String admin;
+
+    private int cls;
 
     protected HafasStationProduct(Parcel in) {
         name = in.readString();
@@ -57,6 +62,7 @@ public class HafasStationProduct implements Parcelable {
         operatorCode = in.readString();
         operator = in.readString();
         admin = in.readString();
+        cls = in.readInt();
     }
 
     @Override
@@ -78,6 +84,7 @@ public class HafasStationProduct implements Parcelable {
         dest.writeString(operatorCode);
         dest.writeString(operator);
         dest.writeString(admin);
+        dest.writeInt(cls);
     }
 
     public static final Creator<HafasStationProduct> CREATOR = new Creator<HafasStationProduct>() {
@@ -107,19 +114,20 @@ public class HafasStationProduct implements Parcelable {
                 ", operatorCode='" + operatorCode + '\'' +
                 ", operator='" + operator + '\'' +
                 ", admin='" + admin + '\'' +
+                ", cls='" + cls + '\'' +
                 '}';
     }
 
     public boolean isLocalTransport() {
-        return (ProductCategory.BITMASK_LOCAL_TRANSPORT & catCode) != 0;
+        return (ProductCategory.BITMASK_LOCAL_TRANSPORT & getCategoryBitMask()) != 0;
     }
 
     public boolean isExtendedLocalTransport() {
-        return (ProductCategory.BITMASK_EXTENDED_LOCAL_TRANSPORT & catCode) != 0;
+        return (ProductCategory.BITMASK_EXTENDED_LOCAL_TRANSPORT & getCategoryBitMask()) != 0;
     }
 
     public boolean isPureLocalTransport() {
-        return isLocalTransport() && (ProductCategory.BITMASK_DB & catCode) == 0;
+        return isLocalTransport() && (ProductCategory.BITMASK_DB & getCategoryBitMask()) == 0;
     }
 
     @Override
@@ -127,16 +135,20 @@ public class HafasStationProduct implements Parcelable {
         if (this == o) return true;
         if (!(o instanceof HafasStationProduct)) return false;
         HafasStationProduct that = (HafasStationProduct) o;
-        return catCode == that.catCode &&
+        return getCategoryBitMask() == that.getCategoryBitMask() &&
                 Objects.equals(lineId, that.lineId);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(lineId, catCode);
+        return Objects.hash(lineId, getCategoryBitMask());
     }
 
     public int getCategoryBitMask() {
+        return cls;
+    }
+
+    public int getCategoryCode() {
         return catCode;
     }
 }
