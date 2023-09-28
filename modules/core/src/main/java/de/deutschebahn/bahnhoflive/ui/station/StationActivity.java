@@ -681,6 +681,7 @@ public class StationActivity extends BaseActivity implements
             return true;
         }
 
+        Log.d("cr", "Station: " + station.getTitle() + ", " + station.getId() + ", " + station.getLocation().latitude + ", " + station.getLocation().longitude + ", " + station.getEvaIds().getIds().toString());
 
         // Daten zur Rücknavigation ins stationViewModel packen
         final Station stationToNavigateBack = intent.getParcelableExtra(ARG_STATION_TO_NAVIGATE_BACK);
@@ -720,8 +721,10 @@ public class StationActivity extends BaseActivity implements
             final int isNotification = intent.getIntExtra("IS_NOTIFICATION", 0);
 
             if(timeDiff<3L*1000L || isNotification==1 ) {
-              if(trainInfo.getShowWagonOrder())
-                    stationViewModel.showWaggonOrder(trainInfo);
+              if(trainInfo.getShowWagonOrder()) {
+//                  stationViewModel.showWaggonOrder(trainInfo);
+                  stationViewModel.getSelectedTrainInfo().postValue(trainInfo);
+              }
             }
             else
                 Log.d("cr", "intent too old" );

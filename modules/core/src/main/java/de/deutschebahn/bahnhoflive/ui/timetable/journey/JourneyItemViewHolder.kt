@@ -72,10 +72,25 @@ class JourneyItemViewHolder(private val itemJourneyDetailedBinding: ItemJourneyD
                     advice.isSelected = true
                     advice.isGone = false
                 }
+
+                (item?.departure?.canceled == true || item?.arrival?.canceled == true) -> {
+                    advice.setText(R.string.journey_stop_canceled)
+                    TextViewCompat.setCompoundDrawablesRelativeWithIntrinsicBounds(
+                        advice,
+                        R.drawable.app_warndreieck,
+                        0,
+                        0,
+                        0
+                    )
+                    advice.isSelected = true
+                    advice.isGone = false
+
+                }
                 else -> {
                     advice.text = null
                     advice.isGone = true
                 }
+
             }
 
             bindTimes(scheduledArrival, expectedArrival, item?.arrival)

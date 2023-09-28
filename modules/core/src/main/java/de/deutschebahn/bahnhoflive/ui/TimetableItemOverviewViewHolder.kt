@@ -10,6 +10,7 @@ import android.content.Context
 import android.view.View
 import android.widget.TextView
 import androidx.annotation.ColorRes
+import androidx.core.content.ContextCompat
 import de.deutschebahn.bahnhoflive.R
 
 open class TimetableItemOverviewViewHolder<T>(view: View) : ViewHolder<T>(view) {
@@ -36,7 +37,8 @@ open class TimetableItemOverviewViewHolder<T>(view: View) : ViewHolder<T>(view) 
     }
 
     private fun getColor(@ColorRes colorResource: Int): Int {
-        return itemView.context.resources.getColor(colorResource)
+      return ContextCompat.getColor(itemView.context, colorResource)
+//        return itemView.context.resources.getColor(colorResource)
     }
 
 }

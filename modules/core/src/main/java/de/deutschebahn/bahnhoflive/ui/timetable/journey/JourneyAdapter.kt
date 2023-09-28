@@ -19,11 +19,13 @@ class JourneyAdapter(onClickStop: (view: View, journeyStop : JourneyStop)->Unit)
             position: Int
         ) {
             holder.bind(item)
+                if(!item.current) { // kein Sprung auf die Station, wenn es sie selbst ist
             holder.itemView.setOnClickListener {
                 VersionManager.getInstance(it.context).journeyLinkWasEverUsed = true
                 onClickStop(it, item)
         }
         }
+            }
 
     }) {
 

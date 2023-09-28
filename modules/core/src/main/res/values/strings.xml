@@ -462,6 +462,7 @@
     <string name="nev_db_companion_link_description">Sie können uns unter folgendem Link einfach per Videoanruf kontaktieren und Unterstützung erhalten.</string>
     <string name="nev_db_companion_button_text">DB Wegbegleitung öffnen</string>
 
+    <string name="journey_stop_canceled">Halt fällt aus</string>
 
 </resources>
 
