@@ -77,7 +77,7 @@ class RegularJourneyContentFragment : Fragment() {
     ): View = FragmentJourneyRegularContentBinding.inflate(inflater).apply {
 
         val issueBinder =
-            IssuesBinder(issueContainer, issueText, IssueIndicatorBinder(issueIcon))
+            IssuesBinder(journeyIssue.issueContainer, journeyIssue.issueText, IssueIndicatorBinder(journeyIssue.issueIcon))
 
         var shouldOfferWagenOrder = false
 
@@ -107,8 +107,7 @@ class RegularJourneyContentFragment : Fragment() {
                 trainInfo,
                 trainEvent.movementRetriever.getTrainMovementInfo(trainInfo)
             )
-            }
-            catch(_:Exception) {
+            } catch (_: Exception) {
 
             }
 

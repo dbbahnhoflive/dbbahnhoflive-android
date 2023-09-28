@@ -77,34 +77,31 @@ class HafasDeparturesFragment : RecyclerFragment<HafasDeparturesAdapter>(R.layou
                     _: View?, details: DetailedHafasEvent, success:Boolean ->
                 run {
 
-                    if(success) {
-                    val hafasJourneyFragment = HafasJourneyFragment()
-                    hafasJourneyFragment.onDataReceived(details, titleView)
+                    if (success) {
+
+                        hafasTimetableViewModel.selectedHafasJourney.postValue(details)
+
+                        val hafasJourneyFragment = HafasJourneyFragment()
+//                        hafasJourneyFragment.onDataReceived(details, titleView)
 
                         if (parentFragment != null) {
-
-                        val historyFragment = HistoryFragment.parentOf(this)
-                        historyFragment.push(hafasJourneyFragment)
+                            val historyFragment = HistoryFragment.parentOf(this)
+                            historyFragment.push(hafasJourneyFragment)
                         } else {
-                        // aufruf aus Favoriten OHNE vorher geladene Station !!!!!! (kein HistoryFragment)
-                        // todo: besser Station ermitteln, laden, Abfahrtstafel laden, gewünschte ÖPNV-Haltestelle laden und dann
-                        // das zugehörige HafasJourneyFragment anzeigen !
+                            // Aufruf aus Favoriten OHNE vorher geladene Station !!!!!! (kein HistoryFragment)
+//                            hafasJourneyFragment.hideHeader = true
 
-//                        hafasJourneyFragment.binding
-                            hafasJourneyFragment.hideHeader = true
-
-                        activity?.supportFragmentManager?.beginTransaction()
+                            activity?.supportFragmentManager?.beginTransaction()
                                 ?.replace(
                                     R.id.hafas_fragment_container,
                                     hafasJourneyFragment,
                                     HafasJourneyFragment.TAG
                                 )
-                        ?.addToBackStack(null)
-                        ?.commit()
+                                ?.addToBackStack(null)
+                                ?.commit()
 
-                    }
-                    }
-                    else {
+                        }
+                    } else {
                         // todo: Fehlermeldung
                         Log.d("cr", "HafasDeparturesFragment::ERROR")
                     }
@@ -274,21 +271,9 @@ class HafasDeparturesFragment : RecyclerFragment<HafasDeparturesAdapter>(R.layou
     }
 
     override fun onDestroyView() {
-
-
-        // not working ???
-//        val mFragmentMgr = activity?.supportFragmentManager
-//        val  mTransaction = mFragmentMgr?.beginTransaction()
-//        val  childFragment = mFragmentMgr?.findFragmentByTag(HafasJourneyFragment.TAG)
-//        if (childFragment != null) {
-//            mTransaction?.remove(childFragment)
-//            mTransaction?.commit()
-//        }
-
         swipeRefreshLayout = null
         super.onDestroyView()
         hafasTimetableViewModel.filterName = adapter?.filter?.label
-
     }
 
     override fun setFilter(trainCategory: String?) {

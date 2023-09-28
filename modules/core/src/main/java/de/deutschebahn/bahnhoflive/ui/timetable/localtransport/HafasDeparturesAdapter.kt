@@ -154,8 +154,11 @@ class HafasDeparturesAdapter(
         ).toList().toTypedArray()
     }
 
-    fun getFilterAttribute(hafasEvent: DetailedHafasEvent): String {
-        return hafasEvent.hafasEvent.product.catOutL
+    private fun getFilterAttribute(hafasEvent: DetailedHafasEvent): String {
+        hafasEvent.hafasEvent.product?.let {
+            return it.catOutL
+        }
+        return ""
     }
 
     private inner class HeaderViewHolder(parent: ViewGroup) : ViewHolder<DetailedHafasEvent>(parent, R.layout.header_timetable_local) {
@@ -179,7 +182,7 @@ class HafasDeparturesAdapter(
 
         return h1.displayName==h2.displayName &&
                 h1.trainNumber==h2.trainNumber &&
-                h1.time == h2.time
+                h1.scheduledTime == h2.scheduledTime
     }
     fun findItemIndex(hafasEvent: HafasEvent): Int {
 
@@ -210,8 +213,13 @@ class HafasDeparturesAdapter(
 
         return filteredEvents.indexOfFirst {
             with(it.hafasEvent.product) {
-                hafasStationProduct.lineId == line &&
-                        ProductCategory.of(hafasStationProduct) == ProductCategory.of(this)
+               if(this?.line?.equals(null) == true)
+                   false
+                else
+                   (hafasStationProduct.lineId?.equals(this?.line) ?: ProductCategory.of(
+                       hafasStationProduct
+                   )) == this?.let { it1 -> ProductCategory.of(it1) }
+
             }
         }.takeUnless {
             it < 0

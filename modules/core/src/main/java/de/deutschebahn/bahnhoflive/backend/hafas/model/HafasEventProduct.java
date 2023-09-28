@@ -123,6 +123,9 @@ public class HafasEventProduct implements Parcelable {
         return ProductCategory.isLocal(catCode);
     }
 
+    public boolean onTrack() {
+        return ProductCategory.onTrack(catCode);
+    }
     /**
      * @see #catCode
      */

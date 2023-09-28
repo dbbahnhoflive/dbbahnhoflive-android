@@ -16,7 +16,7 @@ import de.deutschebahn.bahnhoflive.util.Collections;
 
 public class RouteStopsAdapter extends RecyclerView.Adapter<RouteStopViewHolder> {
 
-    private List<RouteStop> routeStops;
+    private List<HafasRouteStop> hafasRouteStops;
 
     public RouteStopsAdapter() {
     }
@@ -28,16 +28,16 @@ public class RouteStopsAdapter extends RecyclerView.Adapter<RouteStopViewHolder>
 
     @Override
     public void onBindViewHolder(RouteStopViewHolder holder, int position) {
-        holder.bind(routeStops.get(position));
+        holder.bind(hafasRouteStops.get(position));
     }
 
     @Override
     public int getItemCount() {
-        return Collections.size(routeStops);
+        return Collections.size(hafasRouteStops);
     }
 
-    public void setRouteStops(List<RouteStop> routeStops) {
-        this.routeStops = routeStops;
+    public void setRouteStops(List<HafasRouteStop> hafasRouteStops) {
+        this.hafasRouteStops = hafasRouteStops;
         notifyDataSetChanged();
     }
 }

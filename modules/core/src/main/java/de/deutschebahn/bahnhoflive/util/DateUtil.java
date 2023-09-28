@@ -20,8 +20,7 @@ public class DateUtil {
             return null;
         }
         try {
-            Date parsedDate = getRISPattern().parse(dateTime);
-            return parsedDate;
+            return getRISPattern().parse(dateTime);
         } catch (ParseException e) {
             e.printStackTrace();
         }
