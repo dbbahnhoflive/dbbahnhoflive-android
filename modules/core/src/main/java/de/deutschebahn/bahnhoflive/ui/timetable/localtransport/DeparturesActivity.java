@@ -28,7 +28,6 @@ import de.deutschebahn.bahnhoflive.analytics.TrackingManager;
 import de.deutschebahn.bahnhoflive.backend.hafas.HafasDepartures;
 import de.deutschebahn.bahnhoflive.backend.hafas.model.HafasEvent;
 import de.deutschebahn.bahnhoflive.backend.hafas.model.HafasStation;
-import de.deutschebahn.bahnhoflive.backend.ris.model.TrainInfo;
 import de.deutschebahn.bahnhoflive.repository.InternalStation;
 import de.deutschebahn.bahnhoflive.repository.Station;
 import de.deutschebahn.bahnhoflive.ui.ToolbarViewHolder;
@@ -82,22 +81,31 @@ public class DeparturesActivity extends BaseActivity implements TrackingManager.
 
         final Intent intent = getIntent();
         final Bundle arguments = intent.getBundleExtra(ARG_HAFAS_LOADER_ARGUMENTS);
+
+        hafasEvent = intent.getParcelableExtra(ARG_HAFAS_EVENT);
+
+        if(arguments==null) {
+            hafasStation=null;
+            station=null;
+//            hafasTimetableViewModel.initialize(hafasStation, null, false, station, null);
+        }
+        else {
         hafasStation = arguments.getParcelable(ARG_HAFAS_STATION);
 //        final HafasStation hafasStation = arguments.getParcelable(ARG_HAFAS_STATION);
         final HafasDepartures departures = arguments.getParcelable(ARG_HAFAS_DEPARTURES);
         final List<HafasStation> hafasStations = arguments.getParcelableArrayList(ARG_DB_STATION_HAFAS_STATIONS);
         station = arguments.getParcelable(ARG_DB_STATION);
 //        final Station station = arguments.getParcelable(ARG_DB_STATION);
-        hafasEvent = intent.getParcelableExtra(ARG_HAFAS_EVENT);
         final boolean filterStrictly = arguments.getBoolean(ARG_FILTER_STRICTLY, true);
         hafasTimetableViewModel.initialize(hafasStation, departures, filterStrictly, station, hafasStations);
-
+        }
 
         navigateBack = intent.getBooleanExtra(ARG_NAVIGATE_BACK, false);
 
         setContentView(R.layout.activity_departures);
 
-        installFragment(getSupportFragmentManager());
+        if (arguments != null)
+            installFragment(getSupportFragmentManager());
 
         toolbarViewHolder = new ToolbarViewHolder(findViewById(android.R.id.content));
         hafasTimetableViewModel.getHafasStationResource().getData().observe(this, new Observer<HafasStation>() {
