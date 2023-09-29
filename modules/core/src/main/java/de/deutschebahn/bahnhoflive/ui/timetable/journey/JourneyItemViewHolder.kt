@@ -62,15 +62,16 @@ class JourneyItemViewHolder(
 
             item?.let {
 
-                val displayPlatform: String = it.platform?:"" // kann auch 15 D-F sein !
-                val thisPlatform : Platform? = platformList.findPlatform(displayPlatform)
+                val displayPlatform: String = it.platform ?: "" // kann auch 15 D-F sein !
+                val thisPlatform: Platform? = platformList.findPlatform(displayPlatform)
 
-                linkPlatform.isVisible = it.current==true && thisPlatform!=null && ((platformList.size>1) || thisPlatform.isHeadPlatform)
+                linkPlatform.isVisible =
+                    it.current == true && thisPlatform != null && ((platformList.size > 1) || thisPlatform.isHeadPlatform)
 
                 if (linkPlatform.isVisible) {
 
                     layout.setOnClickListener {
-                        platformList?.let { it1 ->
+                        platformList.let { it1 ->
                             onClickPlatformInformation(
                                 it,
                                 item,
@@ -80,7 +81,7 @@ class JourneyItemViewHolder(
                     }
 
                     linkPlatform.setOnClickListener {
-                        platformList?.let { it1 ->
+                        platformList.let { it1 ->
                                     onClickPlatformInformation(
                                         it,
                                         item,
@@ -89,29 +90,53 @@ class JourneyItemViewHolder(
                                 }
                             }
 
-                    thisPlatform?.let {itPlatform->
+                    /*
+                    thisPlatform?.let { itPlatform ->
+
+                        linkPlatform.text = "Gleisinformationen"
 
                         val levelMask = when  {
-                            itPlatform.level<0 -> "%d. Untergeschoss, Gleis " + itPlatform.formatLinkedPlatformString(true,false)
-                            itPlatform.level==0 -> "Erdgeschoss, Gleis " + itPlatform.formatLinkedPlatformString(true,false)
-                            itPlatform.level==LEVEL_UNKNOWN -> "Gleis " + itPlatform.formatLinkedPlatformString(true,false)
-                            else -> "%d. Obergeschoss, Gleis " + itPlatform.formatLinkedPlatformString(true,false)
+                            itPlatform.level < 0 -> "%d. Untergeschoss, Gleis " + itPlatform.formatLinkedPlatformString(
+                                true,
+                                false
+                            )
+
+                            itPlatform.level == 0 -> "Erdgeschoss, Gleis " + itPlatform.formatLinkedPlatformString(
+                                true,
+                                false
+                            )
+
+                            itPlatform.level == LEVEL_UNKNOWN -> "Gleis " + itPlatform.formatLinkedPlatformString(
+                                true,
+                                false
+                            )
+
+                            else -> "%d. Obergeschoss, Gleis " + itPlatform.formatLinkedPlatformString(
+                                true,
+                                false
+                            )
                         }
 
                         when {
-                            itPlatform.level<0 -> linkPlatform.text = String.format(levelMask,  Math.abs(itPlatform.level))
-                            itPlatform.level==0 -> linkPlatform.text = levelMask
-                            itPlatform.level==LEVEL_UNKNOWN -> linkPlatform.text = String.format(levelMask)
-                            else -> linkPlatform.text = String.format(levelMask, Math.abs(itPlatform.level))
+                            itPlatform.level < 0 -> linkPlatform.text =
+                                String.format(levelMask, Math.abs(itPlatform.level))
+
+                            itPlatform.level == 0 -> linkPlatform.text = levelMask
+                            itPlatform.level == LEVEL_UNKNOWN -> linkPlatform.text =
+                                String.format(levelMask)
+
+                            else -> linkPlatform.text =
+                                String.format(levelMask, Math.abs(itPlatform.level))
 
                     }
 
-                        linkPlatform.contentDescription= linkPlatform.text
+                        linkPlatform.contentDescription = linkPlatform.text
 
                 }
-                    root.changeAccessibilityActionClickText(itemView.resources.getString(R.string.sr_open_platform_information))
-                }
-                else
+                    */
+
+                    root.changeAccessibilityActionClickText(itemView.resources.getString(R.string.sr_open_platform_information)) // -> Zum * Doppeltippen
+                } else
                     root.changeAccessibilityActionClickText(itemView.resources.getString(R.string.sr_open_station))
             }
 

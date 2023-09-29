@@ -29,13 +29,15 @@ public abstract class HafasRequest<T> extends Request<T> implements Countable, T
 
     private static final String TAG = HafasRequest.class.getSimpleName();
     private final String endpoint;
+    private final String parameters;
+
     private final Map<String, Object> trackingContextVariables = new HashMap<>();
     private final ForcedCacheEntryFactory cacheOverrider;
 
     public HafasRequest(int method, String endpoint, String parameters, String origin,
                         Response.ErrorListener listener, boolean shouldCache, int minimumCacheTime) {
         super(method, (endpoint + parameters).replaceAll(" ", "%20"), listener);
-        Log.d("cr", "hafas request: " + endpoint + parameters);
+        Log.d("cr", "hafas request:       url:" + endpoint + parameters);
         setShouldCache(shouldCache);
         setRetryPolicy(new DefaultRetryPolicy(
                 10*1000,
@@ -44,10 +46,25 @@ public abstract class HafasRequest<T> extends Request<T> implements Countable, T
         );
 
         this.endpoint = endpoint;
+        this.parameters = parameters;
+
         cacheOverrider = new ForcedCacheEntryFactory(minimumCacheTime);
 
         setTrackingContextVariable("origin", origin);
         setTrackingContextVariable("endpoint", endpoint);
+
+
+    }
+
+    @Override
+    protected VolleyError parseNetworkError(VolleyError volleyError) {
+        String msg = "hafas request: error url:" + endpoint + parameters;
+
+        if(volleyError.networkResponse!=null)
+            msg += " statusCode: " + volleyError.networkResponse.statusCode;
+
+        Log.d("cr", msg + " msg: <" + volleyError.getMessage() + ">");
+        return volleyError;
     }
 
     protected static String encodeParameter(String value) {
