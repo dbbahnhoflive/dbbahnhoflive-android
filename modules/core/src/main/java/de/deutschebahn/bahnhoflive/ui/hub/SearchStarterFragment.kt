@@ -6,7 +6,6 @@
 
 package de.deutschebahn.bahnhoflive.ui.hub
 
-import android.R
 import android.content.Context
 import android.content.Intent
 import android.graphics.drawable.ColorDrawable
@@ -19,6 +18,7 @@ import android.widget.LinearLayout
 import androidx.core.content.ContextCompat
 import com.google.android.gms.maps.model.LatLng
 import de.deutschebahn.bahnhoflive.BuildConfig
+import de.deutschebahn.bahnhoflive.R
 import de.deutschebahn.bahnhoflive.analytics.TrackingManager
 import de.deutschebahn.bahnhoflive.backend.local.model.EvaIds
 import de.deutschebahn.bahnhoflive.databinding.FragmentSearchStarterBinding
@@ -91,7 +91,7 @@ class SearchStarterFragment : androidx.fragment.app.Fragment() {
         inflater: LayoutInflater,
         container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View? =
+    ): View =
         FragmentSearchStarterBinding.inflate(inflater, container, false).apply {
             search.setOnClickListener { searchView ->
                 trackingManager.track(
