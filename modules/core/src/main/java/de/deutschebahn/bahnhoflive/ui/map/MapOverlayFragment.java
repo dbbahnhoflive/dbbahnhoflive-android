@@ -239,7 +239,7 @@ public class MapOverlayFragment extends Fragment implements OnMapReadyCallback, 
                     final MarkerBinder markerBinder = new MarkerBinder(markerContent, mapViewModel.getZoom(), mapViewModel.getLevel(), filterItem);
                     updateInitialMarkerBinder(markerBinder);
 
-//                    if(markerBinder.getMarkerContent().getTitle().toString().contains("Gleis"))
+//                    if(markerBinder.getMarkerContent().getTitle().startsWith("Gleis"))
 //                        Log.d("cr", markerBinder.getMarkerContent().getTitle());
 
                     allMarkerBinders.add(markerBinder);
@@ -914,23 +914,23 @@ public class MapOverlayFragment extends Fragment implements OnMapReadyCallback, 
 
     public void applyInitialMarkerBinder() {
 
-//        if (rimapDone && initialMarkerBinder == null && highlightedMarkerBinder == null) {
-//            final MarkerBinder firstMarkerBinder = content.getVisibleMarkerBinderForInitialSelection();
-//            if (firstMarkerBinder != null) {
-//                selectMarker(firstMarkerBinder);
-//            }
-//            return;
-//        }
-//
-//        if (highlightedMarkerBinder != null) {
-//            initialMarkerBinder = null;
-//            snapToFlyout(highlightedMarkerBinder);
-//        }
-//
-//        if (initialMarkerBinder != null) {
-//            selectMarker(initialMarkerBinder);
-//            initialMarkerBinder = null;
-//        }
+        if (rimapDone && initialMarkerBinder == null && highlightedMarkerBinder == null) {
+            final MarkerBinder firstMarkerBinder = content.getVisibleMarkerBinderForInitialSelection();
+            if (firstMarkerBinder != null) {
+                selectMarker(firstMarkerBinder);
+            }
+            return;
+        }
+
+        if (highlightedMarkerBinder != null) {
+            initialMarkerBinder = null;
+            snapToFlyout(highlightedMarkerBinder);
+        }
+
+        if (initialMarkerBinder != null) {
+            selectMarker(initialMarkerBinder);
+            initialMarkerBinder = null;
+        }
     }
 
     public void updateInitialMarkerBinder(MarkerBinder markerBinder) {
