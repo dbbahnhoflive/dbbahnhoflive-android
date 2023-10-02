@@ -25,6 +25,25 @@ ext.loadDebugStation = { stationNr ->
     return dbgStation
 }
 
+ext.loadMapConsentOverride = 'src/java'
+
+def loadMapConsentOverride = { ->
+// from ..\\local.properties
+//    dbgMapConsentOverride = "true"|"false"
+
+    Properties properties = new Properties()
+
+    if (rootProject.file("..\\local.properties").exists()) {
+        properties.load(rootProject.file("..\\local.properties").newDataInputStream())
+    } else {
+        println("file '..\\local.properties' not found")
+        return ""
+    }
+
+    def s = properties.getProperty("dbgMapConsentOverride", "false").toString().trim()
+    return s.equalsIgnoreCase("\"true\"").toString().toLowerCase()
+}
+
 android {
     compileSdkVersion 33
     defaultConfig {
@@ -53,6 +72,9 @@ android {
             buildConfigField "String", "DBG_STATION_3", "\"\""
             buildConfigField "String", "DBG_STATION_4", "\"\""
             buildConfigField "String", "DBG_STATION_5", "\"\""
+
+            buildConfigField "Boolean", "DBG_MAP_CONSENT_OVERRIDE", "false"
+
         }
 
         debug {
@@ -65,12 +87,15 @@ android {
             buildConfigField "String", "DBG_STATION_3", loadDebugStation(3)
             buildConfigField "String", "DBG_STATION_4", loadDebugStation(4)
             buildConfigField "String", "DBG_STATION_5", loadDebugStation(5)
+
+            buildConfigField "Boolean", "DBG_MAP_CONSENT_OVERRIDE", loadMapConsentOverride()
         }
     }
 
     buildFeatures {
         viewBinding true
         dataBinding true
+        buildConfig true
     }
 
     compileOptions {
