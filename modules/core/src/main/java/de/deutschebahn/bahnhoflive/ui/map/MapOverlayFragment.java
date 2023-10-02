@@ -239,12 +239,17 @@ public class MapOverlayFragment extends Fragment implements OnMapReadyCallback, 
                     final MarkerBinder markerBinder = new MarkerBinder(markerContent, mapViewModel.getZoom(), mapViewModel.getLevel(), filterItem);
                     updateInitialMarkerBinder(markerBinder);
 
-//                    if(markerBinder.getMarkerContent().getTitle().toString().contains("DB Information"))
+//                    if(markerBinder.getMarkerContent().getTitle().toString().contains("Gleis"))
 //                        Log.d("cr", markerBinder.getMarkerContent().getTitle());
 
                     allMarkerBinders.add(markerBinder);
                     categoryPins.add(markerBinder);
                 }
+
+                Collections.sort(allMarkerBinders, new ComparatorMarkerBinderTrack());
+
+//                for(MarkerBinder markerBinder : allMarkerBinders)
+//                    Log.d("cr",  markerBinder.getMarkerContent().getTitle() + " " + markerBinder.getMarkerContent().getTrack());
 
                 content.setMarkerBinders(Content.Source.RIMAP, allMarkerBinders, categorizedMarkerBinders);
                 content.updateVisibilities();
