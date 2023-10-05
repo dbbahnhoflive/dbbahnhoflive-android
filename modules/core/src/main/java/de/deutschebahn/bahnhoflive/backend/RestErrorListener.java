@@ -21,12 +21,12 @@ public class RestErrorListener implements Response.ErrorListener {
     @Override
     public void onErrorResponse(VolleyError error) {
 
-        String msg = "VolleyError: ";
+        String msg = "request : error";
 
         if(error.networkResponse!=null)
-            msg += "statusCode: " + error.networkResponse.statusCode;
+            msg += " statusCode: " + error.networkResponse.statusCode;
 
-        Log.d("cr", msg + " <" + error.getMessage() + ">" );
+        Log.d("cr", msg + " message: <" + error.getMessage() + ">" );
 
         listener.onFail(error);
     }
