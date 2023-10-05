@@ -86,6 +86,7 @@ open class HafasStop protected constructor(`in`: Parcel) : Parcelable {
     var arrTrack: String? = null
     var depTrack: String? = null
     var additional: Boolean = false // Zusatzhalt
+    var rtDepTrack: String? = null // bei Gleiswechsel
 
     var progress: Double = -1.0
     override fun describeContents(): Int {
@@ -119,6 +120,7 @@ open class HafasStop protected constructor(`in`: Parcel) : Parcelable {
         dest.writeByte((if (additional) 1 else 0).toByte())
 
         dest.writeDouble(progress)
+        dest.writeString(rtDepTrack)
     }
 
     init {
@@ -149,6 +151,7 @@ open class HafasStop protected constructor(`in`: Parcel) : Parcelable {
         additional = `in`.readByte().toInt() == 1
 
         progress = `in`.readDouble()
+        rtDepTrack = `in`.readString()
 
     }
 
@@ -180,6 +183,8 @@ open class HafasStop protected constructor(`in`: Parcel) : Parcelable {
                 ", depTrack=" + depTrack +
                 ", additional=" + additional +
                 ", progress=" + progress +
+                ", rtDepTrack=" + rtDepTrack +
+
                 '}'
 
     }
@@ -200,6 +205,10 @@ open class HafasStop protected constructor(`in`: Parcel) : Parcelable {
 
     fun bestEffortArrivalTime() : Date? = arrivalTime().second ?: arrivalTime().first
     fun bestEffortDepartureTime() : Date? = departureTime().second ?: departureTime().first
+
+
+    val departureTrackChanged : Boolean
+        get() = depTrack!=null && rtDepTrack!=null && depTrack!=rtDepTrack
 
     companion object {
 

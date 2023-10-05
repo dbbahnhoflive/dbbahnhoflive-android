@@ -44,6 +44,7 @@
     <string name="sr_details">Zu weiteren Details</string>
     <string name="sr_done">Erledigt</string>
     <string name="sr_template_estimated">erwartet %1$s</string>
+    <string name="sr_template_estimated_departure">heute %1$s</string>
     <string name="sr_template_platform">Gleis %1$s</string>
     <string name="sr_template_waggon">Wagen %1$s %2$s %3$s</string>
     <string name="sr_class_1">erste Klasse</string>

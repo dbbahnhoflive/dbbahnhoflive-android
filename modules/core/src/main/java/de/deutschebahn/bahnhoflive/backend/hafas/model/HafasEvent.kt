@@ -56,8 +56,8 @@ open class HafasEvent protected constructor(`in`: Parcel) : Parcelable {
     @SerializedName("JourneyDetailRef")
     var detailReference: HafasDetailReference?
 
-    @JvmField
-    @SerializedName("Product")
+    @SerializedName("ProductAtStop") // vorher Product
+
     var product: HafasEventProduct?
 
     @SerializedName("JourneyStatus")
@@ -86,7 +86,10 @@ open class HafasEvent protected constructor(`in`: Parcel) : Parcelable {
     var trainNumber: String?
     var trainCategory: String?
     var partCancelled: Boolean
-    var track: String?
+
+    private var track: String?
+    private var rtTrack: String? // abweichendes Gleis
+
     override fun describeContents(): Int {
         return 0
     }
@@ -112,6 +115,7 @@ open class HafasEvent protected constructor(`in`: Parcel) : Parcelable {
         dest.writeString(trainCategory)
         dest.writeByte((if (partCancelled) 1 else 0).toByte())
         dest.writeString(track)
+        dest.writeString(rtTrack)
     }
 
     init {
@@ -136,6 +140,7 @@ open class HafasEvent protected constructor(`in`: Parcel) : Parcelable {
         trainCategory = `in`.readString()
         partCancelled = `in`.readByte().toInt() == 1
         track = `in`.readString()
+        rtTrack = `in`.readString()
     }
 
     val displayName: String
@@ -199,6 +204,7 @@ open class HafasEvent protected constructor(`in`: Parcel) : Parcelable {
                 ", trainCategory='" + trainCategory + '\'' +
                 ", partCancelled=" + partCancelled +
                 ", track=" + track +
+                ", rtTrack=" + rtTrack +
                 '}'
     }
 
@@ -229,8 +235,43 @@ open class HafasEvent protected constructor(`in`: Parcel) : Parcelable {
         get() = product != null
     val prettyTrackName: String
         get() = if (track != null && product != null) {
-            if (product!!.onTrack()) "Gleis $track" else "Platform $track"
+            if (product!!.onTrack()) {
+                if (rtTrack != null)
+                    "Gleis $rtTrack"
+                else
+                    "Gleis $track"
+            } else {
+                if (rtTrack != null)
+                    "Platform $rtTrack"
+                else
+                    "Platform $track"
+            }
+
         } else ""
+
+    val shortcutTrackName: String? // Gl. 14 A-F
+        get() = if (track != null && product != null) {
+            if (product!!.onTrack()) {
+                if(rtTrack!=null)
+                    "Gl. $rtTrack"
+                else
+                    "Gl. $track"
+
+            } else {
+                if(rtTrack!=null)
+                    "Pl. $rtTrack"
+                else
+                    "Pl. $track"
+
+            }
+
+        } else null
+
+    val trackChanged : Boolean
+        get() = track!=null && rtTrack!=null && rtTrack!=track
+
+    val hasIssue : Boolean
+        get() = trackChanged || partCancelled
 
     companion object {
 
