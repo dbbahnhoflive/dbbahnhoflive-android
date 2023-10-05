@@ -6,8 +6,11 @@
 
 package de.deutschebahn.bahnhoflive.ui.timetable.localtransport
 
+import android.graphics.Color
+import android.util.Log
 import android.view.View
 import android.widget.ImageView
+import androidx.core.view.isVisible
 import de.deutschebahn.bahnhoflive.R
 import de.deutschebahn.bahnhoflive.backend.hafas.model.HafasEvent
 import de.deutschebahn.bahnhoflive.ui.TimetableItemOverviewViewHolder
@@ -38,24 +41,31 @@ class HafasEventOverviewViewHolder(view: View) : TimetableItemOverviewViewHolder
 
             val resources = itemView.resources
 
-            val platform: String? =
-                if (item.product?.onTrack() == true) {
-                    item.track?.let { "Gl. $it" }
-                } else {
-                    item.track?.let { "Pl. $it" }
+            val platform: String? = item.shortcutTrackName
+
+            platformView?.let {
+                it.text = platform
+                it.isVisible = !platform.isNullOrEmpty()
+                it.setTextColor( if(item.hasIssue) Color.RED else Color.BLACK)
+
                 }
 
-            platformView?.text = platform
-            platformView?.visibleElseGone(!platform.isNullOrEmpty())
-
-            issueIndicator?.visibleElseGone(item.partCancelled)
+            issueIndicator?.isVisible = item.hasIssue
 
             itemView.contentDescription = resources.getString(
                 R.string.sr_template_local_departure_overview,
-                item.displayName, item.direction, estimatedTimeString,
+                item.displayName,
+                item.direction,
+                scheduledTimeString,
+                if (item.trackChanged)
+                    "heute abweichend ${item.prettyTrackName}"
+                else
                 item.prettyTrackName,
                 if (item.delay > 0)
-                    resources.getString(R.string.sr_template_estimated, estimatedTimeString)
+                    resources.getString(
+                        R.string.sr_template_estimated_departure,
+                        estimatedTimeString
+                    )
                 else ""
             )
 

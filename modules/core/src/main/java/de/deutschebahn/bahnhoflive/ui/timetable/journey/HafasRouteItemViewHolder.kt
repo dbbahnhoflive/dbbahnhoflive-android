@@ -1,10 +1,12 @@
 package de.deutschebahn.bahnhoflive.ui.timetable.journey
 
 import android.graphics.Typeface
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import android.widget.TextView
 import androidx.core.content.ContextCompat
+import androidx.core.view.isVisible
 import de.deutschebahn.bahnhoflive.R
 import de.deutschebahn.bahnhoflive.databinding.ItemJourneyDetailedBinding
 import de.deutschebahn.bahnhoflive.ui.Status
@@ -65,40 +67,57 @@ class HafasRouteItemViewHolder(private val itemJourneyBinding: ItemJourneyDetail
                 lowerTrack.visibleElseGone(!it.isLast)
                 trackStop.isSelected = isLastOrFirst
 
-                item.hafasStop?.let {itHafasStop->
+                item.hafasStop?.let { itHafasStop ->
                     bindTimes(scheduledArrival,  expectedArrival, itHafasStop.arrivalTime())
                     bindTimes(scheduledDeparture,  expectedDeparture, itHafasStop.departureTime())
 
-                    if(itHafasStop.cancelled) {
-                    advice.text = "Halt fällt aus"
-                    }
-                    else
-                    if(itHafasStop.additional) {
-                        advice.text = "Zusätzlicher Halt"
+
+                    advice.text =
+                        when {
+                            itHafasStop.cancelled -> "Halt fällt aus"
+                            itHafasStop.additional -> "Zusätzlicher Halt"
+                            itHafasStop.departureTrackChanged -> "Gleiswechsel"
+                            else -> ""
                     }
 
-                    advice.setCompoundDrawablesWithIntrinsicBounds(if(itHafasStop.cancelled) R.drawable.app_warndreieck else 0,0,0,0)
-                    advice.visibleElseGone(itHafasStop.cancelled || itHafasStop.additional)
+
+                    advice.isVisible = advice.text.isNotEmpty()
+                    advice.setCompoundDrawablesWithIntrinsicBounds(
+                        if (advice.isVisible) R.drawable.app_warndreieck else 0,
+                        0,
+                        0,
+                        0
+                    )
 
                     var platformText = ""
-                    var sr_platformText : String? = null
+                    var sr_platformText: String? = null
 
                     var track = itHafasStop.arrTrack
-                    if(track==null || itHafasStop.depTrack!=null)
-                        track = itHafasStop.depTrack
+                    if (track == null || itHafasStop.rtDepTrack != null)
+                        track = itHafasStop.rtDepTrack
+
 
                     track?.let {
+
+//                        platformText = item.hafasEvent?.shortcutTrackName?:""
+//                        sr_platformText = item.hafasEvent?.prettyTrackName?:""
+
+                        if (itHafasStop.departureTrackChanged)
+                            sr_platformText = "heute abweichend von "
+                        else
+                            sr_platformText = ""
+
                         if (item.hafasEvent?.product?.onTrack() == true) {
                             platformText = "Gl. $it"
-                            sr_platformText = "Gleis $it"
+                            sr_platformText += "Gleis $it"
                         } else {
                             platformText = "Pl. $it"
-                            sr_platformText = "Plattform $it"
+                            sr_platformText += "Plattform $it"
                         }
                         platform.text = platformText
                     }
 
-                    platform.visibleElseGone(track!=null)
+                    platform.visibleElseGone(track != null)
 
                     // for screenreader
                     root.contentDescription = item.run {
@@ -109,8 +128,9 @@ class HafasRouteItemViewHolder(private val itemJourneyBinding: ItemJourneyDetail
                             ).joinToString(", ", postfix = "."),
                             listOfNotNull(
                                 when {
-                                    this.hafasStop?.additional == true -> "(Hinweis: \"Zusätzlicher Halt\")"
                                     this.hafasStop?.cancelled == true -> "(Hinweis: \"Halt fällt aus\")"
+                                    this.hafasStop?.additional == true -> "(Hinweis: \"Zusätzlicher Halt\")"
+//                                    this.hafasStop?.departureTrackChanged == true -> "(Hinweis: \"Gleisänderung\")"
                                     else -> null
                                 },
                                 formatContentDescription(
@@ -124,7 +144,7 @@ class HafasRouteItemViewHolder(private val itemJourneyBinding: ItemJourneyDetail
                             ).joinToString("; ", postfix = ".")
                         ).joinToString(separator = " ")
                     }.also {
-//                     Log.d(JourneyItemViewHolder::class.java.simpleName, "Content description:\n$it")
+                    // Log.d(JourneyItemViewHolder::class.java.simpleName, "Content description:\n$it")
                 }
             }
             }
@@ -143,7 +163,7 @@ class HafasRouteItemViewHolder(private val itemJourneyBinding: ItemJourneyDetail
 
     private fun formatContentDescription(time : Pair<Date?, Date?>?, prefix: String, past: Boolean?) =
         listOfNotNull(
-            prefix,
+            if(time?.first != null) prefix else null,
             time?.first?.run {
                 "${this.time.formatShortTime()} Uhr"
             },
