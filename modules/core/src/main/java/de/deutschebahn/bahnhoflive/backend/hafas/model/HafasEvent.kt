@@ -86,6 +86,7 @@ open class HafasEvent protected constructor(`in`: Parcel) : Parcelable {
     var trainNumber: String?
     var trainCategory: String?
     var partCancelled: Boolean
+    var cancelled: Boolean
 
     private var track: String?
     private var rtTrack: String? // abweichendes Gleis
@@ -116,6 +117,7 @@ open class HafasEvent protected constructor(`in`: Parcel) : Parcelable {
         dest.writeByte((if (partCancelled) 1 else 0).toByte())
         dest.writeString(track)
         dest.writeString(rtTrack)
+        dest.writeByte((if (cancelled) 1 else 0).toByte())
     }
 
     init {
@@ -141,6 +143,7 @@ open class HafasEvent protected constructor(`in`: Parcel) : Parcelable {
         partCancelled = `in`.readByte().toInt() == 1
         track = `in`.readString()
         rtTrack = `in`.readString()
+        cancelled = `in`.readByte().toInt() == 1
     }
 
     val displayName: String
@@ -205,6 +208,7 @@ open class HafasEvent protected constructor(`in`: Parcel) : Parcelable {
                 ", partCancelled=" + partCancelled +
                 ", track=" + track +
                 ", rtTrack=" + rtTrack +
+                ", cancelled=" + cancelled +
                 '}'
     }
 
@@ -271,7 +275,7 @@ open class HafasEvent protected constructor(`in`: Parcel) : Parcelable {
         get() = track!=null && rtTrack!=null && rtTrack!=track
 
     val hasIssue : Boolean
-        get() = trackChanged || partCancelled
+        get() = trackChanged || partCancelled || cancelled
 
     companion object {
 
