@@ -52,15 +52,17 @@ class HafasEventOverviewViewHolder(view: View) : TimetableItemOverviewViewHolder
 
             issueIndicator?.isVisible = item.hasIssue
 
+
             itemView.contentDescription = resources.getString(
                 R.string.sr_template_local_departure_overview,
                 item.displayName,
                 item.direction,
                 scheduledTimeString,
-                if (item.trackChanged)
-                    "heute abweichend ${item.prettyTrackName}"
-                else
-                item.prettyTrackName,
+                when {
+                    item.cancelled -> "Verbindung fällt aus"
+                    item.trackChanged -> "heute abweichend ${item.prettyTrackName}"
+                    else -> item.prettyTrackName
+                },
                 if (item.delay > 0)
                     resources.getString(
                         R.string.sr_template_estimated_departure,
