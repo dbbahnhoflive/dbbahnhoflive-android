@@ -38,7 +38,6 @@
         android:background="@color/white"
         android:gravity="center_vertical"
         android:iconifiedByDefault="false"
-        android:layout_marginBottom="@dimen/default_space"
         android:padding="@dimen/default_space"
         android:layout_marginBottom="@dimen/default_space"
         android:contentDescription="@string/sr_search_box"
