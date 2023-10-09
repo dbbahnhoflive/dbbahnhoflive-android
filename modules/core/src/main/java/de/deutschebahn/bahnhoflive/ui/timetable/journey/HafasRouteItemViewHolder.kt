@@ -165,10 +165,10 @@ class HafasRouteItemViewHolder(private val itemJourneyBinding: ItemJourneyDetail
         listOfNotNull(
             if(time?.first != null) prefix else null,
             time?.first?.run {
-                "${this.time.formatShortTime()} Uhr"
+                "${this.time.formatShortTime()}"
             },
             time?.second?.takeUnless { it == time.first }?.run {
-                "(heute ${if (past!=null && !past) "voraussichtlich " else ""}${this.time.formatShortTime()} Uhr)"
+                "(heute ${if (past!=null && !past) "voraussichtlich " else ""}${this.time.formatShortTime()})"
     }
         ).joinToString(" ")
 

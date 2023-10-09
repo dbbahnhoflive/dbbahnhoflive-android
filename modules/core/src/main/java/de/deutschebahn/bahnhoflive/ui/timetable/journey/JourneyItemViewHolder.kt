@@ -290,10 +290,10 @@ class JourneyItemViewHolder(
         listOfNotNull(
             prefix,
             parsedScheduledTime?.run {
-                "${formatTime()} Uhr"
+                "${formatTime()}"
             },
             parsedEstimatedTime?.takeUnless { it == parsedScheduledTime }?.run {
-                "(heute ${if (!past) "voraussichtlich " else ""}${formatTime()} Uhr)"
+                "(heute ${if (!past) "voraussichtlich " else ""}${formatTime()})"
             }
         ).joinToString(" ")
 
