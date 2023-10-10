@@ -59,6 +59,7 @@ import de.deutschebahn.bahnhoflive.ui.station.shop.CategorizedShops;
 import de.deutschebahn.bahnhoflive.ui.station.shop.Shop;
 import de.deutschebahn.bahnhoflive.ui.station.shop.ShopCategory;
 import de.deutschebahn.bahnhoflive.ui.station.timetable.TimetablesFragment;
+import de.deutschebahn.bahnhoflive.ui.timetable.localtransport.HafasTimetableViewModel;
 import de.deutschebahn.bahnhoflive.ui.timetable.localtransport.ReducedDbDeparturesViewHolder;
 import de.deutschebahn.bahnhoflive.util.GeneralPurposeMillisecondsTimer;
 import de.deutschebahn.bahnhoflive.util.GoogleLocationPermissions;
@@ -73,12 +74,17 @@ public class StationFragment extends androidx.fragment.app.Fragment implements
     public static final String STATE_SUMMARY_PARKINGS = "summaryParkings";
     public static final String STATE_SUMMARY_ELEVATORS = "summaryElevators";
     private static final String STATE_SUMMARY_LOCAL_TRANSPORT = "summaryLocalTransport";
+
+    private static final String STATE_SUMMARY_LOCAL_TRANSPORT_TIMETABLE = "summaryLocalTransportTimetable";
+
     public static final int REQUEST_CODE_STATION_FEATURES = 108;
     public static final String EXTRA_SERVICE_CONTENT = "serviceContent";
 
     private SummaryBadge shopsSummary;
     private SummaryBadge elevatorsSummary;
-    private SummaryBadge localTransportSummary;
+    private SummaryBadge localTransportSummary; // OEPNV Stationen im Umkreis
+
+    private SummaryBadge localTransportTimetable; // OEPNV Abfahrten
 
     private SummaryBadge[] summaries;
 
@@ -95,6 +101,9 @@ public class StationFragment extends androidx.fragment.app.Fragment implements
     private int availableElevatorCount = 0;
 
     private StationViewModel stationViewModel;
+
+    private HafasTimetableViewModel hafasTimetableViewModel;
+
     private ToolbarViewHolder toolbarViewHolder;
     private TextView largeTitleView;
 
@@ -152,6 +161,8 @@ public class StationFragment extends androidx.fragment.app.Fragment implements
         final ViewModelProvider viewModelProvider = new ViewModelProvider(requireActivity());
         stationViewModel = viewModelProvider.get(StationViewModel.class);
 
+        hafasTimetableViewModel= viewModelProvider.get(HafasTimetableViewModel.class);
+
         Resource<MergedStation, ? extends Throwable> stationResource = stationViewModel.getStationResource();
         stationLiveData = stationResource.getData();
         stationLiveData.observe(this, new Observer<Station>() {
@@ -178,15 +189,17 @@ public class StationFragment extends androidx.fragment.app.Fragment implements
 //                parkingsSummary = new SummaryBadge();
                 elevatorsSummary = new SummaryBadge();
                 localTransportSummary = new SummaryBadge();
+                localTransportTimetable = new SummaryBadge();
 //                elevatorsSummary.setAvailable(BackspinMapper.getBackspinId(stationLiveData.getValue()) != null);
             } else {
                 shopsSummary = savedInstanceState.getParcelable(STATE_SUMMARY_SHOPS);
 //                parkingsSummary = savedInstanceState.getParcelable(STATE_SUMMARY_PARKINGS);
                 elevatorsSummary = savedInstanceState.getParcelable(STATE_SUMMARY_ELEVATORS);
                 localTransportSummary = savedInstanceState.getParcelable(STATE_SUMMARY_LOCAL_TRANSPORT);
+                localTransportTimetable = savedInstanceState.getParcelable(STATE_SUMMARY_LOCAL_TRANSPORT_TIMETABLE);
             }
 
-            summaries = new SummaryBadge[]{shopsSummary, /*parkingsSummary, */ elevatorsSummary, localTransportSummary};
+            summaries = new SummaryBadge[]{shopsSummary, /*parkingsSummary, */ elevatorsSummary, localTransportSummary, localTransportTimetable};
         }
 
         elevatorsResource = stationViewModel.getElevatorsResource();
@@ -228,6 +241,7 @@ public class StationFragment extends androidx.fragment.app.Fragment implements
             }
         });
 
+        // �PNV
         final LocalTransportViewModel localTransportViewModel = stationViewModel.getLocalTransportViewModel();
         localTransportViewModel.getHafasStationsAvailableLiveData().observe(this, availability -> {
             if (availability != null) {
@@ -236,7 +250,19 @@ public class StationFragment extends androidx.fragment.app.Fragment implements
         });
 
         localTransportViewModel.getHafasStationsResource().getError().observe(this, error -> {
+            if(error!=null)
             localTransportSummary.setError();
+        });
+
+        // used to hide OEPNV card
+        hafasTimetableViewModel.hafasTimetableResource.getError().observe(this, volleyError -> {
+            if(volleyError!=null)
+                localTransportTimetable.setError();
+        });
+
+        hafasTimetableViewModel.hafasTimetableResource.getData().observe(this, hafasDepartures -> {
+            if(hafasDepartures!=null)
+                localTransportTimetable.setAvailable(true);
         });
 
         lastChangeTimer.startTimer(() -> {
@@ -488,7 +514,7 @@ public class StationFragment extends androidx.fragment.app.Fragment implements
             setStationName(station.getTitle());
         }
         stationDetailCardCoordinator = new StationDetailCardCoordinator(DynamicCardLayoutBinding.bind(view.findViewById(R.id.dynamicCardLayout)),
-                view.findViewById(R.id.liveCardsProgressFlipper), localTransportSummary, shopsSummary, elevatorsSummary);
+                view.findViewById(R.id.liveCardsProgressFlipper), localTransportSummary, shopsSummary, elevatorsSummary, localTransportTimetable);
         stationViewModel.getRimapStationInfoLiveData().observe(getViewLifecycleOwner(), stationDetailCardCoordinator.getRimapStationInfoObserver());
 
         view.findViewById(R.id.searchCard).setOnClickListener(v -> {
@@ -676,6 +702,7 @@ public class StationFragment extends androidx.fragment.app.Fragment implements
         outState.putParcelable(STATE_SUMMARY_SHOPS, shopsSummary);
         outState.putParcelable(STATE_SUMMARY_ELEVATORS, elevatorsSummary);
         outState.putParcelable(STATE_SUMMARY_LOCAL_TRANSPORT, localTransportSummary);
+        outState.putParcelable(STATE_SUMMARY_LOCAL_TRANSPORT_TIMETABLE, localTransportTimetable);
     }
 
     @Override
