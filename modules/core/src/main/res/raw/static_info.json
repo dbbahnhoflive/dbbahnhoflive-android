@@ -18,7 +18,7 @@
 		},
 
 		{
-            "descriptionText": "<p>Die Mobilitätsservice-Zentrale organisiert alles Notwendige, wenn Sie Hilfe beim Ein-, Um- oder Aussteigen benötigen. Damit wir Sie optimal betreuen können bitten wir Sie, sich bis spätestens bis <b>20:00 Uhr des Vortages</b> Ihrer Reise anzumelden. Bei Internationalen Reisen <b>spätestens 48 Stunden</b> im Voraus.</p><dbactionbutton href=\"https://msz-bahn.de\">Online-Formular</dbactionbutton><p><b><br>Weitere Kontaktmöglichkeiten</b></p><dbactionbutton href=\"tel:03065212888\">030 6521 2888</dbactionbutton><dbactionbutton href=\"mailto:msz@deutschebahn.com\">E-Mail</dbactionbutton>",
+            "descriptionText": "<p>Die Mobilitätsservice-Zentrale organisiert alles Notwendige, wenn Sie Hilfe beim Ein-, Um- oder Aussteigen benötigen. Damit wir Sie optimal betreuen können bitten wir Sie, sich spätestens bis <b>20:00 Uhr des Vortages</b> Ihrer Reise anzumelden. Bei Internationalen Reisen <b>spätestens 48 Stunden</b> im Voraus.</p><dbactionbutton href=\"https://msz-bahn.de\">Online-Formular</dbactionbutton><p><b><br>Weitere Kontaktmöglichkeiten</b></p><dbactionbutton href=\"tel:03065212888\">030 6521 2888</dbactionbutton><dbactionbutton href=\"mailto:msz@deutschebahn.com\">E-Mail</dbactionbutton>",
 			"title": "Mobilitätsservice",
 			"type": "mobilitaetsservice"
 		},
@@ -52,13 +52,13 @@
 			"title": "DB Lounge",
 			"type": "local_db_lounge"
 		},
-                   
+
 		{
 			"descriptionText": "<p>Sie haben im Zug oder Bahnhof etwas verloren oder gefunden? Teilen Sie uns dies einfach und kostenlos unter <a href=\"https://www.bahn.de/p/view/service/fundservice.shtml\">https://www.bahn.de/p/view/service/fundservice.shtml</a> mit. Telefonisch erreichen Sie uns unter 030 586020909 Dieser Weg steht Ihnen rund um die Uhr zur Verfügung. An einigen Bahnhöfen gibt es darüber hinaus weitere Fundservices.</p>",
 			"title": "Fundservice",
 			"type": "local_lostfound"
 		},
-         
+
 		{
 			"descriptionText": "<p>Hallo, mein Name ist DB Smile. Ich bin Ihr digitaler Assistent und helfe bei Fragen zum Bahnhof.</p> <dbactionbutton>Chatten Sie mit mir</dbactionbutton> <p>Ich bin <b>Montag bis Sonntag von 07:00 - 22:00 Uhr</b> in vollem Umfang für Sie da.</p><p><b>Alternative Kontaktmöglichkeiten</b><dbactionbutton href=\"mailto:feedback@bahnhof.de\">E-Mail</dbactionbutton> <dbactionbutton href=\"tel:030 586020930\">030 586020930</dbactionbutton>Montag bis Sonntag von 07:00 - 22:00 Uhr</p>",
 			"title": "Fragen & Feedback zum Bahnhof",
