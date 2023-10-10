@@ -1,5 +1,6 @@
 package de.deutschebahn.bahnhoflive.ui.timetable.journey
 
+import android.content.Intent
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -21,12 +22,16 @@ import de.deutschebahn.bahnhoflive.backend.ris.model.TrainInfo
 import de.deutschebahn.bahnhoflive.backend.ris.model.TrainMovementInfo
 import de.deutschebahn.bahnhoflive.databinding.FragmentJourneyPlatformInformationBinding
 import de.deutschebahn.bahnhoflive.databinding.IncludePlatformsBinding
+import de.deutschebahn.bahnhoflive.ui.map.Content
+import de.deutschebahn.bahnhoflive.ui.map.InitialPoiManager
+import de.deutschebahn.bahnhoflive.ui.map.MapPresetProvider
+import de.deutschebahn.bahnhoflive.ui.map.content.rimap.Track
 import de.deutschebahn.bahnhoflive.ui.station.StationViewModel
 import de.deutschebahn.bahnhoflive.ui.station.timetable.TimetableViewHelper
 import de.deutschebahn.bahnhoflive.util.changeAccessibilityActionClickText
 
 
-class JourneyPlatformInformationFragment : Fragment() {
+class JourneyPlatformInformationFragment : Fragment(), MapPresetProvider {
 
     val stationViewModel by activityViewModels<StationViewModel>()
 
@@ -205,11 +210,10 @@ class JourneyPlatformInformationFragment : Fragment() {
                                 "Gleis ${itPlatform.formatLinkedPlatformString(true, false)}"
 
                             if (itPlatform.isHeadPlatform)
-                                text += ", Kopfgleis"
+                                text += ", " + getString(R.string.platform_head)
 
                             textView.text = text
-                            textView.contentDescription = text.replace("|", "gegenüber")
-
+                            textView.contentDescription = text.replace("|", getString(R.string.sr_opposite_track))
                             itPlatformContainer.addView(textView)
                         }
 
@@ -249,6 +253,21 @@ class JourneyPlatformInformationFragment : Fragment() {
 
         }
 
+    }
+
+    override fun prepareMapIntent(intent: Intent): Boolean {
+        val trainMovementInfo: TrainMovementInfo? = trainEvent?.movementRetriever?.getTrainMovementInfo(trainInfo)
+
+        if (trainMovementInfo != null) {
+
+            val platform = platforms.findPlatform(trainMovementInfo.displayPlatform)
+
+            platform?.let {
+                InitialPoiManager.putInitialPoi(intent, Content.Source.RIMAP, Track(it.name))
+            }
+        }
+
+        return true
     }
 
     companion object {
