@@ -95,7 +95,7 @@ class TrainInfoViewHolder internal constructor(
             if (it.isHeadPlatform)
                 platformText += ", ${getString(R.string.platform_head)}."
 
-            platformList?.firstLinkedPlatform(trainMovementInfo.platform)?.let { itLinkedPlatform ->
+            platformList?.firstLinkedPlatform(trainMovementInfo.correctedPlatform?:trainMovementInfo.platform)?.let { itLinkedPlatform ->
                 if (it.linkedPlatformNumbers.size == 1) {
                     platformText += " .${
                         getString(
