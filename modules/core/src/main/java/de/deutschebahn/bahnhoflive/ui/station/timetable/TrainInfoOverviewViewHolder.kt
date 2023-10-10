@@ -6,9 +6,11 @@
 
 package de.deutschebahn.bahnhoflive.ui.station.timetable
 
+import android.graphics.Color
 import android.view.View
 import android.widget.ImageView
 import android.widget.TextView
+import androidx.core.view.isVisible
 import de.deutschebahn.bahnhoflive.R
 import de.deutschebahn.bahnhoflive.backend.ris.model.TrainEvent
 import de.deutschebahn.bahnhoflive.backend.ris.model.TrainInfo
@@ -53,8 +55,19 @@ open class TrainInfoOverviewViewHolder(view: View, protected val provider: Train
                 platformView?.run {
                     val displayPlatform = trainMovementInfo.displayPlatform
                     text = context.getString(R.string.template_platform, displayPlatform)
-                    contentDescription = context.getString(R.string.sr_template_platform, displayPlatform)
+                    if(trainMovementInfo.correctedPlatform!=null) {
+                        contentDescription = trainMovementInfo.platformMessage
+                        this.setTextColor(Color.RED)
+//                            context.getString(R.string.sr_template_platform, displayPlatform)
+                    }
+                    else {
+                        this.setTextColor(Color.BLACK)
+                        contentDescription =
+                            context.getString(R.string.sr_template_platform, displayPlatform)
+                    }
                 }
+
+                issueIndicator?.isVisible = true // icon wird per issuesBinder gesetzt oder gelöscht !
 
                 issuesBinder.bindIssues(item, trainMovementInfo)
                 wagonOrderIndicator?.visibility =
