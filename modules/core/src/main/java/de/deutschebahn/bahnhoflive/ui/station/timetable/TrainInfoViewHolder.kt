@@ -81,7 +81,7 @@ class TrainInfoViewHolder internal constructor(
     private fun renderContentDescription(
         trainInfo: TrainInfo,
         trainMovementInfo: TrainMovementInfo
-    ) = with(itemView.resources) {
+    ) : String = with(itemView.resources) {
 
         var platformText =
             getString(R.string.sr_template_platform, trainMovementInfo.displayPlatform)
@@ -89,8 +89,13 @@ class TrainInfoViewHolder internal constructor(
         val platform =
             platformList?.firstOrNull { it.number == Platform.platformNumber(trainMovementInfo.platform) }
 
+
         platform?.let {
-            platformList?.firstLinkedPlatform(trainMovementInfo.platform)?.let { itLinkedPlatform ->
+
+            if (it.isHeadPlatform)
+                platformText += ", ${getString(R.string.platform_head)}."
+
+            platformList?.firstLinkedPlatform(trainMovementInfo.correctedPlatform?:trainMovementInfo.platform)?.let { itLinkedPlatform ->
                 if (it.linkedPlatformNumbers.size == 1) {
                     platformText += " .${
                         getString(
@@ -98,19 +103,18 @@ class TrainInfoViewHolder internal constructor(
                             itLinkedPlatform.number
                         )
                     }"
-                    if (itLinkedPlatform.isHeadPlatform)
-                        platformText += " .${getString(R.string.platform_head)}."
+
                 }
             }
         }
 
-        val trainEvent = trainEvent
+//        val trainEvent = trainEvent
         getString(R.string.sr_template_db_timetable_item,
             TimetableViewHelper.composeName(trainInfo, trainMovementInfo),
             getText(trainEvent.contentDescriptionPhrase),
             trainMovementInfo.getDestinationStop(trainEvent.isDeparture),
             trainMovementInfo.formattedTime,
-            platformText,
+            platformText + ", ",
             trainMovementInfo.delayInMinutes().takeIf { it > 0 }?.let {
                 getString(
                     R.string.sr_template_estimated,
