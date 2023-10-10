@@ -284,6 +284,8 @@ class DbTimetableAdapter extends RecyclerView.Adapter<ViewHolder<?>> implements 
 
         if (selectedTrainInfos != null) {
 
+            final long now = System.currentTimeMillis();
+
             final ArrayList<TrainInfo> filteredTrainInfos = new ArrayList<>();
             for (TrainInfo selectedTrainInfo : selectedTrainInfos) {
                 if (trainCategory != null && !trainCategory.equals(selectedTrainInfo.getTrainCategory())) {
@@ -293,6 +295,25 @@ class DbTimetableAdapter extends RecyclerView.Adapter<ViewHolder<?>> implements 
                 if (track != null && !track.equals(trainEvent.movementRetriever.getTrainMovementInfo(selectedTrainInfo).getPlatformWithoutExtensions())) {
                     continue;
                 }
+
+                if (trainEvent.isDeparture) {
+
+                    final TrainMovementInfo mm = selectedTrainInfo.getDeparture();
+
+                    if (mm != null && mm.getCorrectedStatus() != null
+                            && mm.getCorrectedStatus().equals("c") && mm.getPlannedDateTime() < now) {
+                        continue;
+                    }
+                } else {
+                    final TrainMovementInfo mm = selectedTrainInfo.getArrival();
+
+                    if (mm != null && mm.getCorrectedStatus() != null
+                            && mm.getCorrectedStatus().equals("c") && mm.getPlannedDateTime() < now) {
+                        continue;
+                    }
+
+                }
+
 
                 filteredTrainInfos.add(selectedTrainInfo);
 
