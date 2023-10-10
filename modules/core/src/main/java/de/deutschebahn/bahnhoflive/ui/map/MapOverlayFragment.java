@@ -304,16 +304,17 @@ public class MapOverlayFragment extends Fragment implements OnMapReadyCallback, 
 
         });
 
-        mapViewModel.getTracksAvailableLiveData().observe(this, new Observer<Boolean>() {
-            @Override
-            public void onChanged(@Nullable Boolean tracksAvailable) {
-                if (tracksAvailable != null && tracksAvailable) {
-                    if (TutorialManager.getInstance(getActivity()).showTutorialIfNecessary(mTutorialView, TutorialManager.Id.MAP_TRACK_DEPARTURES)) {
+
+//        mapViewModel.getTracksAvailableLiveData().observe(this, new Observer<Boolean>() {
+//            @Override
+//            public void onChanged(@Nullable Boolean tracksAvailable) {
+//                if (tracksAvailable != null && tracksAvailable) {
+//                    if (TutorialManager.getInstance(getActivity()).showTutorialIfNecessary(mTutorialView, TutorialManager.Id.MAP_TRACK_DEPARTURES)) {
 //                        hideFlyouts();
-                    }
-                }
-            }
-        });
+//                    }
+//                }
+//            }
+//        });
 
         mapViewModel.getParking().getParkingFacilitiesWithLiveCapacity().observe(this, parkingFacilities -> {
             onParkingFacilitiesUpdated(parkingFacilities, false);
@@ -543,6 +544,19 @@ public class MapOverlayFragment extends Fragment implements OnMapReadyCallback, 
             }
         });
         updateOsmCopyrightVisibility(osmCopyrightView, mapInterface.currentMapType);
+
+
+        mapViewModel.getTracksAvailableLiveData().observe(this.getViewLifecycleOwner(), new Observer<Boolean>() {
+
+            @Override
+            public void onChanged(Boolean tracksAvailable) {
+                if (tracksAvailable != null && tracksAvailable) {
+                    if (TutorialManager.getInstance(getActivity()).showTutorialIfNecessary(mTutorialView, TutorialManager.Id.MAP_TRACK_DEPARTURES)) {
+                        hideFlyouts();
+                    }
+                }
+            }
+        });
 
         return view;
     }

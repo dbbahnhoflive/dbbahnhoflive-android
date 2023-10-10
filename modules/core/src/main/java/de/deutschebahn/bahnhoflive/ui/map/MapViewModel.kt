@@ -8,6 +8,7 @@ package de.deutschebahn.bahnhoflive.ui.map
 
 import android.app.Application
 import android.content.Context
+import androidx.databinding.ObservableBoolean
 import androidx.lifecycle.*
 import com.android.volley.VolleyError
 import com.google.android.gms.maps.model.LatLng
@@ -25,10 +26,10 @@ import de.deutschebahn.bahnhoflive.stream.livedata.OneShotLiveData
 import de.deutschebahn.bahnhoflive.stream.livedata.switchMap
 import de.deutschebahn.bahnhoflive.ui.StadaStationCacheViewModel
 import de.deutschebahn.bahnhoflive.ui.station.StationActivity
-import io.reactivex.BackpressureStrategy
-import io.reactivex.android.schedulers.AndroidSchedulers
-import io.reactivex.disposables.CompositeDisposable
-import io.reactivex.subjects.BehaviorSubject
+//import io.reactivex.BackpressureStrategy
+//import io.reactivex.android.schedulers.AndroidSchedulers
+//import io.reactivex.disposables.CompositeDisposable
+//import io.reactivex.subjects.BehaviorSubject
 import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.mapNotNull
 
@@ -166,10 +167,10 @@ class MapViewModel(
     val restHelper
         get() = baseApplication.restHelper
 
-    private val disposables = CompositeDisposable()
+//    private val disposables = CompositeDisposable()
 
     override fun onCleared() {
-        disposables.clear()
+//        disposables.clear()
     }
 
     fun openDepartures(context: Context, track: String) {
@@ -185,16 +186,21 @@ class MapViewModel(
         }
     }
 
-    private val tracksAvailableSubject = BehaviorSubject.createDefault(false)
+//    private val tracksAvailableSubject = BehaviorSubject.createDefault(false)
+//
+//    val tracksAvailableLiveData = LiveDataReactiveStreams.fromPublisher(
+//        tracksAvailableSubject.toFlowable(BackpressureStrategy.LATEST)
+//            .replay(1).autoConnect()
+//            .observeOn(AndroidSchedulers.mainThread())
+//    )
 
-    val tracksAvailableLiveData = LiveDataReactiveStreams.fromPublisher(
-        tracksAvailableSubject.toFlowable(BackpressureStrategy.LATEST)
-            .replay(1).autoConnect()
-            .observeOn(AndroidSchedulers.mainThread())
-    )
+    private val tracksAvailableLiveDataObject = MutableLiveData<Boolean>(false)
+    val tracksAvailableLiveData : LiveData<Boolean>
+        get() = tracksAvailableLiveDataObject
 
     fun setTracksAvailable() {
-        tracksAvailableSubject.onNext(true)
+//        tracksAvailableSubject.onNext(true)
+        tracksAvailableLiveDataObject.postValue(true)
     }
 
     fun mapLaidOut(laidOut: Boolean) {

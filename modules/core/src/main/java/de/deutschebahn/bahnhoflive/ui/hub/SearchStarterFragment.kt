@@ -18,7 +18,6 @@ import android.widget.LinearLayout
 import androidx.core.content.ContextCompat
 import com.google.android.gms.maps.model.LatLng
 import de.deutschebahn.bahnhoflive.BuildConfig
-import de.deutschebahn.bahnhoflive.R
 import de.deutschebahn.bahnhoflive.analytics.TrackingManager
 import de.deutschebahn.bahnhoflive.backend.local.model.EvaIds
 import de.deutschebahn.bahnhoflive.databinding.FragmentSearchStarterBinding

@@ -49,7 +49,6 @@ import de.deutschebahn.bahnhoflive.repository.timetable.TimetableCollector
 import de.deutschebahn.bahnhoflive.repository.timetable.TimetableRepository
 import de.deutschebahn.bahnhoflive.stream.livedata.MergedLiveData
 import de.deutschebahn.bahnhoflive.stream.livedata.switchMap
-import de.deutschebahn.bahnhoflive.stream.rx.Optional
 import de.deutschebahn.bahnhoflive.ui.accessibility.SpokenFeedbackAccessibilityLiveData
 import de.deutschebahn.bahnhoflive.ui.map.Content
 import de.deutschebahn.bahnhoflive.ui.map.MapActivity
@@ -75,8 +74,8 @@ import de.deutschebahn.bahnhoflive.util.combine2LifeData
 import de.deutschebahn.bahnhoflive.util.openhours.OpenHoursParser
 import de.deutschebahn.bahnhoflive.util.then
 import de.deutschebahn.bahnhoflive.util.toLiveData
-import io.reactivex.Observable
-import io.reactivex.subjects.BehaviorSubject
+//import io.reactivex.Observable
+//import io.reactivex.subjects.BehaviorSubject
 import kotlinx.coroutines.*
 import kotlinx.coroutines.flow.*
 import java.io.InputStreamReader
@@ -414,10 +413,10 @@ class StationViewModel(
             RimapStationInfo.fromResponse(input)
         }
 
-    private val trackFilter = BehaviorSubject.createDefault(Optional<String>())
-
-    val trackFilterObservable: Observable<Optional<String>>
-        get() = trackFilter
+//    private val trackFilter = BehaviorSubject.createDefault(Optional<String>())
+//
+//    val trackFilterObservable: Observable<Optional<String>>
+//        get() = trackFilter
 
     val trackFilterFlow = MutableStateFlow<String?>(null)
     val trainCategoryFilterFlow = MutableStateFlow<String?>(null)
@@ -511,7 +510,7 @@ class StationViewModel(
     }
 
     fun setTrackFilter(track: String?) {
-        trackFilter.onNext(Optional(track))
+//        trackFilter.onNext(Optional(track))
         viewModelScope.launch {
             trackFilterFlow.emit(track)
         }

@@ -241,7 +241,7 @@ public class StationFragment extends androidx.fragment.app.Fragment implements
             }
         });
 
-        // �PNV
+        // OEPNV
         final LocalTransportViewModel localTransportViewModel = stationViewModel.getLocalTransportViewModel();
         localTransportViewModel.getHafasStationsAvailableLiveData().observe(this, availability -> {
             if (availability != null) {
