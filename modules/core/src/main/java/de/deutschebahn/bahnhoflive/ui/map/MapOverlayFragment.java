@@ -552,7 +552,7 @@ public class MapOverlayFragment extends Fragment implements OnMapReadyCallback, 
             public void onChanged(Boolean tracksAvailable) {
                 if (tracksAvailable != null && tracksAvailable) {
                     if (TutorialManager.getInstance(getActivity()).showTutorialIfNecessary(mTutorialView, TutorialManager.Id.MAP_TRACK_DEPARTURES)) {
-                        hideFlyouts();
+//                        hideFlyouts();
                     }
                 }
             }
