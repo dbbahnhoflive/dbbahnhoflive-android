@@ -28,6 +28,7 @@ import de.deutschebahn.bahnhoflive.ui.map.MapPresetProvider
 import de.deutschebahn.bahnhoflive.ui.map.content.rimap.Track
 import de.deutschebahn.bahnhoflive.ui.station.StationViewModel
 import de.deutschebahn.bahnhoflive.ui.station.timetable.TimetableViewHelper
+import de.deutschebahn.bahnhoflive.util.accessibility.AccessibilityUtilities
 import de.deutschebahn.bahnhoflive.util.changeAccessibilityActionClickText
 
 
@@ -143,7 +144,7 @@ class JourneyPlatformInformationFragment : Fragment(), MapPresetProvider {
                     trainName,
                     " .",
                     if(trainEvent==TrainEvent.ARRIVAL) resources.getText(R.string.sr_arrival) else resources.getText(R.string.sr_departure),
-                    trainMovementInfo.formattedTime,
+                    AccessibilityUtilities.getSpokenTime(trainMovementInfo.formattedTime),
                     " .",
                     if(delayInMinutes>0)
                      resources.getQuantityString(R.plurals.sr_template_estimated_delay_minutes,

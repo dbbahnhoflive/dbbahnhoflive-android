@@ -14,6 +14,7 @@ import de.deutschebahn.bahnhoflive.backend.ris.model.TrainEvent
 import de.deutschebahn.bahnhoflive.backend.ris.model.TrainInfo
 import de.deutschebahn.bahnhoflive.backend.ris.model.TrainMovementInfo
 import de.deutschebahn.bahnhoflive.repository.Station
+import de.deutschebahn.bahnhoflive.util.accessibility.AccessibilityUtilities
 import de.deutschebahn.bahnhoflive.view.ItemClickListener
 import de.deutschebahn.bahnhoflive.view.SelectableItemViewHolder
 import de.deutschebahn.bahnhoflive.view.SingleSelectionManager
@@ -113,12 +114,12 @@ class TrainInfoViewHolder internal constructor(
             TimetableViewHelper.composeName(trainInfo, trainMovementInfo),
             getText(trainEvent.contentDescriptionPhrase),
             trainMovementInfo.getDestinationStop(trainEvent.isDeparture),
-            trainMovementInfo.formattedTime,
+            AccessibilityUtilities.getSpokenTime(trainMovementInfo.formattedTime),
             platformText + ", ",
             trainMovementInfo.delayInMinutes().takeIf { it > 0 }?.let {
                 getString(
                     R.string.sr_template_estimated,
-                    trainMovementInfo.formattedActualTime
+                    AccessibilityUtilities.getSpokenTime(trainMovementInfo.formattedActualTime)
                 )
             }
                 ?: "",

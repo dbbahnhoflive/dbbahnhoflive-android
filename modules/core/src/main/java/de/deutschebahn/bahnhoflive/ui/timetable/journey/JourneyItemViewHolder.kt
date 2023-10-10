@@ -10,12 +10,12 @@ import androidx.core.view.isVisible
 import androidx.core.widget.TextViewCompat
 import de.deutschebahn.bahnhoflive.R
 import de.deutschebahn.bahnhoflive.backend.db.ris.model.Platform
-import de.deutschebahn.bahnhoflive.backend.db.ris.model.Platform.Companion.LEVEL_UNKNOWN
 import de.deutschebahn.bahnhoflive.backend.db.ris.model.findPlatform
 import de.deutschebahn.bahnhoflive.backend.db.ris.model.firstLinkedPlatform
 import de.deutschebahn.bahnhoflive.databinding.ItemJourneyDetailedBinding
 import de.deutschebahn.bahnhoflive.ui.Status
 import de.deutschebahn.bahnhoflive.ui.ViewHolder
+import de.deutschebahn.bahnhoflive.util.accessibility.AccessibilityUtilities
 import de.deutschebahn.bahnhoflive.util.changeAccessibilityActionClickText
 import java.text.DateFormat
 import java.util.concurrent.TimeUnit
@@ -290,10 +290,10 @@ class JourneyItemViewHolder(
         listOfNotNull(
             prefix,
             parsedScheduledTime?.run {
-                "${formatTime()}"
+                "${ AccessibilityUtilities.getSpokenTime(formatTime())}"
             },
             parsedEstimatedTime?.takeUnless { it == parsedScheduledTime }?.run {
-                "(heute ${if (!past) "voraussichtlich " else ""}${formatTime()})"
+                "(heute ${if (!past) "voraussichtlich " else ""}${AccessibilityUtilities.getSpokenTime(formatTime())})"
             }
         ).joinToString(" ")
 

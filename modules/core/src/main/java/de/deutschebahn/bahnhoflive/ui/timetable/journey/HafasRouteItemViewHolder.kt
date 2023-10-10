@@ -1,7 +1,6 @@
 package de.deutschebahn.bahnhoflive.ui.timetable.journey
 
 import android.graphics.Typeface
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import android.widget.TextView
@@ -12,6 +11,7 @@ import de.deutschebahn.bahnhoflive.databinding.ItemJourneyDetailedBinding
 import de.deutschebahn.bahnhoflive.ui.Status
 import de.deutschebahn.bahnhoflive.ui.ViewHolder
 import de.deutschebahn.bahnhoflive.ui.timetable.HafasRouteStop
+import de.deutschebahn.bahnhoflive.util.accessibility.AccessibilityUtilities
 import de.deutschebahn.bahnhoflive.util.formatShortTime
 import de.deutschebahn.bahnhoflive.util.time.EpochParser
 import de.deutschebahn.bahnhoflive.util.visibleElseGone
@@ -165,10 +165,10 @@ class HafasRouteItemViewHolder(private val itemJourneyBinding: ItemJourneyDetail
         listOfNotNull(
             if(time?.first != null) prefix else null,
             time?.first?.run {
-                "${this.time.formatShortTime()}"
+                "${ AccessibilityUtilities.getSpokenTime(this.time.formatShortTime())}"
             },
             time?.second?.takeUnless { it == time.first }?.run {
-                "(heute ${if (past!=null && !past) "voraussichtlich " else ""}${this.time.formatShortTime()})"
+                "(heute ${if (past!=null && !past) "voraussichtlich " else ""}${AccessibilityUtilities.getSpokenTime(this.time.formatShortTime())})"
     }
         ).joinToString(" ")
 

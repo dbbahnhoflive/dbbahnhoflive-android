@@ -15,6 +15,7 @@ import de.deutschebahn.bahnhoflive.R
 import de.deutschebahn.bahnhoflive.backend.ris.model.TrainEvent
 import de.deutschebahn.bahnhoflive.backend.ris.model.TrainInfo
 import de.deutschebahn.bahnhoflive.ui.TimetableItemOverviewViewHolder
+import de.deutschebahn.bahnhoflive.util.accessibility.AccessibilityUtilities
 
 open class TrainInfoOverviewViewHolder(view: View, protected val provider: TrainEvent.Provider) :
     TimetableItemOverviewViewHolder<TrainInfo>(view) {
@@ -45,6 +46,7 @@ open class TrainInfoOverviewViewHolder(view: View, protected val provider: Train
                 transportationNameView?.text = trainName
 
                 timeView?.text = trainMovementInfo.formattedTime
+                timeView?.contentDescription = AccessibilityUtilities.getSpokenTime(trainMovementInfo.formattedTime)
 
                 val delayInMinutes = if (trainMovementInfo.isTrainMovementCancelled) -1 else trainMovementInfo.delayInMinutes()
                 val actualTime = if (trainMovementInfo.isTrainMovementCancelled) context.getString(R.string.train_cancelled) else trainMovementInfo.formattedActualTime

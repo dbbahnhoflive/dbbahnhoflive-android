@@ -7,15 +7,14 @@
 package de.deutschebahn.bahnhoflive.ui.timetable.localtransport
 
 import android.graphics.Color
-import android.util.Log
 import android.view.View
 import android.widget.ImageView
 import androidx.core.view.isVisible
 import de.deutschebahn.bahnhoflive.R
 import de.deutschebahn.bahnhoflive.backend.hafas.model.HafasEvent
 import de.deutschebahn.bahnhoflive.ui.TimetableItemOverviewViewHolder
+import de.deutschebahn.bahnhoflive.util.accessibility.AccessibilityUtilities
 import de.deutschebahn.bahnhoflive.util.formatShortTime
-import de.deutschebahn.bahnhoflive.util.visibleElseGone
 
 class HafasEventOverviewViewHolder(view: View) : TimetableItemOverviewViewHolder<HafasEvent>(view) {
 
@@ -57,7 +56,7 @@ class HafasEventOverviewViewHolder(view: View) : TimetableItemOverviewViewHolder
                 R.string.sr_template_local_departure_overview,
                 item.displayName,
                 item.direction,
-                scheduledTimeString,
+                AccessibilityUtilities.getSpokenTime(scheduledTimeString),
                 when {
                     item.cancelled -> "Verbindung fällt aus"
                     item.trackChanged -> "heute abweichend ${item.prettyTrackName}"
@@ -66,7 +65,7 @@ class HafasEventOverviewViewHolder(view: View) : TimetableItemOverviewViewHolder
                 if (item.delay > 0)
                     resources.getString(
                         R.string.sr_template_estimated_departure,
-                        estimatedTimeString
+                        AccessibilityUtilities.getSpokenTime(estimatedTimeString)
                     )
                 else ""
             )
