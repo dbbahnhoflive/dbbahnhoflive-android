@@ -96,6 +96,7 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="12dp"
         android:text="Montag bis Sonntag von 07:00 - 22:00 Uhr"
+        android:contentDescription="Montag bis Sonntag von sieben bis zweiundzwanzig Uhr"
         android:textSize="@dimen/textsize_h3" />
 
     <TextView
