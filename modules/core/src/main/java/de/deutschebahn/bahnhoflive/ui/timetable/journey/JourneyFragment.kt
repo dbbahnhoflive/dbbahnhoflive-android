@@ -5,10 +5,12 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.fragment.app.findFragment
 import androidx.fragment.app.viewModels
+import androidx.lifecycle.Observer
 import de.deutschebahn.bahnhoflive.R
 import de.deutschebahn.bahnhoflive.backend.ris.model.TrainEvent
 import de.deutschebahn.bahnhoflive.backend.ris.model.TrainInfo
@@ -17,6 +19,7 @@ import de.deutschebahn.bahnhoflive.ui.map.Content
 import de.deutschebahn.bahnhoflive.ui.map.InitialPoiManager
 import de.deutschebahn.bahnhoflive.ui.map.MapPresetProvider
 import de.deutschebahn.bahnhoflive.ui.map.content.rimap.Track
+import de.deutschebahn.bahnhoflive.ui.station.BackNavigationData
 import de.deutschebahn.bahnhoflive.ui.station.HistoryFragment
 import de.deutschebahn.bahnhoflive.ui.station.StationViewModel
 import de.deutschebahn.bahnhoflive.ui.station.timetable.TimetableViewHelper
@@ -42,6 +45,13 @@ class JourneyFragment() : JourneyCoreFragment(), MapPresetProvider {
     val stationViewModel: StationViewModel by activityViewModels()
 
     val journeyViewModel: JourneyViewModel by viewModels()
+
+    private val backToLastStationClickListener =
+        View.OnClickListener { v: View? ->
+            stationViewModel.navigateBack(
+                requireActivity()
+            )
+        }
 
     var showWagonOrderFromExtern : Boolean=false
 
@@ -124,6 +134,17 @@ class JourneyFragment() : JourneyCoreFragment(), MapPresetProvider {
                 }
             }
         }
+
+        stationViewModel.backNavigationLiveData.observe(
+            viewLifecycleOwner,
+            Observer<BackNavigationData> { stationToNavigateBack: BackNavigationData? ->
+                titleBar.btnBackToLaststation.isVisible =
+                    stationToNavigateBack != null && stationToNavigateBack.showChevron
+                if(titleBar.btnBackToLaststation.isVisible)
+                    titleBar.btnBackToLaststation.setOnClickListener(backToLastStationClickListener)
+            }
+        )
+
 
     }.root
 
