@@ -232,7 +232,6 @@ public class StationActivity extends BaseActivity implements
                 trackingManager.track(TrackingManager.TYPE_ACTION, TrackingManager.Source.TAB_NAVI, TrackingManager.Action.TAP, TrackingManager.UiElement.MAP_BUTTON);
                 GoogleLocationPermissions.startMapActivityIfConsent(getCurrentContentFragment(),
                         () -> MapActivity.createIntentWithInfoAndServicesTitles(StationActivity.this, station, stationViewModel.infoAndServicesTitles()));
-                ;
             }
         });
 
@@ -274,8 +273,6 @@ public class StationActivity extends BaseActivity implements
                     final int countElevators = listElevators.size();
 
                     if(countElevators>0) {
-
-                        final FacilityPushManager fpm = FacilityPushManager.Companion.getInstance();
 
                         for (FacilityStatus item : facilityStatuses) {
                             if (item.getType().equals(FacilityStatus.ELEVATOR)) {
@@ -638,7 +635,8 @@ public class StationActivity extends BaseActivity implements
             if (f != null)
                 fm.beginTransaction().remove(f).commit();
         } catch (Exception e) {
-            Log.d(this.TAG, e.getMessage());
+            if(e.getMessage()!=null)
+              Log.d(this.TAG, e.getMessage());
         }
     }
 
@@ -686,10 +684,12 @@ public class StationActivity extends BaseActivity implements
         }
 
         try {
+           if(station.getLocation()!=null)
             Log.d("cr", "Station: " + station.getTitle() + ", " + station.getId() + ", " + station.getLocation().latitude + ", " + station.getLocation().longitude + ", " + station.getEvaIds().getIds().toString());
         } catch (Exception e) {
             // if location = 0,0
-            Log.d("cr", e.getMessage() );
+            if(e.getMessage()!=null)
+              Log.d("cr", e.getMessage() );
         }
 
         // Daten zur Rücknavigation ins stationViewModel packen
@@ -730,7 +730,7 @@ public class StationActivity extends BaseActivity implements
             final int isNotification = intent.getIntExtra("IS_NOTIFICATION", 0);
 
             if(timeDiff<3L*1000L || isNotification==1 ) {
-              if(trainInfo.getShowWagonOrder()) {
+              if(trainInfo!=null && trainInfo.getShowWagonOrder()) {
 //                  stationViewModel.showWaggonOrder(trainInfo);
                   stationViewModel.getSelectedTrainInfo().postValue(trainInfo);
               }
