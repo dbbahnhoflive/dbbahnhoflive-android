@@ -14,9 +14,6 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentActivity
 import androidx.fragment.app.activityViewModels
 import androidx.fragment.app.viewModels
-import androidx.lifecycle.LiveData
-import androidx.lifecycle.MediatorLiveData
-import androidx.lifecycle.map
 import androidx.recyclerview.widget.ConcatAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.android.volley.VolleyError
@@ -26,19 +23,16 @@ import de.deutschebahn.bahnhoflive.analytics.TrackingManager
 import de.deutschebahn.bahnhoflive.backend.BaseRestListener
 import de.deutschebahn.bahnhoflive.backend.VolleyRestListener
 import de.deutschebahn.bahnhoflive.backend.db.ris.model.Platform
+import de.deutschebahn.bahnhoflive.backend.db.ris.model.StopPlace
 import de.deutschebahn.bahnhoflive.backend.hafas.model.HafasEvent
 import de.deutschebahn.bahnhoflive.backend.hafas.model.HafasStop
 import de.deutschebahn.bahnhoflive.backend.local.model.EvaIds
-import de.deutschebahn.bahnhoflive.backend.rimap.model.LevelMapping
-import de.deutschebahn.bahnhoflive.backend.rimap.model.MenuMapping
-import de.deutschebahn.bahnhoflive.backend.rimap.model.RimapPOI
 import de.deutschebahn.bahnhoflive.backend.ris.model.TrainEvent
 import de.deutschebahn.bahnhoflive.backend.ris.model.TrainInfo
 import de.deutschebahn.bahnhoflive.backend.toHafasStation
 import de.deutschebahn.bahnhoflive.backend.wagenstand.WagenstandRequestManager
 import de.deutschebahn.bahnhoflive.databinding.FragmentJourneyRegularContentBinding
 import de.deutschebahn.bahnhoflive.databinding.ItemJourneyFilterRemoveBinding
-import de.deutschebahn.bahnhoflive.repository.InternalStation
 import de.deutschebahn.bahnhoflive.repository.Station
 import de.deutschebahn.bahnhoflive.repository.trainformation.TrainFormation
 import de.deutschebahn.bahnhoflive.ui.station.HistoryFragment
@@ -49,7 +43,6 @@ import de.deutschebahn.bahnhoflive.ui.station.timetable.IssueIndicatorBinder
 import de.deutschebahn.bahnhoflive.ui.station.timetable.IssuesBinder
 import de.deutschebahn.bahnhoflive.ui.station.timetable.TimetableViewHelper
 import de.deutschebahn.bahnhoflive.ui.timetable.localtransport.DeparturesActivity
-import de.deutschebahn.bahnhoflive.util.combine2LifeData
 import de.deutschebahn.bahnhoflive.view.SimpleViewHolderAdapter
 import de.deutschebahn.bahnhoflive.view.toViewHolder
 
@@ -360,7 +353,7 @@ class RegularJourneyContentFragment : Fragment() {
                         .setPositiveButton(
                             "Öffnen",
                             DialogInterface.OnClickListener { dialog, id ->
-
+/*
                                 get().applicationServices.repositories.stationRepository.queryStationByEvaId(
                                     object : VolleyRestListener<InternalStation?> {
 
@@ -426,6 +419,79 @@ class RegularJourneyContentFragment : Fragment() {
                                     },
                                     it
                                 )
+*/
+
+
+                                get().applicationServices.repositories.stationRepository.queryStations(
+                                    object : VolleyRestListener<List<StopPlace>?> {
+                                        override fun onSuccess(payload: List<StopPlace>?) {
+
+                                            TrackingManager.fromActivity(activity).track(
+                                                TrackingManager.TYPE_ACTION,
+                                                TrackingManager.Screen.H2,
+                                                "journey",
+                                                "openstation"
+                                            )
+
+                                            // payload=null, wenn station keine stadaId hat ! (meist ÖPNV)
+                                            // dann die normale Abfahrtstafel öffnen
+
+                                            var intent: Intent? = null
+
+                                            if (!payload.isNullOrEmpty() ) {
+
+                                                intent = StationActivity.createIntentForBackNavigation(
+                                                    view.context,
+                                                    payload.firstOrNull()?.asInternalStation,
+                                                    stationViewModel?.station,
+                                                    hafasStop?.toHafasStation(),
+                                                    hafasEvent,
+                                                    trainInfo,
+                                                    false
+                                                )
+
+                                            } else {
+                                                hafasStop?.let {
+
+                                                    val hafasStation = it.toHafasStation()
+
+                                                    intent =
+                                                        DeparturesActivity.createIntentForBackNavigation(
+                                                            view.context,
+                                                            stationViewModel?.station,
+                                                            hafasStation,
+                                                            hafasEvent
+                                                        )
+
+                                                }
+                                            }
+
+                                            intent?.let {
+                                                activity.let {
+                                                    it.finish()
+                                                    it.startActivity(intent)
+                                                }
+                                            }
+
+
+                                        }
+
+                                        @Synchronized
+                                        override fun onFail(reason: VolleyError) {
+                                            Log.d("cr", reason.toString())
+                                            // todo: Meldung oder wiederholen
+                                        }
+                                    },
+                                    stopStationName,
+                                    null,
+                                    true,
+                                    mixedResults = false,
+                                    collapseNeighbours = true,
+                                    pullUpFirstDbStation = false,
+                                )
+
+
+
 
                             })
                         .setNeutralButton(

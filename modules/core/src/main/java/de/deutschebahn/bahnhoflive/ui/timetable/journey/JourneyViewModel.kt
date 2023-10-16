@@ -71,12 +71,17 @@ class JourneyViewModel(app: Application, savedStateHandle: SavedStateHandle) :
                 val trainMovementInfo =
                     trainEvent.movementRetriever.getTrainMovementInfo(trainInfo)
 
+                var plannedDateTime = 0L
+
+                if (trainMovementInfo != null)
+                    plannedDateTime = trainMovementInfo.plannedDateTime
+
                 MutableLiveData<Result<List<JourneyStop>>>().apply {
                     val evaIds = station.evaIds
                     if (evaIds != null) {
                         timetableRepository.queryJourneys(
                             evaIds,
-                            trainMovementInfo.plannedDateTime,
+                            plannedDateTime,
                             trainEvent,
                             trainInfo.genuineName,
                             trainInfo.trainCategory,
