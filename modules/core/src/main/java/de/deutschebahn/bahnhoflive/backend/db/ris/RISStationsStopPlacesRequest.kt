@@ -37,7 +37,7 @@ class RISStationsStopPlacesRequest(
             (query?.trim()?.takeUnless { it.isEmpty() }
                 ?.let { "by-name/" + URLEncoder.encode(it, "UTF-8") }
                 ?: "by-position")
-            + sequenceOf("size" to (limit).toString()
+            + sequenceOf("limit" to (limit).toString()
     ).let { sequence ->
         location?.let { location ->
             sequence.plus(

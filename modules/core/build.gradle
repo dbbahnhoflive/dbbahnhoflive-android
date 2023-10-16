@@ -160,7 +160,7 @@ dependencies {
     testApi "org.jetbrains.kotlinx:kotlinx-coroutines-test:1.6.4"
     testApi "io.mockk:mockk:1.12.4"
 
-    implementation 'androidx.core:core-splashscreen:1.0.0'
+    implementation 'androidx.core:core-splashscreen:1.0.1'
 
 //    coreLibraryDesugaring 'com.android.tools:desugar_jdk_libs:2.0.3'
 }

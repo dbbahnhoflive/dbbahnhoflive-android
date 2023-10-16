@@ -20,27 +20,27 @@ class JourneyAdapter(
         override fun onCreateViewHolder(
             parent: ViewGroup,
             viewType: Int
-            ): JourneyItemViewHolder = JourneyItemViewHolder(
-                parent,
-                LayoutInflater.from(parent.context),
-                onClickPlatformInformation
-            )
+        ): JourneyItemViewHolder = JourneyItemViewHolder(
+            parent,
+            LayoutInflater.from(parent.context),
+            onClickPlatformInformation
+        )
 
         override fun onBindViewHolder(
             holder: JourneyItemViewHolder,
             item: JourneyStop,
             position: Int
         ) {
-                if (platformList.isNotEmpty())
-                    platformList.let { holder.setPlatforms(it) }
+            if (platformList.isNotEmpty())
+                platformList.let { holder.setPlatforms(it) }
             holder.bind(item)
-                if(!item.current) { // kein Sprung auf die Station, wenn es sie selbst ist
-            holder.itemView.setOnClickListener {
-                VersionManager.getInstance(it.context).journeyLinkWasEverUsed = true
-                onClickStop(it, item)
-        }
-        }
+            if (!item.current) { // kein Sprung auf die Station, wenn es sie selbst ist
+                holder.itemView.setOnClickListener {
+                    VersionManager.getInstance(it.context).journeyLinkWasEverUsed = true
+                    onClickStop(it, item)
+                }
             }
+        }
 
     }) {
 
