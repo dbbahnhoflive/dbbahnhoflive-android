@@ -15,13 +15,13 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:textSize="@dimen/textsize_32"
+            android:layout_marginBottom="@dimen/default_space_half"
         tools:text="2. OG" />
 
     <LinearLayout
         android:id="@+id/platform_items_container"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="@dimen/default_space_half"
         android:orientation="vertical"
         >
 

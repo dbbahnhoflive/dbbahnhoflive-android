@@ -86,7 +86,7 @@ public class TimetablesFragment extends TwoTabsFragment {
 
     public void switchTo(boolean localTransport, boolean arrivals, String trackFilter) {
        // erst jetzt wird das Fragment sichtbar !
-        if (localTransport) {
+        if (localTransport || tabSelectedIndex==1) {
             setTab(1);
         } else {
             stationViewModel.setTrackFilter(trackFilter);

@@ -65,6 +65,7 @@ class JourneyPlatformInformationFragment : Fragment(), MapPresetProvider {
                             reducedList.add(it)
                     }
 
+                    // alle Gleise einer Ebene zusammensuchen
                     var lastLevel = -10000
                     reducedList.sortedBy { it.level }.forEach {itPlatform->
 
@@ -79,6 +80,41 @@ class JourneyPlatformInformationFragment : Fragment(), MapPresetProvider {
                               platformsPerLevel[platformsPerLevel.size-1].second.add(itPlatform)
                         }
 
+                    }
+
+                    // "unbekanntes Stockwerk" aufräumen (wenn Gleise irgendwo mit Ebene -> ohne ebene entfernen)
+
+                    platformsPerLevel.find {itPair->
+                        itPair.first == LEVEL_UNKNOWN
+                    }?.second?.forEach {itUnknownPlatform->
+                        platformsPerLevel.forEach {itExistingPlatformPair->
+                            if(itExistingPlatformPair.first!=LEVEL_UNKNOWN) {
+                                itExistingPlatformPair.second.forEach {itExistingPlatform->
+                                   if(itExistingPlatform.linkedPlatformNumbers.contains(itUnknownPlatform.number)) {
+                                       itUnknownPlatform.level=-1000 // mark to delete
+                                   }
+                               }
+                            }
+                        }
+
+                    }
+
+                    // markierte gleise löschen
+                    platformsPerLevel.forEach {
+                        if(it.first==LEVEL_UNKNOWN) {
+                            val iterator = it.second.iterator()
+                            while (iterator.hasNext()) {
+                                if(iterator.next().level==-1000)
+                                    iterator.remove()
+                            }
+                        }
+                    }
+
+                    // leere Ebenen löschen
+                    val platformIterator = platformsPerLevel.iterator()
+                    while(platformIterator.hasNext()) {
+                        if(platformIterator.next().second.isEmpty())
+                            platformIterator.remove()
                     }
 
                     platformsPerLevel.sortBy { it.first } // nach Ebenen sortieren
@@ -197,6 +233,7 @@ class JourneyPlatformInformationFragment : Fragment(), MapPresetProvider {
 
                     val layoutLevel = IncludePlatformsBinding.inflate(inflater)
 
+                    layoutLevel.level.isVisible = !(platformsPerLevel.size==1 && it.first==LEVEL_UNKNOWN) // "Unbekanntes Stockwerk" nicht ausgeben, wenn nur 1 Stockwerk existiert
                     layoutLevel.level.text = Platform.staticLevelToText(requireContext(), it.first)
 
                     layoutLevel.platformItemsContainer.let { itPlatformContainer ->
