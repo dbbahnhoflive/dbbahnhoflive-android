@@ -139,7 +139,9 @@ class TimetableCollector(
                     }.awaitAll()
 
                     errorsStateFlow.value =
-                        changesResults.any { it.error != null } || initialsResults.any { it.isFailure }
+                        changesResults.all { it.error != null } || initialsResults.all { it.isFailure }
+
+                    // .any -> .all because some evaids have NO timetable (volleyError: 400)
 
                     val mergedInitials = initialsResults.unwrapSuccessful()
                         .flatMap { it.trainInfos }
