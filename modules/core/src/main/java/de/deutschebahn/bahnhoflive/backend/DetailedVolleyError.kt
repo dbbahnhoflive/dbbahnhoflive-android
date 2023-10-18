@@ -6,7 +6,6 @@
 
 package de.deutschebahn.bahnhoflive.backend
 
-import android.util.Log
 import com.android.volley.Request
 import com.android.volley.VolleyError
 
@@ -15,10 +14,6 @@ class DetailedVolleyError(
     cause: Throwable?
 ) : VolleyError(
     (cause as? VolleyError)?.let { volleyError ->
-
-        volleyError.networkResponse?.let {
-            Log.d("cr", "DetailedVolleyError: ${it.statusCode} url:${request.url}")
-        }
         "Status code ${volleyError.networkResponse?.statusCode}: ${request.url}"
     } ?: "Failed: ${request.url}",
     cause)

@@ -6,7 +6,6 @@
 
 package de.deutschebahn.bahnhoflive.backend
 
-import android.util.Log
 import com.android.volley.Request
 import com.android.volley.VolleyError
 
@@ -16,15 +15,7 @@ abstract class BaseRequest<T>(
     private val restListener: VolleyRestListener<T>
 ) : Request<T>(method, url, RestErrorListener(restListener)) {
 
-    init {
-        Log.d("cr","request : " + url)
-    }
-
     override fun parseNetworkError(volleyError: VolleyError): VolleyError {
-        if(volleyError.message!=null)
-            Log.d("cr","request : error " + url +  "(" + volleyError.message + ")")
-        else
-            Log.d("cr","request : error " + url)
 
         return volleyError as? DetailedVolleyError
             ?: DetailedVolleyError(
@@ -34,7 +25,6 @@ abstract class BaseRequest<T>(
     }
 
     override fun deliverResponse(response: T) {
-        Log.d("cr","request : ok " + url)
         restListener.onSuccess(response)
     }
 

@@ -6,8 +6,6 @@
 
 package de.deutschebahn.bahnhoflive.backend;
 
-import android.util.Log;
-
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
 
@@ -20,14 +18,6 @@ public class RestErrorListener implements Response.ErrorListener {
 
     @Override
     public void onErrorResponse(VolleyError error) {
-
-        String msg = "request : error";
-
-        if(error.networkResponse!=null)
-            msg += " statusCode: " + error.networkResponse.statusCode;
-
-        Log.d("cr", msg + " message: <" + error.getMessage() + ">" );
-
         listener.onFail(error);
     }
 }

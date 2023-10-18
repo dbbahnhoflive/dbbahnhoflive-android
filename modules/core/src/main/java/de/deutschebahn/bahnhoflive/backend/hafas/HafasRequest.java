@@ -24,6 +24,7 @@ import de.deutschebahn.bahnhoflive.analytics.Trackable;
 import de.deutschebahn.bahnhoflive.backend.CappingHttpStack;
 import de.deutschebahn.bahnhoflive.backend.Countable;
 import de.deutschebahn.bahnhoflive.backend.ForcedCacheEntryFactory;
+import de.deutschebahn.bahnhoflive.util.DebugX;
 
 public abstract class HafasRequest<T> extends Request<T> implements Countable, Trackable, CappingHttpStack.Cappable {
 
@@ -37,7 +38,7 @@ public abstract class HafasRequest<T> extends Request<T> implements Countable, T
     public HafasRequest(int method, String endpoint, String parameters, String origin,
                         Response.ErrorListener listener, boolean shouldCache, int minimumCacheTime) {
         super(method, (endpoint + parameters).replaceAll(" ", "%20"), listener);
-        Log.d("cr", "hafas request:       url:" + endpoint + parameters);
+        DebugX.Companion.logVolleyRequest(this, getUrl());
         setShouldCache(shouldCache);
         setRetryPolicy(new DefaultRetryPolicy(
                 10*1000,
@@ -52,19 +53,12 @@ public abstract class HafasRequest<T> extends Request<T> implements Countable, T
 
         setTrackingContextVariable("origin", origin);
         setTrackingContextVariable("endpoint", endpoint);
-
-
     }
 
     @Override
     protected VolleyError parseNetworkError(VolleyError volleyError) {
-        String msg = "hafas request: error url:" + endpoint + parameters;
-
-        if(volleyError.networkResponse!=null)
-            msg += " statusCode: " + volleyError.networkResponse.statusCode;
-
-        Log.d("cr", msg + " msg: <" + volleyError.getMessage() + ">");
-        return volleyError;
+        DebugX.Companion.logVolleyResponseError(this,getUrl(),volleyError);
+        return super.parseNetworkError(volleyError);
     }
 
     protected static String encodeParameter(String value) {

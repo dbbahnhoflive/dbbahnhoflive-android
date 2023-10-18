@@ -1,15 +1,17 @@
 package de.deutschebahn.bahnhoflive.backend.db.ris
 
-import android.util.Log
 import com.android.volley.DefaultRetryPolicy
 import com.android.volley.NetworkResponse
 import com.android.volley.Response
+import com.android.volley.VolleyError
 import com.android.volley.toolbox.HttpHeaderParser
 import com.google.gson.Gson
 import de.deutschebahn.bahnhoflive.backend.DetailedVolleyError
 import de.deutschebahn.bahnhoflive.backend.VolleyRestListener
 import de.deutschebahn.bahnhoflive.backend.db.DbAuthorizationTool
 import de.deutschebahn.bahnhoflive.backend.db.ris.model.JourneyEventBased
+import de.deutschebahn.bahnhoflive.util.DebugX
+import de.deutschebahn.bahnhoflive.util.DebugX.Companion.logVolleyResponseError
 import java.io.ByteArrayInputStream
 
 class RISJourneysEventbasedRequest(
@@ -37,6 +39,9 @@ class RISJourneysEventbasedRequest(
                 JourneyEventBased::class.java
             )
 
+
+            DebugX.logVolleyResponseOk(this,url)
+
             Response.success(
                 departureMatches,
                 HttpHeaderParser.parseCacheHeaders(networkResponse)
@@ -45,4 +50,10 @@ class RISJourneysEventbasedRequest(
             Response.error(DetailedVolleyError(this, it))
         }
     }
+
+    override fun parseNetworkError(volleyError: VolleyError): VolleyError {
+        logVolleyResponseError(this, url, volleyError)
+        return super.parseNetworkError(volleyError!!)
+    }
+
 }

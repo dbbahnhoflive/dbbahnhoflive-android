@@ -6,7 +6,6 @@
 
 package de.deutschebahn.bahnhoflive.backend.db.ris
 
-import androidx.core.text.isDigitsOnly
 import com.android.volley.NetworkResponse
 import com.android.volley.Response
 import com.android.volley.VolleyError
@@ -16,6 +15,7 @@ import de.deutschebahn.bahnhoflive.backend.db.DbAuthorizationTool
 import de.deutschebahn.bahnhoflive.backend.db.ris.model.AccessibilityStatus
 import de.deutschebahn.bahnhoflive.backend.db.ris.model.Platform
 import de.deutschebahn.bahnhoflive.repository.accessibility.AccessibilityFeature
+import de.deutschebahn.bahnhoflive.util.DebugX
 import de.deutschebahn.bahnhoflive.util.json.asJSONObjectSequence
 import de.deutschebahn.bahnhoflive.util.json.toStringList
 import org.json.JSONObject
@@ -41,6 +41,8 @@ class RISPlatformsRequest(
 
     override fun parseNetworkResponse(response: NetworkResponse): Response<List<Platform>> {
         super.parseNetworkResponse(response)
+
+        DebugX.logVolleyResponseOk(this,url)
 
         return try {
             val platforms = response.data?.decodeToString()?.let { responseString ->
@@ -99,7 +101,13 @@ class RISPlatformsRequest(
 
             Response.success(platforms, forcedCacheEntryFactory.createCacheEntry(response))
         } catch (e: Exception) {
+            DebugX.logVolleyResponseException(this, url, e)
             Response.error(VolleyError(e))
         }
+    }
+
+    override fun parseNetworkError(volleyError: VolleyError): VolleyError {
+        DebugX.logVolleyResponseError(this, url, volleyError)
+        return super.parseNetworkError(volleyError)
     }
 }
