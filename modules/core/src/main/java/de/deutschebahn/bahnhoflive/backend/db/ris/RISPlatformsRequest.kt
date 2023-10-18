@@ -78,8 +78,6 @@ class RISPlatformsRequest(
                                                     } ?: AccessibilityStatus.UNKNOWN
                                                 acc
                                     }
-                                }
-
                                 Platform(
                                     name,
                                     emap,
@@ -90,6 +88,10 @@ class RISPlatformsRequest(
                                             platformJsonObject.optDouble("end", 0.0),
                                             platformJsonObject.optDouble("length", 0.0)
                                         )
+                                }
+                                else
+                                    null
+
 
 
                             }
