@@ -23,7 +23,9 @@ import de.deutschebahn.bahnhoflive.analytics.TrackingManager
 import de.deutschebahn.bahnhoflive.backend.VolleyRestListener
 import de.deutschebahn.bahnhoflive.backend.db.newsapi.GroupId
 import de.deutschebahn.bahnhoflive.backend.db.newsapi.model.News
+import de.deutschebahn.bahnhoflive.backend.db.ris.model.AccessibilityStatus
 import de.deutschebahn.bahnhoflive.backend.db.ris.model.Platform
+import de.deutschebahn.bahnhoflive.backend.db.ris.model.containsPlatform
 import de.deutschebahn.bahnhoflive.backend.hafas.model.HafasEvent
 import de.deutschebahn.bahnhoflive.backend.hafas.model.HafasStation
 import de.deutschebahn.bahnhoflive.backend.hafas.model.ProductCategory
@@ -40,6 +42,7 @@ import de.deutschebahn.bahnhoflive.backend.ris.model.TrainEvent
 import de.deutschebahn.bahnhoflive.backend.ris.model.TrainInfo
 import de.deutschebahn.bahnhoflive.persistence.RecentContentQueriesStore
 import de.deutschebahn.bahnhoflive.repository.*
+import de.deutschebahn.bahnhoflive.repository.accessibility.AccessibilityFeature
 import de.deutschebahn.bahnhoflive.repository.accessibility.AccessibilityFeaturesResource
 import de.deutschebahn.bahnhoflive.repository.feedback.WhatsAppFeeback
 import de.deutschebahn.bahnhoflive.repository.locker.LockersViewModel
@@ -1484,15 +1487,15 @@ class StationViewModel(
     val accessibilityFeaturesResource =
         AccessibilityFeaturesResource(this.application.repositories.stationRepository)
 
+    // merge platform and poi data (level)
     val platformsWithLevelResource =
-
             combine2LifeData(accessibilityFeaturesResource.data, // apiPlatformList
             platformLevels.data // poiPlatformList
         ) { apiPlatformList: List<Platform>?, poiPlatformList: List<RimapPOI>? ->
 
-            val platformList : MutableList<Platform> = mutableListOf()
+                val platformList: MutableList<Platform> = mutableListOf()
 
-            if(apiPlatformList!=null)
+                if (apiPlatformList != null)
                 platformList.addAll(apiPlatformList)
 
             val poiPlatforms = poiPlatformList?.filter {
@@ -1512,10 +1515,10 @@ class StationViewModel(
                 itPlatform.linkedPlatformNumbers.let {
                     val iter = it.iterator()
 
-                    while(iter.hasNext()) {
+                    while (iter.hasNext()) {
                         val value = iter.next()
 
-                        if(itPlatform.number==value)
+                        if (itPlatform.number == value)
                             iter.remove()
 
                     }
@@ -1523,23 +1526,33 @@ class StationViewModel(
                 }
             }
 
-            // Gleise suchen, für die kein Level ermittelt wurde, da in rimapPoi nicht enthalten
-            // wenn so eins existiert, in der liste nach einem Gleis suchen, dessen Gegenüber dieses Gleis ist
-//            platformList.filter { it.level==UNKNOWN_LEVEL }.forEach { itPlatform->
-//                itPlatform.level =
-//                    platformList.firstOrNull{it.linkedPlatformNumber()==itPlatform.number}?.level ?: UNKNOWN_LEVEL
-//            }
+                val misssingPlatforms =
+                    poiPlatforms?.filter { it.name!=null && it.name.isDigitsOnly() && !platformList.containsPlatform(Platform.platformNumber(it.name)) }
 
-//            platformList.forEach { itPlatform ->
-//                itPlatform.linkedPlatforms?.sortBy{it} // todo: dient nur dazu 'komische' Gleisnummern nach unten zu schieben
-//                                                       // (so das etwas brauchbares bei linkedPlatform zurückgegeben wird)
-//            }
+                val emap = EnumMap(
+                    EnumSet.allOf(AccessibilityFeature::class.java)
+                        .associateWith { AccessibilityStatus.UNKNOWN })
 
-
+                misssingPlatforms?.forEach {
+                    it.name?.let { itName ->
+                        platformList.add(
+                            Platform(
+                                itName,
+                                emap,
+                                null,
+                                false,
+                                0.0,
+                                0.0,
+                                0.0,
+                                Platform.codeToLevel(it.level)
+                            )
+                        )
+                    }
+                }
 
             platformList.sortBy { it.level }
 
-            platformList.filter { it.name!=null && it.name.isDigitsOnly() }.toList()
+                platformList.filter { it.name != null && it.name.isDigitsOnly() }.toList()
         }
 
     val mapAvailableLiveData =

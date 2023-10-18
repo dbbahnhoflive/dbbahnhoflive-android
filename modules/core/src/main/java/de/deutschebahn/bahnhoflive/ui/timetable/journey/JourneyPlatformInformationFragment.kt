@@ -88,24 +88,27 @@ class JourneyPlatformInformationFragment : Fragment(), MapPresetProvider {
                     platformsPerLevel.find {itPair->
                         itPair.first == LEVEL_UNKNOWN
                     }?.second?.forEach {itUnknownPlatform->
+                        itUnknownPlatform.hasNoLevel=false
                         platformsPerLevel.forEach {itExistingPlatformPair->
                             if(itExistingPlatformPair.first!=LEVEL_UNKNOWN) {
                                 itExistingPlatformPair.second.forEach {itExistingPlatform->
                                    if(itExistingPlatform.linkedPlatformNumbers.contains(itUnknownPlatform.number)) {
-                                       itUnknownPlatform.level=-1000 // mark to delete
+                                       itUnknownPlatform.level=itExistingPlatform.level//-1000 // mark to delete
+                                       itUnknownPlatform.hasNoLevel=true
                                    }
+
                                }
                             }
                         }
 
                     }
 
-                    // markierte gleise löschen
+                    // markierte Gleise löschen
                     platformsPerLevel.forEach {
                         if(it.first==LEVEL_UNKNOWN) {
                             val iterator = it.second.iterator()
                             while (iterator.hasNext()) {
-                                if(iterator.next().level==-1000)
+                                if(iterator.next().hasNoLevel)
                                     iterator.remove()
                             }
                         }

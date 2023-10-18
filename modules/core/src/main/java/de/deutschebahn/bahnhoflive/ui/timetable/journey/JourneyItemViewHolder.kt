@@ -66,7 +66,7 @@ class JourneyItemViewHolder(
                 val thisPlatform: Platform? = platformList.findPlatform(displayPlatform)
 
                 linkPlatform.isVisible =
-                    it.current == true && thisPlatform != null && ((platformList.size > 1) || thisPlatform.isHeadPlatform)
+                    it.current == true && ((platformList.size > 1) || (thisPlatform != null && thisPlatform.isHeadPlatform))
 
                 if (linkPlatform.isVisible) {
 
