@@ -6,7 +6,6 @@
 
 package de.deutschebahn.bahnhoflive.backend.db.ris
 
-import androidx.core.text.isDigitsOnly
 import com.android.volley.NetworkResponse
 import com.android.volley.Response
 import com.android.volley.VolleyError
@@ -76,8 +75,6 @@ class RISPlatformsRequest(
                                                     } ?: AccessibilityStatus.UNKNOWN
                                                 acc
                                     }
-                                }
-
                                 Platform(
                                     name,
                                     emap,
@@ -88,6 +85,10 @@ class RISPlatformsRequest(
                                             platformJsonObject.optDouble("end", 0.0),
                                             platformJsonObject.optDouble("length", 0.0)
                                         )
+                                }
+                                else
+                                    null
+
 
 
                             }
