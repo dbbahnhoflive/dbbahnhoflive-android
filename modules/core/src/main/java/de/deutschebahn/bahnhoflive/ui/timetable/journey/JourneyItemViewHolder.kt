@@ -10,7 +10,6 @@ import androidx.core.view.isVisible
 import androidx.core.widget.TextViewCompat
 import de.deutschebahn.bahnhoflive.R
 import de.deutschebahn.bahnhoflive.backend.db.ris.model.Platform
-import de.deutschebahn.bahnhoflive.backend.db.ris.model.Platform.Companion.LEVEL_UNKNOWN
 import de.deutschebahn.bahnhoflive.backend.db.ris.model.findPlatform
 import de.deutschebahn.bahnhoflive.backend.db.ris.model.firstLinkedPlatform
 import de.deutschebahn.bahnhoflive.databinding.ItemJourneyDetailedBinding
@@ -66,7 +65,7 @@ class JourneyItemViewHolder(
                 val thisPlatform: Platform? = platformList.findPlatform(displayPlatform)
 
                 linkPlatform.isVisible =
-                    it.current == true && thisPlatform != null && ((platformList.size > 1) || thisPlatform.isHeadPlatform)
+                    it.current == true && ((platformList.size > 1) || (thisPlatform != null && thisPlatform.isHeadPlatform))
 
                 if (linkPlatform.isVisible) {
 

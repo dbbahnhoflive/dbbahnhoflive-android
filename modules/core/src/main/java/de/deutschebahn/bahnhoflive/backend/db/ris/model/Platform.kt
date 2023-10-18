@@ -2,6 +2,7 @@ package de.deutschebahn.bahnhoflive.backend.db.ris.model
 
 import android.content.Context
 import de.deutschebahn.bahnhoflive.R
+import de.deutschebahn.bahnhoflive.backend.rimap.model.LevelMapping
 import de.deutschebahn.bahnhoflive.repository.accessibility.AccessibilityFeature
 import java.text.Collator
 import java.util.*
@@ -16,8 +17,8 @@ class Platform(
     val start : Double,
     val end : Double,
     val length : Double,
-    var level : Int = LEVEL_UNKNOWN // wird erst bei Bedarf gesetzt
-
+    var level : Int = LEVEL_UNKNOWN, // wird erst bei Bedarf gesetzt
+    var hasNoLevel : Boolean = false
 ) : Comparable<Platform> {
 
     companion object {
@@ -52,6 +53,13 @@ class Platform(
                 }
             }
 
+        }
+
+        fun codeToLevel(code:String?) : Int {
+            var ret = LevelMapping.codeToLevel(code)
+            if(ret==null)
+                ret = LEVEL_UNKNOWN
+            return ret
         }
     }
 
@@ -173,3 +181,5 @@ fun List<Platform>.firstLinkedPlatform(platformName:String?) : Platform? {
     }
     return null
 }
+
+
