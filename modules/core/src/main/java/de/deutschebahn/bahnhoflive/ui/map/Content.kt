@@ -9,6 +9,7 @@ package de.deutschebahn.bahnhoflive.ui.map
 import android.util.Log
 import com.google.android.gms.maps.GoogleMap
 import com.google.android.gms.maps.OnMapReadyCallback
+import de.deutschebahn.bahnhoflive.backend.db.ris.model.Platform
 import de.deutschebahn.bahnhoflive.ui.map.content.rimap.Filter
 import de.deutschebahn.bahnhoflive.util.ArrayListFactory
 import de.deutschebahn.bahnhoflive.util.MapContentPreserver
@@ -35,8 +36,8 @@ class ComparatorMarkerBinderTrack : Comparator<MarkerBinder>
         ) {
             var ret = -1
             try {
-                val aTrack = aTrackString.toInt()
-                val bTrack = bTrackString.toInt()
+                val aTrack = Platform.platformNumber(aTrackString, 0)
+                val bTrack = Platform.platformNumber(bTrackString,100)
                 ret = aTrack.compareTo(bTrack)
             } catch (e: Exception) {
                 Log.e("cr", "Exception in ComparatorMarkerBinderTrack " + e.message)
