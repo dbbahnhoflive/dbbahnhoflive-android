@@ -63,6 +63,8 @@ import de.deutschebahn.bahnhoflive.repository.MergedStation;
 import de.deutschebahn.bahnhoflive.repository.RepositoryHolderKt;
 import de.deutschebahn.bahnhoflive.repository.Station;
 import de.deutschebahn.bahnhoflive.repository.StationResource;
+import de.deutschebahn.bahnhoflive.repository.timetable.Timetable;
+import de.deutschebahn.bahnhoflive.repository.timetable.TimetableCollector;
 import de.deutschebahn.bahnhoflive.tutorial.TutorialManager;
 import de.deutschebahn.bahnhoflive.tutorial.TutorialView;
 import de.deutschebahn.bahnhoflive.ui.map.content.MapConstants;
@@ -367,6 +369,20 @@ public class MapOverlayFragment extends Fragment implements OnMapReadyCallback, 
 
         content.setMarkerBinders(Content.Source.DB, markerBinders, categorizedMarkerBinders);
 
+        final TimetableCollector timetableCollector = markerContent.getDepartures();
+
+        if (timetableCollector != null) {
+            timetableCollector.getTimetableUpdateAsLiveData().observe(this.getViewLifecycleOwner(), new Observer<Timetable>() {
+
+                @Override
+                public void onChanged(Timetable timetable) {
+                    if(flyoutsAdapter!=null)
+                        flyoutsAdapter.notifyDataSetChanged();
+
+                }
+            });
+
+        }
         applyInitialMarkerBinder();
     }
 
@@ -650,16 +666,32 @@ public class MapOverlayFragment extends Fragment implements OnMapReadyCallback, 
             }
         };
 
-        mapViewModel.getStationLocationLiveData().observe(getViewLifecycleOwner(), location -> {
+        mapViewModel.getStationLocationLiveData().observe(getViewLifecycleOwner(), dbOrHafaslocation -> {
             mapInterface = new GoogleMapsMapInterface(mapInterface, googleMap, getContext(),
                     onMarkerClickListener,
                     this,
-                    zoomChangeListener, location, mapViewModel.getZoom());
+                    zoomChangeListener, dbOrHafaslocation.getLocation(), mapViewModel.getZoom());
 
             content.onMapReady(googleMap);
 
-            if (location == null) {
+            if (dbOrHafaslocation.getLocation() == null) {
                 onLocate();
+            }
+            else {
+
+                if(!dbOrHafaslocation.isDbPosition() && dbOrHafaslocation.getLocation()!=null) {
+                    final MapInterface mapInterface = MapOverlayFragment.this.mapInterface;
+                    if (mapInterface != null) {
+                        mapInterface.setLocation(dbOrHafaslocation.getLocation(), DEFAULT_ZOOM);
+
+                        Location targetLocation = new Location("");
+                        targetLocation.setLatitude(dbOrHafaslocation.getLocation().latitude);
+                        targetLocation.setLongitude(dbOrHafaslocation.getLocation().longitude);
+
+                        mapViewModel.getLocationLiveData().postValue(targetLocation);
+                    }
+                }
+
             }
 
         });

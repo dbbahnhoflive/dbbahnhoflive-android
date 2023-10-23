@@ -9,9 +9,9 @@ import android.view.accessibility.AccessibilityEvent
 import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.Observer
 import de.deutschebahn.bahnhoflive.R
+import de.deutschebahn.bahnhoflive.backend.hafas.model.HafasTimetable
 import de.deutschebahn.bahnhoflive.backend.local.model.EvaIds
 import de.deutschebahn.bahnhoflive.databinding.FragmentHafasJourneyBinding
-import de.deutschebahn.bahnhoflive.repository.localtransport.AnyLocalTransportInitialPoi
 import de.deutschebahn.bahnhoflive.ui.map.Content
 import de.deutschebahn.bahnhoflive.ui.map.InitialPoiManager
 import de.deutschebahn.bahnhoflive.ui.map.MapPresetProvider
@@ -42,6 +42,11 @@ class HafasJourneyFragment : JourneyCoreFragment(), MapPresetProvider
             )
         }
 
+    override fun onDestroy() {
+        hafasTimetableViewModel.selectedHafasJourney.value=null
+        super.onDestroy()
+    }
+
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
@@ -64,9 +69,7 @@ class HafasJourneyFragment : JourneyCoreFragment(), MapPresetProvider
         binding.titleBar.btnBackToLaststation.setOnClickListener(backToLastStationClickListener)
 
 
-        hafasTimetableViewModel.selectedHafasJourney.observe(
-            viewLifecycleOwner
-        ) {
+        hafasTimetableViewModel.selectedHafasJourney.observe(viewLifecycleOwner) {
 
             it?.let { itDetailedHafasEvent ->
                 var partCancelled = itDetailedHafasEvent.hafasEvent.partCancelled
@@ -94,7 +97,7 @@ class HafasJourneyFragment : JourneyCoreFragment(), MapPresetProvider
                 binding.journeyIssue.issueContainer.visibleElseGone(partCancelled)
 
                 // wenn Aufruf OHNE vorher geladene Station (aus Favoriten)
-                // -> Stationstitel verstecken
+                // -> Stationstitel verstecken, Titelzeile kommt dann aus DeparturesActivity
                 if (stationViewModel.station==null) { //
                     binding.titleBar.screenTitle.visibility = View.GONE
                     binding.titleBar.screenRedLine.visibility = View.GONE
@@ -147,11 +150,7 @@ class HafasJourneyFragment : JourneyCoreFragment(), MapPresetProvider
         showTutorialIfNecessary()
     }
 
-    override fun prepareMapIntent(intent: Intent): Boolean {
-        RimapFilter.putPreset(intent, RimapFilter.PRESET_LOCAL_TIMETABLE)
-        InitialPoiManager.putInitialPoi(intent, Content.Source.RIMAP, AnyLocalTransportInitialPoi)
-        return true
-    }
+
 
     inner class HafasRouteAdapter(onClickStop: (view: View, stop : HafasRouteStop)->Unit)
     : BaseListAdapter<HafasRouteStop, HafasRouteItemViewHolder>(
@@ -174,7 +173,41 @@ class HafasJourneyFragment : JourneyCoreFragment(), MapPresetProvider
             }
         })
 
+    override fun prepareMapIntent(intent: Intent): Boolean {
+        RimapFilter.putPreset(intent, RimapFilter.PRESET_LOCAL_TIMETABLE)
+////        InitialPoiManager.putInitialPoi(intent, Content.Source.RIMAP, AnyLocalTransportInitialPoi)
+//
+        try {
+//
+//            var hafasStation : HafasStation? = null
+//
+//            hafasTimetableViewModel.selectedHafasJourney.value?.hafasDetail?.let {
+//
+//                if(it.stops.isNotEmpty()) {
+//                    it.stops[0]?.let {itStop->
+//
+//                        hafasStation = HafasStation(true)
+//
+//                        hafasStation?.let {
+//                            it.name = itStop.name
+//                            it.extId = itStop.extId
+//                            it.id = itStop.id
+//                            it.latitude = itStop.latitude
+//                            it.longitude = itStop.longitude
+//                        }
+//                    }
+//                }
+//            }
 
+
+            val hafasTimeTable = HafasTimetable(hafasTimetableViewModel.hafasTimetableResource.hafasStation)
+            InitialPoiManager.putInitialPoi(intent, Content.Source.RIMAP, hafasTimeTable)
+        } catch (_: Exception) {
+
+        }
+
+        return true
+    }
 
     companion object {
         val TAG: String = HafasJourneyFragment::class.java.simpleName

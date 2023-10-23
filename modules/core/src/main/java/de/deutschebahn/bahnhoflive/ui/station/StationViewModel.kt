@@ -52,7 +52,6 @@ import de.deutschebahn.bahnhoflive.repository.timetable.TimetableCollector
 import de.deutschebahn.bahnhoflive.repository.timetable.TimetableRepository
 import de.deutschebahn.bahnhoflive.stream.livedata.MergedLiveData
 import de.deutschebahn.bahnhoflive.stream.livedata.switchMap
-import de.deutschebahn.bahnhoflive.ui.accessibility.SpokenFeedbackAccessibilityLiveData
 import de.deutschebahn.bahnhoflive.ui.map.Content
 import de.deutschebahn.bahnhoflive.ui.map.MapActivity
 import de.deutschebahn.bahnhoflive.ui.station.elevators.ElevatorStatusListsFragment
@@ -77,8 +76,6 @@ import de.deutschebahn.bahnhoflive.util.combine2LifeData
 import de.deutschebahn.bahnhoflive.util.openhours.OpenHoursParser
 import de.deutschebahn.bahnhoflive.util.then
 import de.deutschebahn.bahnhoflive.util.toLiveData
-//import io.reactivex.Observable
-//import io.reactivex.subjects.BehaviorSubject
 import kotlinx.coroutines.*
 import kotlinx.coroutines.flow.*
 import java.io.InputStreamReader
@@ -95,9 +92,7 @@ class BackNavigationData(var navigateTo: Boolean,
                          var showChevron:Boolean)
 
 
-class StationViewModel(
-    application: Application,
-) : HafasTimetableViewModel(application) {
+class StationViewModel(application: Application) : HafasTimetableViewModel(application) {
 
     // TODO: Inject
     private val defaultDispatcher: CoroutineDispatcher = Dispatchers.Default
@@ -1555,12 +1550,12 @@ class StationViewModel(
                 platformList.filter { it.name != null && it.name.isDigitsOnly() }.toList()
         }
 
-    val mapAvailableLiveData =
-        SpokenFeedbackAccessibilityLiveData(application).switchMap { spokenFeedbackAccessibilityEnabled ->
-            stationResource.data.map { mergedStation ->
-                !(spokenFeedbackAccessibilityEnabled || mergedStation.location == null)
-            }
-        }
+//    val mapAvailableLiveData =
+//        SpokenFeedbackAccessibilityLiveData(application).switchMap { spokenFeedbackAccessibilityEnabled ->
+//            stationResource.data.map { mergedStation ->
+//                !(spokenFeedbackAccessibilityEnabled || mergedStation.location == null)
+//            }
+//        }
 
 
     val showAugmentedRealityTeaser : LiveData<Boolean> = mapAvailableLiveData.switchMap {itMapAvailable->

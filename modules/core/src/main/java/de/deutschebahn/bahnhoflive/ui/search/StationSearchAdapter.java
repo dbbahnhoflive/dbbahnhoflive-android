@@ -22,12 +22,10 @@ import de.deutschebahn.bahnhoflive.analytics.TrackingManager;
 import de.deutschebahn.bahnhoflive.backend.StopPlaceXKt;
 import de.deutschebahn.bahnhoflive.backend.db.ris.model.StopPlace;
 import de.deutschebahn.bahnhoflive.backend.hafas.model.HafasStation;
-import de.deutschebahn.bahnhoflive.backend.hafas.model.HafasTimetable;
 import de.deutschebahn.bahnhoflive.persistence.FavoriteStationsStore;
 import de.deutschebahn.bahnhoflive.persistence.RecentSearchesStore;
 import de.deutschebahn.bahnhoflive.repository.InternalStation;
 import de.deutschebahn.bahnhoflive.repository.timetable.OnStartStopCyclicLoadingOfTimetableListener;
-import de.deutschebahn.bahnhoflive.repository.timetable.TimetableCollector;
 import de.deutschebahn.bahnhoflive.repository.timetable.TimetableRepository;
 import de.deutschebahn.bahnhoflive.ui.ViewHolder;
 import de.deutschebahn.bahnhoflive.ui.hub.DbDeparturesViewHolder;
@@ -110,7 +108,7 @@ class StationSearchAdapter extends RecyclerView.Adapter<ViewHolder> {
 
             } else if (selectedItem instanceof HafasStationSearchResult) {
                 HafasStationSearchResult searchResult = ((HafasStationSearchResult) selectedItem);
-                searchResult.getTimetable().requestTimetable(true, "search");
+                searchResult.getTimetable().requestTimetable(true, "search", true);
                 onStartOrStopCyclicLoadingOfTimetableListener.onStartStopCyclicLoading(
                         null,
                         searchResult.getTimetable(),

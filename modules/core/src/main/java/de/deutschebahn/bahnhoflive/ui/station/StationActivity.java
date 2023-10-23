@@ -52,7 +52,6 @@ import de.deutschebahn.bahnhoflive.backend.hafas.model.HafasStation;
 import de.deutschebahn.bahnhoflive.backend.local.model.RrtPoint;
 import de.deutschebahn.bahnhoflive.backend.local.model.ServiceContentType;
 import de.deutschebahn.bahnhoflive.backend.ris.model.TrainInfo;
-import de.deutschebahn.bahnhoflive.push.FacilityPushManager;
 import de.deutschebahn.bahnhoflive.repository.InternalStation;
 import de.deutschebahn.bahnhoflive.repository.Station;
 import de.deutschebahn.bahnhoflive.repository.StationResource;
@@ -82,12 +81,20 @@ import de.deutschebahn.bahnhoflive.util.VersionManager;
 import kotlin.Pair;
 import de.deutschebahn.bahnhoflive.util.GoogleLocationPermissions;
 
+
+
+
+
 public class StationActivity extends BaseActivity implements
         StationProvider,
         HistoryFragment.RootProvider,
         TrackingManager.Provider,
         StationNavigation
 {
+    final int HISTORYFRAGMENT_INDEX_OVERVIEW=0;
+    final int HISTORYFRAGMENT_INDEX_TIMETABLE=1;
+    final int HISTORYFRAGMENT_INDEX_INFO=2;
+    final int HISTORYFRAGMENT_INDEX_SHOPPING=3;
 
     public static final String ARG_INTENT_CREATION_TIME = "intent_creation_time";
 
@@ -192,10 +199,10 @@ public class StationActivity extends BaseActivity implements
 
         mTutorialView = findViewById(R.id.tab_tutorial_view);
 
-        historyFragments.put(0, overviewFragment);
-        historyFragments.put(1, timetablesFragment);
-        historyFragments.put(2, infoFragment);
-        historyFragments.put(3, shoppingFragment);
+        historyFragments.put(HISTORYFRAGMENT_INDEX_OVERVIEW, overviewFragment);
+        historyFragments.put(HISTORYFRAGMENT_INDEX_TIMETABLE, timetablesFragment);
+        historyFragments.put(HISTORYFRAGMENT_INDEX_INFO, infoFragment);
+        historyFragments.put(HISTORYFRAGMENT_INDEX_SHOPPING, shoppingFragment);
 
         viewFlipper = findViewById(R.id.view_flipper);
 
@@ -635,7 +642,7 @@ public class StationActivity extends BaseActivity implements
             if (f != null)
                 fm.beginTransaction().remove(f).commit();
         } catch (Exception e) {
-            if(e.getMessage()!=null)
+            if (e.getMessage() != null)
               Log.d(this.TAG, e.getMessage());
         }
     }
@@ -659,6 +666,14 @@ public class StationActivity extends BaseActivity implements
         }
 
         if (timetablesFragment == historyFragment) {
+
+//            TimetablesFragment frag = TimetablesFragment.findIn(historyFragment);
+
+//            if(frag!=null) {
+////                frag.switchTo(false,true,"");
+//                return frag;
+//            }
+
             return new TimetablesFragment();
         }
 
@@ -684,12 +699,12 @@ public class StationActivity extends BaseActivity implements
         }
 
         try {
-           if(station.getLocation()!=null)
+            if (station.getLocation() != null)
             Log.d("cr", "Station: " + station.getTitle() + ", " + station.getId() + ", " + station.getLocation().latitude + ", " + station.getLocation().longitude + ", " + station.getEvaIds().getIds().toString());
         } catch (Exception e) {
             // if location = 0,0
-            if(e.getMessage()!=null)
-              Log.d("cr", e.getMessage() );
+            if (e.getMessage() != null)
+                Log.d("cr", e.getMessage());
         }
 
         // Daten zur Rücknavigation ins stationViewModel packen
@@ -820,6 +835,9 @@ public class StationActivity extends BaseActivity implements
     protected void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
 
+        if (getCurrentFragmentIndex() == HISTORYFRAGMENT_INDEX_TIMETABLE)
+            outState.putBoolean(ARG_SHOW_DEPARTURES, true);
+        else
         outState.putBoolean(ARG_SHOW_DEPARTURES, initializeShowingDepartures);
 
         if (BuildConfig.DEBUG) {

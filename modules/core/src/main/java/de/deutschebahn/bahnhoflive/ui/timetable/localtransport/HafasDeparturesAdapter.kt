@@ -58,14 +58,16 @@ class HafasDeparturesAdapter(
         when (viewType) {
             VIEW_TYPE_HEADER -> HeaderViewHolder(parent)
             VIEW_TYPE_FOOTER -> TimetableTrailingItemViewHolder(parent, loadMoreCallback)
-            else -> HafasEventViewHolder(parent, hafasDetailsClickEvent = { view,details ->
+            else -> HafasEventViewHolder(parent, hafasDetailsClickEvent = { view, details ->
                 run {
-                    details.requestDetails()
+                    details.requestDetails() // Daten anfordern
                 }
-            }, hafasDataReceivedEvent = { view,details, success -> run {
-                hafasDataReceivedCallback(view,details, success)
-            }}
-                , singleSelectionManager)
+            }, hafasDataReceivedEvent = { view, details, success ->
+                run {
+                    hafasDataReceivedCallback(view, details, success)
+                }
+            }
+            )
         }
 
     private var filterSummary: FilterSummary? = null

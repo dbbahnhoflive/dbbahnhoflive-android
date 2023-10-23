@@ -33,8 +33,9 @@ open class LocalTransportRepository {
         origin: String,
         listener: BaseRestListener<HafasDepartures>,
         hours: Int,
-        filterStrictly: Boolean,
-        force: Boolean
+        filterStrictly: Boolean, // Fahrzeugtyp
+        force: Boolean,
+        showAllDepartures:Boolean // x Bushaltestellen haben gleichen Namen, auf der map sieht man, welche es sind...
     ) {
         listener.fail()
     }
@@ -49,7 +50,7 @@ open class LocalTransportRepository {
         listener.fail()
     }
 
-    open fun queryTimetableDetails(
+    open fun queryHafasTimetableDetails( // better: journey...
         hafasEvent: HafasEvent,
         listener: VolleyRestListener<HafasDetail>,
         origin: String

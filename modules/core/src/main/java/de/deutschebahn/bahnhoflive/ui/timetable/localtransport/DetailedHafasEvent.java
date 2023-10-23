@@ -36,7 +36,7 @@ public class DetailedHafasEvent {
         loading = true;
 
         Log.d("cr", "DetailedHafasEvent:queryTimetableDetails " + hafasEvent.direction);
-        localTransportRepository.queryTimetableDetails(hafasEvent, new BaseRestListener<HafasDetail>() {
+        localTransportRepository.queryHafasTimetableDetails(hafasEvent, new BaseRestListener<HafasDetail>() {
             @Override
             public void onSuccess(@NonNull HafasDetail payload) {
                 success=true;
