@@ -15,6 +15,12 @@ class AlertX {
             BUTTON_NODEFAULT, BUTTON_POSITIVE, BUTTON_NEGATIVE, BUTTON_NEUTRAL
         }
 
+
+        // for java
+        fun buttonNegative() : AlertDefaultButton = AlertDefaultButton.BUTTON_NEGATIVE
+        fun buttonPositive() : AlertDefaultButton = AlertDefaultButton.BUTTON_POSITIVE
+        fun buttonNeutral() : AlertDefaultButton = AlertDefaultButton.BUTTON_NEUTRAL
+
         fun execAlert(
             context: Context,
             titleText:String,
@@ -47,14 +53,14 @@ class AlertX {
 
             if (buttonNegativeText.isNotEmpty()) {
                 builder.setNeutralButton(buttonNegativeText) { dialog, which ->
-                    buttonNeutralClicked?.invoke()
+                    buttonNegativeClicked?.invoke()
                     dialog.dismiss()
                 }
             }
 
             if (buttonNeutralText.isNotEmpty()) {
                 builder.setNegativeButton(buttonNegativeText) { dialog, which ->
-                    buttonNegativeClicked?.invoke()
+                    buttonNeutralClicked?.invoke()
                     dialog.dismiss()
                 }
             }
