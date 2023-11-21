@@ -54,13 +54,13 @@ class HafasEventOverviewViewHolder(view: View) : TimetableItemOverviewViewHolder
 
             itemView.contentDescription = resources.getString(
                 R.string.sr_template_local_departure_overview,
-                item.displayName,
+                AccessibilityUtilities.fixScreenReaderText(item.displayName),
                 item.direction,
                 AccessibilityUtilities.getSpokenTime(scheduledTimeString),
                 when {
                     item.cancelled -> "Verbindung fällt aus"
-                    item.trackChanged -> "heute abweichend ${item.prettyTrackName}"
-                    else -> item.prettyTrackName
+                    item.trackChanged -> "heute abweichend ${AccessibilityUtilities.convertTrackSpan(item.prettyTrackName)}"
+                    else -> AccessibilityUtilities.convertTrackSpan(item.prettyTrackName)
                 },
                 if (item.delay > 0)
                     resources.getString(

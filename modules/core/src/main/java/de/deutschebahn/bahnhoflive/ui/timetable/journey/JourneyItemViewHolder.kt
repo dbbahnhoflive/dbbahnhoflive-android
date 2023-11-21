@@ -234,7 +234,7 @@ class JourneyItemViewHolder(
                 listOfNotNull(
                     listOfNotNull(
                         itStop.name,
-                        itStop.platform?.let { "Gleis $it " },
+                        itStop.platform?.let { "Gleis ${AccessibilityUtilities.convertTrackSpan(it)} " },
 
                         platform?.let {
                             if (it.isHeadPlatform)
@@ -248,21 +248,16 @@ class JourneyItemViewHolder(
 
                             platformList.firstLinkedPlatform(journeyStop.platform)
                                 ?.let { itLinkedPlatform ->
-                                    listOfNotNull(
                                         if (it.linkedPlatformNumbers.size == 1) {
-                                            listOfNotNull(
-                                                " .${
+                                                " ${
                                                     getString(
                                                         R.string.template_linkplatform,
                                                         itLinkedPlatform.number
                                                     )
                                                 }"
 
-                                            )
-
                                         } else
                                             null
-                                    )
                                 }
                         }
 

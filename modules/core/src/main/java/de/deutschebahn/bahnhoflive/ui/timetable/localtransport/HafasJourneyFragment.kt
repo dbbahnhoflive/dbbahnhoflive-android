@@ -23,6 +23,7 @@ import de.deutschebahn.bahnhoflive.ui.timetable.journey.HafasRouteItemViewHolder
 import de.deutschebahn.bahnhoflive.ui.timetable.journey.JourneyCoreFragment
 import de.deutschebahn.bahnhoflive.ui.timetable.journey.RegularJourneyContentFragment
 import de.deutschebahn.bahnhoflive.util.VersionManager
+import de.deutschebahn.bahnhoflive.util.accessibility.AccessibilityUtilities
 import de.deutschebahn.bahnhoflive.util.visibleElseGone
 import de.deutschebahn.bahnhoflive.view.BaseListAdapter
 import de.deutschebahn.bahnhoflive.view.ListViewHolderDelegate
@@ -106,6 +107,14 @@ class HafasJourneyFragment : JourneyCoreFragment(), MapPresetProvider
                                     R.string.template_hafas_journey_title,
                                     it.displayName,
                                     it.direction
+                                )
+                            binding.titleBar.screenTitle.contentDescription =
+                                AccessibilityUtilities.fixScreenReaderText(
+                                    getString(
+                                        R.string.template_hafas_journey_title,
+                                        it.displayName,
+                                        it.direction
+                                    )
                                 )
                         }
                     }
