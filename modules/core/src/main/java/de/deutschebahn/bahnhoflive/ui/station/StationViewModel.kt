@@ -1484,14 +1484,14 @@ class StationViewModel(application: Application) : HafasTimetableViewModel(appli
 
     // merge platform and poi data (level)
     val platformsWithLevelResource =
-            combine2LifeData(accessibilityFeaturesResource.data, // apiPlatformList
+            combine2LifeData(accessibilityFeaturesResource.data, // apiPlatformList (RISPlatformsRequest)
             platformLevels.data // poiPlatformList
         ) { apiPlatformList: List<Platform>?, poiPlatformList: List<RimapPOI>? ->
 
                 val platformList: MutableList<Platform> = mutableListOf()
 
                 if (apiPlatformList != null)
-                platformList.addAll(apiPlatformList)
+                    platformList.addAll(apiPlatformList)
 
             val poiPlatforms = poiPlatformList?.filter {
                 it.type == MenuMapping.PLATFORM
