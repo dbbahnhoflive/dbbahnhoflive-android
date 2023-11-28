@@ -27,9 +27,24 @@ class RISPlatformsRequest(
     force: Boolean = false,
     clientIdDbAuthorizationTool: DbAuthorizationTool?,
 ) : RISStationsRequest<List<Platform>>(
-    "platforms/by-key?includeAccessibility=true&keyType=STADA&key=$stadaId",
+    "platforms/by-key?includeAccessibility=true&includeSubPlatforms=false&keyType=STADA&key=$stadaId",
     dbAuthorizationTool,
     listener
+
+//    object : VolleyRestListener<List<Platform>> {
+//
+//        @Synchronized
+//        override fun onSuccess(payload: List<Platform>) {
+//            listener.onSuccess(payload)
+//        }
+//
+//        @Synchronized
+//        override fun onFail(reason: VolleyError) {
+//            // todo: stop requesting for a while
+//            listener.onFail(reason)
+//        }
+//
+//    }
 ) {
 
     init {
@@ -38,6 +53,9 @@ class RISPlatformsRequest(
 
     override fun getCountKey() = "RIS/stations"
 
+    /**
+     * deliver all platforms(multiple possible!) with a name, with ot without accessibility-information
+     */
     override fun parseNetworkResponse(response: NetworkResponse): Response<List<Platform>> {
         super.parseNetworkResponse(response)
 
@@ -50,21 +68,18 @@ class RISPlatformsRequest(
                         platformJsonObject.takeUnless { it.has("parentPlatform") }
                             ?.optString("name")?.let { name ->
 
-                                val accJson =  platformJsonObject.optJSONObject("accessibility")
+                                val accessibilityJson =  platformJsonObject.optJSONObject("accessibility")
 
-                                var emap = EnumMap(
-                                    EnumSet.allOf(AccessibilityFeature::class.java)
-                                        .associateWith { AccessibilityStatus.UNKNOWN })
+                                name.takeIf { it.isNotEmpty() }.let {
 
-                                if(accJson!=null) {
-
-                                    emap = AccessibilityFeature.VALUES.fold(
+                                    val emap = if (accessibilityJson != null) {
+                                        AccessibilityFeature.VALUES.fold(
                                                 EnumMap<AccessibilityFeature, AccessibilityStatus>(
                                                     AccessibilityFeature::class.java
                                                 )
                                             ) { acc, accessibilityFeature ->
                                                 acc[accessibilityFeature] =
-                                            accJson.optString(
+                                                accessibilityJson.optString(
                                                         accessibilityFeature.tag
                                                     ).let {
                                                         try {
@@ -75,21 +90,21 @@ class RISPlatformsRequest(
                                                     } ?: AccessibilityStatus.UNKNOWN
                                                 acc
                                     }
+                                    } else {
+                                        EnumMap(
+                                            EnumSet.allOf(AccessibilityFeature::class.java)
+                                                .associateWith { AccessibilityStatus.UNKNOWN })
+                                    }
+
                                 Platform(
                                     name,
                                     emap,
                                     platformJsonObject.optJSONArray("linkedPlatforms")
                                         ?.toStringList()?.toMutableList(),
-                                            platformJsonObject.optBoolean("headPlatform"),
-                                            platformJsonObject.optDouble("start", -1.0),
-                                            platformJsonObject.optDouble("end", 0.0),
-                                            platformJsonObject.optDouble("length", 0.0)
+                                        platformJsonObject.optBoolean("headPlatform")
                                         )
+
                                 }
-                                else
-                                    null
-
-
 
                             }
                     }?.toList()

@@ -18,7 +18,8 @@ class PlatformSelectionFragment : FullBottomSheetDialogFragment() {
         savedInstanceState: Bundle?
     ) = FragmentPlatformSelectionBinding.inflate(inflater, container, false).apply {
         viewModel.accessibilityPlatformsAndSelectedLiveData.observe(viewLifecycleOwner) { platformsAndSelection ->
-            platformsAndSelection.first?.also { platforms ->
+            platformsAndSelection.first?.filter { it.hasAccessibilityInformation }
+                ?.distinct()?.also { platforms ->
                 with(picker) {
 
                     minValue = 0

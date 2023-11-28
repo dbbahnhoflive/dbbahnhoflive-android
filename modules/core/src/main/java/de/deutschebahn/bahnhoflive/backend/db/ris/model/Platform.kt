@@ -2,7 +2,6 @@ package de.deutschebahn.bahnhoflive.backend.db.ris.model
 
 import android.content.Context
 import de.deutschebahn.bahnhoflive.R
-import de.deutschebahn.bahnhoflive.backend.rimap.model.LevelMapping
 import de.deutschebahn.bahnhoflive.repository.accessibility.AccessibilityFeature
 import java.text.Collator
 import java.util.*
@@ -12,13 +11,9 @@ import kotlin.math.abs
 class Platform(
     val name: String,
     val accessibility: EnumMap<AccessibilityFeature, AccessibilityStatus>,
-    private val linkedPlatforms : MutableList<String>? = null,
+    val linkedPlatforms : MutableList<String>? = null,
     val isHeadPlatform : Boolean,
-    val start : Double,
-    val end : Double,
-    val length : Double,
-    var level : Int = LEVEL_UNKNOWN, // wird erst bei Bedarf gesetzt
-    var hasNoLevel : Boolean = false
+    var level : Int = LEVEL_UNKNOWN // wird erst bei Bedarf gesetzt
 ) : Comparable<Platform> {
 
     companion object {
@@ -55,16 +50,21 @@ class Platform(
 
         }
 
-        fun codeToLevel(code:String?) : Int {
-            var ret = LevelMapping.codeToLevel(code)
-            if(ret==null)
-                ret = LEVEL_UNKNOWN
-            return ret
         }
-    }
+
+    val hasLevel: Boolean
+        get() = level!=LEVEL_UNKNOWN
 
     val hasLinkedPlatforms : Boolean
         get() = linkedPlatforms!=null
+
+    val hasAccessibilityInformation: Boolean
+        get() = accessibility != EnumMap(
+            EnumSet.allOf(AccessibilityFeature::class.java)
+                .associateWith { AccessibilityStatus.UNKNOWN })
+
+    val countLinkedPlatforms : Int
+        get() = linkedPlatforms?.size ?: 0
     val linkedPlatformNumbers : MutableList<Int>
         get() {
            val fullmap = linkedPlatforms?.map { platformNumber(it) }?.toMutableList() ?: mutableListOf()
@@ -86,26 +86,14 @@ class Platform(
 
     fun levelToText(context: Context): String = staticLevelToText(context, level)
 
-    fun formatLinkedPlatformString(includePlatform: Boolean = true, sort:Boolean=true) : String {
-
-        val platformAsInt = this.number ?: 0
-
-        val tmpLinkedPlatformsAsInts  = linkedPlatformNumbers
-
-
-        if (includePlatform)
-            if (!tmpLinkedPlatformsAsInts.contains(platformAsInt))
-                tmpLinkedPlatformsAsInts.add(0, platformAsInt)
-
-        if(sort)
-            tmpLinkedPlatformsAsInts.sort()
+    fun formatLinkedPlatformString() : String {
 
         var s = ""
 
-        tmpLinkedPlatformsAsInts.indices.forEach {
+        linkedPlatforms?.indices?.forEach {
             if (s != "")
                 s += " | "
-            s += tmpLinkedPlatformsAsInts[it]
+            s += linkedPlatforms[it]
         }
 
         return s
@@ -143,31 +131,65 @@ class Platform(
 }
 
 fun List<Platform>.findPlatform(platformName:String) : Platform? {
-    val platformNumber : Int = Platform.platformNumber(platformName)
-
-    if(platformNumber>0) {
-        return this.firstOrNull { it.number == platformNumber }
-    }
-
-    return null
+  return this.firstOrNull { it.name == platformName }
 }
 
-fun List<Platform>.hasLinkedPlatform(platformNumber:Int?) : Boolean {
+fun List<Platform>.containsPlatform(platformName:String?) : Boolean {
     this.forEach {
-        if (it.number != platformNumber) {
-            if (it.linkedPlatformNumbers.contains(platformNumber)) return true
+        if (it.name == platformName) {
+            return true
         }
     }
     return false
 }
 
-fun List<Platform>.containsPlatform(platformNumber:Int?) : Boolean {
-    this.forEach {
-        if (it.number == platformNumber) {
-            return true
+fun List<Platform>.removeNotExistingLinkedPlatforms() {
+
+    this.forEach { itLoopItem ->
+
+        itLoopItem.linkedPlatforms?.let { itLinkedPlatforms ->
+            run {
+
+                val iter = itLinkedPlatforms.iterator()
+
+                while (iter.hasNext()) {
+
+                    val item = iter.next()
+                    if (!this.containsPlatform(item))
+                        iter.remove()
+
+                }
+
+            }
+        }
     }
+}
+
+fun List<Platform>.getPlatformWithMostLinkedPlatforms(platformName:String?) : Platform? {
+    var ret : Platform? = null
+    this.forEach {itLoopItem->
+        if (itLoopItem.name == platformName) {
+
+            if(ret==null)
+                ret = itLoopItem // null
+            else
+                if(itLoopItem.countLinkedPlatforms > ret!!.countLinkedPlatforms)
+                    ret = itLoopItem
+
+        }
     }
-    return false
+    return ret
+}
+
+fun Platform.combineToSet(includeLinkedPlatforms: Boolean=true) : Set<String> {
+    val linkedPlatformSet : MutableSet<String> = mutableSetOf()
+    linkedPlatformSet.add(name)
+    if(includeLinkedPlatforms) {
+        this.linkedPlatforms?.let {
+            linkedPlatformSet.addAll(it)
+        }
+    }
+    return linkedPlatformSet
 }
 
 fun List<Platform>.firstLinkedPlatform(platformName:String?) : Platform? {
@@ -182,4 +204,47 @@ fun List<Platform>.firstLinkedPlatform(platformName:String?) : Platform? {
     return null
 }
 
+/**
+ * find level
+ * 1. search in existing platforms
+ * 2. search in linked platforms
+ */
+fun List<Platform>.getLevel(
+    platformName: String,
+    poiLevelList: List<Pair<String, Int>>? = null
+): Int {
+    this.forEach { itPlatform ->
+        if (itPlatform.name == platformName) {
+
+            if (itPlatform.hasLevel)
+                return itPlatform.level
+
+            itPlatform.linkedPlatforms?.forEach { itName ->
+                poiLevelList?.firstOrNull { it.first == itName }?.let {
+                    return it.second
+                }
+
+            }
+        }
+    }
+
+    this.forEach { itPlatform ->
+        itPlatform.linkedPlatforms?.let { itLinkedPlatformNames ->
+
+            if (itLinkedPlatformNames.contains(platformName)) {
+                for (item in itLinkedPlatformNames) {
+                    this.findPlatform(item)?.let {
+                        if (it.hasLevel)
+                            return it.level
+                    }
+                }
+
+            }
+
+
+        }
+    }
+
+    return Platform.LEVEL_UNKNOWN
+}
 
