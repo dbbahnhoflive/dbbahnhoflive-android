@@ -61,9 +61,7 @@ class JourneyItemViewHolder(
 
             item?.let {
 
-                val displayPlatform: String = it.platform ?: "" // kann auch 15 D-F sein !
-
-                linkPlatform.isVisible = it.current==true
+                linkPlatform.isVisible = it.current==true && it.platform!=null
 //                    it.current == true && ((platformList.size > 1) || (thisPlatform != null && thisPlatform.isHeadPlatform))
 
                 if (linkPlatform.isVisible) {
@@ -202,7 +200,7 @@ class JourneyItemViewHolder(
                             platformList.firstLinkedPlatform(journeyStop.platform)
                                 ?.let { itLinkedPlatform ->
                                     listOfNotNull(
-                                        if (it.linkedPlatformNumbers.size == 1) {
+                                        if (it.countLinkedPlatforms == 1) {
                                             listOfNotNull(
                                                 " .${
                                                     getString(

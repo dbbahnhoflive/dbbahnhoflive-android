@@ -15,6 +15,7 @@ import androidx.fragment.app.activityViewModels
 import de.deutschebahn.bahnhoflive.R
 import de.deutschebahn.bahnhoflive.backend.db.ris.model.Platform
 import de.deutschebahn.bahnhoflive.backend.db.ris.model.Platform.Companion.LEVEL_UNKNOWN
+import de.deutschebahn.bahnhoflive.backend.db.ris.model.TrackComparator
 import de.deutschebahn.bahnhoflive.backend.db.ris.model.combineToSet
 import de.deutschebahn.bahnhoflive.backend.db.ris.model.containsPlatform
 import de.deutschebahn.bahnhoflive.backend.db.ris.model.findPlatform
@@ -43,7 +44,7 @@ class JourneyPlatformInformationFragment : Fragment(), MapPresetProvider {
     var trainEvent : TrainEvent? = null
     var journeyStop: JourneyStop? = null
 
-    var platforms : List<Platform> = listOf()
+    var platforms : MutableList<Platform> = mutableListOf()
 
     lateinit var binding: FragmentJourneyPlatformInformationBinding
     override fun onCreateView(
@@ -61,36 +62,33 @@ class JourneyPlatformInformationFragment : Fragment(), MapPresetProvider {
 
                     val reducedList : MutableList<Platform> = itRawPlatforms.filter { it.hasLinkedPlatforms }.toMutableList()
 
-                    reducedList.removeNotExistingLinkedPlatforms()
-
-                    val linkedList :  MutableList<Platform> = mutableListOf()
-
                     // falls Gleise mit gleichem Namen vorhanden sind, das Gleis mit den meisten linked Gleisen nehmen
                     reducedList.forEach {itLoopItem->
-                        if(!linkedList.containsPlatform(itLoopItem.name))
+                        if(!platforms.containsPlatform(itLoopItem.name))
                             reducedList.getPlatformWithMostLinkedPlatforms(itLoopItem.name)?.let {
-                                linkedList.add(it)
+                                platforms.add(it)
                             }
                     }
 
 //                   aus Gleisname und Linked-Gleisen ein SET bilden:
-
                     val linkedSetList0 : MutableList<Triple<Int, String,Set<String>>> = mutableListOf()
-                    linkedList.forEach {itLoopItem->
-                       linkedSetList0.add(Triple(linkedList.getLevel(itLoopItem.name),itLoopItem.name,itLoopItem.combineToSet(true)))
+                    platforms.forEach {itLoopItem->
+                       linkedSetList0.add(Triple(platforms.getLevel(itLoopItem.name),itLoopItem.name,itLoopItem.combineToSet(true)))
                         }
 
 
-                    val linkedSetList : MutableList<Triple<Int, String,Set<String>>> = mutableListOf()
+                    val linkedSetList : MutableList<Triple<Int, String,MutableSet<String>>> = mutableListOf()
 
                     // Nur Gleise, die in allen linked-Gleisen übereinstimmen, werden als "am gleichen Bahnsteig" angesehen
-                    linkedList.forEach {itLoopItem->
+                    platforms.forEach {itLoopItem->
 
-                        if(linkedSetList0.count {itLoopItem.combineToSet() == it.third  } > 1 ) {
+                        val nItems = linkedSetList0.count {itLoopItem.combineToSet() == it.third  }
+
+                        if(nItems > 1 ) {
                             if (linkedSetList.find { itLoopItem.combineToSet() == it.third } == null)
                                 linkedSetList.add(
                                     Triple(
-                                        linkedList.getLevel(itLoopItem.name),
+                                        platforms.getLevel(itLoopItem.name),
                                         itLoopItem.name,
                                         itLoopItem.combineToSet()
                                     )
@@ -100,7 +98,7 @@ class JourneyPlatformInformationFragment : Fragment(), MapPresetProvider {
                             if (linkedSetList.find { itLoopItem.combineToSet(false) == it.third } == null)
                                 linkedSetList.add(
                                     Triple(
-                                        linkedList.getLevel(itLoopItem.name),
+                                        platforms.getLevel(itLoopItem.name),
                                         itLoopItem.name,
                                         itLoopItem.combineToSet(false)
                                     )
@@ -110,20 +108,20 @@ class JourneyPlatformInformationFragment : Fragment(), MapPresetProvider {
 
                     linkedSetList.sortBy { it.first }
 
-                    linkedSetList.groupBy {
-                        it.first
-                    }.forEach {
-                        Log.d("cr", it.value.toString())
+                    // ggf. Gleise, die einen eigenen set haben aus den anderen sets entfernen
+                    linkedSetList.forEach {itTriple->
 
-                        it.value.forEach {
+                        val iter = itTriple.third.iterator()
 
-                            val  lst : MutableList<Platform>  = mutableListOf()
-                            it.third.forEach {
-                                linkedList.findPlatform(it)?.let { it1 -> lst.add(it1) }
+                        while (iter.hasNext()) {
+                            val item = iter.next()
+                            if( linkedSetList.find { itTriple!=it && it.second==item } != null) {
+                                iter.remove()
                     }
-
                             }
                         }
+
+                    platforms.removeNotExistingLinkedPlatforms()
 
                     createContent(inflater, linkedSetList)
 
@@ -161,7 +159,7 @@ class JourneyPlatformInformationFragment : Fragment(), MapPresetProvider {
     }
 
     // level, name, linkennamen
-    private fun createContent(inflater: LayoutInflater, platformList : MutableList<Triple<Int, String,Set<String>>>) {
+    private fun createContent(inflater: LayoutInflater, platformList : MutableList<Triple<Int, String, MutableSet<String>>>) {
 
 
         binding.also {itBinding->
@@ -228,35 +226,39 @@ class JourneyPlatformInformationFragment : Fragment(), MapPresetProvider {
 
                 // Gegenüberliegendes Gleis
                 platform?.let {
-                   if(it.linkedPlatformNumbers.size==1)
+                   if(it.countLinkedPlatforms==1)
                       itBinding.platformOtherSide.text = "Gegenüberliegend Gleis " + it.formatLinkedPlatformString()
                    else
                        itBinding.platformOtherSide.isVisible=false
                 }
 
 
+                var levelCounter=0
                 // Gleise pro Stockwerk (level) ausgeben
                 itBinding.levelInformationContainer.removeAllViews()
-                platformList.groupBy { it.first }.forEach {
+                platformList.groupBy { it.first }.forEach {itTriples->
+
+                    levelCounter++
 
                     val layoutLevel = IncludePlatformsBinding.inflate(inflater)
 
                     layoutLevel.level.isVisible =
-                        !(platformList.size == 1 && it.value.first().first == LEVEL_UNKNOWN) // "Unbekanntes Stockwerk" nicht ausgeben, wenn nur 1 Stockwerk existiert
+                        levelCounter>1 || (platformList.size > 1 && itTriples.value.first().first != LEVEL_UNKNOWN) // "Unbekanntes Stockwerk" nicht ausgeben, wenn nur 1 Stockwerk existiert
                     layoutLevel.level.text =
-                        Platform.staticLevelToText(requireContext(), it.value.first().first)
+                        Platform.staticLevelToText(requireContext(), itTriples.value.first().first)
 
                     layoutLevel.platformItemsContainer.let { itPlatformContainer ->
 
                         // Infos pro level
                         itPlatformContainer.removeAllViews()
-                        it.value.forEach { itTriple ->
+                        itTriples.value.forEach { itTriple ->
 
-                            var textPlatforms: String = ""
+                            var textPlatforms = ""
 
-                            itTriple.third.sortedBy { it }.forEach { itPlatformName ->
+                            itTriple.third.sortedWith(TrackComparator()).forEach { itPlatformName ->
 
                                 platforms.findPlatform(itPlatformName)?.let { itPlatform ->
+
                                     if (textPlatforms.isNotEmpty())
                                         textPlatforms += " | "
                                     textPlatforms += itPlatform.name
@@ -264,7 +266,6 @@ class JourneyPlatformInformationFragment : Fragment(), MapPresetProvider {
                             if (itPlatform.isHeadPlatform)
                                         textPlatforms += " (" + getString(R.string.platform_head) + ")"
                                 }
-
 
                             }
                             val textView = TextView(requireContext())
@@ -339,7 +340,7 @@ class JourneyPlatformInformationFragment : Fragment(), MapPresetProvider {
             fragment.trainEvent = trainEvent
             fragment.trainInfo =  trainInfo
             fragment.journeyStop = journeyStop
-            fragment.platforms = platforms
+//            fragment.platforms = platforms
 
             return  fragment
         }

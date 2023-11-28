@@ -2,10 +2,60 @@ package de.deutschebahn.bahnhoflive.backend.db.ris.model
 
 import android.content.Context
 import de.deutschebahn.bahnhoflive.R
+import de.deutschebahn.bahnhoflive.backend.ris.model.RISTimetable
 import de.deutschebahn.bahnhoflive.repository.accessibility.AccessibilityFeature
 import java.text.Collator
-import java.util.*
+import java.util.EnumMap
+import java.util.EnumSet
+import java.util.Locale
 import kotlin.math.abs
+
+class TrackComparator : Comparator<String?> {
+
+    private fun extractDigits(src: String): String? {
+        val builder = StringBuilder()
+        for (i in 0 until src.length) {
+            val c = src[i]
+            if (Character.isDigit(c)) {
+                builder.append(c)
+            }
+        }
+        return builder.toString()
+    }
+    override fun compare(o1: String?, o2: String?): Int {
+        //comparing tracks which might contain single numbers, but also combination of numbers and chars or chars only, e.g. "k.a.", "7 A-D"
+
+        if(o1==null)
+            return 1
+        if(o2==null)
+            return -1
+
+
+        try {
+            //try to convert strings into numbers and compare them
+            val d1 = extractDigits(o1)
+            val d2 = extractDigits(o2)
+
+            if(d1==null)
+                return 1
+            if(d2==null)
+                return -1
+
+            if (d1.isNotEmpty() && d2.isNotEmpty()) {
+                val res = Integer.valueOf(d1).compareTo(Integer.valueOf(d2))
+                return if (res == 0) {
+                    //extracted digits are equal, compare original strings
+                    o1.compareTo(o2)
+                } else {
+                    res
+                }
+            }
+        } catch (e: Exception) {
+            //ignore and try string compare
+        }
+        return o1.compareTo(o2)
+    }
+}
 
 
 class Platform(
@@ -65,20 +115,7 @@ class Platform(
 
     val countLinkedPlatforms : Int
         get() = linkedPlatforms?.size ?: 0
-    val linkedPlatformNumbers : MutableList<Int>
-        get() {
-           val fullmap = linkedPlatforms?.map { platformNumber(it) }?.toMutableList() ?: mutableListOf()
 
-           val resultMap : MutableList<Int> = mutableListOf()
-
-            val iter = fullmap.iterator()
-            while(iter.hasNext()) {
-              val value = iter.next()
-              if(!resultMap.contains(value) && value!=number)
-                  resultMap.add(value)
-            }
-            return resultMap
-        }
 
     val number : Int? = runCatching {
         numberPattern.find(name)?.value?.toInt()
@@ -181,7 +218,7 @@ fun List<Platform>.getPlatformWithMostLinkedPlatforms(platformName:String?) : Pl
     return ret
 }
 
-fun Platform.combineToSet(includeLinkedPlatforms: Boolean=true) : Set<String> {
+fun Platform.combineToSet(includeLinkedPlatforms: Boolean=true) : MutableSet<String> {
     val linkedPlatformSet : MutableSet<String> = mutableSetOf()
     linkedPlatformSet.add(name)
     if(includeLinkedPlatforms) {
@@ -194,11 +231,13 @@ fun Platform.combineToSet(includeLinkedPlatforms: Boolean=true) : Set<String> {
 
 fun List<Platform>.firstLinkedPlatform(platformName:String?) : Platform? {
     this.forEach { itPlatform ->
-        if (itPlatform.number == Platform.platformNumber(platformName)) {
-            return if(itPlatform.linkedPlatformNumbers.size>0)
-                this.firstOrNull {itPlatform.linkedPlatformNumbers[0] == it.number }
+        if (itPlatform.name == platformName) {
+            itPlatform.linkedPlatforms?.let {itPlatformNames->
+                return if (itPlatformNames.size>0)
+                    this.firstOrNull { itPlatformNames[0] == it.name }
             else
                 null
+            }
         }
     }
     return null

@@ -1503,7 +1503,6 @@ class StationViewModel(
             }
 
             risPlatforms.forEach { itPlatform ->
-                val platformNr: Int = Platform.platformNumber(itPlatform.name)
 
                 val poi: RimapPOI? = poiPlatforms?.firstOrNull { itRimapPoi ->
                     itRimapPoi.name == itPlatform.name
