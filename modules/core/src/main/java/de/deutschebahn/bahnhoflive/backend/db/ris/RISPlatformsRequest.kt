@@ -20,47 +20,13 @@ import de.deutschebahn.bahnhoflive.util.json.toStringList
 import org.json.JSONObject
 import java.util.*
 
-class RISPlatformsRequest(
-    listener: VolleyRestListener<List<Platform>>,
-    dbAuthorizationTool: DbAuthorizationTool,
-    stadaId: String,
-    force: Boolean = false,
-    clientIdDbAuthorizationTool: DbAuthorizationTool?,
-) : RISStationsRequest<List<Platform>>(
-    "platforms/by-key?includeAccessibility=true&includeSubPlatforms=false&keyType=STADA&key=$stadaId",
-    dbAuthorizationTool,
-    listener
+class RISPlatformsRequestResponseParser {
 
-//    object : VolleyRestListener<List<Platform>> {
-//
-//        @Synchronized
-//        override fun onSuccess(payload: List<Platform>) {
-//            listener.onSuccess(payload)
-//        }
-//
-//        @Synchronized
-//        override fun onFail(reason: VolleyError) {
-//            // todo: stop requesting for a while
-//            listener.onFail(reason)
-//        }
-//
-//    }
-) {
+    fun parse(jsonString: String?) : List<Platform> {
 
-    init {
-        setShouldCache(!force)
-    }
+        val platforms = kotlin.runCatching {
 
-    override fun getCountKey() = "RIS/stations"
-
-    /**
-     * deliver all platforms(multiple possible!) with a name, with ot without accessibility-information
-     */
-    override fun parseNetworkResponse(response: NetworkResponse): Response<List<Platform>> {
-        super.parseNetworkResponse(response)
-
-        return try {
-            val platforms = response.data?.decodeToString()?.let { responseString ->
+            jsonString?.let { responseString ->
                 JSONObject(responseString).optJSONArray("platforms")
                     ?.asJSONObjectSequence()
                     ?.filterNotNull()
@@ -68,7 +34,8 @@ class RISPlatformsRequest(
                         platformJsonObject.takeUnless { it.has("parentPlatform") }
                             ?.optString("name")?.let { name ->
 
-                                val accessibilityJson =  platformJsonObject.optJSONObject("accessibility")
+                                val accessibilityJson =
+                                    platformJsonObject.optJSONObject("accessibility")
 
                                 name.takeIf { it.isNotEmpty() }.let {
 
@@ -109,6 +76,57 @@ class RISPlatformsRequest(
                             }
                     }?.toList()
             } ?: emptyList()
+        }
+        return platforms.getOrElse { emptyList() }
+    }
+
+}
+
+
+class RISPlatformsRequest(
+    listener: VolleyRestListener<List<Platform>>,
+    dbAuthorizationTool: DbAuthorizationTool,
+    stadaId: String,
+    force: Boolean = false,
+    clientIdDbAuthorizationTool: DbAuthorizationTool?,
+) : RISStationsRequest<List<Platform>>(
+    "platforms/by-key?includeAccessibility=true&includeSubPlatforms=false&keyType=STADA&key=$stadaId",
+    dbAuthorizationTool,
+    listener
+
+//    object : VolleyRestListener<List<Platform>> {
+//
+//        @Synchronized
+//        override fun onSuccess(payload: List<Platform>) {
+//            listener.onSuccess(payload)
+//        }
+//
+//        @Synchronized
+//        override fun onFail(reason: VolleyError) {
+//            // todo: stop requesting for a while
+//            listener.onFail(reason)
+//        }
+//
+//    }
+) {
+
+    init {
+        setShouldCache(!force)
+    }
+
+    override fun getCountKey() = "RIS/stations"
+
+    /**
+     * deliver all platforms(multiple possible!) with a name, with ot without accessibility-information
+     */
+    override fun parseNetworkResponse(response: NetworkResponse): Response<List<Platform>> {
+        super.parseNetworkResponse(response)
+
+        return try {
+
+            val jsonString = response.data?.decodeToString()
+
+            val platforms = RISPlatformsRequestResponseParser().parse(jsonString)
 
             val forcedCacheEntryFactory =
                 ForcedCacheEntryFactory(ForcedCacheEntryFactory.DAY_IN_MILLISECONDS)

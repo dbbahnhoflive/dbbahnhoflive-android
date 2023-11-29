@@ -2,13 +2,14 @@ package de.deutschebahn.bahnhoflive.backend.db.ris.model
 
 import android.content.Context
 import de.deutschebahn.bahnhoflive.R
-import de.deutschebahn.bahnhoflive.backend.ris.model.RISTimetable
 import de.deutschebahn.bahnhoflive.repository.accessibility.AccessibilityFeature
 import java.text.Collator
 import java.util.EnumMap
 import java.util.EnumSet
 import java.util.Locale
 import kotlin.math.abs
+
+typealias PlatformList = List<Platform>
 
 class TrackComparator : Comparator<String?> {
 

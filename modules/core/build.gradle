@@ -26,10 +26,10 @@ ext.loadDebugStation = { stationNr ->
 }
 
 android {
-    compileSdkVersion 33
+    compileSdk 33
     defaultConfig {
         minSdkVersion 19
-        targetSdkVersion 33
+        targetSdk 33
         multiDexEnabled true
 
         buildConfigField "String", "RIS_JOURNEYS_BASE_URL", "\"https://apis.deutschebahn.com/db/apis/ris-journeys/v1/\""
@@ -89,6 +89,9 @@ android {
 //        jvmToolchain(8)
 //    }
 
+    testOptions {
+        unitTests.returnDefaultValues = true
+    }
 }
 
 dependencies {
@@ -137,6 +140,8 @@ dependencies {
     testApi "io.mockk:mockk:1.12.4"
 
     implementation 'androidx.core:core-splashscreen:1.0.0'
+
+    testImplementation("org.json:json:20210307")
 
 //    coreLibraryDesugaring 'com.android.tools:desugar_jdk_libs:2.0.3'
 }
