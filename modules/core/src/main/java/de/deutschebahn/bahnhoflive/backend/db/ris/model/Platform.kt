@@ -7,11 +7,25 @@ import java.text.Collator
 import java.util.EnumMap
 import java.util.EnumSet
 import java.util.Locale
+import java.util.TreeSet
 import kotlin.math.abs
 
 typealias PlatformList = List<Platform>
+typealias PlatformName = String
 
-class TrackComparator : Comparator<String?> {
+class PlatformWithLevelAndLinkedPlatforms (val level:Int, val platformName:PlatformName, var linkedPlatforms:MutableSet<PlatformName>)
+{
+
+}
+
+class PlatformWithLevelAndLinkedPlatformsComparator : Comparator<PlatformWithLevelAndLinkedPlatforms> {
+    override fun compare(o1: PlatformWithLevelAndLinkedPlatforms, o2: PlatformWithLevelAndLinkedPlatforms): Int {
+       val ret = TrackComparator().compare(o1.platformName, o2.platformName)
+        return ret
+    }
+}
+
+open class TrackComparator : Comparator<PlatformName?> {
 
     private fun extractDigits(src: String): String? {
         val builder = StringBuilder()
@@ -20,10 +34,12 @@ class TrackComparator : Comparator<String?> {
             if (Character.isDigit(c)) {
                 builder.append(c)
             }
+            else
+                break
         }
         return builder.toString()
     }
-    override fun compare(o1: String?, o2: String?): Int {
+    override fun compare(o1: PlatformName?, o2: PlatformName?): Int {
         //comparing tracks which might contain single numbers, but also combination of numbers and chars or chars only, e.g. "k.a.", "7 A-D"
 
         if(o1==null)
@@ -219,8 +235,8 @@ fun List<Platform>.getPlatformWithMostLinkedPlatforms(platformName:String?) : Pl
     return ret
 }
 
-fun Platform.combineToSet(includeLinkedPlatforms: Boolean=true) : MutableSet<String> {
-    val linkedPlatformSet : MutableSet<String> = mutableSetOf()
+fun Platform.combineToSet(includeLinkedPlatforms: Boolean=true) : TreeSet<PlatformName> {
+    val linkedPlatformSet : TreeSet<PlatformName> =  TreeSet<PlatformName>(TrackComparator())
     linkedPlatformSet.add(name)
     if(includeLinkedPlatforms) {
         this.linkedPlatforms?.let {
@@ -242,6 +258,36 @@ fun List<Platform>.firstLinkedPlatform(platformName:String?) : Platform? {
         }
     }
     return null
+}
+
+fun List<Platform>.getLinkedPlatformsAsString() : String
+{
+    var ret : String = "["
+    this.forEachIndexed { index, platform ->
+        run {
+
+            if (index > 0)
+                ret += ","
+
+            ret += platform.name
+
+            if(platform.hasLinkedPlatforms)
+                ret+=":"
+
+            platform.linkedPlatforms?.forEachIndexed { index, s -> run {
+
+                if(index>0)
+                    ret+=";"
+
+                ret+=s
+
+
+            } }
+
+        }
+    }
+
+    return ret + "]"
 }
 
 /**

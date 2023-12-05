@@ -87,7 +87,7 @@
     <dimen name="circle_button_size">40dp</dimen>
     <dimen name="indent">110dp</dimen>
 
-    <dimen name="round_button_size">40dp</dimen>
+    <dimen name="round_button_size">42dp</dimen>
     <dimen name="round_button_half_size">20dp</dimen>
 
     <dimen name="round_button_size_large">60dp</dimen>

@@ -160,7 +160,7 @@
                         android:elevation="@dimen/default_elevation"
                         android:scaleType="center"
                         android:src="@drawable/app_extern_link"
-
+android:importantForAccessibility="no"
                         app:elevation="@dimen/default_elevation" />
 
                 </androidx.constraintlayout.widget.ConstraintLayout>

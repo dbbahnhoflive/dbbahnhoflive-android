@@ -2,7 +2,6 @@ package de.deutschebahn.bahnhoflive.ui.timetable.journey
 
 import android.content.Intent
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -13,15 +12,13 @@ import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import de.deutschebahn.bahnhoflive.R
+import de.deutschebahn.bahnhoflive.backend.db.ris.RISPlatformsRequestResponseParser
 import de.deutschebahn.bahnhoflive.backend.db.ris.model.Platform
 import de.deutschebahn.bahnhoflive.backend.db.ris.model.Platform.Companion.LEVEL_UNKNOWN
+import de.deutschebahn.bahnhoflive.backend.db.ris.model.PlatformList
+import de.deutschebahn.bahnhoflive.backend.db.ris.model.PlatformWithLevelAndLinkedPlatforms
 import de.deutschebahn.bahnhoflive.backend.db.ris.model.TrackComparator
-import de.deutschebahn.bahnhoflive.backend.db.ris.model.combineToSet
-import de.deutschebahn.bahnhoflive.backend.db.ris.model.containsPlatform
 import de.deutschebahn.bahnhoflive.backend.db.ris.model.findPlatform
-import de.deutschebahn.bahnhoflive.backend.db.ris.model.getLevel
-import de.deutschebahn.bahnhoflive.backend.db.ris.model.getPlatformWithMostLinkedPlatforms
-import de.deutschebahn.bahnhoflive.backend.db.ris.model.removeNotExistingLinkedPlatforms
 import de.deutschebahn.bahnhoflive.backend.ris.model.TrainEvent
 import de.deutschebahn.bahnhoflive.backend.ris.model.TrainInfo
 import de.deutschebahn.bahnhoflive.backend.ris.model.TrainMovementInfo
@@ -38,90 +35,105 @@ import de.deutschebahn.bahnhoflive.util.changeAccessibilityActionClickText
 
 class JourneyPlatformInformationFragment : Fragment(), MapPresetProvider {
 
-    val stationViewModel by activityViewModels<StationViewModel>()
+    private val stationViewModel by activityViewModels<StationViewModel>()
 
-    var trainInfo : TrainInfo? = null
-    var trainEvent : TrainEvent? = null
-    var journeyStop: JourneyStop? = null
+    private var trainInfo : TrainInfo? = null
+    private var trainEvent : TrainEvent? = null
+    private var journeyStop: JourneyStop? = null
 
-    var platforms : MutableList<Platform> = mutableListOf()
+    private var platforms : MutableList<Platform> = mutableListOf()
 
-    lateinit var binding: FragmentJourneyPlatformInformationBinding
+    lateinit private var binding: FragmentJourneyPlatformInformationBinding
+
+
+    fun test() {
+
+
+            var allPlatforms: PlatformList
+            val reducedPlatforms: MutableList<Platform> = mutableListOf()
+
+        val jsonString = "{\"platforms\":[" +
+                "            {" +
+                "                \"name\":\"3\"," +
+                "                \"linkedPlatforms\":[\"4\", \"5\", \"1\", \"2\"]" +
+                "            }," +
+                "            {" +
+                "                \"name\":\"7c\"," +
+                "                \"linkedPlatforms\":[\"7\", \"7a\"]" +
+                "            }," +
+                "            {" +
+                "                \"name\":\"1\"," +
+                "                \"linkedPlatforms\":[\"3\", \"4\", \"2\", \"5\"]" +
+                "            }," +
+                "            {" +
+                "                \"name\":\"2\"," +
+                "                \"linkedPlatforms\":[\"5\", \"3\", \"1\", \"4\"]" +
+                "            }," +
+                "            {" +
+                "                \"name\":\"6\"," +
+                "                \"linkedPlatforms\":[\"5\", \"4\"]" +
+                "            }," +
+                "            {" +
+                "                \"name\":\"11\"," +
+                "                \"linkedPlatforms\":[\"10\"]" +
+                "            }," +
+                "            {" +
+                "                \"name\":\"5\"," +
+                "                \"linkedPlatforms\":[\"6\", \"4\"]" +
+                "            }," +
+                "            {" +
+                "                \"name\":\"4\"," +
+                "                \"linkedPlatforms\":[\"6\", \"5\"]" +
+                "            }," +
+                "            {" +
+                "                \"name\":\"10\"," +
+                "                \"linkedPlatforms\":[\"11\"]" +
+                "            }," +
+                "            {" +
+                "                \"name\":\"7\"," +
+                "                \"linkedPlatforms\":[\"7c\", \"7a\"]" +
+                "            }," +
+                "            {" +
+                "                \"name\":\"7a\"," +
+                "                \"linkedPlatforms\":[\"7c\", \"7\"]" +
+                "            }," +
+                "        ]" +
+                "    }"
+
+        RISPlatformsRequestResponseParser().run {
+
+                allPlatforms = parse(jsonString)
+
+
+
+//            val lst = sortedSetOf<PlatformName>("18", "19", "18a")
+
+
+//            lst.sortWith(TrackComparator())
+
+                val output = getLinkedPlatforms(allPlatforms, reducedPlatforms)
+
+            }
+
+    }
+
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
 
+ //       test()
+
         binding = FragmentJourneyPlatformInformationBinding.inflate(inflater, container, false).apply {
 
             titleBar.staticTitleBar.screenTitle.setText(R.string.platform_information)
 
-            stationViewModel.platformsWithLevelResource.observe(viewLifecycleOwner) {itRawPlatforms->
-                itRawPlatforms?.let {
+            stationViewModel.platformsWithLevelResource.observe(viewLifecycleOwner) {itAllPlatforms->
+                itAllPlatforms?.let {
 
-                    val reducedList : MutableList<Platform> = itRawPlatforms.filter { it.hasLinkedPlatforms }.toMutableList()
-
-                    // falls Gleise mit gleichem Namen vorhanden sind, das Gleis mit den meisten linked Gleisen nehmen
-                    reducedList.forEach {itLoopItem->
-                        if(!platforms.containsPlatform(itLoopItem.name))
-                            reducedList.getPlatformWithMostLinkedPlatforms(itLoopItem.name)?.let {
-                                platforms.add(it)
-                            }
-                    }
-
-//                   aus Gleisname und Linked-Gleisen ein SET bilden:
-                    val linkedSetList0 : MutableList<Triple<Int, String,Set<String>>> = mutableListOf()
-                    platforms.forEach {itLoopItem->
-                       linkedSetList0.add(Triple(platforms.getLevel(itLoopItem.name),itLoopItem.name,itLoopItem.combineToSet(true)))
-                        }
-
-
-                    val linkedSetList : MutableList<Triple<Int, String,MutableSet<String>>> = mutableListOf()
-
-                    // Nur Gleise, die in allen linked-Gleisen übereinstimmen, werden als "am gleichen Bahnsteig" angesehen
-                    platforms.forEach {itLoopItem->
-
-                        val nItems = linkedSetList0.count {itLoopItem.combineToSet() == it.third  }
-
-                        if(nItems > 1 ) {
-                            if (linkedSetList.find { itLoopItem.combineToSet() == it.third } == null)
-                                linkedSetList.add(
-                                    Triple(
-                                        platforms.getLevel(itLoopItem.name),
-                                        itLoopItem.name,
-                                        itLoopItem.combineToSet()
-                                    )
-                                )
-                               }
-                        else {
-                            if (linkedSetList.find { itLoopItem.combineToSet(false) == it.third } == null)
-                                linkedSetList.add(
-                                    Triple(
-                                        platforms.getLevel(itLoopItem.name),
-                                        itLoopItem.name,
-                                        itLoopItem.combineToSet(false)
-                                    )
-                                )
-                            }
-                        }
-
-                    linkedSetList.sortBy { it.first }
-
-                    // ggf. Gleise, die einen eigenen set haben aus den anderen sets entfernen
-                    linkedSetList.forEach {itTriple->
-
-                        val iter = itTriple.third.iterator()
-
-                        while (iter.hasNext()) {
-                            val item = iter.next()
-                            if( linkedSetList.find { itTriple!=it && it.second==item } != null) {
-                                iter.remove()
-                    }
-                            }
-                        }
-
-                    platforms.removeNotExistingLinkedPlatforms()
+                    platforms.clear()
+                    val linkedSetList = RISPlatformsRequestResponseParser().getLinkedPlatforms(itAllPlatforms, platforms)
 
                     createContent(inflater, linkedSetList)
 
@@ -159,7 +171,7 @@ class JourneyPlatformInformationFragment : Fragment(), MapPresetProvider {
     }
 
     // level, name, linkennamen
-    private fun createContent(inflater: LayoutInflater, platformList : MutableList<Triple<Int, String, MutableSet<String>>>) {
+    private fun createContent(inflater: LayoutInflater, platformList : MutableList<PlatformWithLevelAndLinkedPlatforms>) {
 
 
         binding.also {itBinding->
@@ -236,26 +248,26 @@ class JourneyPlatformInformationFragment : Fragment(), MapPresetProvider {
                 var levelCounter=0
                 // Gleise pro Stockwerk (level) ausgeben
                 itBinding.levelInformationContainer.removeAllViews()
-                platformList.groupBy { it.first }.forEach {itTriples->
+                platformList.groupBy { it.level }.forEach {itPlatformsWithLevels->
 
                     levelCounter++
 
                     val layoutLevel = IncludePlatformsBinding.inflate(inflater)
 
                     layoutLevel.level.isVisible =
-                        levelCounter>1 || (platformList.size > 1 && itTriples.value.first().first != LEVEL_UNKNOWN) // "Unbekanntes Stockwerk" nicht ausgeben, wenn nur 1 Stockwerk existiert
+                        levelCounter>1 || (platformList.size > 1 && itPlatformsWithLevels.value.first().level != LEVEL_UNKNOWN) // "Unbekanntes Stockwerk" nicht ausgeben, wenn nur 1 Stockwerk existiert
                     layoutLevel.level.text =
-                        Platform.staticLevelToText(requireContext(), itTriples.value.first().first)
+                        Platform.staticLevelToText(requireContext(), itPlatformsWithLevels.value.first().level)
 
                     layoutLevel.platformItemsContainer.let { itPlatformContainer ->
 
                         // Infos pro level
                         itPlatformContainer.removeAllViews()
-                        itTriples.value.forEach { itTriple ->
+                        itPlatformsWithLevels.value.forEach { itPlatformWithLevel ->
 
-                            var textPlatforms = ""
+                            var textPlatforms = "" // itPlatformWithLevel.platformName
 
-                            itTriple.third.sortedWith(TrackComparator()).forEach { itPlatformName ->
+                            itPlatformWithLevel.linkedPlatforms.sortedWith(TrackComparator()).forEach { itPlatformName ->
 
                                 platforms.findPlatform(itPlatformName)?.let { itPlatform ->
 

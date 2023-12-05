@@ -14,11 +14,20 @@ import de.deutschebahn.bahnhoflive.backend.VolleyRestListener
 import de.deutschebahn.bahnhoflive.backend.db.DbAuthorizationTool
 import de.deutschebahn.bahnhoflive.backend.db.ris.model.AccessibilityStatus
 import de.deutschebahn.bahnhoflive.backend.db.ris.model.Platform
+import de.deutschebahn.bahnhoflive.backend.db.ris.model.PlatformWithLevelAndLinkedPlatforms
+import de.deutschebahn.bahnhoflive.backend.db.ris.model.PlatformWithLevelAndLinkedPlatformsComparator
+import de.deutschebahn.bahnhoflive.backend.db.ris.model.combineToSet
+import de.deutschebahn.bahnhoflive.backend.db.ris.model.containsPlatform
+import de.deutschebahn.bahnhoflive.backend.db.ris.model.getLevel
+import de.deutschebahn.bahnhoflive.backend.db.ris.model.getPlatformWithMostLinkedPlatforms
+import de.deutschebahn.bahnhoflive.backend.db.ris.model.removeNotExistingLinkedPlatforms
 import de.deutschebahn.bahnhoflive.repository.accessibility.AccessibilityFeature
 import de.deutschebahn.bahnhoflive.util.json.asJSONObjectSequence
 import de.deutschebahn.bahnhoflive.util.json.toStringList
 import org.json.JSONObject
-import java.util.*
+import java.util.EnumMap
+import java.util.EnumSet
+
 
 class RISPlatformsRequestResponseParser {
 
@@ -79,6 +88,91 @@ class RISPlatformsRequestResponseParser {
         }
         return platforms.getOrElse { emptyList() }
     }
+
+
+    // level, plaformname, linked platforms
+    fun getLinkedPlatforms(allPlatforms: List<Platform>, linkedPlatforms:MutableList<Platform>): MutableList<PlatformWithLevelAndLinkedPlatforms> {
+
+        val reducedList: MutableList<Platform> =
+            allPlatforms.filter { it.hasLinkedPlatforms }.toMutableList()
+
+        // falls Gleise mit gleichem Namen vorhanden sind, das Gleis mit den meisten linked Gleisen nehmen
+        reducedList.forEach { itLoopItem ->
+            if (!linkedPlatforms.containsPlatform(itLoopItem.name))
+                reducedList.getPlatformWithMostLinkedPlatforms(itLoopItem.name)?.let {
+                    linkedPlatforms.add(it)
+                }
+        }
+
+//                   aus Gleisname und Linked-Gleisen ein SET bilden:
+        val linkedSetList0: MutableList<PlatformWithLevelAndLinkedPlatforms> = mutableListOf()
+        linkedPlatforms.forEach { itLoopItem ->
+            linkedSetList0.add(
+                PlatformWithLevelAndLinkedPlatforms(
+                    linkedPlatforms.getLevel(itLoopItem.name),
+                    itLoopItem.name,
+                    itLoopItem.combineToSet(true)
+                )
+            )
+        }
+
+
+        val linkedSetList: MutableList<PlatformWithLevelAndLinkedPlatforms> = mutableListOf()
+
+        // Nur Gleise, die in allen linked-Gleisen übereinstimmen, werden als "am gleichen Bahnsteig" angesehen
+        linkedPlatforms.forEach { itLoopItem ->
+
+            val nItems =
+                linkedSetList0.count { itLoopItem.combineToSet(true) == it.linkedPlatforms }
+
+            if (nItems > 1) {
+                if (linkedSetList.find { itLoopItem.combineToSet() == it.linkedPlatforms } == null) {
+                    linkedSetList.add(
+                        PlatformWithLevelAndLinkedPlatforms(
+                            linkedPlatforms.getLevel(itLoopItem.name),
+                            itLoopItem.name,
+                            itLoopItem.combineToSet(true)
+                        )
+                    )
+                }
+            } else {
+                if (linkedSetList.find { itLoopItem.combineToSet(false) == it.linkedPlatforms } == null) {
+                    linkedSetList.add(
+                        PlatformWithLevelAndLinkedPlatforms(
+                            linkedPlatforms.getLevel(itLoopItem.name),
+                            itLoopItem.name,
+                            itLoopItem.combineToSet(false)
+                        )
+                    )
+                }
+            }
+        }
+
+        linkedPlatforms.removeNotExistingLinkedPlatforms()
+
+        // ggf. Gleise, die einen eigenen set haben aus den anderen sets entfernen
+        linkedSetList.forEach { itSet ->
+
+            val iter = itSet.linkedPlatforms.iterator()
+
+            while (iter.hasNext()) {
+                val item = iter.next()
+                if (linkedSetList.find { itSet != it && it.platformName == item } != null) {
+                    iter.remove()
+                } else // linkedPlatforms, die nicht ex. aus set entfernen
+                    if (linkedPlatforms.find { it.name == item } == null) {
+                        iter.remove()
+                    }
+            }
+        }
+
+        linkedSetList.sortWith(PlatformWithLevelAndLinkedPlatformsComparator())
+
+        return linkedSetList
+    }
+
+
+
 
 }
 
