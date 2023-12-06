@@ -14,20 +14,19 @@ typealias PlatformList = List<Platform>
 typealias PlatformName = String
 
 class PlatformWithLevelAndLinkedPlatforms (val level:Int, val platformName:PlatformName, var linkedPlatforms:MutableSet<PlatformName>)
-{
-
-}
 
 class PlatformWithLevelAndLinkedPlatformsComparator : Comparator<PlatformWithLevelAndLinkedPlatforms> {
-    override fun compare(o1: PlatformWithLevelAndLinkedPlatforms, o2: PlatformWithLevelAndLinkedPlatforms): Int {
-       val ret = TrackComparator().compare(o1.platformName, o2.platformName)
-        return ret
+    override fun compare(
+        o1: PlatformWithLevelAndLinkedPlatforms,
+        o2: PlatformWithLevelAndLinkedPlatforms
+    ): Int {
+        return TrackComparator().compare(o1.platformName, o2.platformName)
     }
 }
 
 open class TrackComparator : Comparator<PlatformName?> {
 
-    private fun extractDigits(src: String): String? {
+    private fun extractDigits(src: String): String {
         val builder = StringBuilder()
         for (i in 0 until src.length) {
             val c = src[i]
@@ -53,9 +52,9 @@ open class TrackComparator : Comparator<PlatformName?> {
             val d1 = extractDigits(o1)
             val d2 = extractDigits(o2)
 
-            if(d1==null)
+            if(d1.isEmpty())
                 return 1
-            if(d2==null)
+            if(d2.isEmpty())
                 return -1
 
             if (d1.isNotEmpty() && d2.isNotEmpty()) {
@@ -87,8 +86,7 @@ class Platform(
         const val LEVEL_UNKNOWN = 100
         val numberPattern = Regex("\\d+")
 
-        val collator = Collator.getInstance(Locale.GERMAN)
-
+        val collator : Collator = Collator.getInstance(Locale.GERMAN)?:Collator.getInstance()
         fun platformNumber(platformString: String?, defaultValue: Int = 0): Int {
 
             if(platformString==null) return defaultValue
@@ -258,36 +256,6 @@ fun List<Platform>.firstLinkedPlatform(platformName:String?) : Platform? {
         }
     }
     return null
-}
-
-fun List<Platform>.getLinkedPlatformsAsString() : String
-{
-    var ret : String = "["
-    this.forEachIndexed { index, platform ->
-        run {
-
-            if (index > 0)
-                ret += ","
-
-            ret += platform.name
-
-            if(platform.hasLinkedPlatforms)
-                ret+=":"
-
-            platform.linkedPlatforms?.forEachIndexed { index, s -> run {
-
-                if(index>0)
-                    ret+=";"
-
-                ret+=s
-
-
-            } }
-
-        }
-    }
-
-    return ret + "]"
 }
 
 /**
