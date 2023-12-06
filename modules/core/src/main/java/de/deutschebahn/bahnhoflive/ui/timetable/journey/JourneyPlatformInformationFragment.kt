@@ -248,7 +248,7 @@ class JourneyPlatformInformationFragment : Fragment(), MapPresetProvider {
                 var levelCounter=0
                 // Gleise pro Stockwerk (level) ausgeben
                 itBinding.levelInformationContainer.removeAllViews()
-                platformList.groupBy { it.level }.forEach {itPlatformsWithLevels->
+                platformList.sortedBy {it.level }.groupBy { it.level }.forEach {itPlatformsWithLevels->
 
                     levelCounter++
 

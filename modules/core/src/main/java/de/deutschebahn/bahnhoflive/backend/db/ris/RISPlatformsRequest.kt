@@ -90,7 +90,7 @@ class RISPlatformsRequestResponseParser {
     }
 
 
-    // level, plaformname, linked platforms
+    // level, platformname, linked platforms
     fun getLinkedPlatforms(allPlatforms: List<Platform>, linkedPlatforms:MutableList<Platform>): MutableList<PlatformWithLevelAndLinkedPlatforms> {
 
         val reducedList: MutableList<Platform> =
@@ -119,7 +119,7 @@ class RISPlatformsRequestResponseParser {
 
         val linkedSetList: MutableList<PlatformWithLevelAndLinkedPlatforms> = mutableListOf()
 
-        // Nur Gleise, die in allen linked-Gleisen übereinstimmen, werden als "am gleichen Bahnsteig" angesehen
+        // Nur Gleise, die in allen linked-Gleisen uebereinstimmen, werden als "am gleichen Bahnsteig" angesehen
         linkedPlatforms.forEach { itLoopItem ->
 
             val nItems =
@@ -152,9 +152,7 @@ class RISPlatformsRequestResponseParser {
 
         // ggf. Gleise, die einen eigenen set haben aus den anderen sets entfernen
         linkedSetList.forEach { itSet ->
-
             val iter = itSet.linkedPlatforms.iterator()
-
             while (iter.hasNext()) {
                 val item = iter.next()
                 if (linkedSetList.find { itSet != it && it.platformName == item } != null) {
@@ -163,6 +161,28 @@ class RISPlatformsRequestResponseParser {
                     if (linkedPlatforms.find { it.name == item } == null) {
                         iter.remove()
                     }
+            }
+        }
+
+        // linked Gleise, die nicht auf dem geichen Stockwerk sind sonderbehandeln
+        linkedSetList.forEach { itSet ->
+            val iter = itSet.linkedPlatforms.iterator()
+            while (iter.hasNext()) {
+                val item = iter.next()
+                if(reducedList.getLevel(item)!=itSet.level)
+                    iter.remove()
+            }
+        }
+
+        // gg. Gleise, die in einem anderen set sind, entfernen
+         linkedSetList.forEach { itSet ->
+            val iter = itSet.linkedPlatforms.iterator()
+            while (iter.hasNext()) {
+                val item = iter.next()
+                val found = linkedSetList.find { itSet != it && it.linkedPlatforms.contains(item) }
+                if(found!=null) {
+                    iter.remove()
+                }
             }
         }
 

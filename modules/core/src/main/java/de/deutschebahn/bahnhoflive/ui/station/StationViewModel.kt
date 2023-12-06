@@ -1505,7 +1505,7 @@ class StationViewModel(
             risPlatforms.forEach { itPlatform ->
 
                 val poi: RimapPOI? = poiPlatforms?.firstOrNull { itRimapPoi ->
-                    itRimapPoi.name == itPlatform.name
+                    itRimapPoi.name.equals(itPlatform.name, true)
                 }
 
                 if (poi != null)
