@@ -29,6 +29,8 @@ class PlatformSelectionFragment : FullBottomSheetDialogFragment() {
                         platforms[index].name
                     }
 
+                    displayedValues = platforms.map{it.name}.toTypedArray()
+
                     buttonApply.setOnClickListener {
                         viewModel.setSelectedAccessibilityPlatform(platforms[value])
 
