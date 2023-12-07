@@ -6,6 +6,7 @@
 
 package de.deutschebahn.bahnhoflive.backend
 
+import android.util.Log
 import com.android.volley.Request
 import com.android.volley.VolleyError
 

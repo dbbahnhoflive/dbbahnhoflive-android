@@ -153,10 +153,10 @@ class DbTimetableFragment : Fragment(), MapPresetProvider {
         }
 
         stationViewModel.backNavigationLiveData.observe(viewLifecycleOwner) {
-            if(it!=null && it.navigateTo) {
+            if (it != null && it.navigateTo) {
                 Log.d("cr", "navigate back from dbtimetablefragment ")
 
-                if(it.trainInfo!=null) {
+                if (it.trainInfo != null) {
 
                     val itemIndex = adapter.setSelectedItem(it.trainInfo)
                     if (itemIndex >= 0) {
@@ -176,6 +176,7 @@ class DbTimetableFragment : Fragment(), MapPresetProvider {
                     stationViewModel.finishBackNavigation()
                 }
             }
+        }
 
         stationViewModel.trackFilterFlow.asLiveData().observe(viewLifecycleOwner) {
             adapter.setFilter(it)

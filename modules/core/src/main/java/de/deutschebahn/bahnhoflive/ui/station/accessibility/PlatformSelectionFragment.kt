@@ -23,30 +23,30 @@ class PlatformSelectionFragment : FullBottomSheetDialogFragment() {
                 if (platforms.isNotEmpty()) {
                     with(picker) {
 
-                    minValue = 0
-                    maxValue = platforms.size - 1
+                        minValue = 0
+                        maxValue = platforms.size - 1
 
-                    setFormatter { index ->
-                        platforms[index].name
-                    }
+                        setFormatter { index ->
+                            platforms[index].name
+                        }
 
-                    displayedValues = platforms.map{it.name}.toTypedArray()
+                        displayedValues = platforms.map { it.name }.toTypedArray()
 
-                    buttonApply.setOnClickListener {
-                        viewModel.setSelectedAccessibilityPlatform(platforms[value])
+                        buttonApply.setOnClickListener {
+                            viewModel.setSelectedAccessibilityPlatform(platforms[value])
 
-                        dismiss()
-                    }
+                            dismiss()
+                        }
 
-                    platformsAndSelection.second?.also { selectedPlatform ->
-                        platforms.indexOfFirst { matchingPlatform ->
-                            matchingPlatform.name == selectedPlatform.name
-                        }.takeIf { it >= 0 }?.also { selectedIndex ->
-                            value = selectedIndex
+                        platformsAndSelection.second?.also { selectedPlatform ->
+                            platforms.indexOfFirst { matchingPlatform ->
+                                matchingPlatform.name == selectedPlatform.name
+                            }.takeIf { it >= 0 }?.also { selectedIndex ->
+                                value = selectedIndex
+                            }
                         }
                     }
                 }
-
             }
 
         }
