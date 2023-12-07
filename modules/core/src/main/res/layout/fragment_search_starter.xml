@@ -38,6 +38,7 @@
         android:background="@color/white"
         android:gravity="center_vertical"
         android:iconifiedByDefault="false"
+        android:layout_marginBottom="@dimen/default_space"
         android:padding="@dimen/default_space"
         android:layout_marginBottom="@dimen/default_space"
         android:contentDescription="@string/sr_search_box"
@@ -45,6 +46,11 @@
         android:text="@string/hint_search"
         android:textSize="@dimen/textsize_h3"
         app:drawableRightCompat="@drawable/app_lupe" />
+
+    <androidx.legacy.widget.Space
+        android:layout_width="wrap_content"
+        android:layout_height="40dp"
+        />
 
     <androidx.legacy.widget.Space
         android:layout_width="wrap_content"

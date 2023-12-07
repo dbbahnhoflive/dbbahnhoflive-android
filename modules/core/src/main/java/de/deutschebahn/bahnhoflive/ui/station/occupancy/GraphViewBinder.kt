@@ -94,6 +94,9 @@ class GraphViewBinder(
         this.currentOccupancy = currentOccupancy
         this.max = max ?: MAX_FALLBACK
 
+        if(this.max<=0)
+            this.max = MAX_FALLBACK
+
         bind()
     }
 

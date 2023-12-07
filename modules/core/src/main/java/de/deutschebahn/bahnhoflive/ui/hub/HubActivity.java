@@ -9,6 +9,7 @@ package de.deutschebahn.bahnhoflive.ui.hub;
 import static android.content.Intent.FLAG_ACTIVITY_CLEAR_TASK;
 import static android.content.Intent.FLAG_ACTIVITY_TASK_ON_HOME;
 import static de.deutschebahn.bahnhoflive.BaseApplication.get;
+import static de.deutschebahn.bahnhoflive.ui.accessibility.ContextXKt.isSpokenFeedbackAccessibilityEnabled;
 
 import android.annotation.TargetApi;
 import android.content.Context;
@@ -40,6 +41,7 @@ import de.deutschebahn.bahnhoflive.debug.BhfLiveUtilHandler;
 import de.deutschebahn.bahnhoflive.permission.Permission;
 import de.deutschebahn.bahnhoflive.push.FacilityFirebaseService;
 import de.deutschebahn.bahnhoflive.repository.InternalStation;
+import de.deutschebahn.bahnhoflive.ui.accessibility.ContextXKt;
 import de.deutschebahn.bahnhoflive.ui.search.SearchResultResource;
 import de.deutschebahn.bahnhoflive.ui.search.StationSearchViewModel;
 import de.deutschebahn.bahnhoflive.ui.station.StationActivity;
@@ -282,7 +284,7 @@ public class HubActivity extends BaseActivity implements TutorialFragment.Host {
     }
 
     public void endSplash() {
-        if (TutorialFragment.isPending(this)) {
+        if (TutorialFragment.isPending(this) && !ContextXKt.isTalkbackOrSelectToSpeakEnabled(this)) {
             switchFragment(new TutorialFragment(), "tutorial", R.string.title_tutorial);
         } else {
             switchFragment(HubFragment.Companion.createWithoutInitialPermissionRequest(), "hub", R.string.title_hub);

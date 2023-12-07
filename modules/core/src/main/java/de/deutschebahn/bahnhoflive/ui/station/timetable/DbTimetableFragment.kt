@@ -176,7 +176,6 @@ class DbTimetableFragment : Fragment(), MapPresetProvider {
                     stationViewModel.finishBackNavigation()
                 }
             }
-        }
 
         stationViewModel.trackFilterFlow.asLiveData().observe(viewLifecycleOwner) {
             adapter.setFilter(it)

@@ -22,6 +22,15 @@ val Context.isSpokenFeedbackAccessibilityEnabled // talkback
         isEnabled && talkbackActive
     } == true
 
+val Context.isTalkbackOrSelectToSpeakEnabled // talkback
+    get() = accessibilityManager?.run {
+        val lst =  getEnabledAccessibilityServiceList(AccessibilityServiceInfo.FEEDBACK_SPOKEN)
+        val talkbackActive = lst.filter { it.resolveInfo.serviceInfo.name.contains("TalkBack", true) }.isNotEmpty()
+        val selectToSpeakActive = lst.filter { it.resolveInfo.serviceInfo.name.contains("SelectToSpeak", true) }.isNotEmpty()
+        isEnabled && (talkbackActive || selectToSpeakActive)
+    } == true
+
+
 val Context.GlobalPreferences: SharedPreferences
     get() = getSharedPreferences("global_settings.prefs", Context.MODE_PRIVATE)
 

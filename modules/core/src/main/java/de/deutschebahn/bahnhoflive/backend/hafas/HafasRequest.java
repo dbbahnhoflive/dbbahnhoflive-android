@@ -40,6 +40,7 @@ public abstract class HafasRequest<T> extends Request<T> implements Countable, T
         super(method, (endpoint + parameters).replaceAll(" ", "%20"), listener);
         DebugX.Companion.logVolleyRequest(this, getUrl());
         setShouldCache(shouldCache);
+
         setRetryPolicy(new DefaultRetryPolicy(
                 10*1000,
                 3,
