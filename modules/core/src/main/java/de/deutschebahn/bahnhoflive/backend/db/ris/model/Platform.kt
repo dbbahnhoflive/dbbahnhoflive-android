@@ -2,31 +2,91 @@ package de.deutschebahn.bahnhoflive.backend.db.ris.model
 
 import android.content.Context
 import de.deutschebahn.bahnhoflive.R
-import de.deutschebahn.bahnhoflive.backend.rimap.model.LevelMapping
 import de.deutschebahn.bahnhoflive.repository.accessibility.AccessibilityFeature
 import java.text.Collator
-import java.util.*
+import java.util.EnumMap
+import java.util.EnumSet
+import java.util.Locale
+import java.util.TreeSet
 import kotlin.math.abs
+
+typealias PlatformList = List<Platform>
+typealias PlatformName = String
+
+class PlatformWithLevelAndLinkedPlatforms (val level:Int, val platformName:PlatformName, var linkedPlatforms:MutableSet<PlatformName>)
+
+class PlatformWithLevelAndLinkedPlatformsComparator : Comparator<PlatformWithLevelAndLinkedPlatforms> {
+    override fun compare(
+        o1: PlatformWithLevelAndLinkedPlatforms,
+        o2: PlatformWithLevelAndLinkedPlatforms
+    ): Int {
+        return TrackComparator().compare(o1.platformName, o2.platformName)
+    }
+}
+
+open class TrackComparator : Comparator<PlatformName?> {
+
+    private fun extractDigits(src: String): String {
+        val builder = StringBuilder()
+        for (i in 0 until src.length) {
+            val c = src[i]
+            if (Character.isDigit(c)) {
+                builder.append(c)
+            }
+            else
+                break
+        }
+        return builder.toString()
+    }
+    override fun compare(o1: PlatformName?, o2: PlatformName?): Int {
+        //comparing tracks which might contain single numbers, but also combination of numbers and chars or chars only, e.g. "k.a.", "7 A-D"
+
+        if(o1==null)
+            return 1
+        if(o2==null)
+            return -1
+
+
+        try {
+            //try to convert strings into numbers and compare them
+            val d1 = extractDigits(o1)
+            val d2 = extractDigits(o2)
+
+            if(d1.isEmpty())
+                return 1
+            if(d2.isEmpty())
+                return -1
+
+            if (d1.isNotEmpty() && d2.isNotEmpty()) {
+                val res = Integer.valueOf(d1).compareTo(Integer.valueOf(d2))
+                return if (res == 0) {
+                    //extracted digits are equal, compare original strings
+                    o1.compareTo(o2)
+                } else {
+                    res
+                }
+            }
+        } catch (e: Exception) {
+            //ignore and try string compare
+        }
+        return o1.compareTo(o2)
+    }
+}
 
 
 class Platform(
     val name: String,
     val accessibility: EnumMap<AccessibilityFeature, AccessibilityStatus>,
-    private val linkedPlatforms : MutableList<String>? = null,
+    val linkedPlatforms : MutableList<String>? = null,
     val isHeadPlatform : Boolean,
-    val start : Double,
-    val end : Double,
-    val length : Double,
-    var level : Int = LEVEL_UNKNOWN, // wird erst bei Bedarf gesetzt
-    var hasNoLevel : Boolean = false
+    var level : Int = LEVEL_UNKNOWN // wird erst bei Bedarf gesetzt
 ) : Comparable<Platform> {
 
     companion object {
         const val LEVEL_UNKNOWN = 100
         val numberPattern = Regex("\\d+")
 
-        val collator = Collator.getInstance(Locale.GERMAN)
-
+        val collator : Collator = Collator.getInstance(Locale.GERMAN)?:Collator.getInstance()
         fun platformNumber(platformString: String?, defaultValue: Int = 0): Int {
 
             if(platformString==null) return defaultValue
@@ -55,30 +115,22 @@ class Platform(
 
         }
 
-        fun codeToLevel(code:String?) : Int {
-            var ret = LevelMapping.codeToLevel(code)
-            if(ret==null)
-                ret = LEVEL_UNKNOWN
-            return ret
         }
-    }
+
+    val hasLevel: Boolean
+        get() = level!=LEVEL_UNKNOWN
 
     val hasLinkedPlatforms : Boolean
         get() = linkedPlatforms!=null
-    val linkedPlatformNumbers : MutableList<Int>
-        get() {
-           val fullmap = linkedPlatforms?.map { platformNumber(it) }?.toMutableList() ?: mutableListOf()
 
-           val resultMap : MutableList<Int> = mutableListOf()
+    val hasAccessibilityInformation: Boolean
+        get() = accessibility != EnumMap(
+            EnumSet.allOf(AccessibilityFeature::class.java)
+                .associateWith { AccessibilityStatus.UNKNOWN })
 
-            val iter = fullmap.iterator()
-            while(iter.hasNext()) {
-              val value = iter.next()
-              if(!resultMap.contains(value) && value!=number)
-                  resultMap.add(value)
-            }
-            return resultMap
-        }
+    val countLinkedPlatforms : Int
+        get() = linkedPlatforms?.size ?: 0
+
 
     val number : Int? = runCatching {
         numberPattern.find(name)?.value?.toInt()
@@ -86,26 +138,14 @@ class Platform(
 
     fun levelToText(context: Context): String = staticLevelToText(context, level)
 
-    fun formatLinkedPlatformString(includePlatform: Boolean = true, sort:Boolean=true) : String {
-
-        val platformAsInt = this.number ?: 0
-
-        val tmpLinkedPlatformsAsInts  = linkedPlatformNumbers
-
-
-        if (includePlatform)
-            if (!tmpLinkedPlatformsAsInts.contains(platformAsInt))
-                tmpLinkedPlatformsAsInts.add(0, platformAsInt)
-
-        if(sort)
-            tmpLinkedPlatformsAsInts.sort()
+    fun formatLinkedPlatformString() : String {
 
         var s = ""
 
-        tmpLinkedPlatformsAsInts.indices.forEach {
+        linkedPlatforms?.indices?.forEach {
             if (s != "")
                 s += " | "
-            s += tmpLinkedPlatformsAsInts[it]
+            s += linkedPlatforms[it]
         }
 
         return s
@@ -143,43 +183,122 @@ class Platform(
 }
 
 fun List<Platform>.findPlatform(platformName:String) : Platform? {
-    val platformNumber : Int = Platform.platformNumber(platformName)
-
-    if(platformNumber>0) {
-        return this.firstOrNull { it.number == platformNumber }
-    }
-
-    return null
+  return this.firstOrNull { it.name == platformName }
 }
 
-fun List<Platform>.hasLinkedPlatform(platformNumber:Int?) : Boolean {
+fun List<Platform>.containsPlatform(platformName:String?) : Boolean {
     this.forEach {
-        if (it.number != platformNumber) {
-            if (it.linkedPlatformNumbers.contains(platformNumber)) return true
+        if (it.name == platformName) {
+            return true
         }
     }
     return false
 }
 
-fun List<Platform>.containsPlatform(platformNumber:Int?) : Boolean {
-    this.forEach {
-        if (it.number == platformNumber) {
-            return true
+fun List<Platform>.removeNotExistingLinkedPlatforms() {
+
+    this.forEach { itLoopItem ->
+
+        itLoopItem.linkedPlatforms?.let { itLinkedPlatforms ->
+            run {
+
+                val iter = itLinkedPlatforms.iterator()
+
+                while (iter.hasNext()) {
+
+                    val item = iter.next()
+                    if (!this.containsPlatform(item))
+                        iter.remove()
+
+                }
+
+            }
+        }
     }
+}
+
+fun List<Platform>.getPlatformWithMostLinkedPlatforms(platformName:String?) : Platform? {
+    var ret : Platform? = null
+    this.forEach {itLoopItem->
+        if (itLoopItem.name == platformName) {
+
+            if(ret==null)
+                ret = itLoopItem // null
+            else
+                if(itLoopItem.countLinkedPlatforms > ret!!.countLinkedPlatforms)
+                    ret = itLoopItem
+
+        }
     }
-    return false
+    return ret
+}
+
+fun Platform.combineToSet(includeLinkedPlatforms: Boolean=true) : TreeSet<PlatformName> {
+    val linkedPlatformSet : TreeSet<PlatformName> =  TreeSet<PlatformName>(TrackComparator())
+    linkedPlatformSet.add(name)
+    if(includeLinkedPlatforms) {
+        this.linkedPlatforms?.let {
+            linkedPlatformSet.addAll(it)
+        }
+    }
+    return linkedPlatformSet
 }
 
 fun List<Platform>.firstLinkedPlatform(platformName:String?) : Platform? {
     this.forEach { itPlatform ->
-        if (itPlatform.number == Platform.platformNumber(platformName)) {
-            return if(itPlatform.linkedPlatformNumbers.size>0)
-                this.firstOrNull {itPlatform.linkedPlatformNumbers[0] == it.number }
+        if (itPlatform.name == platformName) {
+            itPlatform.linkedPlatforms?.let {itPlatformNames->
+                return if (itPlatformNames.size>0)
+                    this.firstOrNull { itPlatformNames[0] == it.name }
             else
                 null
+            }
         }
     }
     return null
 }
 
+/**
+ * find level
+ * 1. search in existing platforms
+ * 2. search in linked platforms
+ */
+fun List<Platform>.getLevel(
+    platformName: String,
+    poiLevelList: List<Pair<String, Int>>? = null
+): Int {
+    this.forEach { itPlatform ->
+        if (itPlatform.name == platformName) {
+
+            if (itPlatform.hasLevel)
+                return itPlatform.level
+
+            itPlatform.linkedPlatforms?.forEach { itName ->
+                poiLevelList?.firstOrNull { it.first == itName }?.let {
+                    return it.second
+                }
+
+            }
+        }
+    }
+
+    this.forEach { itPlatform ->
+        itPlatform.linkedPlatforms?.let { itLinkedPlatformNames ->
+
+            if (itLinkedPlatformNames.contains(platformName)) {
+                for (item in itLinkedPlatformNames) {
+                    this.findPlatform(item)?.let {
+                        if (it.hasLevel)
+                            return it.level
+                    }
+                }
+
+            }
+
+
+        }
+    }
+
+    return Platform.LEVEL_UNKNOWN
+}
 

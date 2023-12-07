@@ -14,38 +14,29 @@ import de.deutschebahn.bahnhoflive.backend.VolleyRestListener
 import de.deutschebahn.bahnhoflive.backend.db.DbAuthorizationTool
 import de.deutschebahn.bahnhoflive.backend.db.ris.model.AccessibilityStatus
 import de.deutschebahn.bahnhoflive.backend.db.ris.model.Platform
+import de.deutschebahn.bahnhoflive.backend.db.ris.model.PlatformWithLevelAndLinkedPlatforms
+import de.deutschebahn.bahnhoflive.backend.db.ris.model.PlatformWithLevelAndLinkedPlatformsComparator
+import de.deutschebahn.bahnhoflive.backend.db.ris.model.combineToSet
+import de.deutschebahn.bahnhoflive.backend.db.ris.model.containsPlatform
+import de.deutschebahn.bahnhoflive.backend.db.ris.model.getLevel
+import de.deutschebahn.bahnhoflive.backend.db.ris.model.getPlatformWithMostLinkedPlatforms
+import de.deutschebahn.bahnhoflive.backend.db.ris.model.removeNotExistingLinkedPlatforms
 import de.deutschebahn.bahnhoflive.repository.accessibility.AccessibilityFeature
 import de.deutschebahn.bahnhoflive.util.DebugX
 import de.deutschebahn.bahnhoflive.util.json.asJSONObjectSequence
 import de.deutschebahn.bahnhoflive.util.json.toStringList
 import org.json.JSONObject
-import java.util.*
+import java.util.EnumMap
+import java.util.EnumSet
 
-class RISPlatformsRequest(
-    listener: VolleyRestListener<List<Platform>>,
-    dbAuthorizationTool: DbAuthorizationTool,
-    stadaId: String,
-    force: Boolean = false,
-    clientIdDbAuthorizationTool: DbAuthorizationTool?,
-) : RISStationsRequest<List<Platform>>(
-    "platforms/by-key?includeAccessibility=true&keyType=STADA&key=$stadaId",
-    dbAuthorizationTool,
-    listener
-) {
 
-    init {
-        setShouldCache(!force)
-    }
+class RISPlatformsRequestResponseParser {
 
-    override fun getCountKey() = "RIS/stations"
+    fun parse(jsonString: String?) : List<Platform> {
 
-    override fun parseNetworkResponse(response: NetworkResponse): Response<List<Platform>> {
-        super.parseNetworkResponse(response)
+        val platforms = kotlin.runCatching {
 
-        DebugX.logVolleyResponseOk(this,url)
-
-        return try {
-            val platforms = response.data?.decodeToString()?.let { responseString ->
+            jsonString?.let { responseString ->
                 JSONObject(responseString).optJSONArray("platforms")
                     ?.asJSONObjectSequence()
                     ?.filterNotNull()
@@ -53,21 +44,19 @@ class RISPlatformsRequest(
                         platformJsonObject.takeUnless { it.has("parentPlatform") }
                             ?.optString("name")?.let { name ->
 
-                                val accJson =  platformJsonObject.optJSONObject("accessibility")
+                                val accessibilityJson =
+                                    platformJsonObject.optJSONObject("accessibility")
 
-                                var emap = EnumMap(
-                                    EnumSet.allOf(AccessibilityFeature::class.java)
-                                        .associateWith { AccessibilityStatus.UNKNOWN })
+                                name.takeIf { it.isNotEmpty() }.let {
 
-                                if(accJson!=null) {
-
-                                    emap = AccessibilityFeature.VALUES.fold(
+                                    val emap = if (accessibilityJson != null) {
+                                        AccessibilityFeature.VALUES.fold(
                                                 EnumMap<AccessibilityFeature, AccessibilityStatus>(
                                                     AccessibilityFeature::class.java
                                                 )
                                             ) { acc, accessibilityFeature ->
                                                 acc[accessibilityFeature] =
-                                            accJson.optString(
+                                                accessibilityJson.optString(
                                                         accessibilityFeature.tag
                                                     ).let {
                                                         try {
@@ -78,25 +67,182 @@ class RISPlatformsRequest(
                                                     } ?: AccessibilityStatus.UNKNOWN
                                                 acc
                                     }
+                                    } else {
+                                        EnumMap(
+                                            EnumSet.allOf(AccessibilityFeature::class.java)
+                                                .associateWith { AccessibilityStatus.UNKNOWN })
+                                    }
+
                                 Platform(
                                     name,
                                     emap,
                                     platformJsonObject.optJSONArray("linkedPlatforms")
                                         ?.toStringList()?.toMutableList(),
-                                            platformJsonObject.optBoolean("headPlatform"),
-                                            platformJsonObject.optDouble("start", -1.0),
-                                            platformJsonObject.optDouble("end", 0.0),
-                                            platformJsonObject.optDouble("length", 0.0)
+                                        platformJsonObject.optBoolean("headPlatform")
                                         )
+
                                 }
-                                else
-                                    null
-
-
 
                             }
                     }?.toList()
             } ?: emptyList()
+        }
+        return platforms.getOrElse { emptyList() }
+    }
+
+
+    // level, platformname, linked platforms
+    fun getLinkedPlatforms(allPlatforms: List<Platform>, linkedPlatforms:MutableList<Platform>): MutableList<PlatformWithLevelAndLinkedPlatforms> {
+
+        val reducedList: MutableList<Platform> =
+            allPlatforms.filter { it.hasLinkedPlatforms }.toMutableList()
+
+        // falls Gleise mit gleichem Namen vorhanden sind, das Gleis mit den meisten linked Gleisen nehmen
+        reducedList.forEach { itLoopItem ->
+            if (!linkedPlatforms.containsPlatform(itLoopItem.name))
+                reducedList.getPlatformWithMostLinkedPlatforms(itLoopItem.name)?.let {
+                    linkedPlatforms.add(it)
+                }
+        }
+
+//                   aus Gleisname und Linked-Gleisen ein SET bilden:
+        val linkedSetList0: MutableList<PlatformWithLevelAndLinkedPlatforms> = mutableListOf()
+        linkedPlatforms.forEach { itLoopItem ->
+            linkedSetList0.add(
+                PlatformWithLevelAndLinkedPlatforms(
+                    linkedPlatforms.getLevel(itLoopItem.name),
+                    itLoopItem.name,
+                    itLoopItem.combineToSet(true)
+                )
+            )
+        }
+
+
+        val linkedSetList: MutableList<PlatformWithLevelAndLinkedPlatforms> = mutableListOf()
+
+        // Nur Gleise, die in allen linked-Gleisen uebereinstimmen, werden als "am gleichen Bahnsteig" angesehen
+        linkedPlatforms.forEach { itLoopItem ->
+
+            val nItems =
+                linkedSetList0.count { itLoopItem.combineToSet(true) == it.linkedPlatforms }
+
+            if (nItems > 1) {
+                if (linkedSetList.find { itLoopItem.combineToSet() == it.linkedPlatforms } == null) {
+                    linkedSetList.add(
+                        PlatformWithLevelAndLinkedPlatforms(
+                            linkedPlatforms.getLevel(itLoopItem.name),
+                            itLoopItem.name,
+                            itLoopItem.combineToSet(true)
+                        )
+                    )
+                }
+            } else {
+                if (linkedSetList.find { itLoopItem.combineToSet(false) == it.linkedPlatforms } == null) {
+                    linkedSetList.add(
+                        PlatformWithLevelAndLinkedPlatforms(
+                            linkedPlatforms.getLevel(itLoopItem.name),
+                            itLoopItem.name,
+                            itLoopItem.combineToSet(false)
+                        )
+                    )
+                }
+            }
+        }
+
+        linkedPlatforms.removeNotExistingLinkedPlatforms()
+
+        // ggf. Gleise, die einen eigenen set haben aus den anderen sets entfernen
+        linkedSetList.forEach { itSet ->
+            val iter = itSet.linkedPlatforms.iterator()
+            while (iter.hasNext()) {
+                val item = iter.next()
+                if (linkedSetList.find { itSet != it && it.platformName == item } != null) {
+                    iter.remove()
+                } else // linkedPlatforms, die nicht ex. aus set entfernen
+                    if (linkedPlatforms.find { it.name == item } == null) {
+                        iter.remove()
+                    }
+            }
+        }
+
+        // linked Gleise, die nicht auf dem geichen Stockwerk sind sonderbehandeln
+        linkedSetList.forEach { itSet ->
+            val iter = itSet.linkedPlatforms.iterator()
+            while (iter.hasNext()) {
+                val item = iter.next()
+                if(reducedList.getLevel(item)!=itSet.level)
+                    iter.remove()
+            }
+        }
+
+        // gg. Gleise, die in einem anderen set sind, entfernen
+         linkedSetList.forEach { itSet ->
+            val iter = itSet.linkedPlatforms.iterator()
+            while (iter.hasNext()) {
+                val item = iter.next()
+                val found = linkedSetList.find { itSet != it && it.linkedPlatforms.contains(item) }
+                if(found!=null) {
+                    iter.remove()
+                }
+            }
+        }
+
+        linkedSetList.sortWith(PlatformWithLevelAndLinkedPlatformsComparator())
+
+        return linkedSetList
+    }
+
+
+
+
+}
+
+
+class RISPlatformsRequest(
+    listener: VolleyRestListener<List<Platform>>,
+    dbAuthorizationTool: DbAuthorizationTool,
+    stadaId: String,
+    force: Boolean = false,
+    clientIdDbAuthorizationTool: DbAuthorizationTool?,
+) : RISStationsRequest<List<Platform>>(
+    "platforms/by-key?includeAccessibility=true&includeSubPlatforms=false&keyType=STADA&key=$stadaId",
+    dbAuthorizationTool,
+    listener
+
+//    object : VolleyRestListener<List<Platform>> {
+//
+//        @Synchronized
+//        override fun onSuccess(payload: List<Platform>) {
+//            listener.onSuccess(payload)
+//        }
+//
+//        @Synchronized
+//        override fun onFail(reason: VolleyError) {
+//            // todo: stop requesting for a while
+//            listener.onFail(reason)
+//        }
+//
+//    }
+) {
+
+    init {
+        setShouldCache(!force)
+    }
+
+    override fun getCountKey() = "RIS/stations"
+
+    /**
+     * deliver all platforms(multiple possible!) with a name, with ot without accessibility-information
+     */
+    override fun parseNetworkResponse(response: NetworkResponse): Response<List<Platform>> {
+        super.parseNetworkResponse(response)
+        DebugX.logVolleyResponseOk(this,url)
+
+        return try {
+
+            val jsonString = response.data?.decodeToString()
+
+            val platforms = RISPlatformsRequestResponseParser().parse(jsonString)
 
             val forcedCacheEntryFactory =
                 ForcedCacheEntryFactory(ForcedCacheEntryFactory.DAY_IN_MILLISECONDS)

@@ -12,11 +12,13 @@ import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import de.deutschebahn.bahnhoflive.R
+import de.deutschebahn.bahnhoflive.backend.db.ris.RISPlatformsRequestResponseParser
 import de.deutschebahn.bahnhoflive.backend.db.ris.model.Platform
 import de.deutschebahn.bahnhoflive.backend.db.ris.model.Platform.Companion.LEVEL_UNKNOWN
-import de.deutschebahn.bahnhoflive.backend.db.ris.model.containsPlatform
+import de.deutschebahn.bahnhoflive.backend.db.ris.model.PlatformList
+import de.deutschebahn.bahnhoflive.backend.db.ris.model.PlatformWithLevelAndLinkedPlatforms
+import de.deutschebahn.bahnhoflive.backend.db.ris.model.TrackComparator
 import de.deutschebahn.bahnhoflive.backend.db.ris.model.findPlatform
-import de.deutschebahn.bahnhoflive.backend.db.ris.model.hasLinkedPlatform
 import de.deutschebahn.bahnhoflive.backend.ris.model.TrainEvent
 import de.deutschebahn.bahnhoflive.backend.ris.model.TrainInfo
 import de.deutschebahn.bahnhoflive.backend.ris.model.TrainMovementInfo
@@ -34,96 +36,107 @@ import de.deutschebahn.bahnhoflive.util.changeAccessibilityActionClickText
 
 class JourneyPlatformInformationFragment : Fragment(), MapPresetProvider {
 
-    val stationViewModel by activityViewModels<StationViewModel>()
+    private val stationViewModel by activityViewModels<StationViewModel>()
 
-    var trainInfo : TrainInfo? = null
-    var trainEvent : TrainEvent? = null
-    var journeyStop: JourneyStop? = null
+    private var trainInfo : TrainInfo? = null
+    private var trainEvent : TrainEvent? = null
+    private var journeyStop: JourneyStop? = null
 
-    var platforms : List<Platform> = listOf()
-    private var platformsPerLevel : MutableList<Pair<Int, MutableList<Platform>>> = mutableListOf()
+    private var platforms : MutableList<Platform> = mutableListOf()
 
-    lateinit var binding: FragmentJourneyPlatformInformationBinding
+    lateinit private var binding: FragmentJourneyPlatformInformationBinding
+
+
+    fun test() {
+
+
+            var allPlatforms: PlatformList
+            val reducedPlatforms: MutableList<Platform> = mutableListOf()
+
+        val jsonString = "{\"platforms\":[" +
+                "            {" +
+                "                \"name\":\"3\"," +
+                "                \"linkedPlatforms\":[\"4\", \"5\", \"1\", \"2\"]" +
+                "            }," +
+                "            {" +
+                "                \"name\":\"7c\"," +
+                "                \"linkedPlatforms\":[\"7\", \"7a\"]" +
+                "            }," +
+                "            {" +
+                "                \"name\":\"1\"," +
+                "                \"linkedPlatforms\":[\"3\", \"4\", \"2\", \"5\"]" +
+                "            }," +
+                "            {" +
+                "                \"name\":\"2\"," +
+                "                \"linkedPlatforms\":[\"5\", \"3\", \"1\", \"4\"]" +
+                "            }," +
+                "            {" +
+                "                \"name\":\"6\"," +
+                "                \"linkedPlatforms\":[\"5\", \"4\"]" +
+                "            }," +
+                "            {" +
+                "                \"name\":\"11\"," +
+                "                \"linkedPlatforms\":[\"10\"]" +
+                "            }," +
+                "            {" +
+                "                \"name\":\"5\"," +
+                "                \"linkedPlatforms\":[\"6\", \"4\"]" +
+                "            }," +
+                "            {" +
+                "                \"name\":\"4\"," +
+                "                \"linkedPlatforms\":[\"6\", \"5\"]" +
+                "            }," +
+                "            {" +
+                "                \"name\":\"10\"," +
+                "                \"linkedPlatforms\":[\"11\"]" +
+                "            }," +
+                "            {" +
+                "                \"name\":\"7\"," +
+                "                \"linkedPlatforms\":[\"7c\", \"7a\"]" +
+                "            }," +
+                "            {" +
+                "                \"name\":\"7a\"," +
+                "                \"linkedPlatforms\":[\"7c\", \"7\"]" +
+                "            }," +
+                "        ]" +
+                "    }"
+
+        RISPlatformsRequestResponseParser().run {
+
+                allPlatforms = parse(jsonString)
+
+
+
+//            val lst = sortedSetOf<PlatformName>("18", "19", "18a")
+
+
+//            lst.sortWith(TrackComparator())
+
+                val output = getLinkedPlatforms(allPlatforms, reducedPlatforms)
+
+            }
+
+    }
+
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
 
+ //       test()
+
         binding = FragmentJourneyPlatformInformationBinding.inflate(inflater, container, false).apply {
 
             titleBar.staticTitleBar.screenTitle.setText(R.string.platform_information)
 
-            stationViewModel.platformsWithLevelResource.observe(viewLifecycleOwner) {itPlatforms->
-                itPlatforms?.let {
+            stationViewModel.platformsWithLevelResource.observe(viewLifecycleOwner) {itAllPlatforms->
+                itAllPlatforms?.let {
 
-                    platformsPerLevel.clear()
+                    platforms.clear()
+                    val linkedSetList = RISPlatformsRequestResponseParser().getLinkedPlatforms(itAllPlatforms, platforms)
 
-                    val reducedList : MutableList<Platform> = itPlatforms.filter { it.hasLinkedPlatforms }.distinct().toMutableList()
-
-                    itPlatforms.forEach {
-                        if(!reducedList.containsPlatform(it.number))
-                            reducedList.add(it)
-                    }
-
-                    // alle Gleise einer Ebene zusammensuchen
-                    var lastLevel = -10000
-                    reducedList.sortedBy { it.level }.forEach {itPlatform->
-
-                        if(itPlatform.level!=lastLevel) {
-                            lastLevel=itPlatform.level
-                            val  lst : MutableList<Platform>  = mutableListOf()
-                            lst.add(itPlatform)
-                            platformsPerLevel.add(Pair(itPlatform.level, lst)) // neue Ebene
-                        }
-                        else {
-                            if(!platformsPerLevel[platformsPerLevel.size-1].second.hasLinkedPlatform(itPlatform.number))
-                              platformsPerLevel[platformsPerLevel.size-1].second.add(itPlatform)
-                        }
-
-                    }
-
-                    // "unbekanntes Stockwerk" aufräumen (wenn Gleise irgendwo mit Ebene -> ohne ebene entfernen)
-
-                    platformsPerLevel.find {itPair->
-                        itPair.first == LEVEL_UNKNOWN
-                    }?.second?.forEach {itUnknownPlatform->
-                        itUnknownPlatform.hasNoLevel=false
-                        platformsPerLevel.forEach {itExistingPlatformPair->
-                            if(itExistingPlatformPair.first!=LEVEL_UNKNOWN) {
-                                itExistingPlatformPair.second.forEach {itExistingPlatform->
-                                   if(itExistingPlatform.linkedPlatformNumbers.contains(itUnknownPlatform.number)) {
-                                       itUnknownPlatform.level=itExistingPlatform.level//-1000 // mark to delete
-                                       itUnknownPlatform.hasNoLevel=true
-                                   }
-
-                               }
-                            }
-                        }
-
-                    }
-
-                    // markierte Gleise löschen
-                    platformsPerLevel.forEach {
-                        if(it.first==LEVEL_UNKNOWN) {
-                            val iterator = it.second.iterator()
-                            while (iterator.hasNext()) {
-                                if(iterator.next().hasNoLevel)
-                                    iterator.remove()
-                            }
-                        }
-                    }
-
-                    // leere Ebenen löschen
-                    val platformIterator = platformsPerLevel.iterator()
-                    while(platformIterator.hasNext()) {
-                        if(platformIterator.next().second.isEmpty())
-                            platformIterator.remove()
-                    }
-
-                    platformsPerLevel.sortBy { it.first } // nach Ebenen sortieren
-
-                    createContent(inflater)
+                    createContent(inflater, linkedSetList)
 
                 }
             }
@@ -158,7 +171,9 @@ class JourneyPlatformInformationFragment : Fragment(), MapPresetProvider {
        return ContextCompat.getColor(requireContext(), colorResource)
     }
 
-    private fun createContent(inflater: LayoutInflater) {
+    // level, name, linkennamen
+    private fun createContent(inflater: LayoutInflater, platformList : MutableList<PlatformWithLevelAndLinkedPlatforms>) {
+
 
         binding.also {itBinding->
 
@@ -224,37 +239,55 @@ class JourneyPlatformInformationFragment : Fragment(), MapPresetProvider {
 
                 // Gegenüberliegendes Gleis
                 platform?.let {
-                   if(it.linkedPlatformNumbers.size==1)
-                      itBinding.platformOtherSide.text = "Gegenüberliegend Gleis " + it.formatLinkedPlatformString(false)
+                   if(it.countLinkedPlatforms==1)
+                      itBinding.platformOtherSide.text = "Gegenüberliegend Gleis " + it.formatLinkedPlatformString()
                    else
                        itBinding.platformOtherSide.isVisible=false
                 }
 
 
-                // Infos für alle levels
+                var levelCounter=0
+                // Gleise pro Stockwerk (level) ausgeben
                 itBinding.levelInformationContainer.removeAllViews()
-                platformsPerLevel.forEach {
+                platformList.sortedBy {it.level }.groupBy { it.level }.forEach {itPlatformsWithLevels->
+
+                    levelCounter++
 
                     val layoutLevel = IncludePlatformsBinding.inflate(inflater)
 
-                    layoutLevel.level.isVisible = !(platformsPerLevel.size==1 && it.first==LEVEL_UNKNOWN) // "Unbekanntes Stockwerk" nicht ausgeben, wenn nur 1 Stockwerk existiert
-                    layoutLevel.level.text = Platform.staticLevelToText(requireContext(), it.first)
+                    layoutLevel.level.isVisible =
+                        levelCounter>1 || (platformList.size > 1 && itPlatformsWithLevels.value.first().level != LEVEL_UNKNOWN) // "Unbekanntes Stockwerk" nicht ausgeben, wenn nur 1 Stockwerk existiert
+                    layoutLevel.level.text =
+                        Platform.staticLevelToText(requireContext(), itPlatformsWithLevels.value.first().level)
 
                     layoutLevel.platformItemsContainer.let { itPlatformContainer ->
 
                         // Infos pro level
                         itPlatformContainer.removeAllViews()
-                        it.second.forEach { itPlatform ->
+                        itPlatformsWithLevels.value.forEach { itPlatformWithLevel ->
 
-                            val textView = TextView(requireContext())
-                            var text: String =
-                                "Gleis ${itPlatform.formatLinkedPlatformString(true, false)}"
+                            var textPlatforms = "" // itPlatformWithLevel.platformName
+
+                            itPlatformWithLevel.linkedPlatforms.sortedWith(TrackComparator()).forEach { itPlatformName ->
+
+                                platforms.findPlatform(itPlatformName)?.let { itPlatform ->
+
+                                    if (textPlatforms.isNotEmpty())
+                                        textPlatforms += " | "
+                                    textPlatforms += itPlatform.name
 
                             if (itPlatform.isHeadPlatform)
-                                text += ", " + getString(R.string.platform_head)
+                                        textPlatforms += " (" + getString(R.string.platform_head) + ")"
+                                }
 
-                            textView.text = text
-                            textView.contentDescription = text.replace("|", getString(R.string.sr_opposite_track))
+                            }
+                            val textView = TextView(requireContext())
+                            textView.text = "Gleis $textPlatforms"
+                            textView.contentDescription =
+                                textPlatforms.replace(
+                                    "|",
+                                    getString(R.string.sr_opposite_track)
+                                )
                             itPlatformContainer.addView(textView)
                         }
 
@@ -320,7 +353,7 @@ class JourneyPlatformInformationFragment : Fragment(), MapPresetProvider {
             fragment.trainEvent = trainEvent
             fragment.trainInfo =  trainInfo
             fragment.journeyStop = journeyStop
-            fragment.platforms = platforms
+//            fragment.platforms = platforms
 
             return  fragment
         }
