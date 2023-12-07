@@ -6,10 +6,14 @@
 
 package de.deutschebahn.bahnhoflive.ui.timetable;
 
+import static android.provider.Settings.ACTION_REQUEST_SCHEDULE_EXACT_ALARM;
+
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
 import android.text.Html;
 import android.text.TextUtils;
@@ -37,6 +41,7 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
 import java.util.Locale;
+import java.util.Objects;
 
 import de.deutschebahn.bahnhoflive.R;
 import de.deutschebahn.bahnhoflive.analytics.TrackingManager;
@@ -60,6 +65,8 @@ import de.deutschebahn.bahnhoflive.ui.map.InitialPoiManager;
 import de.deutschebahn.bahnhoflive.ui.map.MapPresetProvider;
 import de.deutschebahn.bahnhoflive.ui.map.content.rimap.Track;
 import de.deutschebahn.bahnhoflive.ui.station.StationViewModel;
+import de.deutschebahn.bahnhoflive.util.AlertX;
+import de.deutschebahn.bahnhoflive.push.NotificationChannelManager;
 import de.deutschebahn.bahnhoflive.util.accessibility.AccessibilityUtilities;
 
 public class WagenstandFragment extends Fragment implements View.OnLayoutChangeListener, WagenstandSectionIndicator.WagenstandSectionIndicatorListener,
@@ -221,10 +228,13 @@ public class WagenstandFragment extends Fragment implements View.OnLayoutChangeL
         reminderCheckboxContainer = v.findViewById(R.id.reminder_checkbox_container);
         reminderCheckBox = v.findViewById(R.id.wagenstand_pushActivatedCheckBox);
 
+        reminderCheckBox.setEnabled(true);
+
         // refresh on click
         refreshButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+
                 doRefresh();
             }
         });
@@ -408,6 +418,40 @@ public class WagenstandFragment extends Fragment implements View.OnLayoutChangeL
         reminderCheckBox.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+
+                if (isChecked && !wagenstandAlarmManager.isAlarmAllowed()) {
+
+                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
+
+                    AlertX.Companion.execAlert(requireContext(), "Hinweis",
+                            getString(R.string.notification_advice_systemsettings),
+                            AlertX.Companion.buttonNegative(),
+                            "Einstellungen", () -> {
+                                startActivity(new Intent(ACTION_REQUEST_SCHEDULE_EXACT_ALARM, Uri.parse("package:" + requireActivity().getPackageName())));
+                                return null;
+                            },
+                            "Abbrechen", () -> {
+                                reminderCheckBox.setChecked(false);
+                                return null;
+                                },
+                                "", () -> null,
+                            "", (x) -> null
+                    );
+
+                    } else {
+
+                        AlertX.Companion.execAlert(requireContext(), "Hinweis",
+                                getString(R.string.notification_advice_systemsettings),
+                                AlertX.Companion.buttonNegative(),
+                                "OK", () -> null,
+                                "", () -> null,
+                                "", () -> null,
+                                "", (x) -> null
+                        );
+                    }
+                }
+                else {
+
                 final @NonNull String trainNumber = trainFormation.getTrainNumber();
                 String time = trainFormation.getTime();
 
@@ -440,6 +484,7 @@ public class WagenstandFragment extends Fragment implements View.OnLayoutChangeL
                 } else {
                     wagenstandAlarmManager
                             .cancelWagenstandAlarm(trainNumber, time);
+                    }
                 }
             }
         });

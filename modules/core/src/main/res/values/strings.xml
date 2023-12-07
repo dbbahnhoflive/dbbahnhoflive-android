@@ -476,6 +476,8 @@
     <string name="template_platform_level">"%d. %s, Bahnsteig %d"</string>
 
     <string name="journey_stop_canceled">Halt fällt aus</string>
+    <string name="notification_advice_systemsettings">Mitteilungen für diese App müssen in den Systemeinstellungen zugelassen werden.</string>
+
     <string name="template_linkplatform">Gegenüberliegend Gleis %d</string>
 
 </resources>
