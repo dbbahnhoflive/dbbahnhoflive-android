@@ -80,7 +80,7 @@ internal class LocalTransportsAdapter(
 
 
     private fun hasLocalTransport(station: HafasStation): Boolean {
-        return station.hasStationLocalTransport();
+        return station.hasStationLocalTransport()
     }
 
 

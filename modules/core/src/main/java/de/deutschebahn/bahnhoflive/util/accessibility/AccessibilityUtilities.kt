@@ -120,5 +120,35 @@ object AccessibilityUtilities {
         return getSpokenTime(time.toString())
     }
 
+    /**
+     * converts "Hannover (A-F)" to "Hannover Abschnitt A bis F" if found in source
+     */
+    fun convertTrackSpan(source: String?): String {
+
+        if (source == null)
+            return ""
+
+        val pattern = "[A-Z]\\s*-\\s*[A-Z]"
+        val result: MatchResult? = Regex(pattern).find(source)
+        return if (result != null) source.replace(
+            result.value,
+            "Abschnitt " + result.value.replace("-", " bis ")
+        ) else source
+
+    }
+
+    /**
+     * Einfacher Konverter von diversen falsch vorgelesenen Abkürzungen/Wörtern
+     * converts "STR" -> Strassenbahn
+     */
+    fun fixScreenReaderText(source: String?): String {
+
+        if (source == null)
+            return ""
+
+        return source
+            .replace("STR","Strassenbahn",false)
+
+    }
 
 }

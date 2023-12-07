@@ -85,7 +85,7 @@ class TrainInfoViewHolder internal constructor(
     ) : String = with(itemView.resources) {
 
         var platformText =
-            getString(R.string.sr_template_platform, trainMovementInfo.displayPlatform)
+            AccessibilityUtilities.convertTrackSpan(getString(R.string.sr_template_platform, trainMovementInfo.displayPlatform))
 
         val platform =
             platformList?.firstOrNull { it.number == Platform.platformNumber(trainMovementInfo.platform) }
@@ -111,7 +111,7 @@ class TrainInfoViewHolder internal constructor(
 
 //        val trainEvent = trainEvent
         getString(R.string.sr_template_db_timetable_item,
-            TimetableViewHelper.composeName(trainInfo, trainMovementInfo),
+            AccessibilityUtilities.fixScreenReaderText(TimetableViewHelper.composeName(trainInfo, trainMovementInfo)),
             getText(trainEvent.contentDescriptionPhrase),
             trainMovementInfo.getDestinationStop(trainEvent.isDeparture),
             AccessibilityUtilities.getSpokenTime(trainMovementInfo.formattedTime),

@@ -60,6 +60,7 @@ import de.deutschebahn.bahnhoflive.ui.map.InitialPoiManager;
 import de.deutschebahn.bahnhoflive.ui.map.MapPresetProvider;
 import de.deutschebahn.bahnhoflive.ui.map.content.rimap.Track;
 import de.deutschebahn.bahnhoflive.ui.station.StationViewModel;
+import de.deutschebahn.bahnhoflive.util.accessibility.AccessibilityUtilities;
 
 public class WagenstandFragment extends Fragment implements View.OnLayoutChangeListener, WagenstandSectionIndicator.WagenstandSectionIndicatorListener,
         MapPresetProvider, VolleyRestListener<TrainFormation> {
@@ -155,8 +156,8 @@ public class WagenstandFragment extends Fragment implements View.OnLayoutChangeL
     }
 
     public void setTitle() {
-        this.title = String.format("%s | Gl. %s", trainFormation.getTime(), trainFormation.getPlatform());
-        this.titleDescription = String.format("%s | Gleis %s", trainFormation.getTime(), trainFormation.getPlatform());
+        this.title = "Wagenreihung " + String.format("%s | Gl. %s", trainFormation.getTime(), trainFormation.getPlatform());
+        this.titleDescription = "Wagenreihung " + String.format("%s | Gleis %s", trainFormation.getTime(), trainFormation.getPlatform());
     }
 
     public String getActionBarTitle() {
@@ -471,6 +472,8 @@ public class WagenstandFragment extends Fragment implements View.OnLayoutChangeL
             final TextView directionAndSectionsView = rowView.findViewById(R.id.direction_and_sections);
             final String htmlDirectionAndSection = String.format("<b>%s</b>%s", train.getDestinationStation(), formatSection(train));
             directionAndSectionsView.setText(Html.fromHtml(htmlDirectionAndSection));
+
+            directionAndSectionsView.setContentDescription(AccessibilityUtilities.INSTANCE.convertTrackSpan(String.format("%s %s", train.getDestinationStation(), formatSection(train))));
 
             headerLayout.addView(rowView);
         }
