@@ -10,7 +10,6 @@ import androidx.core.view.isVisible
 import androidx.core.widget.TextViewCompat
 import de.deutschebahn.bahnhoflive.R
 import de.deutschebahn.bahnhoflive.backend.db.ris.model.Platform
-import de.deutschebahn.bahnhoflive.backend.db.ris.model.findPlatform
 import de.deutschebahn.bahnhoflive.backend.db.ris.model.firstLinkedPlatform
 import de.deutschebahn.bahnhoflive.databinding.ItemJourneyDetailedBinding
 import de.deutschebahn.bahnhoflive.ui.Status
@@ -62,10 +61,11 @@ class JourneyItemViewHolder(
 
             item?.let {
 
-                linkPlatform.isVisible = it.current==true && it.platform!=null
-//                    it.current == true && ((platformList.size > 1) || (thisPlatform != null && thisPlatform.isHeadPlatform))
+//                linkPlatform.isVisible = it.current==true && it.platform!=null // todo: wenn Gleisinformationen eingebaut werden sollen, diese Zeile einbauen raus und
+                                                                                 //      linkPlatform.isVisible = false löschen
+                linkPlatform.isVisible = false
 
-                if (linkPlatform.isVisible) {
+                if (linkPlatform.isVisible) { // > Gleisinfomationen
 
                     layout.setOnClickListener {
                         platformList.let { it1 ->
@@ -230,9 +230,10 @@ class JourneyItemViewHolder(
                         itStop.departure?.formatContentDescription("Abfahrt", itStop.progress > 0)
                     ).joinToString("; ", postfix = ".")
                 ).joinToString(separator = " ")
-            }.also {
-//                Log.d(JourneyItemViewHolder::class.java.simpleName, "Content description:\n$it")
             }
+//                .also {
+//                Log.d(JourneyItemViewHolder::class.java.simpleName, "Content description:\n$it")
+//            }
 
         }
 
@@ -242,7 +243,7 @@ class JourneyItemViewHolder(
         listOfNotNull(
             prefix,
             parsedScheduledTime?.run {
-                "${ AccessibilityUtilities.getSpokenTime(formatTime())}"
+                AccessibilityUtilities.getSpokenTime(formatTime())
             },
             parsedEstimatedTime?.takeUnless { it == parsedScheduledTime }?.run {
                 "(heute ${if (!past) "voraussichtlich " else ""}${AccessibilityUtilities.getSpokenTime(formatTime())})"
@@ -264,9 +265,9 @@ class JourneyItemViewHolder(
             journeyStopEvent?.parsedEstimatedTime?.let { dateFormat.format(it) }
         estimatedTimeView.setTextColor(
             estimatedTimeView.context.resources.getColor(
-                journeyStopEvent?.let { journeyStopEvent ->
-                    journeyStopEvent.parsedScheduledTime?.let {
-                        journeyStopEvent.parsedEstimatedTime?.minus(
+                journeyStopEvent?.let { itJourneyStopEvent ->
+                    itJourneyStopEvent.parsedScheduledTime?.let {
+                        itJourneyStopEvent.parsedEstimatedTime?.minus(
                             it
                         )?.takeIf { it > TimeUnit.MINUTES.toMillis(5) }?.let {
                             Status.NEGATIVE.color
