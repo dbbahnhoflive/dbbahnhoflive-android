@@ -250,8 +250,8 @@ public class StationFragment extends androidx.fragment.app.Fragment implements
         });
 
         localTransportViewModel.getHafasStationsResource().getError().observe(this, error -> {
-            if(error!=null)
-            localTransportSummary.setError();
+            if (error != null)
+                localTransportSummary.setError();
         });
 
         // used to hide OEPNV card

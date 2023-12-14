@@ -1,5 +1,6 @@
 package de.deutschebahn.bahnhoflive.ui.timetable.journey
 
+import android.graphics.Color
 import android.graphics.Typeface
 import android.view.LayoutInflater
 import android.view.View
@@ -16,6 +17,7 @@ import de.deutschebahn.bahnhoflive.ui.Status
 import de.deutschebahn.bahnhoflive.ui.ViewHolder
 import de.deutschebahn.bahnhoflive.util.accessibility.AccessibilityUtilities
 import de.deutschebahn.bahnhoflive.util.changeAccessibilityActionClickText
+import de.deutschebahn.bahnhoflive.util.getColorById
 import java.text.DateFormat
 import java.util.concurrent.TimeUnit
 
@@ -264,12 +266,11 @@ class JourneyItemViewHolder(
         estimatedTimeView.text =
             journeyStopEvent?.parsedEstimatedTime?.let { dateFormat.format(it) }
         estimatedTimeView.setTextColor(
-            estimatedTimeView.context.resources.getColor(
+            estimatedTimeView.context.getColorById(
                 journeyStopEvent?.let { itJourneyStopEvent ->
                     itJourneyStopEvent.parsedScheduledTime?.let {
-                        itJourneyStopEvent.parsedEstimatedTime?.minus(
-                            it
-                        )?.takeIf { it > TimeUnit.MINUTES.toMillis(5) }?.let {
+                        itJourneyStopEvent.parsedEstimatedTime?.minus(it)
+                            ?.takeIf { it > TimeUnit.MINUTES.toMillis(5) }?.let {
                             Status.NEGATIVE.color
                         }
                     }

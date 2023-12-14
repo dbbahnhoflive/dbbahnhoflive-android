@@ -58,7 +58,6 @@ import de.deutschebahn.bahnhoflive.repository.StationResource;
 import de.deutschebahn.bahnhoflive.tutorial.Tutorial;
 import de.deutschebahn.bahnhoflive.tutorial.TutorialManager;
 import de.deutschebahn.bahnhoflive.tutorial.TutorialView;
-import de.deutschebahn.bahnhoflive.ui.hub.HubActivity;
 import de.deutschebahn.bahnhoflive.ui.map.EquipmentID;
 import de.deutschebahn.bahnhoflive.ui.map.MapActivity;
 import de.deutschebahn.bahnhoflive.ui.map.content.rimap.RimapFilter;
@@ -80,6 +79,7 @@ import de.deutschebahn.bahnhoflive.util.DebugX;
 import de.deutschebahn.bahnhoflive.util.VersionManager;
 import kotlin.Pair;
 import de.deutschebahn.bahnhoflive.util.GoogleLocationPermissions;
+import de.deutschebahn.bahnhoflive.ui.hub.HubActivity;
 
 
 
@@ -700,7 +700,7 @@ public class StationActivity extends BaseActivity implements
 
         try {
             if (station.getLocation() != null)
-            Log.d("cr", "Station: " + station.getTitle() + ", " + station.getId() + ", " + station.getLocation().latitude + ", " + station.getLocation().longitude + ", " + station.getEvaIds().getIds().toString());
+                Log.d("cr", "Station: " + station.getTitle() + ", " + station.getId() + ", " + station.getLocation().latitude + ", " + station.getLocation().longitude + ", " + station.getEvaIds().getIds().toString());
         } catch (Exception e) {
             // if location = 0,0
             if (e.getMessage() != null)
@@ -838,7 +838,7 @@ public class StationActivity extends BaseActivity implements
         if (getCurrentFragmentIndex() == HISTORYFRAGMENT_INDEX_TIMETABLE)
             outState.putBoolean(ARG_SHOW_DEPARTURES, true);
         else
-        outState.putBoolean(ARG_SHOW_DEPARTURES, initializeShowingDepartures);
+            outState.putBoolean(ARG_SHOW_DEPARTURES, initializeShowingDepartures);
 
         if (BuildConfig.DEBUG) {
             final Parcel parcel = Parcel.obtain();

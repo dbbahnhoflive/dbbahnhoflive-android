@@ -67,10 +67,10 @@ import de.deutschebahn.bahnhoflive.ui.station.shop.Shop
 import de.deutschebahn.bahnhoflive.ui.station.shop.ShopCategory
 import de.deutschebahn.bahnhoflive.ui.station.timetable.TimetableViewHelper
 import de.deutschebahn.bahnhoflive.ui.timetable.localtransport.HafasTimetableViewModel
-import de.deutschebahn.bahnhoflive.util.ContextX
 import de.deutschebahn.bahnhoflive.util.Token
 import de.deutschebahn.bahnhoflive.util.append
 import de.deutschebahn.bahnhoflive.util.combine2LifeData
+import de.deutschebahn.bahnhoflive.util.execBrowser
 import de.deutschebahn.bahnhoflive.util.openhours.OpenHoursParser
 import de.deutschebahn.bahnhoflive.util.then
 import de.deutschebahn.bahnhoflive.util.toLiveData
@@ -1581,11 +1581,11 @@ class StationViewModel(application: Application) : HafasTimetableViewModel(appli
     fun hasSEV() : Boolean = !railReplacementSummaryLiveData.value.isNullOrEmpty()
 
     fun startDbCompanionWebSite(context: Context) {
-        ContextX.execBrowser(context, R.string.teaser_db_companion_url)
+        context.execBrowser(R.string.teaser_db_companion_url)
     }
 
 
     fun startAugmentedRealityWebSite(context: Context) {
-        ContextX.execBrowser(context, R.string.teaser_ar_url)
+        context.execBrowser(R.string.teaser_ar_url)
     }
 }

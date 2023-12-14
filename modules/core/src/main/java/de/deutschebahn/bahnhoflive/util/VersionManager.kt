@@ -5,8 +5,6 @@ import android.content.SharedPreferences
 import android.content.pm.PackageInfo
 import android.content.pm.PackageManager
 import android.os.Build
-import de.deutschebahn.bahnhoflive.ui.accessibility.GlobalPreferences
-import de.deutschebahn.bahnhoflive.ui.accessibility.TrackingPreferences
 import java.text.SimpleDateFormat
 import java.util.Calendar
 import java.util.Locale

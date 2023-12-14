@@ -16,6 +16,7 @@ import androidx.fragment.app.activityViewModels
 import androidx.fragment.app.viewModels
 import androidx.recyclerview.widget.ConcatAdapter
 import androidx.recyclerview.widget.RecyclerView
+import androidx.recyclerview.widget.RecyclerView.AdapterDataObserver
 import com.android.volley.VolleyError
 import de.deutschebahn.bahnhoflive.BaseApplication.Companion.get
 import de.deutschebahn.bahnhoflive.R
@@ -51,6 +52,8 @@ class RegularJourneyContentFragment : Fragment() {
     val stationViewModel: StationViewModel by activityViewModels()
 
     val journeyViewModel: JourneyViewModel by viewModels({ requireParentFragment() })
+
+    var currentRecyclerPosition = 0
 
     private fun scrollRecyclerToStation(recycler: RecyclerView, stops:List<JourneyStop>) {
 
@@ -192,6 +195,9 @@ class RegularJourneyContentFragment : Fragment() {
 
             )
 
+
+
+
             val filterAdapter = SimpleViewHolderAdapter { parent, _ ->
                 ItemJourneyFilterRemoveBinding.inflate(
                     inflater,
@@ -208,14 +214,45 @@ class RegularJourneyContentFragment : Fragment() {
             val journeyConcatAdapter = ConcatAdapter(journeyAdapter, filterAdapter)
 
             journeyViewModel.eventuallyFilteredJourneysLiveData.observe(viewLifecycleOwner) { pairResult ->
+
+//                if(isFirstUpdate) {
+//                    isFirstUpdate=false
+//                }
+//                else
+//                    return@observe
+
                 pairResult.fold({ (filtered, journeyStops) ->
                     if (recycler.adapter != journeyConcatAdapter) {
                         recycler.adapter = journeyConcatAdapter
                     }
 
+                    recycler.adapter?.let {
+                        if(recycler.childCount>0)
+                            currentRecyclerPosition =
+                                recycler.getChildAdapterPosition(recycler.getChildAt(0))
+                    }
+
                     filterAdapter.count = if (filtered) 1 else 0
                     journeyAdapter.submitList(journeyStops)
-                    scrollRecyclerToStation(recycler, journeyAdapter.currentList)
+
+                    journeyAdapter.registerAdapterDataObserver(object : AdapterDataObserver() {
+                        override fun onItemRangeInserted(positionStart: Int, itemCount: Int) {
+
+                            try {
+                                contentLayout.recycler.smoothScrollToPosition(
+                                    currentRecyclerPosition
+                                )
+                            }
+                            catch(_:Exception) {
+
+                            }
+                        }
+                    })
+
+//                    val pos = recycler.getChildAdapterPosition(recycler.getChildAt(0)) BhfLive au
+
+//                    recycler.scrollToPosition(0)
+//                    scrollRecyclerToStation(recycler, journeyAdapter.currentList)
 
                     // hide buttonWagonOrder if Endbahnhof
                     if (journeyStops.firstOrNull() { it.current && it.last } != null) {
