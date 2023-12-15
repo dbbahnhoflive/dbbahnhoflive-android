@@ -36,7 +36,7 @@ class MapConsentDialogFragment : DialogFragment() {
         privacyPolicyLink.setOnClickListener(activity?.let { activity ->
             AssetDocumentBroker(activity).takeIf { it.hasLegalNotice }?.run {
                 View.OnClickListener {
-                    showDocument(AssetDocumentBroker.Document.PRIVACY_POLICY)
+                    showDocument(getCurrentPrivacyPolicy())
                 }
             }
         }

@@ -130,9 +130,10 @@ class HubFragment : androidx.fragment.app.Fragment() {
                 this
             )
 
+
             privacyPolicy.prepareLegalButton(
                 hasPrivacyPolicy,
-                AssetDocumentBroker.Document.PRIVACY_POLICY,
+                getCurrentPrivacyPolicy(),
                 this
             )
         }
