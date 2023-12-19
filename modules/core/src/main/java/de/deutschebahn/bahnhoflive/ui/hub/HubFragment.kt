@@ -126,14 +126,14 @@ class HubFragment : androidx.fragment.app.Fragment() {
         with(AssetDocumentBroker(requireContext(), trackingManager)) {
             legalNotice.prepareLegalButton(
                 hasLegalNotice,
-                AssetDocumentBroker.Document.LEGAL_NOTICE,
+                ::getCurrentLegalNotice,
                 this
             )
 
 
             privacyPolicy.prepareLegalButton(
                 hasPrivacyPolicy,
-                getCurrentPrivacyPolicy(),
+                ::getCurrentPrivacyPolicy,
                 this
             )
         }
@@ -169,12 +169,12 @@ class HubFragment : androidx.fragment.app.Fragment() {
 
     private fun TextView.prepareLegalButton(
         available: Boolean,
-        document: AssetDocumentBroker.Document,
+        documentProvider: () -> AssetDocumentBroker.Document,
         assetDocumentBroker: AssetDocumentBroker
     ) {
         if (available) {
             setOnClickListener {
-                assetDocumentBroker.showDocument(document)
+                assetDocumentBroker.showDocument(documentProvider())
             }
         } else {
             visibility = View.GONE
