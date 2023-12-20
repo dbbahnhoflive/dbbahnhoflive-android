@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+
+<!--
+  ~ SPDX-FileCopyrightText: 2020 DB Station&Service AG <bahnhoflive-opensource@deutschebahn.com>
+  ~
+  ~ SPDX-License-Identifier: Apache-2.0
+  -->
+
+<LinearLayout
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+
+    android:id="@+id/layout"
+
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    style="@style/App.Widget.CardContainer"
+    android:padding="@dimen/card_container_padding"
+    tools:context=".ui.station.StationFragment">
+
+
+    <LinearLayout
+
+        app:layout_constraintDimensionRatio="2"
+
+        android:layout_width="wrap_content"
+        android:layout_height="170dp"
+
+        style="@style/App.Widget.CardContainer.Row">
+
+        <include
+            layout="@layout/card_ar_teaser"
+            android:id="@+id/arTeaser"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="@integer/double_cell_weight" />
+
+    </LinearLayout>
+
+
+
+
+</LinearLayout>
+                

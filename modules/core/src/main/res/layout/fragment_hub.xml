@@ -39,7 +39,7 @@
             android:layout_marginBottom="@dimen/default_space"
             android:text="@string/rich_app_title"
             android:textColor="@color/white"
-            android:textSize="25dp"
+            android:textSize="25sp"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintLeft_toLeftOf="parent"
             app:layout_constraintRight_toRightOf="parent" />
@@ -47,7 +47,9 @@
         <ImageView
             android:id="@+id/demo"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"></ImageView>
+            android:layout_height="wrap_content"
+            android:importantForAccessibility="no">
+        </ImageView>
 
         <FrameLayout
             android:layout_width="match_parent"
@@ -124,11 +126,11 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:background="?android:selectableItemBackground"
-                    android:drawableLeft="@drawable/app_links_pfeil"
                     android:padding="@dimen/default_space"
                     android:textStyle="bold"
                     android:text="@string/legal_notice"
-                    android:textSize="@dimen/textsize_h3" />
+                    android:textSize="@dimen/textsize_h3"
+                    app:drawableLeftCompat="@drawable/app_links_pfeil" />
 
 
                 <TextView
@@ -136,11 +138,11 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:background="?android:selectableItemBackground"
-                    android:drawableLeft="@drawable/app_links_pfeil"
                     android:padding="@dimen/default_space"
                     android:textStyle="bold"
                     android:text="@string/privacy_policy"
-                    android:textSize="@dimen/textsize_h3" />
+                    android:textSize="@dimen/textsize_h3"
+                    app:drawableLeftCompat="@drawable/app_links_pfeil" />
 
             </LinearLayout>
         </HorizontalScrollView>
@@ -153,7 +155,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginBottom="32dp"
-        android:layout_marginRight="16dp"
+        android:layout_marginEnd="16dp"
         android:src="@drawable/app_karte"
         app:layout_anchor="@+id/pager"
         app:layout_anchorGravity="bottom|right" />

@@ -71,12 +71,17 @@ class JourneyViewModel(app: Application, savedStateHandle: SavedStateHandle) :
                 val trainMovementInfo =
                     trainEvent.movementRetriever.getTrainMovementInfo(trainInfo)
 
+                var plannedDateTime = 0L
+
+                if (trainMovementInfo != null)
+                    plannedDateTime = trainMovementInfo.plannedDateTime
+
                 MutableLiveData<Result<List<JourneyStop>>>().apply {
                     val evaIds = station.evaIds
                     if (evaIds != null) {
                         timetableRepository.queryJourneys(
                             evaIds,
-                            trainMovementInfo.plannedDateTime,
+                            plannedDateTime,
                             trainEvent,
                             trainInfo.genuineName,
                             trainInfo.trainCategory,
@@ -84,11 +89,11 @@ class JourneyViewModel(app: Application, savedStateHandle: SavedStateHandle) :
                             object : VolleyRestListener<List<JourneyStop>> {
                                 override fun onSuccess(payload: List<JourneyStop>) {
                                     value = if (payload == null) {
-                                    Result.failure(Exception("Result was empty"))
-                                } else {
-                                    Result.success(payload)
+                                        Result.failure(Exception("Result was empty"))
+                                    } else {
+                                        Result.success(payload)
+                                    }
                                 }
-                            }
 
                                 override fun onFail(reason: VolleyError) {
                                     value = Result.failure(reason)

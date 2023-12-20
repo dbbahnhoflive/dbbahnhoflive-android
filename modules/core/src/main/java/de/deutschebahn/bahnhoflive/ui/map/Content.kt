@@ -6,8 +6,10 @@
 
 package de.deutschebahn.bahnhoflive.ui.map
 
+import android.util.Log
 import com.google.android.gms.maps.GoogleMap
 import com.google.android.gms.maps.OnMapReadyCallback
+import de.deutschebahn.bahnhoflive.backend.db.ris.model.Platform
 import de.deutschebahn.bahnhoflive.ui.map.content.rimap.Filter
 import de.deutschebahn.bahnhoflive.util.ArrayListFactory
 import de.deutschebahn.bahnhoflive.util.MapContentPreserver
@@ -15,20 +17,53 @@ import de.deutschebahn.bahnhoflive.util.NumberAwareCollator
 import java.util.*
 import kotlin.math.abs
 
+class ComparatorMarkerBinderTrack : Comparator<MarkerBinder>
+{
+    override fun compare(o1: MarkerBinder?, o2: MarkerBinder?): Int {
+
+        if (o1 == null) return -1
+        if (o2 == null) return 1
+
+        val aTrackString: String? = o1.markerContent.track
+        val bTrackString: String? = o2.markerContent.track
+
+        if (aTrackString == null) return -1
+        if (bTrackString == null) return 1
+
+        if (o1.markerContent
+                .viewType == MarkerContent.ViewType.TRACK && o2.markerContent
+                .viewType == MarkerContent.ViewType.TRACK
+        ) {
+            var ret = -1
+            try {
+                val aTrack = Platform.platformNumber(aTrackString, 0)
+                val bTrack = Platform.platformNumber(bTrackString,100)
+                ret = aTrack.compareTo(bTrack)
+            } catch (e: Exception) {
+                Log.e("cr", "Exception in ComparatorMarkerBinderTrack " + e.message)
+            }
+            return ret
+        }
+
+        return aTrackString.compareTo(bTrackString)
+    }
+
+}
 class Content : OnMapReadyCallback, ZoomChangeMonitor.Listener {
 
     private var googleMap: GoogleMap? = null
 
     private var visibilityChangeListener: VisibilityChangeListener? = null
 
-    val allMarkerBinders = ArrayList<MarkerBinder>()
+    private val allMarkerBinders = ArrayList<MarkerBinder>()
 
     private val sourcedMarkerBinders = EnumMap<Source, List<MarkerBinder>>(Source::class.java)
 
     val visibleMarkerBinders: List<MarkerBinder>
         get() = allMarkerBinders.filter {
             it.isVisible
-        }
+        }.sortedWith( ComparatorMarkerBinderTrack())
+
 
     val categorizedMarkerBinders = MapContentPreserver(
         HashMap<Filter, MutableList<MarkerBinder>>(),
@@ -81,7 +116,7 @@ class Content : OnMapReadyCallback, ZoomChangeMonitor.Listener {
         }
     }
 
-    public fun findNearbyLevelWithContent(referenceLevel: Int): Int? = allMarkerBinders.asSequence()
+    fun findNearbyLevelWithContent(referenceLevel: Int): Int? = allMarkerBinders.asSequence()
         .filter { it.isFilterChecked }
         .fold(mutableSetOf<Int>()) { acc, markerBinder ->
             acc.apply {

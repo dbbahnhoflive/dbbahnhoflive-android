@@ -19,3 +19,18 @@ fun <T> LiveData<T?>.nonNull(): LiveData<T> = MediatorLiveData<T>().also { media
         }
     }
 }
+
+fun <A, B, C> combine2LifeData(
+    liveData1: LiveData<A>,
+    liveData2: LiveData<B>,
+    onChanged: (A?, B?) -> C
+): MediatorLiveData<C> {
+    return MediatorLiveData<C>().apply {
+        addSource(liveData1) {
+            value = onChanged(liveData1.value, liveData2.value)
+        }
+        addSource(liveData2) {
+            value = onChanged(liveData1.value, liveData2.value)
+        }
+    }
+}

@@ -24,6 +24,7 @@ import de.deutschebahn.bahnhoflive.ui.map.content.MapIntent
 import de.deutschebahn.bahnhoflive.ui.station.CommonDetailsCardViewHolder
 import de.deutschebahn.bahnhoflive.ui.station.ServiceContents
 import de.deutschebahn.bahnhoflive.util.PhoneIntent
+import de.deutschebahn.bahnhoflive.util.accessibility.AccessibilityUtilities
 import de.deutschebahn.bahnhoflive.util.handleUrlClicks
 import de.deutschebahn.bahnhoflive.view.SingleSelectionManager
 import de.deutschebahn.bahnhoflive.view.inflater
@@ -176,10 +177,18 @@ open class ServiceContentViewHolder(
             ServiceContentType.MOBILE_SERVICE -> {
                 val partTextView = addHtmlPart(item.descriptionText)
                 partTextView.handleUrlClicks { url ->
-                    if(url == "showServiceNrMobi") {
+                    if(url == "mobilitaetsservice") {
                         dbActionButtonCallback(DbActionButton(DbActionButton.Type.ACTION, url))
                     }
                 }
+                renderAdditionalText(item)
+                renderDescriptionText(item)
+
+            }
+
+            ServiceContentType.Local.DB_LOUNGE -> {
+                renderDescriptionText(item)
+                renderAdditionalText(item)
             }
 
             else -> {
@@ -217,6 +226,7 @@ open class ServiceContentViewHolder(
 
                 labelPeriod.text =
                     "${fromDateFormat.format(first().timestamp)} - ${toDateFormat.format(last().timestamp)}"
+                labelPeriod.contentDescription = "${toDateFormat.format(first().timestamp)} bis ${toDateFormat.format(last().timestamp)}"
 
                 asSequence().zip(
                     sequenceOf(
@@ -237,6 +247,14 @@ open class ServiceContentViewHolder(
                     contentView.text = dailyOpeningHours.list.joinToString("\n") { openingHour ->
                         listOfNotNull(
                             "${openingHour.fromMinuteOfDay.renderMinuteAsTimeOfDay()} - ${openingHour.toMinuteOfDay.renderMinuteAsTimeOfDay()} Uhr",
+                            openingHour.note
+                        ).joinToString("\n")
+                    }.takeUnless { it.isBlank() }
+                        ?: layoutInflater.context.getText(R.string.status_closed)
+
+                    contentView.contentDescription = dailyOpeningHours.list.joinToString("\n") { openingHour ->
+                        listOfNotNull(
+                            "${AccessibilityUtilities.getSpokenTime(openingHour.fromMinuteOfDay.renderMinuteAsTimeOfDay())} bis ${AccessibilityUtilities.getSpokenTime(openingHour.toMinuteOfDay.renderMinuteAsTimeOfDay())}",
                             openingHour.note
                         ).joinToString("\n")
                     }.takeUnless { it.isBlank() }

@@ -143,9 +143,10 @@ open class RisTimetableRepository(
                                             )
                                         } else {
                                             events.asSequence()
-                                                .filter { event ->
-                                                    !event.canceled
-                                                }.mapNotNull {
+//                                                .filter { event ->
+//                                                    !event.canceled
+//                                                }
+                                                .mapNotNull {
                                                     it.toJourneyStopEvent()
                                                 }
                                                 .fold(ArrayList<JourneyStop>(events.size / 2)) { acc, journeyStopEvent ->

@@ -96,8 +96,10 @@ public class FacilityStatusRequest extends Fasta2Request {
             final JSONArray facilities = jsonObject.getJSONArray("facilities");
             for (int i = facilities.length() - 1; i >= 0; i--) {
                 try {
+                    if(facilities.getJSONObject(i).has("description")) {
                     if ("Nicht Reisendenrelevant".equals(facilities.getJSONObject(i).get("description"))) {
                         facilities.remove(i);
+                        }
                     }
                 } catch (JSONException inner) {
                     inner.printStackTrace();

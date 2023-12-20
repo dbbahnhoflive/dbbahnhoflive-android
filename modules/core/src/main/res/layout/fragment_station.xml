@@ -47,15 +47,18 @@
                 </androidx.constraintlayout.widget.ConstraintLayout>
 
                 <androidx.viewpager2.widget.ViewPager2
+                    android:id="@+id/newsPager"
                     android:visibility="gone"
                     tools:visibility="visible"
                     style="@style/App.Widget.CardContainer"
-                    android:id="@+id/newsPager"
                     android:layout_width="match_parent"
                     android:layout_height="144sp"
                     tools:listitem="@layout/item_news" />
 
                 <com.google.android.material.tabs.TabLayout
+                    android:id="@+id/newsPagerIndicator"
+                    android:layout_width="match_parent"
+                    android:layout_height="24dp"
                     android:visibility="gone"
                     tools:visibility="visible"
                     app:tabIndicatorHeight="0dp"
@@ -66,15 +69,39 @@
                     app:tabPaddingEnd="0dp"
                     app:tabIndicator="@null"
                     app:tabGravity="center"
-                    android:id="@+id/newsPagerIndicator"
                     android:paddingBottom="@dimen/default_space"
+                    />
+
+                <LinearLayout
+                    android:id="@+id/dbCompanionTeaser"
+
                     android:layout_width="match_parent"
-                    android:layout_height="24dp" />
+                    android:layout_height="110dp"
+                    android:layout_marginTop="@dimen/default_space"
+                    android:layout_marginBottom="@dimen/default_space"
+                    android:layout_marginHorizontal="@dimen/default_space"
+
+                    android:visibility="gone"
+                    tools:visibility="visible"
+
+                    style="@style/App.Widget.CardContainer.Row">
+
+                    <include
+                        layout="@layout/card_db_companion_teaser"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        />
+
+                </LinearLayout>
+
+                <androidx.legacy.widget.Space
+                    android:layout_width="match_parent"
+                    android:layout_height="@dimen/default_space">
+                </androidx.legacy.widget.Space>
 
                 <androidx.cardview.widget.CardView
-                    android:layout_marginStart="@dimen/default_space"
-                    android:layout_marginEnd="@dimen/default_space"
                     android:id="@+id/db_departures"
+                    android:layout_marginHorizontal="@dimen/default_space"
                     android:contentDescription="@string/sr_station_departures"
                     app:layout_constraintLeft_toLeftOf="parent"
                     app:layout_constraintRight_toRightOf="parent"

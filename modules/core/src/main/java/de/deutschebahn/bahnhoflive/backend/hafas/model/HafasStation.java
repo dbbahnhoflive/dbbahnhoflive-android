@@ -150,7 +150,7 @@ public class HafasStation implements Parcelable {
      * Assembles the position as LatLng.
      * @return LatLng - The position of the station.
      */
-    public LatLng getPosition() {
+    public LatLng getLocation() {
         return new LatLng(latitude, longitude);
     }
 

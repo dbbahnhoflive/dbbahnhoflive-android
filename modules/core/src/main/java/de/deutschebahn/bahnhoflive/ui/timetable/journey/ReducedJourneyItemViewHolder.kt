@@ -5,10 +5,10 @@ import android.view.ViewGroup
 import androidx.core.view.isVisible
 import de.deutschebahn.bahnhoflive.databinding.ItemJourneyBinding
 import de.deutschebahn.bahnhoflive.ui.ViewHolder
-import de.deutschebahn.bahnhoflive.ui.timetable.RouteStop
+import de.deutschebahn.bahnhoflive.ui.timetable.HafasRouteStop
 
 class ReducedJourneyItemViewHolder(val itemJourneyBinding: ItemJourneyBinding) :
-    ViewHolder<RouteStop>(itemJourneyBinding.root) {
+    ViewHolder<HafasRouteStop>(itemJourneyBinding.root) {
 
     constructor(
         parent: ViewGroup,
@@ -21,7 +21,7 @@ class ReducedJourneyItemViewHolder(val itemJourneyBinding: ItemJourneyBinding) :
         )
     )
 
-    override fun onBind(item: RouteStop?) {
+    override fun onBind(item: HafasRouteStop?) {
         super.onBind(item)
 
         itemJourneyBinding.stopName.text = item?.name

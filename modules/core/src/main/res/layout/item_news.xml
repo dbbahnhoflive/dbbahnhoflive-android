@@ -18,7 +18,9 @@
     <LinearLayout
         android:orientation="vertical"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
+        android:layout_height="match_parent"
+        tools:layout_height="144dp"
+        >
 
         <de.deutschebahn.bahnhoflive.view.ProgrammaticHorozontalScrollView
             android:id="@+id/animatedHeadlineScroller"
@@ -52,7 +54,6 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent">
 
-
             <View
                 android:id="@+id/divider"
                 android:layout_marginTop="@dimen/default_space"
@@ -64,78 +65,110 @@
                 android:importantForAccessibility="no"
                 />
 
-            <ImageView
-                android:id="@+id/icon"
-                android:padding="@dimen/default_space_double"
-                tools:src="@drawable/app_news_malfunction"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                app:layout_constraintBottom_toBottomOf="parent"
+
+
+
+            <LinearLayout
+                android:orientation="horizontal"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+
+                android:layout_marginTop="@dimen/default_space_double"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/divider"
+                app:layout_constraintTop_toBottomOf="parent"
 
-                android:contentDescription="@null"
-                android:importantForAccessibility="yes"
-                />
+                >
 
-            <TextView
-                android:id="@+id/newsHeadline"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="@dimen/default_space"
-                android:layout_marginTop="@dimen/default_space"
-                android:layout_marginEnd="@dimen/default_space"
-            android:layout_marginBottom="@dimen/default_space_half"
-                android:ellipsize="end"
-                android:gravity="bottom"
-            android:lineSpacingMultiplier="1.2"
-                android:maxLines="2"
-                android:paddingEnd="@dimen/default_space_double"
-            android:textSize="@dimen/textsize_h3"
-            android:textStyle="bold"
-                app:layout_constraintBottom_toTopOf="@+id/newsCopy"
-                app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toEndOf="@+id/icon"
-                app:layout_constraintTop_toBottomOf="@id/divider"
-                app:layout_constraintVertical_chainStyle="packed"
-                tools:text="@tools:sample/lorem/random" />
+                <ImageView
+                    android:id="@+id/icon"
+                    android:layout_width="0dp"
+                    android:layout_weight="0.8"
+                    android:importantForAccessibility="no"
+                    android:layout_height="match_parent"
+                    android:src="@drawable/teaser_db_companion_card"
+                    android:paddingHorizontal="12dp"
+                    android:layout_marginBottom="@dimen/default_space"
+                    android:scaleX="1.0"
+                    android:scaleY="1.0"
+                    android:layout_gravity="top|center_horizontal"
 
-            <ImageButton
-                android:visibility="gone"
-                tools:visibility="visible"
-                android:layout_margin="@dimen/default_space"
-                android:id="@+id/btnLink"
-                android:layout_width="@dimen/round_button_size"
-                android:layout_height="@dimen/round_button_size"
-                android:scaleType="center"
-                android:elevation="@dimen/default_elevation"
-                app:elevation="@dimen/default_elevation"
-                android:background="@drawable/shape_circle_button"
-                android:src="@drawable/app_extern_link"
-                app:layout_constraintTop_toBottomOf="@+id/newsHeadline"
-                app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintEnd_toEndOf="parent" />
+                    />
 
-            <TextView
-                android:id="@+id/newsCopy"
-                android:layout_width="0dp"
-                android:layout_height="0dp"
-                android:layout_marginStart="@dimen/default_space"
-                android:layout_marginTop="@dimen/default_space_half"
-                android:layout_marginEnd="@dimen/default_space"
-            android:layout_marginBottom="@dimen/default_space"
-                android:ellipsize="end"
-                android:importantForAccessibility="yes"
-                android:lineSpacingMultiplier="1.2"
-                android:maxLines="3"
-                android:paddingEnd="@dimen/default_space_double"
-            android:textSize="@dimen/textsize_h3"
-                app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintEnd_toStartOf="@+id/btnLink"
-            app:layout_constraintHeight_default="wrap"
-                app:layout_constraintStart_toEndOf="@+id/icon"
-                app:layout_constraintTop_toBottomOf="@+id/newsHeadline"
-                tools:text="@tools:sample/lorem/random" />
+                <androidx.legacy.widget.Space
+                    android:layout_width="0dp"
+                    android:layout_weight="0.1"
+                    android:layout_height="match_parent"
+                    />
+
+                <androidx.constraintlayout.widget.ConstraintLayout
+                    android:layout_width="0dp"
+                    android:layout_weight="3"
+                    android:layout_height="match_parent"
+                    >
+
+                    <TextView
+                        android:id="@+id/newsHeadline"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toTopOf="parent"
+
+                        android:ellipsize="end"
+                        android:maxLines="2"
+
+                        android:text="@string/nev_date_range"
+                        android:textSize="@dimen/textsize_h3plus"
+                        android:textStyle="bold"
+
+                        android:paddingVertical="@dimen/default_space"
+                        />
+
+                    <TextView
+                        android:id="@+id/newsCopy"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintEnd_toStartOf="@+id/btnLink"
+                        app:layout_constraintTop_toBottomOf="@+id/newsHeadline"
+
+                        android:paddingEnd="30dp"
+
+                        android:ellipsize="end"
+                        android:maxLines="3"
+
+                        android:textSize="14sp"
+                        android:importantForAccessibility="yes"
+                        android:text="@string/nev_copy"
+
+                        />
+
+                    <ImageButton
+                        android:id="@+id/btnLink"
+                        android:layout_width="@dimen/round_button_size"
+                        android:layout_height="@dimen/round_button_size"
+
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintBottom_toBottomOf="parent"
+
+                        android:visibility="gone"
+                        tools:visibility="visible"
+                        android:layout_marginBottom="@dimen/default_space"
+                        android:layout_marginEnd="@dimen/default_space"
+                        android:background="@drawable/shape_circle_button"
+                        android:elevation="@dimen/default_elevation"
+                        android:scaleType="center"
+                        android:src="@drawable/app_extern_link"
+android:importantForAccessibility="no"
+                        app:elevation="@dimen/default_elevation" />
+
+                </androidx.constraintlayout.widget.ConstraintLayout>
+
+            </LinearLayout>
+
+
+
 
         </androidx.constraintlayout.widget.ConstraintLayout>
     </LinearLayout>

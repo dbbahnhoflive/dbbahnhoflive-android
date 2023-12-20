@@ -157,6 +157,7 @@ public class FilterDialogFragment extends FullBottomSheetDialogFragment {
 
     private void setPickerContent(String[] contents, String currentFilter) {
         picker.setMaxValue(0);
+        if(contents!=null && contents.length>0) {
         picker.setDisplayedValues(contents);
         picker.setMaxValue(contents.length - 1);
 
@@ -164,6 +165,7 @@ public class FilterDialogFragment extends FullBottomSheetDialogFragment {
             final int index = Arrays.asList(contents).indexOf(currentFilter);
             if (index >= 0) {
                 picker.setValue(index);
+                }
             }
         }
     }

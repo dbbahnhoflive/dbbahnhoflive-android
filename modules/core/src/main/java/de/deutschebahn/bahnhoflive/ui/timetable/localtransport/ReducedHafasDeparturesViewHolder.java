@@ -6,6 +6,7 @@
 
 package de.deutschebahn.bahnhoflive.ui.timetable.localtransport;
 
+import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
 
@@ -37,6 +38,7 @@ public class ReducedHafasDeparturesViewHolder extends ViewHolder<Resource<HafasD
         @Override
         public void onChanged(@Nullable HafasDepartures hafasDepartures) {
             if (hafasDepartures == null) {
+                Log.d("cr", "ReducedHafasDeparturesViewHolder.onChanged = null ");
                 return;
             }
             final List<HafasEvent> hafasEvents = hafasDepartures.getEvents();
@@ -46,9 +48,13 @@ public class ReducedHafasDeparturesViewHolder extends ViewHolder<Resource<HafasD
                     final HafasEvent hafasEvent = hafasEvents.size() > i ? hafasEvents.get(i) : null;
                     hafasEventOverviewViewHolder.bind(hafasEvent);
                 }
+                Log.d("cr", "ReducedHafasDeparturesViewHolder.onChanged content ");
 
                 loadingContentDecorationViewHolder.showContent();
             } else {
+
+                Log.d("cr", "ReducedHafasDeparturesViewHolder.onChanged empty ");
+
                 loadingContentDecorationViewHolder.showEmpty(R.string.empty_departures);
             }
         }
@@ -58,6 +64,8 @@ public class ReducedHafasDeparturesViewHolder extends ViewHolder<Resource<HafasD
         @Override
         public void onChanged(@Nullable VolleyError volleyError) {
             if (volleyError != null) {
+                Log.d("cr", "ReducedHafasDeparturesViewHolder.onChanged error ");
+
                 loadingContentDecorationViewHolder.showError();
             }
         }
@@ -66,6 +74,8 @@ public class ReducedHafasDeparturesViewHolder extends ViewHolder<Resource<HafasD
     private final Observer<LoadingStatus> loadingStatusObserver = new Observer<LoadingStatus>() {
         @Override
         public void onChanged(@Nullable LoadingStatus loadingStatus) {
+            Log.d("cr", "ReducedHafasDeparturesViewHolder.onChanged loadingStatus ");
+
             if (loadingStatus == LoadingStatus.BUSY) {
                 loadingContentDecorationViewHolder.showProgress();
             }

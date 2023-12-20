@@ -19,7 +19,8 @@ class StationDetailCardCoordinator(
     private val flipper: ViewFlipper,
     private val localTransportSummary: SummaryBadge,
     private val shopsSummary: SummaryBadge,
-    private val elevatorSummary: SummaryBadge
+    private val elevatorSummary: SummaryBadge,
+    private val localTransportSummaryTimetable: SummaryBadge
 ) : SummaryBadge.OnChangeListener {
 
     private val localTransportCard = grabStationDetailCard(
@@ -77,12 +78,13 @@ class StationDetailCardCoordinator(
         localTransportSummary.setOnChangeListener(this)
         shopsSummary.setOnChangeListener(this)
         elevatorSummary.setOnChangeListener(this)
+        localTransportSummaryTimetable.setOnChangeListener(this)
 
         updateLayout()
     }
 
     fun updateLayout() {
-        for (summary in listOf(localTransportSummary, shopsSummary, elevatorSummary)) {
+        for (summary in listOf(localTransportSummary, shopsSummary, elevatorSummary, localTransportSummaryTimetable)) {
             if (summary.availability == SummaryBadge.Availability.PENDING) {
                 flipper.displayedChild = 1
                 return
@@ -93,7 +95,7 @@ class StationDetailCardCoordinator(
             mapCard.label =
                 if (shopsSummary.isAvailable && hasLevels) R.string.card_button_label_map_detailed else R.string.card_button_label_map
             when {
-                localTransportSummary.isAvailable -> {
+                localTransportSummary.isAvailable && localTransportSummaryTimetable.isAvailable-> {
                     localTransportCard.addTo(featureRow)
                     featuresCard.addTo(featureRow)
 

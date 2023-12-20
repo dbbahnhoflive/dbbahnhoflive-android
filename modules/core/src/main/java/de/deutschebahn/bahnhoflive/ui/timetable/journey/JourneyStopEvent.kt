@@ -14,7 +14,8 @@ data class JourneyStopEvent(
     val scheduledTime: String,
     val estimatedTime: String?,
     val eventType: EventType,
-    val additional: Boolean
+    val additional: Boolean,
+    val canceled : Boolean
 ) {
 
     companion object {
@@ -43,6 +44,7 @@ fun ArrivalDepartureEvent.toJourneyStopEvent() = eventType?.let { eventType ->
         timeSchedule,
         time.takeUnless { timeType == TimeType.SCHEDULE },
         eventType,
-        additional
+        additional,
+        canceled
     )
 }

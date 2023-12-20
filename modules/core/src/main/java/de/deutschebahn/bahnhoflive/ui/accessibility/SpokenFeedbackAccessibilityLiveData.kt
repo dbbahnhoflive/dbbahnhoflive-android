@@ -3,6 +3,8 @@ package de.deutschebahn.bahnhoflive.ui.accessibility
 import android.content.Context
 import android.view.accessibility.AccessibilityManager
 import androidx.lifecycle.LiveData
+import de.deutschebahn.bahnhoflive.util.accessibility.accessibilityManager
+import de.deutschebahn.bahnhoflive.util.accessibility.isSpokenFeedbackAccessibilityEnabled
 
 class SpokenFeedbackAccessibilityLiveData(context: Context) : LiveData<Boolean>() {
 

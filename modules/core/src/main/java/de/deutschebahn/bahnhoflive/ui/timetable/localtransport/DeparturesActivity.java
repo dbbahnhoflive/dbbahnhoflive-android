@@ -9,6 +9,7 @@ package de.deutschebahn.bahnhoflive.ui.timetable.localtransport;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
+import android.view.View;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -28,10 +29,11 @@ import de.deutschebahn.bahnhoflive.analytics.TrackingManager;
 import de.deutschebahn.bahnhoflive.backend.hafas.HafasDepartures;
 import de.deutschebahn.bahnhoflive.backend.hafas.model.HafasEvent;
 import de.deutschebahn.bahnhoflive.backend.hafas.model.HafasStation;
-import de.deutschebahn.bahnhoflive.backend.ris.model.TrainInfo;
 import de.deutschebahn.bahnhoflive.repository.InternalStation;
 import de.deutschebahn.bahnhoflive.repository.Station;
 import de.deutschebahn.bahnhoflive.ui.ToolbarViewHolder;
+import de.deutschebahn.bahnhoflive.ui.map.MapActivity;
+import de.deutschebahn.bahnhoflive.util.GoogleLocationPermissions;
 
 public class DeparturesActivity extends BaseActivity implements TrackingManager.Provider {
 
@@ -53,6 +55,10 @@ public class DeparturesActivity extends BaseActivity implements TrackingManager.
     public HafasStation hafasStation;
     public HafasEvent hafasEvent;
     public Boolean navigateBack;
+
+    private View mapButton;
+    private HafasDeparturesFragment hafasDeparturesFragment = null;
+
 
     public static Bundle createArguments(HafasStation hafasStation,
                                          HafasDepartures departures,
@@ -82,25 +88,30 @@ public class DeparturesActivity extends BaseActivity implements TrackingManager.
 
         final Intent intent = getIntent();
         final Bundle arguments = intent.getBundleExtra(ARG_HAFAS_LOADER_ARGUMENTS);
+
+        hafasEvent = intent.getParcelableExtra(ARG_HAFAS_EVENT);
+
+        if (arguments == null) {
+            hafasStation = null;
+            station = null;
+        } else {
         hafasStation = arguments.getParcelable(ARG_HAFAS_STATION);
-//        final HafasStation hafasStation = arguments.getParcelable(ARG_HAFAS_STATION);
         final HafasDepartures departures = arguments.getParcelable(ARG_HAFAS_DEPARTURES);
         final List<HafasStation> hafasStations = arguments.getParcelableArrayList(ARG_DB_STATION_HAFAS_STATIONS);
         station = arguments.getParcelable(ARG_DB_STATION);
-//        final Station station = arguments.getParcelable(ARG_DB_STATION);
-        hafasEvent = intent.getParcelableExtra(ARG_HAFAS_EVENT);
         final boolean filterStrictly = arguments.getBoolean(ARG_FILTER_STRICTLY, true);
-        hafasTimetableViewModel.initialize(hafasStation, departures, filterStrictly, station, hafasStations);
-
+            hafasTimetableViewModel.initialize(hafasStation, departures, filterStrictly, station, hafasStations, true);
+        }
 
         navigateBack = intent.getBooleanExtra(ARG_NAVIGATE_BACK, false);
 
         setContentView(R.layout.activity_departures);
 
-        installFragment(getSupportFragmentManager());
+        if (arguments != null)
+            installFragment(getSupportFragmentManager());
 
-        toolbarViewHolder = new ToolbarViewHolder(findViewById(android.R.id.content));
-        hafasTimetableViewModel.getHafasStationResource().getData().observe(this, new Observer<HafasStation>() {
+        toolbarViewHolder = new ToolbarViewHolder(findViewById(android.R.id.content)); // hier ist die Ueberschrift und der back-Button drin
+        hafasTimetableViewModel.hafasStationResource.getData().observe(this, new Observer<HafasStation>() {
             @Override
             public void onChanged(@Nullable HafasStation hafasStation) {
                 if (hafasStation != null) {
@@ -109,17 +120,61 @@ public class DeparturesActivity extends BaseActivity implements TrackingManager.
                 }
             }
         });
+
+        hafasTimetableViewModel.getSelectedHafasJourney().observe(this, new Observer<DetailedHafasEvent>() {
+            @Override
+            public void onChanged(DetailedHafasEvent detailedHafasEvent) {
+
+                if(detailedHafasEvent!=null && detailedHafasEvent.hafasEvent!=null) {
+                    toolbarViewHolder.setTitle(getString(
+                                    R.string.template_hafas_journey_title,
+                                    detailedHafasEvent.hafasEvent.getDisplayName(),
+                                    detailedHafasEvent.hafasEvent.direction
+                    ));
+                }
+                else
+                  if(hafasStation!=null)
+                    toolbarViewHolder.setTitle(hafasStation.name);
+
+            }
+        });
+
+        mapButton = findViewById(R.id.btn_map);
+
+        if (mapButton != null) {
+            mapButton.setVisibility(View.VISIBLE);
+            mapButton.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    if (hafasDeparturesFragment != null) {
+                        trackingManager.track(TrackingManager.TYPE_ACTION, TrackingManager.Source.TAB_NAVI, TrackingManager.Action.TAP, TrackingManager.UiElement.MAP_BUTTON);
+                        GoogleLocationPermissions.startMapActivityIfConsent(hafasDeparturesFragment,
+                                () -> MapActivity.createIntent(DeparturesActivity.this, hafasStation));
+                    }
+                }
+            });
+        }
+
+        // todo (not working WHY?)
+        hafasTimetableViewModel.getMapAvailableLiveData().observe(this,
+                aBoolean -> {
+                    mapButton.setVisibility(aBoolean ? View.VISIBLE : View.GONE);
+                });
     }
 
     private void installFragment(FragmentManager fragmentManager) {
         final Fragment fragment = fragmentManager.findFragmentById(R.id.fragment_container);
         if (fragment instanceof HafasDeparturesFragment) {
+            hafasDeparturesFragment = (HafasDeparturesFragment) fragment;
             return;
         }
 
+        hafasDeparturesFragment =  new HafasDeparturesFragment();
+
         fragmentManager.beginTransaction()
-                .replace(R.id.fragment_container, new HafasDeparturesFragment())
+                .replace(R.id.fragment_container, hafasDeparturesFragment)
                 .commit();
+
     }
 
     public static Intent createIntent(Context context,

@@ -44,6 +44,7 @@
     <string name="sr_details">Zu weiteren Details</string>
     <string name="sr_done">Erledigt</string>
     <string name="sr_template_estimated">erwartet %1$s</string>
+    <string name="sr_template_estimated_departure">heute %1$s</string>
     <string name="sr_template_platform">Gleis %1$s</string>
     <string name="sr_template_waggon">Wagen %1$s %2$s %3$s</string>
     <string name="sr_class_1">erste Klasse</string>
@@ -69,7 +70,7 @@
     <string name="sr_map_no_accessibility">Umgebungskarte. Dieser Inhalt ist nicht für das Vorlesen optimiert.</string>
     <string name="sr_template_local_departure_prefix">%1$s nach %2$s %3$s</string>
     <string name="sr_template_local_departure_stops">über %1$s</string>
-    <string name="sr_template_local_departure_overview">%1$s nach %2$s um %3$s %4$s</string>
+    <string name="sr_template_local_departure_overview">%1$s nach %2$s um %3$s %4$s %5$s</string>
     <string name="sr_station_departures">Abfahrtstafel Bahnhof</string>
     <string name="sr_station_local_transport">ÖPNV</string>
     <string name="sr_tab_timetable_station">Abfahrten des Fernverkehrs, Regionalverkehrs und gegebenenfalls S-Bahnen</string>
@@ -105,5 +106,21 @@
 
     <string name="sr_accessibility_link_elevators">Zur Übersicht der Aufzüge wechseln</string>
     <string name="sr_accessibility_hotline">Telefon 030 6521 2888</string>
+
+    <string name = "sr_open_platform_information">Öffnen von Gleisinformationen</string>
+    <string name = "sr_open_station">"Öffnen des Bahnhofs"</string>
+    <string name = "sr_arrival">"Ankunft"</string>
+    <string name = "sr_departure">"Abfahrt"</string>
+
+    <plurals name="sr_template_estimated_delay_minutes">
+        <item quantity="one">"circa %d Minute später"</item>
+        <item quantity="other">"circa %d Minuten später"</item>
+    </plurals>
+
+    <string name = "sr_open_elevators">Wechseln in die Übersicht Aufzüge</string>
+    <string name = "sr_open_accessibility">Wechseln in die Informationen zur Barrierefreiheit</string>
+    <string name = "sr_opposite_track">gegenüber Gleis</string>
+
+
 
 </resources>

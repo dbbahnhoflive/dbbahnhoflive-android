@@ -19,30 +19,34 @@ class PlatformSelectionFragment : FullBottomSheetDialogFragment() {
     ) = FragmentPlatformSelectionBinding.inflate(inflater, container, false).apply {
         viewModel.accessibilityPlatformsAndSelectedLiveData.observe(viewLifecycleOwner) { platformsAndSelection ->
             platformsAndSelection.first?.also { platforms ->
-                with(picker) {
 
-                    minValue = 0
-                    maxValue = platforms.size - 1
+                if (platforms.isNotEmpty()) {
+                    with(picker) {
 
-                    setFormatter { index ->
-                        platforms[index].name
-                    }
+                        minValue = 0
+                        maxValue = platforms.size - 1
 
-                    buttonApply.setOnClickListener {
-                        viewModel.setSelectedAccessibilityPlatform(platforms[value])
+                        setFormatter { index ->
+                            platforms[index].name
+                        }
 
-                        dismiss()
-                    }
+                        displayedValues = platforms.map { it.name }.toTypedArray()
 
-                    platformsAndSelection.second?.also { selectedPlatform ->
-                        platforms.indexOfFirst { matchingPlatform ->
-                            matchingPlatform.name == selectedPlatform.name
-                        }.takeIf { it >= 0 }?.also { selectedIndex ->
-                            value = selectedIndex
+                        buttonApply.setOnClickListener {
+                            viewModel.setSelectedAccessibilityPlatform(platforms[value])
+
+                            dismiss()
+                        }
+
+                        platformsAndSelection.second?.also { selectedPlatform ->
+                            platforms.indexOfFirst { matchingPlatform ->
+                                matchingPlatform.name == selectedPlatform.name
+                            }.takeIf { it >= 0 }?.also { selectedIndex ->
+                                value = selectedIndex
+                            }
                         }
                     }
                 }
-
             }
 
         }

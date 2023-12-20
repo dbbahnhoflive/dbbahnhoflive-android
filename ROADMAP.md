@@ -16,7 +16,7 @@ Folgenden Themen werden als Entwicklungsfelder betrachtet und befinden sich entw
 •	Reisenden-Unterstützung bei der Nutzung von Schienenersatzverkehr (Navigation vor Ort)  
 •	Digitale Barrierefreiheit  
 •	Erweiterung des Angebots zum Thema Shared Mobility Services  
-•	Erweiterung der Abfahrtstafel hinsichtlich des Streckenverlauf einzelner Zugverbindungen  
+•	Erweiterung der Abfahrtstafel hinsichtlich des Streckenverlauf einzelner Zugverbindungen
 
 
 ##### Open Invitation

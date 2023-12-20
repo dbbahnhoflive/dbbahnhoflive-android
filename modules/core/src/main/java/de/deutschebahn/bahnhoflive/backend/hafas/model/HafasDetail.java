@@ -19,6 +19,8 @@ import java.util.List;
 
 public class HafasDetail implements Parcelable {
 
+    public boolean partCancelled;
+
     private static class StopsWrapper {
         @SerializedName("Stop")
         List<HafasStop> stops;

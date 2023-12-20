@@ -13,6 +13,7 @@ import com.android.volley.DefaultRetryPolicy;
 import com.android.volley.NetworkResponse;
 import com.android.volley.Request;
 import com.android.volley.Response;
+import com.android.volley.VolleyError;
 
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
@@ -23,18 +24,23 @@ import de.deutschebahn.bahnhoflive.analytics.Trackable;
 import de.deutschebahn.bahnhoflive.backend.CappingHttpStack;
 import de.deutschebahn.bahnhoflive.backend.Countable;
 import de.deutschebahn.bahnhoflive.backend.ForcedCacheEntryFactory;
+import de.deutschebahn.bahnhoflive.util.DebugX;
 
 public abstract class HafasRequest<T> extends Request<T> implements Countable, Trackable, CappingHttpStack.Cappable {
 
     private static final String TAG = HafasRequest.class.getSimpleName();
     private final String endpoint;
+    private final String parameters;
+
     private final Map<String, Object> trackingContextVariables = new HashMap<>();
     private final ForcedCacheEntryFactory cacheOverrider;
 
-    public HafasRequest(int method, String endpoint, String parameters, String origin, Response.ErrorListener listener, boolean shouldCache, int minimumCacheTime) {
+    public HafasRequest(int method, String endpoint, String parameters, String origin,
+                        Response.ErrorListener listener, boolean shouldCache, int minimumCacheTime) {
         super(method, (endpoint + parameters).replaceAll(" ", "%20"), listener);
-        Log.d("dbg", "HafasRequest");
+        DebugX.Companion.logVolleyRequest(this, getUrl());
         setShouldCache(shouldCache);
+
         setRetryPolicy(new DefaultRetryPolicy(
                 10*1000,
                 3,
@@ -42,10 +48,18 @@ public abstract class HafasRequest<T> extends Request<T> implements Countable, T
         );
 
         this.endpoint = endpoint;
+        this.parameters = parameters;
+
         cacheOverrider = new ForcedCacheEntryFactory(minimumCacheTime);
 
         setTrackingContextVariable("origin", origin);
         setTrackingContextVariable("endpoint", endpoint);
+    }
+
+    @Override
+    protected VolleyError parseNetworkError(VolleyError volleyError) {
+        DebugX.Companion.logVolleyResponseError(this,getUrl(),volleyError);
+        return super.parseNetworkError(volleyError);
     }
 
     protected static String encodeParameter(String value) {
@@ -62,7 +76,7 @@ public abstract class HafasRequest<T> extends Request<T> implements Countable, T
     }
 
     public String getTrackingTag() {
-        return "request:hafas:" + getLegacyTrackingTag();
+        return "request : hafas:" + getLegacyTrackingTag();
     }
 
     protected Cache.Entry getCacheEntry(NetworkResponse response) {

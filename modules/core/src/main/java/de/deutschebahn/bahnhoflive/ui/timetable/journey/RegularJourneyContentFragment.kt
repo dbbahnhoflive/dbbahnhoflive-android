@@ -16,13 +16,15 @@ import androidx.fragment.app.activityViewModels
 import androidx.fragment.app.viewModels
 import androidx.recyclerview.widget.ConcatAdapter
 import androidx.recyclerview.widget.RecyclerView
-import androidx.recyclerview.widget.RecyclerView.Recycler
+import androidx.recyclerview.widget.RecyclerView.AdapterDataObserver
 import com.android.volley.VolleyError
 import de.deutschebahn.bahnhoflive.BaseApplication.Companion.get
 import de.deutschebahn.bahnhoflive.R
 import de.deutschebahn.bahnhoflive.analytics.TrackingManager
 import de.deutschebahn.bahnhoflive.backend.BaseRestListener
 import de.deutschebahn.bahnhoflive.backend.VolleyRestListener
+import de.deutschebahn.bahnhoflive.backend.db.ris.model.Platform
+import de.deutschebahn.bahnhoflive.backend.db.ris.model.StopPlace
 import de.deutschebahn.bahnhoflive.backend.hafas.model.HafasEvent
 import de.deutschebahn.bahnhoflive.backend.hafas.model.HafasStop
 import de.deutschebahn.bahnhoflive.backend.local.model.EvaIds
@@ -32,9 +34,9 @@ import de.deutschebahn.bahnhoflive.backend.toHafasStation
 import de.deutschebahn.bahnhoflive.backend.wagenstand.WagenstandRequestManager
 import de.deutschebahn.bahnhoflive.databinding.FragmentJourneyRegularContentBinding
 import de.deutschebahn.bahnhoflive.databinding.ItemJourneyFilterRemoveBinding
-import de.deutschebahn.bahnhoflive.repository.InternalStation
 import de.deutschebahn.bahnhoflive.repository.Station
 import de.deutschebahn.bahnhoflive.repository.trainformation.TrainFormation
+import de.deutschebahn.bahnhoflive.ui.station.HistoryFragment
 import de.deutschebahn.bahnhoflive.ui.station.StationActivity
 import de.deutschebahn.bahnhoflive.ui.station.StationViewModel
 import de.deutschebahn.bahnhoflive.ui.station.railreplacement.SEV_Static
@@ -50,6 +52,8 @@ class RegularJourneyContentFragment : Fragment() {
     val stationViewModel: StationViewModel by activityViewModels()
 
     val journeyViewModel: JourneyViewModel by viewModels({ requireParentFragment() })
+
+    var currentRecyclerPosition = 0
 
     private fun scrollRecyclerToStation(recycler: RecyclerView, stops:List<JourneyStop>) {
 
@@ -77,13 +81,19 @@ class RegularJourneyContentFragment : Fragment() {
     ): View = FragmentJourneyRegularContentBinding.inflate(inflater).apply {
 
         val issueBinder =
-            IssuesBinder(issueContainer, issueText, IssueIndicatorBinder(issueIcon))
+            IssuesBinder(journeyIssue.issueContainer, journeyIssue.issueText, IssueIndicatorBinder(journeyIssue.issueIcon))
 
         var shouldOfferWagenOrder = false
 
         sev.setOnClickListener {
             stationViewModel.stationNavigation?.showRailReplacement()
         }
+
+        sevLinkDbCompanion.setOnClickListener {
+            stationViewModel.startDbCompanionWebSite(requireContext())
+        }
+
+
 
         journeyViewModel.essentialParametersLiveData.observe(viewLifecycleOwner) { (station, trainInfo, trainEvent) ->
 
@@ -101,8 +111,7 @@ class RegularJourneyContentFragment : Fragment() {
                 trainInfo,
                 trainEvent.movementRetriever.getTrainMovementInfo(trainInfo)
             )
-            }
-            catch(_:Exception) {
+            } catch (_: Exception) {
 
             }
 
@@ -136,7 +145,7 @@ class RegularJourneyContentFragment : Fragment() {
         with(contentLayout) {
             prepareCommons(viewLifecycleOwner, stationViewModel, journeyViewModel)
 
-            val journeyAdapter = JourneyAdapter {
+            val journeyAdapter = JourneyAdapter({
                 // onClickStop
                     view, journeyStop ->
                 val trainInfo = journeyViewModel.essentialParametersLiveData.value?.second
@@ -172,7 +181,22 @@ class RegularJourneyContentFragment : Fragment() {
 
                         )
                 }
-            }
+            },
+                {
+                    // onClickPlatformInformation
+                        view: View, journeyStop: JourneyStop, platforms: List<Platform> ->
+                    run {
+                        val trainInfo = journeyViewModel.essentialParametersLiveData.value?.second
+                        val trainEvent = journeyViewModel.essentialParametersLiveData.value?.third
+                        val fragment = JourneyPlatformInformationFragment.create(trainInfo, trainEvent, journeyStop, platforms)
+                        HistoryFragment.parentOf(this@RegularJourneyContentFragment).push(fragment)
+                    }
+                }
+
+            )
+
+
+
 
             val filterAdapter = SimpleViewHolderAdapter { parent, _ ->
                 ItemJourneyFilterRemoveBinding.inflate(
@@ -190,14 +214,45 @@ class RegularJourneyContentFragment : Fragment() {
             val journeyConcatAdapter = ConcatAdapter(journeyAdapter, filterAdapter)
 
             journeyViewModel.eventuallyFilteredJourneysLiveData.observe(viewLifecycleOwner) { pairResult ->
+
+//                if(isFirstUpdate) {
+//                    isFirstUpdate=false
+//                }
+//                else
+//                    return@observe
+
                 pairResult.fold({ (filtered, journeyStops) ->
                     if (recycler.adapter != journeyConcatAdapter) {
                         recycler.adapter = journeyConcatAdapter
                     }
 
+                    recycler.adapter?.let {
+                        if(recycler.childCount>0)
+                            currentRecyclerPosition =
+                                recycler.getChildAdapterPosition(recycler.getChildAt(0))
+                    }
+
                     filterAdapter.count = if (filtered) 1 else 0
                     journeyAdapter.submitList(journeyStops)
-                    scrollRecyclerToStation(recycler, journeyAdapter.currentList)
+
+                    journeyAdapter.registerAdapterDataObserver(object : AdapterDataObserver() {
+                        override fun onItemRangeInserted(positionStart: Int, itemCount: Int) {
+
+                            try {
+                                contentLayout.recycler.smoothScrollToPosition(
+                                    currentRecyclerPosition
+                                )
+                            }
+                            catch(_:Exception) {
+
+                            }
+                        }
+                    })
+
+//                    val pos = recycler.getChildAdapterPosition(recycler.getChildAt(0)) BhfLive au
+
+//                    recycler.scrollToPosition(0)
+//                    scrollRecyclerToStation(recycler, journeyAdapter.currentList)
 
                     // hide buttonWagonOrder if Endbahnhof
                     if (journeyStops.firstOrNull() { it.current && it.last } != null) {
@@ -208,12 +263,16 @@ class RegularJourneyContentFragment : Fragment() {
 
                     textWagonOrder.isGone = buttonWagonOrder.isGone
 
-
-                    if(journeyStops.isNotEmpty()) { // empty happens if train is cancelled !!
+                    if (journeyStops.isNotEmpty()) { // empty happens if train is cancelled !!
                         val lastStation = journeyStops.last()
 
                         sev.visibility =
                             if (SEV_Static.isReplacementStopFrom(lastStation.evaId)) View.VISIBLE else View.GONE // default=gone
+
+                        sevLinkDbCompanion.visibility =
+                            if ((stationViewModel.mapAvailableLiveData.value != true) &&
+                                SEV_Static.hasSEVStationWebAppCompanionLink(lastStation.evaId)
+                            ) sev.visibility else View.GONE
 
                     }
 
@@ -221,7 +280,6 @@ class RegularJourneyContentFragment : Fragment() {
                     Log.d(RegularJourneyContentFragment::class.java.simpleName, "Error: $it")
                 })
             }
-
 
             ReducedJourneyAdapter().also { reducedJourneyAdapter ->
                 journeyViewModel.routeStopsLiveData.observe(viewLifecycleOwner) { routeStops ->
@@ -235,10 +293,15 @@ class RegularJourneyContentFragment : Fragment() {
 
                     }
                 }
+
+                stationViewModel.platformsWithLevelResource.observe(viewLifecycleOwner) {
+                    it?.let {
+                        journeyAdapter.setPlatforms(it)
             }
         }
 
-
+            }
+        }
 
 
     }.root
@@ -327,7 +390,7 @@ class RegularJourneyContentFragment : Fragment() {
                         .setPositiveButton(
                             "Öffnen",
                             DialogInterface.OnClickListener { dialog, id ->
-
+/*
                                 get().applicationServices.repositories.stationRepository.queryStationByEvaId(
                                     object : VolleyRestListener<InternalStation?> {
 
@@ -393,6 +456,79 @@ class RegularJourneyContentFragment : Fragment() {
                                     },
                                     it
                                 )
+*/
+
+
+                                get().applicationServices.repositories.stationRepository.queryStations(
+                                    object : VolleyRestListener<List<StopPlace>?> {
+                                        override fun onSuccess(payload: List<StopPlace>?) {
+
+                                            TrackingManager.fromActivity(activity).track(
+                                                TrackingManager.TYPE_ACTION,
+                                                TrackingManager.Screen.H2,
+                                                "journey",
+                                                "openstation"
+                                            )
+
+                                            // payload=null, wenn station keine stadaId hat ! (meist ÖPNV)
+                                            // dann die normale Abfahrtstafel öffnen
+
+                                            var intent: Intent? = null
+
+                                            if (!payload.isNullOrEmpty() ) {
+
+                                                intent = StationActivity.createIntentForBackNavigation(
+                                                    view.context,
+                                                    payload.firstOrNull()?.asInternalStation,
+                                                    stationViewModel?.station,
+                                                    hafasStop?.toHafasStation(),
+                                                    hafasEvent,
+                                                    trainInfo,
+                                                    false
+                                                )
+
+                                            } else {
+                                                hafasStop?.let {
+
+                                                    val hafasStation = it.toHafasStation()
+
+                                                    intent =
+                                                        DeparturesActivity.createIntentForBackNavigation(
+                                                            view.context,
+                                                            stationViewModel?.station,
+                                                            hafasStation,
+                                                            hafasEvent
+                                                        )
+
+                                                }
+                                            }
+
+                                            intent?.let {
+                                                activity.let {
+                                                    it.finish()
+                                                    it.startActivity(intent)
+                                                }
+                                            }
+
+
+                                        }
+
+                                        @Synchronized
+                                        override fun onFail(reason: VolleyError) {
+                                            Log.d("cr", reason.toString())
+                                            // todo: Meldung oder wiederholen
+                                        }
+                                    },
+                                    stopStationName,
+                                    null,
+                                    true,
+                                    mixedResults = false,
+                                    collapseNeighbours = true,
+                                    pullUpFirstDbStation = false,
+                                )
+
+
+
 
                             })
                         .setNeutralButton(

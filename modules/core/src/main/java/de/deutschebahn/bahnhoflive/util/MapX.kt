@@ -12,6 +12,7 @@ import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import de.deutschebahn.bahnhoflive.BaseActivity
+import de.deutschebahn.bahnhoflive.BuildConfig
 import de.deutschebahn.bahnhoflive.R
 import de.deutschebahn.bahnhoflive.ui.map.MapConsentDialogFragment
 import de.deutschebahn.bahnhoflive.ui.map.MapPresetProvider
@@ -164,10 +165,12 @@ class GoogleLocationPermissions {
 
                 } else {
 
-                    var mapViewModel: MapViewModel =
+                    val mapViewModel: MapViewModel =
                         ViewModelProvider(baseActivity)[MapViewModel::class.java]
 
-                    if (mapViewModel.mapConsentedLiveData.value == false) {
+
+
+                    if (mapViewModel.mapConsentedLiveData.value == false && BuildConfig.DBG_MAP_CONSENT_OVERRIDE==false) {
                         MapConsentDialogFragment().setOnMapConsentDialogListener(object :
                             OnMapConsentDialogListener {
 

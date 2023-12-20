@@ -127,16 +127,15 @@ class AccessibilityFragment : Fragment(R.layout.fragment_accessibility), MapPres
                 }
             }
 
+            if(platformsAndSelection?.first?.count()==1 && platformsAndSelection.second==null) {
+                viewModel.setSelectedAccessibilityPlatform(platformsAndSelection.first?.first())
+                return@observe
+            }
+
             platformsAndSelection?.second?.also { platform ->
                 includeAccessibilityHeaderBinding.selectedPlatform.text = "Gleis ${platform.name}"
                 includeAccessibilityHeaderBinding.filter.filter.isSelected = true
                 includeAccessibilityHeaderBinding.selectPlatformInvitation.visibility = View.GONE
-
-
-//                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
-//                    platform.accessibility.put(AccessibilityFeature.AUTOMATIC_DOOR,AccessibilityStatus.PARTIAL)
-//                    platform.accessibility.put(AccessibilityFeature.BOARDING_AID,AccessibilityStatus.AVAILABLE)
-//                }
 
                 accessibilityAdapter.submitList(platform.accessibility.filter { accessibility ->
                     if(accessibility.component2() == AccessibilityStatus.NOT_APPLICABLE) {
@@ -151,18 +150,6 @@ class AccessibilityFragment : Fragment(R.layout.fragment_accessibility), MapPres
                          true
                     }
                 }.toList())
-
-
-//                accessibilityAdapter.submitList(platform.accessibility.filter { accessibility ->
-//                    if(accessibility.component2() != AccessibilityStatus.NOT_APPLICABLE) {
-//                        if((accessibility.component1()!=AccessibilityFeature.BOARDING_AID  ||
-//                                    accessibility.component1()!=AccessibilityFeature.AUTOMATIC_DOOR))
-//                            true
-//                         (accessibility.component2()==AccessibilityStatus.AVAILABLE || accessibility.component2()==AccessibilityStatus.PARTIAL )
-//                    }
-//                    else
-//                         false
-//                }.toList())
 
             } ?: kotlin.run {
                 if (!platformsAndSelection?.first.isNullOrEmpty()) {

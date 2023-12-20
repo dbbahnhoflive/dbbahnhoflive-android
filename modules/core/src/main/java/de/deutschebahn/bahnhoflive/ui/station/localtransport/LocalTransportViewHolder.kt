@@ -17,6 +17,7 @@ import de.deutschebahn.bahnhoflive.R
 import de.deutschebahn.bahnhoflive.backend.hafas.model.HafasStation
 import de.deutschebahn.bahnhoflive.backend.hafas.model.ProductCategory
 import de.deutschebahn.bahnhoflive.ui.ViewHolder
+import de.deutschebahn.bahnhoflive.util.accessibility.AccessibilityUtilities
 import de.deutschebahn.bahnhoflive.view.ItemClickListener
 
 internal class LocalTransportViewHolder(parent: ViewGroup, itemClickListener: ItemClickListener<HafasStation>) : ViewHolder<HafasStation>(parent, R.layout.item_local_transport_station) {
@@ -82,6 +83,11 @@ internal class LocalTransportViewHolder(parent: ViewGroup, itemClickListener: It
                 }
 
                 displayTextBuilder.append(line)
+
+                // fix statt "STR" wird "Strasse" vorgelesen...
+                if(category==ProductCategory.TRAM && line.startsWith("STR",false))
+                    contentDescriptionBuilder.append(AccessibilityUtilities.fixScreenReaderText(line))
+                else
                 contentDescriptionBuilder.append(line)
             }
         }

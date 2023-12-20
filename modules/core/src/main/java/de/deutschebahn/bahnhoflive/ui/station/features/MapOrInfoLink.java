@@ -6,6 +6,8 @@
 
 package de.deutschebahn.bahnhoflive.ui.station.features;
 
+import static de.deutschebahn.bahnhoflive.util.accessibility.AccessibilityUtilitiesKt.isSpokenFeedbackAccessibilityEnabled;
+
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
@@ -20,7 +22,6 @@ import de.deutschebahn.bahnhoflive.backend.local.model.DailyOpeningHours;
 import de.deutschebahn.bahnhoflive.backend.local.model.ServiceContent;
 import de.deutschebahn.bahnhoflive.backend.local.model.ServiceContentType;
 import de.deutschebahn.bahnhoflive.ui.ServiceContentFragment;
-import de.deutschebahn.bahnhoflive.ui.accessibility.ContextXKt;
 import de.deutschebahn.bahnhoflive.ui.station.StaticInfoCollection;
 import de.deutschebahn.bahnhoflive.ui.station.info.StaticInfo;
 
@@ -58,7 +59,7 @@ public class MapOrInfoLink extends MapLink {
     @Nullable
     @Override
     public Intent createMapActivityIntent(Context context, StationFeature stationFeature) {
-        if (ContextXKt.isSpokenFeedbackAccessibilityEnabled(context)) {
+        if (isSpokenFeedbackAccessibilityEnabled(context)) {
             return null;
         }
 

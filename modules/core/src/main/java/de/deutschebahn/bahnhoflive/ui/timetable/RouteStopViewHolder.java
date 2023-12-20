@@ -14,7 +14,7 @@ import android.widget.TextView;
 import de.deutschebahn.bahnhoflive.R;
 import de.deutschebahn.bahnhoflive.ui.ViewHolder;
 
-public class RouteStopViewHolder extends ViewHolder<RouteStop> {
+public class RouteStopViewHolder extends ViewHolder<HafasRouteStop> {
 
     private final TextView nameView;
     private final View leftLine;
@@ -31,7 +31,7 @@ public class RouteStopViewHolder extends ViewHolder<RouteStop> {
     }
 
     @Override
-    protected void onBind(RouteStop item) {
+    protected void onBind(HafasRouteStop item) {
         nameView.setText(item.getName());
         nameView.setTypeface(nameView.getTypeface(), item.isCurrent() ? Typeface.BOLD : Typeface.NORMAL);
 
