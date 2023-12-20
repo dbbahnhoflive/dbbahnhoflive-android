@@ -9,6 +9,7 @@ package de.deutschebahn.bahnhoflive.ui.hub;
 import static android.content.Intent.FLAG_ACTIVITY_CLEAR_TASK;
 import static android.content.Intent.FLAG_ACTIVITY_TASK_ON_HOME;
 import static de.deutschebahn.bahnhoflive.BaseApplication.get;
+import static de.deutschebahn.bahnhoflive.util.accessibility.AccessibilityUtilitiesKt.isTalkbackOrSelectToSpeakEnabled;
 
 import android.annotation.TargetApi;
 import android.content.Context;
@@ -51,15 +52,10 @@ import de.deutschebahn.bahnhoflive.backend.wagenstand.WagenstandAlarm;
 
 public class HubActivity extends BaseActivity implements TutorialFragment.Host {
 
-    private TrackingManager trackingManager = new TrackingManager(this);
+    private final TrackingManager trackingManager = new TrackingManager(this);
 
     private Boolean checkSelectStationBundle(Intent appIntent) {
-
-        if(appIntent.hasExtra(StationActivity.ARG_STATION_TO_NAVIGATE_BACK)) {
-            return true;
-        }
-
-        return false;
+       return appIntent.hasExtra(StationActivity.ARG_STATION_TO_NAVIGATE_BACK);
     }
 
     private Boolean checkWagenstandNotificationBundle(Intent appIntent) {
@@ -133,7 +129,7 @@ public class HubActivity extends BaseActivity implements TutorialFragment.Host {
 
             if (bundle != null && (appIntent.getFlags() & (FLAG_ACTIVITY_CLEAR_TASK|FLAG_ACTIVITY_TASK_ON_HOME))!=0  ) {
 
-                final Integer stationNumber = bundle.getInt("stationNumber");
+                final int stationNumber = bundle.getInt("stationNumber");
                 final String stationName = bundle.getString("stationName");
                 final Boolean mapconsent = bundle.getBoolean("mapconsent");
 
@@ -160,7 +156,7 @@ public class HubActivity extends BaseActivity implements TutorialFragment.Host {
                                     station = stations.get(i).getAsInternalStation();
 
                                     if (station != null) {
-                                        if (station.getId().equalsIgnoreCase(stationNumber.toString())) {
+                                        if (station.getId().equalsIgnoreCase(Integer.toString(stationNumber))) {
                                             final Intent intent = StationActivity.createIntent(ctx, station, false);
                                             intent.putExtra("SHOW_ELEVATORS", "1");
                                             startActivity(intent);
@@ -197,7 +193,7 @@ public class HubActivity extends BaseActivity implements TutorialFragment.Host {
         super.onCreate(savedInstanceState);
 
         final VersionManager versionManager = VersionManager.Companion.getInstance(this); // IMPORTANT: has to be done BEFORE Tracking is initialized
-        final long version = versionManager.getActualVersion().asVersionLong();
+//        final long version = versionManager.getActualVersion().asVersionLong();
         if(versionManager.isFreshInstallation())
             Log.d("cr", "FRESH");
         else
@@ -217,9 +213,7 @@ public class HubActivity extends BaseActivity implements TutorialFragment.Host {
 
             if(!checkWagenstandNotificationBundle(appIntent)) {
                 if(!checkElevatorNotificationBundle(appIntent)) {
-                  if(!checkSelectStationBundle(appIntent)) {
-
-                  }
+                    checkSelectStationBundle(appIntent);
                 }
             }
 
@@ -282,7 +276,7 @@ public class HubActivity extends BaseActivity implements TutorialFragment.Host {
     }
 
     public void endSplash() {
-        if (TutorialFragment.isPending(this)) {
+        if (TutorialFragment.isPending(this) && !isTalkbackOrSelectToSpeakEnabled(this)) {
             switchFragment(new TutorialFragment(), "tutorial", R.string.title_tutorial);
         } else {
             switchFragment(HubFragment.Companion.createWithoutInitialPermissionRequest(), "hub", R.string.title_hub);

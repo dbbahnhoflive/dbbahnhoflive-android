@@ -5,8 +5,6 @@ import android.content.SharedPreferences
 import android.content.pm.PackageInfo
 import android.content.pm.PackageManager
 import android.os.Build
-import de.deutschebahn.bahnhoflive.ui.accessibility.GlobalPreferences
-import de.deutschebahn.bahnhoflive.ui.accessibility.TrackingPreferences
 import java.text.SimpleDateFormat
 import java.util.Calendar
 import java.util.Locale
@@ -65,6 +63,7 @@ class VersionManager private constructor(private val manager: PackageManager,
         object TypeInt {
             const val PushTutorialGeneralShowCounter = "PushTutorialGeneralShowCounter"
             const val JourneyLinkTappedTutorialCounter = "JourneyLinkTappedTutorialCounter"
+            const val LinkedPlatformsTutorialGeneralShowCounter = "LinkedPlatformsTutorialGeneralShowCounter"
         }
 
     }
@@ -114,6 +113,18 @@ class VersionManager private constructor(private val manager: PackageManager,
             _pushTutorialGeneralShowCounter = value
         }
 
+    var linkedPlatformsTutorialGeneralShowCounter: Int
+        get() = _linkedPlatformsTutorialGeneralShowCounter
+        set(value) {
+            if(value!=_linkedPlatformsTutorialGeneralShowCounter) {
+                global_preferences.edit()
+                    .putInt(PreferenceName.TypeInt.LinkedPlatformsTutorialGeneralShowCounter, value)
+                    .apply()
+            }
+            _linkedPlatformsTutorialGeneralShowCounter = value
+        }
+
+
     var journeyLinkTappedTutorialCounter: Int
         get() = _journeyLinkTappedTutorialCounter
         set(value) {
@@ -143,6 +154,7 @@ class VersionManager private constructor(private val manager: PackageManager,
     private var _journeyLinkWasEverUsed : Boolean = false
     private var _pushTutorialGeneralShowCounter : Int = 0
     private var _journeyLinkTappedTutorialCounter : Int = 0
+    private var _linkedPlatformsTutorialGeneralShowCounter : Int = 0
 
     init {
         doInit()
@@ -207,6 +219,7 @@ class VersionManager private constructor(private val manager: PackageManager,
         _pushWasEverUsed = global_preferences.getBoolean(PreferenceName.TypeBool.PushWasEverUsed, false)
         _pushTutorialGeneralShowCounter = global_preferences.getInt(PreferenceName.TypeInt.PushTutorialGeneralShowCounter, 0)
         _journeyLinkTappedTutorialCounter = global_preferences.getInt(PreferenceName.TypeInt.JourneyLinkTappedTutorialCounter, 0)
+        _linkedPlatformsTutorialGeneralShowCounter = global_preferences.getInt(PreferenceName.TypeInt.LinkedPlatformsTutorialGeneralShowCounter, 0)
     }
 
 

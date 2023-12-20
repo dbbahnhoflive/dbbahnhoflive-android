@@ -20,6 +20,7 @@ import de.deutschebahn.bahnhoflive.repository.timetable.Timetable
 import de.deutschebahn.bahnhoflive.ui.LoadingContentDecorationViewHolder
 import de.deutschebahn.bahnhoflive.ui.station.timetable.OnWagonOrderClickListener
 import de.deutschebahn.bahnhoflive.ui.station.timetable.TrackDepartureSummaryViewHolder
+import de.deutschebahn.bahnhoflive.util.StringX
 import de.deutschebahn.bahnhoflive.view.inflater
 
 internal class TrackFlyoutViewHolder(
@@ -107,8 +108,9 @@ internal class TrackFlyoutViewHolder(
                         itTimetable.departures.filter { trainInfo ->
                              val platForm : String = trainInfo.departure?.purePlatform ?: ""
 
-                             platForm.length>=markerContent.track.length && platForm.startsWith(markerContent.track)
+//                             platForm.length>=markerContent.track.length && platForm.startsWith(markerContent.track)
 
+                            StringX.extractIntAtStartOfString(platForm) == StringX.extractIntAtStartOfString(markerContent.track, 1000)
 //                             trainInfo.departure?.purePlatform == markerContent.track
                         }
 

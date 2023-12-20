@@ -4,6 +4,7 @@ import android.content.Intent
 import android.os.Build
 import android.os.Bundle
 import android.util.Log
+import com.android.volley.VolleyError
 import de.deutschebahn.bahnhoflive.repository.InternalStation
 import java.text.SimpleDateFormat
 import java.util.Calendar
@@ -96,5 +97,54 @@ class DebugX {
             return preText + formatter.format(calendar.time)
 
         }
+
+        fun logVolleyRequest(preText: String = "", url: String?) {
+            var msg = "${preText.padEnd(30)} request  :       "
+            if (url != null)
+                msg += url
+            Log.d("cr", msg)
     }
+
+        fun logVolleyRequest(cls: Any, url: String?) {
+            logVolleyRequest(cls.javaClass.simpleName, url)
+        }
+
+        fun logVolleyResponseOk(preText: String = "", url: String?) {
+            var msg = "${preText.padEnd(30)} response : ok    "
+            url?.let { msg += url }
+            Log.d("cr", msg)
+        }
+
+        fun logVolleyResponseOk(cls: Any, url: String?) {
+            logVolleyResponseOk(cls.javaClass.simpleName, url)
+        }
+
+        fun logVolleyResponseException(preText: String = "", url: String?, e: Exception?) {
+            var msg = "${preText.padEnd(30)} response : excep "
+            url?.let { msg += url }
+            if (e?.message != null)
+                msg += e.message
+            Log.d("cr", msg)
+        }
+        fun logVolleyResponseException(cls: Any, url: String?, e: Exception?) {
+            logVolleyResponseException(cls.javaClass.simpleName, url, e)
+        }
+        fun logVolleyResponseError(preText: String = "", url: String?, volleyError: VolleyError?) {
+            var msg = "${preText.padEnd(30)} response : error "
+            url?.let { msg += url }
+            volleyError?.let {
+                if (it.networkResponse != null)
+                    msg += " statusCode: " + it.networkResponse.statusCode
+                if (it.message != null)
+                    msg += " message: <" + it.message + ">"
+            }
+            Log.d("cr", msg)
+        }
+        fun logVolleyResponseError(cls: Any, url: String?, volleyError: VolleyError?) {
+            logVolleyResponseError(cls.javaClass.simpleName, url, volleyError)
+        }
+
+    }
+
+
 }

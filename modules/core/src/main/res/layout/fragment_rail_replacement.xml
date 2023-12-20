@@ -115,10 +115,10 @@
                         tools:text="@tools:sample/lorem/random" />
 
                     <ImageButton
+                        android:id="@+id/btnLink"
                         android:visibility="gone"
                         tools:visibility="visible"
                         android:layout_margin="@dimen/default_space"
-                        android:id="@+id/btnLink"
                         android:layout_width="@dimen/round_button_size"
                         android:layout_height="@dimen/round_button_size"
                         android:scaleType="center"
@@ -133,7 +133,7 @@
                     <TextView
                         android:id="@+id/newsCopy"
                         android:layout_width="0dp"
-                        android:layout_height="0dp"
+                        android:layout_height="wrap_content"
                         android:layout_marginStart="@dimen/default_space"
                         android:layout_marginTop="@dimen/default_space_half"
                         android:layout_marginEnd="@dimen/default_space"
@@ -146,7 +146,7 @@
                         android:textSize="@dimen/textsize_h3"
                         app:layout_constraintBottom_toBottomOf="parent"
                         app:layout_constraintEnd_toStartOf="@+id/btnLink"
-                        app:layout_constraintHeight_default="wrap"
+                        app:layout_constrainedHeight="true"
                         app:layout_constraintStart_toEndOf="@+id/icon"
                         app:layout_constraintTop_toBottomOf="@+id/newsHeadline"
                         android:text="@string/nev_copy"
@@ -193,9 +193,26 @@
 
                     <include layout="@layout/include_item_rail_replacement" />
 
-
-
                 </LinearLayout>
+
+
+                <include
+                    android:id="@+id/ar_teaser_nev"
+                    layout="@layout/card_ar_teaser_nev"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginHorizontal="@dimen/default_space" />
+
+                <include
+                    android:id="@+id/db_companion_teaser_nev"
+                    layout="@layout/card_db_companion_teaser_nev"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="@dimen/default_space"
+                    android:layout_marginHorizontal="@dimen/default_space_double"
+                    android:layout_marginTop="@dimen/default_space"
+                    />
+
 
                 <TextView
                     android:id="@+id/rail_replacement_nev2"

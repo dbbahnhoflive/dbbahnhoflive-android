@@ -42,6 +42,8 @@ public class TutorialManager {
         String PUSH_ELEVATORS = "push_elevators";
 
         String JOURNEY = "journey";
+
+        String TIMETABLE = "timetable";
     }
 
     private List<Tutorial> seedingList() {
@@ -92,6 +94,8 @@ public class TutorialManager {
         tutorials.add(
                 new Tutorial(Id.JOURNEY, "So wechseln Sie den Bahnhof", "Wählen Sie einen Halt im Fahrtverlauf, um den Bahnhof zu wechseln.", 0));
 
+        tutorials.add(
+                new Tutorial(Id.TIMETABLE, "Gegenüberliegende Gleise", "Wählen Sie eine Verbindung aus, um weitere Gleisinfomationen zu erhalten.", 0));
 
         return tutorials;
     }

@@ -15,7 +15,7 @@
     <string name="dlg_yes">Ja</string>
     <string name="dlg_no">Nein</string>
     <string name="dlg_cancel">Abbrechen</string>
-    <string name="dlg_ok">Ok</string>
+    <string name="dlg_ok">OK</string>
 
     <!--<string name="dialog_stationNotAvailableTitle">Entschuldigung!</string>-->
 
@@ -88,7 +88,7 @@
 
     <!-- Wagenreihung Ausstattungsarten -->
     <string name="wagon_feature_bicycle_spaces">Stellplätze für Fahrräder</string>
-    <string name="wagon_feature_wheelchair_spaces">Plätze für Rollstuhlfahrer</string>
+    <string name="wagon_feature_wheelchair_spaces">Plätze für Menschen mit Rollstuhl</string>
     <string name="wagon_feature_disabled_toilet">Toilette für mobilitätseingeschränkte Personen</string>
     <string name="wagon_feature_airconditioning">Klimaanlage</string>
     <string name="status_defective">defekt</string>
@@ -190,6 +190,7 @@
     <string name="template_level_overground">%1$d. Obergeschoss</string>
     <string name="template_level_underground">%1$d. Untergeschoss</string>
     <string name="level_base">Erdgeschoss</string>
+    <string name="level_unknown">Unbekanntes Stockwerk</string>
     <string name="template_remaining_open_hours">Noch %1$d:%2$02d Std. geöffnet.</string>
     <string name="error_data_unavailable">Daten derzeit nicht verfügbar</string>
     <string name="empty_departures">Keine Abfahrt in den nächsten zwei Stunden</string>
@@ -263,7 +264,7 @@
     <string name="notification_channel_arrival_name">Einfahrt</string>
     <string name="notification_channel_arrival_description">Erinnerungen vor Einfahrt eines Zuges</string>
     <string name="label_current_occupancy">Aktuell:</string>
-    <string name="title_occupancy">Besucheraufkommen</string>
+    <string name="title_occupancy">Besuchendenaufkommen</string>
 
     <string name="notification_channel_facility_state">Verfügbarkeitsmeldungen</string>
     <string name="default_notification_channel_id">Verfügbarkeitsmeldungen</string> <!-- MUST BE SAME AS notification_channel_facility_state-->
@@ -284,16 +285,16 @@
     <string name="friday">Freitag</string>
     <string name="saturday">Samstag</string>
     <string name="sunday">Sonntag</string>
-    <string name="title_occupancy_explanation">Besucheraufkommen</string>
-    <string name="occupancy_level_unknown">Es liegt keine aktuelle Information vor.</string>
-    <string name="occupancy_level_low">Weniger Besucher als üblich</string>
-    <string name="occupancy_explanation_low">Vor Ort ist aktuell mit weniger Besuchern als gewöhnlich zu rechnen. In der Regel ist das Besucheraufkommen zu dieser Uhrzeit an diesem Wochentag höher.</string>
-    <string name="occupancy_level_average">Übliches Besucheraufkommen</string>
-    <string name="occupancy_explanation_average">Die Anzahl der Besucher vor Ort entspricht dem gewöhnlichen Besucheraufkommen zu dieser Uhrzeit an diesem Wochentag.</string>
-    <string name="occupancy_level_high">Mehr Besucher als üblich</string>
-    <string name="occupancy_explanation_high">Vor Ort ist aktuell mit mehr Besuchern als gewöhnlich zu rechnen. In der Regel ist das Besucheraufkommen zu dieser Uhrzeit an diesem Wochentag geringer.</string>
+    <string name="title_occupancy_explanation">Besuchendenaufkommen</string>
+    <string name="occupancy_level_unknown">Es liegen zur Zeit keine Informationen über das Besuchendenaufkommen vor.</string>
+    <string name="occupancy_level_low">Weniger Besuchende als üblich</string>
+    <string name="occupancy_explanation_low">Vor Ort ist aktuell mit weniger Besuchenden als gewöhnlich zu rechnen. In der Regel ist das Publikumsaufkommen zu dieser Uhrzeit an diesem Wochentag höher.</string>
+    <string name="occupancy_level_average">Übliches Besuchendenaufkommen</string>
+    <string name="occupancy_explanation_average">Die Anzahl der Besuchenden vor Ort entspricht dem gewöhnlichen Publikumsaufkommen zu dieser Uhrzeit an diesem Wochentag.</string>
+    <string name="occupancy_level_high">Mehr Besuchende als üblich</string>
+    <string name="occupancy_explanation_high">Vor Ort ist aktuell mit mehr Besuchenden als gewöhnlich zu rechnen. In der Regel ist das Publikumsaufkommen zu dieser Uhrzeit an diesem Wochentag geringer.</string>
     <string name="occupancy_advice_title">Hinweise</string>
-    <string name="occupancy_advice_copy">Bitte beachten Sie: Diese Info-Grafik gibt Auskunft über das aktuelle Besucheraufkommen im Vergleich zum durchschnittlichen Besucheraufkommen der vergangenen acht Wochen. Für diese Grafik werden Näherungswerte errechnet und keine absoluten Zahlen verwendet. Folglich sind Abweichungen zum tatsächlichen Besucheraufkommen vor Ort möglich. Diese Grafik gibt außerdem keine Auskunft hinsichtlich des Besucheraufkommens im Verhältnis zu den räumlichen Kapazitäten vor Ort. Alle Angaben sind ohne Gewähr.</string>
+    <string name="occupancy_advice_copy">Bitte beachten Sie: Diese Info-Grafik gibt Auskunft über das aktuelle Besuchendenaufkommen im Vergleich zum durchschnittlichen Besuchendenaufkommen der vergangenen acht Wochen. Für diese Grafik werden Näherungswerte errechnet und keine absoluten Zahlen verwendet. Folglich sind Abweichungen zum tatsächlichen Publikumsaufkommen vor Ort möglich. Diese Grafik gibt außerdem keine Auskunft hinsichtlich des Besuchendenaufkommens im Verhältnis zu den räumlichen Kapazitäten vor Ort. Alle Angaben sind ohne Gewähr.</string>
     <string name="occupancy_additional_info_title">Weiterführende Informationen</string>
     <string name="occupancy_additional_info_copy">Aktuelle Informationen und Service-Hinweise zum sicheren Aufenthalt am Bahnhof sowie Ihrer Reise finden Sie auf gemeinsamgehtdas.de.</string>
     <string name="consent_headline">Gemeinsam mit Ihnen wollen wir besser werden!</string>
@@ -308,8 +309,8 @@
     <string name="feedback_cost_notice">Dieser Service ist <b>kostenlos</b>. Es fällt ggf. das Datenentgelte Ihres Mobilfunkproviders an.</string>
     <string name="feedback_mail_alternative">E-Mail</string>
     <string name="feedback_phone_number">030 586020930</string>
-    <string name="feeback_disclaimer"><b>* Bitte beachten Sie,</b> dass die Benachrichtigung auf diesem Weg ein bestehendes Nutzerkonto beim Dienst „WhatsApp“ voraussetzt und über den Dienst „MessengerPeople“ weitergeleitet wird. Diese Dienste und deren Datenverarbeitung werden ausschließlich durch die jeweiligen Anbieter eigenverantwortlich angeboten, betrieben und ausgestaltet. Sofern Sie diese Dienste freiwillig und eigenständig nutzen, um uns eine Verschmutzung zu melden, sind die Erklärungen zum Datenschutz von „WhatsApp“ und „MessengerPeople GmbH“ zu beachten. Hinsichtlich der Verarbeitung Ihrer Daten bei der DB Station&amp;Service AG im Zuge einer Verschmutzungsmeldung über diese Dienste lesen Sie bitte vorab auch aufmerksam unsere Datenschutzerklärung: bahnhof.de/service/db-reinigungsteam</string>
-    <string name="feedback_whatsapp_unavailable">Sie benötigen ein bestehendes Nutzerkonto beim Dienst „WhatsApp“. Aktuell ist dieser Dienst nicht auf ihrem Gerät installiert.</string>
+    <string name="feeback_disclaimer"><b>* Bitte beachten Sie,</b> dass die Benachrichtigung auf diesem Weg ein bestehendes Konto beim Dienst „WhatsApp“ voraussetzt und über den Dienst „MessengerPeople“ weitergeleitet wird. Diese Dienste und deren Datenverarbeitung werden ausschließlich durch die jeweiligen Anbietenden eigenverantwortlich angeboten, betrieben und ausgestaltet. Sofern Sie diese Dienste freiwillig und eigenständig nutzen, um uns eine Verschmutzung zu melden, sind die Erklärungen zum Datenschutz von „WhatsApp“ und „MessengerPeople GmbH“ zu beachten. Hinsichtlich der Verarbeitung Ihrer Daten bei der DB Station&amp;Service AG im Zuge einer Verschmutzungsmeldung über diese Dienste lesen Sie bitte vorab auch aufmerksam unsere Datenschutzerklärung: bahnhof.de/service/db-reinigungsteam</string>
+    <string name="feedback_whatsapp_unavailable">Sie benötigen ein bestehendes Konto beim Dienst „WhatsApp“. Aktuell ist dieser Dienst nicht auf ihrem Gerät installiert.</string>
     <string name="feedback_headline_alternative_contacts">Alternative Kontaktmöglichkeiten</string>
 
     <string name="accessibilityStepFreeAll">Dieser Bahnhof bietet Ihnen einen stufenfreien Zugang zu den Bahnsteigen.</string>
@@ -337,7 +338,7 @@
     <string name="accessibilityDescriptionStairsMarking">Die Kanten der Treppenstufen, mindestens der ersten und der letzten Stufe, sind kontrastreich markiert.</string>
     <string name="accessibilityDescriptionTactileHandrailLabel">Die Handläufe an den Treppen und Rampen zum Bahnsteig verfügen über ein Handlaufschild mit Kurzinformationen (z.B. zu Gleisen) in ertastbarer Schrift.</string>
     <string name="accessibilityDescriptionPlatformSign">Ein kontrastreiches und damit gut lesbares, modernes Wegeleitsystem ist vorhanden. (Gut erkennbare, kontrastreiche Schilder erleichtern die Orientierung. Dazu gehören blaue Schilder mit weißer oder gelber Schrift.)</string>
-    <string name="accessibilityDescriptionBoardingAid">Der Einstieg vom Bahnsteig in den Zug ist direkt oder über mobile Einstiegshilfen wie Hublifte oder mobile Rampen möglich. Unsere DB Service-Mitarbeiter und Mitarbeiterinnen sind speziell geschult, um mobilitätseingeschränkte Reisende beim Ein- und Aussteigen zu unterstützen.</string>
+    <string name="accessibilityDescriptionBoardingAid">Der Einstieg vom Bahnsteig in den Zug ist direkt oder über mobile Einstiegshilfen wie Hublifte oder mobile Rampen möglich. Unsere DB Service-Servicemitarbeitenden sind speziell geschult, um mobilitätseingeschränkte Reisende beim Ein- und Aussteigen zu unterstützen.</string>
     <string name="accessibilityDescriptionAutomaticDoor">An diesem Bahnhof ist der Zugang zum Empfangsgebäude mit Automatiktüren ausgestattet.</string>
 
     <string name="accessibility_title">Barrierefreiheit</string>
@@ -436,16 +437,48 @@
     <string name="nev_announcement_headline">Ankündigung Ersatzverkehr</string>
     <string name="nev_phase_headline">Ersatzverkehr beachten</string>
     <string name="nev_copy">Ersatzverkehr auf der Strecke Würzburg – Nürnberg aufgrund von Baumaßnahmen.</string>
-    <string name="nev_text_1">Aufgrund von Bauarbeiten kommt es zwischen Würzburg und Nürnberg vom 26. Mai bis zum 11. September 2023 zu Einschränkungen im Zugverkehr.\n\nEin Ersatzverkehr mit Bussen ist eingerichtet.</string>
-    <string name="nev_text_2">Die Sanierung erfolgt in zwei Abschnitten. Zunächst wird die Strecke zwischen Rottendorf und Neustadt (Aisch) Bahnhof vom 26. Mai bis 06. August 2023 für den Zugverkehr komplett gesperrt. Anschließend erfolgt eine Sperrung der Strecke zwischen Neustadt (Aisch) Bahnhof und Fürth Hauptbahnhof vom 06. August bis 11. September 2023. Durch die Sperrung in dem zweiten genannten Zeitraum erfolgt auf der Strecke Markt Erlbach - Siegelsdorf - Fürth Hauptbahnhof zudem ebenfalls kein Zugverkehr.\n\nWeiterführende Informationen finden Sie unter bahnhof.de"</string>
+    <string name="nev_text_1">Aufgrund von Bauarbeiten kommt es zwischen Würzburg und Nürnberg vom 26. Mai bis zum 11. September 2023 zu Einschränkungen im Zugverkehr.\n\nEin Ersatzverkehr mit Bussen ist teilweise eingerichtet.</string>
+    <string name="nev_text_2">Die Sanierung erfolgt in zwei Abschnitten. Zunächst wird die Strecke zwischen Rottendorf und Neustadt (Aisch) Bahnhof vom 26. Mai bis 05. August 2023 für den Zugverkehr komplett gesperrt. Anschließend erfolgt eine Sperrung der Strecke zwischen Neustadt (Aisch) Bahnhof und Fürth (Bay) Hauptbahnhof vom 06. August bis 11. September 2023. Durch die Sperrung in dem zweiten genannten Zeitraum erfolgt auf der Strecke Markt Erlbach - Siegelsdorf - Fürth (Bay) Hauptbahnhof zudem ebenfalls kein Zugverkehr.\n\nDarüber hinaus entfallen über beide Bauphasen die meisten Züge der Linie RB80 zwischen Würzburg Hauptbahnhof und Marktbreit.\n\nWeiterhin kommt es in den späten Abend- und frühen Morgenstunden zwischen Nürnberg Hauptbahnhof und Würzburg Hauptbahnhof über den gesamten Zeitraum hinweg zu Zugausfällen.\n\nWeiterführende Informationen finden Sie unter bahnhof.de"</string>
 
     <string name="nev_date_range">26.05. - 11.09.2023</string>
     <string name="sr_nev_date_range">vom 26.5.2023 bis 11.9.2023</string>
 
     <string name="open_link_bahnhof_de">"bahnhof.de öffnen"</string>
 
-
-
     <string name="info_sev">Übersicht Ersatzverkehr</string>
+
+    <string name="teaser_ar_headline">Augmented Reality App für den Ersatzverkehr</string>
+    <string name="teaser_ar_copy">Mit „AR EV Navigation“ zur Ersatzhaltestelle leiten lassen</string>
+    <string name="teaser_ar_url">https://play.google.com/store/apps/details?id=com.DBSystelGmbH.SEV.WbNacht&amp;hl=de</string>
+    <string name="teaser_ar_linkbutton_text">zum playstore</string>
+
+    <string name="teaser_db_companion_headline">DB Wegbegleitung</string>
+    <string name="teaser_db_companion_copy">Orientierungshilfe für blinde und sehbeeinträchtigte Reisende.</string>
+    <string name="teaser_db_companion_url">https://db.de/wegbegleitung</string>
+    <string name="teaser_db_companion_sr_content_description">DB Wegbegleitung\n Für blinde und stark sehbeeinträchtigte Reisende bieten wir an diesem Bahnhof, für den Zeitraum des Ersatzverkehrs, Unterstützung bei der Orientierung vor Ort per Videoanruf.</string>
+    <string name="teaser_db_companion_link_to_external_website">Zur externen Website www.db.de/wegbegleitung</string>
+
+    <string name="nev_db_companion_headline">DB Wegbegleitung - Unterstützung per Videoanruf für blinde und sehbeeinträchtigte Reisende</string>
+    <string name="nev_db_companion_copy">Während des Ersatzverkehrs an den Bahnhöfen zwischen Würzburg und Nürnberg begleitet unser geschultes Personal Sie sicher vom Gleis zur Ersatzhaltestelle und zurück.</string>
+    <string name="nev_db_companion_link_description">Sie können uns unter folgendem Link einfach per Videoanruf kontaktieren und Unterstützung erhalten.</string>
+    <string name="nev_db_companion_button_text">DB Wegbegleitung öffnen</string>
+
+    <string name="platform_information">Gleisinformationen</string>
+    <string name="platform_information_headline">Informationen zu den Gleisen vor Ort</string>
+    <string name="platform_information_body">Bitte beachten Sie, dass ein Bahnsteigwechsel ggf. über eine andere Ebene erfolgt und die Nutzung von Treppen oder Aufzugsanlagen erfordert. Eine Übersicht der Aufzugsanlagen und deren aktuelle Verfügbarkeit finden Sie hier:</string>
+    <string name="platform_information_body_without_elevators">Bitte beachten Sie, dass ein Bahnsteigwechsel ggf. über eine andere Ebene erfolgt und die Nutzung von Treppen oder Aufzugsanlagen erfordert.</string>
+    <string name="information_accessibility">Informationen zur Barrierefreiheit</string>
+    <string name="information_accessibility_hint">Weitere Informationen zur Barrierefreiheit finden Sie hier:</string>
+
+    <string name="platform_head">Kopfgleis</string>
+    <string name="platform_name">Bahnsteig</string>
+    <string name="template_platform_level_linkedplatform">"%d. %s, Bahnsteig %d | %d"</string>
+    <string name="template_platform_level">"%d. %s, Bahnsteig %d"</string>
+
+    <string name="journey_stop_canceled">Halt fällt aus</string>
+    <string name="notification_advice_systemsettings">Mitteilungen für diese App müssen in den Systemeinstellungen zugelassen werden.</string>
+
+    <string name="template_linkplatform">Gegenüberliegend Gleis %d</string>
+
 </resources>
 

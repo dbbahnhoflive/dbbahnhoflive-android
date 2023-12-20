@@ -111,6 +111,8 @@ public class TrainMovementInfo implements Parcelable {
 
         TrainMovementInfo result = new TrainMovementInfo();
         result.setPlatform(parser.getAttributeValue(null, _platform));
+        if(result.getPlatform()==null || result.getPlatform().isEmpty())
+            result.setPlatform("k.A.");
         result.setVia(parser.getAttributeValue(null, _via));
         result.setDistantEndpoint(parser.getAttributeValue(null, _distantEndpoint));
         result.setWings(parser.getAttributeValue(null, _wings));
@@ -573,7 +575,7 @@ public class TrainMovementInfo implements Parcelable {
     }
 
     @Nullable
-    public String getPurePlatform() {
+    public String getPurePlatform() { // 1a, 5d-f
         final String bestPlatform = getBestPlatform();
         if (bestPlatform == null) {
             return null;
@@ -599,6 +601,23 @@ public class TrainMovementInfo implements Parcelable {
     public String getDisplayPlatform() {
         final String bestPlatform = getBestPlatform();
         return bestPlatform == null ? "k.A." : bestPlatform;
+    }
+
+    @Nullable
+    public String getPlatformWithoutExtensions() { // 1a->1, 5d-f->5
+        if(platform==null) return null;
+        String platformString = platform.trim();
+
+        String retString = "";
+
+        for (int i = 0; i < platformString.length(); i++) {
+            if( Character.isDigit(platformString.charAt(i)) )
+                retString+=platformString.charAt(i);
+        }
+
+
+        if (retString.isEmpty()) return null;
+        return retString;
     }
 
     public long getActualTime() {

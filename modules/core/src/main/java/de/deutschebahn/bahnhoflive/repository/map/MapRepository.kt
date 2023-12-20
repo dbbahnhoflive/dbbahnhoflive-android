@@ -58,6 +58,12 @@ open class MapRepository {
         force: Boolean,
         listener: VolleyRestListener<RrtRequestResult>
     ): Cancellable? = listener.fail()
+
+    open fun queryStationPlatformLevels(
+        station: Station,
+        cache: Boolean,
+        listener: VolleyRestListener<List<RimapPOI>>
+    ): Cancellable? = listener.fail()
 }
 
 typealias RrtRequestResult = List<RrtPoint>

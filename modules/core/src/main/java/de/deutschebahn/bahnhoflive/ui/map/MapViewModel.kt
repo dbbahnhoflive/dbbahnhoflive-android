@@ -13,6 +13,7 @@ import com.android.volley.VolleyError
 import com.google.android.gms.maps.model.LatLng
 import de.deutschebahn.bahnhoflive.BaseApplication
 import de.deutschebahn.bahnhoflive.backend.BaseRestListener
+import de.deutschebahn.bahnhoflive.backend.hafas.model.HafasStation
 import de.deutschebahn.bahnhoflive.backend.rimap.model.RimapPOI
 import de.deutschebahn.bahnhoflive.backend.rimap.model.RimapStation
 import de.deutschebahn.bahnhoflive.backend.ris.model.TrainInfo
@@ -25,10 +26,6 @@ import de.deutschebahn.bahnhoflive.stream.livedata.OneShotLiveData
 import de.deutschebahn.bahnhoflive.stream.livedata.switchMap
 import de.deutschebahn.bahnhoflive.ui.StadaStationCacheViewModel
 import de.deutschebahn.bahnhoflive.ui.station.StationActivity
-import io.reactivex.BackpressureStrategy
-import io.reactivex.android.schedulers.AndroidSchedulers
-import io.reactivex.disposables.CompositeDisposable
-import io.reactivex.subjects.BehaviorSubject
 import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.mapNotNull
 
@@ -43,6 +40,8 @@ enum class EquipmentID(var code: Int) {
     ELEVATORS(7)
     ;
 }
+
+class DbOrHafasPosition(val location:LatLng?, val isDbPosition:Boolean)
 
 private val mapMarkerContentTitle_EquipmentID = mapOf(
     "DB Information" to EquipmentID.DB_INFORMATION,
@@ -118,23 +117,35 @@ class MapViewModel(
 
     val originalStationLiveData = MutableLiveData<Station?>()
 
+    val hafasStationLiveData = MutableLiveData<HafasStation?>()
+
     val railReplacementResource = RimapRRTResource()
 
     private var infoAndServicesTitles : List<String>? = null
 
-    val stationLocationLiveData: LiveData<LatLng?> = MediatorLiveData<LatLng?>().apply {
+//    val stationLocationLiveData: LiveData<LatLng?> = MediatorLiveData<LatLng?>().apply {
+    val stationLocationLiveData: LiveData<DbOrHafasPosition?> = MediatorLiveData<DbOrHafasPosition?>().apply {
 
         addSource(originalStationLiveData) { originalStation ->
             if (value == null) {
-                value = originalStation?.location
+                value = DbOrHafasPosition(originalStation?.location, true)
             }
         }
 
         addSource(stationResource.data) { station ->
-            value = station?.location ?: originalStationLiveData.value?.location
+            value = DbOrHafasPosition(station?.location ?: originalStationLiveData.value?.location, true)
+        }
+
+        addSource(hafasStationLiveData) { hafasStation ->
+            value = DbOrHafasPosition(hafasStation?.location ?: LatLng(0.0, 0.0), false)
         }
 
     }.distinctUntilChanged()
+
+    fun setHafasStation(station: HafasStation?) {
+        hafasStationLiveData.value = station
+
+    }
 
     fun setStation(station: Station?, infoAndServicesTitles : List<String>? ) {
         originalStationLiveData.value = station
@@ -166,10 +177,10 @@ class MapViewModel(
     val restHelper
         get() = baseApplication.restHelper
 
-    private val disposables = CompositeDisposable()
+//    private val disposables = CompositeDisposable()
 
     override fun onCleared() {
-        disposables.clear()
+//        disposables.clear()
     }
 
     fun openDepartures(context: Context, track: String) {
@@ -185,16 +196,21 @@ class MapViewModel(
         }
     }
 
-    private val tracksAvailableSubject = BehaviorSubject.createDefault(false)
+//    private val tracksAvailableSubject = BehaviorSubject.createDefault(false)
+//
+//    val tracksAvailableLiveData = LiveDataReactiveStreams.fromPublisher(
+//        tracksAvailableSubject.toFlowable(BackpressureStrategy.LATEST)
+//            .replay(1).autoConnect()
+//            .observeOn(AndroidSchedulers.mainThread())
+//    )
 
-    val tracksAvailableLiveData = LiveDataReactiveStreams.fromPublisher(
-        tracksAvailableSubject.toFlowable(BackpressureStrategy.LATEST)
-            .replay(1).autoConnect()
-            .observeOn(AndroidSchedulers.mainThread())
-    )
+    private val tracksAvailableLiveDataObject = MutableLiveData<Boolean>(false)
+    val tracksAvailableLiveData : LiveData<Boolean>
+        get() = tracksAvailableLiveDataObject
 
     fun setTracksAvailable() {
-        tracksAvailableSubject.onNext(true)
+//        tracksAvailableSubject.onNext(true)
+        tracksAvailableLiveDataObject.postValue(true)
     }
 
     fun mapLaidOut(laidOut: Boolean) {

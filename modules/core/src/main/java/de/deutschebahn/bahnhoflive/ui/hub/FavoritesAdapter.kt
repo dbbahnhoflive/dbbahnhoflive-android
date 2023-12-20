@@ -40,7 +40,7 @@ class FavoritesAdapter(val owner: LifecycleOwner,
                 is StoredStationSearchResult ->
                     startOrStopCyclicLoadingOfTimetable(selected.timetable, null, selection)
                 is HafasStationSearchResult -> {
-                    selected.timetable.requestTimetable(true, "hub") // init
+                    selected.timetable.requestTimetable(true, "hub", true) // init
 
                     startOrStopCyclicLoadingOfTimetable(null,
                         selected.timetable,

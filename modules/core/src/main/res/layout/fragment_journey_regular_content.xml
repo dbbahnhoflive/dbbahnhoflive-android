@@ -15,58 +15,82 @@
         android:layout_height="wrap_content"
         android:showDividers="beginning|end">
 
-        <androidx.constraintlayout.widget.ConstraintLayout
-            android:id="@+id/issue_container"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="@dimen/default_space_double"
-            android:layout_marginEnd="@dimen/default_space_double"
-            android:minHeight="34dp"
-            android:paddingStart="@dimen/default_space"
-            android:paddingEnd="@dimen/default_space"
-            android:visibility="gone"
-            tools:visibility="visible">
 
-            <ImageView
-                android:id="@+id/issue_icon"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:baseline="17.5dp"
-                android:importantForAccessibility="no"
-                android:src="@drawable/app_warndreieck"
-                app:layout_constraintBaseline_toBaselineOf="@+id/issue_text"
-                app:layout_constraintLeft_toLeftOf="parent" />
+        <include android:id="@+id/journey_issue"
+            layout="@layout/fragment_journey_issue">
+        </include>
 
-            <TextView
-                android:id="@+id/issue_text"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="@dimen/default_space_half"
-                android:textColor="?attr/colorAccent"
-                android:textSize="@dimen/textsize_h3"
-                android:layout_marginTop="4dp"
-                app:layout_constraintLeft_toRightOf="@+id/issue_icon"
-                app:layout_constraintRight_toRightOf="parent"
-                app:layout_constraintTop_toTopOf="parent"
-                tools:text="ICE 1630: At vero eos et accusam et justo duo dolores et a rebum, stet clita kasd." />
 
-        </androidx.constraintlayout.widget.ConstraintLayout>
-
-        <TextView
+        <androidx.appcompat.widget.LinearLayoutCompat
             android:id="@+id/sev"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:orientation="horizontal"
             android:layout_marginStart="@dimen/default_space_half"
-            android:layout_marginTop="@dimen/default_space"
-            android:drawablePadding="@dimen/default_space"
+            tools:visibility="visible"
+            android:visibility="gone"
+            >
+
+            <ImageView
+                android:layout_width="16dp"
+                android:layout_height="16dp"
+                android:importantForAccessibility="no"
+                android:src="@drawable/app_links_pfeil"
+                android:layout_gravity="center_vertical"
+                />
+
+            <TextView
+                android:layout_width="0dp"
+                android:layout_weight="1"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_vertical"
+            android:layout_marginStart="@dimen/default_space_half"
             android:text="@string/info_sev"
             android:textSize="@dimen/textsize_h3"
             android:textStyle="bold"
+                />
+
+        </androidx.appcompat.widget.LinearLayoutCompat>
+
+
+
+        <androidx.appcompat.widget.LinearLayoutCompat
+            android:id="@+id/sevLinkDbCompanion"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:layout_marginTop="@dimen/default_space"
+            android:layout_marginStart="@dimen/default_space_half"
+            android:layout_marginBottom="@dimen/default_space_half"
+            tools:visibility="visible"
             android:visibility="gone"
-            app:drawableLeftCompat="@drawable/app_links_pfeil"
-            app:drawableTint="@android:color/holo_red_light"
-            tools:text="@string/info_sev"
-            tools:visibility="visible" />
+
+            >
+
+            <ImageView
+                android:layout_width="16dp"
+                android:layout_height="16dp"
+                android:importantForAccessibility="no"
+                android:scaleType="center"
+                android:scaleX="0.9"
+                android:scaleY="0.9"
+                android:src="@drawable/app_link_external_red"
+                android:layout_gravity="center_vertical"
+                />
+
+            <TextView
+                android:layout_width="0dp"
+                android:layout_weight="1"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_vertical"
+                android:layout_marginStart="@dimen/default_space_half"
+                android:text="@string/teaser_db_companion_headline"
+                android:textSize="@dimen/textsize_h3"
+                android:textStyle="bold"
+                />
+
+
+        </androidx.appcompat.widget.LinearLayoutCompat>
 
         <androidx.cardview.widget.CardView
             android:id="@+id/button_wagon_order"
@@ -90,7 +114,9 @@
                 android:gravity="center"
                 android:minHeight="64dp"
                 android:text="@string/btn_wagon_order"
-                android:textColor="@color/white" />
+                android:textColor="@color/white"
+                tools:visibility="visible"
+                />
 
         </androidx.cardview.widget.CardView>
 

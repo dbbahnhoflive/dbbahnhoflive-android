@@ -33,6 +33,8 @@
                 android:layout_weight="1"
                 android:gravity="center_vertical|right"
                 android:text="@string/facility_edit"
+                android:contentDescription=""
+                android:importantForAccessibility="no"
                 android:textSize="@dimen/textsize_h2" />
 
             <androidx.cardview.widget.CardView

@@ -8,9 +8,9 @@
     <bool name="isTablet">true</bool>
     
 <!-- text dimensions are about +2.5 from default values -->
-    <dimen name="textsize_24">15.5dp</dimen>
-    <dimen name="textsize_32">19dp</dimen> <!-- plus extra 0.5dp -->
-    <dimen name="textsize_28">17dp</dimen>
+    <dimen name="textsize_24">15.5sp</dimen>
+    <dimen name="textsize_32">19sp</dimen> <!-- plus extra 0.5dp -->
+    <dimen name="textsize_28">17sp</dimen>
 
     <dimen name="content_phonetextHeight">42.5dp</dimen>
     <dimen name="service_textsize">16dp</dimen>

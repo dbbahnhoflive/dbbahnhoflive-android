@@ -11,16 +11,26 @@ import de.deutschebahn.bahnhoflive.BaseApplication
 import de.deutschebahn.bahnhoflive.backend.hafas.HafasDepartures
 import de.deutschebahn.bahnhoflive.backend.hafas.model.HafasStation
 import de.deutschebahn.bahnhoflive.repository.timetable.Constants
+import de.deutschebahn.bahnhoflive.util.isNotZero
 
 class HafasTimetableResource : RemoteResource<HafasDepartures>() {
 
-    private var hafasStation: HafasStation? = null
+    var hafasStation: HafasStation? = null
+        private set
+
     private var filterStrictly = true
+    private var showAllDepartures = true
     private var origin = HafasStationResource.ORIGIN_TIMETABLE
     private var hours = Constants.PRELOAD_HOURS
 
-    fun initialize(hafasStation: HafasStation?, departures: HafasDepartures?,
-                   filterStrictly: Boolean, origin: String) {
+    fun initialize(hafasStation: HafasStation?,
+                   departures: HafasDepartures?,
+                   filterStrictly: Boolean,
+                   origin: String,
+                   showAllDepartures:Boolean
+                   ) {
+
+        this.showAllDepartures = showAllDepartures
         this.filterStrictly = filterStrictly
         this.origin = origin
 
@@ -46,7 +56,8 @@ class HafasTimetableResource : RemoteResource<HafasDepartures>() {
             Listener(),
             hours,
             filterStrictly,
-            force
+            force,
+            showAllDepartures // x Bushaltestellen haben gleichen Namen, auf der map sieht man, welche es sind...
         )
     }
 
@@ -65,6 +76,10 @@ class HafasTimetableResource : RemoteResource<HafasDepartures>() {
 
     public override fun setError(reason: VolleyError?) {
         super.setError(reason)
+    }
+
+    fun hasStationWithLocation() : Boolean {
+        return if(hafasStation!=null) (hafasStation?.latitude?.isNotZero() == true && hafasStation?.longitude?.isNotZero() == true) else false
     }
 
 }

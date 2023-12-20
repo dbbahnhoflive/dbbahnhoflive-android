@@ -21,11 +21,14 @@ class ConsentFragment : DialogFragment() {
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ) = FragmentConsentBinding.inflate(inflater, container, false).apply {
+
+        val assetDocumentBroker = AssetDocumentBroker(requireContext())
+
         val onClickListener: (v: View) -> Unit = {
             startActivity(
                 WebViewActivity.createIntent(
                     context,
-                    AssetDocumentBroker.FILE_NAME_PRIVACY_POLICY,
+                    assetDocumentBroker.getCurrentPrivacyPolicy().assetFileName,
                     "Datenschutz"
                 )
             )

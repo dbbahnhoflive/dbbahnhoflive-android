@@ -11,7 +11,7 @@ import de.deutschebahn.bahnhoflive.ui.search.HafasStationSearchResult
 class NearbyHafasStationItem(val hafasStationSearchResult: HafasStationSearchResult) :
     NearbyStationItem {
     override fun onLoadDetails() {
-        hafasStationSearchResult.timetable.requestTimetable(true, HubFragment.ORIGIN_HUB)
+        hafasStationSearchResult.timetable.requestTimetable(true, HubFragment.ORIGIN_HUB, true)
     }
 
     override val type: Int

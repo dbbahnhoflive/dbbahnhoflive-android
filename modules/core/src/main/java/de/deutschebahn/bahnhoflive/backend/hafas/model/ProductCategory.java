@@ -121,14 +121,14 @@ public enum ProductCategory {
         return categories;
     }
 
-    public static int BITMASK_LOCAL_TRANSPORT = bitMask(
+    public static final int BITMASK_LOCAL_TRANSPORT = bitMask(
             BUS,
             SHIP,
             SUBWAY,
             TRAM,
             CALLABLE
     );
-    public static int BITMASK_EXTENDED_LOCAL_TRANSPORT = bitMask(
+    public static final int BITMASK_EXTENDED_LOCAL_TRANSPORT = bitMask(
             BUS,
             SHIP,
             SUBWAY,
@@ -136,12 +136,22 @@ public enum ProductCategory {
             CALLABLE,
             S
     );
-    public static int BITMASK_DB = bitMask(
+    public static final int BITMASK_DB = bitMask(
             HIGH_SPEED,
             INTER_CITY,
             INTER_REGIO,
             REGIO,
             S
+    );
+
+    public static final int BITMASK_ON_TRACK = bitMask(
+            HIGH_SPEED,
+            INTER_CITY,
+            INTER_REGIO,
+            REGIO,
+            S,
+            SUBWAY,
+            TRAM
     );
 
     public boolean isLocal() {
@@ -156,6 +166,7 @@ public enum ProductCategory {
         return (bitMask() & categories) != 0;
     }
 
+
     public static boolean isLocal(int categoryCode) {
         return (bitMask(categoryCode) & BITMASK_LOCAL_TRANSPORT) != 0;
     }
@@ -168,10 +179,14 @@ public enum ProductCategory {
         return (bitMask(categoryCode) & BITMASK_DB) != 0;
     }
 
+    public static boolean onTrack(int categoryCode) {
+        return (bitMask(categoryCode) & BITMASK_ON_TRACK) != 0;
+    }
+
     @Nullable
     public static ProductCategory of(@NonNull HafasStationProduct hafasProduct) {
         for (ProductCategory productCategory : VALUES) {
-            if ((productCategory.bitMask() & hafasProduct.catCode) != 0) {
+            if ((productCategory.bitMask() & hafasProduct.getCategoryBitMask()) != 0) {
                 return productCategory;
             }
         }
@@ -181,7 +196,7 @@ public enum ProductCategory {
 
     @Nullable
     public static ProductCategory of(@NonNull HafasEvent hafasEvent) {
-        final HafasEventProduct product = hafasEvent.product;
+        final HafasEventProduct product = hafasEvent.getProduct();
         if (product == null) {
             return null;
         }

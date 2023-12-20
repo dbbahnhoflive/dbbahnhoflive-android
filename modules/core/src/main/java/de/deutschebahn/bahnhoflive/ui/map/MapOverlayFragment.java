@@ -63,6 +63,8 @@ import de.deutschebahn.bahnhoflive.repository.MergedStation;
 import de.deutschebahn.bahnhoflive.repository.RepositoryHolderKt;
 import de.deutschebahn.bahnhoflive.repository.Station;
 import de.deutschebahn.bahnhoflive.repository.StationResource;
+import de.deutschebahn.bahnhoflive.repository.timetable.Timetable;
+import de.deutschebahn.bahnhoflive.repository.timetable.TimetableCollector;
 import de.deutschebahn.bahnhoflive.tutorial.TutorialManager;
 import de.deutschebahn.bahnhoflive.tutorial.TutorialView;
 import de.deutschebahn.bahnhoflive.ui.map.content.MapConstants;
@@ -239,12 +241,17 @@ public class MapOverlayFragment extends Fragment implements OnMapReadyCallback, 
                     final MarkerBinder markerBinder = new MarkerBinder(markerContent, mapViewModel.getZoom(), mapViewModel.getLevel(), filterItem);
                     updateInitialMarkerBinder(markerBinder);
 
-//                    if(markerBinder.getMarkerContent().getTitle().toString().contains("DB Information"))
+//                    if(markerBinder.getMarkerContent().getTitle().startsWith("Gleis"))
 //                        Log.d("cr", markerBinder.getMarkerContent().getTitle());
 
                     allMarkerBinders.add(markerBinder);
                     categoryPins.add(markerBinder);
                 }
+
+                Collections.sort(allMarkerBinders, new ComparatorMarkerBinderTrack());
+
+//                for(MarkerBinder markerBinder : allMarkerBinders)
+//                    Log.d("cr",  markerBinder.getMarkerContent().getTitle() + " " + markerBinder.getMarkerContent().getTrack());
 
                 content.setMarkerBinders(Content.Source.RIMAP, allMarkerBinders, categorizedMarkerBinders);
                 content.updateVisibilities();
@@ -299,16 +306,17 @@ public class MapOverlayFragment extends Fragment implements OnMapReadyCallback, 
 
         });
 
-        mapViewModel.getTracksAvailableLiveData().observe(this, new Observer<Boolean>() {
-            @Override
-            public void onChanged(@Nullable Boolean tracksAvailable) {
-                if (tracksAvailable != null && tracksAvailable) {
-                    if (TutorialManager.getInstance(getActivity()).showTutorialIfNecessary(mTutorialView, TutorialManager.Id.MAP_TRACK_DEPARTURES)) {
-                        hideFlyouts();
-                    }
-                }
-            }
-        });
+
+//        mapViewModel.getTracksAvailableLiveData().observe(this, new Observer<Boolean>() {
+//            @Override
+//            public void onChanged(@Nullable Boolean tracksAvailable) {
+//                if (tracksAvailable != null && tracksAvailable) {
+//                    if (TutorialManager.getInstance(getActivity()).showTutorialIfNecessary(mTutorialView, TutorialManager.Id.MAP_TRACK_DEPARTURES)) {
+//                        hideFlyouts();
+//                    }
+//                }
+//            }
+//        });
 
         mapViewModel.getParking().getParkingFacilitiesWithLiveCapacity().observe(this, parkingFacilities -> {
             onParkingFacilitiesUpdated(parkingFacilities, false);
@@ -361,6 +369,20 @@ public class MapOverlayFragment extends Fragment implements OnMapReadyCallback, 
 
         content.setMarkerBinders(Content.Source.DB, markerBinders, categorizedMarkerBinders);
 
+        final TimetableCollector timetableCollector = markerContent.getDepartures();
+
+        if (timetableCollector != null) {
+            timetableCollector.getTimetableUpdateAsLiveData().observe(this.getViewLifecycleOwner(), new Observer<Timetable>() {
+
+                @Override
+                public void onChanged(Timetable timetable) {
+                    if(flyoutsAdapter!=null)
+                        flyoutsAdapter.notifyDataSetChanged();
+
+                }
+            });
+
+        }
         applyInitialMarkerBinder();
     }
 
@@ -539,6 +561,19 @@ public class MapOverlayFragment extends Fragment implements OnMapReadyCallback, 
         });
         updateOsmCopyrightVisibility(osmCopyrightView, mapInterface.currentMapType);
 
+
+        mapViewModel.getTracksAvailableLiveData().observe(this.getViewLifecycleOwner(), new Observer<Boolean>() {
+
+            @Override
+            public void onChanged(Boolean tracksAvailable) {
+                if (tracksAvailable != null && tracksAvailable) {
+                    if (TutorialManager.getInstance(getActivity()).showTutorialIfNecessary(mTutorialView, TutorialManager.Id.MAP_TRACK_DEPARTURES)) {
+//                        hideFlyouts();
+                    }
+                }
+            }
+        });
+
         return view;
     }
 
@@ -631,16 +666,32 @@ public class MapOverlayFragment extends Fragment implements OnMapReadyCallback, 
             }
         };
 
-        mapViewModel.getStationLocationLiveData().observe(getViewLifecycleOwner(), location -> {
+        mapViewModel.getStationLocationLiveData().observe(getViewLifecycleOwner(), dbOrHafaslocation -> {
             mapInterface = new GoogleMapsMapInterface(mapInterface, googleMap, getContext(),
                     onMarkerClickListener,
                     this,
-                    zoomChangeListener, location, mapViewModel.getZoom());
+                    zoomChangeListener, dbOrHafaslocation.getLocation(), mapViewModel.getZoom());
 
             content.onMapReady(googleMap);
 
-            if (location == null) {
+            if (dbOrHafaslocation.getLocation() == null) {
                 onLocate();
+            }
+            else {
+
+                if(!dbOrHafaslocation.isDbPosition() && dbOrHafaslocation.getLocation()!=null) {
+                    final MapInterface mapInterface = MapOverlayFragment.this.mapInterface;
+                    if (mapInterface != null) {
+                        mapInterface.setLocation(dbOrHafaslocation.getLocation(), DEFAULT_ZOOM);
+
+                        Location targetLocation = new Location("");
+                        targetLocation.setLatitude(dbOrHafaslocation.getLocation().latitude);
+                        targetLocation.setLongitude(dbOrHafaslocation.getLocation().longitude);
+
+                        mapViewModel.getLocationLiveData().postValue(targetLocation);
+                    }
+                }
+
             }
 
         });
@@ -909,23 +960,23 @@ public class MapOverlayFragment extends Fragment implements OnMapReadyCallback, 
 
     public void applyInitialMarkerBinder() {
 
-//        if (rimapDone && initialMarkerBinder == null && highlightedMarkerBinder == null) {
-//            final MarkerBinder firstMarkerBinder = content.getVisibleMarkerBinderForInitialSelection();
-//            if (firstMarkerBinder != null) {
-//                selectMarker(firstMarkerBinder);
-//            }
-//            return;
-//        }
-//
-//        if (highlightedMarkerBinder != null) {
-//            initialMarkerBinder = null;
-//            snapToFlyout(highlightedMarkerBinder);
-//        }
-//
-//        if (initialMarkerBinder != null) {
-//            selectMarker(initialMarkerBinder);
-//            initialMarkerBinder = null;
-//        }
+        if (rimapDone && initialMarkerBinder == null && highlightedMarkerBinder == null) {
+            final MarkerBinder firstMarkerBinder = content.getVisibleMarkerBinderForInitialSelection();
+            if (firstMarkerBinder != null) {
+                selectMarker(firstMarkerBinder);
+            }
+            return;
+        }
+
+        if (highlightedMarkerBinder != null) {
+            initialMarkerBinder = null;
+            snapToFlyout(highlightedMarkerBinder);
+        }
+
+        if (initialMarkerBinder != null) {
+            selectMarker(initialMarkerBinder);
+            initialMarkerBinder = null;
+        }
     }
 
     public void updateInitialMarkerBinder(MarkerBinder markerBinder) {

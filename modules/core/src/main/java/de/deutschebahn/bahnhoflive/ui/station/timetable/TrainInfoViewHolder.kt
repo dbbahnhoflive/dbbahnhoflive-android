@@ -8,10 +8,13 @@ package de.deutschebahn.bahnhoflive.ui.station.timetable
 
 import android.view.ViewGroup
 import de.deutschebahn.bahnhoflive.R
+import de.deutschebahn.bahnhoflive.backend.db.ris.model.Platform
+import de.deutschebahn.bahnhoflive.backend.db.ris.model.firstLinkedPlatform
 import de.deutschebahn.bahnhoflive.backend.ris.model.TrainEvent
 import de.deutschebahn.bahnhoflive.backend.ris.model.TrainInfo
 import de.deutschebahn.bahnhoflive.backend.ris.model.TrainMovementInfo
 import de.deutschebahn.bahnhoflive.repository.Station
+import de.deutschebahn.bahnhoflive.util.accessibility.AccessibilityUtilities
 import de.deutschebahn.bahnhoflive.view.ItemClickListener
 import de.deutschebahn.bahnhoflive.view.SelectableItemViewHolder
 import de.deutschebahn.bahnhoflive.view.SingleSelectionManager
@@ -54,6 +57,8 @@ class TrainInfoViewHolder internal constructor(
     private val trainEvent: TrainEvent
         get() = timetableAdapter.trainEvent
 
+    private var platformList : List<Platform>? = null
+
     override fun onBind(item: TrainInfo?) {
         super.onBind(item)
 
@@ -77,18 +82,44 @@ class TrainInfoViewHolder internal constructor(
     private fun renderContentDescription(
         trainInfo: TrainInfo,
         trainMovementInfo: TrainMovementInfo
-    ) = with(itemView.resources) {
-        val trainEvent = trainEvent
+    ) : String = with(itemView.resources) {
+
+        var platformText =
+            AccessibilityUtilities.convertTrackSpan(getString(R.string.sr_template_platform, trainMovementInfo.displayPlatform))
+
+        val platform =
+            platformList?.firstOrNull { it.number == Platform.platformNumber(trainMovementInfo.platform) }
+
+
+        platform?.let {
+
+            if (it.isHeadPlatform)
+                platformText += ", ${getString(R.string.platform_head)}."
+
+            platformList?.firstLinkedPlatform(trainMovementInfo.correctedPlatform?:trainMovementInfo.platform)?.let { itLinkedPlatform ->
+                if (it.countLinkedPlatforms == 1) {
+                    platformText += " .${
+                        getString(
+                            R.string.template_linkplatform,
+                            itLinkedPlatform.number
+                        )
+                    }"
+
+                }
+            }
+        }
+
+//        val trainEvent = trainEvent
         getString(R.string.sr_template_db_timetable_item,
-            TimetableViewHelper.composeName(trainInfo, trainMovementInfo),
+            AccessibilityUtilities.fixScreenReaderText(TimetableViewHelper.composeName(trainInfo, trainMovementInfo)),
             getText(trainEvent.contentDescriptionPhrase),
             trainMovementInfo.getDestinationStop(trainEvent.isDeparture),
-            trainMovementInfo.formattedTime,
-            getString(R.string.sr_template_platform, trainMovementInfo.displayPlatform),
+            AccessibilityUtilities.getSpokenTime(trainMovementInfo.formattedTime),
+            platformText + ", ",
             trainMovementInfo.delayInMinutes().takeIf { it > 0 }?.let {
                 getString(
                     R.string.sr_template_estimated,
-                    trainMovementInfo.formattedActualTime
+                    AccessibilityUtilities.getSpokenTime(trainMovementInfo.formattedActualTime)
                 )
             }
                 ?: "",
@@ -97,9 +128,9 @@ class TrainInfoViewHolder internal constructor(
         )
     }
 
-
-
-
+    fun setPlatforms(platforms: List<Platform>) {
+        this.platformList = platforms
+    }
     private fun updateWagonOrderViews(item: TrainInfo?) {
         trainInfoOverviewViewHolder.bind(item)
     }

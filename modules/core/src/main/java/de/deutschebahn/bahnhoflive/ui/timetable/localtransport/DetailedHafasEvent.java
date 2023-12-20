@@ -6,6 +6,8 @@
 
 package de.deutschebahn.bahnhoflive.ui.timetable.localtransport;
 
+import android.util.Log;
+
 import androidx.annotation.NonNull;
 
 import com.android.volley.VolleyError;
@@ -33,12 +35,14 @@ public class DetailedHafasEvent {
         }
         loading = true;
 
-        localTransportRepository.queryTimetableDetails(hafasEvent, new BaseRestListener<HafasDetail>() {
+        Log.d("cr", "DetailedHafasEvent:queryTimetableDetails " + hafasEvent.direction);
+        localTransportRepository.queryHafasTimetableDetails(hafasEvent, new BaseRestListener<HafasDetail>() {
             @Override
             public void onSuccess(@NonNull HafasDetail payload) {
                 success=true;
                 setHafasDetail(payload);
                 loading = false;
+                Log.d("cr", "DetailedHafasEvent:queryTimetableDetails SUCCESS");
             }
 
             @Override
@@ -47,6 +51,7 @@ public class DetailedHafasEvent {
                 loading = false;
                 success = false;
                 notifyListeners();
+                Log.d("cr", "DetailedHafasEvent:queryTimetableDetails FAILED(" + reason.getMessage()+")");
                 //TODO notify client
             }
         }, ORIGIN_TIMETABLE);

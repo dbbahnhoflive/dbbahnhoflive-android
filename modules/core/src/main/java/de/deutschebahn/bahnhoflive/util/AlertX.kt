@@ -2,16 +2,8 @@ package de.deutschebahn.bahnhoflive.util
 
 import android.content.Context
 import android.graphics.Typeface
-import android.view.Gravity
-import android.widget.LinearLayout
-import android.widget.TextView
+import android.widget.CheckBox
 import androidx.appcompat.app.AlertDialog
-import androidx.appcompat.widget.DialogTitle
-import androidx.core.content.ContextCompat
-import androidx.core.view.ViewCompat
-import com.google.android.material.shape.CornerFamily
-import com.google.android.material.shape.MaterialShapeDrawable
-import com.google.android.material.shape.ShapeAppearanceModel
 import de.deutschebahn.bahnhoflive.R
 
 
@@ -23,6 +15,12 @@ class AlertX {
             BUTTON_NODEFAULT, BUTTON_POSITIVE, BUTTON_NEGATIVE, BUTTON_NEUTRAL
         }
 
+
+        // for java
+        fun buttonNegative() : AlertDefaultButton = AlertDefaultButton.BUTTON_NEGATIVE
+        fun buttonPositive() : AlertDefaultButton = AlertDefaultButton.BUTTON_POSITIVE
+        fun buttonNeutral() : AlertDefaultButton = AlertDefaultButton.BUTTON_NEUTRAL
+
         fun execAlert(
             context: Context,
             titleText:String,
@@ -30,11 +28,12 @@ class AlertX {
             defaultButton : AlertDefaultButton=AlertDefaultButton.BUTTON_POSITIVE,
             buttonPositiveText:String="", // right
             buttonPositiveClicked: (() -> Unit)? = null,
-            buttonNegativText:String="", // left
+            buttonNegativeText:String="", // left
             buttonNegativeClicked: (() -> Unit)? = null,
             buttonNeutralText:String="", // middle
-            buttonNeutralClicked: (() -> Unit)? = null
-
+            buttonNeutralClicked: (() -> Unit)? = null,
+            checkboxText:String="",
+            checkboxClicked: ((Boolean)->Unit)? = null
         ) {
 
             val builder: AlertDialog.Builder = androidx.appcompat.app.AlertDialog.Builder(context, R.style.App_Dialog_Theme)
@@ -52,20 +51,36 @@ class AlertX {
                 }
             }
 
-            if (buttonNegativText.isNotEmpty()) {
-                builder.setNeutralButton(buttonNegativText) { dialog, which ->
-                    buttonNeutralClicked?.invoke()
-                    dialog.dismiss()
-                }
-            }
-
-            if (buttonNeutralText.isNotEmpty()) {
-                builder.setNegativeButton(buttonNegativText) { dialog, which ->
+            if (buttonNegativeText.isNotEmpty()) {
+                builder.setNeutralButton(buttonNegativeText) { dialog, which ->
                     buttonNegativeClicked?.invoke()
                     dialog.dismiss()
                 }
             }
 
+            if (buttonNeutralText.isNotEmpty()) {
+                builder.setNegativeButton(buttonNegativeText) { dialog, which ->
+                    buttonNeutralClicked?.invoke()
+                    dialog.dismiss()
+                }
+            }
+
+
+//            val checkBoxView = View.inflate(context, R.layout.test_alert_checkbox, null)
+//            val checkBox = checkBoxView.findViewById<View>(R.id.checkbox) as CheckBox
+//            checkBox.setOnCheckedChangeListener { buttonView, isChecked ->
+//                // Save to shared preferences
+//            }
+//            checkBox.text = "Text to the right of the check box."
+
+            if(checkboxText.isNotBlank() && checkboxClicked!=null) {
+                val checkBoxView = CheckBox(context)
+                checkBoxView.text = checkboxText
+                checkBoxView.setOnCheckedChangeListener { buttonView, isChecked ->
+                    checkboxClicked(isChecked)
+                }
+                builder.setView(checkBoxView)
+            }
 
             builder.setCancelable(false)
 
@@ -75,8 +90,6 @@ class AlertX {
 
 
             // alert_dialog.xml
-
-
 
 //            val parentPanel = dialog.findViewById<LinearLayout>(androidx.appcompat.R.id.parentPanel)
 

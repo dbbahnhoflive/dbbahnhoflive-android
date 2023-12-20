@@ -17,7 +17,6 @@ import de.deutschebahn.bahnhoflive.databinding.IncludeItemRailReplacementBinding
 import de.deutschebahn.bahnhoflive.ui.map.MapPresetProvider
 import de.deutschebahn.bahnhoflive.ui.map.content.rimap.RimapFilter
 import de.deutschebahn.bahnhoflive.ui.station.StationViewModel
-import de.deutschebahn.bahnhoflive.util.setAccessibilityText
 import de.deutschebahn.bahnhoflive.util.startSafely
 
 class RailReplacementFragment : Fragment(), MapPresetProvider {
@@ -41,26 +40,14 @@ class RailReplacementFragment : Fragment(), MapPresetProvider {
             if (railReplacementNev2.visibility == View.VISIBLE)
                 fullText += railReplacementNev2.text ?: ""
 
-
-//           val cleanedFullText = fullText.replace("26. Mai", "26.5.2023")
-//                .replace("11. September 2023", "11.9.2023")
-//                .replace("06. August 2023", "6.8.2023")
-//                .replace("06. August", "6.8.2023")
-//
-//            if(railReplacementNev.visibility!=View.VISIBLE)
-//               railReplacementEntryLabel.contentDescription = cleanedFullText
-//
-//            servicesDetails.contentDescription = fullText.replace("26. Mai", "26.5.2023")
-//                .replace("11. September 2023", "11.9.2023")
-//                .replace("06. August 2023", "6.8.2023")
-//                .replace("06. August", "6.8.2023")
-
             railReplacementNev.apply {
                 if (visibility == View.VISIBLE) {
                     contentDescription = text.toString().replace("26. Mai", "26.5.2023")
                         .replace("11. September 2023", "11.9.2023")
                         .replace("06. August 2023", "6.8.2023")
                         .replace("06. August", "6.8.2023")
+                        .replace("05. August 2023", "5.8.2023")
+                        .replace("05. August", "5.8.2023")
                 }
             }
 
@@ -68,6 +55,8 @@ class RailReplacementFragment : Fragment(), MapPresetProvider {
                 if (visibility == View.VISIBLE) {
                     contentDescription = text.toString().replace("26. Mai", "26.5.2023")
                 .replace("11. September 2023", "11.9.2023")
+                        .replace("05. August 2023", "5.8.2023")
+                        .replace("05. August", "5.8.2023")
                 .replace("06. August 2023", "6.8.2023")
                 .replace("06. August", "6.8.2023")
                 }
@@ -114,8 +103,25 @@ class RailReplacementFragment : Fragment(), MapPresetProvider {
                     ).startSafely(it1)
                 }
             }
-
             setScreenReaderText(this)
+        }
+
+
+        stationViewModel.showAugmentedRealityTeaser.observe(viewLifecycleOwner) { itShow ->
+            arTeaserNev.root.visibility = if(itShow) View.VISIBLE else View.GONE
+            arTeaserNev.webLinkAr.setOnClickListener {
+                stationViewModel.startAugmentedRealityWebSite(requireContext())
+            }
+            arTeaserNev.root.setOnClickListener {
+                stationViewModel.startAugmentedRealityWebSite(requireContext())
+            }
+        }
+
+        stationViewModel.showDbCompanionTeaser.observe(viewLifecycleOwner) {itShowDbCompanionTeaser ->
+            dbCompanionTeaserNev.root.visibility = if(itShowDbCompanionTeaser) View.VISIBLE else View.GONE
+            dbCompanionTeaserNev.weblinkDbCompanion.setOnClickListener {
+                stationViewModel.startDbCompanionWebSite(requireContext())
+            }
         }
 
         stationViewModel.railReplacementSummaryLiveData.observe(viewLifecycleOwner) { it ->

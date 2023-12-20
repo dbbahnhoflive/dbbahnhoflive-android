@@ -20,6 +20,7 @@ import java.util.List;
 
 import de.deutschebahn.bahnhoflive.R;
 import de.deutschebahn.bahnhoflive.analytics.TrackingManager;
+import de.deutschebahn.bahnhoflive.backend.db.ris.model.Platform;
 import de.deutschebahn.bahnhoflive.backend.ris.model.RISTimetable;
 import de.deutschebahn.bahnhoflive.backend.ris.model.TrainEvent;
 import de.deutschebahn.bahnhoflive.backend.ris.model.TrainInfo;
@@ -29,6 +30,7 @@ import de.deutschebahn.bahnhoflive.repository.timetable.Constants;
 import de.deutschebahn.bahnhoflive.repository.timetable.Timetable;
 import de.deutschebahn.bahnhoflive.ui.ViewHolder;
 import de.deutschebahn.bahnhoflive.ui.map.content.rimap.Track;
+import de.deutschebahn.bahnhoflive.util.ListHelper;
 import de.deutschebahn.bahnhoflive.view.SingleSelectionManager;
 import kotlin.Unit;
 import kotlin.jvm.functions.Function3;
@@ -54,7 +56,10 @@ class DbTimetableAdapter extends RecyclerView.Adapter<ViewHolder<?>> implements 
     @Nullable
     private String track;
 
-    private TrackingManager trackingManager;
+    private Boolean hasMoreThan1Track=true;
+    private Boolean hasMoreThan1TrainType=true;
+
+    private final TrackingManager trackingManager;
     private final View.OnClickListener loadMoreListener;
 
     @NonNull
@@ -63,6 +68,8 @@ class DbTimetableAdapter extends RecyclerView.Adapter<ViewHolder<?>> implements 
     private final List<String> trainCategories = new LinkedList<>();
 
     private Timetable timetable;
+    private List<Platform> platforms = null;
+
     private final Function3<? super TrainInfo, ? super TrainEvent, ? super Integer, Unit> itemClickListener;
 
     DbTimetableAdapter(@Nullable Station station, FilterUI filterUI,
@@ -127,7 +134,7 @@ class DbTimetableAdapter extends RecyclerView.Adapter<ViewHolder<?>> implements 
     }
 
     public void setFilter(@Nullable String track) {
-        this.track = track;
+        this.track = track;//track witout extension, statt (Gleis) 1a -> (Gleis) 1
 
         notifyItemChanged(0);
 
@@ -137,14 +144,24 @@ class DbTimetableAdapter extends RecyclerView.Adapter<ViewHolder<?>> implements 
     public void setTimetable(@NonNull Timetable timetable) {
         this.timetable = timetable;
 
+        if (!applyFilters()) {
+            // fallback old solution (todo: check if necessaray)
         trainCategories.clear();
         trainCategories.addAll(RISTimetable.getTrainCategories(
                 timetable.getTrainInfos()));
 
         tracks.clear();
         tracks.addAll(RISTimetable.getTracksForFilter(getSelectedTrainInfos()));
+        }
 
-        applyFilters();
+        hasMoreThan1Track = RISTimetable.hasMoreThan1Platform(getSelectedTrainInfos());
+        hasMoreThan1TrainType = RISTimetable.hasMoreThan1TrainCategory( timetable.getTrainInfos());
+
+    }
+
+    public void setPlatforms(List<Platform> platforms) {
+        this.platforms=platforms;
+        notifyDataSetChanged();
     }
 
     @Nullable
@@ -201,6 +218,8 @@ class DbTimetableAdapter extends RecyclerView.Adapter<ViewHolder<?>> implements 
         } else if (filteredTrainInfos != null && position <= filteredTrainInfos.size() && holder instanceof TrainInfoViewHolder) {
             final TrainInfoViewHolder trainInfoViewHolder = (TrainInfoViewHolder) holder;
             trainInfoViewHolder.setStation(station);
+            if(platforms!=null)
+             trainInfoViewHolder.setPlatforms(platforms);
             trainInfoViewHolder.bind(filteredTrainInfos.get(position - 1));
         } else if (holder instanceof TimetableTrailingItemViewHolder) {
             if (timetable == null) {
@@ -226,12 +245,46 @@ class DbTimetableAdapter extends RecyclerView.Adapter<ViewHolder<?>> implements 
                                 ITEM_TYPE_CONTENT;
     }
 
-    public void applyFilters() {
+    private void addPlatformAndTrainCategoryToUiFilter(@NonNull TrainInfo trainInfo,
+                                                       @Nullable TrainMovementInfo trainMovementInfo)
+    {
+     if(trainMovementInfo!=null) {
+         final String platformRaw = trainMovementInfo.getPlatform();
+         String platform = ""; //""k.A.";
+
+         try {
+           int value = Integer.parseInt(platformRaw.replaceAll("[^0-9]", "").trim());
+           platform = Integer.toString(value);
+         }
+         catch(Exception e) {
+             platform = platformRaw;
+         }
+
+         ListHelper.addToStringList(tracks, platform, false, true );
+
+         final String category = trainInfo.getTrainCategory();
+         ListHelper.addToStringList(trainCategories,category, false, true );
+     }
+    }
+
+    public boolean applyFilters() { // nach Gleis (track,platform) und/oder Zugtyp(category) filtern
         selectionManager.clearSelection();
 
-        final List<TrainInfo> selectedTrainInfos = getSelectedTrainInfos();
+        final List<TrainInfo> selectedTrainInfos = getSelectedTrainInfos(); // alle im Zeitbereich (akt. zeit bis (+ n Stunden))
+
+        // fuer ui Filter bzw. FilterDialogFragment
+        trainCategories.clear();
+        tracks.clear();
+        for (TrainInfo trainInfo : selectedTrainInfos) {
+            if (this.trainEvent == TrainEvent.DEPARTURE)
+                addPlatformAndTrainCategoryToUiFilter(trainInfo, trainInfo.getDeparture());
+            else
+                addPlatformAndTrainCategoryToUiFilter(trainInfo, trainInfo.getArrival());
+        }
 
         if (selectedTrainInfos != null) {
+
+            final long now = System.currentTimeMillis();
 
             final ArrayList<TrainInfo> filteredTrainInfos = new ArrayList<>();
             for (TrainInfo selectedTrainInfo : selectedTrainInfos) {
@@ -239,17 +292,44 @@ class DbTimetableAdapter extends RecyclerView.Adapter<ViewHolder<?>> implements 
                     continue;
                 }
 
-                if (track != null && !track.equals(trainEvent.movementRetriever.getTrainMovementInfo(selectedTrainInfo).getPurePlatform())) {
+                if (track != null && !track.equals(trainEvent.movementRetriever.getTrainMovementInfo(selectedTrainInfo).getPlatformWithoutExtensions())) {
                     continue;
                 }
 
+                if (trainEvent.isDeparture) {
+
+                    final TrainMovementInfo mm = selectedTrainInfo.getDeparture();
+
+                    if (mm != null && mm.getCorrectedStatus() != null
+                            && mm.getCorrectedStatus().equals("c") && mm.getPlannedDateTime() < now) {
+                        continue;
+                    }
+                } else {
+                    final TrainMovementInfo mm = selectedTrainInfo.getArrival();
+
+                    if (mm != null && mm.getCorrectedStatus() != null
+                            && mm.getCorrectedStatus().equals("c") && mm.getPlannedDateTime() < now) {
+                        continue;
+                    }
+
+                }
+
+
                 filteredTrainInfos.add(selectedTrainInfo);
+
             }
 
             this.filteredTrainInfos = filteredTrainInfos;
+
+
         }
 
+        trainCategories.add(0, "Alle");
+        tracks.add(0, "Alle");
+
         notifyDataSetChanged();
+
+        return selectedTrainInfos!=null;
     }
 
     private List<TrainInfo> getSelectedTrainInfos() {
@@ -283,9 +363,8 @@ class DbTimetableAdapter extends RecyclerView.Adapter<ViewHolder<?>> implements 
                     twoAlternateButtonsViewHolder.checkRightButton();
                     break;
             }
-            filterButton.setVisibility(
-                    trainCategories.size() > 2 || tracks.size() > 2 ? View.VISIBLE : View.INVISIBLE
-            );
+            filterButton.setVisibility(hasMoreThan1Track || hasMoreThan1TrainType
+                    ? View.VISIBLE : View.INVISIBLE);
             filterButton.setSelected(trainCategory != null || track != null);
         }
 

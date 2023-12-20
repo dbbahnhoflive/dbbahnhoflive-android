@@ -40,7 +40,7 @@ class HafasMarkerContent extends MarkerContent {
         final MarkerOptions markerOptions = super.createMarkerOptions();
 
         try {
-            markerOptions.position(getStation().getPosition()); // can cause exception
+            markerOptions.position(getStation().getLocation()); // can cause exception
         }
         catch(Exception e) {
 
@@ -96,7 +96,7 @@ class HafasMarkerContent extends MarkerContent {
     @Override
     public void onHighlighted(boolean highlighted) {
         if (highlighted && hafasTimetable != null) {
-            hafasTimetable.requestTimetable(true, MapOverlayFragment.ORIGIN_MAP);
+            hafasTimetable.requestTimetable(true, MapOverlayFragment.ORIGIN_MAP, false);
         }
     }
 

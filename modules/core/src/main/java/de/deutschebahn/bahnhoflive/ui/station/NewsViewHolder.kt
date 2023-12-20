@@ -16,8 +16,8 @@ import androidx.core.view.get
 import de.deutschebahn.bahnhoflive.backend.db.newsapi.model.News
 import de.deutschebahn.bahnhoflive.databinding.ItemNewsBinding
 import de.deutschebahn.bahnhoflive.ui.ViewHolder
-import de.deutschebahn.bahnhoflive.ui.accessibility.isSpokenFeedbackAccessibilityEnabled
 import de.deutschebahn.bahnhoflive.ui.station.news.groupIcon
+import de.deutschebahn.bahnhoflive.util.accessibility.isSpokenFeedbackAccessibilityEnabled
 import de.deutschebahn.bahnhoflive.view.ItemClickListener
 
 data class NewsHeadline(

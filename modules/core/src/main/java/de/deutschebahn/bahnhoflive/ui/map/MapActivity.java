@@ -6,6 +6,8 @@
 
 package de.deutschebahn.bahnhoflive.ui.map;
 
+import static de.deutschebahn.bahnhoflive.ui.timetable.localtransport.DeparturesActivity.ARG_HAFAS_STATION;
+
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
@@ -27,6 +29,7 @@ import java.util.ArrayList;
 import de.deutschebahn.bahnhoflive.R;
 import de.deutschebahn.bahnhoflive.analytics.StationTrackingManager;
 import de.deutschebahn.bahnhoflive.analytics.TrackingManager;
+import de.deutschebahn.bahnhoflive.backend.hafas.model.HafasStation;
 import de.deutschebahn.bahnhoflive.backend.hafas.model.HafasTimetable;
 import de.deutschebahn.bahnhoflive.repository.InternalStation;
 import de.deutschebahn.bahnhoflive.repository.Station;
@@ -35,6 +38,7 @@ import de.deutschebahn.bahnhoflive.ui.accessibility.SpokenFeedbackAccessibilityL
 import de.deutschebahn.bahnhoflive.ui.map.content.rimap.RimapFilter;
 import de.deutschebahn.bahnhoflive.ui.station.ElevatorIssuesLoaderFragment;
 import de.deutschebahn.bahnhoflive.ui.station.LoaderFragment;
+import de.deutschebahn.bahnhoflive.util.DebugX;
 import de.deutschebahn.bahnhoflive.view.BackHandlingFragment;
 
 public class MapActivity extends AppCompatActivity implements
@@ -52,6 +56,8 @@ public class MapActivity extends AppCompatActivity implements
 
     private Station station;
 
+    private HafasStation hafasStation=null;
+
     @NonNull
     private TrackingManager trackingManager;
 
@@ -62,8 +68,15 @@ public class MapActivity extends AppCompatActivity implements
         super.onCreate(savedInstanceState);
 
         final Intent intent = getIntent();
+        DebugX.Companion.logIntent("MapActivity", intent);
+
         if (intent.hasExtra(ARG_STATION)) {
             station = intent.getParcelableExtra(ARG_STATION);
+        }
+
+        if (intent.hasExtra(ARG_HAFAS_STATION)) {
+            hafasStation = intent.getParcelableExtra(ARG_HAFAS_STATION);
+//            station = new InternalStation(hafasStation.extId, hafasStation.name, new LatLng(hafasStation.longitude, hafasStation.latitude), hafasStation.evaIds);
         }
 
         new SpokenFeedbackAccessibilityLiveData(this).observe(this, aBoolean -> {
@@ -80,8 +93,13 @@ public class MapActivity extends AppCompatActivity implements
         }
 
         mapViewModel = new ViewModelProvider(this).get(MapViewModel.class);
-        mapViewModel.setStation(station, infoAndServicesTitles);
 
+        if(hafasStation!=null) {
+            mapViewModel.setHafasStation(hafasStation);
+        }
+        else {
+        mapViewModel.setStation(station, infoAndServicesTitles);
+        }
 
         trackingManager = station == null ? new TrackingManager(this) : new StationTrackingManager(this, station);
 
@@ -153,6 +171,12 @@ public class MapActivity extends AppCompatActivity implements
         intent.putExtra(ARG_STATION, station instanceof Parcelable ?
                 (Parcelable) station : new InternalStation(station));
 
+        return intent;
+    }
+
+    public static Intent createIntent(Context context, HafasStation station) {
+        final Intent intent = createIntent(context);
+        intent.putExtra(ARG_HAFAS_STATION, station);
         return intent;
     }
 

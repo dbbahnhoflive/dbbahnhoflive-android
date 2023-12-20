@@ -6,14 +6,19 @@
 
 package de.deutschebahn.bahnhoflive.ui.timetable.localtransport
 
+import android.graphics.Color
 import android.view.View
+import android.widget.ImageView
+import androidx.core.view.isVisible
 import de.deutschebahn.bahnhoflive.R
 import de.deutschebahn.bahnhoflive.backend.hafas.model.HafasEvent
 import de.deutschebahn.bahnhoflive.ui.TimetableItemOverviewViewHolder
-import java.text.SimpleDateFormat
-import java.util.*
+import de.deutschebahn.bahnhoflive.util.accessibility.AccessibilityUtilities
+import de.deutschebahn.bahnhoflive.util.formatShortTime
 
 class HafasEventOverviewViewHolder(view: View) : TimetableItemOverviewViewHolder<HafasEvent>(view) {
+
+    private val issueIndicator : ImageView? = itemView.findViewById<ImageView>(R.id.issue_indicator)
 
     override fun onBind(item: HafasEvent?) {
         super.onBind(item)
@@ -26,25 +31,51 @@ class HafasEventOverviewViewHolder(view: View) : TimetableItemOverviewViewHolder
             transportationNameView?.text = item.displayName
             directionView?.text = item.direction
 
-            val time = item.time?.let { DATE_FORMAT.format(it) } ?: "?"
-            timeView?.text = time
+            val scheduledTimeString = item.scheduledTime?.let { (it.time).formatShortTime() } ?: "?"
+            timeView?.text = scheduledTimeString
 
-            val estimatedTime: CharSequence = item.actualTime?.let { DATE_FORMAT.format(it) }
-                ?: time
-            bindDelay(item.delay.toLong(), estimatedTime)
+            val estimatedTimeString: CharSequence = item.estimatedTime?.let { (it.time).formatShortTime() }
+                ?: scheduledTimeString
+            bindDelay(item.delay.toLong(), estimatedTimeString)
 
             val resources = itemView.resources
 
+            val platform: String? = item.shortcutTrackName
+
+            platformView?.let {
+                it.text = platform
+                it.isVisible = !platform.isNullOrEmpty()
+                it.setTextColor( if(item.hasIssue) Color.RED else Color.BLACK)
+
+                }
+
+            issueIndicator?.isVisible = item.hasIssue
+
+
             itemView.contentDescription = resources.getString(
                 R.string.sr_template_local_departure_overview,
-                item.displayName, item.direction, time,
-                if (item.delay > 0) resources.getString(R.string.sr_template_estimated, estimatedTime) else ""
+                AccessibilityUtilities.fixScreenReaderText(item.displayName),
+                item.direction,
+                AccessibilityUtilities.getSpokenTime(scheduledTimeString),
+                when {
+                    item.cancelled -> "Verbindung fällt aus"
+                    item.trackChanged -> "heute abweichend ${AccessibilityUtilities.convertTrackSpan(item.prettyTrackName)}"
+                    else -> AccessibilityUtilities.convertTrackSpan(item.prettyTrackName)
+                },
+                if (item.delay > 0)
+                    resources.getString(
+                        R.string.sr_template_estimated_departure,
+                        AccessibilityUtilities.getSpokenTime(estimatedTimeString)
+                    )
+                else ""
             )
+
         }
     }
 
-    companion object {
 
-        val DATE_FORMAT = SimpleDateFormat("HH:mm", Locale.GERMANY)
-    }
+
+//    companion object {
+//        val DATE_FORMAT = SimpleDateFormat("HH:mm", Locale.GERMANY)
+//    }
 }

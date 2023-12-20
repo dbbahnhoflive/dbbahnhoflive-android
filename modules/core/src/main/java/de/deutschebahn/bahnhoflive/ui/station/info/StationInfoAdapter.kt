@@ -79,7 +79,7 @@ class StationInfoAdapter(
                     "rateApp" -> {
                         activityStarter(parent.context.createPlaystoreIntent())
                     }
-                    "showServiceNrMobi" -> run {
+                    "mobilitaetsservice" -> run {
                         (parent.context as? StationActivity)?.showMobilityServiceNumbers()
                     }
                 }

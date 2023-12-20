@@ -19,9 +19,9 @@ import de.deutschebahn.bahnhoflive.backend.db.fasta2.model.FacilityStatus
 import de.deutschebahn.bahnhoflive.push.FacilityPushManager
 import de.deutschebahn.bahnhoflive.push.NotificationChannelManager
 import de.deutschebahn.bahnhoflive.ui.Status
-import de.deutschebahn.bahnhoflive.ui.accessibility.isSpokenFeedbackAccessibilityEnabled
 import de.deutschebahn.bahnhoflive.ui.station.CommonDetailsCardViewHolder
 import de.deutschebahn.bahnhoflive.util.AlertX
+import de.deutschebahn.bahnhoflive.util.accessibility.isSpokenFeedbackAccessibilityEnabled
 import de.deutschebahn.bahnhoflive.util.setAccessibilityText
 import de.deutschebahn.bahnhoflive.view.CompoundButtonChecker
 import de.deutschebahn.bahnhoflive.view.SingleSelectionManager

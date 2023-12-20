@@ -23,6 +23,7 @@ import de.deutschebahn.bahnhoflive.repository.locker.AnyLockerInitialPoi
 import de.deutschebahn.bahnhoflive.ui.map.content.rimap.Track
 import de.deutschebahn.bahnhoflive.ui.station.shop.OpenStatusResolver
 import de.deutschebahn.bahnhoflive.ui.station.shop.RimapShop
+import de.deutschebahn.bahnhoflive.util.StringX
 
 class RimapMarkerContent(val rimapPOI: RimapPOI, private val rimapConfigItem: RimapConfig.Item, @field:DrawableRes
 private val mapIcon: Int, @field:DrawableRes
@@ -108,9 +109,12 @@ private val mapIcon: Int, @field:DrawableRes
         }
 
         if (rimapPOI.type in MenuMapping.PLATFORM_TYPES && item is Track) {
-            val platform = item.number
+            val platform = item.number // platform 12 A-F möglich, rimapPOI.name NUR numerisch !
             if (!TextUtils.isEmpty(platform)) {
-                return platform == rimapPOI.name
+                return  StringX.extractIntAtStartOfString(platform, 0) == rimapPOI.name?.let {
+                    StringX.extractIntAtStartOfString(
+                        it, 1000)
+                }
             }
         }
 

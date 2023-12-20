@@ -52,14 +52,12 @@ import de.deutschebahn.bahnhoflive.backend.hafas.model.HafasStation;
 import de.deutschebahn.bahnhoflive.backend.local.model.RrtPoint;
 import de.deutschebahn.bahnhoflive.backend.local.model.ServiceContentType;
 import de.deutschebahn.bahnhoflive.backend.ris.model.TrainInfo;
-import de.deutschebahn.bahnhoflive.push.FacilityPushManager;
 import de.deutschebahn.bahnhoflive.repository.InternalStation;
 import de.deutschebahn.bahnhoflive.repository.Station;
 import de.deutschebahn.bahnhoflive.repository.StationResource;
 import de.deutschebahn.bahnhoflive.tutorial.Tutorial;
 import de.deutschebahn.bahnhoflive.tutorial.TutorialManager;
 import de.deutschebahn.bahnhoflive.tutorial.TutorialView;
-import de.deutschebahn.bahnhoflive.ui.hub.HubActivity;
 import de.deutschebahn.bahnhoflive.ui.map.EquipmentID;
 import de.deutschebahn.bahnhoflive.ui.map.MapActivity;
 import de.deutschebahn.bahnhoflive.ui.map.content.rimap.RimapFilter;
@@ -81,6 +79,11 @@ import de.deutschebahn.bahnhoflive.util.DebugX;
 import de.deutschebahn.bahnhoflive.util.VersionManager;
 import kotlin.Pair;
 import de.deutschebahn.bahnhoflive.util.GoogleLocationPermissions;
+import de.deutschebahn.bahnhoflive.ui.hub.HubActivity;
+
+
+
+
 
 public class StationActivity extends BaseActivity implements
         StationProvider,
@@ -88,6 +91,10 @@ public class StationActivity extends BaseActivity implements
         TrackingManager.Provider,
         StationNavigation
 {
+    final int HISTORYFRAGMENT_INDEX_OVERVIEW=0;
+    final int HISTORYFRAGMENT_INDEX_TIMETABLE=1;
+    final int HISTORYFRAGMENT_INDEX_INFO=2;
+    final int HISTORYFRAGMENT_INDEX_SHOPPING=3;
 
     public static final String ARG_INTENT_CREATION_TIME = "intent_creation_time";
 
@@ -192,10 +199,10 @@ public class StationActivity extends BaseActivity implements
 
         mTutorialView = findViewById(R.id.tab_tutorial_view);
 
-        historyFragments.put(0, overviewFragment);
-        historyFragments.put(1, timetablesFragment);
-        historyFragments.put(2, infoFragment);
-        historyFragments.put(3, shoppingFragment);
+        historyFragments.put(HISTORYFRAGMENT_INDEX_OVERVIEW, overviewFragment);
+        historyFragments.put(HISTORYFRAGMENT_INDEX_TIMETABLE, timetablesFragment);
+        historyFragments.put(HISTORYFRAGMENT_INDEX_INFO, infoFragment);
+        historyFragments.put(HISTORYFRAGMENT_INDEX_SHOPPING, shoppingFragment);
 
         viewFlipper = findViewById(R.id.view_flipper);
 
@@ -232,7 +239,6 @@ public class StationActivity extends BaseActivity implements
                 trackingManager.track(TrackingManager.TYPE_ACTION, TrackingManager.Source.TAB_NAVI, TrackingManager.Action.TAP, TrackingManager.UiElement.MAP_BUTTON);
                 GoogleLocationPermissions.startMapActivityIfConsent(getCurrentContentFragment(),
                         () -> MapActivity.createIntentWithInfoAndServicesTitles(StationActivity.this, station, stationViewModel.infoAndServicesTitles()));
-                ;
             }
         });
 
@@ -274,8 +280,6 @@ public class StationActivity extends BaseActivity implements
                     final int countElevators = listElevators.size();
 
                     if(countElevators>0) {
-
-                        final FacilityPushManager fpm = FacilityPushManager.Companion.getInstance();
 
                         for (FacilityStatus item : facilityStatuses) {
                             if (item.getType().equals(FacilityStatus.ELEVATOR)) {
@@ -449,6 +453,10 @@ public class StationActivity extends BaseActivity implements
         final TimetablesFragment timetablesFragment = TimetablesFragment.findIn(this.timetablesFragment);
 
         if (timetablesFragment != null) {
+
+            if(!localTransport) // kam mit ticket 2453, dient dazu Gleis(platform)-Informationen zu laden, da die ab 2453 mit angezeigt werden
+                stationViewModel.getAccessibilityFeaturesResource().loadIfNecessary();
+
             this.timetablesFragment.popEntireHistory();
             timetablesFragment.switchTo(localTransport, arrivals, trackFilter);
         }
@@ -475,15 +483,15 @@ public class StationActivity extends BaseActivity implements
 
     @Override
     public void showContentSearch() {
-        showTab(0);
-        overviewFragment.push(new ContentSearchFragment());
+//        showTab(0);
+//        overviewFragment.push(new ContentSearchFragment());
 
 //        showBottomSheetFragment(new ContentSearchFragment(), "content_search");
 //
-//        getSupportFragmentManager()
-//                .beginTransaction()
-//                .replace(R.id.overlayFrame, new ContentSearchFragment())
-//                .commit();
+        getSupportFragmentManager()
+                .beginTransaction()
+                .replace(R.id.overlayFrame, new ContentSearchFragment())
+                .commit();
     }
 
     @Override
@@ -634,7 +642,8 @@ public class StationActivity extends BaseActivity implements
             if (f != null)
                 fm.beginTransaction().remove(f).commit();
         } catch (Exception e) {
-            Log.d(this.TAG, e.getMessage());
+            if (e.getMessage() != null)
+              Log.d(this.TAG, e.getMessage());
         }
     }
 
@@ -657,6 +666,14 @@ public class StationActivity extends BaseActivity implements
         }
 
         if (timetablesFragment == historyFragment) {
+
+//            TimetablesFragment frag = TimetablesFragment.findIn(historyFragment);
+
+//            if(frag!=null) {
+////                frag.switchTo(false,true,"");
+//                return frag;
+//            }
+
             return new TimetablesFragment();
         }
 
@@ -681,6 +698,14 @@ public class StationActivity extends BaseActivity implements
             return true;
         }
 
+        try {
+            if (station.getLocation() != null)
+                Log.d("cr", "Station: " + station.getTitle() + ", " + station.getId() + ", " + station.getLocation().latitude + ", " + station.getLocation().longitude + ", " + station.getEvaIds().getIds().toString());
+        } catch (Exception e) {
+            // if location = 0,0
+            if (e.getMessage() != null)
+                Log.d("cr", e.getMessage());
+        }
 
         // Daten zur Rücknavigation ins stationViewModel packen
         final Station stationToNavigateBack = intent.getParcelableExtra(ARG_STATION_TO_NAVIGATE_BACK);
@@ -696,13 +721,13 @@ public class StationActivity extends BaseActivity implements
                 // something went wrong
                 stationViewModel.getBackNavigationLiveData().postValue(null);
             } else
-            stationViewModel.getBackNavigationLiveData().postValue(new BackNavigationData(doNavigateBack,
-                    station,
-                    stationToNavigateBack,
-                    trainInfo2,
-                    hafasStation,
-                    hafasEvent,
-                    true));
+                stationViewModel.getBackNavigationLiveData().postValue(new BackNavigationData(doNavigateBack,
+                        station,
+                        stationToNavigateBack,
+                        trainInfo2,
+                        hafasStation,
+                        hafasEvent,
+                        true));
 
         } else {
             stationViewModel.getBackNavigationLiveData().postValue(null);
@@ -720,8 +745,10 @@ public class StationActivity extends BaseActivity implements
             final int isNotification = intent.getIntExtra("IS_NOTIFICATION", 0);
 
             if(timeDiff<3L*1000L || isNotification==1 ) {
-              if(trainInfo.getShowWagonOrder())
-                    stationViewModel.showWaggonOrder(trainInfo);
+              if(trainInfo!=null && trainInfo.getShowWagonOrder()) {
+//                  stationViewModel.showWaggonOrder(trainInfo);
+                  stationViewModel.getSelectedTrainInfo().postValue(trainInfo);
+              }
             }
             else
                 Log.d("cr", "intent too old" );
@@ -808,7 +835,10 @@ public class StationActivity extends BaseActivity implements
     protected void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
 
-        outState.putBoolean(ARG_SHOW_DEPARTURES, initializeShowingDepartures);
+        if (getCurrentFragmentIndex() == HISTORYFRAGMENT_INDEX_TIMETABLE)
+            outState.putBoolean(ARG_SHOW_DEPARTURES, true);
+        else
+            outState.putBoolean(ARG_SHOW_DEPARTURES, initializeShowingDepartures);
 
         if (BuildConfig.DEBUG) {
             final Parcel parcel = Parcel.obtain();

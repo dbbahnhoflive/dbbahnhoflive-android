@@ -10,6 +10,7 @@ import android.app.AlarmManager;
 import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
+import android.os.Build;
 import android.util.Log;
 
 import androidx.annotation.NonNull;
@@ -89,6 +90,7 @@ public class WagenstandAlarmManager {
         alarmIntent.setFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT);
         // set the extras to identify the right Train at the BroadcastReceiver
 
+        wagenstandAlarm.trainInfo.setShowWagonOrder(true);
         alarmIntent.putExtra(WagenstandAlarm.DEFAULT_BUNDLE_NAME, wagenstandAlarm.toBundle());
 
         int flags = PendingIntent.FLAG_ONE_SHOT;
@@ -190,4 +192,21 @@ public class WagenstandAlarmManager {
             }
         }
     }
+
+
+    public boolean isAlarmAllowed() {
+        final AlarmManager manager = (AlarmManager) context.getSystemService(Context.ALARM_SERVICE);
+
+        if (manager == null) {
+            return false;
+        }
+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
+            return manager.canScheduleExactAlarms();
+        }
+
+        return true;
+    }
+
+
 }

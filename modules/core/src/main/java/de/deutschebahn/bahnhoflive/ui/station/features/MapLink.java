@@ -6,6 +6,8 @@
 
 package de.deutschebahn.bahnhoflive.ui.station.features;
 
+import static de.deutschebahn.bahnhoflive.util.accessibility.AccessibilityUtilitiesKt.isSpokenFeedbackAccessibilityEnabled;
+
 import android.content.Context;
 import android.content.Intent;
 import android.os.Parcelable;
@@ -17,7 +19,6 @@ import java.util.List;
 
 import de.deutschebahn.bahnhoflive.backend.rimap.model.RimapPOI;
 import de.deutschebahn.bahnhoflive.repository.VenueFeature;
-import de.deutschebahn.bahnhoflive.ui.accessibility.ContextXKt;
 import de.deutschebahn.bahnhoflive.ui.map.Content;
 import de.deutschebahn.bahnhoflive.ui.map.InitialPoiManager;
 import de.deutschebahn.bahnhoflive.ui.map.MapActivity;
@@ -25,7 +26,7 @@ import de.deutschebahn.bahnhoflive.ui.map.content.rimap.RimapFilter;
 import de.deutschebahn.bahnhoflive.ui.station.shop.Shop;
 import de.deutschebahn.bahnhoflive.util.Collections;
 
-public class MapLink extends Link {
+public class MapLink extends de.deutschebahn.bahnhoflive.ui.station.features.Link {
 
     protected Content.Source getMapSource() {
         return Content.Source.RIMAP;
@@ -77,7 +78,7 @@ public class MapLink extends Link {
 
     @Override
     public boolean isAvailable(Context context, StationFeature stationFeature) {
-        return !ContextXKt.isSpokenFeedbackAccessibilityEnabled(context) &&
+        return !isSpokenFeedbackAccessibilityEnabled(context) &&
                 Collections.hasContent(getPois(stationFeature));
     }
 }

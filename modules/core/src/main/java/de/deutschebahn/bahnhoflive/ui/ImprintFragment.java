@@ -13,6 +13,7 @@ import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 import android.provider.Settings;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -34,6 +35,9 @@ import de.deutschebahn.bahnhoflive.R;
 import de.deutschebahn.bahnhoflive.analytics.ConsentState;
 import de.deutschebahn.bahnhoflive.analytics.TrackingManager;
 
+// ImprintFragment wird fuer impressum.html UND datenschutz.html benutzt
+// todo: content-spezifische Anpassungen (APP_VERSION, links, ...) besser verwalten
+//
 public class ImprintFragment extends Fragment {
 
     public static final String TAG = ImprintFragment.class.getSimpleName();
@@ -43,6 +47,8 @@ public class ImprintFragment extends Fragment {
     private WebView webview;
     private ImageView headerIcon;
     private TrackingManager trackingManager = new TrackingManager();
+
+    private Boolean contentIsDatenschutz = false;
 
     @Override
     public void setArguments(Bundle args) {
@@ -55,19 +61,13 @@ public class ImprintFragment extends Fragment {
         url = args.getString(FragmentArgs.URL);
     }
 
-    @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                             Bundle savedInstanceState) {
-        View v = inflater.inflate(R.layout.fragment_webview, container, false);
-
-        if (savedInstanceState != null) {
-            setUIArguments(savedInstanceState);
-        }
+    private void createWebViewAndLoadContent(View v) {
 
         webview = v.findViewById(R.id.webview);
         headerIcon = v.findViewById(R.id.webview_icon);
 
         if (url.contains("datenschutz")) {
+            contentIsDatenschutz = true;
             headerIcon.setImageResource(R.drawable.legacy_datenschutz_dark);
         }
 
@@ -168,6 +168,8 @@ public class ImprintFragment extends Fragment {
         try {
             in = getResources().getAssets().open(url);
 
+            if(!contentIsDatenschutz) {
+                // Impressum
             String versionInformation = BaseApplication.get().getVersionName();
 
             if(BaseApplication.get().getVersionName().contains("demo") ||
@@ -179,14 +181,40 @@ public class ImprintFragment extends Fragment {
             String imprint = getString(in).replaceAll("\\{APP_VERSION\\}", versionInformation);  // todo check
 
 
+            String fullhtmlData = imprint.replace("<p>App Version", "<p>Diese App verwendet Open-Source Software <a href=\"app:lizenzen.html\">Lizenzen</a>.</p>\n" +
+                    "<p>App Version");
 
-            webview.loadDataWithBaseURL("nil://nil.nil", imprint
-                    , "text/html", "UTF-8", null);
+            webview.loadDataWithBaseURL("file:///android_asset/", fullhtmlData, "text/html", "UTF-8", null);
+            }
+            else
+                webview.loadDataWithBaseURL("file:///android_asset/", getString(in), "text/html", "UTF-8", null);
 
-//            webview.loadDataWithBaseURL("nil://nil.nil", imprint + "</body>", "text/html", "UTF-8", null);
+
         } catch (IOException e) {
             e.printStackTrace();
         }
+    }
+    @Override
+    public View onCreateView(LayoutInflater inflater, ViewGroup container,
+                             Bundle savedInstanceState) {
+
+        View v = null;
+
+        try {
+            v = inflater.inflate(R.layout.fragment_webview, container, false);
+        }
+        catch(Exception e) {
+            Log.e("ImprintFragment", "Exception: " + e.getMessage());
+        }
+
+        if (savedInstanceState != null) {
+            setUIArguments(savedInstanceState);
+        }
+
+        if(v!=null)
+            createWebViewAndLoadContent(v);
+        else
+            v = inflater.inflate(R.layout.include_error, container, false);
 
         new ToolbarViewHolder(v, title);
 

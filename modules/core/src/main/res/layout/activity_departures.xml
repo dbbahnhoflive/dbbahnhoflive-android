@@ -5,11 +5,11 @@
   -->
 
 
-<LinearLayout
-
+<androidx.coordinatorlayout.widget.CoordinatorLayout
 
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/fragment_container"
     android:orientation="vertical"
     android:layout_width="match_parent"
@@ -23,9 +23,21 @@
         />
 
     <FrameLayout
-        android:id="@+id/framgent_container"
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        app:layout_behavior="@string/appbar_scrolling_view_behavior" />
+        app:layout_behavior="@string/appbar_scrolling_view_behavior"
+        />
 
-</LinearLayout>
+    <com.google.android.material.floatingactionbutton.FloatingActionButton
+        android:id="@+id/btn_map"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="bottom|end"
+        android:layout_margin="@dimen/default_space_double"
+        android:src="@drawable/app_karte"
+        android:visibility="gone"
+        tools:visibility="visible"
+        android:contentDescription="@string/sr_map" />
+
+
+</androidx.coordinatorlayout.widget.CoordinatorLayout>

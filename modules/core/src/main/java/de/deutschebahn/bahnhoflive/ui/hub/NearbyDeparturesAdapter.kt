@@ -47,6 +47,13 @@ internal class NearbyDeparturesAdapter(
             oldItem: NearbyStationItem,
             newItem: NearbyStationItem
         ) = oldItem == newItem
+
+        override fun areContentsTheSame(
+            oldItem: NearbyStationItem,
+            newItem: NearbyStationItem
+        ): Boolean {
+            return oldItem.equals(newItem)
+        }
     }
 ) {
 

@@ -23,6 +23,8 @@ import de.deutschebahn.bahnhoflive.backend.VolleyRestListener
 import de.deutschebahn.bahnhoflive.backend.db.newsapi.GroupId
 import de.deutschebahn.bahnhoflive.backend.db.newsapi.model.News
 import de.deutschebahn.bahnhoflive.backend.db.ris.model.Platform
+import de.deutschebahn.bahnhoflive.backend.db.ris.model.Platform.Companion.LEVEL_UNKNOWN
+import de.deutschebahn.bahnhoflive.backend.db.ris.model.getLevel
 import de.deutschebahn.bahnhoflive.backend.hafas.model.HafasEvent
 import de.deutschebahn.bahnhoflive.backend.hafas.model.HafasStation
 import de.deutschebahn.bahnhoflive.backend.hafas.model.ProductCategory
@@ -30,6 +32,9 @@ import de.deutschebahn.bahnhoflive.backend.local.model.EvaIds
 import de.deutschebahn.bahnhoflive.backend.local.model.ServiceContentType
 import de.deutschebahn.bahnhoflive.backend.local.model.isEco
 import de.deutschebahn.bahnhoflive.backend.rimap.RimapConfig
+import de.deutschebahn.bahnhoflive.backend.rimap.model.LevelMapping
+import de.deutschebahn.bahnhoflive.backend.rimap.model.MenuMapping
+import de.deutschebahn.bahnhoflive.backend.rimap.model.RimapPOI
 import de.deutschebahn.bahnhoflive.backend.rimap.model.RimapStationInfo
 import de.deutschebahn.bahnhoflive.backend.ris.model.RISTimetable
 import de.deutschebahn.bahnhoflive.backend.ris.model.TrainEvent
@@ -45,8 +50,6 @@ import de.deutschebahn.bahnhoflive.repository.timetable.TimetableCollector
 import de.deutschebahn.bahnhoflive.repository.timetable.TimetableRepository
 import de.deutschebahn.bahnhoflive.stream.livedata.MergedLiveData
 import de.deutschebahn.bahnhoflive.stream.livedata.switchMap
-import de.deutschebahn.bahnhoflive.stream.rx.Optional
-import de.deutschebahn.bahnhoflive.ui.accessibility.SpokenFeedbackAccessibilityLiveData
 import de.deutschebahn.bahnhoflive.ui.map.Content
 import de.deutschebahn.bahnhoflive.ui.map.MapActivity
 import de.deutschebahn.bahnhoflive.ui.station.elevators.ElevatorStatusListsFragment
@@ -56,6 +59,7 @@ import de.deutschebahn.bahnhoflive.ui.station.info.ServiceNumbersLiveData
 import de.deutschebahn.bahnhoflive.ui.station.localtransport.LocalTransportViewModel
 import de.deutschebahn.bahnhoflive.ui.station.locker.LockerFragment
 import de.deutschebahn.bahnhoflive.ui.station.parking.ParkingListFragment
+import de.deutschebahn.bahnhoflive.ui.station.railreplacement.SEV_Static
 import de.deutschebahn.bahnhoflive.ui.station.search.ContentSearchResult
 import de.deutschebahn.bahnhoflive.ui.station.search.QueryPart
 import de.deutschebahn.bahnhoflive.ui.station.search.ResultSetType
@@ -65,11 +69,11 @@ import de.deutschebahn.bahnhoflive.ui.station.timetable.TimetableViewHelper
 import de.deutschebahn.bahnhoflive.ui.timetable.localtransport.HafasTimetableViewModel
 import de.deutschebahn.bahnhoflive.util.Token
 import de.deutschebahn.bahnhoflive.util.append
+import de.deutschebahn.bahnhoflive.util.combine2LifeData
+import de.deutschebahn.bahnhoflive.util.execBrowser
 import de.deutschebahn.bahnhoflive.util.openhours.OpenHoursParser
 import de.deutschebahn.bahnhoflive.util.then
 import de.deutschebahn.bahnhoflive.util.toLiveData
-import io.reactivex.Observable
-import io.reactivex.subjects.BehaviorSubject
 import kotlinx.coroutines.*
 import kotlinx.coroutines.flow.*
 import java.io.InputStreamReader
@@ -86,9 +90,7 @@ class BackNavigationData(var navigateTo: Boolean,
                          var showChevron:Boolean)
 
 
-class StationViewModel(
-    application: Application,
-) : HafasTimetableViewModel(application) {
+class StationViewModel(application: Application) : HafasTimetableViewModel(application) {
 
     // TODO: Inject
     private val defaultDispatcher: CoroutineDispatcher = Dispatchers.Default
@@ -389,6 +391,8 @@ class StationViewModel(
 
     val occupancyResource = StationOccupancyResource(repositories.occupancyRepository)
 
+    val platformLevels = PlatformLevelResource()
+
     private val initializationPending = Token()
 
     private val rimapStationFeatureCollectionResource = RimapStationFeatureCollectionResource()
@@ -405,18 +409,18 @@ class StationViewModel(
             RimapStationInfo.fromResponse(input)
         }
 
-    private val trackFilter = BehaviorSubject.createDefault(Optional<String>())
-
-    val trackFilterObservable: Observable<Optional<String>>
-        get() = trackFilter
+//    private val trackFilter = BehaviorSubject.createDefault(Optional<String>())
+//
+//    val trackFilterObservable: Observable<Optional<String>>
+//        get() = trackFilter
 
     val trackFilterFlow = MutableStateFlow<String?>(null)
     val trainCategoryFilterFlow = MutableStateFlow<String?>(null)
     val showArrivalsStateFlow = MutableStateFlow<Boolean>(false)
 
-    private val waggonOrderSubject = BehaviorSubject.create<TrainInfo>()
+//    private val waggonOrderSubject = BehaviorSubject.create<TrainInfo>()
 
-    val waggonOrderObservable = waggonOrderSubject.distinctUntilChanged()
+//    val waggonOrderObservable = waggonOrderSubject.distinctUntilChanged()
 
     fun log(msg: String) {
         Log.d(StationViewModel::class.java.simpleName, msg)
@@ -444,6 +448,7 @@ class StationViewModel(
             parking.parkingsResource.initialize(station)
             lockers.lockerResource.initialize(station)
 
+
             viewModelScope.launch {
                 stationStateFlow.emit(station)
             }
@@ -457,6 +462,10 @@ class StationViewModel(
 
             railReplacementResource.initialize(station)
             accessibilityFeaturesResource.initialize(station)
+
+//            platformResource.initialize(station)
+            platformLevels.initialize(station)
+
             this.station = station
         }
 
@@ -497,15 +506,15 @@ class StationViewModel(
     }
 
     fun setTrackFilter(track: String?) {
-        trackFilter.onNext(Optional(track))
+//        trackFilter.onNext(Optional(track))
         viewModelScope.launch {
             trackFilterFlow.emit(track)
         }
     }
 
-    fun showWaggonOrder(trainInfo: TrainInfo) {
-        waggonOrderSubject.onNext(trainInfo)
-    }
+//    fun showWaggonOrder(trainInfo: TrainInfo) {
+//        waggonOrderSubject.onNext(trainInfo)
+//    }
 
     fun clearStationNavigation(stationNavigation: StationNavigation) {
         if (stationNavigation == this.stationNavigation) {
@@ -948,7 +957,7 @@ class StationViewModel(
                                         "Bahnhofsinformation Info & Services DB Information" -> eventuallyGenerateInfoResult(
                                             ServiceContentType.DB_INFORMATION
                                         )
-                                        "Bahnhofsinformation Info & Services Mobiler Service" -> eventuallyGenerateInfoResult(
+                                        "Bahnhofsinformation Info & Services Mobile Servicemitarbeitende" -> eventuallyGenerateInfoResult(
                                             ServiceContentType.MOBILE_SERVICE
                                         )
                                         "Bahnhofsinformation Info & Services Bahnhofsmission" -> eventuallyGenerateInfoResult(
@@ -1098,7 +1107,7 @@ class StationViewModel(
                                 products.asSequence().filter { product ->
                                     ProductCategory.of(product)?.isExtendedLocal ?: false && (
                                             acceptedProducts.any {
-                                                it.bitMask() and product.catCode != 0
+                                                it.bitMask() and product.categoryBitMask != 0
                                             } ||
                                                     listOfNotNull(product.name).let { candidates ->
                                                         queryParts.all { queryPart ->
@@ -1175,6 +1184,7 @@ class StationViewModel(
             }
         }.mapNotNull { trainInfo ->
             trainEvent.movementRetriever.getTrainMovementInfo(trainInfo)?.let { trainMovementInfo ->
+
                 ContentSearchResult(
                     "${trainEvent.timeLabel} ${trainMovementInfo.formattedTime} / ${
                         TimetableViewHelper.composeName(
@@ -1274,11 +1284,19 @@ class StationViewModel(
         recentContentQueriesStore.clear()
     }
 
-    val contentSearchResults = Transformations.switchMap(resultSetType) {
-        when (it) {
+    val contentSearchResults = Transformations.switchMap(resultSetType) { itResultType ->
+        when (itResultType) {
             ResultSetType.HISTORY -> recentContentSearchesAsResults
             ResultSetType.SUGGESTIONS -> contentSearchSuggestionsAsResults
-            else -> Transformations.map(genuineContentSearchResults) { it.second }
+            else -> Transformations.map(genuineContentSearchResults) {
+                try {
+                    it?.second
+                }
+                catch(e:Exception) {
+                    Log.d("cr", "Exception in contentSearchResults : " + e.message)
+                    null
+                }
+            }
         }
     }
 
@@ -1459,16 +1477,73 @@ class StationViewModel(
             }
         }
 
-
     val accessibilityFeaturesResource =
         AccessibilityFeaturesResource(this.application.repositories.stationRepository)
 
-    val mapAvailableLiveData =
-        SpokenFeedbackAccessibilityLiveData(application).switchMap { spokenFeedbackAccessibilityEnabled ->
-            stationResource.data.map { mergedStation ->
-                !(spokenFeedbackAccessibilityEnabled || mergedStation.location == null)
+    // merge platform and poi data (level)
+    val platformsWithLevelResource =
+        combine2LifeData(
+            accessibilityFeaturesResource.data, // risPlatformList
+            platformLevels.data // poiPlatformList
+        ) { risPlatformList: List<Platform>?, poiPlatformList: List<RimapPOI>? ->
+
+            val risPlatforms: MutableList<Platform> = mutableListOf()
+
+            if (risPlatformList != null)
+                    risPlatforms.addAll(risPlatformList)
+
+            var poiPlatforms = poiPlatformList?.filter {
+                it.type == MenuMapping.PLATFORM
             }
+
+            risPlatforms.forEach { itPlatform ->
+
+                val poi: RimapPOI? = poiPlatforms?.firstOrNull { itRimapPoi ->
+                    itRimapPoi.name.equals(itPlatform.name, true)
+                }
+
+                if (poi != null)
+                    itPlatform.level = LevelMapping.codeToLevel(poi.level) ?: LEVEL_UNKNOWN
+
+            }
+
+            // ggf. fehlende Stockwerke eintragen
+            risPlatforms.filter { !it.hasLevel }.forEach { itPlatform ->
+
+                itPlatform.level = risPlatforms.getLevel(itPlatform.name,
+                    poiPlatforms?.map {
+                        Pair(
+                            it.name ?: "",
+                            LevelMapping.codeToLevel(it.level) ?: LEVEL_UNKNOWN
+                            )
+                    }?.filter { it.first.isNotEmpty() }
+                        )
+                    }
+
+            risPlatforms.sortBy { it.level }
+
+            risPlatforms
         }
+
+//    val mapAvailableLiveData =
+//        SpokenFeedbackAccessibilityLiveData(application).switchMap { spokenFeedbackAccessibilityEnabled ->
+//            stationResource.data.map { mergedStation ->
+//                !(spokenFeedbackAccessibilityEnabled || mergedStation.location == null)
+//            }
+//        }
+
+
+    val showAugmentedRealityTeaser : LiveData<Boolean> = mapAvailableLiveData.switchMap {itMapAvailable->
+        stationResource.data.map {itStation ->
+            itMapAvailable && SEV_Static.hasStationArAppLink(itStation.id)
+        }
+    }
+
+    val showDbCompanionTeaser : LiveData<Boolean> =
+        stationResource.data.map {itStation ->
+            SEV_Static.hasStationWebAppCompanionLink(itStation.id)
+    }
+
 
     val pendingRrtPointAndStationNavigationLiveData = stationNavigationLiveData.switchMap { it ->
         it?.let { stationNavigation ->
@@ -1505,4 +1580,12 @@ class StationViewModel(
     fun hasElevators() : Boolean = !elevatorsResource.data.value.isNullOrEmpty()
     fun hasSEV() : Boolean = !railReplacementSummaryLiveData.value.isNullOrEmpty()
 
+    fun startDbCompanionWebSite(context: Context) {
+        context.execBrowser(R.string.teaser_db_companion_url)
+    }
+
+
+    fun startAugmentedRealityWebSite(context: Context) {
+        context.execBrowser(R.string.teaser_ar_url)
+    }
 }

@@ -6,13 +6,16 @@
 
 package de.deutschebahn.bahnhoflive.ui.station.timetable
 
+import android.graphics.Color
 import android.view.View
 import android.widget.ImageView
 import android.widget.TextView
+import androidx.core.view.isVisible
 import de.deutschebahn.bahnhoflive.R
 import de.deutschebahn.bahnhoflive.backend.ris.model.TrainEvent
 import de.deutschebahn.bahnhoflive.backend.ris.model.TrainInfo
 import de.deutschebahn.bahnhoflive.ui.TimetableItemOverviewViewHolder
+import de.deutschebahn.bahnhoflive.util.accessibility.AccessibilityUtilities
 
 open class TrainInfoOverviewViewHolder(view: View, protected val provider: TrainEvent.Provider) :
     TimetableItemOverviewViewHolder<TrainInfo>(view) {
@@ -43,6 +46,7 @@ open class TrainInfoOverviewViewHolder(view: View, protected val provider: Train
                 transportationNameView?.text = trainName
 
                 timeView?.text = trainMovementInfo.formattedTime
+                timeView?.contentDescription = AccessibilityUtilities.getSpokenTime(trainMovementInfo.formattedTime)
 
                 val delayInMinutes = if (trainMovementInfo.isTrainMovementCancelled) -1 else trainMovementInfo.delayInMinutes()
                 val actualTime = if (trainMovementInfo.isTrainMovementCancelled) context.getString(R.string.train_cancelled) else trainMovementInfo.formattedActualTime
@@ -53,8 +57,19 @@ open class TrainInfoOverviewViewHolder(view: View, protected val provider: Train
                 platformView?.run {
                     val displayPlatform = trainMovementInfo.displayPlatform
                     text = context.getString(R.string.template_platform, displayPlatform)
-                    contentDescription = context.getString(R.string.sr_template_platform, displayPlatform)
+                    if(trainMovementInfo.correctedPlatform!=null) {
+                        contentDescription = trainMovementInfo.platformMessage
+                        this.setTextColor(Color.RED)
+//                            context.getString(R.string.sr_template_platform, displayPlatform)
+                    }
+                    else {
+                        this.setTextColor(Color.BLACK)
+                        contentDescription =
+                            context.getString(R.string.sr_template_platform, displayPlatform)
+                    }
                 }
+
+                issueIndicator?.isVisible = true // icon wird per issuesBinder gesetzt oder gelöscht !
 
                 issuesBinder.bindIssues(item, trainMovementInfo)
                 wagonOrderIndicator?.visibility =
