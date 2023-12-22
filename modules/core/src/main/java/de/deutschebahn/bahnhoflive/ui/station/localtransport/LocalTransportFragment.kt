@@ -13,6 +13,8 @@ import android.view.ViewGroup
 import androidx.core.text.HtmlCompat
 import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.Observer
+import androidx.lifecycle.map
+import androidx.lifecycle.switchMap
 import de.deutschebahn.bahnhoflive.R
 import de.deutschebahn.bahnhoflive.analytics.TrackingManager
 import de.deutschebahn.bahnhoflive.databinding.FragmentLocalTransportBinding
@@ -27,8 +29,6 @@ import de.deutschebahn.bahnhoflive.view.FullBottomSheetDialogFragment
 class LocalTransportFragment : FullBottomSheetDialogFragment() {
 
     private val trackingManager = TrackingManager()
-
-    private var localTransportsAdapter: LocalTransportsAdapter? = null
 
     private lateinit var localTransportViewModel: LocalTransportViewModel
     private lateinit var hafasStationsResource: HafasStationsResource
@@ -61,19 +61,6 @@ class LocalTransportFragment : FullBottomSheetDialogFragment() {
 
         hafasStationsResource = localTransportViewModel.hafasStationsResource
 
-        localTransportsAdapter = LocalTransportsAdapter { item, _ ->
-            context?.let { context ->
-                trackingManager.track(TrackingManager.TYPE_ACTION, TrackingManager.Action.TAP, TrackingManager.UiElement.ABFAHRT_OEPNV)
-                val intent = DeparturesActivity.createIntent(
-                    context,
-                    item,
-                    localTransportViewModel.hafasStationsResource.data.value,
-                    stationResource.data.value
-                )
-                context.startActivity(intent)
-            }
-        }
-
     }
 
     override fun onCreateView(
@@ -96,23 +83,44 @@ class LocalTransportFragment : FullBottomSheetDialogFragment() {
 
         closeButton.setOnClickListener { dismiss() }
 
+        val localTransportsAdapter = LocalTransportsAdapter { item, _ ->
+            requireActivity().let { activity ->
+                trackingManager.track(
+                    TrackingManager.TYPE_ACTION,
+                    TrackingManager.Action.TAP,
+                    TrackingManager.UiElement.ABFAHRT_OEPNV
+                )
+                val intent = DeparturesActivity.createIntent(
+                    activity,
+                    item,
+                    localTransportViewModel.hafasStationsResource.data.value,
+                    stationResource.data.value
+                )
+                activity.startActivity(intent)
+            }
+        }
+
         val hafasStationsContainerHolder = LoadingContentDecorationViewHolder(viewFlipper)
         recycler.apply {
             adapter = localTransportsAdapter
         }
 
-        hafasStationsResource.data.observe(viewLifecycleOwner, Observer { hafasStations ->
-            localTransportsAdapter?.setHafasStations(
+        stationResource.data.switchMap { station ->
+            hafasStationsResource.data.map { hafasStations ->
+                station to hafasStations
+            }
+        }.observe(viewLifecycleOwner) { (station, hafasStations) ->
+            localTransportsAdapter.setHafasStations(
                 hafasStations,
-                stationResource.data?.value?.evaIds
+                station.evaIds
             )
-            if (hafasStations != null && hafasStations.isNotEmpty()) {
+            if (!hafasStations.isNullOrEmpty()) {
                 hafasStationsContainerHolder.showContent()
                 root.requestLayout()
             } else {
                 hafasStationsContainerHolder.showEmpty()
             }
-        })
+        }
 
         hafasStationsResource.error.observe(viewLifecycleOwner, Observer { error ->
             error?.let {
@@ -124,10 +132,5 @@ class LocalTransportFragment : FullBottomSheetDialogFragment() {
 
     }.root
 
-
-    override fun onDestroy() {
-        super.onDestroy()
-        localTransportsAdapter = null
-    }
 
 }
