@@ -8,6 +8,7 @@ package de.deutschebahn.bahnhoflive.backend.hafas.model;
 
 import android.os.Parcel;
 import android.os.Parcelable;
+import android.util.Log;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -16,6 +17,7 @@ import com.google.android.gms.maps.model.LatLng;
 import com.google.gson.annotations.SerializedName;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 
 import de.deutschebahn.bahnhoflive.BaseApplication;
 import de.deutschebahn.bahnhoflive.backend.local.model.EvaIds;
@@ -89,6 +91,16 @@ public class HafasStation implements Parcelable {
         products = in.readArrayList(BaseApplication.get().getClassLoader());
         forceLocalTransport = in.readInt() == 1;
         evaIds = in.readParcelable(getClass().getClassLoader());
+
+        try {
+            if (evaIds != null)
+                Log.d("cr", "Hafas-Station: " + name + ", " + extId + ", " + latitude + ", " + longitude + ", " + Arrays.toString(evaIds.getIds().toArray()));
+            else
+                Log.d("cr", "Hafas-Station: " + name + ", " + extId + ", " + latitude + ", " + longitude);
+        }
+        catch(Exception e) {
+
+        }
     }
 
     public HafasStation(boolean forceLocalTransport) {
