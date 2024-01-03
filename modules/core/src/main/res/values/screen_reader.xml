@@ -103,6 +103,10 @@
         <item quantity="one">U-Bahn</item>
         <item quantity="other">U-Bahnen</item>
     </plurals>
+    <plurals name="sr_ship">
+        <item quantity="one">Fähre</item>
+        <item quantity="other">Fähren</item>
+    </plurals>
 
     <string name="sr_accessibility_link_elevators">Zur Übersicht der Aufzüge wechseln</string>
     <string name="sr_accessibility_hotline">Telefon 030 6521 2888</string>

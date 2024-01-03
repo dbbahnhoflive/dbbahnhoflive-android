@@ -97,8 +97,7 @@ public class HafasStation implements Parcelable {
                 Log.d("cr", "Hafas-Station: " + name + ", " + extId + ", " + latitude + ", " + longitude + ", " + Arrays.toString(evaIds.getIds().toArray()));
             else
                 Log.d("cr", "Hafas-Station: " + name + ", " + extId + ", " + latitude + ", " + longitude);
-        }
-        catch(Exception e) {
+        } catch (Exception ignored) {
 
         }
     }

@@ -85,10 +85,10 @@ internal class LocalTransportViewHolder(parent: ViewGroup, itemClickListener: It
                 displayTextBuilder.append(line)
 
                 // fix statt "STR" wird "Strasse" vorgelesen...
-                if(category==ProductCategory.TRAM && line.startsWith("STR",false))
+                if (category == ProductCategory.TRAM && line.startsWith("STR", false))
                     contentDescriptionBuilder.append(AccessibilityUtilities.fixScreenReaderText(line))
                 else
-                contentDescriptionBuilder.append(line)
+                    contentDescriptionBuilder.append(line)
             }
         }
         val infoContainer = inflater.inflate(R.layout.item_local_transport_info, transportInfos, false)
@@ -97,7 +97,7 @@ internal class LocalTransportViewHolder(parent: ViewGroup, itemClickListener: It
         iconView.setImageDrawable(getIconDrawable(category))
         info.text = displayTextBuilder.toString()
         info.contentDescription = getCategoryLabel(category, productCount).toString() + contentDescriptionBuilder.toString()
-        if (displayTextBuilder.length == 0) {
+        if (displayTextBuilder.isEmpty()) {
             infoContainer.visibility = View.GONE
         }
         return infoContainer
@@ -110,7 +110,7 @@ internal class LocalTransportViewHolder(parent: ViewGroup, itemClickListener: It
             ProductCategory.BUS -> resources.getQuantityString(R.plurals.sr_bus, productCount)
             ProductCategory.SUBWAY -> resources.getQuantityString(R.plurals.sr_subway, productCount)
             ProductCategory.TRAM -> resources.getQuantityString(R.plurals.sr_tram, productCount)
-            ProductCategory.SHIP -> resources.getQuantityString(R.plurals.sr_tram, productCount)
+            ProductCategory.SHIP -> resources.getQuantityString(R.plurals.sr_ship, productCount)
             else -> ""
         }
     }
