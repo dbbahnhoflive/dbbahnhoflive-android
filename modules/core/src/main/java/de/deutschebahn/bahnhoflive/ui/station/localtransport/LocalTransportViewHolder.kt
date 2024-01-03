@@ -85,10 +85,10 @@ internal class LocalTransportViewHolder(parent: ViewGroup, itemClickListener: It
                 displayTextBuilder.append(line)
 
                 // fix statt "STR" wird "Strasse" vorgelesen...
-                if(category==ProductCategory.TRAM && line.startsWith("STR",false))
+                if (category == ProductCategory.TRAM && line.startsWith("STR", false))
                     contentDescriptionBuilder.append(AccessibilityUtilities.fixScreenReaderText(line))
                 else
-                contentDescriptionBuilder.append(line)
+                    contentDescriptionBuilder.append(line)
             }
         }
         val infoContainer = inflater.inflate(R.layout.item_local_transport_info, transportInfos, false)
