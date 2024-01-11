@@ -8,7 +8,7 @@ plugins {
 group 'de.deutschebahn.bahnhoflive'
 
 android {
-    compileSdkVersion 33
+    compileSdk 33
     defaultConfig {
         minSdkVersion 21
         targetSdkVersion 33
