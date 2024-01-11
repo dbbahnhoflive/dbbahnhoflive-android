@@ -4,8 +4,7 @@
   ~ SPDX-License-Identifier: Apache-2.0
   -->
 
-
-<androidx.coordinatorlayout.widget.CoordinatorLayout
+<androidx.appcompat.widget.LinearLayoutCompat
 
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
@@ -40,4 +39,6 @@
         android:contentDescription="@string/sr_map" />
 
 
-</androidx.coordinatorlayout.widget.CoordinatorLayout>
+
+
+    </androidx.appcompat.widget.LinearLayoutCompat>

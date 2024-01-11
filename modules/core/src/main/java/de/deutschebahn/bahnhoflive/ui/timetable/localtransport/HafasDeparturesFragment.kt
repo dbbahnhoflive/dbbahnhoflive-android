@@ -30,12 +30,14 @@ import de.deutschebahn.bahnhoflive.ui.LoadingContentDecorationViewHolder
 import de.deutschebahn.bahnhoflive.ui.RecyclerFragment
 import de.deutschebahn.bahnhoflive.ui.map.Content
 import de.deutschebahn.bahnhoflive.ui.map.InitialPoiManager
+import de.deutschebahn.bahnhoflive.ui.map.MapActivity
 import de.deutschebahn.bahnhoflive.ui.map.MapPresetProvider
 import de.deutschebahn.bahnhoflive.ui.map.content.rimap.RimapFilter
 import de.deutschebahn.bahnhoflive.ui.station.BackNavigationData
 import de.deutschebahn.bahnhoflive.ui.station.HistoryFragment
 import de.deutschebahn.bahnhoflive.ui.station.StationActivity
 import de.deutschebahn.bahnhoflive.ui.station.StationViewModel
+import de.deutschebahn.bahnhoflive.util.GoogleLocationPermissions.Companion.startMapActivityIfConsent
 
 
 class HafasDeparturesFragment : RecyclerFragment<HafasDeparturesAdapter>(R.layout.recycler_linear_refreshable),
@@ -251,14 +253,33 @@ class HafasDeparturesFragment : RecyclerFragment<HafasDeparturesAdapter>(R.layou
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-
-
         // todo (see DeparturesFragment)
         hafasTimetableViewModel.mapAvailableLiveData.observe(
             this.viewLifecycleOwner
         ) { aBoolean: Boolean ->
             val mapButton = view.findViewById<View>(R.id.btn_map)
-            mapButton?.isVisible = aBoolean
+            mapButton?.let {
+                it.isVisible = aBoolean
+
+                it.setOnClickListener {
+
+                    trackingManager.track(
+                        TrackingManager.TYPE_ACTION,
+                        TrackingManager.Source.TAB_NAVI,
+                        TrackingManager.Action.TAP,
+                        TrackingManager.UiElement.MAP_BUTTON
+                    )
+
+                    startMapActivityIfConsent(this ) {
+                        MapActivity.createIntent(
+                            activity,
+                            (activity as DeparturesActivity).hafasStation
+                        )
+                    }
+                }
+
+            }
+
         }
 
 

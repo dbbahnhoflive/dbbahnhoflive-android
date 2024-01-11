@@ -131,35 +131,33 @@ public class DeparturesActivity extends BaseActivity implements TrackingManager.
                                     detailedHafasEvent.hafasEvent.getDisplayName(),
                                     detailedHafasEvent.hafasEvent.direction
                     ));
-                }
-                else
-                  if(hafasStation!=null)
+                } else if (hafasStation != null)
                     toolbarViewHolder.setTitle(hafasStation.name);
 
             }
         });
 
-        mapButton = findViewById(R.id.btn_map);
-
-        if (mapButton != null) {
-            mapButton.setVisibility(View.VISIBLE);
-            mapButton.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    if (hafasDeparturesFragment != null) {
-                        trackingManager.track(TrackingManager.TYPE_ACTION, TrackingManager.Source.TAB_NAVI, TrackingManager.Action.TAP, TrackingManager.UiElement.MAP_BUTTON);
-                        GoogleLocationPermissions.startMapActivityIfConsent(hafasDeparturesFragment,
-                                () -> MapActivity.createIntent(DeparturesActivity.this, hafasStation));
-                    }
-                }
-            });
-        }
-
-        // todo (not working WHY?)
-        hafasTimetableViewModel.getMapAvailableLiveData().observe(this,
-                aBoolean -> {
-                    mapButton.setVisibility(aBoolean ? View.VISIBLE : View.GONE);
-                });
+//        mapButton = findViewById(R.id.btn_map);
+//
+//        if (mapButton != null) {
+//            mapButton.setVisibility(View.VISIBLE);
+//            mapButton.setOnClickListener(new View.OnClickListener() {
+//                @Override
+//                public void onClick(View v) {
+//                    if (hafasDeparturesFragment != null) {
+//                        trackingManager.track(TrackingManager.TYPE_ACTION, TrackingManager.Source.TAB_NAVI, TrackingManager.Action.TAP, TrackingManager.UiElement.MAP_BUTTON);
+//                        GoogleLocationPermissions.startMapActivityIfConsent(hafasDeparturesFragment,
+//                                () -> MapActivity.createIntent(DeparturesActivity.this, hafasStation));
+//                    }
+//                }
+//            });
+//        }
+//
+//        // todo (not working WHY?)
+//        hafasTimetableViewModel.getMapAvailableLiveData().observe(this,
+//                aBoolean -> {
+//                    mapButton.setVisibility(aBoolean ? View.VISIBLE : View.GONE);
+//                });
     }
 
     private void installFragment(FragmentManager fragmentManager) {
