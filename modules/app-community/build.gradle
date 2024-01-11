@@ -8,10 +8,12 @@ plugins {
 group 'de.deutschebahn.bahnhoflive'
 
 android {
+
     compileSdk 33
+
     defaultConfig {
         minSdkVersion 21
-        targetSdkVersion 33
+        targetSdk 33
         versionCode 85
         versionName "3.22.0"
         applicationId "de.deutschebahn.bahnhoflive.community"
@@ -41,6 +43,7 @@ android {
     buildFeatures {
         viewBinding true
         dataBinding true
+        buildConfig true
     }
 
     kotlinOptions {
