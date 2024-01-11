@@ -5,13 +5,14 @@ import androidx.recyclerview.widget.DiffUtil
 open class BaseItemCallback<T> : DiffUtil.ItemCallback<T>() {
 
     override fun areItemsTheSame(
-        oldItem: T,
-        newItem: T
+        oldItem: T & Any,
+        newItem: T & Any
     ): Boolean = oldItem == newItem
 
     override fun areContentsTheSame(
-        oldItem: T,
-        newItem: T
+        oldItem: T & Any,
+        newItem: T & Any
     ) = true
+
 
 }

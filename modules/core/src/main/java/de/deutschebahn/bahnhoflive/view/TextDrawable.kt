@@ -6,7 +6,7 @@ import de.deutschebahn.bahnhoflive.util.ComputeIfNull
 import de.deutschebahn.bahnhoflive.util.CustomDelegates
 
 class TextDrawable(
-    val paint: Paint,
+    private val paint: Paint,
     padding: Int = 0,
     text: CharSequence = ""
 ) : Drawable() {

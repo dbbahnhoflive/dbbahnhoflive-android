@@ -2,6 +2,7 @@ plugins {
     id 'com.android.application'
     id 'kotlin-android'
     id 'kotlin-kapt'
+    id 'kotlin-parcelize'
 }
 
 group 'de.deutschebahn.bahnhoflive'
@@ -9,7 +10,7 @@ group 'de.deutschebahn.bahnhoflive'
 android {
     compileSdkVersion 33
     defaultConfig {
-        minSdkVersion 19
+        minSdkVersion 21
         targetSdkVersion 33
         versionCode 85
         versionName "3.22.0"

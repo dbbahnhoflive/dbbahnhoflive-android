@@ -31,9 +31,7 @@ class NearbyDbStationItem(val dbStationSearchResult: StopPlaceSearchResult) :
         if (this === other) return true
         if (other !is NearbyDbStationItem) return false
 
-        if (station.id != other.station.id) return false
-
-        return true
+        return station.id == other.station.id
     }
 
     override fun hashCode(): Int {

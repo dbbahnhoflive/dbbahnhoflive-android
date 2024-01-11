@@ -28,9 +28,7 @@ class NearbyHafasStationItem(val hafasStationSearchResult: HafasStationSearchRes
         if (this === other) return true
         if (other !is NearbyHafasStationItem) return false
 
-        if (hafasStationSearchResult.timetable.station.extId != other.hafasStationSearchResult.timetable.station.extId) return false
-
-        return true
+        return hafasStationSearchResult.timetable.station.extId == other.hafasStationSearchResult.timetable.station.extId
     }
 
     override fun hashCode(): Int {

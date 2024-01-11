@@ -157,4 +157,6 @@ interface NearbyStationItem {
     fun bindViewHolder(holder: RecyclerView.ViewHolder)
 
     fun onLoadDetails()
+
+    override fun equals(other: Any?): Boolean
 }

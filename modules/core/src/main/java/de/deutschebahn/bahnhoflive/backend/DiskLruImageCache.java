@@ -5,7 +5,7 @@
  */
 
 package de.deutschebahn.bahnhoflive.backend;
-
+/*
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.Bitmap.CompressFormat;
@@ -178,3 +178,4 @@ public class DiskLruImageCache implements ImageLoader.ImageCache {
         return generatedKey;
     }
 }
+*/
