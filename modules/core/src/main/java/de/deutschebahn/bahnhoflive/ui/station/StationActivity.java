@@ -32,7 +32,6 @@ import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModel;
 import androidx.lifecycle.ViewModelProvider;
 
-import com.google.android.material.internal.CheckableImageButton;
 
 import org.jetbrains.annotations.NotNull;
 
@@ -77,6 +76,7 @@ import de.deutschebahn.bahnhoflive.ui.station.timetable.TimetablesFragment;
 import de.deutschebahn.bahnhoflive.ui.timetable.localtransport.HafasTimetableViewModel;
 import de.deutschebahn.bahnhoflive.util.DebugX;
 import de.deutschebahn.bahnhoflive.util.VersionManager;
+import de.deutschebahn.bahnhoflive.widgets.CeCheckableImageButton;
 import kotlin.Pair;
 import de.deutschebahn.bahnhoflive.util.GoogleLocationPermissions;
 import de.deutschebahn.bahnhoflive.ui.hub.HubActivity;
@@ -117,12 +117,12 @@ public class StationActivity extends BaseActivity implements
     private Station station;
     private ViewFlipper viewFlipper;
     private SparseArray<HistoryFragment> historyFragments = new SparseArray<>();
-    private CheckableImageButton infoTabButton;
+    private CeCheckableImageButton infoTabButton;
     private View mapButton;
     private HistoryFragment overviewFragment;
     private HistoryFragment shoppingFragment;
     private HistoryFragment timetablesFragment;
-    private CheckableImageButton shoppingTabButton;
+    private CeCheckableImageButton shoppingTabButton;
     private TutorialView mTutorialView;
     private StationTrackingManager trackingManager;
     private boolean initializeShowingDepartures;
@@ -385,8 +385,8 @@ public class StationActivity extends BaseActivity implements
         return (F) getSupportFragmentManager().findFragmentById(id);
     }
 
-    private CheckableImageButton prepareNavigationButton(int id, final int i, final String trackingTag) {
-        final CheckableImageButton view = findViewById(id);
+    private CeCheckableImageButton prepareNavigationButton(int id, final int i, final String trackingTag) {
+        final CeCheckableImageButton view = findViewById(id);
         view.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {

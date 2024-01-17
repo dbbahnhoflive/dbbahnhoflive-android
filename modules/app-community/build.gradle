@@ -8,7 +8,7 @@ plugins {
 group 'de.deutschebahn.bahnhoflive'
 
 android {
-    namespace "de.deutschebahn.bahnhoflive"
+    namespace "de.deutschebahn.bahnhoflive.community"
     compileSdk 34
 
     defaultConfig {

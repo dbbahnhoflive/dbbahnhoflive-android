@@ -5,11 +5,10 @@
   -->
 
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
-    package="de.deutschebahn.bahnhoflive.community">
+    xmlns:tools="http://schemas.android.com/tools">
 
     <application
         tools:replace="android:name"
-        android:name=".CommunityApplication" />
+        android:name="de.deutschebahn.bahnhoflive.community.CommunityApplication" />
 
 </manifest>

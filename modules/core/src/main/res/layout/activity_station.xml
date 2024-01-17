@@ -56,7 +56,7 @@
                 android:id="@+id/btn_map"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_gravity="bottom|right"
+                android:layout_gravity="bottom|end"
                 android:layout_margin="@dimen/default_space_double"
                 android:src="@drawable/app_karte"
                 android:visibility="gone"
@@ -87,7 +87,7 @@
             android:padding="1dp"
             android:orientation="horizontal">
 
-            <com.google.android.material.internal.CheckableImageButton
+            <de.deutschebahn.bahnhoflive.widgets.CeCheckableImageButton
                 android:contentDescription="@string/sr_tab_search"
                 android:id="@+id/search"
                 android:layout_width="0dp"
@@ -96,7 +96,7 @@
                 android:padding="@dimen/small_space"
                 android:src="@drawable/checkable_search" />
 
-            <com.google.android.material.internal.CheckableImageButton
+            <de.deutschebahn.bahnhoflive.widgets.CeCheckableImageButton
                 android:contentDescription="@string/sr_tab_overview"
                 android:id="@+id/tab_overview"
                 android:layout_width="0dp"
@@ -105,7 +105,7 @@
                 android:padding="@dimen/small_space"
                 android:src="@drawable/checkable_station" />
 
-            <com.google.android.material.internal.CheckableImageButton
+            <de.deutschebahn.bahnhoflive.widgets.CeCheckableImageButton
                 android:contentDescription="@string/sr_tab_timetables"
                 android:id="@+id/tab_timetables"
                 android:layout_width="0dp"
@@ -114,7 +114,7 @@
                 android:padding="@dimen/small_space"
                 android:src="@drawable/checkable_departure_arrival" />
 
-            <com.google.android.material.internal.CheckableImageButton
+            <de.deutschebahn.bahnhoflive.widgets.CeCheckableImageButton
                 android:contentDescription="@string/sr_tab_info"
                 android:id="@+id/tab_info"
                 android:layout_width="0dp"
@@ -123,7 +123,7 @@
                 android:padding="@dimen/small_space"
                 android:src="@drawable/checkable_info" />
 
-            <com.google.android.material.internal.CheckableImageButton
+            <de.deutschebahn.bahnhoflive.widgets.CeCheckableImageButton
                 android:contentDescription="@string/sr_tab_shopping"
                 android:id="@+id/tab_shopping"
                 android:layout_width="0dp"
