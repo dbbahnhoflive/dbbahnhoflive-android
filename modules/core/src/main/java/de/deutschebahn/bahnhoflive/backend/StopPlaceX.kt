@@ -29,8 +29,8 @@ fun de.deutschebahn.bahnhoflive.backend.db.ris.model.StopPlace.toHafasStation() 
         hafasStation.evaIds = EvaIds(listOf(evaNumber))
 
         position?.let { location ->
-            hafasStation.latitude = location.latitude
-            hafasStation.longitude = location.longitude
+            hafasStation.latitude = location.getLatitude()
+            hafasStation.longitude = location.getLongitude()
         }
 
         hafasStation.name = name

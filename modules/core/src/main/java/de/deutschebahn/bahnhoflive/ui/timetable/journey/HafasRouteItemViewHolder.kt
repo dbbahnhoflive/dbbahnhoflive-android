@@ -13,9 +13,7 @@ import de.deutschebahn.bahnhoflive.ui.ViewHolder
 import de.deutschebahn.bahnhoflive.ui.timetable.HafasRouteStop
 import de.deutschebahn.bahnhoflive.util.accessibility.AccessibilityUtilities
 import de.deutschebahn.bahnhoflive.util.formatShortTime
-import de.deutschebahn.bahnhoflive.util.time.EpochParser
 import de.deutschebahn.bahnhoflive.util.visibleElseGone
-import java.text.DateFormat
 import java.util.Date
 import java.util.concurrent.TimeUnit
 
@@ -23,11 +21,11 @@ import java.util.concurrent.TimeUnit
 class HafasRouteItemViewHolder(private val itemJourneyBinding: ItemJourneyDetailedBinding) :
     ViewHolder<HafasRouteStop>(itemJourneyBinding.root) {
 
-    companion object {
-        val TIME_PARSER = EpochParser.getInstance()
-    }
+//    companion object {
+//        val TIME_PARSER = EpochParser.getInstance()
+//    }
 
-    private val dateFormat = java.text.SimpleDateFormat.getTimeInstance(DateFormat.SHORT)
+//    private val dateFormat = java.text.SimpleDateFormat.getTimeInstance(DateFormat.SHORT)
 
     constructor(
         parent: ViewGroup,
@@ -181,13 +179,13 @@ class HafasRouteItemViewHolder(private val itemJourneyBinding: ItemJourneyDetail
         var parsedEstimatedTime: Long? = time.second?.time
 
         scheduledTimeView.text =
-            parsedScheduledTime?.let { dateFormat.format(it) }
+            parsedScheduledTime?.let { it.formatShortTime() /*dateFormat.format(it)*/ }
 
         if (parsedEstimatedTime == null)
             parsedEstimatedTime = parsedScheduledTime
 
         estimatedTimeView.text =
-            parsedEstimatedTime?.let { dateFormat.format(it) }
+            parsedEstimatedTime?.let { it.formatShortTime() /*dateFormat.format(it)*/ }
 
         val colorId =
                 parsedScheduledTime?.let {

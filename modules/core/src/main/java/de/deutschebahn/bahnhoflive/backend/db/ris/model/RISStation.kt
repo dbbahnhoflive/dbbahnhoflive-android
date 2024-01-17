@@ -16,7 +16,7 @@ class RISStation {
 
     val location by lazy {
         position?.let {
-            LatLng(it.latitude, it.longitude)
+            LatLng(it.getLatitude(), it.getLongitude())
         }
     }
 }

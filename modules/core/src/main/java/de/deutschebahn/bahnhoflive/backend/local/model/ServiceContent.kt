@@ -8,7 +8,7 @@ package de.deutschebahn.bahnhoflive.backend.local.model
 import android.os.Parcelable
 import com.google.android.gms.maps.model.LatLng
 import de.deutschebahn.bahnhoflive.ui.station.info.StaticInfo
-import kotlinx.android.parcel.Parcelize
+import kotlinx.parcelize.Parcelize
 
 @Parcelize
 class ServiceContent private constructor(

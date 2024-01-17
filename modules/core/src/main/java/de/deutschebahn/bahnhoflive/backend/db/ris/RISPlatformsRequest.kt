@@ -203,7 +203,6 @@ class RISPlatformsRequest(
     dbAuthorizationTool: DbAuthorizationTool,
     stadaId: String,
     force: Boolean = false,
-    clientIdDbAuthorizationTool: DbAuthorizationTool?,
 ) : RISStationsRequest<List<Platform>>(
     "platforms/by-key?includeAccessibility=true&includeSubPlatforms=false&keyType=STADA&key=$stadaId",
     dbAuthorizationTool,

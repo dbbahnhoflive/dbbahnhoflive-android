@@ -31,21 +31,24 @@ class StationInfoDetailsFragment :
 
     val stationViewModel: StationViewModel by activityViewModels()
 
-    val dbActionButtonParser = DbActionButtonParser()
+    private val dbActionButtonParser = DbActionButtonParser()
 
-    lateinit var serviceContents: List<ServiceContent>
+    private lateinit var serviceContents: List<ServiceContent>
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
         serviceContents = arguments?.getParcelableArrayList(ARG_SERVICE_CONTENTS) ?: emptyList()
-        setTitle(arguments?.getCharSequence(FragmentArgs.TITLE))
-
+        arguments?.let {
+            it.getCharSequence(FragmentArgs.TITLE)?.let {itTitle->
+                setTitle(itTitle)
+            }
+        }
         stationViewModel.stationFeatures.observe(this) {
             // do nothing, just keep contents updated
         }
 
-        adapter = StationInfoAdapter(
+        this.setAdapter( StationInfoAdapter(
             serviceContents,
             TrackingManager.fromActivity(activity),
             dbActionButtonParser,
@@ -58,7 +61,7 @@ class StationInfoDetailsFragment :
             }
         ) { intent ->
             startActivity(intent)
-        }
+        })
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {

@@ -7,7 +7,7 @@
 package de.deutschebahn.bahnhoflive.ui.station.info
 
 import androidx.lifecycle.LiveData
-import androidx.lifecycle.Transformations
+import androidx.lifecycle.map
 import de.deutschebahn.bahnhoflive.backend.db.publictrainstation.model.Availability
 import de.deutschebahn.bahnhoflive.backend.db.publictrainstation.model.AvailabilityEntry
 import de.deutschebahn.bahnhoflive.backend.db.ris.model.AddressWithWeb
@@ -25,16 +25,16 @@ import de.deutschebahn.bahnhoflive.util.then
 
 class InfoAndServicesLiveData(
     risServiceAndCategoryResource: RisServiceAndCategoryResource,
-    val staticInfoCollectionSource: LiveData<StaticInfoCollection>,
-    val travelCenter: LiveData<LocalService?>,
+    private val staticInfoCollectionSource: LiveData<StaticInfoCollection>,
+    private val travelCenter: LiveData<LocalService?>,
     shopsResource: ShopsResource
 ) : MergedLiveData<List<ServiceContent>?>(null) {
-    val detailedStopPlaceLiveData = risServiceAndCategoryResource.data
-    val travelCenterOpenHours = Transformations.map(shopsResource.data) {
+    private val detailedStopPlaceLiveData = risServiceAndCategoryResource.data
+    private val travelCenterOpenHours = shopsResource.data.map {
         getTravelCenterOpenHours(it?.travelCenter)
     }
 
-    val availabilityRenderer = AvailabilityRenderer()
+    private val availabilityRenderer = AvailabilityRenderer()
 
     init {
         addSource(detailedStopPlaceLiveData)

@@ -24,11 +24,11 @@ import de.deutschebahn.bahnhoflive.view.inflater
 class StationInfoAdapter(
     private val serviceContents: List<ServiceContent>,
     val trackingManager: TrackingManager,
-    val dbActionButtonParser: DbActionButtonParser,
-    val stationLiveData: LiveData<out Station>,
-    val whatsAppInstallationLiveData: WhatsAppInstallation,
-    val whatsAppContactliveData: LiveData<String?>,
-    val lifecycleProvider: () -> LifecycleOwner,
+    private val dbActionButtonParser: DbActionButtonParser,
+    private val stationLiveData: LiveData<out Station>,
+    private val whatsAppInstallationLiveData: WhatsAppInstallation,
+    private val whatsAppContactliveData: LiveData<String?>,
+    private val lifecycleProvider: () -> LifecycleOwner,
     val activityStarter: (Intent) -> Unit
 ) : androidx.recyclerview.widget.RecyclerView.Adapter<CommonDetailsCardViewHolder<ServiceContent>>() {
     val singleSelectionManager: SingleSelectionManager = SingleSelectionManager(this)

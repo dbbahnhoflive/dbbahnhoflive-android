@@ -49,7 +49,6 @@ import de.deutschebahn.bahnhoflive.repository.parking.ViewModelParking
 import de.deutschebahn.bahnhoflive.repository.timetable.TimetableCollector
 import de.deutschebahn.bahnhoflive.repository.timetable.TimetableRepository
 import de.deutschebahn.bahnhoflive.stream.livedata.MergedLiveData
-import de.deutschebahn.bahnhoflive.stream.livedata.switchMap
 import de.deutschebahn.bahnhoflive.ui.map.Content
 import de.deutschebahn.bahnhoflive.ui.map.MapActivity
 import de.deutschebahn.bahnhoflive.ui.station.elevators.ElevatorStatusListsFragment
@@ -233,6 +232,10 @@ class StationViewModel(application: Application) : HafasTimetableViewModel(appli
 
     val railReplacementResource = RimapRRTResource()
 
+    // wichtig: MUSS vor accessibilityPlatformsAndSelectedLiveData initialisiert werden !
+    val accessibilityFeaturesResource =
+        AccessibilityFeaturesResource(this.application.repositories.stationRepository)
+
     val accessibilityPlatformsAndSelectedLiveData =
         selectedAccessibilityPlatformMutableLiveData.switchMap { selectedPlatform ->
             accessibilityFeaturesResource.data.map { platforms ->
@@ -295,7 +298,7 @@ class StationViewModel(application: Application) : HafasTimetableViewModel(appli
     val backNavigationLiveData = MutableLiveData<BackNavigationData>()
 
     private val queryAndParts = "[\\p{L}-]+|\\d+".toRegex().let { pattern ->
-        Transformations.map(contentQuery) { rawQuery ->
+        contentQuery.map { rawQuery ->
             rawQuery to rawQuery?.first?.let {
                 pattern.findAll(it).map {
                     it.value
@@ -315,9 +318,9 @@ class StationViewModel(application: Application) : HafasTimetableViewModel(appli
     val risServiceAndCategoryResource =
         RisServiceAndCategoryResource(openHoursParser)
 
-    val infoAvailability = Transformations.switchMap(risServiceAndCategoryResource.data) {
+    val infoAvailability = risServiceAndCategoryResource.data.switchMap {
         it?.let { detailedStopPlace ->
-            Transformations.map(staticInfoLiveData) {
+            staticInfoLiveData.map {
                 it?.let { staticInfoCollection ->
                     sequenceOf(
                         detailedStopPlace.hasDbInformation then { ServiceContentType.DB_INFORMATION },
@@ -405,7 +408,7 @@ class StationViewModel(application: Application) : HafasTimetableViewModel(appli
         )
 
     val rimapStationInfoLiveData =
-        Transformations.map(rimapStationFeatureCollectionResource.data) { input ->
+        rimapStationFeatureCollectionResource.data.map { input ->
             RimapStationInfo.fromResponse(input)
         }
 
@@ -531,7 +534,7 @@ class StationViewModel(application: Application) : HafasTimetableViewModel(appli
     }
 
     val travelCenterLiveData =
-        Transformations.map(risServiceAndCategoryResource.data) { risServicesAndCategory ->
+        risServiceAndCategoryResource.data.map { risServicesAndCategory ->
             risServicesAndCategory?.closestTravelCenter
         }
 
@@ -1228,14 +1231,14 @@ class StationViewModel(application: Application) : HafasTimetableViewModel(appli
         }
     }
 
-    val recentContentSearchesAsResults =
-        Transformations.map(recentContentQueriesStore.recentQueries) { recentQueries ->
+    private val recentContentSearchesAsResults : LiveData<List<ContentSearchResult>?> =
+        recentContentQueriesStore.recentQueries.map { recentQueries ->
             recentQueries.map { query ->
                 ContentSearchResult(query, 0, query, UpdateQueryOnClickListener(query))
             }
         }
 
-    val contentSearchSuggestionsAsResults = MediatorLiveData<List<ContentSearchResult>>().apply {
+    private val contentSearchSuggestionsAsResults = MediatorLiveData<List<ContentSearchResult>>().apply {
 
         val contentSearchResultMapper = fun(items: List<String>) =
             items.map { suggestion ->
@@ -1270,10 +1273,10 @@ class StationViewModel(application: Application) : HafasTimetableViewModel(appli
 
     private val contentQueryGenuineResultsType = ResultSetType.GENUINE.toLiveData()
 
-    val resultSetType = Transformations.switchMap(contentQuery) { query ->
+    val resultSetType = contentQuery.switchMap  { query ->
         if (query?.first.isNullOrBlank()) {
-            Transformations.map(recentContentSearchesAsResults) { recentSearchQueries ->
-                if (recentSearchQueries.isEmpty()) ResultSetType.SUGGESTIONS else ResultSetType.HISTORY
+            recentContentSearchesAsResults.map { recentSearchQueries ->
+                if (recentSearchQueries.isNullOrEmpty()) ResultSetType.SUGGESTIONS else ResultSetType.HISTORY
             }
         } else {
             contentQueryGenuineResultsType
@@ -1284,20 +1287,21 @@ class StationViewModel(application: Application) : HafasTimetableViewModel(appli
         recentContentQueriesStore.clear()
     }
 
-    val contentSearchResults = Transformations.switchMap(resultSetType) { itResultType ->
+    val contentSearchResults = resultSetType.switchMap { itResultType->
+
         when (itResultType) {
             ResultSetType.HISTORY -> recentContentSearchesAsResults
             ResultSetType.SUGGESTIONS -> contentSearchSuggestionsAsResults
-            else -> Transformations.map(genuineContentSearchResults) {
+            else -> genuineContentSearchResults.map {
                 try {
-                    it?.second
-                }
-                catch(e:Exception) {
+                    it.second
+                } catch(e:Exception) {
                     Log.d("cr", "Exception in contentSearchResults : " + e.message)
                     null
                 }
             }
         }
+
     }
 
     private fun storeContentQuery() {
@@ -1330,22 +1334,23 @@ class StationViewModel(application: Application) : HafasTimetableViewModel(appli
     }
 
 
-    val visibileOrderedStationFeatures = Transformations.map(stationFeatures) {
+    val visibileOrderedStationFeatures = stationFeatures.map {
         it.asSequence().filter { it.isVisible }.sortedBy { it.isFeatured == false }.toList()
     }
 
-    val isEcoStation = Transformations.map(stationResource.data) {
+    val isEcoStation = stationResource.data.map {
         it?.isEco ?: false
     }
 
-    private val stationIdLiveData = Transformations.distinctUntilChanged(
-        Transformations.map(stationResource.data) { station ->
+    private val stationIdLiveData =
+        stationResource.data.map { station ->
             station.id
         }
-    )
+            .distinctUntilChanged()
 
-    val newsLiveData = Transformations.switchMap(refreshLiveData) { force ->
-        Transformations.switchMap(stationIdLiveData) { stationId ->
+
+    val newsLiveData = refreshLiveData.switchMap  { force ->
+        stationIdLiveData.switchMap { stationId ->
             MutableLiveData<List<News>>().apply {
                 application.appRepositories.newsRepository.queryNews(
                     stationId,
@@ -1362,7 +1367,7 @@ class StationViewModel(application: Application) : HafasTimetableViewModel(appli
         }
     }
 
-    val couponsLiveData = Transformations.map(newsLiveData) { newsList ->
+    val couponsLiveData = newsLiveData.map { newsList ->
         newsList?.run {
             val couponGroupId = GroupId.COUPON.id
             filter { news ->
@@ -1371,12 +1376,12 @@ class StationViewModel(application: Application) : HafasTimetableViewModel(appli
         }
     }
 
-    val hasCouponsLiveData = Transformations.map(couponsLiveData) {
+    val hasCouponsLiveData = couponsLiveData.map {
         !it.isNullOrEmpty()
     }
 
     val hasCouponsAndShopsLiveData =
-        Transformations.switchMap(shopsResource.data) { categorizedShops ->
+        shopsResource.data.switchMap { categorizedShops ->
             categorizedShops?.takeUnless { it.shops.isNullOrEmpty() }?.let {
                 hasCouponsLiveData
             }
@@ -1431,10 +1436,10 @@ class StationViewModel(application: Application) : HafasTimetableViewModel(appli
         selectedAccessibilityPlatformMutableLiveData.value = platform
     }
 
-    val shoppingAvailableLiveData: LiveData<Boolean> = Transformations.distinctUntilChanged(
-        Transformations.map(shopsResource.data) {
+    val shoppingAvailableLiveData: LiveData<Boolean> =
+        shopsResource.data.map {
             !(it?.shops).isNullOrEmpty()
-        })
+        }.distinctUntilChanged()
 
     val railwayMissionPoiLiveData = shopsResource.data.map {
         it?.featureVenues?.get(VenueFeature.RAILWAY_MISSION)?.firstOrNull()?.rimapPOI
@@ -1477,8 +1482,6 @@ class StationViewModel(application: Application) : HafasTimetableViewModel(appli
             }
         }
 
-    val accessibilityFeaturesResource =
-        AccessibilityFeaturesResource(this.application.repositories.stationRepository)
 
     // merge platform and poi data (level)
     val platformsWithLevelResource =

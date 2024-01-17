@@ -13,8 +13,11 @@ import android.view.View;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.core.view.MenuProvider;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
+import androidx.lifecycle.Lifecycle;
+import androidx.lifecycle.LifecycleOwner;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
 
@@ -228,4 +231,5 @@ public class DeparturesActivity extends BaseActivity implements TrackingManager.
     public static Intent createIntent(@NotNull Context context, @NotNull HafasStation hafasStation, List<HafasStation> hafasStations, @org.jetbrains.annotations.Nullable Station station) {
         return createIntent(context, hafasStation, null, true, station, hafasStations);
     }
+
 }

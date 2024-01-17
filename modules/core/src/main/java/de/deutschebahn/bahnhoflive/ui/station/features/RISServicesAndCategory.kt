@@ -10,7 +10,7 @@ import de.deutschebahn.bahnhoflive.util.openhours.OpenHoursParser
 class RISServicesAndCategory(
     val station: RISStation?,
     val localServices: LocalServices?,
-    val openHoursParser: OpenHoursParser
+    private val openHoursParser: OpenHoursParser
 ) : ServicesAndCategory {
     fun has(type: LocalService.Type): Boolean = localServices?.get(type) != null
 
@@ -53,14 +53,14 @@ class RISServicesAndCategory(
         get() = localServices?.travelCenters?.run {
             if (size > 1) {
                 station?.position?.let {
-                    DistanceCalculator(it.latitude, it.longitude).run {
+                    DistanceCalculator(it.getLatitude(), it.getLongitude()).run {
                         nullsLast { position1: Coordinate2D, position2: Coordinate2D ->
                             ((calculateDistance(
-                                position1.latitude,
-                                position1.longitude
+                                position1.getLatitude(),
+                                position1.getLongitude()
                             ) - calculateDistance(
-                                position2.latitude,
-                                position2.longitude
+                                position2.getLatitude(),
+                                position2.getLongitude()
                             )) * 1000).toInt()
                         }
                     }

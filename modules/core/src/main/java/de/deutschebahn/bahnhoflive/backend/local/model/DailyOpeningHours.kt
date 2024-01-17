@@ -1,7 +1,7 @@
 package de.deutschebahn.bahnhoflive.backend.local.model
 
 import android.os.Parcelable
-import kotlinx.android.parcel.Parcelize
+import kotlinx.parcelize.Parcelize
 
 @Parcelize
 data class DailyOpeningHours(

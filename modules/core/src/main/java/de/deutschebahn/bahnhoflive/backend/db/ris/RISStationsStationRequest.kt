@@ -11,8 +11,7 @@ import de.deutschebahn.bahnhoflive.backend.parse
 class RISStationsStationRequest(
     val stadaId: String,
     restListener: VolleyRestListener<RISStation>,
-    dbAuthorizationTool: DbAuthorizationTool,
-    clientIdDbAuthorizationTool: DbAuthorizationTool?
+    dbAuthorizationTool: DbAuthorizationTool
 ) :
     RISStationsRequest<RISStation>(
         "/stations/$stadaId",

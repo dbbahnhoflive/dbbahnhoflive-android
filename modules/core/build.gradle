@@ -45,10 +45,11 @@ def loadMapConsentOverride = { ->
 }
 
 android {
-    compileSdk 33
+    namespace "de.deutschebahn.bahnhoflive"
+    compileSdk 34
     defaultConfig {
         minSdkVersion 21
-        targetSdk 33
+        targetSdk 34
         multiDexEnabled true
 
         buildConfigField "String", "RIS_JOURNEYS_BASE_URL", "\"https://apis.deutschebahn.com/db/apis/ris-journeys/v1/\""
@@ -101,17 +102,17 @@ android {
         // Flag to enable support for the new language APIs
 //        coreLibraryDesugaringEnabled true
 
-        sourceCompatibility JavaVersion.VERSION_1_8
-        targetCompatibility JavaVersion.VERSION_1_8
+        sourceCompatibility JavaVersion.VERSION_17
+        targetCompatibility JavaVersion.VERSION_17
     }
 
     kotlinOptions {
-        jvmTarget = JavaVersion.VERSION_1_8.toString()
+        jvmTarget = JavaVersion.VERSION_17.toString()
     }
 
-//    kotlin {
-//        jvmToolchain(8)
-//    }
+    kotlin {
+        jvmToolchain(17)
+    }
 
     testOptions {
         unitTests.returnDefaultValues = true
@@ -121,40 +122,34 @@ android {
 dependencies {
     api "androidx.legacy:legacy-support-v4:1.0.0"
     api 'androidx.appcompat:appcompat:1.6.1'
-    implementation "com.google.android.material:material:1.9.0"
+    implementation "com.google.android.material:material:1.11.0"
     implementation "androidx.vectordrawable:vectordrawable-animated:1.1.0"
     implementation "androidx.viewpager2:viewpager2:1.0.0"
-//    implementation "androidx.media:media:1.7.0"
     implementation "androidx.recyclerview:recyclerview:1.3.2"
     implementation "androidx.cardview:cardview:1.0.0"
     implementation 'androidx.constraintlayout:constraintlayout:2.1.4'
-    implementation 'androidx.activity:activity-ktx:1.6.1'
-    implementation 'androidx.fragment:fragment-ktx:1.5.7'
+    implementation 'androidx.activity:activity-ktx:1.8.2'
+    implementation 'androidx.fragment:fragment-ktx:1.6.2'
     api 'androidx.multidex:multidex:2.0.1'
     api 'com.android.volley:volley:1.2.1'
     api 'com.google.android.gms:play-services-maps:18.2.0'
-    api 'com.google.code.gson:gson:2.9.0'
+    api 'com.google.code.gson:gson:2.10'
     implementation 'com.google.android.flexbox:flexbox:3.0.0'
-//    implementation 'com.jakewharton:disklrucache:2.0.2'
     implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"
 
-    implementation 'androidx.webkit:webkit:1.7.0'
+    implementation 'androidx.webkit:webkit:1.9.0'
 
-    final lifecycleLibraryVersion = '2.5.1'
+    final lifecycleLibraryVersion = '2.7.0'
     implementation "androidx.lifecycle:lifecycle-common-java8:$lifecycleLibraryVersion"
     implementation "androidx.lifecycle:lifecycle-reactivestreams-ktx:$lifecycleLibraryVersion"
     implementation "androidx.lifecycle:lifecycle-livedata-ktx:$lifecycleLibraryVersion"
 
-//    final fuelVersion = '2.3.1'
-//    api "com.github.kittinunf.fuel:fuel:$fuelVersion"
-//    api "com.github.kittinunf.fuel:fuel-android:$fuelVersion"
-//    api "com.github.kittinunf.fuel:fuel-coroutines:$fuelVersion"
 
     api 'io.reactivex.rxjava2:rxjava:2.2.21'
     api 'io.reactivex.rxjava2:rxandroid:2.1.1'
     api 'io.reactivex.rxjava2:rxkotlin:2.4.0'
 
-    implementation 'io.sentry:sentry-android:7.1.0' // 6.19.1
+    implementation 'io.sentry:sentry-android:7.1.0'
 
     implementation 'com.google.firebase:firebase-messaging-ktx:23.4.0'
     implementation 'com.google.firebase:firebase-analytics:21.5.0'
@@ -166,6 +161,14 @@ dependencies {
     implementation 'androidx.core:core-splashscreen:1.0.1'
 
     testImplementation("org.json:json:20210307")
+
+    //    implementation "androidx.media:media:1.7.0"
+//    implementation 'com.jakewharton:disklrucache:2.0.2'
+
+//    final fuelVersion = '2.3.1'
+//    api "com.github.kittinunf.fuel:fuel:$fuelVersion"
+//    api "com.github.kittinunf.fuel:fuel-android:$fuelVersion"
+//    api "com.github.kittinunf.fuel:fuel-coroutines:$fuelVersion"
 
 //    coreLibraryDesugaring 'com.android.tools:desugar_jdk_libs:2.0.3'
 }

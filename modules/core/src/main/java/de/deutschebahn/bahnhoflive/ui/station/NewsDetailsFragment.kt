@@ -15,7 +15,7 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.Observer
-import androidx.lifecycle.Transformations
+import androidx.lifecycle.map
 import de.deutschebahn.bahnhoflive.R
 import de.deutschebahn.bahnhoflive.analytics.IssueTracker
 import de.deutschebahn.bahnhoflive.analytics.TrackingManager
@@ -29,9 +29,9 @@ class NewsDetailsFragment : FullBottomSheetDialogFragment() {
 
     val stationViewModel by activityViewModels<StationViewModel>()
 
-    val newsEntry by lazy {
+    private val newsEntry by lazy {
         requireArguments().getInt(ARG_NEWS_INDEX).let { newsIndex ->
-            Transformations.map(stationViewModel.newsLiveData) { newsList ->
+            stationViewModel.newsLiveData.map { newsList ->
                 newsList?.getOrNull(newsIndex)
             }
         }

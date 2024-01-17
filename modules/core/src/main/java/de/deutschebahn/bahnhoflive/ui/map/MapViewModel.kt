@@ -23,7 +23,6 @@ import de.deutschebahn.bahnhoflive.repository.parking.ViewModelParking
 import de.deutschebahn.bahnhoflive.repository.timetable.TimetableCollector
 import de.deutschebahn.bahnhoflive.repository.timetable.TimetableRepository
 import de.deutschebahn.bahnhoflive.stream.livedata.OneShotLiveData
-import de.deutschebahn.bahnhoflive.stream.livedata.switchMap
 import de.deutschebahn.bahnhoflive.ui.StadaStationCacheViewModel
 import de.deutschebahn.bahnhoflive.ui.station.StationActivity
 import kotlinx.coroutines.flow.flow

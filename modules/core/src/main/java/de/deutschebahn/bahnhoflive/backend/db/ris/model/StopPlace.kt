@@ -44,11 +44,7 @@ open class StopPlace {
 
     fun calculateDistance(distanceCalculator: DistanceCalculator) {
         position?.apply {
-            latitude?.also { latitude ->
-                longitude?.also { longitude ->
-                    distanceInKm = distanceCalculator.calculateDistance(latitude, longitude)
-                }
-            }
+            distanceInKm = distanceCalculator.calculateDistance(getLatitude(), getLongitude())
         }
     }
 

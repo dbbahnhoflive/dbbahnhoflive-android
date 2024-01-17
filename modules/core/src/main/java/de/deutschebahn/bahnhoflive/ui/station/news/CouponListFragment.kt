@@ -11,7 +11,8 @@ import android.os.Bundle
 import android.view.View
 import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.Observer
-import androidx.lifecycle.Transformations
+import androidx.lifecycle.map
+import androidx.lifecycle.switchMap
 import de.deutschebahn.bahnhoflive.BaseApplication
 import de.deutschebahn.bahnhoflive.R
 import de.deutschebahn.bahnhoflive.analytics.TrackingManager
@@ -25,10 +26,10 @@ class CouponListFragment : RecyclerFragment<CouponAdapter>(R.layout.fragment_rec
 
     val stationViewModel by activityViewModels<StationViewModel>()
 
-    val deepLinkSelectionLiveData by lazy {
-        Transformations.switchMap(stationViewModel.couponsLiveData) { coupons ->
+    private val deepLinkSelectionLiveData by lazy {
+        stationViewModel.couponsLiveData.switchMap { coupons ->
             coupons?.let {
-                Transformations.map(stationViewModel.selectedNews) { coupon ->
+                stationViewModel.selectedNews.map { coupon ->
                     coupon?.let {
                         coupons.indexOf(coupon)
                     }
@@ -55,7 +56,7 @@ class CouponListFragment : RecyclerFragment<CouponAdapter>(R.layout.fragment_rec
                 startActivity(Intent(Intent.ACTION_VIEW, item.linkUri))
             }
         }
-        adapter = couponAdapter
+        setAdapter(couponAdapter)
 
         deepLinkSelectionLiveData.observe(this, Observer { selection ->
             stationViewModel.selectedNews.value = null

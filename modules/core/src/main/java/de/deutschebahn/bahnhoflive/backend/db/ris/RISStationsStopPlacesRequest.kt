@@ -30,8 +30,7 @@ class RISStationsStopPlacesRequest(
     radius: Int = 2000,
     private val mixedResults: Boolean,
     private val collapseNeighbours: Boolean,
-    private val pullUpFirstDbStation: Boolean,
-    clientIdDbAuthorizationTool: DbAuthorizationTool?
+    private val pullUpFirstDbStation: Boolean
 ) : RISStationsRequest<List<StopPlace>>( //         "https://apis.deutschebahn.com/db/apis/ris-stations/v1/$urlSuffix",
     "stop-places/" +
             (query?.trim()?.takeUnless { it.isEmpty() }

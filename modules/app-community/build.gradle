@@ -8,12 +8,12 @@ plugins {
 group 'de.deutschebahn.bahnhoflive'
 
 android {
-
-    compileSdk 33
+    namespace "de.deutschebahn.bahnhoflive"
+    compileSdk 34
 
     defaultConfig {
         minSdkVersion 21
-        targetSdk 33
+        targetSdk 34
         versionCode 85
         versionName "3.22.0"
         applicationId "de.deutschebahn.bahnhoflive.community"
@@ -36,8 +36,8 @@ android {
         // Flag to enable support for the new language APIs
 //        coreLibraryDesugaringEnabled true
 
-        sourceCompatibility JavaVersion.VERSION_1_8
-        targetCompatibility JavaVersion.VERSION_1_8
+        sourceCompatibility JavaVersion.VERSION_17
+        targetCompatibility JavaVersion.VERSION_17
     }
 
     buildFeatures {
@@ -47,12 +47,12 @@ android {
     }
 
     kotlinOptions {
-        jvmTarget = JavaVersion.VERSION_1_8.toString()
+        jvmTarget = JavaVersion.VERSION_17.toString()
     }
 
-//    kotlin {
-//        jvmToolchain(8)
-//    }
+    kotlin {
+        jvmToolchain(17)
+    }
 
 }
 

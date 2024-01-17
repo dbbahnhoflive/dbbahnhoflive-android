@@ -17,7 +17,7 @@ import android.widget.ImageButton
 import androidx.core.view.isVisible
 import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.Observer
-import androidx.lifecycle.Transformations
+import androidx.lifecycle.switchMap
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
 import de.deutschebahn.bahnhoflive.BaseApplication
 import de.deutschebahn.bahnhoflive.R
@@ -43,8 +43,6 @@ class HafasDeparturesFragment : RecyclerFragment<HafasDeparturesAdapter>(R.layou
 
     private val stationViewModel by activityViewModels<StationViewModel>()
 
-    private val restHelper = BaseApplication.get().restHelper
-
     private var swipeRefreshLayout: SwipeRefreshLayout? = null
     private var loadingContentDecorationViewHolder: LoadingContentDecorationViewHolder? = null
     private val hafasTimetableViewModel: HafasTimetableViewModel by activityViewModels()
@@ -58,14 +56,14 @@ class HafasDeparturesFragment : RecyclerFragment<HafasDeparturesAdapter>(R.layou
         super.onSaveInstanceState(outState)
 
         hafasTimetableViewModel.selectedHafasJourney.value?.let {
-            outState.putParcelable("test", it.hafasEvent)
+            outState.putParcelable(ARG_HAFAS_EVENT, it.hafasEvent)
         }
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        adapter = HafasDeparturesAdapter(View.OnClickListener {
+        setAdapter( HafasDeparturesAdapter(View.OnClickListener {
             trackingManager.track(
                 TrackingManager.TYPE_ACTION,
                 TrackingManager.Screen.H2,
@@ -115,7 +113,7 @@ class HafasDeparturesFragment : RecyclerFragment<HafasDeparturesAdapter>(R.layou
 
                 }
             }
-        )
+        ))
 
         setFilter(hafasTimetableViewModel.filterName)
 
@@ -150,20 +148,21 @@ class HafasDeparturesFragment : RecyclerFragment<HafasDeparturesAdapter>(R.layou
             backNavigationData?.hafasStation?.let {
 
                 if (backNavigationData.navigateTo) {
-                    recyclerView.post {
+                    recyclerView?.post {
 
-                        backNavigationData.hafasEvent?.let {
+                        backNavigationData.hafasEvent?.let { it ->
 
                             Log.d("cr", "item to find: ${it.direction} ${it.displayName}")
 
                             val index: Int? = adapter?.findItemIndex(backNavigationData.hafasEvent)
 
                             if (index != null && index >= 0) {
-                                val vh =
-                                    recyclerView.findViewHolderForAdapterPosition(index + 1) as? HafasEventViewHolder
+                                recyclerView?.let {itRecyclerView->
+                                    val vh = itRecyclerView.findViewHolderForAdapterPosition(index + 1) as? HafasEventViewHolder
                                 vh?.performClick()
                             }
                         }
+                    }
                     }
 
                     stationViewModel.finishBackNavigation()
@@ -190,8 +189,8 @@ class HafasDeparturesFragment : RecyclerFragment<HafasDeparturesAdapter>(R.layou
 
     fun navigateBack(this_activity: Activity) {
 
-        (this_activity as DeparturesActivity)?.let {
-            var intent: Intent? = null
+        (this_activity as? DeparturesActivity)?.let {
+            val intent: Intent?
 
             if (it.station != null) {
                 intent = StationActivity.createIntentForBackNavigation(
@@ -262,7 +261,7 @@ class HafasDeparturesFragment : RecyclerFragment<HafasDeparturesAdapter>(R.layou
         }
 
 
-        Transformations.switchMap(hafasTimetableResource.data) {
+        hafasTimetableResource.data.switchMap {
             it?.let {
                 hafasTimetableViewModel.selectedHafasStationProduct
             }
@@ -278,7 +277,7 @@ class HafasDeparturesFragment : RecyclerFragment<HafasDeparturesAdapter>(R.layou
 
 
         if (savedInstanceState != null) {
-            val hafasEvent: HafasEvent? = savedInstanceState.getParcelable("test")
+            val hafasEvent: HafasEvent? = savedInstanceState.getParcelable(ARG_HAFAS_EVENT)
 
             hafasEvent?.let {
                 val ev = DetailedHafasEvent(

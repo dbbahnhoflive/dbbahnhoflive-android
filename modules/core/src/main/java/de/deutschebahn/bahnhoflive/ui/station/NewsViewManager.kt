@@ -7,6 +7,7 @@
 package de.deutschebahn.bahnhoflive.ui.station
 
 import android.view.View
+import androidx.core.view.isVisible
 import androidx.lifecycle.Observer
 import androidx.viewpager2.widget.ViewPager2
 import com.google.android.material.tabs.TabLayout
@@ -21,29 +22,31 @@ class NewsViewManager(
     private val newsAdapter: NewsAdapter = NewsAdapter()
 ) : Observer<List<News>> {
 
-    val pageIndicator = containerView.findViewById<TabLayout>(R.id.newsPagerIndicator)
+    val pageIndicator : TabLayout? = containerView.findViewById<TabLayout>(R.id.newsPagerIndicator)
 
-    val viewPager = containerView.findViewById<ViewPager2>(R.id.newsPager).apply {
+    val viewPager : ViewPager2? = containerView.findViewById<ViewPager2>(R.id.newsPager).apply {
         adapter = newsAdapter
 
+        pageIndicator?.let {
         TabLayoutMediator(pageIndicator, this) { tab, position ->
             tab.icon = resources.getDrawable(R.drawable.shape_page_indicator_news)
         }.attach()
     }
+    }
 
-    override fun onChanged(newsList: List<News>?) {
+    override fun onChanged(newsList: List<News>) {
         newsAdapter.newsList = newsList
 
-        viewPager.visibility = if (newsList.isNullOrEmpty()) View.GONE else View.VISIBLE
-        pageIndicator.visibility = when (newsList?.size) {
+        viewPager?.isVisible = newsList.isNotEmpty()
+        pageIndicator?.visibility = when (newsList.size) {
             null, 0 -> View.GONE
             1 -> View.INVISIBLE
             else -> View.VISIBLE
         }
 
-        val layoutParams = pageIndicator.layoutParams
-        layoutParams.height = if(pageIndicator.visibility==View.VISIBLE) DimensionX.dp2px(pageIndicator.resources, 24) else 0
-        pageIndicator.layoutParams = layoutParams
+        val layoutParams = pageIndicator?.layoutParams
+        layoutParams?.height = if(pageIndicator?.visibility==View.VISIBLE) DimensionX.dp2px(pageIndicator.resources, 24) else 0
+        pageIndicator?.layoutParams = layoutParams
 
     }
 

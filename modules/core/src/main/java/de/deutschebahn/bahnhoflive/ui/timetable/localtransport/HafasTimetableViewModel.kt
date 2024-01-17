@@ -9,6 +9,7 @@ import android.app.Application
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.map
+import androidx.lifecycle.switchMap
 import com.android.volley.VolleyError
 import de.deutschebahn.bahnhoflive.backend.hafas.HafasDepartures
 import de.deutschebahn.bahnhoflive.backend.hafas.model.HafasStation
@@ -21,7 +22,6 @@ import de.deutschebahn.bahnhoflive.repository.MergedStation
 import de.deutschebahn.bahnhoflive.repository.Resource
 import de.deutschebahn.bahnhoflive.repository.Station
 import de.deutschebahn.bahnhoflive.repository.StationResource
-import de.deutschebahn.bahnhoflive.stream.livedata.switchMap
 import de.deutschebahn.bahnhoflive.ui.accessibility.SpokenFeedbackAccessibilityLiveData
 import de.deutschebahn.bahnhoflive.util.ManagedObserver
 import de.deutschebahn.bahnhoflive.util.Token

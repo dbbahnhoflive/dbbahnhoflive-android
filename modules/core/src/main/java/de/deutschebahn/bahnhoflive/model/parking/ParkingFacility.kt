@@ -8,7 +8,7 @@ package de.deutschebahn.bahnhoflive.model.parking
 
 import android.os.Parcelable
 import com.google.android.gms.maps.model.LatLng
-import kotlinx.android.parcel.Parcelize
+import kotlinx.parcelize.Parcelize
 
 @Parcelize
 data class ParkingFacility(

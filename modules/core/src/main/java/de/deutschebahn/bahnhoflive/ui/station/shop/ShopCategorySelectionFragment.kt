@@ -9,16 +9,14 @@ package de.deutschebahn.bahnhoflive.ui.station.shop
 import android.content.Intent
 import android.os.Bundle
 import android.view.View
-import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.MediatorLiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.Observer
-import androidx.lifecycle.Transformations
+import androidx.lifecycle.map
 import de.deutschebahn.bahnhoflive.R
 import de.deutschebahn.bahnhoflive.analytics.TrackingManager
-import de.deutschebahn.bahnhoflive.ui.ViewHolder
 import de.deutschebahn.bahnhoflive.ui.map.Content
 import de.deutschebahn.bahnhoflive.ui.map.InitialPoiManager
 import de.deutschebahn.bahnhoflive.ui.map.MapPresetProvider
@@ -37,9 +35,9 @@ class ShopCategorySelectionFragment : CategorySelectionFragment(
 
     private val categoriesLiveData by lazy {
         MediatorLiveData<List<Category>>().apply {
-            val shopCategoriesLiveData = Transformations.map(stationViewModel.shopsResource.data) {
+            val shopCategoriesLiveData = stationViewModel.shopsResource.data.map {
                 it?.shops?.let { shops ->
-                    ShopCategory.values().mapNotNull { shopCategory ->
+                    ShopCategory.entries.mapNotNull { shopCategory ->
                         shops[shopCategory]?.takeUnless { shopList -> shopList.isEmpty() }
                             ?.let {
                                 ShoppingCategory(shopCategory)

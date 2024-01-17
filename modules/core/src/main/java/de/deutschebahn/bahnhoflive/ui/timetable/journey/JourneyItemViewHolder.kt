@@ -17,6 +17,7 @@ import de.deutschebahn.bahnhoflive.ui.Status
 import de.deutschebahn.bahnhoflive.ui.ViewHolder
 import de.deutschebahn.bahnhoflive.util.accessibility.AccessibilityUtilities
 import de.deutschebahn.bahnhoflive.util.changeAccessibilityActionClickText
+import de.deutschebahn.bahnhoflive.util.formatShortTime
 import de.deutschebahn.bahnhoflive.util.getColorById
 import java.text.DateFormat
 import java.util.concurrent.TimeUnit
@@ -262,9 +263,9 @@ class JourneyItemViewHolder(
         val parsedScheduledTime = journeyStopEvent?.parsedScheduledTime
 
         scheduledTimeView.text =
-            parsedScheduledTime?.let { dateFormat.format(it) }
+            parsedScheduledTime?.let { it.formatShortTime() /* dateFormat.format(it) */}
         estimatedTimeView.text =
-            journeyStopEvent?.parsedEstimatedTime?.let { dateFormat.format(it) }
+            journeyStopEvent?.parsedEstimatedTime?.let { it.formatShortTime() /* dateFormat.format(it)*/ }
         estimatedTimeView.setTextColor(
             estimatedTimeView.context.getColorById(
                 journeyStopEvent?.let { itJourneyStopEvent ->

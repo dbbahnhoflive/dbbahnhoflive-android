@@ -48,7 +48,6 @@ class OfficialStationRepository(
                     VolleyRestListener<List<de.deutschebahn.bahnhoflive.backend.db.ris.model.StopPlace>> {
                     override fun onSuccess(payload: List<de.deutschebahn.bahnhoflive.backend.db.ris.model.StopPlace>) {
 
-//payload[0].evaIds.ids.add("1234")
                         if(payload.isNotEmpty()) {
                             SEV_Static.addEvaIds(payload[0].stationID, payload[0].evaIds.ids)
                         }
@@ -84,8 +83,7 @@ class OfficialStationRepository(
                 radius,
                 mixedResults,
                 collapseNeighbours,
-                pullUpFirstDbStation,
-                clientIdDbAuthorizationTool
+                pullUpFirstDbStation
             )
         )
         .cancellable()
@@ -100,8 +98,7 @@ class OfficialStationRepository(
             RISStationsLocalServicesRequest(
                 stadaId,
                 listener,
-                dbAuthorizationTool,
-                clientIdDbAuthorizationTool
+                dbAuthorizationTool
             )
         ).cancellable()
 
@@ -114,7 +111,7 @@ class OfficialStationRepository(
     ) =
         restHelper.add(
             RISStationsStationRequest(
-                stadaId, listener, dbAuthorizationTool, clientIdDbAuthorizationTool
+                stadaId, listener, dbAuthorizationTool
             )
         ).cancellable()
 
@@ -149,7 +146,7 @@ class OfficialStationRepository(
     ): VolleyRequestCancellable<List<Platform>> = restHelper
         .add(
             RISPlatformsRequest(
-                listener, dbAuthorizationTool, stadaId, force, clientIdDbAuthorizationTool
+                listener, dbAuthorizationTool, stadaId, force
             )
         )
         .cancellable()

@@ -123,7 +123,7 @@ class OccupancyViewBinder(
     private val dayOfWeekPopup = PopupWindow(
         context,
         null,
-        R.style.Widget_AppCompat_PopupWindow,
+        androidx.appcompat.R.style.Widget_AppCompat_PopupWindow ,
         R.style.App_Theme_Base
     ).apply {
         PopupWindowCompat.setOverlapAnchor(this, true)
