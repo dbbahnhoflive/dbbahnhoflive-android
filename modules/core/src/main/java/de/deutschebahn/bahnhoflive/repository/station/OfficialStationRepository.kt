@@ -45,8 +45,8 @@ class OfficialStationRepository(
         .add(
             RISStationsStopPlacesRequest(
                 object :
-                    VolleyRestListener<List<de.deutschebahn.bahnhoflive.backend.db.ris.model.StopPlace>> {
-                    override fun onSuccess(payload: List<de.deutschebahn.bahnhoflive.backend.db.ris.model.StopPlace>) {
+                    VolleyRestListener<List<StopPlace>> {
+                    override fun onSuccess(payload: List<StopPlace>) {
 
                         if(payload.isNotEmpty()) {
                             SEV_Static.addEvaIds(payload[0].stationID, payload[0].evaIds.ids)

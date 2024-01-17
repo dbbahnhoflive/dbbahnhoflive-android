@@ -1,6 +1,5 @@
 package de.deutschebahn.bahnhoflive.ui.timetable.journey
 
-import android.graphics.Color
 import android.graphics.Typeface
 import android.view.LayoutInflater
 import android.view.View
@@ -263,9 +262,9 @@ class JourneyItemViewHolder(
         val parsedScheduledTime = journeyStopEvent?.parsedScheduledTime
 
         scheduledTimeView.text =
-            parsedScheduledTime?.let { it.formatShortTime() /* dateFormat.format(it) */}
+            parsedScheduledTime?.formatShortTime()
         estimatedTimeView.text =
-            journeyStopEvent?.parsedEstimatedTime?.let { it.formatShortTime() /* dateFormat.format(it)*/ }
+            journeyStopEvent?.parsedEstimatedTime?.formatShortTime()
         estimatedTimeView.setTextColor(
             estimatedTimeView.context.getColorById(
                 journeyStopEvent?.let { itJourneyStopEvent ->

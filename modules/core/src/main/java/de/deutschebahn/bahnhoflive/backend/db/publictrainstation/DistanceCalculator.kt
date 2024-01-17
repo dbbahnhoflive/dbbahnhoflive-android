@@ -17,17 +17,16 @@ class DistanceCalculator(
 
     fun calculateDistance(latitude: Double?, longitude: Double?): Float {
 
-        if(latitude!=null && longitude!=null && this.latitude!=null && this.longitude!=null) {
-        Location.distanceBetween(
-            latitude,
-            longitude,
-            this.latitude,
-            this.longitude,
-            distanceResults
-        )
-        return distanceResults[0] / 1000
-        }
-        else
-            return 0.0f
+        return if(latitude!=null && longitude!=null && this.latitude!=null && this.longitude!=null) {
+            Location.distanceBetween(
+                latitude,
+                longitude,
+                this.latitude,
+                this.longitude,
+                distanceResults
+            )
+            distanceResults[0] / 1000
+        } else
+            0.0f
     }
 }

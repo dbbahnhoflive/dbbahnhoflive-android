@@ -90,7 +90,7 @@ class Duration(
                 }.nonBlankOrNull()
 
             }
-        } catch (e: Exception) {
+        } catch (_: Exception) {
 
         }
 

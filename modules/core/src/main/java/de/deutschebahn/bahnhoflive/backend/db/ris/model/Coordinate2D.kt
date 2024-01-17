@@ -10,9 +10,12 @@ class Coordinate2D {
     fun toLatLng() = LatLng(latitude, longitude)
 
     fun getLatitude() : Double = latitude
+
+    @SuppressWarnings("unused")
     fun setLatitude(value:Double?) = if(value!=null)  latitude=value else latitude=0.0
 
     fun getLongitude() : Double = longitude
+    @SuppressWarnings("unused")
     fun setLongitude(value:Double?) = if(value!=null)  longitude=value else longitude=0.0
 
 }

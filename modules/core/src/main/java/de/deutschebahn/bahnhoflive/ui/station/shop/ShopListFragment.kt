@@ -83,11 +83,11 @@ class ShopListFragment : RecyclerFragment<ShopAdapter>(R.layout.fragment_recycle
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         val shopsLiveData: LiveData<CategorizedShops?> = stationViewModel!!.shopsResource.data
-        shopsLiveData.observe(viewLifecycleOwner, Observer { categorizedShops ->
+        shopsLiveData.observe(viewLifecycleOwner) { categorizedShops ->
             if (categorizedShops != null) {
                 updateAdapter((categorizedShops.shops[category])!!)
             }
-        })
+        }
         shopsLiveData.switchMap { shops: CategorizedShops? ->
             if (shops != null) {
                 return@switchMap selectedShopCategory!!.switchMap<ShopCategory?, Shop> { selectedShopCategoryValue: ShopCategory? ->

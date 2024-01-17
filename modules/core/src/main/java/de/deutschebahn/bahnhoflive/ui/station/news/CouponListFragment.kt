@@ -58,27 +58,27 @@ class CouponListFragment : RecyclerFragment<CouponAdapter>(R.layout.fragment_rec
         }
         setAdapter(couponAdapter)
 
-        deepLinkSelectionLiveData.observe(this, Observer { selection ->
+        deepLinkSelectionLiveData.observe(this) { selection ->
             stationViewModel.selectedNews.value = null
-
             if (selection >= 0) {
                 couponAdapter.singleSelectionManager.selection = selection
             }
-        })
+        }
 
-        stationViewModel.selectedShop.observe(this, Observer {
+        stationViewModel.selectedShop.observe(this) {
             if (it != null) {
                 HistoryFragment.parentOf(this)?.pop()
             }
-        })
+        }
+
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        stationViewModel.couponsLiveData.observe(viewLifecycleOwner, Observer {
+        stationViewModel.couponsLiveData.observe(viewLifecycleOwner) {
             adapter?.items = it
-        })
+        }
     }
 
     override fun onStart() {
