@@ -9,6 +9,7 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.core.app.ActivityCompat
 import androidx.core.view.isGone
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentActivity
@@ -390,74 +391,6 @@ class RegularJourneyContentFragment : Fragment() {
                         .setPositiveButton(
                             "Öffnen",
                             DialogInterface.OnClickListener { dialog, id ->
-/*
-                                get().applicationServices.repositories.stationRepository.queryStationByEvaId(
-                                    object : VolleyRestListener<InternalStation?> {
-
-                                        @Synchronized
-                                        override fun onSuccess(payload: InternalStation?) {
-
-                                                TrackingManager.fromActivity(activity).track(
-                                                    TrackingManager.TYPE_ACTION,
-                                                    TrackingManager.Screen.H2,
-                                                    "journey",
-                                                    "openstation"
-                                                )
-
-                                            // payload=null, wenn station keine stadaId hat ! (meist ÖPNV)
-                                            // dann die normale Abfahrtstafel öffnen
-
-                                            var intent: Intent? = null
-
-                                            if (payload != null) {
-
-                                                intent = StationActivity.createIntentForBackNavigation(
-                                                        view.context,
-                                                        payload,
-                                                        stationViewModel?.station,
-                                                    hafasStop?.toHafasStation(),
-                                                    hafasEvent,
-                                                        trainInfo,
-                                                        false
-                                                    )
-
-                                            } else {
-                                                hafasStop?.let {
-
-                                                    val hafasStation = it.toHafasStation()
-
-                                                    intent =
-                                                        DeparturesActivity.createIntentForBackNavigation(
-                                                            view.context,
-                                                            stationViewModel?.station,
-                                                            hafasStation,
-                                                            hafasEvent
-                                                        )
-
-                                                }
-                                            }
-
-                                            intent?.let {
-                                                activity.let {
-                                                    it.finish()
-                                                    it.startActivity(intent)
-                                                }
-                                            }
-
-
-
-                                        }
-
-                                        @Synchronized
-                                        override fun onFail(reason: VolleyError) {
-                                            Log.d("cr", reason.toString())
-                                            // todo: Meldung oder wiederholen
-                                        }
-                                    },
-                                    it
-                                )
-*/
-
 
                                 get().applicationServices.repositories.stationRepository.queryStations(
                                     object : VolleyRestListener<List<StopPlace>?> {
@@ -505,6 +438,7 @@ class RegularJourneyContentFragment : Fragment() {
 
                                             intent?.let {
                                                 activity.let {
+                                                    ActivityCompat.finishAffinity(activity)
                                                     it.finish()
                                                     it.startActivity(intent)
                                                 }
