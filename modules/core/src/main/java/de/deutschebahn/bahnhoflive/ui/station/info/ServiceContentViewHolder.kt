@@ -1,7 +1,6 @@
 package de.deutschebahn.bahnhoflive.ui.station.info
 
 import android.content.Intent
-import android.graphics.Color
 import android.net.Uri
 import android.text.Html
 import android.text.method.LinkMovementMethod
@@ -11,7 +10,6 @@ import android.view.View
 import android.widget.LinearLayout
 import android.widget.TextView
 import androidx.annotation.LayoutRes
-import androidx.core.content.ContextCompat
 import de.deutschebahn.bahnhoflive.BaseApplication
 import de.deutschebahn.bahnhoflive.IconMapper
 import de.deutschebahn.bahnhoflive.R
@@ -31,7 +29,8 @@ import de.deutschebahn.bahnhoflive.util.handleUrlClicks
 import de.deutschebahn.bahnhoflive.view.SingleSelectionManager
 import de.deutschebahn.bahnhoflive.view.inflater
 import java.text.SimpleDateFormat
-import java.util.*
+import java.util.Calendar
+import java.util.Locale
 
 open class ServiceContentViewHolder(
     cardExpandableStationInfoBinding: CardExpandableStationInfoBinding,

@@ -5,7 +5,6 @@
  */
 package de.deutschebahn.bahnhoflive.ui.station.shop
 
-import android.app.Activity
 import android.content.Context
 import android.content.Intent
 import android.os.Build
@@ -13,7 +12,6 @@ import android.os.Bundle
 import android.view.View
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
-import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.switchMap
 import de.deutschebahn.bahnhoflive.R
