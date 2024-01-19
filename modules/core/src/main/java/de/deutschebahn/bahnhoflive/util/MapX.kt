@@ -43,13 +43,13 @@ class GoogleLocationPermissions {
 /*        setTitle(title)*/
                 .setCancelable(false)
                 .setPositiveButton(R.string.tutorial_button_location_permission,
-                    DialogInterface.OnClickListener { dialog, id ->
+                    DialogInterface.OnClickListener { _, _ ->
                         permissionCheckFunction()
 
                     })
                 .setNegativeButton(
                     R.string.dlg_cancel,
-                    DialogInterface.OnClickListener { dialog, id ->
+                    DialogInterface.OnClickListener { _, _ ->
                         permissionResponseFunction(false)
                     })
             builder.create().show()

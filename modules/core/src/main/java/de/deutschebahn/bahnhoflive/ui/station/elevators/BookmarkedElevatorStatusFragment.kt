@@ -119,7 +119,7 @@ class BookmarkedElevatorStatusFragment : Fragment(), SwipeRefreshLayout.OnRefres
         view.findViewById<View>(R.id.clear)
             .setOnClickListener(OnDeleteAllFacilityStatusSubscriptionsClickListener(
                 activity
-            ) { dialog, which ->
+            ) { dialog, _ ->
                 instance.removeAll(requireContext())
                 resetAdapter()
                 dialog.dismiss()

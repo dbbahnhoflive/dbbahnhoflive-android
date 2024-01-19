@@ -131,7 +131,7 @@ class NewsViewHolder(
 
         newsHeadline.text = item?.title
         if(item?.titleForScreenReader!=null)
-         newsHeadline.contentDescription = item?.titleForScreenReader
+         newsHeadline.contentDescription = item.titleForScreenReader
 
         newsCopy.text = item?.summary
 

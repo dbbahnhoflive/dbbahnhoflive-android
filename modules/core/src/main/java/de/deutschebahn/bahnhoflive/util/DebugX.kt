@@ -14,12 +14,12 @@ class DebugX {
 
     companion object {
 
-        fun getKeyType(bundle:Bundle, key:String) : String? {
-            val keyobj: Any?
-            keyobj = bundle.get(key) // get key as object
-            if (keyobj == null) return null // not present?
-            return keyobj.javaClass.name // get class name
-        }
+//        fun getKeyType(bundle:Bundle, key:String) : String? {
+//            val keyobj: Any?
+//            keyobj = bundle.get(key) // get key as object
+//            if (keyobj == null) return null // not present?
+//            return keyobj.javaClass.name // get class name
+//        }
 
         fun logBundle(preString: String, bundle: Bundle?) {
 
@@ -27,7 +27,7 @@ class DebugX {
                 Log.d("cr", "")
                 Log.d("cr", preString + "bundle-content")
 
-                var newPreString = preString + " "
+                val newPreString = preString + " "
                 val ks = it.keySet()
                 val iterator: Iterator<String> = ks.iterator()
 
@@ -45,7 +45,7 @@ class DebugX {
                         it.getBundle(key)?.let {
                             logBundle("$newPreString ", it)
                         }
-                    } catch (e: Exception) {
+                    } catch (_: Exception) {
 
                     }
 
@@ -58,7 +58,7 @@ class DebugX {
                                 Log.d("cr", newPreString + " station-ID: " + station.id.toString())
                                 Log.d("cr", newPreString + " station-Title: " + station.title)
                             }
-                        } catch (e: Exception) {
+                        } catch (_: Exception) {
 
                         }
                     }

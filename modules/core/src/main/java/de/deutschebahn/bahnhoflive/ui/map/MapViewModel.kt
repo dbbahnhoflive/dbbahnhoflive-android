@@ -104,10 +104,8 @@ class MapViewModel(
     val timetableLoadingLiveData =
         timetableCollector.progressFlow.asLiveData(viewModelScope.coroutineContext)
 
-    private val evaIdsDataObserver = Observer<Station> { evaIds ->
-        if (evaIds != null) {
+    private val evaIdsDataObserver = Observer<Station> { _ ->
             timetableCollector.loadIfNecessary()
-        }
     }
 
     val isMapLayedOut = MutableLiveData<Boolean?>()

@@ -30,7 +30,7 @@ class ParkingFacilitiesRequest(
     override fun parseNetworkResponse(response: NetworkResponse): Response<List<ParkingFacility>>? {
         super.parseNetworkResponse(response)
 
-        return response?.let { networkResponse ->
+        return response.let { networkResponse ->
             try {
                 JSONParkingFacilityConverter()
                     .parse(JSONObject(String(networkResponse.data)))?.let {

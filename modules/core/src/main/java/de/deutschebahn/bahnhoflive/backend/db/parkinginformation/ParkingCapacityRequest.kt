@@ -31,7 +31,7 @@ class ParkingCapacityRequest(
     override fun parseNetworkResponse(response: NetworkResponse): Response<LiveCapacity>? {
         super.parseNetworkResponse(response)
 
-        return response?.let { networkResponse ->
+        return response.let { networkResponse ->
             try {
                 JSONParkingCapacityConverter(parkingFacility)
                     .parse(JSONObject(String(networkResponse.data)))?.let {

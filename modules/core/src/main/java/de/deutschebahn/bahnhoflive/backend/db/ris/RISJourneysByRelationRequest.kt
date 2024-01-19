@@ -48,19 +48,19 @@ class RISJourneysByRelationRequest(
         }
     }
 
-    override fun parseNetworkResponse(networkResponse: NetworkResponse): Response<DepartureMatches> {
-        super.parseNetworkResponse(networkResponse)
+    override fun parseNetworkResponse(response: NetworkResponse): Response<DepartureMatches> {
+        super.parseNetworkResponse(response)
 
         return kotlin.runCatching {
             val departureMatches = Gson().fromJson(
-                ByteArrayInputStream(networkResponse.data).reader(),
+                ByteArrayInputStream(response.data).reader(),
                 DepartureMatches::class.java
             )
             DebugX.logVolleyResponseOk(this,url)
             Response.success(
                 departureMatches,
                 ForcedCacheEntryFactory(TimeUnit.HOURS.toMillis(2).toInt()).createCacheEntry(
-                    networkResponse
+                    response
                 )
             )
         }.getOrElse {
@@ -70,7 +70,7 @@ class RISJourneysByRelationRequest(
 
     override fun parseNetworkError(volleyError: VolleyError): VolleyError {
         logVolleyResponseError(this, url, volleyError)
-        return super.parseNetworkError(volleyError!!)
+        return super.parseNetworkError(volleyError)
     }
 
 }

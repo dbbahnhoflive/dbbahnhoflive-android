@@ -105,6 +105,7 @@ class Duration(
         this.unrecognizedTags = unrecognizedTags
     }
 
+    @IgnoredOnParcel
     val valid by lazy { amount != null && timeUnit != null }
 
     override fun toString() = "Duration(" + if (valid) {

@@ -30,12 +30,12 @@ class RISJourneysEventbasedRequest(
         retryPolicy = DefaultRetryPolicy(20 * 1000, 1, 1.0f)
     }
 
-    override fun parseNetworkResponse(networkResponse: NetworkResponse): Response<JourneyEventBased> {
-        super.parseNetworkResponse(networkResponse)
+    override fun parseNetworkResponse(response: NetworkResponse): Response<JourneyEventBased> {
+        super.parseNetworkResponse(response)
 
         return kotlin.runCatching {
             val departureMatches = Gson().fromJson(
-                ByteArrayInputStream(networkResponse.data).reader(),
+                ByteArrayInputStream(response.data).reader(),
                 JourneyEventBased::class.java
             )
 
@@ -44,7 +44,7 @@ class RISJourneysEventbasedRequest(
 
             Response.success(
                 departureMatches,
-                HttpHeaderParser.parseCacheHeaders(networkResponse)
+                HttpHeaderParser.parseCacheHeaders(response)
             )
         }.getOrElse {
             Response.error(DetailedVolleyError(this, it))
@@ -53,7 +53,7 @@ class RISJourneysEventbasedRequest(
 
     override fun parseNetworkError(volleyError: VolleyError): VolleyError {
         logVolleyResponseError(this, url, volleyError)
-        return super.parseNetworkError(volleyError!!)
+        return super.parseNetworkError(volleyError)
     }
 
 }

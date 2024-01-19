@@ -45,21 +45,21 @@ class AlertX {
                 builder.setMessage(mainText)
 
             if (buttonPositiveText.isNotEmpty()) {
-                builder.setPositiveButton(buttonPositiveText) { dialog, which ->
+                builder.setPositiveButton(buttonPositiveText) { dialog, _ ->
                     buttonPositiveClicked?.invoke()
                     dialog.dismiss()
                 }
             }
 
             if (buttonNegativeText.isNotEmpty()) {
-                builder.setNeutralButton(buttonNegativeText) { dialog, which ->
+                builder.setNeutralButton(buttonNegativeText) { dialog, _ ->
                     buttonNegativeClicked?.invoke()
                     dialog.dismiss()
                 }
             }
 
             if (buttonNeutralText.isNotEmpty()) {
-                builder.setNegativeButton(buttonNegativeText) { dialog, which ->
+                builder.setNegativeButton(buttonNegativeText) { dialog, _ ->
                     buttonNeutralClicked?.invoke()
                     dialog.dismiss()
                 }
@@ -76,7 +76,7 @@ class AlertX {
             if(checkboxText.isNotBlank() && checkboxClicked!=null) {
                 val checkBoxView = CheckBox(context)
                 checkBoxView.text = checkboxText
-                checkBoxView.setOnCheckedChangeListener { buttonView, isChecked ->
+                checkBoxView.setOnCheckedChangeListener { _, isChecked ->
                     checkboxClicked(isChecked)
                 }
                 builder.setView(checkBoxView)

@@ -146,7 +146,7 @@ class TimetableCollector(
                     val mergedInitials = initialsResults.unwrapSuccessful()
                         .flatMap { it.trainInfos }
                         .groupBy { it.id }
-                        .mapValues { (id, trainInfos) ->
+                        .mapValues { (_, trainInfos) ->
                             trainInfos.reduce { mergedTrainInfo, nextTrainInfo ->
                                 mergedTrainInfo.merge(
                                     nextTrainInfo
