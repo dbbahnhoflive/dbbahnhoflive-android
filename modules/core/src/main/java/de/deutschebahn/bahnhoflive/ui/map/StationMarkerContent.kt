@@ -21,7 +21,7 @@ import de.deutschebahn.bahnhoflive.view.TextDrawable
 import de.deutschebahn.bahnhoflive.view.VerticalStackDrawable
 
 internal class StationMarkerContent(private val station: Station, context: Context) :
-    MarkerContent(DrawableBitmapDescriptorFactory { highlighted ->
+    MarkerContent(DrawableBitmapDescriptorFactory {
         VerticalStackDrawable(
             ContextCompat.getDrawable(context, R.drawable.legacy_dbmappinicon)!!,
             TextDrawable(Paint().apply {

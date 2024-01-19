@@ -70,9 +70,9 @@ class RepositoryConverter {
         val waggons = mutableListOf<Waggon>()
         val trains = mutableListOf<Train>()
 
-        val sections = halt.allSektor.map {
-            it.sektorbezeichnung
-        }.sorted()
+//        val sections = halt.allSektor.map {
+//            it.sektorbezeichnung
+//        }.sorted()
 
         for (wagenstandFahrzeugData in allFahrzeuggruppe) {
             val number = wagenstandFahrzeugData.verkehrlichezugnummer

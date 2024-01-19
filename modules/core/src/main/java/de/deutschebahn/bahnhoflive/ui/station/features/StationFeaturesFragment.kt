@@ -28,7 +28,7 @@ import de.deutschebahn.bahnhoflive.view.FullBottomSheetDialogFragment
 
 class StationFeaturesFragment : FullBottomSheetDialogFragment() {
 
-    private val stationFeaturesAdapter = StationFeaturesAdapter { item, adapterPosition ->
+    private val stationFeaturesAdapter = StationFeaturesAdapter { item, _ ->
         item.stationFeatureTemplate.link?.also { link ->
 
             val pois = link.getPois(item)

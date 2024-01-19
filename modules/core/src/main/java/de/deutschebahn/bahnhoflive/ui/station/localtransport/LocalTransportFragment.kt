@@ -72,12 +72,12 @@ class LocalTransportFragment : FullBottomSheetDialogFragment() {
             text = HtmlCompat.fromHtml(
                 getString(
                     R.string.template_local_transport_connections,
-                    localTransportViewModel.MAX_NEARBY_DEPARTURES_DISTANCE
+                    LocalTransportViewModel.MAX_NEARBY_DEPARTURES_DISTANCE
                 ), 0
             )
             contentDescription = getString(
                 R.string.sr_template_local_transport_connections,
-                localTransportViewModel.MAX_NEARBY_DEPARTURES_DISTANCE
+                LocalTransportViewModel.MAX_NEARBY_DEPARTURES_DISTANCE
             )
         }
 

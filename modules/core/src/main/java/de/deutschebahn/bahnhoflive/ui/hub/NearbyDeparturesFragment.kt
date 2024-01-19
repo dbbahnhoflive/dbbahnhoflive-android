@@ -7,6 +7,7 @@
 package de.deutschebahn.bahnhoflive.ui.hub
 
 import android.location.Location
+import android.os.Build
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -83,11 +84,16 @@ class NearbyDeparturesFragment : androidx.fragment.app.Fragment(), Permission.Li
         if (savedInstanceState != null) {
             askForPermission = savedInstanceState.getBoolean(STATE_ASK_FOR_PERMISSION, false)
             hubViewModel.locationLiveData.value =
-                savedInstanceState.getParcelable<Location>(STATE_LATEST_LOCATION)
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU)
+                    savedInstanceState.getParcelable(
+                        STATE_LATEST_LOCATION,
+                        Location::class.java
+                    )
+                else
+                    savedInstanceState.getParcelable(STATE_LATEST_LOCATION)
         } else {
-            val arguments = arguments
-            if (arguments != null) {
-                askForPermission = arguments.getBoolean(STATE_ASK_FOR_PERMISSION, false)
+            arguments?.let {
+                askForPermission = it.getBoolean(STATE_ASK_FOR_PERMISSION, false)
             }
         }
 

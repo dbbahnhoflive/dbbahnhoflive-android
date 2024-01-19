@@ -6,9 +6,11 @@
 
 package de.deutschebahn.bahnhoflive.ui.station.features
 
+import android.graphics.Color
 import android.view.View
 import android.widget.ImageView
 import android.widget.TextView
+import androidx.core.content.ContextCompat
 import de.deutschebahn.bahnhoflive.R
 import de.deutschebahn.bahnhoflive.databinding.RowStationFeatureBinding
 import de.deutschebahn.bahnhoflive.ui.Status
@@ -62,7 +64,7 @@ internal class StationFeatureViewHolder(
             staticInfoView.visibility = View.GONE
             statusView.visibility = View.VISIBLE
             statusView.setText(text)
-            statusView.setTextColor(statusView.context.resources.getColor(status.color))
+            statusView.setTextColor(ContextCompat.getColor( itemView.context, status.color))
             statusView.setCompoundDrawablesWithIntrinsicBounds(status.icon, 0, 0, 0)
         }
     }

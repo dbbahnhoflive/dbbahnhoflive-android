@@ -18,8 +18,6 @@ import de.deutschebahn.bahnhoflive.util.Token
 
 class LocalTransportViewModel : ViewModel() {
 
-    val MAX_NEARBY_DEPARTURES_DISTANCE = 250 // BAHNHOFLIVE-1311: radius 250m
-
     val hafasStationsResource = HafasStationsResource(MAX_NEARBY_DEPARTURES_DISTANCE)
 
     val hafasStationsAvailableLiveData = hafasStationsResource.data.map { hafasStations ->
@@ -53,9 +51,9 @@ class LocalTransportViewModel : ViewModel() {
             mediatorResource.addLoadingStatusSource(stationResource)
 
             stationObserver = object : ManagedObserver<MergedStation>(stationResource.data) {
-                override fun onChanged(station: MergedStation?) {
-                    if (station != null) {
-                        hafasStationsResource.initialize(station, ORIGIN_STATION)
+                override fun onChanged(value: MergedStation?) {
+                    if (value != null) {
+                        hafasStationsResource.initialize(value, ORIGIN_STATION)
 
                         if (hafasStationsResource.isLoadingPreconditionsMet) {
                             mediatorResource.removeSource(stationResource)
@@ -88,7 +86,8 @@ class LocalTransportViewModel : ViewModel() {
 
     companion object {
 
-        private val ORIGIN_STATION = "station"
+        private const val ORIGIN_STATION = "station"
+        const val MAX_NEARBY_DEPARTURES_DISTANCE = 250 // BAHNHOFLIVE-1311: radius 250m
     }
 
 }

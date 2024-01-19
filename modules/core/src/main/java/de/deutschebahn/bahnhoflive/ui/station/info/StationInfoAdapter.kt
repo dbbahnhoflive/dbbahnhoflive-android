@@ -20,6 +20,7 @@ import de.deutschebahn.bahnhoflive.ui.station.StationActivity
 import de.deutschebahn.bahnhoflive.util.MailUri
 import de.deutschebahn.bahnhoflive.view.SingleSelectionManager
 import de.deutschebahn.bahnhoflive.view.inflater
+import java.util.Locale
 
 class StationInfoAdapter(
     private val serviceContents: List<ServiceContent>,
@@ -99,7 +100,7 @@ class StationInfoAdapter(
     }
 
     override fun getItemViewType(position: Int): Int {
-        return when (serviceContents[position].type.toLowerCase()) {
+        return when (serviceContents[position].type.lowercase(Locale.GERMAN)) {
             ServiceContentType.Local.STATION_COMPLAINT -> VIEW_TYPE_STATION_COMPLAINT
             else -> VIEW_TYPE_DEFAULT
         }

@@ -120,8 +120,8 @@ class OverviewElevatorStatusFragment : Fragment(), MapPresetProvider {
             return object :
                 FacilityStatusViewHolder(parent, selectionManager, trackingManager, facilityPushManager) {
 
-                override fun onBookmarkChanged(isBookmarked: Boolean) {
-                    bindBookmarkedIndicator(isBookmarked)
+                override fun onBookmarkChanged(isChecked: Boolean) {
+                    bindBookmarkedIndicator(isChecked)
                 }
 
                 override fun isSelected(): Boolean {

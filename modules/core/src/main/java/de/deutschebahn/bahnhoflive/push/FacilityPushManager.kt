@@ -48,7 +48,7 @@ class FacilityPushManager private constructor() {
     fun subscribeOrUnsubscribePushMessage(context: Context, facilityStatus: FacilityStatus, subscribe : Boolean) {
 
         if(subscribe) {
-            subscribePushMessage(context, facilityStatus.equipmentNumber)
+            subscribePushMessage(facilityStatus.equipmentNumber)
             VersionManager.getInstance(context).pushWasEverUsed=true
         }
         else
@@ -57,7 +57,7 @@ class FacilityPushManager private constructor() {
         PrefUtil.setFacilityPushEnabled(context, facilityStatus, subscribe)
     }
 
-    fun subscribePushMessage(context: Context, equipmentNumber: Int) {
+    private fun subscribePushMessage(equipmentNumber: Int) {
 
         val topicName = "F$equipmentNumber"
 

@@ -13,6 +13,7 @@ import android.widget.PopupWindow
 import android.widget.TextView
 import androidx.annotation.ColorRes
 import androidx.annotation.StringRes
+import androidx.core.content.ContextCompat
 import androidx.core.widget.PopupWindowCompat
 import androidx.viewpager2.widget.ViewPager2
 import com.google.android.material.tabs.TabLayoutMediator
@@ -148,7 +149,7 @@ class OccupancyViewBinder(
     }
 
     private fun TextView.setColorResource(@ColorRes colorRes: Int) {
-        setTextColor(context.resources.getColor(colorRes))
+        setTextColor(ContextCompat.getColor( context, colorRes))
     }
 
     private val selectedDayView = includeOccupancyBinding.dayOfWeekSpinner.also { textView ->
@@ -176,7 +177,7 @@ class OccupancyViewBinder(
         TabLayoutMediator(
             includeOccupancyBinding.dailyOccupancyPagerIndicator,
             this
-        ) { tab, position ->
+        ) { tab, _ ->
             tab.icon = resources.getDrawable(R.drawable.shape_page_indicator_news)
         }.attach()
 

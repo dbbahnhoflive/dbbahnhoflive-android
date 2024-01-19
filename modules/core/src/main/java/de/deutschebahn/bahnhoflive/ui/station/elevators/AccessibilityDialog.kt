@@ -44,11 +44,11 @@ class AccessibilityDialog {
 
 
 
-            builder.setNeutralButton(context.getText(R.string.dlg_cancel)) { dialog, which ->
+            builder.setNeutralButton(context.getText(R.string.dlg_cancel)) { _, _ ->
             }
 
             if (buttonPositiveText.isNotEmpty()) {
-                builder.setPositiveButton(buttonPositiveText) { dialog, which ->
+                builder.setPositiveButton(buttonPositiveText) { dialog, _ ->
                     buttonPositiveClicked?.invoke()
                     dialog.dismiss()
                 }

@@ -8,7 +8,6 @@ package de.deutschebahn.bahnhoflive.backend.rimap.model
 import android.content.Context
 import android.os.Parcel
 import android.os.Parcelable
-import android.util.Log
 import com.google.android.gms.maps.model.LatLng
 import com.google.android.gms.maps.model.LatLngBounds
 import de.deutschebahn.bahnhoflive.MarkerFilterable
@@ -19,9 +18,6 @@ import de.deutschebahn.bahnhoflive.util.json.asJSONObjectSequence
 import de.deutschebahn.bahnhoflive.util.json.string
 import de.deutschebahn.bahnhoflive.util.json.toStringList
 import org.json.JSONObject
-import java.text.SimpleDateFormat
-import java.util.*
-import java.util.regex.Pattern
 
 class RimapPOI : Parcelable, MarkerFilterable {
     val id: Int
@@ -214,41 +210,41 @@ class RimapPOI : Parcelable, MarkerFilterable {
         return 0
     }
 
-    private fun dateMatchesOpeningHours(day: String?, time: String?): Boolean {
-        if (day == null || time == null || day.isEmpty() || time.isEmpty()) {
-            return false
-        }
-        var parts: Array<String?> = day.split("-".toRegex()).toTypedArray()
-        val dayMin = days.indexOf(parts[0])
-        val dayMax = days.indexOf(parts[parts.size - 1])
-        val today = (Calendar.getInstance()[Calendar.DAY_OF_WEEK] - 2 + 7) % 7
-        if (dayMin == -1 || dayMax == -1 || today < dayMin || today > dayMax) {
-            return false
-        }
-        parts = time.split("-".toRegex()).toTypedArray()
-        val timeMin = parts[0]
-        val timeMax = parts[parts.size - 1]
-        val now = TIME_FORMAT.format(Calendar.getInstance().time)
-        return !(now.compareTo(timeMin!!, ignoreCase = true) == -1 || now.compareTo(
-            timeMax!!,
-            ignoreCase = true
-        ) == 1)
-    }
+//    private fun dateMatchesOpeningHours(day: String?, time: String?): Boolean {
+//        if (day == null || time == null || day.isEmpty() || time.isEmpty()) {
+//            return false
+//        }
+//        var parts: Array<String?> = day.split("-".toRegex()).toTypedArray()
+//        val dayMin = days.indexOf(parts[0])
+//        val dayMax = days.indexOf(parts[parts.size - 1])
+//        val today = (Calendar.getInstance()[Calendar.DAY_OF_WEEK] - 2 + 7) % 7
+//        if (dayMin == -1 || dayMax == -1 || today < dayMin || today > dayMax) {
+//            return false
+//        }
+//        parts = time.split("-".toRegex()).toTypedArray()
+//        val timeMin = parts[0]
+//        val timeMax = parts[parts.size - 1]
+//        val now = TIME_FORMAT.format(Calendar.getInstance().time)
+//        return !(now.compareTo(timeMin!!, ignoreCase = true) == -1 || now.compareTo(
+//            timeMax!!,
+//            ignoreCase = true
+//        ) == 1)
+//    }
 
-    private fun calculateRemainingTimeMinutes(time: String?): Int {
-        val matcher = TIME_PATTERN.matcher(time)
-        if (matcher.matches()) {
-            try {
-                val hour = Integer.valueOf(matcher.group(3))
-                val minute = Integer.valueOf(matcher.group(4))
-                val now = Calendar.getInstance()
-                return 60 * (hour - now[Calendar.HOUR_OF_DAY]) + minute - now[Calendar.MINUTE]
-            } catch (e: NumberFormatException) {
-                Log.w(TAG, "Calculating remaining open hours", e)
-            }
-        }
-        return -1
-    }
+//    private fun calculateRemainingTimeMinutes(time: String?): Int {
+//        val matcher = TIME_PATTERN.matcher(time)
+//        if (matcher.matches()) {
+//            try {
+//                val hour = Integer.valueOf(matcher.group(3))
+//                val minute = Integer.valueOf(matcher.group(4))
+//                val now = Calendar.getInstance()
+//                return 60 * (hour - now[Calendar.HOUR_OF_DAY]) + minute - now[Calendar.MINUTE]
+//            } catch (e: NumberFormatException) {
+//                Log.w(TAG, "Calculating remaining open hours", e)
+//            }
+//        }
+//        return -1
+//    }
 
     override fun isFiltered(filter: Any, fallback: Boolean): Boolean {
         return if (filter is RimapFilter) {
@@ -259,8 +255,8 @@ class RimapPOI : Parcelable, MarkerFilterable {
         } else fallback
     }
 
-    override fun equals(obj: Any?): Boolean {
-        return (obj as? RimapPOI)?.id == id
+    override fun equals(other: Any?): Boolean {
+        return (other as? RimapPOI)?.id == id
     }
 
     override fun hashCode() = id
@@ -286,20 +282,20 @@ class RimapPOI : Parcelable, MarkerFilterable {
         const val PREFIX_SECTOR_CUBE = "Abschnitt "
         const val PREFIX_PLATFORM = "Gleis "
 
-        const val SUBCAT_ELEVATORS = "Aufzüge"
-        const val SUBCAT_CAR_PARK = "Parkplatz"
-        const val SUBCAT_PARKING_GARAGE = "Parkhaus"
+        private const val SUBCAT_ELEVATORS = "Aufzüge"
+        private const val SUBCAT_CAR_PARK = "Parkplatz"
+        private const val SUBCAT_PARKING_GARAGE = "Parkhaus"
         const val SUBCAT_TICKETS = "Fahrkarten"
 
-        val EXCLUDED_SUBCATS = setOf(SUBCAT_ELEVATORS, SUBCAT_CAR_PARK, SUBCAT_PARKING_GARAGE)
+        private val EXCLUDED_SUBCATS = setOf(SUBCAT_ELEVATORS, SUBCAT_CAR_PARK, SUBCAT_PARKING_GARAGE)
 
-        val TIME_FORMAT = SimpleDateFormat("hh:mm", Locale.GERMAN)
-        val TAG = RimapPOI::class.java.simpleName
-        val TIME_PATTERN = Pattern.compile(".*(\\d\\d).*:.*(\\d\\d).*-.*(\\d\\d).*:.*(\\d\\d).*")
-        private val shoppingCategories = Arrays.asList(
-            "Restaurants", "Press", "Food",
-            "Fashion and Accessories", "Services", "Health", "Deutsche Bahn Services"
-        )
+//        val TIME_FORMAT = SimpleDateFormat("hh:mm", Locale.GERMAN)
+        val TAG: String = RimapPOI::class.java.simpleName
+//        val TIME_PATTERN = Pattern.compile(".*(\\d\\d).*:.*(\\d\\d).*-.*(\\d\\d).*:.*(\\d\\d).*")
+//        private val shoppingCategories = Arrays.asList(
+//            "Restaurants", "Press", "Food",
+//            "Fashion and Accessories", "Services", "Health", "Deutsche Bahn Services"
+//        )
 
         fun fromJson(properties: JSONObject?): RimapPOI? {
             return try {
@@ -314,15 +310,15 @@ class RimapPOI : Parcelable, MarkerFilterable {
             }
         }
 
-        private val days = Arrays.asList(
-            "Montag",
-            "Dienstag",
-            "Mittwoch",
-            "Donnerstag",
-            "Freitag",
-            "Samstag",
-            "Sonntag"
-        )
+//        private val days = Arrays.asList(
+//            "Montag",
+//            "Dienstag",
+//            "Mittwoch",
+//            "Donnerstag",
+//            "Freitag",
+//            "Samstag",
+//            "Sonntag"
+//        )
 
         fun renderFloorDescription(context: Context, level: Int): CharSequence {
             return if (level == 0) {

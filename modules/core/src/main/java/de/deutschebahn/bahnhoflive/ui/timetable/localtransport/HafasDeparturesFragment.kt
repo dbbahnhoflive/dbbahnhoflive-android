@@ -220,8 +220,8 @@ class HafasDeparturesFragment : RecyclerFragment<HafasDeparturesAdapter>(R.layou
         }
     }
 
-    val backToLastStationClickListener =
-        View.OnClickListener { v: View? ->
+    private val backToLastStationClickListener =
+        View.OnClickListener { _: View? ->
             navigateBack(
                 requireActivity()
             )

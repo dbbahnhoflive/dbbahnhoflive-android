@@ -7,6 +7,7 @@
 package de.deutschebahn.bahnhoflive.ui.station.info
 
 import android.content.Intent
+import android.os.Build
 import android.os.Bundle
 import android.view.View
 import androidx.fragment.app.activityViewModels
@@ -38,7 +39,11 @@ class StationInfoDetailsFragment :
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        serviceContents = arguments?.getParcelableArrayList(ARG_SERVICE_CONTENTS) ?: emptyList()
+        serviceContents = if(Build.VERSION.SDK_INT>=Build.VERSION_CODES.TIRAMISU)
+            arguments?.getParcelableArrayList(ARG_SERVICE_CONTENTS, ServiceContent::class.java) ?: emptyList()
+        else
+            arguments?.getParcelableArrayList(ARG_SERVICE_CONTENTS) ?: emptyList()
+
         arguments?.let {
             it.getCharSequence(FragmentArgs.TITLE)?.let {itTitle->
                 setTitle(itTitle)

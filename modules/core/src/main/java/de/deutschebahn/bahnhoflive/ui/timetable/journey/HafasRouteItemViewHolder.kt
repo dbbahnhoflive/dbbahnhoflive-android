@@ -87,7 +87,7 @@ class HafasRouteItemViewHolder(private val itemJourneyBinding: ItemJourneyDetail
                         0
                     )
 
-                    var platformText = ""
+                    var platformText: String
                     var sr_platformText: String? = null
 
                     var track = itHafasStop.arrTrack

@@ -108,8 +108,8 @@ open class HafasTimetableViewModel(val hafasapplication: Application) : AndroidV
             mediatorResource.addLoadingStatusSource(hafasStationResource)
             hafasStationObserver =
                 object : ManagedObserver<HafasStation>(hafasStationResource.data) {
-                    override fun onChanged(hafasStation: HafasStation?) {
-                        hafasTimetableResource.initialize(hafasStation, null, false, ORIGIN_STATION, true)
+                    override fun onChanged(value: HafasStation?) {
+                        hafasTimetableResource.initialize(value, null, false, ORIGIN_STATION, true)
                         mediatorResource.removeSource(hafasStationResource)
                         destroy()
                         hafasStationObserver = null
@@ -117,17 +117,17 @@ open class HafasTimetableViewModel(val hafasapplication: Application) : AndroidV
                 }
             hafasStationErrorObserver =
                 object : ManagedObserver<VolleyError>(hafasStationResource.error) {
-                    override fun onChanged(volleyError: VolleyError?) {
-                        if (volleyError != null) {
-                            hafasTimetableResource.setError(volleyError)
+                    override fun onChanged(value: VolleyError?) {
+                        if (value != null) {
+                            hafasTimetableResource.setError(value)
                         }
                     }
                 }
             mediatorResource.addErrorSource(stationResource)
             mediatorResource.addLoadingStatusSource(stationResource)
             stationObserver = object : ManagedObserver<MergedStation>(stationResource.data) {
-                override fun onChanged(station: MergedStation?) {
-                    hafasStationResource.initialize(station)
+                override fun onChanged(value: MergedStation?) {
+                    hafasStationResource.initialize(value)
                     if (hafasStationResource.isLoadingPreconditionsMet) {
                         mediatorResource.removeSource(stationResource)
                         destroy()

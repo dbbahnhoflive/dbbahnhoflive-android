@@ -90,10 +90,10 @@ class ServiceContent private constructor(
     //                ", position=" + position +
     //                '}';
     //    }
-    override fun equals(o: Any?): Boolean {
-        if (this === o) return true
-        if (o !is ServiceContent) return false
-        val that = o
+    override fun equals(other: Any?): Boolean {
+        if (this === other) return true
+        if (other !is ServiceContent) return false
+        val that = other
         return if (position != that.position) false else type == that.type
     }
 

@@ -475,6 +475,7 @@ class StationViewModel(application: Application) : HafasTimetableViewModel(appli
         stationResource.refresh()
     }
 
+    @OptIn(ExperimentalCoroutinesApi::class)
     val railReplacementSummaryLiveData = railReplacementResource.data.asFlow()
         .mapLatest { rrtRequestResult: RrtRequestResult? ->
             rrtRequestResult?.fold(mutableMapOf<String, MutableList<String?>>()) { map, rrtPoint ->
@@ -496,7 +497,7 @@ class StationViewModel(application: Application) : HafasTimetableViewModel(appli
         .flowOn(defaultDispatcher)
         .asLiveData(viewModelScope.coroutineContext)
 
-    val stationNavigationLiveData = MutableLiveData<StationNavigation?>()
+    private val stationNavigationLiveData = MutableLiveData<StationNavigation?>()
 
     var stationNavigation: StationNavigation?
         get() = stationNavigationLiveData.value
@@ -1349,7 +1350,7 @@ class StationViewModel(application: Application) : HafasTimetableViewModel(appli
             .distinctUntilChanged()
 
 
-    val newsLiveData = refreshLiveData.switchMap  { force ->
+    val newsLiveData = refreshLiveData.switchMap  { _ ->
         stationIdLiveData.switchMap { stationId ->
             MutableLiveData<List<News>>().apply {
                 application.appRepositories.newsRepository.queryNews(

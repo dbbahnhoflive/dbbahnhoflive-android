@@ -58,7 +58,7 @@ class ApplicationServices(
     }
 
     val mapConsentRepository by lazy {
-        MapConsentRepository(context)
+        MapConsentRepository()
     }
 
     val updatedStationRepository by lazy {

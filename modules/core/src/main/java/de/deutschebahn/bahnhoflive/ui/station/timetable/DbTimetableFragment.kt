@@ -69,11 +69,11 @@ class DbTimetableFragment : Fragment(), MapPresetProvider {
             },
             trackingManager,
             { // loadMoreListener
-                    view: View? ->
+                    _: View? ->
                 timetableCollector.loadMore()
             })
         { // onClick
-                trainInfo: TrainInfo?, trainEvent: TrainEvent?, integer: Int? ->
+                trainInfo: TrainInfo?, trainEvent: TrainEvent?, _: Int? ->
             run {
             val historyFragment = HistoryFragment.parentOf(this)
             historyFragment.push(JourneyFragment(trainInfo!!, trainEvent!!))

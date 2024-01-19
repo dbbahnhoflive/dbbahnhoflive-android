@@ -47,7 +47,7 @@ class JourneyFragment() : JourneyCoreFragment(), MapPresetProvider {
     val journeyViewModel: JourneyViewModel by viewModels()
 
     private val backToLastStationClickListener =
-        View.OnClickListener { v: View? ->
+        View.OnClickListener { _: View? ->
             stationViewModel.navigateBack(
                 requireActivity()
             )
@@ -70,9 +70,9 @@ class JourneyFragment() : JourneyCoreFragment(), MapPresetProvider {
 
         var isSEV=false
 
-        journeyViewModel.essentialParametersLiveData.observe(viewLifecycleOwner) { (station, trainInfo, trainEvent) ->
+        journeyViewModel.essentialParametersLiveData.observe(viewLifecycleOwner) { (_, trainInfo, trainEvent) ->
 
-           var screenTitle = ""
+           val screenTitle: String
 
            if(trainEvent==TrainEvent.ARRIVAL) {
                screenTitle = getString(
@@ -97,8 +97,6 @@ class JourneyFragment() : JourneyCoreFragment(), MapPresetProvider {
                     " ${getString(R.string.template_journey_title_destination, it)}"
                 } ?: ""
             )
-
-
 
            }
 
@@ -159,9 +157,9 @@ class JourneyFragment() : JourneyCoreFragment(), MapPresetProvider {
 
 
     override fun prepareMapIntent(intent: Intent): Boolean {
-        journeyViewModel.essentialParametersLiveData.value?.also { (station, trainInfo, trainEvent) ->
+        journeyViewModel.essentialParametersLiveData.value?.also { (_, trainInfo, trainEvent) ->
 
-            trainInfo?.let { trainInfo ->
+            trainInfo?.let {
                 trainEvent?.movementRetriever?.getTrainMovementInfo(trainInfo)
                     ?.purePlatform?.let {
                         InitialPoiManager.putInitialPoi(intent, Content.Source.RIMAP, Track(it))

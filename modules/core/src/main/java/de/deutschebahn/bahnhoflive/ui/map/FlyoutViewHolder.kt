@@ -8,6 +8,7 @@ package de.deutschebahn.bahnhoflive.ui.map
 import android.view.View
 import android.widget.ImageView
 import android.widget.TextView
+import androidx.core.content.ContextCompat
 import de.deutschebahn.bahnhoflive.R
 import de.deutschebahn.bahnhoflive.ui.ViewHolder
 
@@ -32,7 +33,8 @@ open class FlyoutViewHolder(view: View, protected var equipmentID: EquipmentID) 
             return
         }
         statusTextView.visibility = View.VISIBLE
-        statusTextView.setTextColor(statusTextView.resources.getColor(status.color))
+//        statusTextView.setTextColor(statusTextView.resources.getColor(status.color))
+        statusTextView.setTextColor( ContextCompat.getColor(itemView.context, status.color))
         statusTextView.setCompoundDrawablesWithIntrinsicBounds(status.icon, 0, 0, 0)
         statusTextView.text = status.text
     }

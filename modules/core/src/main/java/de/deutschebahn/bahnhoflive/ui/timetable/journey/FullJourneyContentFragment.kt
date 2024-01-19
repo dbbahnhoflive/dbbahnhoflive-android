@@ -24,40 +24,6 @@ class FullJourneyContentFragment : Fragment() {
 
     val journeyViewModel: JourneyViewModel by viewModels({ requireParentFragment() })
 
-    class PopParentFragmentOnBackPressedCallback(val fragmentManager: FragmentManager) :
-        OnBackPressedCallback(false), LifecycleObserver {
-
-        override fun handleOnBackPressed() {
-            fragmentManager.popBackStack()
-        }
-
-        @OnLifecycleEvent(Lifecycle.Event.ON_RESUME)
-        fun enable() {
-            isEnabled = true
-        }
-
-        @OnLifecycleEvent(Lifecycle.Event.ON_PAUSE)
-        fun disable() {
-            isEnabled = false
-        }
-
-    }
-
-//    override fun onCreate(savedInstanceState: Bundle?) {
-//        super.onCreate(savedInstanceState)
-//
-//        val popParentFragmentOnBackPressedCallback =
-//            PopParentFragmentOnBackPressedCallback(parentFragmentManager)
-//
-//        lifecycle.addObserver(popParentFragmentOnBackPressedCallback)
-//
-//        requireActivity().onBackPressedDispatcher.addCallback(
-//            this,
-//            popParentFragmentOnBackPressedCallback
-//        )
-//
-//    }
-
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
@@ -87,12 +53,12 @@ class FullJourneyContentFragment : Fragment() {
                 }
                 },
                 //     onClickPlatformInformation: (view: View, journeyStop: JourneyStop, platforms:List<Platform>) -> Unit
-                { view: View, journeyStop: JourneyStop, platforms: List<Platform> ->
+                { _: View, journeyStop: JourneyStop, _: List<Platform> ->
 
                     run {
                         val trainEvent = journeyViewModel.essentialParametersLiveData.value?.third
                         val trainInfo = journeyViewModel.essentialParametersLiveData.value?.second
-                        val fragment = JourneyPlatformInformationFragment.create(trainInfo, trainEvent, journeyStop, platforms)
+                        val fragment = JourneyPlatformInformationFragment.create(trainInfo, trainEvent, journeyStop)
                         HistoryFragment.parentOf(this@FullJourneyContentFragment).push(fragment)
                     }
                 }

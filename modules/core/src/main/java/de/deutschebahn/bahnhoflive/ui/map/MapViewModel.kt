@@ -246,13 +246,13 @@ class MapViewModel(
         }
     }
 
-    val rimapPoisLiveData = rimapStationInfoLiveData.switchMap {
-        it.second?.takeIf { it.levelCount > 0 }?.let {
+    val rimapPoisLiveData = rimapStationInfoLiveData.switchMap { itStationPair ->
+        itStationPair.second?.takeIf { it.levelCount > 0 }?.let {
             stationResource.data.switchMap { station ->
-                station?.let { station ->
+                station?.let { itStation->
                     OneShotLiveData<List<RimapPOI>?> {
                         baseApplication.repositories.mapRepository.queryPois(
-                            station,
+                            itStation,
                             object : BaseRestListener<List<RimapPOI>>() {
                                 override fun onSuccess(payload: List<RimapPOI>?) {
                                     super.onSuccess(payload)

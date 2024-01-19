@@ -39,7 +39,7 @@ class NewsViewManager(
 
         viewPager?.isVisible = newsList.isNotEmpty()
         pageIndicator?.visibility = when (newsList.size) {
-            null, 0 -> View.GONE
+            0 -> View.GONE
             1 -> View.INVISIBLE
             else -> View.VISIBLE
         }

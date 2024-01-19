@@ -11,6 +11,7 @@ import android.text.Html
 import android.view.View
 import android.widget.TextView
 import androidx.annotation.ColorInt
+import androidx.core.content.ContextCompat
 import de.deutschebahn.bahnhoflive.backend.ris.model.TrainInfo
 import de.deutschebahn.bahnhoflive.backend.ris.model.TrainMovementInfo
 
@@ -44,7 +45,8 @@ class IssuesBinder(
     private fun Context.resolveColor(issueSeverity: IssueSeverity): Int {
         return if (issueSeverity.color == 0) {
             0
-        } else resources.getColor(issueSeverity.color)
+        } else
+            ContextCompat.getColor(this, issueSeverity.color)
 
     }
 

@@ -84,12 +84,12 @@ internal class LocalTransportsAdapter(
     }
 
 
-    fun notifyContentUpdated() {
+    private fun notifyContentUpdated() {
         notifyItemRangeChanged(0, itemCount)
     }
 
     companion object {
-        val TAG = LocalTransportsAdapter::class.java.simpleName
+        val TAG: String = LocalTransportsAdapter::class.java.simpleName
     }
 
     private class HeaderItemWrapper (var item : String, viewType : Int) : ItemWrapper (viewType) {

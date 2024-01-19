@@ -21,7 +21,7 @@ class GraphViewBinder(
     private val parent = IncludeGraphBinding.bind(parentView)
 
     private val graphView = parent.graph.also {
-        it.addOnLayoutChangeListener { v, left, top, right, bottom, oldLeft, oldTop, oldRight, oldBottom ->
+        it.addOnLayoutChangeListener { _, _, top, _, bottom, _, oldTop, _, oldBottom ->
             if (bottom - top != oldBottom - oldTop) {
                 bind()
             }

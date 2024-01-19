@@ -58,7 +58,7 @@ class HafasDeparturesAdapter(
         when (viewType) {
             VIEW_TYPE_HEADER -> HeaderViewHolder(parent)
             VIEW_TYPE_FOOTER -> TimetableTrailingItemViewHolder(parent, loadMoreCallback)
-            else -> HafasEventViewHolder(parent, hafasDetailsClickEvent = { view, details ->
+            else -> HafasEventViewHolder(parent, hafasDetailsClickEvent = { _, details ->
                 run {
                     details.requestDetails() // Daten anfordern
                 }

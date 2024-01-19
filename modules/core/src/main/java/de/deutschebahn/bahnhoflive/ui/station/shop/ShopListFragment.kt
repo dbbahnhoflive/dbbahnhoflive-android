@@ -6,7 +6,9 @@
 package de.deutschebahn.bahnhoflive.ui.station.shop
 
 import android.app.Activity
+import android.content.Context
 import android.content.Intent
+import android.os.Build
 import android.os.Bundle
 import android.view.View
 import androidx.lifecycle.LiveData
@@ -34,14 +36,21 @@ class ShopListFragment : RecyclerFragment<ShopAdapter>(R.layout.fragment_recycle
     private var selectedShopCategory: MutableLiveData<ShopCategory?>? = null
     override fun setArguments(args: Bundle?) {
         super.setArguments(args)
-        category = args!!.getSerializable(ARG_CATEGORY) as ShopCategory?
-        if (category != null) {
-            titleResourceLiveData.value = category!!.label
+
+        args?.let {
+            category = if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU)
+                it.getSerializable(ARG_CATEGORY, ShopCategory::class.java)
+            else
+                it.getSerializable(ARG_CATEGORY) as ShopCategory?
+
+            category?.let { itShopCategory->
+                titleResourceLiveData.value = itShopCategory.label
+            }
         }
     }
 
-    override fun onAttach(activity: Activity) {
-        super.onAttach(activity)
+    override fun onAttach(context: Context) {
+        super.onAttach(context)
         category?.let { ShopAdapter(it) }?.let { setAdapter(it) }
         stationViewModel = ViewModelProvider(requireActivity()).get(StationViewModel::class.java)
         selectedShopCategory = stationViewModel!!.selectedShopCategory

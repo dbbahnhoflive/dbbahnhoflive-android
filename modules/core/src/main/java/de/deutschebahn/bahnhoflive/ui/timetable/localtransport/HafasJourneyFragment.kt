@@ -37,7 +37,7 @@ class HafasJourneyFragment : JourneyCoreFragment(), MapPresetProvider
     private val hafasTimetableViewModel: HafasTimetableViewModel by activityViewModels()
 
     private val backToLastStationClickListener =
-        View.OnClickListener { v: View? ->
+        View.OnClickListener { _: View? ->
             stationViewModel.navigateBack(
                 requireActivity()
             )

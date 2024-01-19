@@ -29,17 +29,16 @@ class NewsViewHolder(
     itemClickListener: ItemClickListener<News?>? = null
 ) : ViewHolder<News>(itemNewsBinding.root) {
 
-    val newsHeadline: TextView = itemNewsBinding.newsHeadline
-    val newsCopy: TextView = itemNewsBinding.newsCopy
-    val linkButton: View = itemNewsBinding.btnLink
+    private val newsHeadline: TextView = itemNewsBinding.newsHeadline
+    private val newsCopy: TextView = itemNewsBinding.newsCopy
     val iconView: ImageView = itemNewsBinding.icon
 
-    val newsTopHeadline : NewsHeadline = NewsHeadline("")
+    private val newsTopHeadline : NewsHeadline = NewsHeadline("")
 
     init {
-        itemClickListener?.also { itemClickListener ->
+        itemClickListener?.also {
             itemNewsBinding.root.setOnClickListener {
-                itemClickListener(item, adapterPosition)
+                it(item, absoluteAdapterPosition)
             }
         }
 
@@ -61,7 +60,7 @@ class NewsViewHolder(
             itemNewsBinding.line1.crosses.visibility=View.GONE
         }
         else {
-        itemNewsBinding.animatedHeadlineScroller.also { scroller ->
+        itemNewsBinding.animatedHeadlineScroller.also {
             val container = itemNewsBinding.animatedHeadlineContainer
 
             var width = 0
@@ -75,7 +74,7 @@ class NewsViewHolder(
             }
 
             if (container.childCount > 0) {
-                container[0].addOnLayoutChangeListener { v, left, top, right, bottom, oldLeft, oldTop, oldRight, oldBottom ->
+                container[0].addOnLayoutChangeListener { _, left, _, right, _, _, _, _, _ ->
                     val newWidth = right - left
                     if (newWidth != width) {
                         width = newWidth

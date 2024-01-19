@@ -28,7 +28,7 @@ internal class LocalTransportViewHolder(parent: ViewGroup, itemClickListener: It
         itemView.setOnClickListener {
             val item = item
             if (item != null) {
-                itemClickListener(item, adapterPosition)
+                itemClickListener(item, absoluteAdapterPosition)
             }
         }
     }

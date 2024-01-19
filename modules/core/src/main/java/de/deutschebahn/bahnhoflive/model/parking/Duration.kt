@@ -9,7 +9,7 @@ package de.deutschebahn.bahnhoflive.model.parking
 import android.os.Parcelable
 import de.deutschebahn.bahnhoflive.R
 import de.deutschebahn.bahnhoflive.util.nonBlankOrNull
-import kotlinx.android.parcel.IgnoredOnParcel
+import kotlinx.parcelize.IgnoredOnParcel
 import kotlinx.parcelize.Parcelize
 import java.util.*
 
@@ -25,7 +25,7 @@ class Duration(
         MONTH(R.plurals.time_month),
         YEAR(R.plurals.time_year);
 
-        val key = name.lowercase(Locale.ROOT)
+        val key = name.lowercase(Locale.GERMAN)
     }
 
     companion object {

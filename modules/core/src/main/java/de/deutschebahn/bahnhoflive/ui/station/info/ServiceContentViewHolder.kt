@@ -1,6 +1,7 @@
 package de.deutschebahn.bahnhoflive.ui.station.info
 
 import android.content.Intent
+import android.graphics.Color
 import android.net.Uri
 import android.text.Html
 import android.text.method.LinkMovementMethod
@@ -10,6 +11,7 @@ import android.view.View
 import android.widget.LinearLayout
 import android.widget.TextView
 import androidx.annotation.LayoutRes
+import androidx.core.content.ContextCompat
 import de.deutschebahn.bahnhoflive.BaseApplication
 import de.deutschebahn.bahnhoflive.IconMapper
 import de.deutschebahn.bahnhoflive.R
@@ -79,7 +81,7 @@ open class ServiceContentViewHolder(
 
         contentHeaderImage.visibility = View.GONE
 
-        when (item.type.toLowerCase()) {
+        when (item.type.lowercase(Locale.GERMAN)) {
             ServiceContentType.THREE_S -> {
                 val threeSComponents = ServiceContents.ThreeSComponents(item)
 
@@ -197,11 +199,8 @@ open class ServiceContentViewHolder(
         }
     }
 
-    private fun addImagePart(imageResource: Int, backgroundColor: Int? = null) {
+    private fun addImagePart(imageResource: Int) {
         contentHeaderImage.setImageResource(imageResource)
-        backgroundColor?.let { color ->
-            contentHeaderImage.setBackgroundColor(contentHeaderImage.resources.getColor(color))
-        }
         contentHeaderImage.visibility = View.VISIBLE
     }
 
@@ -308,7 +307,7 @@ open class ServiceContentViewHolder(
                         }
                     }
                     DbActionButton.Type.ACTION -> {
-                        addActionButton(dbActionButton) { view, dbActionButton ->
+                        addActionButton(dbActionButton) { _, _ ->
                             dbActionButtonCallback(dbActionButton)
                         }
                     }
@@ -399,7 +398,7 @@ open class ServiceContentViewHolder(
         when (v.id) {
             R.id.button_right -> {
                 val item = item
-                if (ServiceContentType.THREE_S == item?.type?.toLowerCase(Locale.GERMAN)) {
+                if (ServiceContentType.THREE_S == item?.type?.lowercase(Locale.GERMAN)) {
                     val threeSComponents = ServiceContents.ThreeSComponents(item)
 
                     if (threeSComponents.phoneNumber != null) {

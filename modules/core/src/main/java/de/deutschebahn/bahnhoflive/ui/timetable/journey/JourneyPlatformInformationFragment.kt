@@ -102,18 +102,7 @@ class JourneyPlatformInformationFragment : Fragment(), MapPresetProvider {
                 "    }"
 
         RISPlatformsRequestResponseParser().run {
-
                 allPlatforms = parse(jsonString)
-
-
-
-//            val lst = sortedSetOf<PlatformName>("18", "19", "18a")
-
-
-//            lst.sortWith(TrackComparator())
-
-                val output = getLinkedPlatforms(allPlatforms, reducedPlatforms)
-
             }
 
     }
@@ -315,9 +304,8 @@ class JourneyPlatformInformationFragment : Fragment(), MapPresetProvider {
                 itBinding.linkAccessibility.changeAccessibilityActionClickText(getString(R.string.sr_open_accessibility))
                 itBinding.linkAccessibility.setOnClickListener {
                     // ggf. akt. Gleis vorwählen, wird im Accessibilitfragment observed
-                    trainMovementInfo?.let {
-                        val platform = platforms.findPlatform(it.displayPlatform)
-                        platform?.let {
+                    trainMovementInfo.let {
+                        platforms.findPlatform(it.displayPlatform)?.let {
                             stationViewModel.setSelectedAccessibilityPlatform(platform)
                         }
                     }
@@ -347,13 +335,12 @@ class JourneyPlatformInformationFragment : Fragment(), MapPresetProvider {
     companion object {
         val TAG: String = JourneyPlatformInformationFragment::class.java.simpleName
 
-        fun create(trainInfo: TrainInfo?, trainEvent : TrainEvent?, journeyStop: JourneyStop, platforms: List<Platform>) : JourneyPlatformInformationFragment {
+        fun create(trainInfo: TrainInfo?, trainEvent : TrainEvent?, journeyStop: JourneyStop) : JourneyPlatformInformationFragment {
             val fragment = JourneyPlatformInformationFragment()
 
             fragment.trainEvent = trainEvent
             fragment.trainInfo =  trainInfo
             fragment.journeyStop = journeyStop
-//            fragment.platforms = platforms
 
             return  fragment
         }
