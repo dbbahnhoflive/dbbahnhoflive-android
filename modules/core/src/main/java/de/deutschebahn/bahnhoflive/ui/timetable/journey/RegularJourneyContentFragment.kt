@@ -9,6 +9,7 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.core.app.ActivityCompat
 import androidx.core.view.isGone
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentActivity
@@ -505,6 +506,7 @@ class RegularJourneyContentFragment : Fragment() {
 
                                             intent?.let {
                                                 activity.let {
+                                                    ActivityCompat.finishAffinity(activity)
                                                     it.finish()
                                                     it.startActivity(intent)
                                                 }
