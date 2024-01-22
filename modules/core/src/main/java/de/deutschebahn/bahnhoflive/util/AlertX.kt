@@ -18,7 +18,10 @@ class AlertX {
 
         // for java
         fun buttonNegative() : AlertDefaultButton = AlertDefaultButton.BUTTON_NEGATIVE
+        @SuppressWarnings("unused")
         fun buttonPositive() : AlertDefaultButton = AlertDefaultButton.BUTTON_POSITIVE
+
+//        @SuppressWarnings("unused")
         fun buttonNeutral() : AlertDefaultButton = AlertDefaultButton.BUTTON_NEUTRAL
 
         fun execAlert(
@@ -36,7 +39,7 @@ class AlertX {
             checkboxClicked: ((Boolean)->Unit)? = null
         ) {
 
-            val builder: AlertDialog.Builder = androidx.appcompat.app.AlertDialog.Builder(context, R.style.App_Dialog_Theme)
+            val builder: AlertDialog.Builder = AlertDialog.Builder(context, R.style.App_Dialog_Theme)
 
             if(titleText.isNotEmpty())
                 builder.setTitle(titleText)
@@ -102,13 +105,13 @@ class AlertX {
             try {
                 when (defaultButton) {
                     AlertDefaultButton.BUTTON_POSITIVE ->
-                        dialog.getButton(androidx.appcompat.app.AlertDialog.BUTTON_POSITIVE)
+                        dialog.getButton(AlertDialog.BUTTON_POSITIVE)
                             ?.setTypeface(null, Typeface.BOLD)
 
-                    AlertDefaultButton.BUTTON_NEGATIVE -> dialog.getButton(androidx.appcompat.app.AlertDialog.BUTTON_NEGATIVE)
+                    AlertDefaultButton.BUTTON_NEGATIVE -> dialog.getButton(AlertDialog.BUTTON_NEGATIVE)
                         ?.setTypeface(null, Typeface.BOLD)
 
-                    AlertDefaultButton.BUTTON_NEUTRAL -> dialog.getButton(androidx.appcompat.app.AlertDialog.BUTTON_NEUTRAL)
+                    AlertDefaultButton.BUTTON_NEUTRAL -> dialog.getButton(AlertDialog.BUTTON_NEUTRAL)
                         ?.setTypeface(null, Typeface.BOLD)
 
                     else -> {}
