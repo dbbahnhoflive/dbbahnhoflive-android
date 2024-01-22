@@ -12,7 +12,9 @@ class AlertX {
     companion object {
 
         enum class AlertDefaultButton {
-            BUTTON_NODEFAULT, BUTTON_POSITIVE, BUTTON_NEGATIVE, BUTTON_NEUTRAL
+            @Suppress("unused")
+            BUTTON_NODEFAULT,
+            BUTTON_POSITIVE, BUTTON_NEGATIVE, BUTTON_NEUTRAL
         }
 
 
@@ -20,8 +22,7 @@ class AlertX {
         fun buttonNegative() : AlertDefaultButton = AlertDefaultButton.BUTTON_NEGATIVE
         @Suppress("unused")
         fun buttonPositive() : AlertDefaultButton = AlertDefaultButton.BUTTON_POSITIVE
-
-//        @SuppressWarnings("unused")
+        @Suppress("unused")
         fun buttonNeutral() : AlertDefaultButton = AlertDefaultButton.BUTTON_NEUTRAL
 
         fun execAlert(
