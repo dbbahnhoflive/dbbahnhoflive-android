@@ -18,7 +18,7 @@ class AlertX {
 
         // for java
         fun buttonNegative() : AlertDefaultButton = AlertDefaultButton.BUTTON_NEGATIVE
-        @SuppressWarnings("unused")
+        @Suppress("unused")
         fun buttonPositive() : AlertDefaultButton = AlertDefaultButton.BUTTON_POSITIVE
 
 //        @SuppressWarnings("unused")
