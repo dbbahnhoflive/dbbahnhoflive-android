@@ -47,7 +47,7 @@ class SentryIssueTracker(app: BaseApplication, dsn: String) : IssueTracker(app) 
         }
     }
 
-    override fun setContext(name: String, values: Map<String, out Any>?) {
+    override fun setContext(name: String, values: Map<String, Any>?) {
         Sentry.configureScope { scope ->
             if (values == null) {
                 scope.removeContexts(name)

@@ -38,11 +38,11 @@ abstract class FacilityStatusViewHolder(parent: ViewGroup,
     private val subscribePushSwitch: CompoundButtonChecker =
         CompoundButtonChecker(itemView.findViewById(R.id.receive_push_msg_if_broken_switch), this)
 
-    override fun onBind(item: FacilityStatus) {
+    override fun onBind(item: FacilityStatus?) {
         super.onBind(item)
 
-        titleView.text = item.stationName
         iconView.visibility= View.GONE
+
 
         val guideline : Guideline = itemView.findViewById(R.id.guideline)
         guideline.setGuidelineBegin(0)
@@ -51,21 +51,36 @@ abstract class FacilityStatusViewHolder(parent: ViewGroup,
         val spaceMargin : Space = itemView.findViewById(R.id.spaceMargin)
         spaceMargin.visibility=View.VISIBLE
 
-        titleView.rootView.setAccessibilityText("", AccessibilityNodeInfo.ACTION_CLICK, itemView.context.getText(R.string.general_switch).toString())
+        titleView.rootView.setAccessibilityText(
+            "",
+            AccessibilityNodeInfo.ACTION_CLICK,
+            itemView.context.getText(R.string.general_switch).toString()
+        )
 
-        val bookmarked = facilityPushManager.getBookmarked(itemView.context, item.equipmentNumber)
+        item?.let {
+            titleView.text = it.stationName
+            val bookmarked =
+                facilityPushManager.getBookmarked(itemView.context, item.equipmentNumber)
         bindBookmarkedIndicator(bookmarked)
 
-        var subscribed = facilityPushManager.isPushMessageSubscribed(itemView.context, item.equipmentNumber)
-        subscribePushSwitch.isChecked = if(FacilityPushManager.isPushEnabled(itemView.context)) subscribed else {
+            var subscribed =
+                facilityPushManager.isPushMessageSubscribed(itemView.context, item.equipmentNumber)
+            subscribePushSwitch.isChecked =
+                if (FacilityPushManager.isPushEnabled(itemView.context)) subscribed else {
 //            subscribePushSwitch.compoundButton.isEnabled=false
             false
         }
 //        subscribePushSwitch.compoundButton.setAccessibilityText("", AccessibilityNodeInfo.ACTION_CLICK, itemView.context.getText(R.string.general_switch).toString())
 
         val status = Status.of(item)
-        val accessibilityText = item.description + "  " + iconView.context.getText(item.stateDescription)
-        setStatus(status, item.description, renderDescription(status, item.description), accessibilityText) // ex.: 'von Gleis 1/2 (S-Bahn)
+            val accessibilityText =
+                item.description + "  " + iconView.context.getText(item.stateDescription)
+            setStatus(
+                status,
+                item.description,
+                renderDescription(status, item.description),
+                accessibilityText
+            ) // ex.: 'von Gleis 1/2 (S-Bahn)
 
         val isPushEnabled = FacilityPushManager.isPushEnabled(itemView.context)
 
@@ -95,14 +110,12 @@ abstract class FacilityStatusViewHolder(parent: ViewGroup,
                         else {
                             if (!subscribed) {
                                 toggleBookmarked(item)
-                            }
-                            else  {
+                                } else {
                               if(isPushEnabled) {
                                   onCheckedChanged(subscribePushSwitch.compoundButton, false)
                                   subscribePushSwitch.isChecked = false
                                   subscribed=false
-                              }
-                              else {
+                                    } else {
                                   showPushSystemDialog(it)
                               }
                             }
@@ -115,14 +128,12 @@ abstract class FacilityStatusViewHolder(parent: ViewGroup,
                             toggleBookmarked(item)
                             if(!FacilityPushManager.isPushEnabled(itemView.context)) {
                                 showPushSystemDialog(it)
-                            }
-                            else {
+                                } else {
                                 onCheckedChanged(subscribePushSwitch.compoundButton, true)
                                 subscribePushSwitch.isChecked = true
                                 subscribed=true
                             }
-                        }
-                        else {
+                            } else {
                             if (!subscribed) {
                                 if (!isPushEnabled) {
                                     showPushSystemDialog(it)
@@ -131,8 +142,7 @@ abstract class FacilityStatusViewHolder(parent: ViewGroup,
                                     subscribePushSwitch.isChecked = true
                                     subscribed = true
                                 }
-                            }
-                            else {
+                                } else {
                                 // "Aus der Merkliste entfernen und Mitteilungen deaktivieren"
 
                                 toggleBookmarked(item)
@@ -146,10 +156,9 @@ abstract class FacilityStatusViewHolder(parent: ViewGroup,
 
                 }
 
+                } else {
+                    toggleBookmarked(item)
             }
-            else {
-
-                toggleBookmarked(item)
             }
         }
     }

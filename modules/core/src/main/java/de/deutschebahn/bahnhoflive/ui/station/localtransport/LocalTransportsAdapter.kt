@@ -6,6 +6,8 @@
 
 package de.deutschebahn.bahnhoflive.ui.station.localtransport
 
+import android.view.LayoutInflater
+import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
 import de.deutschebahn.bahnhoflive.BaseApplication
@@ -28,8 +30,17 @@ internal class LocalTransportsAdapter(
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder<*> =
         when (viewType) {
-            1 -> LocalTransportViewHolder(parent, itemClickListener)
-            else -> HeaderViewHolder(parent)
+            1 -> {
+                val view = LayoutInflater.from(parent.context)
+                    .inflate(R.layout.item_local_transport_station, parent, false)
+                LocalTransportViewHolder(view, itemClickListener)
+            }
+
+            else -> {
+                val view = LayoutInflater.from(parent.context)
+                    .inflate(R.layout.item_local_transport_header, parent, false)
+                HeaderViewHolder(view)
+            }
         }
 
     override fun onBindViewHolder(holder: ViewHolder<*>, position: Int) =
@@ -104,7 +115,7 @@ internal class LocalTransportsAdapter(
         }
     }
 
-    class HeaderViewHolder(parent: ViewGroup?) : ViewHolder<String>(parent, R.layout.item_local_transport_header) {
+    class HeaderViewHolder(parent: View) : ViewHolder<String>(parent) {
         val titleView: TextView = itemView.findViewById(R.id.title)
 
         override fun onBind(item: String?) {

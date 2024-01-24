@@ -5,10 +5,13 @@
  */
 package de.deutschebahn.bahnhoflive.backend.hafas.model
 
+import android.os.Build
 import android.os.Parcel
 import android.os.Parcelable
 import android.util.Log
+import androidx.core.app.BundleCompat
 import com.google.gson.annotations.SerializedName
+import de.deutschebahn.bahnhoflive.util.readParcelableCompatible
 import java.text.DateFormat
 import java.text.ParseException
 import java.text.SimpleDateFormat
@@ -122,10 +125,11 @@ open class HafasEvent protected constructor(`in`: Parcel) : Parcelable {
 
     init {
         val classLoader = javaClass.classLoader
-        detailReference = `in`.readParcelable(classLoader)
-        product = `in`.readParcelable(classLoader)
+
+        detailReference = `in`.readParcelableCompatible(classLoader, HafasDetailReference::class.java)
+        product = `in`.readParcelableCompatible(classLoader, HafasEventProduct::class.java)
         journeyStatus = `in`.readString()
-        notes = `in`.readParcelable(classLoader)
+        notes = `in`.readParcelableCompatible(classLoader, HafasNotes::class.java)
         name = `in`.readString()
         stop = `in`.readString()
         stopid = `in`.readString()
@@ -157,6 +161,7 @@ open class HafasEvent protected constructor(`in`: Parcel) : Parcelable {
             val line = if (product!!.line == null) product!!.num else product!!.line
             return String.format("%s %s", product!!.catOut, line)
         }
+    @Suppress("UNUSED")
     val displayMessages: String
         /**
          * Returns a String containing all messages to display

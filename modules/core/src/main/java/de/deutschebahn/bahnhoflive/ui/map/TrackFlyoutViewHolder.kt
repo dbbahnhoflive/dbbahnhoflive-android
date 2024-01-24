@@ -94,7 +94,7 @@ internal class TrackFlyoutViewHolder(
             })
 
             it.progressFlow.asLiveData().observe(owner, Observer<Boolean> { itProgress ->
-                if (itProgress == true)
+                if (itProgress)
                     loadingContentDecorationViewHolder.showProgress()
             })
 

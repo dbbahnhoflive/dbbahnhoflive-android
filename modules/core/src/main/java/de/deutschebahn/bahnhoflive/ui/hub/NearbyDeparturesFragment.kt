@@ -31,8 +31,8 @@ class NearbyDeparturesFragment : androidx.fragment.app.Fragment(), Permission.Li
     androidx.swiperefreshlayout.widget.SwipeRefreshLayout.OnRefreshListener {
 
     val STATE_ASK_FOR_PERMISSION = "askForPermission"
-    val MIN_NEARBY_DEPARTURES = 3
-    val MAX_NEARBY_DEPARTURES_DISTANCE = 2f
+//    val MIN_NEARBY_DEPARTURES = 3
+//    val MAX_NEARBY_DEPARTURES_DISTANCE = 2f
     val STATE_LATEST_LOCATION = "latestLocation"
 
     private val trackingManager = TrackingManager()

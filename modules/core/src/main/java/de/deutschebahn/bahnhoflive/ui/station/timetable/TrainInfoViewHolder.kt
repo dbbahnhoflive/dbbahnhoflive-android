@@ -6,6 +6,7 @@
 
 package de.deutschebahn.bahnhoflive.ui.station.timetable
 
+import android.view.View
 import android.view.ViewGroup
 import de.deutschebahn.bahnhoflive.R
 import de.deutschebahn.bahnhoflive.backend.db.ris.model.Platform
@@ -20,14 +21,13 @@ import de.deutschebahn.bahnhoflive.view.SelectableItemViewHolder
 import de.deutschebahn.bahnhoflive.view.SingleSelectionManager
 
 class TrainInfoViewHolder internal constructor(
-    parent: ViewGroup,
+    parent: View,
     private val timetableAdapter: DbTimetableAdapter,
     var station: Station?,
     selectionManager: SingleSelectionManager,
     clickListener: ItemClickListener<TrainInfo>
 ) : SelectableItemViewHolder<TrainInfo>( // selection feature is currently unused
     parent,
-    R.layout.card_expandable_timetable_db,
     selectionManager
 ), TrainInfo.ChangeListener {
 

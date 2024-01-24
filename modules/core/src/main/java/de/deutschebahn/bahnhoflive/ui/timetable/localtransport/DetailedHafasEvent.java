@@ -35,14 +35,12 @@ public class DetailedHafasEvent {
         }
         loading = true;
 
-        Log.d("cr", "DetailedHafasEvent:queryTimetableDetails " + hafasEvent.direction);
         localTransportRepository.queryHafasTimetableDetails(hafasEvent, new BaseRestListener<HafasDetail>() {
             @Override
             public void onSuccess(@NonNull HafasDetail payload) {
                 success=true;
                 setHafasDetail(payload);
                 loading = false;
-                Log.d("cr", "DetailedHafasEvent:queryTimetableDetails SUCCESS");
             }
 
             @Override
@@ -51,7 +49,6 @@ public class DetailedHafasEvent {
                 loading = false;
                 success = false;
                 notifyListeners();
-                Log.d("cr", "DetailedHafasEvent:queryTimetableDetails FAILED(" + reason.getMessage()+")");
                 //TODO notify client
             }
         }, ORIGIN_TIMETABLE);

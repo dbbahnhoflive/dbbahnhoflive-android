@@ -27,10 +27,6 @@ suspend fun <T> RestHelper.submitSuspending(requestFactory: (VolleyRestListener<
         val request = requestFactory(CancellableContinuationVolleyRestListener(it))
         add(request)
 
-        request.url?.let {itUrl->
-            Log.d("cr", "request : $itUrl")
-        }
-
         it.invokeOnCancellation {
             cancel(request)
         }

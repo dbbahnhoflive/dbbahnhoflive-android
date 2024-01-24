@@ -63,16 +63,17 @@ open class ServiceContentViewHolder(
         titleView.setLines(2)
     }
 
-    val timeFormat = SimpleDateFormat("HH:mm", Locale.GERMANY)
+//    val timeFormat = SimpleDateFormat("HH:mm", Locale.GERMANY)
     val fromDateFormat = SimpleDateFormat("dd.MM", Locale.GERMANY)
     val toDateFormat = SimpleDateFormat("dd.MM.yy", Locale.GERMANY)
 
 
-    override fun onBind(item: ServiceContent) {
+    override fun onBind(item: ServiceContent?) {
         super.onBind(item)
 
         threeButtonsViewHolder.reset()
 
+        item?.let {
         titleView.text = item.title
         iconView.setImageResource(IconMapper.contentIconForType(item))
 
@@ -86,8 +87,8 @@ open class ServiceContentViewHolder(
 
                 addTextPart(threeSComponents.description)
 
-                if (threeSComponents.phoneNumber != null) {
-                    addPhonePart(threeSComponents.phoneNumber, item.title)
+                    threeSComponents.phoneNumber?.let {itPhoneNumber->
+                        addPhonePart(itPhoneNumber, item.title)
                 }
             }
 
@@ -194,6 +195,7 @@ open class ServiceContentViewHolder(
 
             else -> {
                 defaultRender(item)
+                }
             }
         }
     }

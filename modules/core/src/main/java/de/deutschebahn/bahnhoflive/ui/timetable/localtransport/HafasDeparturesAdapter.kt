@@ -7,6 +7,7 @@
 package de.deutschebahn.bahnhoflive.ui.timetable.localtransport
 
 import android.util.Log
+import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import de.deutschebahn.bahnhoflive.R
@@ -56,9 +57,24 @@ class HafasDeparturesAdapter(
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder<out Any> =
         when (viewType) {
-            VIEW_TYPE_HEADER -> HeaderViewHolder(parent)
-            VIEW_TYPE_FOOTER -> TimetableTrailingItemViewHolder(parent, loadMoreCallback)
-            else -> HafasEventViewHolder(parent, hafasDetailsClickEvent = { _, details ->
+
+            VIEW_TYPE_HEADER -> {
+                val view = LayoutInflater.from(parent.context)
+                    .inflate(R.layout.header_timetable_local, parent, false)
+
+                HeaderViewHolder(view)
+            }
+
+            VIEW_TYPE_FOOTER -> {
+
+                TimetableTrailingItemViewHolder(parent, loadMoreCallback)
+            }
+
+            else -> {
+                val view = LayoutInflater.from(parent.context)
+                    .inflate(R.layout.card_expandable_hafas_event, parent, false)
+
+                HafasEventViewHolder(view, hafasDetailsClickEvent = { _, details ->
                 run {
                     details.requestDetails() // Daten anfordern
                 }
@@ -68,6 +84,8 @@ class HafasDeparturesAdapter(
                 }
             }
             )
+        }
+
         }
 
     private var filterSummary: FilterSummary? = null
@@ -163,14 +181,16 @@ class HafasDeparturesAdapter(
         return ""
     }
 
-    private inner class HeaderViewHolder(parent: ViewGroup) : ViewHolder<DetailedHafasEvent>(parent, R.layout.header_timetable_local) {
+    private inner class HeaderViewHolder(parent: View) : ViewHolder<DetailedHafasEvent>(parent) {
         init {
-
             itemView.findViewById<View>(R.id.filter).setOnClickListener(onFilterClickListener)
         }
     }
 
+
+    @Suppress("Unused")
     fun setSelectedItem(hafasEvent: HafasEvent): Int {
+
         filter = null
 
         return filteredEvents.indexOfFirst {

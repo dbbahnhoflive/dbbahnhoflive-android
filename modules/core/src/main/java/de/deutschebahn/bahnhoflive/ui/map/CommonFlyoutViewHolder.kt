@@ -42,11 +42,11 @@ class CommonFlyoutViewHolder(
 
     }
 
-    override fun onBind(item: MarkerBinder) {
+    override fun onBind(item: MarkerBinder?) {
         super.onBind(item)
-        val markerContent = item.markerContent
-        descriptionView.text = markerContent.getDescription(context)
-        equipmentID = mapViewModel.isMarkerContentValidStationFeature(markerContent.title)
+        item?.let {
+            descriptionView.text = it.markerContent.getDescription(context)
+            equipmentID = mapViewModel.isMarkerContentValidStationFeature(it.markerContent.title)
 
         linkButton.visibility =
             if (markerContent.hasLink() || equipmentID != EquipmentID.UNKNOWN) View.VISIBLE else View.GONE

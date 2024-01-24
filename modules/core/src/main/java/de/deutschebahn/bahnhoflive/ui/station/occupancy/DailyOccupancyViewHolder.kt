@@ -7,19 +7,18 @@ import de.deutschebahn.bahnhoflive.repository.occupancy.model.Occupancy
 import de.deutschebahn.bahnhoflive.ui.ViewHolder
 
 class DailyOccupancyViewHolder(
-    parent: ViewGroup,
+    parent: View,
     timeTextWidth: Float,
     val onClickListener: View.OnClickListener?
 ) : ViewHolder<Pair<Occupancy, Int>>(
-    parent,
-    R.layout.include_graph
+    parent
 ) {
 
     init {
         itemView.setOnClickListener(onClickListener)
     }
 
-    val graphViewBinder = GraphViewBinder(itemView, timeTextWidth)
+    private val graphViewBinder = GraphViewBinder(itemView, timeTextWidth)
 
     override fun onBind(item: Pair<Occupancy, Int>?) {
         super.onBind(item)

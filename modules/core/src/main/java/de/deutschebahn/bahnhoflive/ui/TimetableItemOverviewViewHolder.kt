@@ -39,7 +39,6 @@ open class TimetableItemOverviewViewHolder<T>(view: View) : ViewHolder<T>(view) 
 
     private fun getColor(@ColorRes colorResource: Int): Int {
       return ContextCompat.getColor(itemView.context, colorResource)
-//        return itemView.context.resources.getColor(colorResource)
     }
 
 }

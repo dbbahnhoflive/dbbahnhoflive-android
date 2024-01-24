@@ -11,9 +11,9 @@ import android.os.Build
 import androidx.multidex.MultiDexApplication
 import com.android.volley.Network
 import com.android.volley.RequestQueue
+import com.android.volley.toolbox.BaseHttpStack
 import com.android.volley.toolbox.BasicNetwork
 import com.android.volley.toolbox.DiskBasedCache
-import com.android.volley.toolbox.HttpStack
 import com.android.volley.toolbox.HurlStack
 import com.google.android.gms.common.GooglePlayServicesNotAvailableException
 import com.google.android.gms.common.GooglePlayServicesRepairableException
@@ -206,7 +206,7 @@ abstract class BaseApplication(
      */
     private fun createRequestQueue(
         context: Context,
-        stack: HttpStack
+        stack: BaseHttpStack
     ): RequestQueue {
         val cacheDir = File(context.cacheDir, "volley")
         val network: Network = BasicNetwork(stack)

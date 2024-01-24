@@ -13,13 +13,12 @@ import de.deutschebahn.bahnhoflive.push.FacilityPushManager
 import android.view.ViewGroup
 import java.util.ArrayList
 
-abstract class ElevatorStatusAdapter(useSelectionManager:Boolean=true) : RecyclerView.Adapter<FacilityStatusViewHolder>() {
+abstract class ElevatorStatusAdapter : RecyclerView.Adapter<FacilityStatusViewHolder>() {
     private var facilityStatuses: List<FacilityStatus>? = null
     private var selectionManager: SingleSelectionManager? = null
     private val facilityPushManager = instance
 
     init {
-//        if(useSelectionManager)
          selectionManager = SingleSelectionManager(this)
         SingleSelectionManager.type = "d1_aufzuege"
     }

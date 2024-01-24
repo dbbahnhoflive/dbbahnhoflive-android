@@ -34,12 +34,15 @@ internal class StationFeatureViewHolder(
         }
     }
 
-    override fun onBind(stationFeature: StationFeature) {
-        val stationFeatureTemplate = stationFeature.stationFeatureTemplate
+    override fun onBind(stationFeature: StationFeature?) {
+
+        stationFeature?.let {
+
+            val stationFeatureTemplate = it.stationFeatureTemplate
         iconView.setImageResource(stationFeatureTemplate.definition.icon)
         labelView.setText(stationFeatureTemplate.definition.label)
 
-        when (stationFeature.isFeatured) { // definitions in StationFeatureDefinition.kt
+            when (it.isFeatured) { // definitions in StationFeatureDefinition.kt
             true -> bindStatusView(R.string.available, Status.POSITIVE)
             false -> bindStatusView(R.string.not_available, Status.NEGATIVE)
             else -> bindStatusView(0, Status.NONE)
@@ -47,13 +50,15 @@ internal class StationFeatureViewHolder(
 
         // link->button to map
         button.visibility =
-            if (stationFeature.isLinkVisible(button.context)) View.VISIBLE else View.GONE
+                if (it.isLinkVisible(button.context)) View.VISIBLE else View.GONE
 
         val context = button.context
         button.contentDescription = context.getString(
             R.string.sr_template_details,
             context.getString(stationFeatureTemplate.definition.label)
         )
+        }
+
     }
 
     private fun bindStatusView(text: Int, status: Status) {

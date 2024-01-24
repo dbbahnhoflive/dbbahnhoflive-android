@@ -96,7 +96,7 @@ class RegularJourneyContentFragment : Fragment() {
 
 
 
-        journeyViewModel.essentialParametersLiveData.observe(viewLifecycleOwner) { (station, trainInfo, trainEvent) ->
+        journeyViewModel.essentialParametersLiveData.observe(viewLifecycleOwner) { (_, trainInfo, trainEvent) ->
 
             journeyViewModel.showSEVLiveData.observe(viewLifecycleOwner) {itShowSEV->
 

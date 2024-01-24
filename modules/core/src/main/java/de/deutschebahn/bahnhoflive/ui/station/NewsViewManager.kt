@@ -34,11 +34,11 @@ class NewsViewManager(
     }
     }
 
-    override fun onChanged(newsList: List<News>) {
-        newsAdapter.newsList = newsList
+    override fun onChanged(value: List<News>) {
+        newsAdapter.newsList = value
 
-        viewPager?.isVisible = newsList.isNotEmpty()
-        pageIndicator?.visibility = when (newsList.size) {
+        viewPager?.isVisible = value.isNotEmpty()
+        pageIndicator?.visibility = when (value.size) {
             0 -> View.GONE
             1 -> View.INVISIBLE
             else -> View.VISIBLE

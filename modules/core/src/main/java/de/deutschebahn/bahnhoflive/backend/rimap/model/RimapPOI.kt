@@ -17,6 +17,7 @@ import de.deutschebahn.bahnhoflive.util.JSONHelper
 import de.deutschebahn.bahnhoflive.util.json.asJSONObjectSequence
 import de.deutschebahn.bahnhoflive.util.json.string
 import de.deutschebahn.bahnhoflive.util.json.toStringList
+import de.deutschebahn.bahnhoflive.util.readParcelableCompatible
 import org.json.JSONObject
 
 class RimapPOI : Parcelable, MarkerFilterable {
@@ -54,19 +55,19 @@ class RimapPOI : Parcelable, MarkerFilterable {
     var showLabelAtZoom: Int
 
     private constructor(props: JSONObject?) {
-        var props = props
-        if (props == null) {
-            props = JSONObject()
+        var properties: JSONObject? = props
+        if (properties == null) {
+            properties = JSONObject()
         }
-        id = props.getString("poiID").toInt()
-        display = props.optBoolean("display")
+        id = properties.getString("poiID").toInt()
+        display = properties.optBoolean("display")
 
-        type = JSONHelper.getStringFromJson(props, "type", "")
-        category = JSONHelper.getStringFromJson(props, "group", "")
+        type = JSONHelper.getStringFromJson(properties, "type", "")
+        category = JSONHelper.getStringFromJson(properties, "group", "")
 
-        tags = JSONHelper.getStringFromJson(props, "tags", null)
+        tags = JSONHelper.getStringFromJson(properties, "tags", null)
 
-        name = props.optString("name")
+        name = properties.optString("name")
 
         displname = when {
             type == MenuMapping.PLATFORM_SECTOR_CUBE && !name.startsWith(PREFIX_SECTOR_CUBE) -> "$PREFIX_SECTOR_CUBE$name"
@@ -77,12 +78,12 @@ class RimapPOI : Parcelable, MarkerFilterable {
         }
         displmap = displname
 
-        level = props.string("level")
+        level = properties.string("level")
 
         var displayX: Double = Double.NaN
         var displayY: Double = Double.NaN
 
-        props.optJSONObject("displayPosition")?.also { displayPositionJsonObject ->
+        properties.optJSONObject("displayPosition")?.also { displayPositionJsonObject ->
             displayX = displayPositionJsonObject.optDouble("lon")
             displayY = displayPositionJsonObject.optDouble("lat")
         }
@@ -92,7 +93,7 @@ class RimapPOI : Parcelable, MarkerFilterable {
         menucat = menuMapping?.first
         menusubcat = menuMapping?.second
 
-        bbox = props.optJSONObject("viewPort")?.run {
+        bbox = properties.optJSONObject("viewPort")?.run {
             val topRight = optJSONObject("topRight")?.toLatLng()
             val bottomLeft = optJSONObject("bottomLeft")?.toLatLng()
 
@@ -114,7 +115,7 @@ class RimapPOI : Parcelable, MarkerFilterable {
         this.displayX = displayX
         this.displayY = displayY
 
-        openings = props.optJSONArray("openings")?.asJSONObjectSequence()
+        openings = properties.optJSONArray("openings")?.asJSONObjectSequence()
             ?.filterNotNull()?.mapNotNull { openingJsonObject ->
                 openingJsonObject.optJSONArray("openingTimes")
                     ?.asJSONObjectSequence()?.filterNotNull()?.mapNotNull {
@@ -128,7 +129,7 @@ class RimapPOI : Parcelable, MarkerFilterable {
 
         fun JSONObject.contactRef() = optJSONArray("refs")?.toStringList()?.firstOrNull()
 
-        props.optJSONArray("contacts")?.asJSONObjectSequence()?.filterNotNull()
+        properties.optJSONArray("contacts")?.asJSONObjectSequence()?.filterNotNull()
             ?.forEach { contactJsonObject ->
                 when (contactJsonObject.string("type")) {
                     "URL" -> website = contactJsonObject.contactRef()
@@ -170,7 +171,7 @@ class RimapPOI : Parcelable, MarkerFilterable {
         menusubcat = `in`.readString()
         displayX = `in`.readDouble()
         displayY = `in`.readDouble()
-        bbox = `in`.readParcelable(LatLngBounds::class.java.classLoader)
+        bbox = `in`.readParcelableCompatible(LatLngBounds::class.java.classLoader, LatLngBounds::class.java)
         phone = `in`.readString()
         email = `in`.readString()
         website = `in`.readString()

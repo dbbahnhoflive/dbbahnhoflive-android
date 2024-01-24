@@ -6,6 +6,7 @@
 
 package de.deutschebahn.bahnhoflive.ui.hub
 
+import androidx.recyclerview.widget.RecyclerView
 import de.deutschebahn.bahnhoflive.repository.Station
 import de.deutschebahn.bahnhoflive.ui.search.StopPlaceSearchResult
 
@@ -23,8 +24,9 @@ class NearbyDbStationItem(val dbStationSearchResult: StopPlaceSearchResult) :
     override val distance: Float
         get() = dbStationSearchResult.distance
 
-    override fun bindViewHolder(holder: androidx.recyclerview.widget.RecyclerView.ViewHolder) {
-        (holder as NearbyDbDeparturesViewHolder).bind(dbStationSearchResult)
+    override fun bindViewHolder(holder: RecyclerView.ViewHolder) {
+        val h : NearbyDbDeparturesViewHolder = holder as NearbyDbDeparturesViewHolder
+        h.onBindStopPlaceSearchResult(dbStationSearchResult)
     }
 
     override fun equals(other: Any?): Boolean {

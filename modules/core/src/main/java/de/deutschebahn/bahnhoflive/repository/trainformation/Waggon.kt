@@ -11,6 +11,7 @@ import android.os.Parcelable
 import androidx.annotation.ColorInt
 import de.deutschebahn.bahnhoflive.backend.wagenstand.favendo.model.LegacyWaggon
 import de.deutschebahn.bahnhoflive.backend.wagenstand.models.FeatureStatus
+import de.deutschebahn.bahnhoflive.util.readParcelableCompatible
 
 class Waggon(
     val train: Train?,
@@ -31,7 +32,7 @@ class Waggon(
     val displayNumber: String
 ) : Parcelable {
     constructor(parcel: Parcel) : this(
-        parcel.readParcelable(Train::class.java.classLoader),
+        parcel.readParcelableCompatible(Train::class.java.classLoader, Train::class.java),
         parcel.readByte() != 0.toByte(),
         parcel.createTypedArrayList(FeatureStatus.CREATOR).orEmpty(),
         parcel.createTypedArrayList(LegacyFeature.CREATOR).orEmpty(),

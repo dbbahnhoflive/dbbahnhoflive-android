@@ -36,7 +36,7 @@ open class IssueTracker(application: BaseApplication) {
         log("Tag '$key' is now '$value'.")
     }
 
-    open fun setContext(name: String, values: Map<String, out Any>?) {
+    open fun setContext(name: String, values: Map<String, Any>?) {
         log("Context $name")
         values?.forEach { entry ->
             setTag("$name.${entry.key}", entry.value.toString())

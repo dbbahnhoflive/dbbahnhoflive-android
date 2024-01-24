@@ -39,7 +39,7 @@ private val mapIcon: Int, @field:DrawableRes
         try {
             markerOptions?.position(LatLng(rimapPOI.displayY, rimapPOI.displayX)) // can cause exception
         }
-        catch(e:Exception) {
+        catch(_:Exception) {
 
         }
         return markerOptions
@@ -99,7 +99,7 @@ private val mapIcon: Int, @field:DrawableRes
         return mapIcon
     }
 
-    override fun getDescription(context: Context): CharSequence? {
+    override fun getDescription(context: Context): CharSequence {
         return RimapPOI.renderFloorDescription(context, level ?: 0)
     }
 
@@ -133,7 +133,7 @@ private val mapIcon: Int, @field:DrawableRes
         return flyoutIcon
     }
 
-    override fun getViewType(): MarkerContent.ViewType =
+    override fun getViewType(): ViewType =
         when (rimapPOI.type) {
             in MenuMapping.PLATFORM_TYPES -> ViewType.TRACK
             MenuMapping.LOCKER -> ViewType.LOCKERS

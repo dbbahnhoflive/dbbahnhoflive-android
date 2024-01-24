@@ -59,6 +59,7 @@ class InfoAndServicesLiveData(
     fun update(
         risServicesAndCategory: RISServicesAndCategory,
         staticInfoCollection: StaticInfoCollection,
+        @Suppress("unused")
         travelCenterOpenHours: String?,
         travelCenter: LocalService?
     ) {

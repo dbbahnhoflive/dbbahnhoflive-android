@@ -196,9 +196,8 @@ class VersionManager private constructor(private val manager: PackageManager,
                 .apply()
         }
 
-        val restartedDayCount = global_preferences.getInt("restartedDayCount", 0 )
-        val lastDayStarted = global_preferences.getInt("lastStartedDay", 0 )
-
+//        val restartedDayCount = global_preferences.getInt("restartedDayCount", 0 )
+//        val lastDayStarted = global_preferences.getInt("lastStartedDay", 0 )
 
         val usageLastDateInFile : String = global_preferences.getString("UsageLastDate", "") ?: ""
         _appUsageCountDays = global_preferences.getInt("UsageCountDays", 0)

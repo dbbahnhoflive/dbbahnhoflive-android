@@ -38,11 +38,11 @@ open class TrainInfoOverviewViewHolder(view: View, protected val provider: Train
     override fun onBind(item: TrainInfo?) {
         super.onBind(item)
 
-        if (item != null) {
-            val trainMovementInfo = trainEvent.movementRetriever.getTrainMovementInfo(item)
+        item?.let {
+            val trainMovementInfo = trainEvent.movementRetriever.getTrainMovementInfo(it)
 
             if (trainMovementInfo != null) {
-                val trainName = TimetableViewHelper.composeName(item, trainMovementInfo)
+                val trainName = TimetableViewHelper.composeName(it, trainMovementInfo)
                 transportationNameView?.text = trainName
 
                 timeView?.text = trainMovementInfo.formattedTime
@@ -71,9 +71,9 @@ open class TrainInfoOverviewViewHolder(view: View, protected val provider: Train
 
                 issueIndicator?.isVisible = true // icon wird per issuesBinder gesetzt oder gelöscht !
 
-                issuesBinder.bindIssues(item, trainMovementInfo)
+                issuesBinder.bindIssues(it, trainMovementInfo)
                 wagonOrderIndicator?.visibility =
-                    if (item.shouldOfferWagenOrder() && item.departure!=null) View.VISIBLE else View.GONE
+                    if (it.shouldOfferWagenOrder() && it.departure!=null) View.VISIBLE else View.GONE
 
                 return
             }

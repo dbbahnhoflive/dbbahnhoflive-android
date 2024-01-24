@@ -19,20 +19,17 @@ internal class ElevatorFlyoutViewHolder(parent: ViewGroup, private val stationAc
         equipmentID = EquipmentID.ELEVATORS
     }
 
-    private val binding = FlyoutElevatorBinding.bind(itemView).apply {
-        externalLink.setOnClickListener {
-            stationActivityStarter.startStationActivity(
-                {
-                    addFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT)
-                },
-                equipmentID
-            )
-        }
+//    private val binding = FlyoutElevatorBinding.bind(itemView).apply {
+//        externalLink.setOnClickListener {
+//            stationActivityStarter.startStationActivity(
+//                {
+//                    addFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT)
+//                },
+//                equipmentID
+//            )
+//        }
+//
+//    }
 
-    }
-
-    override fun onBind(item: MarkerBinder) {
-        super.onBind(item)
-    }
 
 }

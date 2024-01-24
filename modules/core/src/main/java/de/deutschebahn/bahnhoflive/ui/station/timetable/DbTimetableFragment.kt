@@ -57,7 +57,13 @@ class DbTimetableFragment : Fragment(), MapPresetProvider {
 
         val adapter = DbTimetableAdapter(
             stationLiveData.value,
-            { trainCategories: Array<String?>?, trainCategory: String?, tracks: Array<String?>?, track: String? ->
+            object : DbTimetableAdapter.FilterUI {
+                override fun onShowFilter(
+                    trainCategories: Array<String>?,
+                    trainCategory: String?,
+                    tracks: Array<String>?,
+                    track: String?
+                ) {
                 val filterDialogFragment = FilterDialogFragment.create(
                     trainCategories,
                     trainCategory,
@@ -66,6 +72,8 @@ class DbTimetableFragment : Fragment(), MapPresetProvider {
                     stationViewModel.timetableCollector.lastHourEnd
                 )
                 filterDialogFragment.show(childFragmentManager, "filterDialog")
+                }
+
             },
             trackingManager,
             { // loadMoreListener

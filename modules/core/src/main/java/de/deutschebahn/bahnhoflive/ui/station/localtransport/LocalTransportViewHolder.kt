@@ -20,7 +20,9 @@ import de.deutschebahn.bahnhoflive.ui.ViewHolder
 import de.deutschebahn.bahnhoflive.util.accessibility.AccessibilityUtilities
 import de.deutschebahn.bahnhoflive.view.ItemClickListener
 
-internal class LocalTransportViewHolder(parent: ViewGroup, itemClickListener: ItemClickListener<HafasStation>) : ViewHolder<HafasStation>(parent, R.layout.item_local_transport_station) {
+internal class LocalTransportViewHolder(parent: View, itemClickListener: ItemClickListener<HafasStation>) :
+       ViewHolder<HafasStation>(parent) {
+
     private val stationName: TextView = itemView.findViewById(R.id.station_name)
     private val transportInfos: ViewGroup = itemView.findViewById(R.id.transport_infos)
 
@@ -33,10 +35,12 @@ internal class LocalTransportViewHolder(parent: ViewGroup, itemClickListener: It
         }
     }
 
-    override fun onBind(item: HafasStation) {
+    override fun onBind(item: HafasStation?) {
         super.onBind(item)
-        stationName.text = item.name
-        fillProductInfos(item)
+        item?.let {
+            stationName.text = it.name
+            fillProductInfos(it)
+        }
 
     }
 

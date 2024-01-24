@@ -145,7 +145,7 @@ internal class NearbyDeparturesAdapter(
     }
 
     companion object {
-        val TAG = NearbyDeparturesAdapter::class.java.simpleName
+        val TAG: String = NearbyDeparturesAdapter::class.java.simpleName
     }
 }
 

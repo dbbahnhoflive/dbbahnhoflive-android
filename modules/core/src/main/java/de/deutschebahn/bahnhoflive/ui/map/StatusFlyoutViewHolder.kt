@@ -25,11 +25,12 @@ open class StatusFlyoutViewHolder(parent: ViewGroup, layout: Int) :
         statusText3View = findTextView(R.id.status_text_3)
     }
 
-    override fun onBind(item: MarkerBinder) {
+    override fun onBind(item: MarkerBinder?) {
         super.onBind(item)
-        val markerContent = item.markerContent
-        bindStatus(statusText1View, markerContent.getStatus1(context))
-        bindStatus(statusText2View, markerContent.getStatus2(context))
-        bindStatus(statusText3View, markerContent.getStatus3(context))
+        item?.let {
+            bindStatus(statusText1View, it.markerContent.getStatus1(context))
+            bindStatus(statusText2View, it.markerContent.getStatus2(context))
+            bindStatus(statusText3View, it.markerContent.getStatus3(context))
+        }
     }
 }

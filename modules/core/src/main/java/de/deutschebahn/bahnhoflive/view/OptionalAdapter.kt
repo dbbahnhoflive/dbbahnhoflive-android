@@ -8,7 +8,7 @@ class OptionalAdapter(
     enabled: Boolean = true
 ) : SimpleAdapter(view) {
 
-    var enabled by Delegates.observable(enabled) { property, oldValue, newValue ->
+    var enabled by Delegates.observable(enabled) { _, oldValue, newValue ->
         if (newValue != oldValue) {
             if (newValue) {
                 notifyItemInserted(0)

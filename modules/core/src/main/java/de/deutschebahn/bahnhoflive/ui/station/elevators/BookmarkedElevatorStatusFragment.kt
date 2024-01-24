@@ -36,7 +36,7 @@ class BookmarkedElevatorStatusFragment : Fragment(), SwipeRefreshLayout.OnRefres
     private lateinit var adapter: ElevatorStatusAdapter
 
     init {
-        setAdapter(object : ElevatorStatusAdapter(false) {
+        setAdapter(object : ElevatorStatusAdapter() {
             override fun onCreateViewHolder(
                 parent: ViewGroup,
                 selectionManager: SingleSelectionManager?,

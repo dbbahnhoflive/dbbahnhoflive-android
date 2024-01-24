@@ -235,7 +235,6 @@ class RISPlatformsRequest(
      */
     override fun parseNetworkResponse(response: NetworkResponse): Response<List<Platform>> {
         super.parseNetworkResponse(response)
-        DebugX.logVolleyResponseOk(this,url)
 
         return try {
 
@@ -253,8 +252,4 @@ class RISPlatformsRequest(
         }
     }
 
-    override fun parseNetworkError(volleyError: VolleyError): VolleyError {
-        DebugX.logVolleyResponseError(this, url, volleyError)
-        return super.parseNetworkError(volleyError)
-    }
 }

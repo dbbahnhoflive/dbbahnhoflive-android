@@ -17,14 +17,17 @@ open class FlyoutViewHolder(view: View, protected var equipmentID: EquipmentID) 
     private val titleView: TextView = findTextView(R.id.title)
     private val iconView: ImageView = itemView.findViewById(R.id.icon)
 
-    protected override fun onBind(item: MarkerBinder) {
-        val markerContent = item.markerContent
-        onBind(markerContent)
+    override fun onBind(item: MarkerBinder?) {
+        item?.let {
+            onBind(it.markerContent)
+        }
     }
 
     protected open fun onBind(markerContent: MarkerContent) {
-        iconView.setImageResource(markerContent.flyoutIcon)
-        titleView.text = markerContent.title
+        markerContent.let {
+            iconView.setImageResource(it.flyoutIcon)
+            titleView.text = it.title
+        }
     }
 
     protected fun bindStatus(statusTextView: TextView, status: Status?) {
@@ -33,7 +36,6 @@ open class FlyoutViewHolder(view: View, protected var equipmentID: EquipmentID) 
             return
         }
         statusTextView.visibility = View.VISIBLE
-//        statusTextView.setTextColor(statusTextView.resources.getColor(status.color))
         statusTextView.setTextColor( ContextCompat.getColor(itemView.context, status.color))
         statusTextView.setCompoundDrawablesWithIntrinsicBounds(status.icon, 0, 0, 0)
         statusTextView.text = status.text

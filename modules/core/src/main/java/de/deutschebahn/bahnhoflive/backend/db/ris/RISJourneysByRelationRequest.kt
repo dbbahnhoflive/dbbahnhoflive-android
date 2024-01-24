@@ -56,7 +56,7 @@ class RISJourneysByRelationRequest(
                 ByteArrayInputStream(response.data).reader(),
                 DepartureMatches::class.java
             )
-            DebugX.logVolleyResponseOk(this,url)
+//            DebugX.logVolleyResponseOk(this,url)
             Response.success(
                 departureMatches,
                 ForcedCacheEntryFactory(TimeUnit.HOURS.toMillis(2).toInt()).createCacheEntry(
@@ -68,9 +68,9 @@ class RISJourneysByRelationRequest(
         }
     }
 
-    override fun parseNetworkError(volleyError: VolleyError): VolleyError {
-        logVolleyResponseError(this, url, volleyError)
-        return super.parseNetworkError(volleyError)
-    }
+//    override fun parseNetworkError(volleyError: VolleyError): VolleyError {
+////        logVolleyResponseError(this, url, volleyError)
+//        return super.parseNetworkError(volleyError)
+//    }
 
 }

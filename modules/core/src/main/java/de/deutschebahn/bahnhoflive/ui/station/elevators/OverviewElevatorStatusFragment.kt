@@ -96,7 +96,7 @@ class OverviewElevatorStatusFragment : Fragment(), MapPresetProvider {
 //        applyAdapter()
 //    }
 
-    internal class StationElevatorStatusAdapter(val trackingManager: TrackingManager) : ElevatorStatusAdapter(false)
+    internal class StationElevatorStatusAdapter(val trackingManager: TrackingManager) : ElevatorStatusAdapter()
     {
         override var data: List<FacilityStatus>?
             get() = super.data

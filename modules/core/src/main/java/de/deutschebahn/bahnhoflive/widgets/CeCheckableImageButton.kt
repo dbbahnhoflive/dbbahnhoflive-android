@@ -29,8 +29,8 @@ import android.os.Parcelable.Creator
 import android.util.AttributeSet
 import android.view.View
 import android.view.accessibility.AccessibilityEvent
+import android.view.accessibility.AccessibilityEvent.TYPE_WINDOW_CONTENT_CHANGED
 import android.widget.Checkable
-import androidx.appcompat.R
 import androidx.appcompat.widget.AppCompatImageButton
 import androidx.core.view.AccessibilityDelegateCompat
 import androidx.core.view.ViewCompat
@@ -42,14 +42,14 @@ import androidx.customview.view.AbsSavedState
 class CeCheckableImageButton @JvmOverloads constructor(
     context: Context?,
     attrs: AttributeSet? = null,
-    defStyleAttr: Int = R.attr.imageButtonStyle
+    defStyleAttr: Int = androidx.appcompat.R.attr.imageButtonStyle
 ) :
     AppCompatImageButton(context!!, attrs, defStyleAttr), Checkable {
     private var checked = false
     private var checkable = true
     /** Returns whether the image button is pressable.  */
     /** Sets image button to be pressable or not.  */
-    var isPressable = true
+    private var isPressable = true
 
     init {
         ViewCompat.setAccessibilityDelegate(
@@ -74,7 +74,7 @@ class CeCheckableImageButton @JvmOverloads constructor(
         if (checkable && this.checked != checked) {
             this.checked = checked
             refreshDrawableState()
-            sendAccessibilityEvent(AccessibilityEventCompat.TYPE_WINDOW_CONTENT_CHANGED)
+            sendAccessibilityEvent(TYPE_WINDOW_CONTENT_CHANGED)
         }
     }
 
@@ -115,12 +115,13 @@ class CeCheckableImageButton @JvmOverloads constructor(
             super.onRestoreInstanceState(state)
             return
         }
-        val savedState = state
-        super.onRestoreInstanceState(savedState.superState)
-        isChecked = savedState.checked
+        super.onRestoreInstanceState(state.superState)
+        isChecked = state.checked
     }
 
     /** Sets image button to be checkable or not.  */
+
+    @Suppress("unused")
     fun setCheckable(checkable: Boolean) {
         if (this.checkable != checkable) {
             this.checkable = checkable
@@ -136,6 +137,7 @@ class CeCheckableImageButton @JvmOverloads constructor(
     internal class SavedState : AbsSavedState {
         var checked = false
 
+        @Suppress("unused")
         constructor(parcel: Parcel) : super(parcel) {
             checked = parcel.readByte() != 0.toByte()
         }

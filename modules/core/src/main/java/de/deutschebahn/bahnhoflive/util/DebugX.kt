@@ -20,6 +20,7 @@ class DebugX {
 //            if (keyobj == null) return null // not present?
 //            return keyobj.javaClass.name // get class name
 //        }
+        private const val MAX_CLSNAME_LENGTH = 35
 
         fun logBundle(preString: String, bundle: Bundle?) {
 
@@ -27,7 +28,7 @@ class DebugX {
                 Log.d("cr", "")
                 Log.d("cr", preString + "bundle-content")
 
-                val newPreString = preString + " "
+                val newPreString = "$preString "
                 val ks = it.keySet()
                 val iterator: Iterator<String> = ks.iterator()
 
@@ -41,7 +42,6 @@ class DebugX {
                         Log.d("cr", newPreString + "key: " + key + " : NULL")
 
                     try {
-
                         it.getBundle(key)?.let {
                             logBundle("$newPreString ", it)
                         }
@@ -87,9 +87,9 @@ class DebugX {
         fun getFormattedDateTimeFromMillis(
             millis: Long,
             preText: String = "",
-            dateTimeFomat: String = "dd.MM.yy HH:mm:ss.SSS"
+            dateTimeFormat: String = "dd.MM.yy HH:mm:ss.SSS"
         ): String {
-            val formatter = SimpleDateFormat(dateTimeFomat)
+            val formatter = SimpleDateFormat(dateTimeFormat, Locale.GERMANY)
             val calendar: Calendar = Calendar.getInstance(Locale.GERMANY)
             calendar.timeZone = DateUtil.getGermanTimezone()
             calendar.timeInMillis = millis
@@ -99,7 +99,7 @@ class DebugX {
         }
 
         fun logVolleyRequest(preText: String = "", url: String?) {
-            var msg = "${preText.padEnd(30)} request  :       "
+            var msg = "${preText.padEnd(MAX_CLSNAME_LENGTH)} request  :       "
             if (url != null)
                 msg += url
             Log.d("cr", msg)
@@ -110,7 +110,7 @@ class DebugX {
         }
 
         fun logVolleyResponseOk(preText: String = "", url: String?) {
-            var msg = "${preText.padEnd(30)} response : ok    "
+            var msg = "${preText.padEnd(MAX_CLSNAME_LENGTH)} response : ok    "
             url?.let { msg += url }
             Log.d("cr", msg)
         }
@@ -120,7 +120,7 @@ class DebugX {
         }
 
         fun logVolleyResponseException(preText: String = "", url: String?, e: Exception?) {
-            var msg = "${preText.padEnd(30)} response : excep "
+            var msg = "${preText.padEnd(MAX_CLSNAME_LENGTH)} response : excep "
             url?.let { msg += url }
             if (e?.message != null)
                 msg += e.message
@@ -130,7 +130,7 @@ class DebugX {
             logVolleyResponseException(cls.javaClass.simpleName, url, e)
         }
         fun logVolleyResponseError(preText: String = "", url: String?, volleyError: VolleyError?) {
-            var msg = "${preText.padEnd(30)} response : error "
+            var msg = "${preText.padEnd(MAX_CLSNAME_LENGTH)} response : error "
             url?.let { msg += url }
             volleyError?.let {
                 if (it.networkResponse != null)

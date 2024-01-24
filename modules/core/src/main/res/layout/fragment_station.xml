@@ -94,10 +94,10 @@
 
                 </LinearLayout>
 
-                <androidx.legacy.widget.Space
+                <android.widget.Space
                     android:layout_width="match_parent"
                     android:layout_height="@dimen/default_space">
-                </androidx.legacy.widget.Space>
+                </android.widget.Space>
 
                 <androidx.cardview.widget.CardView
                     android:id="@+id/db_departures"

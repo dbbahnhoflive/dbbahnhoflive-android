@@ -116,7 +116,7 @@ open class RisTimetableRepository(
 
     ) {
 
-        val pendingDeparturesMatches = departureMatches.take(4).toMutableList()
+        private val pendingDeparturesMatches = departureMatches.take(4).toMutableList()
 
         fun processPendingJourney() {
             pendingDeparturesMatches.removeFirstOrNull()?.let {

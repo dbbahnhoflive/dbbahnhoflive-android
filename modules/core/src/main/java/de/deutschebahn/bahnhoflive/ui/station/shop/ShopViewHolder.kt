@@ -16,12 +16,13 @@ import de.deutschebahn.bahnhoflive.view.SingleSelectionManager
 
 class ShopViewHolder(parent: ViewGroup, singleSelectionManager: SingleSelectionManager) : ShoppingViewHolder<Shop>(parent, R.layout.card_expandable_venue, singleSelectionManager) {
 
-    protected val networkIconView: NetworkImageView = itemView.findViewById(R.id.icon)
+    private val networkIconView: NetworkImageView = itemView.findViewById(R.id.icon)
     private val paymentOptionsContainer: View = itemView.findViewById(R.id.payment_options_container)
 
-    override fun onBind(item: Shop) {
+    override fun onBind(item: Shop?) {
         super.onBind(item)
 
+        item?.let {
         titleView.text = item.name
         val open = item.isOpen
 
@@ -33,7 +34,7 @@ class ShopViewHolder(parent: ViewGroup, singleSelectionManager: SingleSelectionM
         }
 
         itemView.contentDescription = when {
-            isSelected -> null
+                isSelected() -> null
             else -> listOfNotNull(
                 item.name,
                 open?.let { context.getString(getStatus(it)) },
@@ -80,6 +81,7 @@ class ShopViewHolder(parent: ViewGroup, singleSelectionManager: SingleSelectionM
         hoursTitleView.visibility = hoursVisibility
 
         locationView.text = item.getLocationDescription(context)
+        }
     }
 
     private fun getStatus(open: Boolean) =

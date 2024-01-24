@@ -33,11 +33,12 @@ class LockerFlyoutViewHolder(
     private val context: Context
         get() = itemView.context
 
-    override fun onBind(item: MarkerBinder) {
+    override fun onBind(item: MarkerBinder?) {
         super.onBind(item)
 
-        val description = item.markerContent.getDescription(context)
-        binding.text.text = description
+        item?.let {
+            binding.text.text = it.markerContent.getDescription(context)
+        }
     }
 
 }

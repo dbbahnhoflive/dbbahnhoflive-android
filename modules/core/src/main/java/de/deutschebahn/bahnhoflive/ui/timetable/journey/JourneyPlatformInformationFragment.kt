@@ -44,76 +44,13 @@ class JourneyPlatformInformationFragment : Fragment(), MapPresetProvider {
 
     private var platforms : MutableList<Platform> = mutableListOf()
 
-    lateinit private var binding: FragmentJourneyPlatformInformationBinding
-
-
-    fun test() {
-
-
-            var allPlatforms: PlatformList
-            val reducedPlatforms: MutableList<Platform> = mutableListOf()
-
-        val jsonString = "{\"platforms\":[" +
-                "            {" +
-                "                \"name\":\"3\"," +
-                "                \"linkedPlatforms\":[\"4\", \"5\", \"1\", \"2\"]" +
-                "            }," +
-                "            {" +
-                "                \"name\":\"7c\"," +
-                "                \"linkedPlatforms\":[\"7\", \"7a\"]" +
-                "            }," +
-                "            {" +
-                "                \"name\":\"1\"," +
-                "                \"linkedPlatforms\":[\"3\", \"4\", \"2\", \"5\"]" +
-                "            }," +
-                "            {" +
-                "                \"name\":\"2\"," +
-                "                \"linkedPlatforms\":[\"5\", \"3\", \"1\", \"4\"]" +
-                "            }," +
-                "            {" +
-                "                \"name\":\"6\"," +
-                "                \"linkedPlatforms\":[\"5\", \"4\"]" +
-                "            }," +
-                "            {" +
-                "                \"name\":\"11\"," +
-                "                \"linkedPlatforms\":[\"10\"]" +
-                "            }," +
-                "            {" +
-                "                \"name\":\"5\"," +
-                "                \"linkedPlatforms\":[\"6\", \"4\"]" +
-                "            }," +
-                "            {" +
-                "                \"name\":\"4\"," +
-                "                \"linkedPlatforms\":[\"6\", \"5\"]" +
-                "            }," +
-                "            {" +
-                "                \"name\":\"10\"," +
-                "                \"linkedPlatforms\":[\"11\"]" +
-                "            }," +
-                "            {" +
-                "                \"name\":\"7\"," +
-                "                \"linkedPlatforms\":[\"7c\", \"7a\"]" +
-                "            }," +
-                "            {" +
-                "                \"name\":\"7a\"," +
-                "                \"linkedPlatforms\":[\"7c\", \"7\"]" +
-                "            }," +
-                "        ]" +
-                "    }"
-
-        RISPlatformsRequestResponseParser().run {
-                allPlatforms = parse(jsonString)
-            }
-
-    }
+    private lateinit var binding: FragmentJourneyPlatformInformationBinding
 
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
-
- //       test()
 
         binding = FragmentJourneyPlatformInformationBinding.inflate(inflater, container, false).apply {
 

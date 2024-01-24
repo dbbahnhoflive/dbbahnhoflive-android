@@ -39,9 +39,6 @@ class RISJourneysEventbasedRequest(
                 JourneyEventBased::class.java
             )
 
-
-            DebugX.logVolleyResponseOk(this,url)
-
             Response.success(
                 departureMatches,
                 HttpHeaderParser.parseCacheHeaders(response)
@@ -51,9 +48,5 @@ class RISJourneysEventbasedRequest(
         }
     }
 
-    override fun parseNetworkError(volleyError: VolleyError): VolleyError {
-        logVolleyResponseError(this, url, volleyError)
-        return super.parseNetworkError(volleyError)
-    }
 
 }

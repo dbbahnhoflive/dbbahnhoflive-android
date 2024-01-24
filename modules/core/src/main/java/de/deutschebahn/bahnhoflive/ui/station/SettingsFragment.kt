@@ -7,6 +7,8 @@ package de.deutschebahn.bahnhoflive.ui.station
 
 import android.os.Bundle
 import android.util.Log
+import android.view.LayoutInflater
+import android.view.View
 import android.view.ViewGroup
 import android.widget.CompoundButton
 import androidx.recyclerview.widget.RecyclerView
@@ -35,16 +37,13 @@ class SettingsFragment : RecyclerFragment<SectionAdapter<*>?>(R.layout.fragment_
 
     override fun onResume() {
         super.onResume()
-
         adapter?.notifyDataSetChanged()
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        Log.d("cr", "------------ " + this.javaClass.name)
-        logBundle( "    ", savedInstanceState)
-        Log.d("cr", "------------ " + this.javaClass.name)
+        logBundle( "SettingsFragment", savedInstanceState)
 
         if (activity is StationActivity) {
 
@@ -86,60 +85,16 @@ class SettingsFragment : RecyclerFragment<SectionAdapter<*>?>(R.layout.fragment_
         }
     }
 
-//    @Deprecated("Deprecated in Java")
-//    override fun onAttach(activity: Activity) {
-//        super.onAttach(activity)
-//        if (activity is StationActivity) {
-//            val station = activity.station
-//
-//            // okt. 2022 customer wants to see multiple expanded sections
-//            // set selectionManager to null does the trick
-//            // now on default sections are expanded
-//            // SelectableItemViewHolder checks if selectionManager=null and sets selected on true as default
-//            // if selectionManager is not null, behaviour is like before
-//            val selectionManager: SingleSelectionManager? = null //new SingleSelectionManager(null);
-//            val favoritesAdapter = FavoritesAdapter(
-//                InternalStation.of(station),
-//                get().applicationServices.favoriteDbStationStore, selectionManager,
-//                StationImageResolver(getActivity()), get().applicationServices.evaIdsProvider
-//            )
-//            val tutorialAdapter = TutorialAdapter(selectionManager)
-//            val pushAdapter: PushAdapter = PushAdapter(selectionManager)
-//
-//            val adapter: SectionAdapter<*> = SectionAdapter(
-//                SectionAdapter.Section(
-//                    favoritesAdapter, 1, "Favoriten verwalten"
-//                ),
-//                SectionAdapter.Section(
-//                    tutorialAdapter, 1, activity.getText(R.string.settings_manage_notifications)
-//                ),
-//                SectionAdapter.Section(
-//                    pushAdapter, 1, ""
-//                ) // no title, so it appears under the last
-//            )
-//            selectionManager?.setAdapter(adapter)
-//            setAdapter(adapter)
-//            fromActivity(getActivity()).track(
-//                TrackingManager.TYPE_STATE,
-//                TrackingManager.Screen.D2,
-//                TrackingManager.Entity.EINSTELLUNGEN
-//            )
-//        }
-//    }
-
     private inner class TutorialSettingItemViewHolder(
-        parent: ViewGroup?,
+        parent: View,
         selectionManager: SingleSelectionManager?
     ) : SelectableItemViewHolder<Any?>(
         parent,
-        R.layout.card_expandable_setting_tutorial,
         selectionManager
     ), CompoundButton.OnCheckedChangeListener {
-        private val toggleView: CompoundButtonChecker
 
-        init {
-            toggleView = CompoundButtonChecker(itemView.findViewById(R.id.show_tips_switch), this)
-        }
+        private val toggleView: CompoundButtonChecker =
+            CompoundButtonChecker(itemView.findViewById(R.id.show_tips_switch), this)
 
         override fun onBind(item: Any?) {
             super.onBind(item)
@@ -158,7 +113,8 @@ class SettingsFragment : RecyclerFragment<SectionAdapter<*>?>(R.layout.fragment_
             parent: ViewGroup,
             viewType: Int
         ): TutorialSettingItemViewHolder {
-            return TutorialSettingItemViewHolder(parent, selectionManager)
+            val view = LayoutInflater.from(parent.context).inflate(R.layout.card_expandable_setting_tutorial, parent, false)
+            return TutorialSettingItemViewHolder(view, selectionManager)
         }
 
         override fun onBindViewHolder(holder: TutorialSettingItemViewHolder, position: Int) {
@@ -171,18 +127,15 @@ class SettingsFragment : RecyclerFragment<SectionAdapter<*>?>(R.layout.fragment_
     }
 
     private inner class PushSettingItemViewHolder(
-        parent: ViewGroup?,
+        parent: View,
         selectionManager: SingleSelectionManager?
     ) : SelectableItemViewHolder<Any?>(
         parent,
-        R.layout.card_expandable_setting_push,
         selectionManager
     ), CompoundButton.OnCheckedChangeListener {
-        private val toggleView: CompoundButtonChecker
 
-        init {
-            toggleView = CompoundButtonChecker(itemView.findViewById(R.id.enable_push), this)
-        }
+        private val toggleView: CompoundButtonChecker =
+            CompoundButtonChecker(itemView.findViewById(R.id.enable_push), this)
 
         override fun onBind(item: Any?) {
             super.onBind(item)
@@ -203,7 +156,9 @@ class SettingsFragment : RecyclerFragment<SectionAdapter<*>?>(R.layout.fragment_
             parent: ViewGroup,
             viewType: Int
         ): PushSettingItemViewHolder {
-            return PushSettingItemViewHolder(parent, selectionManager)
+            val view = LayoutInflater.from(parent.context)
+                .inflate(R.layout.card_expandable_setting_push, parent, false)
+            return PushSettingItemViewHolder(view, selectionManager)
         }
 
         override fun onBindViewHolder(holder: PushSettingItemViewHolder, position: Int) {

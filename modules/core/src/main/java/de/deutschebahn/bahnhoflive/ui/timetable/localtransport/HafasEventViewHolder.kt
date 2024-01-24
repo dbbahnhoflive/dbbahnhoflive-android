@@ -12,10 +12,10 @@ import de.deutschebahn.bahnhoflive.R
 import de.deutschebahn.bahnhoflive.ui.ViewHolder
 
 internal class HafasEventViewHolder(
-    parent: ViewGroup,
+    parent: View,
     hafasDetailsClickEvent : (View, DetailedHafasEvent)->Unit,
     hafasDataReceivedEvent : (View, DetailedHafasEvent, Boolean)->Unit
-) : ViewHolder<DetailedHafasEvent>(parent,R.layout.card_expandable_hafas_event )
+) : ViewHolder<DetailedHafasEvent>(parent)
     , DetailedHafasEvent.HafasDetailListener {
 
     private val onHafasDetailsClickEvent :  (View, DetailedHafasEvent)->Unit = hafasDetailsClickEvent
@@ -24,12 +24,14 @@ internal class HafasEventViewHolder(
     private val overviewViewHolder: HafasEventOverviewViewHolder =
         HafasEventOverviewViewHolder(this@HafasEventViewHolder.itemView.findViewById(R.id.overview))
 
-    override fun onBind(item: DetailedHafasEvent) {
+    override fun onBind(item: DetailedHafasEvent?) {
         super.onBind(item)
-        overviewViewHolder.bind(item.hafasEvent)
-        item.setListener(this)
-        overviewViewHolder.itemView.setOnClickListener {
-            onHafasDetailsClickEvent(it, item)
+        item?.let {
+            overviewViewHolder.bind(it.hafasEvent)
+            it.setListener(this)
+            overviewViewHolder.itemView.setOnClickListener {itView->
+                onHafasDetailsClickEvent(itView, it)
+            }
         }
     }
 
