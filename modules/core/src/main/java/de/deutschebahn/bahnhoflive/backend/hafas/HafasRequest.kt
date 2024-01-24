@@ -9,7 +9,6 @@ import android.util.Log
 import com.android.volley.Cache
 import com.android.volley.DefaultRetryPolicy
 import com.android.volley.NetworkResponse
-import com.android.volley.VolleyError
 import de.deutschebahn.bahnhoflive.analytics.Trackable
 import de.deutschebahn.bahnhoflive.backend.BaseRequest
 import de.deutschebahn.bahnhoflive.backend.CappingHttpStack
@@ -17,8 +16,6 @@ import de.deutschebahn.bahnhoflive.backend.CappingHttpStack.Cappable
 import de.deutschebahn.bahnhoflive.backend.Countable
 import de.deutschebahn.bahnhoflive.backend.ForcedCacheEntryFactory
 import de.deutschebahn.bahnhoflive.backend.VolleyRestListener
-import de.deutschebahn.bahnhoflive.util.DebugX.Companion.logVolleyRequest
-import de.deutschebahn.bahnhoflive.util.DebugX.Companion.logVolleyResponseError
 import java.io.UnsupportedEncodingException
 import java.net.URLEncoder
 

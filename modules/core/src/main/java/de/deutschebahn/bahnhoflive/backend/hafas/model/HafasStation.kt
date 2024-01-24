@@ -5,11 +5,9 @@
  */
 package de.deutschebahn.bahnhoflive.backend.hafas.model
 
-import android.os.Build
 import android.os.Parcel
 import android.os.Parcelable
 import android.os.Parcelable.Creator
-import androidx.annotation.RequiresApi
 import com.google.android.gms.maps.model.LatLng
 import com.google.gson.annotations.SerializedName
 import de.deutschebahn.bahnhoflive.BaseApplication.Companion.get

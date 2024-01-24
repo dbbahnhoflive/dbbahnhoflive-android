@@ -2,8 +2,6 @@ package de.deutschebahn.bahnhoflive.util
 
 import android.os.Build
 import android.os.Parcel
-import de.deutschebahn.bahnhoflive.backend.hafas.model.HafasStationProduct
-import java.util.Objects
 
 fun <T> Parcel.readParcelableCompatible(classLoader: ClassLoader?, clazz: Class<T>): T? {
     return try {
