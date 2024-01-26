@@ -30,7 +30,8 @@
             app:layout_constraintBottom_toTopOf="@+id/app_title"
             app:layout_constraintLeft_toLeftOf="parent"
             app:layout_constraintRight_toRightOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/guideline" />
+            app:layout_constraintTop_toBottomOf="@+id/guideline"
+            android:contentDescription="" />
 
         <TextView
             android:id="@+id/app_title"

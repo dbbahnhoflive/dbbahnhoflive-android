@@ -28,11 +28,12 @@ fun Intent.putExtraTimeStamp()
 
 // checks is intent is older than seconds
 // if intent does not have extra INTENT_CREATION_TIME_MS return false
+
+@Suppress("UNUSED")
 fun Intent.isOlderThan(seconds: Int): Boolean {
     val creationTime: Long = getLongExtra(INTENT_CREATION_TIME_MS, 0)
     val timeDiff = abs(System.currentTimeMillis() - creationTime)
-    val ret = (timeDiff > seconds.toLong() * 1000L)
-    return ret
+    return (timeDiff > seconds.toLong() * 1000L)
 }
 
 fun <T> Intent.getParcelableExtraCompatible(key: String?, clazz: Class<T>): T? {
