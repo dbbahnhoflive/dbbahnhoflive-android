@@ -22,10 +22,10 @@ import de.deutschebahn.bahnhoflive.ui.station.parking.DescriptionRenderer.Compan
 import de.deutschebahn.bahnhoflive.ui.station.parking.ParkingLotAdapter.ParkingFacilityViewHolder
 import de.deutschebahn.bahnhoflive.view.SingleSelectionManager
 
-internal class ParkingLotAdapter(
+class ParkingLotAdapter(
     context: Context,
     private val fragmentManager: FragmentManager,
-    val leftButtonClickListener: ButtonClickListener
+    private val leftButtonClickListener: (Context, ParkingFacility) -> Unit
 ) : RecyclerView.Adapter<ParkingFacilityViewHolder>() {
     private val briefDescriptionRenderer: BriefDescriptionRenderer = BriefDescriptionRenderer(
         context
@@ -92,7 +92,7 @@ internal class ParkingLotAdapter(
             when (v.id) {
                 R.id.button_left -> {
                     item?.let {
-                        leftButtonClickListener.onButtonClick(context, it)
+                        leftButtonClickListener(context, it)
                     }
                 }
                 R.id.button_middle -> {

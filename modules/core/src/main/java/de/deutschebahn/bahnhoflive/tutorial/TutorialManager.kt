@@ -7,6 +7,7 @@ package de.deutschebahn.bahnhoflive.tutorial
 
 import android.content.Context
 import android.util.Log
+import de.deutschebahn.bahnhoflive.BaseApplication
 import de.deutschebahn.bahnhoflive.tutorial.TutorialView.TutorialViewDelegate
 
 class TutorialManager private constructor(context : Context) {
@@ -306,10 +307,10 @@ class TutorialManager private constructor(context : Context) {
         @Volatile private var instance : TutorialManager? = null
 
         @JvmStatic
-        fun  getInstance(context: Context) : TutorialManager {
+        fun  getInstance() : TutorialManager {
 
             if (instance == null)
-                instance = TutorialManager(context)
+                instance = TutorialManager(BaseApplication.get())
 
             return instance!!
         }

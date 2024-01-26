@@ -10,10 +10,8 @@ import android.content.Intent
 import android.os.Bundle
 import android.view.View
 import androidx.fragment.app.activityViewModels
-import androidx.lifecycle.Observer
 import androidx.lifecycle.map
 import androidx.lifecycle.switchMap
-import de.deutschebahn.bahnhoflive.BaseApplication
 import de.deutschebahn.bahnhoflive.R
 import de.deutschebahn.bahnhoflive.analytics.TrackingManager
 import de.deutschebahn.bahnhoflive.tutorial.TutorialManager
@@ -84,8 +82,7 @@ class CouponListFragment : RecyclerFragment<CouponAdapter>(R.layout.fragment_rec
     override fun onStart() {
         super.onStart()
 
-        TutorialManager.getInstance(BaseApplication.get())
-            .markTutorialAsSeen(TutorialManager.Id.COUPONS)
+        TutorialManager.getInstance().markTutorialAsSeen(TutorialManager.Id.COUPONS)
 
     }
 }

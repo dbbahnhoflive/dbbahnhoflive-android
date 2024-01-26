@@ -218,7 +218,7 @@ public class TimetablesFragment extends TwoTabsFragment {
     void showTutorialIfNecessary() {
 
         final VersionManager versionManager = VersionManager.Companion.getInstance(requireActivity());
-        final TutorialManager tutorialManager = TutorialManager.getInstance(requireActivity());
+        final TutorialManager tutorialManager = TutorialManager.getInstance();
         final Tutorial tutorial = tutorialManager.getTutorialForView(TutorialManager.Id.TIMETABLE);
         final TutorialView mTutorialView =  requireView().findViewById(R.id.tab_tutorial_view);
 

@@ -9,7 +9,6 @@ package de.deutschebahn.bahnhoflive.ui.station;
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -21,7 +20,6 @@ import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
-import androidx.lifecycle.Lifecycle;
 
 import java.util.Objects;
 
@@ -73,10 +71,6 @@ public class HistoryFragment extends Fragment implements MapPresetProvider {
     }
 
     public void initialize(Activity activity) {
-//        if (getChildFragmentManager().findFragmentById(getId()) == null) {
-//            final RootProvider rootProvider = (RootProvider) activity;
-//            setRootFragment(rootProvider.createRootFragment(this));
-//        }
         final FragmentManager childFragmentManager = getChildFragmentManager();
         Fragment fragment = childFragmentManager.findFragmentById(getId());
         final RootProvider rootProvider = (RootProvider) activity;

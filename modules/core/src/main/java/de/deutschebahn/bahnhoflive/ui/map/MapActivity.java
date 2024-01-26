@@ -68,7 +68,7 @@ public class MapActivity extends AppCompatActivity implements
         super.onCreate(savedInstanceState);
 
         final Intent intent = getIntent();
-        DebugX.Companion.logIntent("MapActivity", intent);
+        DebugX.Companion.logIntentExtras("MapActivity", intent);
 
         if (intent.hasExtra(ARG_STATION)) {
             station = intent.getParcelableExtra(ARG_STATION);

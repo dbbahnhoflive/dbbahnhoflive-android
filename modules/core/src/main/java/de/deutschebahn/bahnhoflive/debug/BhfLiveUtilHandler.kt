@@ -39,7 +39,7 @@ class BhfLiveUtilHandler(val context: Context) {
             }
 
             "#gettippsstate" -> InMemoryDbProviderInterface.setValue(context, "tippsstate",
-                TutorialManager.getInstance(get()).doesUserWantToSeeTutorials().toString())
+                TutorialManager.getInstance().doesUserWantToSeeTutorials().toString())
             "#tipps" -> {
                 TutorialPreferenceStore.getInstance(get())
                     ?.setUserWantsTutorials(value.compareTo("true", true)==0)

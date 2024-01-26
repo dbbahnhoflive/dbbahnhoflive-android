@@ -47,7 +47,7 @@ public class SingleSelectionManager {
         this.selection = selection;
 
         // Mark tutorial as seen once user opens a cell
-        TutorialManager.getInstance(null).markTutorialAsSeen(type);
+        TutorialManager.getInstance().markTutorialAsSeen(type);
 
         notifyListeners();
 

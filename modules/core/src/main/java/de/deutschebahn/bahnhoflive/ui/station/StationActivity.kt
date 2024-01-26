@@ -64,7 +64,7 @@ import de.deutschebahn.bahnhoflive.ui.station.shop.ShopCategorySelectionFragment
 import de.deutschebahn.bahnhoflive.ui.station.timetable.TimetablesFragment
 import de.deutschebahn.bahnhoflive.ui.timetable.localtransport.DeparturesActivity
 import de.deutschebahn.bahnhoflive.ui.timetable.localtransport.HafasTimetableViewModel
-import de.deutschebahn.bahnhoflive.util.DebugX.Companion.logIntent
+import de.deutschebahn.bahnhoflive.util.DebugX.Companion.logIntentExtras
 import de.deutschebahn.bahnhoflive.util.GoogleLocationPermissions.Companion.startMapActivityIfConsent
 import de.deutschebahn.bahnhoflive.util.VersionManager.Companion.getInstance
 import de.deutschebahn.bahnhoflive.util.VersionManager.SoftwareVersion
@@ -104,7 +104,7 @@ class StationActivity : BaseActivity(), StationProvider, RootProvider, TrackingM
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        logIntent("StationActivity:onCreate", intent)
+        logIntentExtras("StationActivity:onCreate", intent)
         
         val fac: ViewModelProvider.AndroidViewModelFactory = object : ViewModelProvider.AndroidViewModelFactory(application) {
             override fun <T : ViewModel> create(modelClass: Class<T>): T {
@@ -241,7 +241,7 @@ class StationActivity : BaseActivity(), StationProvider, RootProvider, TrackingM
                             }
                         }
                         val versionManager = getInstance(this@StationActivity)
-                        val tutorialManager = TutorialManager.getInstance(this@StationActivity)
+                        val tutorialManager = TutorialManager.getInstance()
                         val tutorial =
                             tutorialManager.getTutorialForView(TutorialManager.Id.PUSH_GENERAL) // show only once
                         if (tutorial != null && !versionManager.pushWasEverUsed) {
@@ -371,7 +371,7 @@ class StationActivity : BaseActivity(), StationProvider, RootProvider, TrackingM
     private fun showTab(index: Int) {
         removeOverlayFragment()
         viewFlipper?.displayedChild = index
-        val tutorialManager = TutorialManager.getInstance(this@StationActivity)
+        val tutorialManager = TutorialManager.getInstance()
         tutorialManager.markTutorialAsIgnored(mTutorialView)
         when (index) {
             0 ->  // Bahnhofsübersicht overviewFragment
@@ -763,7 +763,7 @@ class StationActivity : BaseActivity(), StationProvider, RootProvider, TrackingM
 
     override fun onNewIntent(intent: Intent) {
         super.onNewIntent(intent)
-        logIntent("StationActivity:onNewIntent", intent)
+        logIntentExtras("StationActivity:onNewIntent", intent)
         exploitIntent(intent)
     }
 

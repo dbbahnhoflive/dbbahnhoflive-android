@@ -7,7 +7,6 @@
 package de.deutschebahn.bahnhoflive
 
 import android.content.Context
-import android.os.Build
 import androidx.multidex.MultiDexApplication
 import com.android.volley.Network
 import com.android.volley.RequestQueue
@@ -15,9 +14,6 @@ import com.android.volley.toolbox.BaseHttpStack
 import com.android.volley.toolbox.BasicNetwork
 import com.android.volley.toolbox.DiskBasedCache
 import com.android.volley.toolbox.HurlStack
-import com.google.android.gms.common.GooglePlayServicesNotAvailableException
-import com.google.android.gms.common.GooglePlayServicesRepairableException
-import com.google.android.gms.security.ProviderInstaller
 import de.deutschebahn.bahnhoflive.analytics.IssueTracker
 import de.deutschebahn.bahnhoflive.analytics.TrackingDelegate
 import de.deutschebahn.bahnhoflive.analytics.TrackingHttpStack
@@ -36,8 +32,6 @@ import de.deutschebahn.bahnhoflive.tutorial.TutorialManager
 import de.deutschebahn.bahnhoflive.util.font.FontUtil
 import de.deutschebahn.bahnhoflive.util.volley.TLSSocketFactory
 import java.io.File
-import java.security.KeyManagementException
-import java.security.NoSuchAlgorithmException
 import javax.net.ssl.SSLSocketFactory
 
 
@@ -70,19 +64,19 @@ abstract class BaseApplication(
 
 
         // SSL-Fix
-        if (Build.VERSION.SDK_INT in 17..20) {
-            try {
-                ProviderInstaller.installIfNeeded(applicationContext)
-            } catch (e: GooglePlayServicesRepairableException) {
-                e.printStackTrace()
-            } catch (e: GooglePlayServicesNotAvailableException) {
-                e.printStackTrace()
-            } catch (e: NoSuchAlgorithmException) {
-                e.printStackTrace()
-            } catch (e: KeyManagementException) {
-                e.printStackTrace()
-            }
-        }
+//        if (Build.VERSION.SDK_INT in 17..20) {
+//            try {
+//                ProviderInstaller.installIfNeeded(applicationContext)
+//            } catch (e: GooglePlayServicesRepairableException) {
+//                e.printStackTrace()
+//            } catch (e: GooglePlayServicesNotAvailableException) {
+//                e.printStackTrace()
+//            } catch (e: NoSuchAlgorithmException) {
+//                e.printStackTrace()
+//            } catch (e: KeyManagementException) {
+//                e.printStackTrace()
+//            }
+//        }
 
 
         issueTracker = onInitializeIssueTracker()
@@ -92,7 +86,7 @@ abstract class BaseApplication(
         val requestQueue = createRequestQueue()
         restHelper = RestHelper(requestQueue)
         poiSearchConfigurationProvider = PoiSearchConfigurationProvider(this)
-        TutorialManager.getInstance(this).seedTutorials()
+        TutorialManager.getInstance().seedTutorials()
 
         repositories = onCreateRepositories(restHelper)
         applicationServices = ApplicationServices(this, repositories)

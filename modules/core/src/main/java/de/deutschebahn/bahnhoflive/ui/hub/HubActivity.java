@@ -195,14 +195,14 @@ public class HubActivity extends BaseActivity implements TutorialFragment.Host {
         final VersionManager versionManager = VersionManager.Companion.getInstance(this); // IMPORTANT: has to be done BEFORE Tracking is initialized
 //        final long version = versionManager.getActualVersion().asVersionLong();
         if(versionManager.isFreshInstallation())
-            Log.d("cr", "FRESH");
+            Log.d("cr", "version is FRESH");
         else
-            Log.d("cr", "UPDATE");
+            Log.d("cr", "version is UPDATE");
 
         setContentView(R.layout.activity_hub);
         final Intent appIntent = getIntent();
 
-        DebugX.Companion.logIntent(this.getLocalClassName(), appIntent);
+        DebugX.Companion.logIntentExtras(this.getLocalClassName(), appIntent);
 
 
         final String packageName = getPackageName();

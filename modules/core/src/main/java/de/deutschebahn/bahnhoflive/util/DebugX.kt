@@ -5,6 +5,7 @@ import android.os.Build
 import android.os.Bundle
 import android.util.Log
 import com.android.volley.VolleyError
+import de.deutschebahn.bahnhoflive.BuildConfig
 import de.deutschebahn.bahnhoflive.repository.InternalStation
 import java.text.SimpleDateFormat
 import java.util.Calendar
@@ -67,21 +68,21 @@ class DebugX {
                 }
             }
 
-
         }
 
 
-        fun logIntent(className: String, intent: Intent?) {
-
+        fun logIntentExtras(className: String, intent: Intent?) {
+            intent?.let {
+                it.extras?.let {itBundle->
+                    if (BuildConfig.DEBUG) {
             Log.d("cr", "start logIntent $className")
-
-            intent?.let { it ->
-                logBundle(" ", it.extras)
-
-            }
+                        logBundle(" ", itBundle)
             Log.d("cr", "")
             Log.d("cr", "end logIntent $className")
             Log.d("cr", "")
+                    }
+                }
+            }
         }
 
         fun getFormattedDateTimeFromMillis(

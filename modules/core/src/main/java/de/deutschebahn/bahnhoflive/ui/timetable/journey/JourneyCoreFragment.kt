@@ -12,7 +12,7 @@ open class JourneyCoreFragment : Fragment() {
     fun showTutorialIfNecessary() {
 
         val versionManager = VersionManager.getInstance(requireContext())
-        val tutorialManager = TutorialManager.getInstance(requireContext())
+        val tutorialManager = TutorialManager.getInstance()
         val tutorial = tutorialManager.getTutorialForView(TutorialManager.Id.JOURNEY) // show only once
         val mTutorialView = requireActivity().findViewById<TutorialView>(R.id.tab_tutorial_view)
 

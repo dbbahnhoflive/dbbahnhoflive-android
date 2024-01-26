@@ -26,7 +26,7 @@ class StationSettingsTutorialItemViewHolder(
 
     override fun onBind(item: Any?) {
         super.onBind(item)
-        val manager = TutorialManager.getInstance(BaseApplication.get())
+        val manager = TutorialManager.getInstance()
         toggleView.isChecked = manager.doesUserWantToSeeTutorials()
     }
 

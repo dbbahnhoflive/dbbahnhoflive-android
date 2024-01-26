@@ -146,7 +146,7 @@ public class StationFragment extends androidx.fragment.app.Fragment implements
 
     @Override
     public void onStop() {
-        TutorialManager.getInstance(getActivity()).markTutorialAsIgnored(mTutorialView);
+        TutorialManager.getInstance().markTutorialAsIgnored(mTutorialView);
         lastChangeTimer.cancelTimer();
         super.onStop();
     }
@@ -368,7 +368,7 @@ public class StationFragment extends androidx.fragment.app.Fragment implements
         largeTitleView = appBar.findViewById(R.id.large_title);
 
         mTutorialView = getActivity().findViewById(R.id.tab_tutorial_view);
-        final TutorialManager tutorialManager = TutorialManager.getInstance(getActivity());
+        final TutorialManager tutorialManager = TutorialManager.getInstance();
         if (!tutorialManager.showTutorialIfNecessary(mTutorialView, "h1")) {
             tutorialManager.showTutorialIfNecessary(mTutorialView, TutorialManager.Id.POI_SEARCH);
         }
@@ -591,7 +591,7 @@ public class StationFragment extends androidx.fragment.app.Fragment implements
 
         stationViewModel.getHasCouponsAndShopsLiveData().observe(getViewLifecycleOwner(), hasCoupons -> {
             if (hasCoupons != null && hasCoupons && !mTutorialView.mIsVisible) {
-                final TutorialManager tutorialManager = TutorialManager.getInstance(getActivity());
+                final TutorialManager tutorialManager = TutorialManager.getInstance();
                 tutorialManager.showTutorialIfNecessary(mTutorialView, TutorialManager.Id.COUPONS);
             }
         });

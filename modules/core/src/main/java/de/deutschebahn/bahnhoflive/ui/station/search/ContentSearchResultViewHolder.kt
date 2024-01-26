@@ -7,7 +7,6 @@
 package de.deutschebahn.bahnhoflive.ui.station.search
 
 import android.view.View
-import de.deutschebahn.bahnhoflive.BaseApplication
 import de.deutschebahn.bahnhoflive.analytics.TrackingManager
 import de.deutschebahn.bahnhoflive.databinding.ItemContentSearchBinding
 import de.deutschebahn.bahnhoflive.tutorial.TutorialManager
@@ -24,7 +23,7 @@ class ContentSearchResultViewHolder(
     private val onClickListener = View.OnClickListener { view ->
         item?.let { item ->
             item.onClickListener?.apply {
-                TutorialManager.getInstance(BaseApplication.get())
+                TutorialManager.getInstance()
                     .markTutorialAsSeen(TutorialManager.Id.POI_SEARCH)
                 track(
                     TrackingManager.UiElement.POI_SEARCH_QUERY, mapOf(

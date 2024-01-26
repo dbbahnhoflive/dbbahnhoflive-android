@@ -8,6 +8,7 @@ package de.deutschebahn.bahnhoflive.ui.hub
 
 import android.location.Location
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -28,11 +29,6 @@ import de.deutschebahn.bahnhoflive.util.getParcelableCompatible
 
 class NearbyDeparturesFragment : androidx.fragment.app.Fragment(), Permission.Listener,
     androidx.swiperefreshlayout.widget.SwipeRefreshLayout.OnRefreshListener {
-
-    val STATE_ASK_FOR_PERMISSION = "askForPermission"
-//    val MIN_NEARBY_DEPARTURES = 3
-//    val MAX_NEARBY_DEPARTURES_DISTANCE = 2f
-    val STATE_LATEST_LOCATION = "latestLocation"
 
     private val trackingManager = TrackingManager()
 
@@ -58,6 +54,7 @@ class NearbyDeparturesFragment : androidx.fragment.app.Fragment(), Permission.Li
         super.onCreate(savedInstanceState)
 
         val applicationServices = BaseApplication.get().applicationServices
+
         nearbyDeparturesAdapter = NearbyDeparturesAdapter(
             lifecycleScope,
             this,
@@ -71,9 +68,11 @@ class NearbyDeparturesFragment : androidx.fragment.app.Fragment(), Permission.Li
                                                     selectedNearbyItem : NearbyHafasStationItem?,
                                                     selection: Int ->
                 nearbyDeparturesAdapter?.let {
-                    cyclicTimetableCollector.changeTimetableSource(selectedTimetableCollector,
+                    cyclicTimetableCollector.changeTimetableSource(
+                        selectedTimetableCollector,
                         selectedNearbyItem?.hafasStationSearchResult?.timetable,
-                            it, selection)
+                        it, selection
+                    )
                 }
             }
         )
@@ -130,9 +129,18 @@ class NearbyDeparturesFragment : androidx.fragment.app.Fragment(), Permission.Li
                 setOnRefreshListener(this@NearbyDeparturesFragment)
             }
 
+
+        }.root
+
+
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+
+
             hubViewModel.nearbyStopPlacesLiveData.observe(viewLifecycleOwner) {
                 nearbyDeparturesContainerHolder?.run {
                     if (it?.isNotEmpty() == true) {
+                    Log.d("cr", "showContent")
                         showContent()
                     } else {
                         showEmpty()
@@ -152,7 +160,9 @@ class NearbyDeparturesFragment : androidx.fragment.app.Fragment(), Permission.Li
                 .observe(viewLifecycleOwner, androidx.lifecycle.Observer {
                     if (it == LoadingStatus.BUSY) nearbyDeparturesContainerHolder?.showProgress()
                 })
-        }.root
+
+
+    }
 
     override fun onDestroyView() {
         viewBinding = null
@@ -230,7 +240,7 @@ class NearbyDeparturesFragment : androidx.fragment.app.Fragment(), Permission.Li
         }
     }
 
-    fun updateLocation(forceUpdate: Boolean) {
+    private fun updateLocation(forceUpdate: Boolean) {
         if (!locationPermission.isGranted) {
             refreshLayout?.isRefreshing = false
 
@@ -264,6 +274,13 @@ class NearbyDeparturesFragment : androidx.fragment.app.Fragment(), Permission.Li
 
         outState.putBoolean(STATE_ASK_FOR_PERMISSION, askForPermission)
         outState.putParcelable(STATE_LATEST_LOCATION, hubViewModel.locationLiveData.value)
+    }
+
+    companion object {
+        const val STATE_ASK_FOR_PERMISSION = "askForPermission"
+        //    val MIN_NEARBY_DEPARTURES = 3
+        //    val MAX_NEARBY_DEPARTURES_DISTANCE = 2f
+        const val STATE_LATEST_LOCATION = "latestLocation"
     }
 
 }

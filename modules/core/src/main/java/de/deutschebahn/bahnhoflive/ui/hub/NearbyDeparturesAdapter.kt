@@ -54,7 +54,7 @@ internal class NearbyDeparturesAdapter(
             oldItem: NearbyStationItem,
             newItem: NearbyStationItem
         ): Boolean {
-            return oldItem.equals(newItem)
+            return oldItem == newItem
         }
     }
 ) {
@@ -116,6 +116,11 @@ internal class NearbyDeparturesAdapter(
     fun setData(stopPlaces: List<StopPlace>?) {
         clearSelection()
 
+
+        if(stopPlaces!=null)
+            Log.d("cr", "submitList : ${stopPlaces.size}")
+        else
+            Log.d("cr", "submitList : EMPTY")
 
         submitList(stopPlaces?.mapNotNull { stopPlace ->
             when {

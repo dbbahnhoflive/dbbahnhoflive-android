@@ -538,7 +538,7 @@ public class MapOverlayFragment extends Fragment implements OnMapReadyCallback, 
             public void onScrollStateChanged(RecyclerView recyclerView, int scrollState) {
                 if (scrollState != RecyclerView.SCROLL_STATE_DRAGGING) {
 
-                    TutorialManager.getInstance(getActivity()).showTutorialIfNecessary(mTutorialView, TutorialManager.Id.MAP);
+                    TutorialManager.getInstance().showTutorialIfNecessary(mTutorialView, TutorialManager.Id.MAP);
                     getTrackingManager().track(TrackingManager.TYPE_ACTION, TrackingManager.Screen.F1, TrackingManager.Action.SCROLL, TrackingManager.UiElement.POIS);
 
                     flyoutSettled(scrollState==RecyclerView.SCROLL_STATE_SETTLING);
@@ -567,7 +567,7 @@ public class MapOverlayFragment extends Fragment implements OnMapReadyCallback, 
             @Override
             public void onChanged(Boolean tracksAvailable) {
                 if (tracksAvailable != null && tracksAvailable) {
-                    if (TutorialManager.getInstance(getActivity()).showTutorialIfNecessary(mTutorialView, TutorialManager.Id.MAP_TRACK_DEPARTURES)) {
+                    if (TutorialManager.getInstance().showTutorialIfNecessary(mTutorialView, TutorialManager.Id.MAP_TRACK_DEPARTURES)) {
 //                        hideFlyouts();
                     }
                 }
