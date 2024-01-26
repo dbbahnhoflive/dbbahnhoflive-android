@@ -81,7 +81,7 @@ import java.util.*
 import java.util.concurrent.Executors
 
 class BackNavigationData(var navigateTo: Boolean,
-                         val stationToShow : Station,
+                         val stationToShow : Station?,
                          val stationToNavigateTo : Station,
                          val trainInfo:TrainInfo?,
                          val hafasStation: HafasStation?,

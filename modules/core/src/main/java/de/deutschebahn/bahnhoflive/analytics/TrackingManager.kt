@@ -259,15 +259,15 @@ open class TrackingManager(activity: ComponentActivity? = null) {
     }
 
     companion object {
-        val TAG = TrackingManager::class.java.simpleName
-        const val TRACK_KEY_STATION_MAP = "station_map"
-        const val TRACK_KEY_SHOPPEN_SCHLEMMEN = "shoppen_schlemmen"
-        const val TRACK_KEY_NEWS_EVENTS = "news_events"
-        const val TRACK_KEY_CONNECTION = "connection"
-        const val TRACK_KEY_FEEDBACK = "feedback"
-        const val TRACK_KEY_MAP_FULL = "map_full"
-        const val TRACK_KEY_TIMETABLE = "timetable"
-        const val EXTRA_TRACKING_TAG = "trackingTag"
+        val TAG: String = TrackingManager::class.java.simpleName
+//        const val TRACK_KEY_STATION_MAP = "station_map"
+//        const val TRACK_KEY_SHOPPEN_SCHLEMMEN = "shoppen_schlemmen"
+//        const val TRACK_KEY_NEWS_EVENTS = "news_events"
+//        const val TRACK_KEY_CONNECTION = "connection"
+//        const val TRACK_KEY_FEEDBACK = "feedback"
+//        const val TRACK_KEY_MAP_FULL = "map_full"
+//        const val TRACK_KEY_TIMETABLE = "timetable"
+        private const val EXTRA_TRACKING_TAG = "trackingTag"
 
         @JvmStatic
         fun putTrackingTag(bundle: Bundle, trackingTag: String?) {

@@ -58,7 +58,7 @@ class ElevatorStatusListsFragment : TwoTabsFragment(R.string.facilityStatus_over
         // Show tutorial
         // 2 possible d1_aufzuege (old) or new (2335) ELEVATORS_PUSH
 
-        val tutorialManager = TutorialManager.getInstance(activity)
+        val tutorialManager = TutorialManager.getInstance(requireContext())
 
         val tutorial = tutorialManager.getTutorialForView(TutorialManager.Id.PUSH_ELEVATORS) // show only once
 
@@ -114,7 +114,7 @@ class ElevatorStatusListsFragment : TwoTabsFragment(R.string.facilityStatus_over
         if(mTutorialView?.currentlyVisibleTutorial?.id==TutorialManager.Id.PUSH_ELEVATORS)
             mTutorialView?.currentlyVisibleTutorial?.closedByUser=true // show only 1 time
 
-        TutorialManager.getInstance(activity).markTutorialAsIgnored(mTutorialView)
+        TutorialManager.getInstance(requireContext()).markTutorialAsIgnored(mTutorialView)
         super.onStop()
     }
 

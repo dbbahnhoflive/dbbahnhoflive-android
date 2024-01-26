@@ -8,6 +8,8 @@ package de.deutschebahn.bahnhoflive.util
 
 import android.content.Context
 import android.content.Intent
+import android.os.Build
+import android.os.Bundle
 import android.util.Log
 import kotlin.math.abs
 
@@ -33,4 +35,23 @@ fun Intent.isOlderThan(seconds: Int): Boolean {
     val timeDiff = abs(System.currentTimeMillis() - creationTime)
     val ret = (timeDiff > seconds.toLong() * 1000L)
     return ret
+}
+
+fun <T> Intent.getParcelableExtraCompatible(key: String?, clazz: Class<T>): T? {
+    // The reason for not using <T extends Parcelable> is because the caller could provide a
+    // super class to restrict the children that doesn't implement Parcelable itself while the
+    // children do, more details at b/210800751 (same reasoning applies here).
+    return try {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU)
+            this.getParcelableExtra(
+                key,
+                clazz
+            )
+        else {
+            @Suppress("DEPRECATION")
+            this.getParcelableExtra(key)
+        }
+    } catch (_: Exception) {
+        null
+    }
 }

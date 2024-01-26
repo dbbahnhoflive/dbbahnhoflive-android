@@ -137,7 +137,7 @@ dependencies {
     implementation 'com.google.android.flexbox:flexbox:3.0.0'
     implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"
 
-    implementation 'androidx.webkit:webkit:1.9.0'
+    implementation 'androidx.webkit:webkit:1.10.0'
 
     final lifecycleLibraryVersion = '2.7.0'
     implementation "androidx.lifecycle:lifecycle-common-java8:$lifecycleLibraryVersion"

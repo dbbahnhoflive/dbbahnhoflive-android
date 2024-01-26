@@ -196,7 +196,7 @@ class HubFragment : androidx.fragment.app.Fragment() {
 
     override fun onStop() {
         viewBinding?.run {
-            TutorialManager.getInstance(activity).markTutorialAsIgnored(hubTutorialView)
+            TutorialManager.getInstance(requireContext()).markTutorialAsIgnored(hubTutorialView)
         }
 
         super.onStop()

@@ -54,12 +54,10 @@ public class TimetablesFragment extends TwoTabsFragment {
     @Override
     protected void showFragment(int position) {
         final TrackingManager trackingManager = TrackingManager.fromActivity(getActivity());
-        switch (position) {
-            case 0:
+        if (position == 0) {
                 trackTap(trackingManager, TrackingManager.UiElement.TOGGLE_DB);
                 showDbFragment();
-                break;
-            default:
+        } else {
                 trackTap(trackingManager, TrackingManager.UiElement.TOGGLE_OEPNV);
                 showLocalTransportFragment();
         }
@@ -102,8 +100,6 @@ public class TimetablesFragment extends TwoTabsFragment {
 
     public static final String TAG = TimetablesFragment.class.getSimpleName();
 
-    private List<TrainInfo> departureTrainInfos;
-
 
     public void onUpdateRISTimetables(List<RISTimetable> timetables) {
         if (timetables == null) {
@@ -123,7 +119,6 @@ public class TimetablesFragment extends TwoTabsFragment {
 
         Collections.sort(departureTrainInfos, new TrainInfo.Comparator(TrainEvent.DEPARTURE));
 
-        this.departureTrainInfos = departureTrainInfos;
     }
 
 
