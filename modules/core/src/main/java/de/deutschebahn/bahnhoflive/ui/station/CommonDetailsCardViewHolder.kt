@@ -6,41 +6,27 @@
 package de.deutschebahn.bahnhoflive.ui.station
 
 import android.view.View
-import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.TextView
 import androidx.annotation.StringRes
+import androidx.core.content.ContextCompat
 import de.deutschebahn.bahnhoflive.R
 import de.deutschebahn.bahnhoflive.ui.Status
 import de.deutschebahn.bahnhoflive.util.setAccessibilityText
 import de.deutschebahn.bahnhoflive.view.SelectableItemViewHolder
 import de.deutschebahn.bahnhoflive.view.SingleSelectionManager
 
-open class CommonDetailsCardViewHolder<T> : SelectableItemViewHolder<T> {
+open class CommonDetailsCardViewHolder<T>(
+    view: View,
+    singleSelectionManager: SingleSelectionManager?
+) : SelectableItemViewHolder<T>(
+    view,
+    singleSelectionManager
+) {
 
-    protected val titleView: TextView
-    protected val statusView: TextView
-    protected val iconView: ImageView
-
-//    @Deprecated("")
-//    constructor(
-//        parent: ViewGroup?,
-//        layout: Int,
-//        singleSelectionManager: SingleSelectionManager?
-//    ) : super(parent, layout, singleSelectionManager) {
-//        statusView = findTextView(R.id.status)
-//        titleView = findTextView(R.id.title)
-//        iconView = itemView.findViewById(R.id.icon)
-//    }
-
-    constructor(view: View, singleSelectionManager: SingleSelectionManager?) : super(
-        view,
-        singleSelectionManager
-    ) {
-        statusView = findTextView(R.id.status)
-        titleView = findTextView(R.id.title)
-        iconView = itemView.findViewById(R.id.icon)
-    }
+    protected val titleView: TextView = findTextView(R.id.title)
+    protected val statusView: TextView = findTextView(R.id.status)
+    protected val iconView: ImageView = itemView.findViewById(R.id.icon)
 
     protected fun setStatus(status: Status, @StringRes text: Int) {
         setStatus(status, text, null)
@@ -49,13 +35,13 @@ open class CommonDetailsCardViewHolder<T> : SelectableItemViewHolder<T> {
     private fun setStatus(
         status: Status,
         @StringRes text: Int,
-        contentDescription: CharSequence?
+        contentDescription: String?
     ) {
         statusView.setText(text)
         applyStatus(status, contentDescription)
     }
 
-    protected fun setStatus(status: Status, text: CharSequence?) {
+    protected fun setStatus(status: Status, text: String?) {
         setStatus(status, text, null, null)
     }
 
@@ -71,7 +57,7 @@ open class CommonDetailsCardViewHolder<T> : SelectableItemViewHolder<T> {
     }
 
     private fun applyStatus(status: Status, contentDescription: CharSequence?) {
-        statusView.setTextColor(statusView.context.resources.getColor(status.color))
+        statusView.setTextColor(ContextCompat.getColor(itemView.context, status.color))
         statusView.setCompoundDrawablesWithIntrinsicBounds(status.icon, 0, 0, 0)
         statusView.contentDescription = contentDescription
     }

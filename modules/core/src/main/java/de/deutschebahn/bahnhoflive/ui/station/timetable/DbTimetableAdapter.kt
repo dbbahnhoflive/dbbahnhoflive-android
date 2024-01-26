@@ -248,7 +248,6 @@ internal class DbTimetableAdapter(
                 trainInfo.departure
             ) else addPlatformAndTrainCategoryToUiFilter(trainInfo, trainInfo.arrival)
         }
-        if (selectedTrainInfos != null) {
             val now = System.currentTimeMillis()
             val filteredTrainInfos = ArrayList<TrainInfo>()
             for (selectedTrainInfo in selectedTrainInfos) {
@@ -275,16 +274,23 @@ internal class DbTimetableAdapter(
                 filteredTrainInfos.add(selectedTrainInfo)
             }
             this.filteredTrainInfos = filteredTrainInfos
-        }
         trainCategories.add(0, "Alle")
         tracks.add(0, "Alle")
         notifyDataSetChanged()
-        return selectedTrainInfos != null
+        return true
     }
 
     private val selectedTrainInfos: List<TrainInfo>
-        get() = if (timetable == null) emptyList() else if (trainEvent.isDeparture) timetable!!.departures else timetable!!.arrivals
-
+        get() {
+            return if (timetable == null) emptyList()
+            else {
+                timetable?.let {
+                    if (trainEvent.isDeparture)
+                        it.departures
+                    else it.arrivals
+                } ?: emptyList()
+            }
+        }
     private inner class TimetableHeaderViewHolder(
         parent: View,
         private val onFilterClickListener: View.OnClickListener
@@ -312,7 +318,8 @@ internal class DbTimetableAdapter(
 
         override fun onClick(v: View) {
             val id = v.id
-            if (id == R.id.departure) {
+            when (id) {
+                R.id.departure -> {
                 setTrainEvent(TrainEvent.DEPARTURE)
                 trackingManager?.track(
                     TrackingManager.TYPE_ACTION,
@@ -320,7 +327,8 @@ internal class DbTimetableAdapter(
                     TrackingManager.Action.TAP,
                     TrackingManager.UiElement.TOGGLE_ABFAHRT
                 )
-            } else if (id == R.id.arrival) {
+                }
+                R.id.arrival -> {
                 setTrainEvent(TrainEvent.ARRIVAL)
                 trackingManager?.track(
                     TrackingManager.TYPE_ACTION,
@@ -328,7 +336,8 @@ internal class DbTimetableAdapter(
                     TrackingManager.Action.TAP,
                     TrackingManager.UiElement.TOGGLE_ANKUNFT
                 )
-            } else if (id == R.id.filter) {
+                }
+                R.id.filter -> {
                 onFilterClickListener.onClick(v)
                 trackingManager?.track(
                     TrackingManager.TYPE_ACTION,
@@ -339,12 +348,14 @@ internal class DbTimetableAdapter(
             }
         }
     }
+    }
 
-    private fun setTrainEvent(trainEvent: TrainEvent) {
+    internal fun setTrainEvent(trainEvent: TrainEvent) {
         this.trainEvent = trainEvent
         applyFilters()
     }
 
+    @Suppress("UNUSED")
     fun setArrivals(arrivals: Boolean) {
         if (trainEvent.isDeparture == arrivals) {
             setTrainEvent(if (arrivals) TrainEvent.ARRIVAL else TrainEvent.DEPARTURE)

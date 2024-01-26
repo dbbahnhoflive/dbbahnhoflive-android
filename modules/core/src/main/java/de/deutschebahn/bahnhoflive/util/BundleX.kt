@@ -1,6 +1,5 @@
 package de.deutschebahn.bahnhoflive.util
 
-import android.location.Location
 import android.os.Build
 import android.os.Bundle
 

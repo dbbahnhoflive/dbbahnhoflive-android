@@ -7,14 +7,11 @@ package de.deutschebahn.bahnhoflive.ui.hub
 
 import android.location.Location
 import android.view.View
-import android.view.ViewGroup
 import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.MutableLiveData
-import de.deutschebahn.bahnhoflive.R
 import de.deutschebahn.bahnhoflive.analytics.TrackingManager
 import de.deutschebahn.bahnhoflive.backend.db.publictrainstation.DistanceCalculator
 import de.deutschebahn.bahnhoflive.backend.hafas.model.HafasStation
-import de.deutschebahn.bahnhoflive.databinding.CardNearbyDeparturesBinding
 import de.deutschebahn.bahnhoflive.ui.search.HafasStationSearchResult
 import de.deutschebahn.bahnhoflive.view.SingleSelectionManager
 

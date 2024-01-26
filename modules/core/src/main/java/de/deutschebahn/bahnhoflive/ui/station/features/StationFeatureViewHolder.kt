@@ -34,9 +34,9 @@ internal class StationFeatureViewHolder(
         }
     }
 
-    override fun onBind(stationFeature: StationFeature?) {
+    override fun onBind(item: StationFeature?) {
 
-        stationFeature?.let {
+        item?.let {
 
             val stationFeatureTemplate = it.stationFeatureTemplate
         iconView.setImageResource(stationFeatureTemplate.definition.icon)
