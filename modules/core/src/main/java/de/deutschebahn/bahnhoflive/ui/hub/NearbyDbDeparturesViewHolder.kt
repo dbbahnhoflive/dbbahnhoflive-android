@@ -5,9 +5,8 @@
  */
 package de.deutschebahn.bahnhoflive.ui.hub
 
-import android.view.ViewGroup
+import android.view.View
 import androidx.lifecycle.LifecycleOwner
-import de.deutschebahn.bahnhoflive.R
 import de.deutschebahn.bahnhoflive.analytics.TrackingManager
 import de.deutschebahn.bahnhoflive.repository.InternalStation
 import de.deutschebahn.bahnhoflive.repository.timetable.TimetableCollector
@@ -16,13 +15,13 @@ import de.deutschebahn.bahnhoflive.ui.search.StopPlaceSearchResult
 import de.deutschebahn.bahnhoflive.view.SingleSelectionManager
 
 internal class NearbyDbDeparturesViewHolder(
-    parent: ViewGroup?,
+    view: View,
     owner: LifecycleOwner?,
     singleSelectionManager: SingleSelectionManager?,
-    trackingManager: TrackingManager?
+    trackingManager: TrackingManager
 ) : DbDeparturesViewHolder(
-    parent, R.layout.card_nearby_departures, singleSelectionManager, owner,
-    trackingManager!!, null, TrackingManager.UiElement.ABFAHRT_NAEHE_BHF
+    view, owner, singleSelectionManager,
+    trackingManager, null, TrackingManager.UiElement.ABFAHRT_NAEHE_BHF
 ) {
     private val distanceViewHolder: DistanceViewHolder = DistanceViewHolder(itemView)
 

@@ -7,6 +7,7 @@
 package de.deutschebahn.bahnhoflive.ui.station.parking
 
 import android.content.Context
+import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
@@ -35,7 +36,8 @@ internal class ParkingLotAdapter(
         parent: ViewGroup,
         viewType: Int
     ): ParkingFacilityViewHolder {
-        return ParkingFacilityViewHolder(parent, selectionManager)
+        return ParkingFacilityViewHolder( LayoutInflater.from(parent.context).inflate(R.layout.card_expandable_parking_occupancy, parent, false),
+             selectionManager)
     }
 
     override fun onBindViewHolder(
@@ -58,11 +60,10 @@ internal class ParkingLotAdapter(
         get() = selectionManager.getSelectedItem(parkingFacilities)
 
     inner class ParkingFacilityViewHolder(
-        parent: ViewGroup?,
+        parent: View,
         selectionManager: SingleSelectionManager?
     ) : CommonDetailsCardViewHolder<ParkingFacility>(
         parent,
-        R.layout.card_expandable_parking_occupancy,
         selectionManager
     ), View.OnClickListener {
         private val descriptionView: TextView = findTextView(R.id.description)

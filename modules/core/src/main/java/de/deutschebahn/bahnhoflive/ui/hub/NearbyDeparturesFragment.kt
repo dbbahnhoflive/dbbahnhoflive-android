@@ -26,6 +26,7 @@ import de.deutschebahn.bahnhoflive.repository.timetable.CyclicTimetableCollector
 import de.deutschebahn.bahnhoflive.repository.timetable.TimetableCollector
 import de.deutschebahn.bahnhoflive.ui.LoadingContentDecorationViewHolder
 import de.deutschebahn.bahnhoflive.util.Cancellable
+import de.deutschebahn.bahnhoflive.util.getParcelableCompatible
 
 class NearbyDeparturesFragment : androidx.fragment.app.Fragment(), Permission.Listener,
     androidx.swiperefreshlayout.widget.SwipeRefreshLayout.OnRefreshListener {
@@ -83,14 +84,10 @@ class NearbyDeparturesFragment : androidx.fragment.app.Fragment(), Permission.Li
 
         if (savedInstanceState != null) {
             askForPermission = savedInstanceState.getBoolean(STATE_ASK_FOR_PERMISSION, false)
-            hubViewModel.locationLiveData.value =
-                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU)
-                    savedInstanceState.getParcelable(
+            hubViewModel.locationLiveData.value = savedInstanceState.getParcelableCompatible(
                         STATE_LATEST_LOCATION,
                         Location::class.java
                     )
-                else
-                    savedInstanceState.getParcelable(STATE_LATEST_LOCATION)
         } else {
             arguments?.let {
                 askForPermission = it.getBoolean(STATE_ASK_FOR_PERMISSION, false)

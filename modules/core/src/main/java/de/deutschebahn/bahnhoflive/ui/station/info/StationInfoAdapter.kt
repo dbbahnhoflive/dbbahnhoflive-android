@@ -2,6 +2,7 @@ package de.deutschebahn.bahnhoflive.ui.station.info
 
 import android.content.Intent
 import android.os.Build
+import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.LiveData
@@ -39,7 +40,7 @@ class StationInfoAdapter(
         viewType: Int
     ): CommonDetailsCardViewHolder<ServiceContent> = when (viewType) {
         VIEW_TYPE_STATION_COMPLAINT -> StationComplaintServiceContentViewHolder(
-            parent,
+            LayoutInflater.from(parent.context).inflate(R.layout.card_expandable_complaint, parent, false),
             singleSelectionManager,
             stationLiveData,
             whatsAppInstallationLiveData,

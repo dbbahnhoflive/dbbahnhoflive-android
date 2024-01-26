@@ -22,9 +22,9 @@ class NewsViewManager(
     private val newsAdapter: NewsAdapter = NewsAdapter()
 ) : Observer<List<News>> {
 
-    val pageIndicator : TabLayout? = containerView.findViewById<TabLayout>(R.id.newsPagerIndicator)
+    private val pageIndicator : TabLayout? = containerView.findViewById<TabLayout>(R.id.newsPagerIndicator)
 
-    val viewPager : ViewPager2? = containerView.findViewById<ViewPager2>(R.id.newsPager).apply {
+    private val viewPager : ViewPager2? = containerView.findViewById<ViewPager2>(R.id.newsPager).apply {
         adapter = newsAdapter
 
         pageIndicator?.let {

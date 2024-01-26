@@ -6,8 +6,11 @@
 
 package de.deutschebahn.bahnhoflive.ui.hub
 
+import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.lifecycle.LifecycleOwner
+import androidx.recyclerview.widget.RecyclerView
+import de.deutschebahn.bahnhoflive.R
 import de.deutschebahn.bahnhoflive.analytics.TrackingManager
 import de.deutschebahn.bahnhoflive.backend.hafas.model.HafasTimetable
 import de.deutschebahn.bahnhoflive.repository.timetable.TimetableCollector
@@ -23,7 +26,7 @@ class FavoritesAdapter(val owner: LifecycleOwner,
                            (selectedDbTimetableCollector : TimetableCollector?,
                             selectedHafasTimetable : HafasTimetable?,
                             selection:Int) -> Unit) :
-    androidx.recyclerview.widget.RecyclerView.Adapter<ViewHolder<out Any>>() {
+    RecyclerView.Adapter<ViewHolder<out Any>>() {
 
     val singleSelectionManager = SingleSelectionManager(this).apply {
         addListener {
@@ -60,28 +63,25 @@ class FavoritesAdapter(val owner: LifecycleOwner,
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder<out Any> {
 
-        val vh : ViewHolder<out Any>
-
-        when (viewType) {
-            0 -> vh = DbDeparturesViewHolder(
-                parent,
-                singleSelectionManager,
+        return when (viewType) {
+            0 -> DbDeparturesViewHolder(
+                LayoutInflater.from(parent.context).inflate(R.layout.card_departures, parent, false),
                 owner,
+                singleSelectionManager,
                 trackingManager,
                 null, //searchItemPickedListener,
                 TrackingManager.UiElement.ABFAHRT_FAVORITEN_BHF
             ) as ViewHolder<Any>
-             else -> vh = DeparturesViewHolder(
-                parent,
+             else -> DeparturesViewHolder(
+                 LayoutInflater.from(parent.context).inflate(R.layout.card_departures, parent, false),
                 owner,
                 singleSelectionManager,
                 trackingManager,
                 null,
                 TrackingManager.UiElement.ABFAHRT_FAVORITEN_OPNV
-            )
+            ) as ViewHolder<Any>
         }
 
-        return vh
     }
 
     override fun getItemCount() = favorites?.size ?: 0

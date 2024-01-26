@@ -13,7 +13,7 @@ import de.deutschebahn.bahnhoflive.ui.ViewHolder
 
 class DistanceViewHolder(view: View) : ViewHolder<Float>(view) {
 
-    val distanceView = view.findViewById<TextView>(R.id.distance)
+    private val distanceView = view.findViewById<TextView>(R.id.distance)
 
     override fun onBind(item: Float?) {
         super.onBind(item)

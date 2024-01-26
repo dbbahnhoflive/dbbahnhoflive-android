@@ -6,6 +6,7 @@
 
 package de.deutschebahn.bahnhoflive.ui.search;
 
+import android.view.LayoutInflater;
 import android.view.ViewGroup;
 
 import androidx.annotation.NonNull;
@@ -124,11 +125,15 @@ class StationSearchAdapter extends RecyclerView.Adapter<ViewHolder> {
         switch (viewType) {
             case 0:
             case 2:
-                return new DbDeparturesViewHolder(parent, singleSelectionManager, owner,
-                        trackingManager, searchItemPickedListener, TrackingManager.UiElement.ABFAHRT_SUCHE_BHF);
-            case 1:
-                return new DeparturesViewHolder(parent, owner, singleSelectionManager, trackingManager,
+                return new DbDeparturesViewHolder(LayoutInflater.from(parent.getContext()).inflate(R.layout.card_departures, parent, false),
+                        owner, singleSelectionManager, trackingManager,
+                        searchItemPickedListener, TrackingManager.UiElement.ABFAHRT_SUCHE_BHF);
+            case 1: {
+
+                return new DeparturesViewHolder(LayoutInflater.from(parent.getContext()).inflate(R.layout.card_departures, parent, false),
+                        owner, singleSelectionManager, trackingManager,
                         searchItemPickedListener, TrackingManager.UiElement.ABFAHRT_SUCHE_OPNV);
+            }
             default:
                 return new StationSearchViewHolder(parent, R.layout.card_station_suggestion);
         }

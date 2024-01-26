@@ -8,11 +8,13 @@ package de.deutschebahn.bahnhoflive.ui.hub
 
 import android.location.Location
 import android.util.Log
+import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.MutableLiveData
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
+import de.deutschebahn.bahnhoflive.R
 import de.deutschebahn.bahnhoflive.analytics.TrackingManager
 import de.deutschebahn.bahnhoflive.backend.db.ris.model.StopPlace
 import de.deutschebahn.bahnhoflive.backend.hafas.model.HafasStation
@@ -37,8 +39,8 @@ internal class NearbyDeparturesAdapter(
     private val favoriteStationsStore: FavoriteStationsStore<InternalStation>,
     private val timetableRepository: TimetableRepository,
     private val locationLiveData : MutableLiveData<Location>,
-    val trackingManager: TrackingManager,
-    startOrStopCyclicLoadingOfTimetable: (timetableCollector: TimetableCollector?,
+    private val trackingManager: TrackingManager,
+    private val startOrStopCyclicLoadingOfTimetable: (timetableCollector: TimetableCollector?,
                                           selectedNearbyItem : NearbyHafasStationItem?,
                                           selection: Int) -> Unit
 ) : ListAdapter<NearbyStationItem, RecyclerView.ViewHolder>(
@@ -91,7 +93,8 @@ internal class NearbyDeparturesAdapter(
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder<*> =
         when (viewType) {
-            1 -> NearbyDeparturesViewHolder(parent, owner, singleSelectionManager, trackingManager, locationLiveData)
+            1 -> NearbyDeparturesViewHolder( LayoutInflater.from(parent.context).inflate(R.layout.card_nearby_departures, parent, false),
+                owner, singleSelectionManager, trackingManager, locationLiveData)
             else -> NearbyDbDeparturesViewHolder(parent, owner,singleSelectionManager,trackingManager
             )
         }

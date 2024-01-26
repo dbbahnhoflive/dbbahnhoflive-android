@@ -27,7 +27,7 @@ import de.deutschebahn.bahnhoflive.util.Collections;
 public class ReducedDbDeparturesViewHolder extends ViewHolder<Timetable> {
     private final ArrayList<TrainInfoOverviewViewHolder> trainInfoOverviewViewHolders;
     private final LoadingContentDecorationViewHolder loadingContentDecorationViewHolder;
-    private final LifecycleOwner owner;
+//    private final LifecycleOwner owner;
 
     public void showProgress() {
         loadingContentDecorationViewHolder.showProgress();
@@ -41,7 +41,7 @@ public class ReducedDbDeparturesViewHolder extends ViewHolder<Timetable> {
         super(view);
 
         loadingContentDecorationViewHolder = new LoadingContentDecorationViewHolder(itemView, viewAnimatorId, R.id.error_message, R.id.empty_message);
-        this.owner = owner;
+//        this.owner = owner;
         final ViewGroup departuresContainer = itemView.findViewById(R.id.departures);
 
         trainInfoOverviewViewHolders = new ArrayList<>();

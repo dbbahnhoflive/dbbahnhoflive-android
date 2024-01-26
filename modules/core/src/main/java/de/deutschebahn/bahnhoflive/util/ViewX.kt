@@ -12,7 +12,6 @@ import android.view.accessibility.AccessibilityNodeInfo
 import androidx.core.view.AccessibilityDelegateCompat
 import androidx.core.view.ViewCompat
 import androidx.core.view.accessibility.AccessibilityNodeInfoCompat
-import de.deutschebahn.bahnhoflive.R
 
 
 /**

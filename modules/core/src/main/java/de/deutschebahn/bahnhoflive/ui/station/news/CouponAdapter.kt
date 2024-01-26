@@ -14,7 +14,7 @@ import de.deutschebahn.bahnhoflive.view.ItemClickListener
 import de.deutschebahn.bahnhoflive.view.SingleSelectionManager
 import de.deutschebahn.bahnhoflive.view.inflater
 
-class CouponAdapter(val itemClickListener: ItemClickListener<News>) :
+class CouponAdapter(private val itemClickListener: ItemClickListener<News>) :
     RecyclerView.Adapter<CouponViewHolder>() {
 
     val singleSelectionManager = SingleSelectionManager(this)

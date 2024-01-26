@@ -7,24 +7,21 @@ package de.deutschebahn.bahnhoflive.ui.station.shop
 
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
+import de.deutschebahn.bahnhoflive.R
+import de.deutschebahn.bahnhoflive.util.inflateLayout
 import de.deutschebahn.bahnhoflive.view.SingleSelectionManager
 
-class ShopAdapter(category: ShopCategory) : RecyclerView.Adapter<ShopViewHolder>() {
-    private val category: ShopCategory
+class ShopAdapter(val category: ShopCategory) : RecyclerView.Adapter<ShopViewHolder>() {
     private var shops: List<Shop>? = null
-    private val selectionManager: SingleSelectionManager
+    private val selectionManager: SingleSelectionManager = SingleSelectionManager(this)
 
-    init {
-        selectionManager = SingleSelectionManager(this)
-        this.category = category
-    }
 
     fun setData(data: List<Shop>?) {
         shops = data
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ShopViewHolder {
-        return ShopViewHolder(parent, selectionManager)
+        return ShopViewHolder( parent.inflateLayout(R.layout.card_expandable_venue), selectionManager)
     }
 
     override fun onBindViewHolder(holder: ShopViewHolder, position: Int) {

@@ -91,24 +91,21 @@ class OverviewElevatorStatusFragment : Fragment(), MapPresetProvider {
         return thisAdapter
     }
 
-//    protected fun setAdapter(adapter: ElevatorStatusAdapter?) {
-//        this.thisAdapter = adapter
-//        applyAdapter()
-//    }
-
     internal class StationElevatorStatusAdapter(val trackingManager: TrackingManager) : ElevatorStatusAdapter()
     {
         override var data: List<FacilityStatus>?
             get() = super.data
-            set(facilityStatuses) {
-                if (facilityStatuses != null) {
-                    Collections.sort(facilityStatuses) { o1: FacilityStatus?, o2: FacilityStatus? ->
+            set(value) {
+                var mutableFacilityStatusList : MutableList<FacilityStatus>? = null
+                if (value != null) {
+                    mutableFacilityStatusList = value.toMutableList()
+                    mutableFacilityStatusList.sortWith(Comparator { o1: FacilityStatus, o2: FacilityStatus ->
                         val status1 = Status.of(o1)
                         val status2 = Status.of(o2)
                         status2.ordinal - status1.ordinal
+                    })
                     }
-                }
-                super.data = facilityStatuses
+                super.data = mutableFacilityStatusList
             }
 
 
@@ -118,7 +115,9 @@ class OverviewElevatorStatusFragment : Fragment(), MapPresetProvider {
             facilityPushManager: FacilityPushManager
         ): FacilityStatusViewHolder {
             return object :
-                FacilityStatusViewHolder(parent, selectionManager, trackingManager, facilityPushManager) {
+                FacilityStatusViewHolder( LayoutInflater.from(parent.context).inflate(R.layout.card_expandable_facility_status,
+                                           parent, false),
+                                            selectionManager, trackingManager, facilityPushManager) {
 
                 override fun onBookmarkChanged(isChecked: Boolean) {
                     bindBookmarkedIndicator(isChecked)
@@ -126,6 +125,8 @@ class OverviewElevatorStatusFragment : Fragment(), MapPresetProvider {
 
                 override fun isSelected(): Boolean {
 //                     true: expanded
+
+
                     item?.let {
                         return  facilityPushManager.getBookmarked(
                                     itemView.context,
@@ -139,7 +140,7 @@ class OverviewElevatorStatusFragment : Fragment(), MapPresetProvider {
     }
 
     companion object {
-        val TAG = OverviewElevatorStatusFragment::class.java.simpleName
+        val TAG: String = OverviewElevatorStatusFragment::class.java.simpleName
         fun create(): OverviewElevatorStatusFragment {
             return OverviewElevatorStatusFragment()
         }

@@ -28,6 +28,7 @@ import androidx.fragment.app.Fragment
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
 import de.deutschebahn.bahnhoflive.ui.map.Content
 import de.deutschebahn.bahnhoflive.ui.map.content.rimap.RimapFilter
+import de.deutschebahn.bahnhoflive.util.inflateLayout
 
 
 class BookmarkedElevatorStatusFragment : Fragment(), SwipeRefreshLayout.OnRefreshListener,
@@ -43,7 +44,10 @@ class BookmarkedElevatorStatusFragment : Fragment(), SwipeRefreshLayout.OnRefres
                 facilityPushManager: FacilityPushManager
             ): FacilityStatusViewHolder {
                 return object :
-                    FacilityStatusViewHolder(parent, selectionManager, fromActivity(activity), facilityPushManager) {
+                    FacilityStatusViewHolder(parent.inflateLayout(R.layout.card_expandable_facility_status),
+                        selectionManager, fromActivity(activity), facilityPushManager
+                    ) {
+
 
                     override fun onBookmarkChanged(isChecked: Boolean) {
                         resetAdapter()
@@ -84,7 +88,6 @@ class BookmarkedElevatorStatusFragment : Fragment(), SwipeRefreshLayout.OnRefres
 
     fun resetAdapter() {
         val savedFacilities: List<FacilityStatus> = getSavedFacilities(requireContext())
-        getAdapter().data = savedFacilities
         adapter.data = savedFacilities
     }
 
@@ -132,7 +135,7 @@ class BookmarkedElevatorStatusFragment : Fragment(), SwipeRefreshLayout.OnRefres
         super.onDestroyView()
     }
 
-    protected fun applyAdapter() {
+     private fun applyAdapter() {
         recyclerView?.let {
             it.adapter = adapter
         }
@@ -154,7 +157,7 @@ class BookmarkedElevatorStatusFragment : Fragment(), SwipeRefreshLayout.OnRefres
     }
 
     companion object {
-        val TAG = BookmarkedElevatorStatusFragment::class.java.simpleName
+        val TAG: String = BookmarkedElevatorStatusFragment::class.java.simpleName
         fun create(): BookmarkedElevatorStatusFragment {
             return BookmarkedElevatorStatusFragment()
         }

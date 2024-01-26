@@ -10,15 +10,18 @@ import androidx.core.view.isVisible
 import de.deutschebahn.bahnhoflive.R
 import de.deutschebahn.bahnhoflive.ui.ViewHolder
 
-open class SelectableItemViewHolder<T>(
+open class LongClickSelectableItemViewHolder<T>(
     view: View,
-    private val singleSelectionManager: SingleSelectionManager?
+    val singleSelectionManager: SingleSelectionManager?
 ) : ViewHolder<T>(view) {
 
     private val expandableContainer: View = itemView.findViewById(R.id.details)
 
     init {
-        itemView.setOnClickListener { toggleSelection() }
+        itemView.setOnLongClickListener {
+            toggleSelection()
+            true
+        }
     }
 
 
@@ -27,20 +30,22 @@ open class SelectableItemViewHolder<T>(
         expandableContainer.isVisible = isSelected()
     }
 
-    open fun isSelected(): Boolean {
+    fun isSelected(): Boolean {
         return singleSelectionManager?.isSelected(absoluteAdapterPosition) ?: true
     }
 
-    fun toggleSelection() {
+    private fun toggleSelection() {
         if (singleSelectionManager == null) {
             if (expandableContainer.visibility == View.GONE) expandableContainer.visibility =
                 View.VISIBLE else expandableContainer.visibility = View.GONE
         } else {
             val position = absoluteAdapterPosition
-            if (singleSelectionManager.isSelected(position)) {
-                singleSelectionManager.clearSelection()
-            } else {
-                singleSelectionManager.selection = position
+            singleSelectionManager.let {
+                if (it.isSelected(position)) {
+                    it.clearSelection()
+                } else {
+                    it.selection = position
+                }
             }
         }
     }

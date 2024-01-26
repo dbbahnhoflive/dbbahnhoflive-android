@@ -8,13 +8,13 @@ package de.deutschebahn.bahnhoflive.ui.station.shop
 
 import android.text.TextUtils
 import android.view.View
-import android.view.ViewGroup
 import com.android.volley.toolbox.NetworkImageView
 import de.deutschebahn.bahnhoflive.R
 import de.deutschebahn.bahnhoflive.ui.Status
 import de.deutschebahn.bahnhoflive.view.SingleSelectionManager
 
-class ShopViewHolder(parent: ViewGroup, singleSelectionManager: SingleSelectionManager) : ShoppingViewHolder<Shop>(parent, R.layout.card_expandable_venue, singleSelectionManager) {
+open class ShopViewHolder(parent: View, singleSelectionManager: SingleSelectionManager) :
+    ShoppingViewHolder<Shop>(parent, singleSelectionManager) {
 
     private val networkIconView: NetworkImageView = itemView.findViewById(R.id.icon)
     private val paymentOptionsContainer: View = itemView.findViewById(R.id.payment_options_container)
@@ -50,11 +50,11 @@ class ShopViewHolder(parent: ViewGroup, singleSelectionManager: SingleSelectionM
         threeButtonsViewHolder.reset()
 
         val matcher = ShoppingViewHolder.PHONE_PATTERN.matcher(item.phone ?: "")
-        if (matcher.find()) {
+            phoneString = if (matcher.find()) {
             threeButtonsViewHolder.enableButton(R.id.button_right)
-            phoneString = matcher.group()
+                matcher.group()
         } else {
-            phoneString = null
+                null
         }
 
 //        webString = item.web?.trim { it <= ' ' }?.also {
@@ -67,10 +67,12 @@ class ShopViewHolder(parent: ViewGroup, singleSelectionManager: SingleSelectionM
         }
 
 
-        emailString = item.email ?: ""
-        if (emailString.length > 2) {
-            threeButtonsViewHolder.enableButton(R.id.button_middle)
-        }
+            emailString = item.email ?: ""
+            emailString?.let {
+                if (it.length > 2) {
+                    threeButtonsViewHolder.enableButton(R.id.button_middle)
+                }
+            }
 
         bindPayments(item)
 
@@ -87,14 +89,14 @@ class ShopViewHolder(parent: ViewGroup, singleSelectionManager: SingleSelectionM
     private fun getStatus(open: Boolean) =
         if (open) R.string.venue_open else R.string.venue_closed
 
-    protected fun bindPayments(item: Shop) {
+    private fun bindPayments(item: Shop) {
         paymentContainer.removeAllViews()
         val paymentTypes = item.paymentTypes
         if (paymentTypes == null || paymentTypes.isEmpty()) {
             paymentOptionsContainer.visibility = View.GONE
         } else {
             paymentOptionsContainer.visibility = View.VISIBLE
-            paymentTextView?.text = item.paymentTypes.joinToString()
+            paymentTextView.text = item.paymentTypes.joinToString()
         }
     }
 

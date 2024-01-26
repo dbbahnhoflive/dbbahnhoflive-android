@@ -41,16 +41,10 @@ abstract class ElevatorStatusAdapter : RecyclerView.Adapter<FacilityStatusViewHo
         return if (facilityStatuses == null) 0 else facilityStatuses!!.size
     }
 
-    fun invalidateContent() {
-        if (facilityStatuses != null) {
-            notifyItemRangeChanged(0, facilityStatuses!!.size)
-        }
-    }
-
     open var data: List<FacilityStatus>?
         get() = facilityStatuses
-        set(facilityStatuses) {
-            this.facilityStatuses = ArrayList(facilityStatuses)
+        set(value) {
+            this.facilityStatuses = value?.let { ArrayList(it) }
             notifyDataSetChanged()
         }
 

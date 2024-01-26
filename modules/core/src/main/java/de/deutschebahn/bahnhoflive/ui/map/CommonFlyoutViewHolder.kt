@@ -49,10 +49,10 @@ class CommonFlyoutViewHolder(
             equipmentID = mapViewModel.isMarkerContentValidStationFeature(it.markerContent.title)
 
         linkButton.visibility =
-            if (markerContent.hasLink() || equipmentID != EquipmentID.UNKNOWN) View.VISIBLE else View.GONE
+                if (it.markerContent.hasLink() || equipmentID != EquipmentID.UNKNOWN) View.VISIBLE else View.GONE
 
         if(linkButton.visibility == View.VISIBLE)
             (linkButton as? ImageButton)?.setImageResource(if(equipmentID == EquipmentID.UNKNOWN) R.drawable.app_extern_link else  R.drawable.app_link)
     }
-
+    }
 }

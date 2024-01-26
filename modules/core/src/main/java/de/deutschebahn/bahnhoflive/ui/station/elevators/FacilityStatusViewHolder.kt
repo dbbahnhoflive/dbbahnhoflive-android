@@ -7,7 +7,6 @@
 package de.deutschebahn.bahnhoflive.ui.station.elevators
 
 import android.view.View
-import android.view.ViewGroup
 import android.view.accessibility.AccessibilityNodeInfo
 import android.widget.CompoundButton
 import android.widget.ImageView
@@ -27,11 +26,11 @@ import de.deutschebahn.bahnhoflive.view.CompoundButtonChecker
 import de.deutschebahn.bahnhoflive.view.SingleSelectionManager
 
 
-abstract class FacilityStatusViewHolder(parent: ViewGroup,
+abstract class FacilityStatusViewHolder(parent: View,
                                         selectionManager: SingleSelectionManager?,
-                                        private val trackingManager : TrackingManager,
+                                        val trackingManager : TrackingManager,
                                         private val facilityPushManager: FacilityPushManager) :
-    CommonDetailsCardViewHolder<FacilityStatus>(parent, R.layout.card_expandable_facility_status, selectionManager),
+    CommonDetailsCardViewHolder<FacilityStatus>(parent, selectionManager),
     CompoundButton.OnCheckedChangeListener {
 
     private val bookmarkedIndicator: ImageView = itemView.findViewById(R.id.bookmarked_indicator) // star
@@ -57,8 +56,8 @@ abstract class FacilityStatusViewHolder(parent: ViewGroup,
             itemView.context.getText(R.string.general_switch).toString()
         )
 
-        item?.let {
-            titleView.text = it.stationName
+        item?.let { itFacilityStatus ->
+            titleView.text = itFacilityStatus.stationName
             val bookmarked =
                 facilityPushManager.getBookmarked(itemView.context, item.equipmentNumber)
         bindBookmarkedIndicator(bookmarked)

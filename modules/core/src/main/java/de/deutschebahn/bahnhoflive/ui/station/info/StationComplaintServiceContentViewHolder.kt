@@ -1,11 +1,10 @@
 package de.deutschebahn.bahnhoflive.ui.station.info
 
 import android.content.Intent
-import android.view.ViewGroup
+import android.view.View
 import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.LiveData
 import de.deutschebahn.bahnhoflive.IconMapper
-import de.deutschebahn.bahnhoflive.R
 import de.deutschebahn.bahnhoflive.backend.local.model.ServiceContent
 import de.deutschebahn.bahnhoflive.databinding.CardExpandableComplaintBinding
 import de.deutschebahn.bahnhoflive.repository.Station
@@ -15,7 +14,7 @@ import de.deutschebahn.bahnhoflive.ui.station.CommonDetailsCardViewHolder
 import de.deutschebahn.bahnhoflive.view.SingleSelectionManager
 
 class StationComplaintServiceContentViewHolder(
-    parent: ViewGroup,
+    parent: View,
     selectionManager: SingleSelectionManager,
     stationLiveData: LiveData<out Station>,
     whatsAppInstallationLiveData: WhatsAppInstallation,
@@ -24,13 +23,12 @@ class StationComplaintServiceContentViewHolder(
     activityStarter: (Intent) -> Unit
 ) : CommonDetailsCardViewHolder<ServiceContent>(
     parent,
-    R.layout.card_expandable_complaint,
     selectionManager
 ) {
 
-    val expandableComplaintBinding = CardExpandableComplaintBinding.bind(itemView)
+    private val expandableComplaintBinding = CardExpandableComplaintBinding.bind(itemView)
 
-    val complaintUserInterface = ComplaintUserInterface(
+    private val complaintUserInterface = ComplaintUserInterface(
         expandableComplaintBinding.details,
         stationLiveData,
         whatsAppInstallationLiveData,

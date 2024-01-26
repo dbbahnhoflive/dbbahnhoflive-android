@@ -32,7 +32,6 @@ import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModel;
 import androidx.lifecycle.ViewModelProvider;
 
-
 import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
@@ -71,6 +70,7 @@ import de.deutschebahn.bahnhoflive.ui.station.occupancy.OccupancyExplanationFrag
 import de.deutschebahn.bahnhoflive.ui.station.parking.ParkingListFragment;
 import de.deutschebahn.bahnhoflive.ui.station.railreplacement.RailReplacementFragment;
 import de.deutschebahn.bahnhoflive.ui.station.search.ContentSearchFragment;
+import de.deutschebahn.bahnhoflive.ui.station.settings.SettingsFragment;
 import de.deutschebahn.bahnhoflive.ui.station.shop.ShopCategorySelectionFragment;
 import de.deutschebahn.bahnhoflive.ui.station.timetable.TimetablesFragment;
 import de.deutschebahn.bahnhoflive.ui.timetable.localtransport.HafasTimetableViewModel;
@@ -80,9 +80,6 @@ import de.deutschebahn.bahnhoflive.widgets.CeCheckableImageButton;
 import kotlin.Pair;
 import de.deutschebahn.bahnhoflive.util.GoogleLocationPermissions;
 import de.deutschebahn.bahnhoflive.ui.hub.HubActivity;
-
-
-
 
 
 public class StationActivity extends BaseActivity implements
@@ -116,7 +113,7 @@ public class StationActivity extends BaseActivity implements
 
     private Station station;
     private ViewFlipper viewFlipper;
-    private SparseArray<HistoryFragment> historyFragments = new SparseArray<>();
+    private final SparseArray<HistoryFragment> historyFragments = new SparseArray<>();
     private CeCheckableImageButton infoTabButton;
     private View mapButton;
     private HistoryFragment overviewFragment;
@@ -183,7 +180,7 @@ public class StationActivity extends BaseActivity implements
         shoppingAvailableLiveData.observe(this, new Observer<Boolean>() {
             @Override
             public void onChanged(@Nullable Boolean shoppingAvailable) {
-                shoppingTabButton.setEnabled(shoppingAvailable);
+                shoppingTabButton.setEnabled(Boolean.TRUE.equals(shoppingAvailable));
             }
         });
 
@@ -376,6 +373,7 @@ public class StationActivity extends BaseActivity implements
         return historyFragments.get(displayedChild);
     }
 
+
     private void updateMapButton() {
         mapButton.setVisibility(station.getLocation() != null ? View.VISIBLE : View.GONE);
     }
@@ -414,19 +412,16 @@ public class StationActivity extends BaseActivity implements
         tutorialManager.markTutorialAsIgnored(mTutorialView);
 
         switch (index) {
-            case 0: // Bahnhofsübersicht overviewFragment
+            case 0 -> // Bahnhofsübersicht overviewFragment
                 trackingManager.track(TrackingManager.TYPE_STATE, H1, station.getId(), StationTrackingManager.tagOfName(station.getTitle()));
-                break;
-            case 1: // Abfahrten und Ankünfte timetablesFragment
+            case 1 -> { // Abfahrten und Ankünfte timetablesFragment
                 tutorialManager.showTutorialIfNecessary(mTutorialView, "h2_departure");
                 trackingManager.track(TrackingManager.TYPE_STATE, TrackingManager.Screen.H2);
-                break;
-            case 2: // Bahnhofsinformationen infoFragment
+            }
+            case 2 -> // Bahnhofsinformationen infoFragment
                 trackingManager.track(TrackingManager.TYPE_STATE, TrackingManager.Screen.H3, TrackingManager.Source.INFO);
-                break;
-            case 3: // Shoppen und Schlemmen shoppingFragment
+            case 3 -> // Shoppen und Schlemmen shoppingFragment
                 trackingManager.track(TrackingManager.TYPE_STATE, TrackingManager.Screen.H3, TrackingManager.Source.SHOPS);
-                break;
         }
 
         historyFragments.get(index).onShow();
@@ -596,12 +591,10 @@ public class StationActivity extends BaseActivity implements
         FragmentManager fm = overviewFragment.getChildFragmentManager();
 
         List<Fragment> fragments = fm.getFragments();
-        if(fragments != null){
             for(Fragment fragment : fragments){
                 if(fragment != null && fragment.getTag()!=null && fragment.getTag().equals(tagName))
                   return fragment.isVisible();
             }
-        }
         return false;
     }
 
@@ -643,7 +636,7 @@ public class StationActivity extends BaseActivity implements
                 fm.beginTransaction().remove(f).commit();
         } catch (Exception e) {
             if (e.getMessage() != null)
-              Log.d(this.TAG, e.getMessage());
+              Log.d(TAG, e.getMessage());
         }
     }
 
@@ -763,31 +756,15 @@ public class StationActivity extends BaseActivity implements
                 EquipmentID equip_id = EquipmentID.values()[intent.getIntExtra(ARG_EQUIPMENT_ID, 0)];
 
                 switch (equip_id) {
-                    case LOCKERS:
-                        showLockers(true);
-                        break;
-                    case RAIL_REPLACEMENT:
-                        showRailReplacement();
-                        break;
-
-                    case DB_INFORMATION:
-                        showInfo(ServiceContentType.DB_INFORMATION, true);
-                        break;
-                    case RAILWAY_MISSION:
-                        showInfo(ServiceContentType.BAHNHOFSMISSION, true);
-                        break;
-                    case DB_TRAVEL_CENTER:
-                        showInfo(ServiceContentType.Local.TRAVEL_CENTER, true);
-                        break;
-                    case DB_LOUNGE:
-                        showInfo(ServiceContentType.Local.DB_LOUNGE, true);
-                        break;
-                    case ELEVATORS:
-                        showElevators(true);
-                        break;
-                    default:
-                    case UNKNOWN:
-                        break;
+                    case LOCKERS -> showLockers(true);
+                    case RAIL_REPLACEMENT -> showRailReplacement();
+                    case DB_INFORMATION -> showInfo(ServiceContentType.DB_INFORMATION, true);
+                    case RAILWAY_MISSION -> showInfo(ServiceContentType.BAHNHOFSMISSION, true);
+                    case DB_TRAVEL_CENTER -> showInfo(ServiceContentType.Local.TRAVEL_CENTER, true);
+                    case DB_LOUNGE -> showInfo(ServiceContentType.Local.DB_LOUNGE, true);
+                    case ELEVATORS -> showElevators(true);
+                    default -> {
+                    }
                 }
             } catch (Exception e) {
                 Log.d("stationActivity", "unexpected equip_id");
@@ -832,7 +809,7 @@ public class StationActivity extends BaseActivity implements
     }
 
     @Override
-    protected void onSaveInstanceState(Bundle outState) {
+    protected void onSaveInstanceState(@NonNull Bundle outState) {
         super.onSaveInstanceState(outState);
 
         if (getCurrentFragmentIndex() == HISTORYFRAGMENT_INDEX_TIMETABLE)

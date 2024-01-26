@@ -5,9 +5,7 @@
  */
 package de.deutschebahn.bahnhoflive.ui
 
-import android.view.LayoutInflater
 import android.view.View
-import android.view.ViewGroup
 import android.widget.TextView
 import androidx.annotation.IdRes
 import androidx.recyclerview.widget.RecyclerView
@@ -15,11 +13,6 @@ import androidx.recyclerview.widget.RecyclerView
 open class ViewHolder<T>(view: View) : RecyclerView.ViewHolder(view) {
     var item: T? = null
         private set
-
-    @Deprecated("")
-    constructor(parent: ViewGroup, layout: Int) : this(
-        LayoutInflater.from(parent.context).inflate(layout, parent, false)
-    )
 
     fun bind(item: T?) {
         if (this.item != null) {
@@ -44,7 +37,7 @@ open class ViewHolder<T>(view: View) : RecyclerView.ViewHolder(view) {
         return findTextView(itemView, id)
     }
 
-    protected fun findTextView(view: View, @IdRes id: Int): TextView {
+    private fun findTextView(view: View, @IdRes id: Int): TextView {
         return view.findViewById<View>(id) as TextView
     }
 
