@@ -15,6 +15,7 @@ import android.util.SparseArray
 import android.view.View
 import android.widget.Checkable
 import android.widget.ViewFlipper
+import androidx.activity.OnBackPressedCallback
 import androidx.annotation.IdRes
 import androidx.core.view.isVisible
 import androidx.fragment.app.DialogFragment
@@ -266,7 +267,10 @@ class StationActivity : BaseActivity(), StationProvider, RootProvider, TrackingM
             }
         }
 
-        
+        onBackPressedDispatcher.addCallback(
+            this, // Lifecycle owner
+            backPressedCallback
+        )
  
     }
 
@@ -274,6 +278,13 @@ class StationActivity : BaseActivity(), StationProvider, RootProvider, TrackingM
         stationViewModel.clearStationNavigation(this)
         super.onDestroy()
     }
+
+    private val backPressedCallback = object : OnBackPressedCallback(true) {
+        override fun handleOnBackPressed() {
+            doHandleOnBackPressed()
+        }
+    }
+
 
     private fun trackNaviTap(uiElement: String?) {
         trackingManager.track(
@@ -709,7 +720,8 @@ class StationActivity : BaseActivity(), StationProvider, RootProvider, TrackingM
         return false
     }
 
-    override fun onBackPressed() {
+
+    fun doHandleOnBackPressed() {
         if (removeOverlayFragment()) {
             return
         }
@@ -722,7 +734,8 @@ class StationActivity : BaseActivity(), StationProvider, RootProvider, TrackingM
             showTab(0)
             return
         }
-        super.onBackPressed()
+        finish()
+//        super.onBackPressed()
     }
 
     private val currentFragmentIndex: Int
