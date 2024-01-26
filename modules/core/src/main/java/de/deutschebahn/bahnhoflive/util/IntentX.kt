@@ -9,8 +9,6 @@ package de.deutschebahn.bahnhoflive.util
 import android.content.Context
 import android.content.Intent
 import android.os.Build
-import android.os.Bundle
-import android.util.Log
 import kotlin.math.abs
 
 const val INTENT_CREATION_TIME_MS = "intent_creation_time"

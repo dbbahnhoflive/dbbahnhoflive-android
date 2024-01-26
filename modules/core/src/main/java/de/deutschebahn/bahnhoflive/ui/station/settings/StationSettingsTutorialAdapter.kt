@@ -31,7 +31,7 @@ class StationSettingsTutorialItemViewHolder(
     }
 
     override fun onCheckedChanged(buttonView: CompoundButton, isChecked: Boolean) {
-        TutorialPreferenceStore.getInstance(BaseApplication.get()).setUserWantsTutorials(isChecked)
+        TutorialPreferenceStore.getInstance(BaseApplication.get())?.setUserWantsTutorials(isChecked)
     }
 }
 

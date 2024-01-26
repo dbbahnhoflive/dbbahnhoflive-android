@@ -275,10 +275,12 @@ class TutorialManager private constructor(context : Context) {
      * @param identifier
      */
     fun markTutorialAsSeen(identifier: String?) {
-        val tutorial = tutorialPreferenceStore.getTutorial(identifier)
-        tutorial?.let {
-            it.closedByUser = true
-            tutorialPreferenceStore.update(it)
+        identifier?.let {itIdentifier->
+            val tutorial = tutorialPreferenceStore.getTutorial(itIdentifier)
+            tutorial?.let {
+                it.closedByUser = true
+                tutorialPreferenceStore.update(it)
+            }
         }
     }
 
