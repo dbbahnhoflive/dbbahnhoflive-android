@@ -26,6 +26,7 @@ import de.deutschebahn.bahnhoflive.ui.map.InitialPoiManager.Companion.putInitial
 import de.deutschebahn.bahnhoflive.ui.map.MapPresetProvider
 import de.deutschebahn.bahnhoflive.ui.station.HistoryFragment
 import de.deutschebahn.bahnhoflive.ui.station.StationViewModel
+import de.deutschebahn.bahnhoflive.util.getSerializableCompatible
 
 class ShopListFragment : RecyclerFragment<ShopAdapter>(R.layout.fragment_recycler_linear),
     MapPresetProvider {
@@ -36,10 +37,7 @@ class ShopListFragment : RecyclerFragment<ShopAdapter>(R.layout.fragment_recycle
         super.setArguments(args)
 
         args?.let {
-            category = if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU)
-                it.getSerializable(ARG_CATEGORY, ShopCategory::class.java)
-            else
-                it.getSerializable(ARG_CATEGORY) as ShopCategory?
+            category = it.getSerializableCompatible(ARG_CATEGORY, ShopCategory::class.java)
 
             category?.let { itShopCategory->
                 titleResourceLiveData.value = itShopCategory.label
@@ -108,7 +106,7 @@ class ShopListFragment : RecyclerFragment<ShopAdapter>(R.layout.fragment_recycle
         }.observe(viewLifecycleOwner) { shop: Shop? ->
             if (shop != null) {
                 val selectedItemIndex: Int = adapter!!.setSelectedItem(shop)
-                stationViewModel!!.selectedShop.setValue(null)
+                stationViewModel!!.selectedShop.value = null
                 recyclerView!!.scrollToPosition(selectedItemIndex)
             }
         }

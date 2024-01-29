@@ -27,6 +27,7 @@ import de.deutschebahn.bahnhoflive.repository.timetable.TimetableRepository
 import de.deutschebahn.bahnhoflive.ui.ViewHolder
 import de.deutschebahn.bahnhoflive.ui.search.HafasStationSearchResult
 import de.deutschebahn.bahnhoflive.ui.search.StopPlaceSearchResult
+import de.deutschebahn.bahnhoflive.util.inflateLayout
 import de.deutschebahn.bahnhoflive.view.BaseItemCallback
 import de.deutschebahn.bahnhoflive.view.SingleSelectionManager
 import kotlinx.coroutines.CoroutineScope
@@ -93,10 +94,8 @@ internal class NearbyDeparturesAdapter(
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder<*> =
         when (viewType) {
-            1 -> NearbyDeparturesViewHolder( LayoutInflater.from(parent.context).inflate(R.layout.card_nearby_departures, parent, false),
-                owner, singleSelectionManager, trackingManager, locationLiveData)
-            else -> NearbyDbDeparturesViewHolder(parent, owner,singleSelectionManager,trackingManager
-            )
+            1 -> NearbyDeparturesViewHolder( parent.inflateLayout(R.layout.card_nearby_departures), owner, singleSelectionManager, trackingManager, locationLiveData)
+            else -> NearbyDbDeparturesViewHolder( parent.inflateLayout(R.layout.card_departures), owner,singleSelectionManager,trackingManager)
         }
 
     override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
@@ -105,7 +104,11 @@ internal class NearbyDeparturesAdapter(
         item?.bindViewHolder(holder)
     }
 
-    override fun getItemViewType(position: Int) = currentList[position]?.type ?: 0
+    override fun getItemViewType(position: Int) : Int {
+        val searchResult = currentList[position]
+        return searchResult?.type ?: 0
+    }
+
 
     override fun getItemCount() = currentList.size
 
@@ -125,7 +128,6 @@ internal class NearbyDeparturesAdapter(
         submitList(stopPlaces?.mapNotNull { stopPlace ->
             when {
                 stopPlace.isDbStation -> {
-
                     NearbyDbStationItem(
                         StopPlaceSearchResult(
                             coroutineScope,

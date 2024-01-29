@@ -23,10 +23,7 @@ open class DeparturesViewHolder(
     private val trackingManager: TrackingManager,
     private val searchItemPickedListener: SearchItemPickedListener?,
     private val itemTag: String?
-) : LongClickSelectableItemViewHolder<HafasStationSearchResult?>(
-    view,
-    singleSelectionManager
-) {
+) : LongClickSelectableItemViewHolder<HafasStationSearchResult?>(view,singleSelectionManager) {
 
     private val reducedHafasDeparturesViewHolder: ReducedHafasDeparturesViewHolder
     private val stationSearchViewHolder: StationSearchViewHolder = StationSearchViewHolder(itemView)
@@ -44,7 +41,7 @@ open class DeparturesViewHolder(
 
     init {
         itemView.setOnClickListener(onClickListener)
-        itemView.findViewById<View>(R.id.details).setOnClickListener(onClickListener)
+        itemView.findViewById<View>(R.id.details)?.setOnClickListener(onClickListener)
         reducedHafasDeparturesViewHolder = ReducedHafasDeparturesViewHolder(itemView, owner)
     }
 

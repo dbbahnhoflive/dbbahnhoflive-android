@@ -25,7 +25,6 @@ public class StoredStationSearchResult extends StationSearchResult<InternalStati
     @NonNull
     protected final Station station;
 
-    // #cr : todo, nur 1 constructor
     public StoredStationSearchResult(@NonNull InternalStation dbStation,
                                      RecentSearchesStore recentSearchesStore,
                                      FavoriteStationsStore<InternalStation> favoriteStationsStore,
@@ -37,7 +36,7 @@ public class StoredStationSearchResult extends StationSearchResult<InternalStati
 
 
     @Override
-    public CharSequence getTitle() {
+    public String getTitle() {
         return station.getTitle();
     }
 

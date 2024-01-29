@@ -9,6 +9,7 @@ import android.util.Log
 import com.android.volley.Cache
 import com.android.volley.DefaultRetryPolicy
 import com.android.volley.NetworkResponse
+import de.deutschebahn.bahnhoflive.BuildConfig
 import de.deutschebahn.bahnhoflive.analytics.Trackable
 import de.deutschebahn.bahnhoflive.backend.BaseRequest
 import de.deutschebahn.bahnhoflive.backend.CappingHttpStack
@@ -49,14 +50,13 @@ abstract class HafasRequest<T>(
     }
 
     override fun getTrackingTag(): String {
-        return "request : hafas:" + legacyTrackingTag
+        return "request : hafas:$legacyTrackingTag"
     }
 
     protected fun getCacheEntry(response: NetworkResponse): Cache.Entry {
-        Log.d(
-            TAG,
-            "getCacheEntry: " + response.statusCode + " headers: " + response.headers.toString()
-        )
+        if(BuildConfig.DEBUG) {
+            Log.d(TAG, "getCacheEntry: " + response.statusCode + " headers: " + response.headers.toString())
+        }
         return cacheOverrider.createCacheEntry(response)
     }
 
@@ -82,8 +82,9 @@ abstract class HafasRequest<T>(
         @JvmStatic
         protected fun encodeParameter(value: String?): String {
             return try {
-                URLEncoder.encode(value, "utf-8")
+                URLEncoder.encode(value, java.nio.charset.StandardCharsets.UTF_8.toString())
             } catch (e: UnsupportedEncodingException) {
+                @Suppress("DEPRICATED")
                 URLEncoder.encode(value)
             }
         }

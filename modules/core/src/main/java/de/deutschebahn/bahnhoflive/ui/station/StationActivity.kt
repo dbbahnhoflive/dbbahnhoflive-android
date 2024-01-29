@@ -106,6 +106,7 @@ class StationActivity : BaseActivity(), StationProvider, RootProvider, TrackingM
         super.onCreate(savedInstanceState)
         logIntentExtras("StationActivity:onCreate", intent)
         
+        @Suppress("UNCHECKED_CAST")
         val fac: ViewModelProvider.AndroidViewModelFactory = object : ViewModelProvider.AndroidViewModelFactory(application) {
             override fun <T : ViewModel> create(modelClass: Class<T>): T {
                 if (modelClass == LocalTransportViewModel::class.java) {
@@ -116,6 +117,7 @@ class StationActivity : BaseActivity(), StationProvider, RootProvider, TrackingM
                 } else super.create(modelClass)
             }
         }
+
         val viewModelProvider = ViewModelProvider(this, fac as ViewModelProvider.Factory)
         stationViewModel = viewModelProvider[StationViewModel::class.java]
         
@@ -345,6 +347,7 @@ class StationActivity : BaseActivity(), StationProvider, RootProvider, TrackingM
             if (station?.location != null) View.VISIBLE else View.GONE
     }
 
+    @Suppress("UNCHECKED_CAST")
     private fun <F : Fragment?> findFragment(@IdRes id: Int): F? {
         return supportFragmentManager.findFragmentById(id) as F?
     }

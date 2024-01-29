@@ -7,6 +7,7 @@
 package de.deutschebahn.bahnhoflive.ui.station
 
 import android.view.View
+import androidx.core.content.res.ResourcesCompat
 import androidx.core.view.isVisible
 import androidx.lifecycle.Observer
 import androidx.viewpager2.widget.ViewPager2
@@ -28,7 +29,7 @@ class NewsViewManager(
         adapter = newsAdapter
 
         pageIndicator?.let {
-        TabLayoutMediator(pageIndicator, this) { tab, position ->
+            TabLayoutMediator(pageIndicator, this) { tab, _ ->
             tab.icon = resources.getDrawable(R.drawable.shape_page_indicator_news)
         }.attach()
     }

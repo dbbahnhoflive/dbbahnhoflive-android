@@ -78,9 +78,9 @@ class HafasDeparturesAdapter(
                 run {
                     details.requestDetails() // Daten anfordern
                 }
-            }, hafasDataReceivedEvent = { view, details, success ->
+                }, hafasDataReceivedEvent = { v, details, success ->
                 run {
-                    hafasDataReceivedCallback(view, details, success)
+                        hafasDataReceivedCallback(v, details, success)
                 }
             }
             )

@@ -8,4 +8,5 @@ class EmptyLiveData<T> : LiveData<T?>(null) {
     }
 }
 
+@Suppress("UNCHECKED_CAST")
 inline fun <reified T> emptyLiveData(): LiveData<T?> = EmptyLiveData.INSTANCE as LiveData<T?>

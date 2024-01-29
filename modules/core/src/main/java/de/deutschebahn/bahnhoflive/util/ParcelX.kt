@@ -25,7 +25,7 @@ fun <T> Parcel.readArrayListCompatible(
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
             this.readArrayList(classLoader, clazz)
         } else {
-            @Suppress("DEPRECATION")
+            @Suppress("DEPRECATION", "UNCHECKED_CAST")
             this.readArrayList(classLoader) as? ArrayList<T>?
         }
     } catch (_: Exception) {

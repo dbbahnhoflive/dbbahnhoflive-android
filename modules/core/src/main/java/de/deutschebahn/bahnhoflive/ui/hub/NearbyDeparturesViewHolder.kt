@@ -20,7 +20,7 @@ internal class NearbyDeparturesViewHolder(
     owner: LifecycleOwner?,
     singleSelectionManager: SingleSelectionManager?,
     trackingManager: TrackingManager,
-    locationMutableLiveData: MutableLiveData<Location>?
+    private val locationMutableLiveData: MutableLiveData<Location>?
 ) : DeparturesViewHolder(
     parent,
 //    R.layout.card_nearby_departures,
@@ -31,11 +31,6 @@ internal class NearbyDeparturesViewHolder(
     TrackingManager.UiElement.ABFAHRT_NAEHE_OPNV
 ) {
     private val distanceViewHolder: DistanceViewHolder = DistanceViewHolder(itemView)
-    private var locationMutableLiveData: MutableLiveData<Location>? = null
-
-    init {
-        this.locationMutableLiveData = locationMutableLiveData
-    }
 
     private fun calculateDistance(station: HafasStation, location: Location?): Float {
         return if (location != null) {

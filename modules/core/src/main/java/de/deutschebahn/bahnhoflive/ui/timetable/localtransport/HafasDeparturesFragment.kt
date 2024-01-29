@@ -36,6 +36,7 @@ import de.deutschebahn.bahnhoflive.ui.station.BackNavigationData
 import de.deutschebahn.bahnhoflive.ui.station.HistoryFragment
 import de.deutschebahn.bahnhoflive.ui.station.StationActivity
 import de.deutschebahn.bahnhoflive.ui.station.StationViewModel
+import de.deutschebahn.bahnhoflive.util.getParcelableCompatible
 
 
 class HafasDeparturesFragment : RecyclerFragment<HafasDeparturesAdapter>(R.layout.recycler_linear_refreshable),
@@ -277,7 +278,7 @@ class HafasDeparturesFragment : RecyclerFragment<HafasDeparturesAdapter>(R.layou
 
 
         if (savedInstanceState != null) {
-            val hafasEvent: HafasEvent? = savedInstanceState.getParcelable(ARG_HAFAS_EVENT)
+            val hafasEvent: HafasEvent? = savedInstanceState.getParcelableCompatible(ARG_HAFAS_EVENT, HafasEvent::class.java)
 
             hafasEvent?.let {
                 val ev = DetailedHafasEvent(

@@ -5,6 +5,7 @@
   -->
 
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
@@ -32,9 +33,9 @@
             android:id="@+id/distance"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:drawableLeft="@drawable/app_fussweg"
             android:gravity="center_vertical"
             android:padding="@dimen/default_space"
-            tools:text="500 m" />
+            tools:text="500 m"
+            app:drawableLeftCompat="@drawable/app_fussweg" />
     </LinearLayout>
 </LinearLayout>

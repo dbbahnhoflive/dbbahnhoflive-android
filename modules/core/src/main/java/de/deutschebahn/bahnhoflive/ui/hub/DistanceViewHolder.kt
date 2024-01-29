@@ -13,27 +13,39 @@ import de.deutschebahn.bahnhoflive.ui.ViewHolder
 
 class DistanceViewHolder(view: View) : ViewHolder<Float>(view) {
 
-    private val distanceView = view.findViewById<TextView>(R.id.distance)
+    private val distanceView : TextView? = view.findViewById<TextView>(R.id.distance)
 
     override fun onBind(item: Float?) {
         super.onBind(item)
 
+        distanceView?.let {
+
+
         if (item == null || item < 0) {
-            distanceView.visibility = View.GONE
+                it.visibility = View.GONE
             return
         }
 
-        distanceView.visibility = View.VISIBLE
+            it.visibility = View.VISIBLE
 
         val distanceInKm: Float = item
 
         val roundKilometers = Math.round(distanceInKm)
         when {
-            roundKilometers > 1 -> distanceView.text = formatDistance(roundKilometers, R.string.template_distance_in_km)
-            distanceInKm >= .5f -> distanceView.text = formatDistance(Math.round(distanceInKm * 20) * 50, R.string.template_distance_in_m)
-            else -> distanceView.text = formatDistance(Math.round(distanceInKm * 100) * 10, R.string.template_distance_in_m)
-        }
+                roundKilometers > 1 -> it.text =
+                    formatDistance(roundKilometers, R.string.template_distance_in_km)
 
+                distanceInKm >= .5f -> it.text = formatDistance(
+                    Math.round(distanceInKm * 20) * 50,
+                    R.string.template_distance_in_m
+                )
+
+                else -> it.text = formatDistance(
+                    Math.round(distanceInKm * 100) * 10,
+                    R.string.template_distance_in_m
+                )
+            }
+        }
     }
 
     private fun formatDistance(distance: Int, template: Int): String {

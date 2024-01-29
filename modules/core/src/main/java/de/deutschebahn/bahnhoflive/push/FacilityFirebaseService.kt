@@ -16,6 +16,7 @@ import com.google.firebase.messaging.FirebaseMessaging
 import com.google.firebase.messaging.FirebaseMessagingService
 import com.google.firebase.messaging.RemoteMessage
 import de.deutschebahn.bahnhoflive.BaseApplication.Companion.get
+import de.deutschebahn.bahnhoflive.BuildConfig
 import de.deutschebahn.bahnhoflive.R
 import de.deutschebahn.bahnhoflive.ui.hub.HubActivity
 import de.deutschebahn.bahnhoflive.util.PrefUtil
@@ -27,25 +28,9 @@ class FacilityFirebaseService : FirebaseMessagingService() {
 
     override fun onNewToken(s: String) {
         super.onNewToken(s)
+        if(BuildConfig.DEBUG)
         Log.d("cr", "Refreshed token: $s")
     }
-
-    override fun onStart(intent: Intent?, startId: Int) {
-        super.onStart(intent, startId)
-        facilityFirebaseService = this
-    }
-//    fun isAppRunning(context: Context, packageName: String): Boolean {
-//        val activityManager = context.getSystemService(Context.ACTIVITY_SERVICE) as ActivityManager
-//        activityManager.runningAppProcesses?.apply {
-//            for (processInfo in this) {
-//                if (processInfo.processName == packageName) {
-//                    return true
-//
-//                }
-//            }
-//        }
-//        return false
-//    }
 
     // always called !!!! (in foreground AND in background !!!)
     // onMessageReceived is only called if in foreground
@@ -72,6 +57,7 @@ class FacilityFirebaseService : FirebaseMessagingService() {
           ret = remoteMessage.data[itemName].toString().trim()
       }
       catch(e : Exception) {
+        if(BuildConfig.DEBUG)
           Log.d("cr", "Exception in getValueSafeString: " + e.message.toString())
       }
 
@@ -86,6 +72,7 @@ class FacilityFirebaseService : FirebaseMessagingService() {
             ret = itemList[itemName].toString().trim()
         }
         catch(e : Exception) {
+            if(BuildConfig.DEBUG)
             Log.d("cr", "Exception in getValueSafeString2: " + e.message.toString())
         }
 
@@ -100,6 +87,7 @@ class FacilityFirebaseService : FirebaseMessagingService() {
             ret = itemList[itemName].toString().toInt()
         }
         catch(e : Exception) {
+            if(BuildConfig.DEBUG)
             Log.d("cr", "Exception in getValueSafeInt: " + e.message.toString())
         }
 
@@ -275,26 +263,23 @@ class FacilityFirebaseService : FirebaseMessagingService() {
 
         var type = itemList["facilityType"]?.lowercase() ?: ""
         val description = itemList["facilityDescription"] ?: ""
-        var state =  itemList["facilityState"] ?: ""
+        val state =  itemList["facilityState"] ?: ""
         val station = itemList["stationName"] ?: ""
 
-//        val dateLong = Date(System.currentTimeMillis())
-//        val timeString = "(" + SimpleDateFormat("HH:mm", Locale.getDefault()).format(dateLong) + ")"
+        var msgState = ""
 
         if (type == "elevator")
             type = "Aufzug"
         else if (type == "escalator")
             type = "Rolltreppe"
 
-        if (state == "ACTIVE")
-            state = "in Betrieb"
-        else
-            if (state == "INACTIVE")
-                state = "außer Betrieb"
-            else
-                state = "Betriebsstatus unbekannt"
+        msgState = when(state) {
+            "ACTIVE" ->  "in Betrieb"
+            "INACTIVE" ->  "außer Betrieb"
+            else ->  "Betriebsstatus unbekannt"
+        }
 
-        val msg = "Statusänderung: " + station + " " + type + " \"" + description + "\" " + state +"."
+        val msg = "Statusänderung: " + station + " " + type + " \"" + description + "\" " + msgState +"."
 
         return msg
 
@@ -307,8 +292,6 @@ class FacilityFirebaseService : FirebaseMessagingService() {
 
             try {
                     val equipmentNumber : String? = itemList["facilityEquipmentNumber"]
-//                    var msg : String? = itemList["message"]
-//                    if(msg.isNullOrBlank())
                     val msg = createMsgFromData(itemList)
 
                     equipmentNumber?.let {
@@ -325,6 +308,7 @@ class FacilityFirebaseService : FirebaseMessagingService() {
 
                 }
                 catch(e : Exception) {
+                    if(BuildConfig.DEBUG)
                     Log.d("cr", e.message.toString())
                 }
 
@@ -354,36 +338,28 @@ class FacilityFirebaseService : FirebaseMessagingService() {
                 return null
             }
 
+            @Suppress("UNUSED")
             fun debugPrintFirebaseToken() {
                 FirebaseMessaging.getInstance().token.addOnSuccessListener { token: String ->
+                    if(BuildConfig.DEBUG) {
                     if (!TextUtils.isEmpty(token)) {
                         Log.d("cr", "retrieve token successful : $token")
                     } else {
                         Log.d("cr", "token should not be null...")
                     }
-                }.addOnFailureListener { e: Exception? -> Log.d("cr", e.toString()) }
-                    .addOnCanceledListener {}
-                .addOnCompleteListener { task: Task<String> ->
-                    Log.d(
-                        "cr", "This is the token : $task.result"
+                    }
+                }.addOnFailureListener { e: Exception? ->
+                    if (BuildConfig.DEBUG && e != null) Log.d(
+                        "cr",
+                        e.message.toString()
                     )
+                }.addOnCanceledListener {
+                }.addOnCompleteListener { task: Task<String> ->
+                    if (BuildConfig.DEBUG)
+                        Log.d("cr", "This is the token : $task.result")
                 }
             }
 
-
-            var facilityFirebaseService :  FacilityFirebaseService? = null
-
-            @JvmStatic fun test() {
-//            override fun onMessageReceived(remoteMessage: RemoteMessage) {
-
-                val bdl : Bundle  = Bundle()
-                val remoteMessage : RemoteMessage = RemoteMessage(bdl)
-
-                facilityFirebaseService?.let {
-                    it.onMessageReceived(remoteMessage)
-                }
-
-            }
         }
 
 

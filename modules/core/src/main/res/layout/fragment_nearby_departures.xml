@@ -104,6 +104,7 @@
                 tools:listitem="@layout/card_station_suggestion" />
 
             <include layout="@layout/include_progress_and_error" />
+            <include layout="@layout/include_empty_no_station_found" />
         </ViewFlipper>
 
     </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>

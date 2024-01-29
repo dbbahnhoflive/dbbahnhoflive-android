@@ -32,7 +32,7 @@ class GoogleLocationPermissions {
             context: Context,
             permissionCheckFunction: () -> Unit,
             permissionResponseFunction: (response: Boolean) -> Unit,
-            @Suppress("unused")
+            @Suppress("UNUSED_PARAMETER")
             title: String,
             message: String
         ) {

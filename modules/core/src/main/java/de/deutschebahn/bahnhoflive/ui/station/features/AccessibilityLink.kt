@@ -8,7 +8,7 @@ package de.deutschebahn.bahnhoflive.ui.station.features
 import android.content.Context
 import de.deutschebahn.bahnhoflive.ui.station.accessibility.AccessibilityFragment
 
-class AccessibilityLink(@Suppress("unused") trackingTag: String) :
+class AccessibilityLink(@Suppress("UNUSED_PARAMETER") trackingTag: String) :
     Link() {
 
     override fun createServiceContentFragment(

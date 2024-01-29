@@ -11,10 +11,9 @@ import de.deutschebahn.bahnhoflive.analytics.TrackingManager
 import de.deutschebahn.bahnhoflive.repository.InternalStation
 import de.deutschebahn.bahnhoflive.repository.timetable.TimetableCollector
 import de.deutschebahn.bahnhoflive.ui.search.StationSearchResult
-import de.deutschebahn.bahnhoflive.ui.search.StopPlaceSearchResult
 import de.deutschebahn.bahnhoflive.view.SingleSelectionManager
 
-internal class NearbyDbDeparturesViewHolder(
+class NearbyDbDeparturesViewHolder(
     view: View,
     owner: LifecycleOwner?,
     singleSelectionManager: SingleSelectionManager?,
@@ -27,12 +26,6 @@ internal class NearbyDbDeparturesViewHolder(
 
     override fun onBind(item: StationSearchResult<InternalStation?, TimetableCollector?>?) {
         super.onBind(item)
-        item?.let {
-            distanceViewHolder.bind(it.distance)
-        }
-    }
-
-    fun onBindStopPlaceSearchResult(item: StopPlaceSearchResult?) {
         item?.let {
             distanceViewHolder.bind(it.distance)
         }

@@ -10,7 +10,7 @@ import org.json.JSONException
 import org.json.JSONObject
 
 fun JSONObject.string(name: String): String? =
-    optString(name, null)
+    optString(name, "")
 
 fun JSONObject.displayableString(name: String) = string(name)?.takeUnless { it.isBlank() }
 

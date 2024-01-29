@@ -2,6 +2,10 @@ package de.deutschebahn.bahnhoflive.util
 
 import android.os.Build
 import android.os.Bundle
+import de.deutschebahn.bahnhoflive.ui.station.shop.ShopCategory
+import de.deutschebahn.bahnhoflive.ui.station.shop.ShopListFragment
+import java.io.Serializable
+import java.util.Objects
 
 
 fun <T> Bundle.getParcelableCompatible(key: String?, clazz: Class<T>): T? {
@@ -22,3 +26,18 @@ fun <T> Bundle.getParcelableCompatible(key: String?, clazz: Class<T>): T? {
         null
     }
 }
+
+fun <T : Serializable?> Bundle.getSerializableCompatible(key: String?,clazz: Class<T>): T? {
+
+    return try {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU)
+            this.getSerializable(key, clazz)
+        else {
+            @Suppress("DEPRECATION", "UNCHECKED_CAST")
+            this.getSerializable(key) as T
+        }
+    } catch (_: Exception) {
+        null
+    }
+}
+

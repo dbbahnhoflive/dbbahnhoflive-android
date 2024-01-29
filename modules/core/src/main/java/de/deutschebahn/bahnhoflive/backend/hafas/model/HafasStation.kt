@@ -143,10 +143,10 @@ class HafasStation : Parcelable {
                 '}'
     }
 
-    override fun equals(o: Any?): Boolean {
-        if (this === o) return true
-        if (o !is HafasStation) return false
-        return extId == o.extId
+    override fun equals(other: Any?): Boolean {
+        if (this === other) return true
+        if (other !is HafasStation) return false
+        return extId == other.extId
     }
 
     override fun hashCode(): Int {

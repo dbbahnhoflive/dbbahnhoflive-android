@@ -10,7 +10,6 @@ import de.deutschebahn.bahnhoflive.tutorial.TutorialPreferenceStore
 
 class BhfLiveUtilHandler(val context: Context) {
 
-    @Suppress("UNUSED")
     val dataChangeObserver = InMemoryDbProviderInterface.registerValueChangeObserver(context) {key, value ->
         try {
             handleChangeEvent(key, value)

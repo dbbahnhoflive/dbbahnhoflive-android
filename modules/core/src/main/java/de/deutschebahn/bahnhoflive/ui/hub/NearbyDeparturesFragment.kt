@@ -136,7 +136,6 @@ class NearbyDeparturesFragment : androidx.fragment.app.Fragment(), Permission.Li
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-
             hubViewModel.nearbyStopPlacesLiveData.observe(viewLifecycleOwner) {
                 nearbyDeparturesContainerHolder?.run {
                     if (it?.isNotEmpty() == true) {
@@ -158,7 +157,8 @@ class NearbyDeparturesFragment : androidx.fragment.app.Fragment(), Permission.Li
 
             hubViewModel.nearbyStopPlacesResourceLiveData.switchMap { it.loadingStatus }
                 .observe(viewLifecycleOwner, androidx.lifecycle.Observer {
-                    if (it == LoadingStatus.BUSY) nearbyDeparturesContainerHolder?.showProgress()
+                if (it == LoadingStatus.BUSY)
+                    nearbyDeparturesContainerHolder?.showProgress()
                 })
 
 
