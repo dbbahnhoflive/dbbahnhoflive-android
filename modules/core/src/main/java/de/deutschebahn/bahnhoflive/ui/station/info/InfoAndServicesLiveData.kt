@@ -133,6 +133,7 @@ class InfoAndServicesLiveData(
         )
     }
 
+    @Suppress("Unused")
     private fun renderSchedule(schedule: Availability?): String? {
         if (schedule == null) {
             return null
