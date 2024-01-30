@@ -8,12 +8,10 @@ package de.deutschebahn.bahnhoflive.ui
 
 import android.app.Application
 import android.location.Location
-import android.util.Log
 import androidx.lifecycle.*
 import de.deutschebahn.bahnhoflive.repository.StationResource
 import de.deutschebahn.bahnhoflive.repository.StationResourceProvider
 import de.deutschebahn.bahnhoflive.repository.stationsearch.NearbyStopPlacesResource
-import de.deutschebahn.bahnhoflive.ui.map.Content
 import de.deutschebahn.bahnhoflive.util.openhours.OpenHoursParser
 
 

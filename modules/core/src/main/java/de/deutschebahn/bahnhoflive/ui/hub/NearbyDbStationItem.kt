@@ -6,6 +6,7 @@
 
 package de.deutschebahn.bahnhoflive.ui.hub
 
+import android.util.Log
 import androidx.recyclerview.widget.RecyclerView
 import de.deutschebahn.bahnhoflive.repository.InternalStation
 import de.deutschebahn.bahnhoflive.repository.Station
@@ -28,9 +29,14 @@ class NearbyDbStationItem(val dbStationSearchResult: StopPlaceSearchResult) :
         get() = dbStationSearchResult.distance
 
     override fun bindViewHolder(holder: RecyclerView.ViewHolder) {
-        val h : NearbyDbDeparturesViewHolder = holder as NearbyDbDeparturesViewHolder
+        val h: NearbyDbDeparturesViewHolder = holder as NearbyDbDeparturesViewHolder
 //        h.onBindStopPlaceSearchResult(dbStationSearchResult)
-        h.bind(dbStationSearchResult as? StationSearchResult<InternalStation?, TimetableCollector?>)
+        try {
+            @Suppress("UNCHECKED_CAST")
+            h.bind(dbStationSearchResult as? StationSearchResult<InternalStation?, TimetableCollector?>)
+        } catch (e: Exception) {
+            Log.d("cr", "Exception in NearbyDbStationItem")
+        }
     }
 
     override fun equals(other: Any?): Boolean {

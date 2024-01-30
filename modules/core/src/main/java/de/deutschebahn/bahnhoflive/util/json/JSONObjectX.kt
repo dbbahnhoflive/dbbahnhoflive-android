@@ -12,6 +12,7 @@ import org.json.JSONObject
 fun JSONObject.string(name: String): String? =
     optString(name, "")
 
+@Suppress("UNUSED")
 fun JSONObject.displayableString(name: String) = string(name)?.takeUnless { it.isBlank() }
 
 fun JSONObject.int(name: String, exceptionHandler: (JSONException) -> Unit = {}) =

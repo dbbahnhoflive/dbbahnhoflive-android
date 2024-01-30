@@ -26,7 +26,7 @@ import de.deutschebahn.bahnhoflive.repository.Station
 import de.deutschebahn.bahnhoflive.ui.search.StationSearchActivity
 import de.deutschebahn.bahnhoflive.ui.station.StationActivity
 
-class SearchStarterFragment : androidx.fragment.app.Fragment() {
+class SearchStarterFragment : HubCoreFragment() {
 
     val trackingManager = TrackingManager()
 
@@ -83,6 +83,10 @@ class SearchStarterFragment : androidx.fragment.app.Fragment() {
 
             }
         }
+
+    }
+
+    override fun onFragmentVisible() {
 
     }
 

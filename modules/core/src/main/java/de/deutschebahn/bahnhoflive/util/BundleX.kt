@@ -2,10 +2,7 @@ package de.deutschebahn.bahnhoflive.util
 
 import android.os.Build
 import android.os.Bundle
-import de.deutschebahn.bahnhoflive.ui.station.shop.ShopCategory
-import de.deutschebahn.bahnhoflive.ui.station.shop.ShopListFragment
 import java.io.Serializable
-import java.util.Objects
 
 
 fun <T> Bundle.getParcelableCompatible(key: String?, clazz: Class<T>): T? {

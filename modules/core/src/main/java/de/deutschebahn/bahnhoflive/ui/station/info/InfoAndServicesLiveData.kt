@@ -101,6 +101,7 @@ class InfoAndServicesLiveData(
         )
     }
 
+    @Suppress("UNUSED")
     private fun renderSchedule(openingHours: String?): String? {
         return openingHours
     }

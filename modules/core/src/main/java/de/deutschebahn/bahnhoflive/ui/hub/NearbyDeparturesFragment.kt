@@ -8,7 +8,6 @@ package de.deutschebahn.bahnhoflive.ui.hub
 
 import android.location.Location
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -27,7 +26,8 @@ import de.deutschebahn.bahnhoflive.ui.LoadingContentDecorationViewHolder
 import de.deutschebahn.bahnhoflive.util.Cancellable
 import de.deutschebahn.bahnhoflive.util.getParcelableCompatible
 
-class NearbyDeparturesFragment : androidx.fragment.app.Fragment(), Permission.Listener,
+class NearbyDeparturesFragment : HubCoreFragment(), Permission.Listener,
+
     androidx.swiperefreshlayout.widget.SwipeRefreshLayout.OnRefreshListener {
 
     private val trackingManager = TrackingManager()
@@ -93,18 +93,26 @@ class NearbyDeparturesFragment : androidx.fragment.app.Fragment(), Permission.Li
 
     }
 
-    override fun setUserVisibleHint(isVisibleToUser: Boolean) {
-        super.setUserVisibleHint(isVisibleToUser)
-
-        if (isVisibleToUser) {
-            val parentFragment = parentFragment
-            when (parentFragment) {
+    override fun onFragmentVisible() {
+        when (val parentFragment = parentFragment) {
                 is HubFragment -> parentFragment.unhandledClickListener = View.OnClickListener {
                     nearbyDeparturesAdapter?.clearSelection()
                 }
             }
         }
-    }
+
+//    override fun setUserVisibleHint(isVisibleToUser: Boolean) {
+//        super.setUserVisibleHint(isVisibleToUser)
+//
+//        if (isVisibleToUser) {
+//            val parentFragment = parentFragment
+//            when (parentFragment) {
+//                is HubFragment -> parentFragment.unhandledClickListener = View.OnClickListener {
+//                    nearbyDeparturesAdapter?.clearSelection()
+//                }
+//            }
+//        }
+//    }
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -139,7 +147,6 @@ class NearbyDeparturesFragment : androidx.fragment.app.Fragment(), Permission.Li
             hubViewModel.nearbyStopPlacesLiveData.observe(viewLifecycleOwner) {
                 nearbyDeparturesContainerHolder?.run {
                     if (it?.isNotEmpty() == true) {
-                    Log.d("cr", "showContent")
                         showContent()
                     } else {
                         showEmpty()

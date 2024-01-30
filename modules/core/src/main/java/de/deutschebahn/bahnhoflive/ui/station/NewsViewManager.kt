@@ -23,14 +23,14 @@ class NewsViewManager(
     private val newsAdapter: NewsAdapter = NewsAdapter()
 ) : Observer<List<News>> {
 
-    private val pageIndicator : TabLayout? = containerView.findViewById<TabLayout>(R.id.newsPagerIndicator)
+    private val pageIndicator : TabLayout? = containerView.findViewById(R.id.newsPagerIndicator)
 
     private val viewPager : ViewPager2? = containerView.findViewById<ViewPager2>(R.id.newsPager).apply {
         adapter = newsAdapter
 
         pageIndicator?.let {
             TabLayoutMediator(pageIndicator, this) { tab, _ ->
-            tab.icon = resources.getDrawable(R.drawable.shape_page_indicator_news)
+            tab.icon = ResourcesCompat.getDrawable(resources, R.drawable.shape_page_indicator_news, null)
         }.attach()
     }
     }

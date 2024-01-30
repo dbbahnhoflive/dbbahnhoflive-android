@@ -8,7 +8,6 @@ package de.deutschebahn.bahnhoflive.ui.hub
 
 import android.location.Location
 import android.util.Log
-import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.MutableLiveData

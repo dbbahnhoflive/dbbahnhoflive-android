@@ -119,6 +119,7 @@
     <string name="search_history">Suchverlauf</string>
     <string name="search_results">Vorschläge</string>
     <string name="home_suggestionsTitleNoResult">Leider keinen Bahnhof gefunden.</string>
+    <string name="search_no_station_found">Keine Station gefunden.</string>
 
     <string name="template_platform">Gl. %1$s</string>
 

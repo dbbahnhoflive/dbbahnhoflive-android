@@ -6,13 +6,11 @@
 package de.deutschebahn.bahnhoflive.ui.hub
 
 import android.view.View
-import android.view.ViewGroup
 import androidx.lifecycle.LifecycleOwner
 import de.deutschebahn.bahnhoflive.R
 import de.deutschebahn.bahnhoflive.analytics.TrackingManager
 import de.deutschebahn.bahnhoflive.repository.InternalStation
 import de.deutschebahn.bahnhoflive.repository.timetable.TimetableCollector
-import de.deutschebahn.bahnhoflive.ui.hub.DbDeparturesViewHolder
 import de.deutschebahn.bahnhoflive.ui.search.SearchItemPickedListener
 import de.deutschebahn.bahnhoflive.ui.search.StationSearchResult
 import de.deutschebahn.bahnhoflive.ui.search.StationSearchViewHolder

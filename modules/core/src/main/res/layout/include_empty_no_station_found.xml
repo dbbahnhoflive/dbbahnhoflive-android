@@ -18,5 +18,5 @@
         android:layout_gravity="center"
         android:gravity="center"
         android:padding="@dimen/default_space"
-        android:text="Keine Station gefunden"/>
+        android:text="@string/search_no_station_found"/>
 </FrameLayout>

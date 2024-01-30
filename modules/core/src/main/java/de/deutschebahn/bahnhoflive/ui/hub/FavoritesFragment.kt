@@ -26,7 +26,7 @@ import de.deutschebahn.bahnhoflive.ui.search.HafasStationSearchResult
 import de.deutschebahn.bahnhoflive.ui.search.StoredStationSearchResult
 import kotlinx.coroutines.flow.flow
 
-class FavoritesFragment : androidx.fragment.app.Fragment() {
+class FavoritesFragment : HubCoreFragment() {
 
     private var favoriteHafasStationsStore: FavoriteStationsStore<HafasStation>? = null
     private var favoriteDbStationsStore: FavoriteStationsStore<InternalStation>? = null
@@ -87,6 +87,7 @@ class FavoritesFragment : androidx.fragment.app.Fragment() {
             addItemDecoration(dividerItemDecoration)
             adapter = favoritesAdapter
         }
+
 
         registerUnhandledClickListenerIfVisible()
 
@@ -159,20 +160,28 @@ class FavoritesFragment : androidx.fragment.app.Fragment() {
         }
     }
 
-    override fun setUserVisibleHint(isVisibleToUser: Boolean) {
-        super.setUserVisibleHint(isVisibleToUser)
-
-        registerUnhandledClickListenerIfVisible()
-
-        if (isVisibleToUser) {
-            refreshFavorites()
+    override fun onFragmentVisible() {
+        when (val parentFragment = parentFragment) {
+            is HubFragment -> parentFragment.unhandledClickListener = View.OnClickListener {
+                favoritesAdapter?.clearSelection()
+            }
         }
+        refreshFavorites()
     }
 
+//    override fun setUserVisibleHint(isVisibleToUser: Boolean) {
+//        super.setUserVisibleHint(isVisibleToUser)
+//
+//        registerUnhandledClickListenerIfVisible()
+//
+//        if (isVisibleToUser) {
+//            refreshFavorites()
+//        }
+//    }
+//
     private fun registerUnhandledClickListenerIfVisible() {
-        if (userVisibleHint) {
-            val parentFragment = parentFragment
-            when (parentFragment) {
+        if (this.isFragmentVisible()) {
+            when (val parentFragment = parentFragment) {
                 is HubFragment -> parentFragment.unhandledClickListener = View.OnClickListener {
                     favoritesAdapter?.clearSelection()
                 }

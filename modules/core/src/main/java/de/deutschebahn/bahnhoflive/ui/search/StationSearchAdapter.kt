@@ -46,7 +46,7 @@ internal class StationSearchAdapter(
     private val hubViewModel: HubViewModel
 
     private var dbStations: List<StopPlace>? = null
-    private var hafasStations: List<HafasStation>? = null
+//    private var hafasStations: List<HafasStation>? = null
 
     private var searchResults: MutableList<SearchResult> = mutableListOf()
 
@@ -143,6 +143,7 @@ internal class StationSearchAdapter(
                 (holder as DeparturesViewHolder).bind(searchResult)
 
             (searchResult is StopPlaceSearchResult)-> {
+                @Suppress("Unchecked_Cast")
                 (holder as DbDeparturesViewHolder).bind(searchResult as StationSearchResult<InternalStation?, TimetableCollector?>)
             }
             else ->
@@ -181,17 +182,17 @@ internal class StationSearchAdapter(
             }
         }
 
-        hafasStations?.let {
-            for (hafasStation in it) {
-                searchResults.add(
-                    HafasStationSearchResult(
-                        hafasStation,
-                        recentSearchesStore,
-                        favoriteHafasStationsStore
-                    )
-                )
-            }
-        }
+//        hafasStations?.let {
+//            for (hafasStation in it) {
+//                searchResults.add(
+//                    HafasStationSearchResult(
+//                        hafasStation,
+//                        recentSearchesStore,
+//                        favoriteHafasStationsStore
+//                    )
+//                )
+//            }
+//        }
         notifyDataSetChanged()
     }
 
@@ -205,16 +206,16 @@ internal class StationSearchAdapter(
     }
 
 
-    fun setHafasStations(stations: List<HafasStation>?) {
-        hafasStations = stations
-        hafasError = false
-        updateItems()
-    }
-
-    fun setHafasError() {
-        hafasError = true
-        updateItems()
-    }
+//    fun setHafasStations(stations: List<HafasStation>?) {
+//        hafasStations = stations
+//        hafasError = false
+//        updateItems()
+//    }
+//
+//    fun setHafasError() {
+//        hafasError = true
+//        updateItems()
+//    }
 
     fun setDBStations(stations: List<StopPlace>?) {
         dbError = false

@@ -18,7 +18,7 @@ class LoadingContentDecorationViewHolder @JvmOverloads constructor(
     emptyText: Int = R.id.empty_message
 ) : RecyclerView.ViewHolder(itemView) {
     private val container: ViewAnimator?
-    private val errorTextView: TextView
+    private val errorTextView: TextView?
     private val emptyTextView: TextView?
 
     init {
@@ -44,14 +44,11 @@ class LoadingContentDecorationViewHolder @JvmOverloads constructor(
 
     @Suppress("UNUSED")
     fun showError(message: CharSequence?) {
-        val errorTextView = errorTextView
-        if (errorTextView != null) {
             if (message != null) {
-                errorTextView.text = message
+                errorTextView?.text = message
             } else {
-                errorTextView.setText(R.string.error_data_unavailable)
+                errorTextView?.setText(R.string.error_data_unavailable)
             }
-        }
         showError()
     }
 
@@ -62,9 +59,7 @@ class LoadingContentDecorationViewHolder @JvmOverloads constructor(
 
     @Suppress("UNUSED")
     fun showEmpty(message: CharSequence?) {
-        if (emptyTextView != null) {
-            emptyTextView.text = message
-        }
+        emptyTextView?.text = message
         showEmpty()
     }
 

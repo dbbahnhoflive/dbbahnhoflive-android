@@ -164,7 +164,7 @@ val Context.isSpokenFeedbackAccessibilityEnabled // talkback
     get() = accessibilityManager?.run {
         val lst =  getEnabledAccessibilityServiceList(AccessibilityServiceInfo.FEEDBACK_SPOKEN)
         val talkbackActive = lst.filter { it.resolveInfo.serviceInfo.name.contains("TalkBack", true) }.isNotEmpty()
-        @Suppress("UNUSED")
+        @Suppress("Unused_Variable")
         val selectToSpeakActive = lst.filter { it.resolveInfo.serviceInfo.name.contains("SelectToSpeak", true) }.isNotEmpty()
 //        isEnabled && lst.isNotEmpty()
         // neu ab Ticket 2455, spokenfeedback NUR, wenn talkback eingeschaltet ist

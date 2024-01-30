@@ -32,7 +32,7 @@ class GoogleLocationPermissions {
             context: Context,
             permissionCheckFunction: () -> Unit,
             permissionResponseFunction: (response: Boolean) -> Unit,
-            @Suppress("UNUSED_PARAMETER")
+            @Suppress("UNUSED_PARAMETER", "SameParameterValue")
             title: String,
             message: String
         ) {
@@ -143,6 +143,7 @@ class GoogleLocationPermissions {
                 }
             }
 
+            @Suppress("UNUSED")
             fun showMapButAskForLocationPermissionsIfNecessary(baseActivity: BaseActivity) {
                 // consent if ok, but - if needed - ask for Location-Permissions
                 askForGoogleLocationPermissionIfNecessary(baseActivity, ::permissionResponse)

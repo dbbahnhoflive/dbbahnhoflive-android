@@ -14,6 +14,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
 import androidx.core.view.isGone
+import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.fragment.app.findFragment
@@ -43,6 +44,10 @@ class HubFragment : androidx.fragment.app.Fragment() {
             ?: 0
 
     private var viewBinding: FragmentHubBinding? = null
+    private var selectedFragment : HubCoreFragment? =  null
+    private var searchStarterFragment : HubCoreFragment? =  null
+    private var nearbyDeparturesFragment : HubCoreFragment? =  null
+    private var favoritsFragment : HubCoreFragment? =  null
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -78,17 +83,23 @@ class HubFragment : androidx.fragment.app.Fragment() {
                return 3
             }
 
-            override fun createFragment(position: Int): Fragment {
-                Log.d("cr", "createFragment: $position")
-                return when (position) {
-                    0 -> SearchStarterFragment()
-                    1 -> FavoritesFragment()
-                    2 -> NearbyDeparturesFragment()
+            override fun createFragment(position: Int) : Fragment {
+                when (position) {
+                    0 -> {
+                        searchStarterFragment = SearchStarterFragment()
+                        selectedFragment = searchStarterFragment
+                    }
+                    1 ->{favoritsFragment = FavoritesFragment()
+                        selectedFragment =  favoritsFragment}
+
+                    2 -> {nearbyDeparturesFragment = NearbyDeparturesFragment()
+                        selectedFragment = nearbyDeparturesFragment }
 
                     else -> throw IllegalArgumentException()
                 }
-        }
+                return selectedFragment as Fragment
             }
+        }
 
         pager.registerOnPageChangeCallback (object : ViewPager2.OnPageChangeCallback() {
             override fun onPageSelected(position: Int) {
@@ -97,6 +108,28 @@ class HubFragment : androidx.fragment.app.Fragment() {
                 tabNearby.isSelected = position == 2
 
                 latestTabPreferences?.edit()?.putInt(PREF_LATEST_TAB, position)?.apply()
+
+                when {
+
+                    tabSearch.isSelected -> {
+                        favoritsFragment?.setFragmentVisible(false)
+                        nearbyDeparturesFragment?.setFragmentVisible(false)
+                        searchStarterFragment?.setFragmentVisible(true)
+                    }
+                    tabFavorites.isSelected -> {
+                        nearbyDeparturesFragment?.setFragmentVisible(false)
+                        searchStarterFragment?.setFragmentVisible(false)
+                        favoritsFragment?.setFragmentVisible(true)
+                    }
+                    tabNearby.isSelected-> {
+                        searchStarterFragment?.setFragmentVisible(false)
+                        favoritsFragment?.setFragmentVisible(false)
+                        nearbyDeparturesFragment?.setFragmentVisible(true)
+                    }
+
+
+                }
+
                 super.onPageSelected(position)
             }
         })

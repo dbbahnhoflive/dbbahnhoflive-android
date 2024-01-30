@@ -557,6 +557,7 @@ class StationActivity : BaseActivity(), StationProvider, RootProvider, TrackingM
         return false
     }
 
+    @Suppress("SameParameterValue")
     private fun showElevators(removeFeaturesFragment: Boolean) {
 
         // can be opened from station
@@ -698,6 +699,7 @@ class StationActivity : BaseActivity(), StationProvider, RootProvider, TrackingM
         }
         if (intent.hasExtra(ARG_EQUIPMENT_ID)) {
             try {
+
                 when (EquipmentID.entries[intent.getIntExtra(ARG_EQUIPMENT_ID, 0)]) {
                     EquipmentID.LOCKERS -> showLockers(true)
                     EquipmentID.RAIL_REPLACEMENT -> showRailReplacement()

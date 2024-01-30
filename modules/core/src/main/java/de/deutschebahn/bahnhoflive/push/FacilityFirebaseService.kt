@@ -28,8 +28,8 @@ class FacilityFirebaseService : FirebaseMessagingService() {
 
     override fun onNewToken(s: String) {
         super.onNewToken(s)
-        if(BuildConfig.DEBUG)
-        Log.d("cr", "Refreshed token: $s")
+        if (BuildConfig.DEBUG)
+            Log.d("cr", "Refreshed token: $s")
     }
 
     // always called !!!! (in foreground AND in background !!!)
@@ -70,10 +70,9 @@ class FacilityFirebaseService : FirebaseMessagingService() {
 
         try {
             ret = itemList[itemName].toString().trim()
-        }
-        catch(e : Exception) {
-            if(BuildConfig.DEBUG)
-            Log.d("cr", "Exception in getValueSafeString2: " + e.message.toString())
+        } catch (e: Exception) {
+            if (BuildConfig.DEBUG)
+                Log.d("cr", "Exception in getValueSafeString2: " + e.message.toString())
         }
 
         return ret
@@ -85,10 +84,9 @@ class FacilityFirebaseService : FirebaseMessagingService() {
 
         try {
             ret = itemList[itemName].toString().toInt()
-        }
-        catch(e : Exception) {
-            if(BuildConfig.DEBUG)
-            Log.d("cr", "Exception in getValueSafeInt: " + e.message.toString())
+        } catch (e: Exception) {
+            if (BuildConfig.DEBUG)
+                Log.d("cr", "Exception in getValueSafeInt: " + e.message.toString())
         }
 
         return ret
@@ -266,14 +264,12 @@ class FacilityFirebaseService : FirebaseMessagingService() {
         val state =  itemList["facilityState"] ?: ""
         val station = itemList["stationName"] ?: ""
 
-        var msgState = ""
-
         if (type == "elevator")
             type = "Aufzug"
         else if (type == "escalator")
             type = "Rolltreppe"
 
-        msgState = when(state) {
+        val msgState: String = when(state) {
             "ACTIVE" ->  "in Betrieb"
             "INACTIVE" ->  "außer Betrieb"
             else ->  "Betriebsstatus unbekannt"
@@ -306,11 +302,10 @@ class FacilityFirebaseService : FirebaseMessagingService() {
 
                     }
 
-                }
-                catch(e : Exception) {
-                    if(BuildConfig.DEBUG)
+                } catch (e: Exception) {
+                if (BuildConfig.DEBUG)
                     Log.d("cr", e.message.toString())
-                }
+            }
 
                 // sendNotification(itemList, itemList["message"]) // todo: only for test-equipmentNumber (see BaseApplication, test-equips are not enabled)
         }
