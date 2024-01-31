@@ -7,7 +7,6 @@ package de.deutschebahn.bahnhoflive.ui.station.timetable
 
 import android.content.Intent
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -15,6 +14,7 @@ import android.widget.ViewAnimator
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.LiveData
+import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.asLiveData
 import androidx.recyclerview.widget.RecyclerView
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
@@ -38,16 +38,13 @@ class DbTimetableFragment : Fragment(), MapPresetProvider {
 
     private var adapter: DbTimetableAdapter? = null
 
-    private val selectedTrainInfo get() = stationViewModel.selectedTrainInfo
+    private val selectedTrainInfo: MutableLiveData<TrainInfo> get() = stationViewModel.selectedTrainInfo
 
     private val timetableCollector: TimetableCollector
         get() = stationViewModel.timetableCollector
 
     val trackingManager: TrackingManager
         get() = fromActivity(activity)
-//
-//    private var trainInfoFromIntent: TrainInfo? = null
-//    private var trainInfoFromIntentSimulateClick = false
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -123,11 +120,6 @@ class DbTimetableFragment : Fragment(), MapPresetProvider {
             }
             adapter.setTimetable(timetable)
             viewSwitcher.displayedChild = 0
-//            trainInfoFromIntent?.let {
-//                    trainInfoFromIntentSimulateClick = true
-//                    selectedTrainInfo.value = trainInfoFromIntent
-//                    trainInfoFromIntent = null
-//            }
         }
         stationViewModel.timetableErrorsLiveData.observe(viewLifecycleOwner) { volleyError ->
             if (volleyError == true) {
@@ -148,21 +140,16 @@ class DbTimetableFragment : Fragment(), MapPresetProvider {
                 val itemIndex = adapter.setSelectedItem(trainInfo)
                 if (itemIndex >= 0) {
                     recyclerView.scrollToPosition(itemIndex)
-//                    if (trainInfoFromIntentSimulateClick) {
-//                        trainInfoFromIntentSimulateClick = false
                         val trainEvent = TrainEvent.DEPARTURE
                         val historyFragment = HistoryFragment.parentOf(this)
                         historyFragment.push(JourneyFragment(trainInfo, trainEvent, trainInfo.showWagonOrder))
-//                    }
                 }
                 selectedTrainInfo.value = null
-//                trainInfoFromIntentSimulateClick = false
             }
         }
 
         stationViewModel.backNavigationLiveData.observe(viewLifecycleOwner) {
             if (it != null && it.navigateTo) {
-                Log.d("cr", "navigate back from dbtimetablefragment ")
 
                 if (it.trainInfo != null) {
 
@@ -219,6 +206,6 @@ class DbTimetableFragment : Fragment(), MapPresetProvider {
 
     companion object {
         @JvmField
-        val TAG = DbTimetableFragment::class.java.simpleName
+        val TAG: String = DbTimetableFragment::class.java.simpleName
     }
 }
