@@ -1486,7 +1486,7 @@ class StationViewModel(application: Application) : HafasTimetableViewModel(appli
             if (risPlatformList != null)
                     risPlatforms.addAll(risPlatformList)
 
-            var poiPlatforms = poiPlatformList?.filter {
+            val poiPlatforms = poiPlatformList?.filter {
                 it.type == MenuMapping.PLATFORM
             }
 

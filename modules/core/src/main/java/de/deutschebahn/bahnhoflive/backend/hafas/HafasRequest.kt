@@ -17,7 +17,6 @@ import de.deutschebahn.bahnhoflive.backend.CappingHttpStack.Cappable
 import de.deutschebahn.bahnhoflive.backend.Countable
 import de.deutschebahn.bahnhoflive.backend.ForcedCacheEntryFactory
 import de.deutschebahn.bahnhoflive.backend.VolleyRestListener
-import java.io.UnsupportedEncodingException
 import java.net.URLEncoder
 
 abstract class HafasRequest<T>(
@@ -84,7 +83,7 @@ abstract class HafasRequest<T>(
             return try {
                 URLEncoder.encode(value, java.nio.charset.StandardCharsets.UTF_8.name())
             } catch (e: Exception) {
-                @Suppress("DEPRECATED")
+                @Suppress("deprecation")
                 URLEncoder.encode(value)
             }
         }

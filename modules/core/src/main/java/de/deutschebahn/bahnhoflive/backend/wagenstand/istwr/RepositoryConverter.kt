@@ -11,7 +11,33 @@ import android.util.Log
 import de.deutschebahn.bahnhoflive.BuildConfig
 import de.deutschebahn.bahnhoflive.backend.wagenstand.WagenstandDataMergeFactory
 import de.deutschebahn.bahnhoflive.backend.wagenstand.istwr.model.WagenstandAllFahrzeugData
-import de.deutschebahn.bahnhoflive.backend.wagenstand.istwr.model.WagenstandAllFahrzeugData.Category.*
+import de.deutschebahn.bahnhoflive.backend.wagenstand.istwr.model.WagenstandAllFahrzeugData.Category.DOPPELSTOCKAUTOTRANSPORTWAGENREISEZUGWAGENBAUART
+import de.deutschebahn.bahnhoflive.backend.wagenstand.istwr.model.WagenstandAllFahrzeugData.Category.DOPPELSTOCKSTEUERWAGENERSTEKLASSE
+import de.deutschebahn.bahnhoflive.backend.wagenstand.istwr.model.WagenstandAllFahrzeugData.Category.DOPPELSTOCKSTEUERWAGENERSTEZWEITEKLASSE
+import de.deutschebahn.bahnhoflive.backend.wagenstand.istwr.model.WagenstandAllFahrzeugData.Category.DOPPELSTOCKSTEUERWAGENZWEITEKLASSE
+import de.deutschebahn.bahnhoflive.backend.wagenstand.istwr.model.WagenstandAllFahrzeugData.Category.DOPPELSTOCKWAGENERSTEKLASSE
+import de.deutschebahn.bahnhoflive.backend.wagenstand.istwr.model.WagenstandAllFahrzeugData.Category.DOPPELSTOCKWAGENERSTEZWEITEKLASSE
+import de.deutschebahn.bahnhoflive.backend.wagenstand.istwr.model.WagenstandAllFahrzeugData.Category.DOPPELSTOCKWAGENZWEITEKLASSE
+import de.deutschebahn.bahnhoflive.backend.wagenstand.istwr.model.WagenstandAllFahrzeugData.Category.GEPAECKWAGEN
+import de.deutschebahn.bahnhoflive.backend.wagenstand.istwr.model.WagenstandAllFahrzeugData.Category.HALBGEPAECKWAGENERSTEKLASSE
+import de.deutschebahn.bahnhoflive.backend.wagenstand.istwr.model.WagenstandAllFahrzeugData.Category.HALBGEPAECKWAGENZWEITEKLASSE
+import de.deutschebahn.bahnhoflive.backend.wagenstand.istwr.model.WagenstandAllFahrzeugData.Category.HALBSPEISEWAGENERSTEKLASSE
+import de.deutschebahn.bahnhoflive.backend.wagenstand.istwr.model.WagenstandAllFahrzeugData.Category.HALBSPEISEWAGENZWEITEKLASSE
+import de.deutschebahn.bahnhoflive.backend.wagenstand.istwr.model.WagenstandAllFahrzeugData.Category.LIEGEWAGENERSTEKLASSE
+import de.deutschebahn.bahnhoflive.backend.wagenstand.istwr.model.WagenstandAllFahrzeugData.Category.LIEGEWAGENZWEITEKLASSE
+import de.deutschebahn.bahnhoflive.backend.wagenstand.istwr.model.WagenstandAllFahrzeugData.Category.LOK
+import de.deutschebahn.bahnhoflive.backend.wagenstand.istwr.model.WagenstandAllFahrzeugData.Category.REISEZUGWAGENERSTEKLASSE
+import de.deutschebahn.bahnhoflive.backend.wagenstand.istwr.model.WagenstandAllFahrzeugData.Category.REISEZUGWAGENERSTEZWEITEKLASSE
+import de.deutschebahn.bahnhoflive.backend.wagenstand.istwr.model.WagenstandAllFahrzeugData.Category.REISEZUGWAGENZWEITEKLASSE
+import de.deutschebahn.bahnhoflive.backend.wagenstand.istwr.model.WagenstandAllFahrzeugData.Category.SCHLAFWAGENERSTEKLASSE
+import de.deutschebahn.bahnhoflive.backend.wagenstand.istwr.model.WagenstandAllFahrzeugData.Category.SCHLAFWAGENERSTEZWEITEKLASSE
+import de.deutschebahn.bahnhoflive.backend.wagenstand.istwr.model.WagenstandAllFahrzeugData.Category.SCHLAFWAGENZWEITEKLASSE
+import de.deutschebahn.bahnhoflive.backend.wagenstand.istwr.model.WagenstandAllFahrzeugData.Category.SPEISEWAGEN
+import de.deutschebahn.bahnhoflive.backend.wagenstand.istwr.model.WagenstandAllFahrzeugData.Category.STEUERWAGENERSTEKLASSE
+import de.deutschebahn.bahnhoflive.backend.wagenstand.istwr.model.WagenstandAllFahrzeugData.Category.STEUERWAGENERSTEZWEITEKLASSE
+import de.deutschebahn.bahnhoflive.backend.wagenstand.istwr.model.WagenstandAllFahrzeugData.Category.STEUERWAGENZWEITEKLASSE
+import de.deutschebahn.bahnhoflive.backend.wagenstand.istwr.model.WagenstandAllFahrzeugData.Category.TRIEBKOPF
+import de.deutschebahn.bahnhoflive.backend.wagenstand.istwr.model.WagenstandAllFahrzeugData.Category.TRIEBWAGENBAUREIHE628928
 import de.deutschebahn.bahnhoflive.backend.wagenstand.istwr.model.WagenstandIstInformationData
 import de.deutschebahn.bahnhoflive.backend.wagenstand.istwr.model.WagenstandIstResponseData
 import de.deutschebahn.bahnhoflive.backend.wagenstand.models.FeatureStatus
@@ -23,6 +49,7 @@ import de.deutschebahn.bahnhoflive.repository.trainformation.TrainFormation
 import de.deutschebahn.bahnhoflive.repository.trainformation.Waggon
 import java.text.Collator
 import java.text.SimpleDateFormat
+import java.util.Date
 import java.util.Locale
 
 class RepositoryConverter {
@@ -127,8 +154,8 @@ class RepositoryConverter {
             waggons,
             trains,
             halt.abfahrtszeit.let {
-                SimpleDateFormat("HH:mm").format(
-                    SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss").parse(it))
+                val date : Date = SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss").parse(it)
+                SimpleDateFormat("HH:mm").format(date)
 
             },
             halt.gleisbezeichnung,

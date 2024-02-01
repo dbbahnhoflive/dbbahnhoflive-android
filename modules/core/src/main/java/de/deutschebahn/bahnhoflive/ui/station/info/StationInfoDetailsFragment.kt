@@ -24,7 +24,6 @@ import de.deutschebahn.bahnhoflive.ui.map.MapPresetProvider
 import de.deutschebahn.bahnhoflive.ui.map.content.rimap.RimapFilter
 import de.deutschebahn.bahnhoflive.ui.station.HistoryFragment
 import de.deutschebahn.bahnhoflive.ui.station.StationViewModel
-import java.util.*
 
 class StationInfoDetailsFragment :
     RecyclerFragment<StationInfoAdapter>(R.layout.fragment_recycler_linear),
@@ -42,7 +41,7 @@ class StationInfoDetailsFragment :
         serviceContents = if(Build.VERSION.SDK_INT>=Build.VERSION_CODES.TIRAMISU)
             arguments?.getParcelableArrayList(ARG_SERVICE_CONTENTS, ServiceContent::class.java) ?: emptyList()
         else {
-            @Suppress("Deprecated")
+            @Suppress("deprecation")
             arguments?.getParcelableArrayList(ARG_SERVICE_CONTENTS) ?: emptyList()
         }
         arguments?.let {

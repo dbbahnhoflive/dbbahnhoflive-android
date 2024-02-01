@@ -21,8 +21,6 @@ import de.deutschebahn.bahnhoflive.backend.wagenstand.istwr.model.WagenstandFahr
 public class WagenstandDataMergeFactory {
 
     public static final Collator COLLATOR = Collator.getInstance(Locale.GERMAN);
-    private static String TAG = WagenstandDataMergeFactory.class.getSimpleName();
-
 
     public static String extractSectionSpan(WagenstandFahrzeugData wagenstandFahrzeugData) {
         if (wagenstandFahrzeugData == null) {
