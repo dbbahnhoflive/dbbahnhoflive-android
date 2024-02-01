@@ -61,6 +61,7 @@ class FavoritesAdapter(val owner: LifecycleOwner,
             notifyDataSetChanged()
         }
 
+@Suppress("Unchecked_Cast")
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder<out Any> {
 
         return when (viewType) {

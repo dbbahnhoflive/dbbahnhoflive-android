@@ -41,9 +41,10 @@ class StationInfoDetailsFragment :
 
         serviceContents = if(Build.VERSION.SDK_INT>=Build.VERSION_CODES.TIRAMISU)
             arguments?.getParcelableArrayList(ARG_SERVICE_CONTENTS, ServiceContent::class.java) ?: emptyList()
-        else
+        else {
+            @Suppress("Deprecated")
             arguments?.getParcelableArrayList(ARG_SERVICE_CONTENTS) ?: emptyList()
-
+        }
         arguments?.let {
             it.getCharSequence(FragmentArgs.TITLE)?.let {itTitle->
                 setTitle(itTitle)

@@ -8,7 +8,6 @@ package de.deutschebahn.bahnhoflive.repository.trainformation
 
 import android.os.Parcel
 import android.os.Parcelable
-import de.deutschebahn.bahnhoflive.backend.wagenstand.favendo.model.LegacyTrain
 
 class Train(
     val number: String,
@@ -47,6 +46,3 @@ class Train(
     }
 }
 
-fun LegacyTrain.toTrain() = Train(
-    number.orEmpty(), type.orEmpty(), destinationStation.orEmpty(), sectionSpan.orEmpty(), destinationVia
-)

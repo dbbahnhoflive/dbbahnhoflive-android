@@ -82,9 +82,9 @@ abstract class HafasRequest<T>(
         @JvmStatic
         protected fun encodeParameter(value: String?): String {
             return try {
-                URLEncoder.encode(value, java.nio.charset.StandardCharsets.UTF_8.toString())
-            } catch (e: UnsupportedEncodingException) {
-                @Suppress("DEPRICATED")
+                URLEncoder.encode(value, java.nio.charset.StandardCharsets.UTF_8.name())
+            } catch (e: Exception) {
+                @Suppress("DEPRECATED")
                 URLEncoder.encode(value)
             }
         }

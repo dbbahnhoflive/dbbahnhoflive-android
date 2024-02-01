@@ -9,7 +9,10 @@ package de.deutschebahn.bahnhoflive.util
 import android.content.Context
 import android.content.Intent
 import android.os.Build
+import android.os.Bundle
+import java.io.Serializable
 import kotlin.math.abs
+
 
 const val INTENT_CREATION_TIME_MS = "intent_creation_time"
 
@@ -54,3 +57,18 @@ fun <T> Intent.getParcelableExtraCompatible(key: String?, clazz: Class<T>): T? {
         null
     }
 }
+
+
+fun <T : Serializable?> Intent.getSerializableExtraCompatible(key: String, clazz: Class<T>): T? {
+    return try {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU)
+            this.getSerializableExtra(key, clazz)
+        else {
+            @Suppress("Unchecked_Cast")
+            this.getSerializableExtra(key) as? T?
+        }
+    }catch (_: Exception) {
+        null
+    }
+}
+

@@ -129,7 +129,7 @@ class OccupancyViewBinder(
     ).apply {
         PopupWindowCompat.setOverlapAnchor(this, true)
         isOutsideTouchable = true
-        setBackgroundDrawable(context.resources.getDrawable(R.drawable.shape_background_occupancy_day_of_week_popup))
+        setBackgroundDrawable(ContextCompat.getDrawable(context, R.drawable.shape_background_occupancy_day_of_week_popup))
         WindowManager.LayoutParams.TYPE_APPLICATION_PANEL
         contentView = dayOfWeekPopupView.root
 
@@ -178,7 +178,7 @@ class OccupancyViewBinder(
             includeOccupancyBinding.dailyOccupancyPagerIndicator,
             this
         ) { tab, _ ->
-            tab.icon = resources.getDrawable(R.drawable.shape_page_indicator_news)
+            tab.icon = ContextCompat.getDrawable( this.context, R.drawable.shape_page_indicator_news)
         }.attach()
 
     }

@@ -9,7 +9,6 @@ package de.deutschebahn.bahnhoflive.repository.trainformation
 import android.os.Parcel
 import android.os.Parcelable
 import androidx.annotation.ColorInt
-import de.deutschebahn.bahnhoflive.backend.wagenstand.favendo.model.LegacyWaggon
 import de.deutschebahn.bahnhoflive.backend.wagenstand.models.FeatureStatus
 import de.deutschebahn.bahnhoflive.util.readParcelableCompatible
 
@@ -141,23 +140,3 @@ class LegacyFeature(val symbol: String = "p") : Parcelable { // defaults to rest
         }
 }
 
-fun LegacyWaggon.toWaggon(train: Train?) = Waggon(
-    train,
-    isWaggonOfTypRestaurant,
-    features.orEmpty(),
-    symbols.orEmpty().map {
-        LegacyFeature(it)
-    },
-    differentDestination,
-    waggonHasMultipleClasses,
-    sections,
-    classOfWaggon,
-    colorForType(),
-    secondaryColor,
-    isWaggon,
-    length,
-    isWaggonHead,
-    isWaggonTail,
-    isTrainHeadBothWays,
-    waggonNumber.orEmpty()
-)

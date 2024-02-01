@@ -268,7 +268,7 @@ class StationViewModel(application: Application) : HafasTimetableViewModel(appli
 
     }
 
-    val recentContentQueriesStore = RecentContentQueriesStore(this.application)
+   private val recentContentQueriesStore = RecentContentQueriesStore(this.application)
 
     val staticInfoLiveData = object : MutableLiveData<StaticInfoCollection>() {
         private val token = Token()
@@ -318,7 +318,7 @@ class StationViewModel(application: Application) : HafasTimetableViewModel(appli
     val risServiceAndCategoryResource =
         RisServiceAndCategoryResource(openHoursParser)
 
-    val infoAvailability = risServiceAndCategoryResource.data.switchMap {
+    private val infoAvailability = risServiceAndCategoryResource.data.switchMap {
         it?.let { detailedStopPlace ->
             staticInfoLiveData.map {
                 it?.let { staticInfoCollection ->
@@ -419,10 +419,6 @@ class StationViewModel(application: Application) : HafasTimetableViewModel(appli
     val trainCategoryFilterFlow = MutableStateFlow<String?>(null)
     val showArrivalsStateFlow = MutableStateFlow<Boolean>(false)
 
-//    private val waggonOrderSubject = BehaviorSubject.create<TrainInfo>()
-
-//    val waggonOrderObservable = waggonOrderSubject.distinctUntilChanged()
-
     fun log(msg: String) {
         Log.d(StationViewModel::class.java.simpleName, msg)
     }
@@ -514,10 +510,6 @@ class StationViewModel(application: Application) : HafasTimetableViewModel(appli
         }
     }
 
-//    fun showWaggonOrder(trainInfo: TrainInfo) {
-//        waggonOrderSubject.onNext(trainInfo)
-//    }
-
     fun clearStationNavigation(stationNavigation: StationNavigation) {
         if (stationNavigation == this.stationNavigation) {
             this.stationNavigation = null
@@ -532,7 +524,7 @@ class StationViewModel(application: Application) : HafasTimetableViewModel(appli
         stationNavigation?.showLocalTransport()
     }
 
-    val travelCenterLiveData =
+    private val travelCenterLiveData =
         risServiceAndCategoryResource.data.map { risServicesAndCategory ->
             risServicesAndCategory?.closestTravelCenter
         }
@@ -612,7 +604,7 @@ class StationViewModel(application: Application) : HafasTimetableViewModel(appli
 
     }
 
-    val genuineContentSearchResults: LiveData<Pair<Pair<String?, Boolean>, List<ContentSearchResult>?>> =
+    private val genuineContentSearchResults: LiveData<Pair<Pair<String?, Boolean>, List<ContentSearchResult>?>> =
         MediatorLiveData<Pair<Pair<String?, Boolean>, List<ContentSearchResult>?>>().apply {
 
             val poiSearchConfiguration =

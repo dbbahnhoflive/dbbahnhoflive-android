@@ -8,6 +8,8 @@ package de.deutschebahn.bahnhoflive.ui.map
 import android.content.Intent
 import android.os.Bundle
 import android.os.Parcelable
+import de.deutschebahn.bahnhoflive.util.getParcelableExtraCompatible
+import de.deutschebahn.bahnhoflive.util.getSerializableExtraCompatible
 
 class InitialPoiManager(intent: Intent?, savedInstanceState: Bundle?) {
 
@@ -18,11 +20,11 @@ class InitialPoiManager(intent: Intent?, savedInstanceState: Bundle?) {
     private val done = false
 
     init {
-        source = intent?.getSerializableExtra(ARG_SOURCE) as Content.Source?
+        source = intent?.getSerializableExtraCompatible(ARG_SOURCE, Content.Source::class.java)
 
         initialItem = intent?.takeIf {
             savedInstanceState == null || !savedInstanceState.getBoolean(STATE_DONE, false)
-        }?.getParcelableExtra(ARG_POI)
+        }?.getParcelableExtraCompatible(ARG_POI, Parcelable::class.java)
     }
 
     fun onSaveInstanceState(outState: Bundle) {

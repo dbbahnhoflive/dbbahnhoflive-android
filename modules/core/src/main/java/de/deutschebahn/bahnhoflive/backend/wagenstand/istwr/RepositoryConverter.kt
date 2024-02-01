@@ -6,9 +6,10 @@
 
 package de.deutschebahn.bahnhoflive.backend.wagenstand.istwr
 
+import android.graphics.Color
 import android.util.Log
+import de.deutschebahn.bahnhoflive.BuildConfig
 import de.deutschebahn.bahnhoflive.backend.wagenstand.WagenstandDataMergeFactory
-import de.deutschebahn.bahnhoflive.backend.wagenstand.favendo.model.LegacyWaggon
 import de.deutschebahn.bahnhoflive.backend.wagenstand.istwr.model.WagenstandAllFahrzeugData
 import de.deutschebahn.bahnhoflive.backend.wagenstand.istwr.model.WagenstandAllFahrzeugData.Category.*
 import de.deutschebahn.bahnhoflive.backend.wagenstand.istwr.model.WagenstandIstInformationData
@@ -22,7 +23,7 @@ import de.deutschebahn.bahnhoflive.repository.trainformation.TrainFormation
 import de.deutschebahn.bahnhoflive.repository.trainformation.Waggon
 import java.text.Collator
 import java.text.SimpleDateFormat
-import java.util.*
+import java.util.Locale
 
 class RepositoryConverter {
     private val all = setOf(
@@ -65,6 +66,14 @@ class RepositoryConverter {
     private val luggageCategories = all.filter { it.contains("GEPAECK") }.toHashSet()
     private val splitWaggonCategories = all.filter { it.contains("STEUERWAGEN") }.toHashSet()
 
+    private val COLOR_SECOND_CLASS = Color.rgb(0, 178, 27)
+    private val COLOR_FIRST_CLASS = Color.rgb(255, 230, 13)
+    private val COLOR_RESTAURANT = Color.rgb(255, 0, 0)
+    private val COLOR_LUGGAGE = Color.rgb(153, 153, 153)
+    private val COLOR_SLEEPING = Color.rgb(0, 115, 255)
+    private val COLOR_MISC = Color.rgb(255, 97, 3)
+    private val COLOR_NONE = Color.argb(0, 1, 1, 1)
+    
     fun toTrainFormation(wagenstandIstInformationData: WagenstandIstInformationData) = wagenstandIstInformationData.run {
 
         val waggons = mutableListOf<Waggon>()
@@ -138,8 +147,8 @@ class RepositoryConverter {
         false,
         listOf(wagenstandAllFahrzeugData.fahrzeugsektor),
         "",
-        LegacyWaggon.COLOR_MISC,
-        LegacyWaggon.COLOR_NONE,
+        COLOR_MISC,
+        COLOR_NONE,
         false,
         1,
         first,
@@ -159,10 +168,12 @@ class RepositoryConverter {
                     val status = Status.valueOf(it.status)
                     FeatureStatus(waggonFeature, status)
                 } catch (e: Exception) {
+                   if(BuildConfig.DEBUG) {
                     Log.i(
                         TrainFormation::class.java.simpleName,
                         "waggon feature unusable: ${it.ausstattungsart}"
                     )
+                   }
                     null
                 }
             },
@@ -176,19 +187,19 @@ class RepositoryConverter {
                 else -> ""
             },
             when (kategorie) {
-                in firstClassCategories -> LegacyWaggon.COLOR_FIRST_CLASS
-                in restaurantCategories -> LegacyWaggon.COLOR_RESTAURANT
-                in secondClassCategories -> LegacyWaggon.COLOR_SECOND_CLASS
-                in sleepingCategories -> LegacyWaggon.COLOR_SLEEPING
-                in luggageCategories -> LegacyWaggon.COLOR_LUGGAGE
-                else -> LegacyWaggon.COLOR_MISC
+                in firstClassCategories -> COLOR_FIRST_CLASS
+                in restaurantCategories -> COLOR_RESTAURANT
+                in secondClassCategories -> COLOR_SECOND_CLASS
+                in sleepingCategories -> COLOR_SLEEPING
+                in luggageCategories -> COLOR_LUGGAGE
+                else -> COLOR_MISC
             },
             when (kategorie) {
-                in luggageCategories -> LegacyWaggon.COLOR_LUGGAGE
-                in sleepingCategories -> LegacyWaggon.COLOR_SLEEPING
-                in secondClassCategories -> LegacyWaggon.COLOR_SECOND_CLASS
-                in restaurantCategories -> LegacyWaggon.COLOR_RESTAURANT
-                else -> LegacyWaggon.COLOR_NONE
+                in luggageCategories -> COLOR_LUGGAGE
+                in sleepingCategories -> COLOR_SLEEPING
+                in secondClassCategories -> COLOR_SECOND_CLASS
+                in restaurantCategories -> COLOR_RESTAURANT
+                else -> COLOR_NONE
             },
             kategorie !in nonWagonCategories,
             if (half || kategorie in directionalEngineCategory) 1 else 2,
