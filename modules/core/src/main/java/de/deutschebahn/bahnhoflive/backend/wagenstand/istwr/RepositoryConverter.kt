@@ -49,7 +49,6 @@ import de.deutschebahn.bahnhoflive.repository.trainformation.TrainFormation
 import de.deutschebahn.bahnhoflive.repository.trainformation.Waggon
 import java.text.Collator
 import java.text.SimpleDateFormat
-import java.util.Date
 import java.util.Locale
 
 class RepositoryConverter {
@@ -154,8 +153,9 @@ class RepositoryConverter {
             waggons,
             trains,
             halt.abfahrtszeit.let {
-                val date : Date = SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss").parse(it)
-                SimpleDateFormat("HH:mm").format(date)
+                SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss", Locale.GERMANY).parse(it)?.let { itDate ->
+                    SimpleDateFormat("HH:mm", Locale.GERMANY).format(itDate)
+                } ?: ""
 
             },
             halt.gleisbezeichnung,

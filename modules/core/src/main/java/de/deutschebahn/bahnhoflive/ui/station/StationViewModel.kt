@@ -424,6 +424,7 @@ class StationViewModel(application: Application) : HafasTimetableViewModel(appli
     }
 
 
+    @Suppress("unused")
     @OptIn(ExperimentalCoroutinesApi::class)
     private val updatedStationFlow = stationStateFlow.filterNotNull().mapLatest { station ->
         getApplication<BaseApplication>().applicationServices.updatedStationRepository.getUpdatedStation(
