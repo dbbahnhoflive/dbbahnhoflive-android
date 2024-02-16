@@ -23,7 +23,6 @@ import de.deutschebahn.bahnhoflive.repository.trainformation.TrainFormation
 import de.deutschebahn.bahnhoflive.repository.trainformation.Waggon
 import java.text.Collator
 import java.text.SimpleDateFormat
-import java.util.Date
 import java.util.Locale
 
 class RepositoryConverter {

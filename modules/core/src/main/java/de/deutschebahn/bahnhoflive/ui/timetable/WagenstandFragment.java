@@ -9,9 +9,7 @@ package de.deutschebahn.bahnhoflive.ui.timetable;
 import static android.provider.Settings.ACTION_REQUEST_SCHEDULE_EXACT_ALARM;
 
 import android.app.Activity;
-import android.app.AlertDialog;
 import android.content.Context;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Build;
@@ -52,6 +50,7 @@ import de.deutschebahn.bahnhoflive.backend.ris.model.TrainInfo;
 import de.deutschebahn.bahnhoflive.backend.wagenstand.WagenstandAlarm;
 import de.deutschebahn.bahnhoflive.backend.wagenstand.WagenstandAlarmManager;
 import de.deutschebahn.bahnhoflive.backend.wagenstand.WagenstandRequestManager;
+import de.deutschebahn.bahnhoflive.push.NotificationChannelManager;
 import de.deutschebahn.bahnhoflive.repository.MergedStation;
 import de.deutschebahn.bahnhoflive.repository.Station;
 import de.deutschebahn.bahnhoflive.repository.trainformation.Train;
@@ -67,8 +66,6 @@ import de.deutschebahn.bahnhoflive.ui.map.content.rimap.Track;
 import de.deutschebahn.bahnhoflive.ui.station.StationViewModel;
 import de.deutschebahn.bahnhoflive.util.AlertX;
 import de.deutschebahn.bahnhoflive.util.accessibility.AccessibilityUtilities;
-import de.deutschebahn.bahnhoflive.push.NotificationChannelManager;
-import kotlin.Unit;
 
 public class WagenstandFragment extends Fragment implements View.OnLayoutChangeListener, WagenstandSectionIndicator.WagenstandSectionIndicatorListener,
         MapPresetProvider, VolleyRestListener<TrainFormation> {
