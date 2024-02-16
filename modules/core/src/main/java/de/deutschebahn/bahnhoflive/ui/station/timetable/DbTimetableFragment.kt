@@ -80,6 +80,14 @@ class DbTimetableFragment : Fragment(), MapPresetProvider {
         { // onClick
                 trainInfo: TrainInfo?, trainEvent: TrainEvent?, _: Int? ->
             run {
+
+                trackingManager.track(
+                    TrackingManager.TYPE_ACTION,
+                    TrackingManager.Screen.H2,
+                    TrackingManager.Action.TAP,
+                    TrackingManager.UiElement.VERBINDUNG_AUSWAHL
+                )
+
                 val historyFragment = HistoryFragment.parentOf(this)
                 historyFragment.push(JourneyFragment(trainInfo!!, trainEvent!!))
                 Unit

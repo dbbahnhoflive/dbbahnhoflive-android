@@ -27,6 +27,7 @@ public abstract class NumberAwareCollator<T> implements Comparator<T> {
         final String string1 = toString(o1);
         final String string2 = toString(o2);
 
+        try {
         final Matcher matcher1 = pattern.matcher(string1);
         if (matcher1.matches()) {
             final Matcher matcher2 = pattern.matcher(string2);
@@ -42,6 +43,10 @@ public abstract class NumberAwareCollator<T> implements Comparator<T> {
                     }
                 }
             }
+            }
+        }
+        catch(Exception ignored) {
+
         }
 
         return collator.compare(string1, string2);

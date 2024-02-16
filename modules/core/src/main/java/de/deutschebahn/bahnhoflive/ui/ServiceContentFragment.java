@@ -231,15 +231,21 @@ public class ServiceContentFragment extends Fragment {
                                 // Pattern p = Pattern.compile("[0123456789\\- ]{5,}");
 
                                 Pattern p = Pattern.compile("(>|\\s)[\\d]{3,}/?([^\\D]|\\s)+[\\d]");
-                                final Matcher m = p.matcher(shrinkingDescription);
+                                Matcher m = null;
 
+                                try {
+                                    m = p.matcher(shrinkingDescription);
+                                }
+                                catch(Exception ex) {
+                                    m = null;
+                                }
                                 MBTextView descriptionPartTextView = new MBTextView(activity);
                                 descriptionPartTextView.setTextSize(TypedValue.COMPLEX_UNIT_PX,
                                         getResources().getDimensionPixelSize(serviceDetailsFontSize));
                                 descriptionPartTextView.setLinkTextColor(getResources().getColor(R.color.textcolor_light));
                                 descriptionPartTextView.setMovementMethod(LinkMovementMethod.getInstance());
 
-                                if (m.find()) {
+                                if (m!=null && m.find()) {
                                     final String phoneNumber = m.group().substring(1);
 
                                     int phoneNumberPosition = shrinkingDescription.indexOf(phoneNumber);

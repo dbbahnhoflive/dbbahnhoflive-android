@@ -581,8 +581,13 @@ public class TrainMovementInfo implements Parcelable {
             return null;
         }
 
+        try {
         final Matcher matcher = TRACK_PATTERN.matcher(bestPlatform);
         return matcher.find() ? matcher.group() : null;
+        }
+        catch(Exception exception) {
+            return null;
+        }
     }
 
     @Nullable

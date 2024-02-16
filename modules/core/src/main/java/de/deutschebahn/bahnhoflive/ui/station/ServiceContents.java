@@ -31,6 +31,7 @@ public class ServiceContents {
     public static ArrayList<String> parseDreiSComponents(String fromString) {
         ArrayList<String> components = new ArrayList<>();
         Pattern p = Pattern.compile("<p>.*</p>");
+        try {
         Matcher m = p.matcher(fromString);
         if (m.find()) {
             String descriptionText = m.group();
@@ -38,6 +39,10 @@ public class ServiceContents {
             components.add(descriptionText);
             components.add(phoneNumber);
         } else {
+                components.add(fromString);
+            }
+        }
+        catch(Exception ex) {
             components.add(fromString);
         }
         return components;

@@ -22,11 +22,12 @@ import de.deutschebahn.bahnhoflive.ui.station.timetable.TimetableTrailingItemVie
 import de.deutschebahn.bahnhoflive.ui.station.timetable.TrackingSelectionListener
 import de.deutschebahn.bahnhoflive.util.Collections
 import de.deutschebahn.bahnhoflive.view.SingleSelectionManager
-import java.util.*
+import java.util.Date
+import java.util.LinkedList
 
 class HafasDeparturesAdapter(
     private val onFilterClickListener: View.OnClickListener,
-    trackingManager: TrackingManager,
+    private val trackingManager: TrackingManager,
     private val loadMoreCallback: View.OnClickListener,
     private val hafasDataReceivedCallback : (view:View?, item:DetailedHafasEvent, success:Boolean)->Unit
 ) : androidx.recyclerview.widget.RecyclerView.Adapter<ViewHolder<out Any>>() {
@@ -76,6 +77,13 @@ class HafasDeparturesAdapter(
 
                 HafasEventViewHolder(view, hafasDetailsClickEvent = { _, details ->
                     run {
+                        trackingManager.track(
+                            TrackingManager.TYPE_ACTION,
+                            TrackingManager.Screen.H2,
+                            TrackingManager.Action.TAP,
+                            TrackingManager.UiElement.VERBINDUNG_AUSWAHL
+                        )
+
                         details.requestDetails() // Daten anfordern
                     }
                 }, hafasDataReceivedEvent = { v, details, success ->
