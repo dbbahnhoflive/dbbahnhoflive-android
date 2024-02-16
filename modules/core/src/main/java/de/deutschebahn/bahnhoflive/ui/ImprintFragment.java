@@ -181,12 +181,14 @@ public class ImprintFragment extends Fragment {
             String imprint = getString(in).replaceAll("\\{APP_VERSION\\}", versionInformation);  // todo check
 
 
-            String fullhtmlData = imprint.replace("<p>App Version", "<p>Diese App verwendet Open-Source Software <a href=\"app:lizenzen.html\">Lizenzen</a>.</p>\n" +
-                    "<p>App Version");
+//            String fullhtmlData = imprint.replace("<p>App Version", "<p>Diese App verwendet  <a href=\"app:lizenzen.html\">Open-Source Software Lizenzen</a>.</p>\n" +
+//                    "<p>App Version");
+
+                String fullhtmlData = imprint.replace("settings://analytics", "app:lizenzen.html");
+
 
             webview.loadDataWithBaseURL("file:///android_asset/", fullhtmlData, "text/html", "UTF-8", null);
-            }
-            else
+            } else
                 webview.loadDataWithBaseURL("file:///android_asset/", getString(in), "text/html", "UTF-8", null);
 
 
