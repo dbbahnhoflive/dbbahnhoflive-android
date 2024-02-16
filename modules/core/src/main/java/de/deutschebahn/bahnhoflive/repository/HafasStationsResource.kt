@@ -66,7 +66,7 @@ class HafasStationsResource(val maxStationDistance: Int) : RemoteResource<List<H
 
                     val possiblyDuplicateLines = nearbyStations.asSequence().flatMap {
                         it.products?.asSequence()?.filter {
-                            it.isLocalTransport
+                            it.isExtendedLocalTransport
                         } ?: emptySequence()
                     }.toMutableSet()
 

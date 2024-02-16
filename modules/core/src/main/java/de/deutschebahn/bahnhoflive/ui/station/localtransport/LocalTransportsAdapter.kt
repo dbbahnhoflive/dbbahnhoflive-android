@@ -59,9 +59,9 @@ internal class LocalTransportsAdapter(
                 if(hasLocalTransport(station)) {
                     val extId = station.extId
                     if (evaIds != null && extId != null && evaIds.ids.contains(extId)) {
-                        if (!extId.equals(evaIds.main)) {
+//                        if (!extId.equals(evaIds.main)) {
                             inStation.add(station)
-                        }
+//                        }
                     } else {
                         nearby.add(station)
                     }

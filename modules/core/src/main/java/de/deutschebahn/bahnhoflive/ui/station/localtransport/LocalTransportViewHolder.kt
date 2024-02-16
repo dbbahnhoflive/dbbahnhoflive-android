@@ -101,7 +101,7 @@ internal class LocalTransportViewHolder(parent: View, itemClickListener: ItemCli
         iconView.setImageDrawable(getIconDrawable(category))
         info.text = displayTextBuilder.toString()
         info.contentDescription = getCategoryLabel(category, productCount).toString() + contentDescriptionBuilder.toString()
-        if (displayTextBuilder.length == 0) {
+        if (displayTextBuilder.isEmpty()) {
             infoContainer.visibility = View.GONE
         }
         return infoContainer
@@ -114,7 +114,7 @@ internal class LocalTransportViewHolder(parent: View, itemClickListener: ItemCli
             ProductCategory.BUS -> resources.getQuantityString(R.plurals.sr_bus, productCount)
             ProductCategory.SUBWAY -> resources.getQuantityString(R.plurals.sr_subway, productCount)
             ProductCategory.TRAM -> resources.getQuantityString(R.plurals.sr_tram, productCount)
-            ProductCategory.SHIP -> resources.getQuantityString(R.plurals.sr_tram, productCount)
+            ProductCategory.SHIP -> resources.getQuantityString(R.plurals.sr_ship, productCount)
             else -> ""
         }
     }
