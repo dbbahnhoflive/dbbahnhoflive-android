@@ -19,7 +19,7 @@ abstract class ElevatorStatusAdapter : RecyclerView.Adapter<FacilityStatusViewHo
     private val facilityPushManager = instance
 
     init {
-         selectionManager = SingleSelectionManager(this)
+        selectionManager = SingleSelectionManager(this)
         SingleSelectionManager.type = "d1_aufzuege"
     }
 

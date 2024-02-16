@@ -23,48 +23,48 @@ open class ShopViewHolder(parent: View, singleSelectionManager: SingleSelectionM
         super.onBind(item)
 
         item?.let {
-        titleView.text = item.name
-        val open = item.isOpen
+            titleView.text = item.name
+            val open = item.isOpen
 
-        if (open == null) {
-            statusView.visibility = View.INVISIBLE
-        } else {
-            statusView.visibility = View.VISIBLE
-            setStatus(if (open) Status.POSITIVE else Status.NEGATIVE, getStatus(open))
-        }
-
-        itemView.contentDescription = when {
-                isSelected() -> null
-            else -> listOfNotNull(
-                item.name,
-                open?.let { context.getString(getStatus(it)) },
-                item.getLocationDescription(context)
-            ).joinToString {
-                it
+            if (open == null) {
+                statusView.visibility = View.INVISIBLE
+            } else {
+                statusView.visibility = View.VISIBLE
+                setStatus(if (open) Status.POSITIVE else Status.NEGATIVE, getStatus(open))
             }
 
-        }
+            itemView.contentDescription = when {
+                isSelected() -> null
+                else -> listOfNotNull(
+                    item.name,
+                    open?.let { context.getString(getStatus(it)) },
+                    item.getLocationDescription(context)
+                ).joinToString {
+                    it
+                }
 
-        setLogo(item)
+            }
 
-        threeButtonsViewHolder.reset()
+            setLogo(item)
 
-        val matcher = ShoppingViewHolder.PHONE_PATTERN.matcher(item.phone ?: "")
+            threeButtonsViewHolder.reset()
+
+            val matcher = ShoppingViewHolder.PHONE_PATTERN.matcher(item.phone ?: "")
             phoneString = if (matcher.find()) {
-            threeButtonsViewHolder.enableButton(R.id.button_right)
+                threeButtonsViewHolder.enableButton(R.id.button_right)
                 matcher.group()
-        } else {
+            } else {
                 null
-        }
+            }
 
 //        webString = item.web?.trim { it <= ' ' }?.also {
 //            threeButtonsViewHolder.enableButton(R.id.button_left)
 //        }
 
-        webString = item.web?.trim() ?: ""
-        if(webString?.isNotEmpty() == true) {
-            threeButtonsViewHolder.enableButton(R.id.button_left)
-        }
+            webString = item.web?.trim() ?: ""
+            if (webString?.isNotEmpty() == true) {
+                threeButtonsViewHolder.enableButton(R.id.button_left)
+            }
 
 
             emailString = item.email ?: ""
@@ -74,15 +74,15 @@ open class ShopViewHolder(parent: View, singleSelectionManager: SingleSelectionM
                 }
             }
 
-        bindPayments(item)
+            bindPayments(item)
 
-        val openHoursInfo = item.openHoursInfo
-        hoursView.text = openHoursInfo
-        val hoursVisibility = if (TextUtils.isEmpty(openHoursInfo)) View.GONE else View.VISIBLE
-        hoursView.visibility = hoursVisibility
-        hoursTitleView.visibility = hoursVisibility
+            val openHoursInfo = item.openHoursInfo
+            hoursView.text = openHoursInfo
+            val hoursVisibility = if (TextUtils.isEmpty(openHoursInfo)) View.GONE else View.VISIBLE
+            hoursView.visibility = hoursVisibility
+            hoursTitleView.visibility = hoursVisibility
 
-        locationView.text = item.getLocationDescription(context)
+            locationView.text = item.getLocationDescription(context)
         }
     }
 

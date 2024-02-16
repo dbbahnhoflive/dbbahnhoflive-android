@@ -160,10 +160,10 @@ class HafasDeparturesFragment : RecyclerFragment<HafasDeparturesAdapter>(R.layou
                             if (index != null && index >= 0) {
                                 recyclerView?.let {itRecyclerView->
                                     val vh = itRecyclerView.findViewHolderForAdapterPosition(index + 1) as? HafasEventViewHolder
-                                vh?.performClick()
+                                    vh?.performClick()
+                                }
                             }
                         }
-                    }
                     }
 
                     stationViewModel.finishBackNavigation()
@@ -211,7 +211,7 @@ class HafasDeparturesFragment : RecyclerFragment<HafasDeparturesAdapter>(R.layou
                     null  //hafasTimetable.getDepartures()
                 )
 
-    }
+            }
 
 
             intent?.let {

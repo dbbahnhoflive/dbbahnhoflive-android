@@ -31,8 +31,8 @@ class NewsViewManager(
         pageIndicator?.let {
             TabLayoutMediator(pageIndicator, this) { tab, _ ->
             tab.icon = ResourcesCompat.getDrawable(resources, R.drawable.shape_page_indicator_news, null)
-        }.attach()
-    }
+            }.attach()
+        }
     }
 
     override fun onChanged(value: List<News>) {

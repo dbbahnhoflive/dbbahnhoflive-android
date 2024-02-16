@@ -39,24 +39,24 @@ internal class StationFeatureViewHolder(
         item?.let {
 
             val stationFeatureTemplate = it.stationFeatureTemplate
-        iconView.setImageResource(stationFeatureTemplate.definition.icon)
-        labelView.setText(stationFeatureTemplate.definition.label)
+            iconView.setImageResource(stationFeatureTemplate.definition.icon)
+            labelView.setText(stationFeatureTemplate.definition.label)
 
             when (it.isFeatured) { // definitions in StationFeatureDefinition.kt
-            true -> bindStatusView(R.string.available, Status.POSITIVE)
-            false -> bindStatusView(R.string.not_available, Status.NEGATIVE)
-            else -> bindStatusView(0, Status.NONE)
-        }
+                true -> bindStatusView(R.string.available, Status.POSITIVE)
+                false -> bindStatusView(R.string.not_available, Status.NEGATIVE)
+                else -> bindStatusView(0, Status.NONE)
+            }
 
-        // link->button to map
-        button.visibility =
+            // link->button to map
+            button.visibility =
                 if (it.isLinkVisible(button.context)) View.VISIBLE else View.GONE
 
-        val context = button.context
-        button.contentDescription = context.getString(
-            R.string.sr_template_details,
-            context.getString(stationFeatureTemplate.definition.label)
-        )
+            val context = button.context
+            button.contentDescription = context.getString(
+                R.string.sr_template_details,
+                context.getString(stationFeatureTemplate.definition.label)
+            )
         }
 
     }

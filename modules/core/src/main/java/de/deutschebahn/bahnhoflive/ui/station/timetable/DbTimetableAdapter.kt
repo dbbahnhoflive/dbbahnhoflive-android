@@ -248,32 +248,32 @@ internal class DbTimetableAdapter(
                 trainInfo.departure
             ) else addPlatformAndTrainCategoryToUiFilter(trainInfo, trainInfo.arrival)
         }
-            val now = System.currentTimeMillis()
-            val filteredTrainInfos = ArrayList<TrainInfo>()
-            for (selectedTrainInfo in selectedTrainInfos) {
-                if (trainCategory != null && trainCategory != selectedTrainInfo.trainCategory) {
-                    continue
-                }
-                if (track != null && track != trainEvent.movementRetriever.getTrainMovementInfo(
-                        selectedTrainInfo
-                    ).platformWithoutExtensions
-                ) {
-                    continue
-                }
-                if (trainEvent.isDeparture) {
-                    val mm = selectedTrainInfo.departure
-                    if (mm != null && mm.correctedStatus != null && mm.correctedStatus == "c" && mm.plannedDateTime < now) {
-                        continue
-                    }
-                } else {
-                    val mm = selectedTrainInfo.arrival
-                    if (mm != null && mm.correctedStatus != null && mm.correctedStatus == "c" && mm.plannedDateTime < now) {
-                        continue
-                    }
-                }
-                filteredTrainInfos.add(selectedTrainInfo)
+        val now = System.currentTimeMillis()
+        val filteredTrainInfos = ArrayList<TrainInfo>()
+        for (selectedTrainInfo in selectedTrainInfos) {
+            if (trainCategory != null && trainCategory != selectedTrainInfo.trainCategory) {
+                continue
             }
-            this.filteredTrainInfos = filteredTrainInfos
+            if (track != null && track != trainEvent.movementRetriever.getTrainMovementInfo(
+                    selectedTrainInfo
+                ).platformWithoutExtensions
+            ) {
+                continue
+            }
+            if (trainEvent.isDeparture) {
+                val mm = selectedTrainInfo.departure
+                if (mm != null && mm.correctedStatus != null && mm.correctedStatus == "c" && mm.plannedDateTime < now) {
+                    continue
+                }
+            } else {
+                val mm = selectedTrainInfo.arrival
+                if (mm != null && mm.correctedStatus != null && mm.correctedStatus == "c" && mm.plannedDateTime < now) {
+                    continue
+                }
+            }
+            filteredTrainInfos.add(selectedTrainInfo)
+        }
+        this.filteredTrainInfos = filteredTrainInfos
         trainCategories.add(0, "Alle")
         tracks.add(0, "Alle")
         notifyDataSetChanged()
@@ -320,34 +320,34 @@ internal class DbTimetableAdapter(
             val id = v.id
             when (id) {
                 R.id.departure -> {
-                setTrainEvent(TrainEvent.DEPARTURE)
-                trackingManager?.track(
-                    TrackingManager.TYPE_ACTION,
-                    TrackingManager.Screen.H2,
-                    TrackingManager.Action.TAP,
-                    TrackingManager.UiElement.TOGGLE_ABFAHRT
-                )
+                    setTrainEvent(TrainEvent.DEPARTURE)
+                    trackingManager?.track(
+                        TrackingManager.TYPE_ACTION,
+                        TrackingManager.Screen.H2,
+                        TrackingManager.Action.TAP,
+                        TrackingManager.UiElement.TOGGLE_ABFAHRT
+                    )
                 }
                 R.id.arrival -> {
-                setTrainEvent(TrainEvent.ARRIVAL)
-                trackingManager?.track(
-                    TrackingManager.TYPE_ACTION,
-                    TrackingManager.Screen.H2,
-                    TrackingManager.Action.TAP,
-                    TrackingManager.UiElement.TOGGLE_ANKUNFT
-                )
+                    setTrainEvent(TrainEvent.ARRIVAL)
+                    trackingManager?.track(
+                        TrackingManager.TYPE_ACTION,
+                        TrackingManager.Screen.H2,
+                        TrackingManager.Action.TAP,
+                        TrackingManager.UiElement.TOGGLE_ANKUNFT
+                    )
                 }
                 R.id.filter -> {
-                onFilterClickListener.onClick(v)
-                trackingManager?.track(
-                    TrackingManager.TYPE_ACTION,
-                    TrackingManager.Screen.H2,
-                    TrackingManager.Action.TAP,
-                    TrackingManager.UiElement.FILTER_BUTTON
-                )
+                    onFilterClickListener.onClick(v)
+                    trackingManager?.track(
+                        TrackingManager.TYPE_ACTION,
+                        TrackingManager.Screen.H2,
+                        TrackingManager.Action.TAP,
+                        TrackingManager.UiElement.FILTER_BUTTON
+                    )
+                }
             }
         }
-    }
     }
 
     internal fun setTrainEvent(trainEvent: TrainEvent) {

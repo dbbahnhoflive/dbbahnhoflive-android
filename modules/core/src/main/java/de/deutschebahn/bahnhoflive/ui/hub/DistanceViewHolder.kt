@@ -21,17 +21,17 @@ class DistanceViewHolder(view: View) : ViewHolder<Float>(view) {
         distanceView?.let {
 
 
-        if (item == null || item < 0) {
+            if (item == null || item < 0) {
                 it.visibility = View.GONE
-            return
-        }
+                return
+            }
 
             it.visibility = View.VISIBLE
 
-        val distanceInKm: Float = item
+            val distanceInKm: Float = item
 
-        val roundKilometers = Math.round(distanceInKm)
-        when {
+            val roundKilometers = Math.round(distanceInKm)
+            when {
                 roundKilometers > 1 -> it.text =
                     formatDistance(roundKilometers, R.string.template_distance_in_km)
 

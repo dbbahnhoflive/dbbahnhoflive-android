@@ -75,11 +75,11 @@ class DebugX {
             intent?.let {
                 it.extras?.let {itBundle->
                     if (BuildConfig.DEBUG) {
-            Log.d("cr", "start logIntent $className")
+                        Log.d("cr", "start logIntent $className")
                         logBundle(" ", itBundle)
-            Log.d("cr", "")
-            Log.d("cr", "end logIntent $className")
-            Log.d("cr", "")
+                        Log.d("cr", "")
+                        Log.d("cr", "end logIntent $className")
+                        Log.d("cr", "")
                     }
                 }
             }

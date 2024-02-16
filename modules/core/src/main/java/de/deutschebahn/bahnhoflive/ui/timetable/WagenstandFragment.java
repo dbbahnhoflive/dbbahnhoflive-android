@@ -10,6 +10,7 @@ import static android.provider.Settings.ACTION_REQUEST_SCHEDULE_EXACT_ALARM;
 
 import android.app.Activity;
 import android.app.AlertDialog;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.net.Uri;
@@ -41,7 +42,6 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
 import java.util.Locale;
-import java.util.Objects;
 
 import de.deutschebahn.bahnhoflive.R;
 import de.deutschebahn.bahnhoflive.analytics.TrackingManager;
@@ -66,8 +66,9 @@ import de.deutschebahn.bahnhoflive.ui.map.MapPresetProvider;
 import de.deutschebahn.bahnhoflive.ui.map.content.rimap.Track;
 import de.deutschebahn.bahnhoflive.ui.station.StationViewModel;
 import de.deutschebahn.bahnhoflive.util.AlertX;
-import de.deutschebahn.bahnhoflive.push.NotificationChannelManager;
 import de.deutschebahn.bahnhoflive.util.accessibility.AccessibilityUtilities;
+import de.deutschebahn.bahnhoflive.push.NotificationChannelManager;
+import kotlin.Unit;
 
 public class WagenstandFragment extends Fragment implements View.OnLayoutChangeListener, WagenstandSectionIndicator.WagenstandSectionIndicatorListener,
         MapPresetProvider, VolleyRestListener<TrainFormation> {
@@ -413,73 +414,109 @@ public class WagenstandFragment extends Fragment implements View.OnLayoutChangeL
     }
 
     private void updateReminderCheckBoxState(boolean isChecked) {
+
+        Context ctx = this.getContext();
+
         reminderCheckBox.setOnCheckedChangeListener(null);
         reminderCheckBox.setChecked(isChecked);
         reminderCheckBox.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
 
-                if (isChecked && !wagenstandAlarmManager.isAlarmAllowed()) {
+                WagenstandAlarmManager.ValidationState validationState = wagenstandAlarmManager.getAlarmPermissionState();
 
-                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
+                if (isChecked && validationState!= WagenstandAlarmManager.ValidationState.OK) {
 
-                    AlertX.Companion.execAlert(requireContext(), "Hinweis",
-                            getString(R.string.notification_advice_systemsettings),
-                            AlertX.Companion.buttonNegative(),
-                            "Einstellungen", () -> {
-                                startActivity(new Intent(ACTION_REQUEST_SCHEDULE_EXACT_ALARM, Uri.parse("package:" + requireActivity().getPackageName())));
-                                return null;
-                            },
-                            "Abbrechen", () -> {
-                                reminderCheckBox.setChecked(false);
-                                return null;
-                                },
-                                "", () -> null,
-                            "", (x) -> null
-                    );
+                    if(validationState==WagenstandAlarmManager.ValidationState.NO_EXACT_ALARM_ALLOWED) {
 
-                    } else {
+                        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
 
-                        AlertX.Companion.execAlert(requireContext(), "Hinweis",
+                            AlertX.Companion.execAlert(requireContext(), getString(R.string.wagenstand_no_result_headline),
+                                    getString(R.string.notification_advice_systemsettings_reminders),
+                                    AlertX.Companion.buttonNegative(),
+                                    getString(R.string.settings), () -> {
+                                        startActivity(new Intent(ACTION_REQUEST_SCHEDULE_EXACT_ALARM, Uri.parse("package:" + requireActivity().getPackageName())));
+                                        return null;
+                                    },
+                                    getString(R.string.dlg_cancel), () -> {
+                                        reminderCheckBox.setChecked(false);
+                                        return null;
+                                    },
+                                    "", () -> null,
+                                    "", (x) -> null
+                            );
+
+                        } else {
+
+                            AlertX.Companion.execAlert(requireContext(), getString(R.string.wagenstand_no_result_headline),
+                                    getString(R.string.notification_advice_systemsettings_reminders),
+                                    AlertX.Companion.buttonNegative(),
+                                    getString(R.string.dlg_ok), () -> {
+                                        reminderCheckBox.setChecked(false);
+                                        return null;
+                                    },
+                                    "", () -> null,
+                                    "", () -> null,
+                                    "", (x) -> null
+                            );
+                        }
+                    }
+                    else if (validationState == WagenstandAlarmManager.ValidationState.NO_PERMISSION) {
+
+                        AlertX.Companion.execAlert(ctx, getString(R.string.wagenstand_no_result_headline),
                                 getString(R.string.notification_advice_systemsettings),
                                 AlertX.Companion.buttonNegative(),
-                                "OK", () -> null,
-                                "", () -> null,
-                                "", () -> null,
-                                "", (x) -> null
+                                getString(R.string.settings), () -> {
+                                    NotificationChannelManager.Companion.showNotificationSettingsDialog(ctx, null);
+                                    return null;
+                                },
+                                getString(R.string.dlg_cancel), () -> {
+                                    reminderCheckBox.setChecked(false);
+                                    return null;
+                                },
+                                "", null,
+                                "", null
                         );
+
+
                     }
-                }
-                else {
 
-                final @NonNull String trainNumber = trainFormation.getTrainNumber();
-                String time = trainFormation.getTime();
 
-                StringBuilder trainLabel = new StringBuilder();
-                List<Train> trains = trainFormation.getTrains();
-                for (Train train : trains) {
-                    trainLabel.append(String.format("%s %s nach %s ",
-                            train.getType(),
-                            train.getNumber(),
-                            train.getDestinationStation()));
-                }
 
-                if (isChecked) {
-                    boolean success = wagenstandAlarmManager
-                            .addWagenstandAlarm(new WagenstandAlarm(trainFormation, trainNumber, trainInfo, time, trainLabel.toString(), timestamp, stationLiveData.getValue()));
+                } else {
 
-                    if (!success) {
-                        reminderCheckBox.setChecked(false);
+                    final @NonNull String trainNumber = trainFormation.getTrainNumber();
+                    String time = trainFormation.getTime();
 
-                        AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
-                        builder.setTitle("Wagenreihungsplan");
-                        builder.setMessage(R.string.alert_wagenstand_reminder_not_possible_msg)
-                                .setNegativeButton(R.string.alert_notificationOkayLink, new DialogInterface.OnClickListener() {
-                                    public void onClick(DialogInterface dialog, int id) {
-                                        // User cancelled the dialog
-                                    }
-                                });
-                        builder.create().show();
+                    StringBuilder trainLabel = new StringBuilder();
+                    List<Train> trains = trainFormation.getTrains();
+                    for (Train train : trains) {
+                        trainLabel.append(String.format("%s %s nach %s ",
+                                train.getType(),
+                                train.getNumber(),
+                                train.getDestinationStation()));
+                    }
+
+                    if (isChecked) {
+                        final WagenstandAlarm wagenStandAlarm = new WagenstandAlarm(trainFormation, trainNumber, trainInfo,
+                                time, trainLabel.toString(), timestamp, stationLiveData.getValue());
+
+                        if (!wagenstandAlarmManager.isWagenstandAlarmInValidTimeRange(wagenStandAlarm)) {
+                            reminderCheckBox.setChecked(false);
+
+                            AlertX.Companion.execAlert(ctx, "Wagenreihungsplan",
+                                    getString(R.string.alert_wagenstand_reminder_not_possible_msg),
+                                    AlertX.Companion.buttonPositive(),
+                                    getString(R.string.dlg_ok), null,
+                                    "", null,
+                                    "", null,
+                                    "", null
+                            );
+
+                        }
+                        else
+                            if(!wagenstandAlarmManager.addWagenstandAlarm(wagenStandAlarm)) {
+
                     }
                 } else {
                     wagenstandAlarmManager

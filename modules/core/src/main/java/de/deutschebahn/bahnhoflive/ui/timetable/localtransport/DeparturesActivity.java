@@ -95,11 +95,11 @@ public class DeparturesActivity extends BaseActivity implements TrackingManager.
             hafasStation = null;
             station = null;
         } else {
-        hafasStation = arguments.getParcelable(ARG_HAFAS_STATION);
-        final HafasDepartures departures = arguments.getParcelable(ARG_HAFAS_DEPARTURES);
-        final List<HafasStation> hafasStations = arguments.getParcelableArrayList(ARG_DB_STATION_HAFAS_STATIONS);
-        station = arguments.getParcelable(ARG_DB_STATION);
-        final boolean filterStrictly = arguments.getBoolean(ARG_FILTER_STRICTLY, true);
+            hafasStation = arguments.getParcelable(ARG_HAFAS_STATION);
+            final HafasDepartures departures = arguments.getParcelable(ARG_HAFAS_DEPARTURES);
+            final List<HafasStation> hafasStations = arguments.getParcelableArrayList(ARG_DB_STATION_HAFAS_STATIONS);
+            station = arguments.getParcelable(ARG_DB_STATION);
+            final boolean filterStrictly = arguments.getBoolean(ARG_FILTER_STRICTLY, true);
             hafasTimetableViewModel.initialize(hafasStation, departures, filterStrictly, station, hafasStations, true);
         }
 
@@ -169,7 +169,7 @@ public class DeparturesActivity extends BaseActivity implements TrackingManager.
             return;
         }
 
-        hafasDeparturesFragment =  new HafasDeparturesFragment();
+        hafasDeparturesFragment = new HafasDeparturesFragment();
 
         fragmentManager.beginTransaction()
                 .replace(R.id.fragment_container, hafasDeparturesFragment)

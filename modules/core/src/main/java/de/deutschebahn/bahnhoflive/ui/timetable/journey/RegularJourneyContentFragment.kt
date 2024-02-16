@@ -108,10 +108,10 @@ class RegularJourneyContentFragment : Fragment() {
             }
 
             try {
-            issueBinder.bindIssues(
-                trainInfo,
-                trainEvent.movementRetriever.getTrainMovementInfo(trainInfo)
-            )
+                issueBinder.bindIssues(
+                    trainInfo,
+                    trainEvent.movementRetriever.getTrainMovementInfo(trainInfo)
+                )
             } catch (_: Exception) {
 
             }
@@ -365,19 +365,19 @@ class RegularJourneyContentFragment : Fragment() {
 
         fun openJourneyStopStation(
             activity: FragmentActivity,
-                                   stationViewModel:StationViewModel?,
-                                   view: View,
-                                   stationIds: EvaIds?,
-                                   stopEvaId:String?,
-                                   stopStationName:String?,
-                                   hafasStop : HafasStop? = null, // ziel
-                                   hafasEvent : HafasEvent? = null, // quelle
-                                   trainInfo:TrainInfo?=null
+            stationViewModel: StationViewModel?,
+            view: View,
+            stationIds: EvaIds?,
+            stopEvaId: String?,
+            stopStationName: String?,
+            hafasStop: HafasStop? = null, // ziel
+            hafasEvent: HafasEvent? = null, // quelle
+            trainInfo: TrainInfo? = null
         ) {
 
             stopEvaId?.let {
 
-                val itIsThisStation =  stationIds?.ids?.contains(stopEvaId) ?: false
+                val itIsThisStation = stationIds?.ids?.contains(stopEvaId) ?: false
 
                 if (!itIsThisStation) {
 
@@ -409,7 +409,7 @@ class RegularJourneyContentFragment : Fragment() {
 
                                             var intent: Intent? = null
 
-                                            if (!payload.isNullOrEmpty() ) {
+                                            if (!payload.isNullOrEmpty()) {
 
                                                 intent =
                                                     StationActivity.createIntentForBackNavigation(

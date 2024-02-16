@@ -48,11 +48,11 @@ class CommonFlyoutViewHolder(
             descriptionView.text = it.markerContent.getDescription(context)
             equipmentID = mapViewModel.isMarkerContentValidStationFeature(it.markerContent.title)
 
-        linkButton.visibility =
+            linkButton.visibility =
                 if (it.markerContent.hasLink() || equipmentID != EquipmentID.UNKNOWN) View.VISIBLE else View.GONE
 
-        if(linkButton.visibility == View.VISIBLE)
-            (linkButton as? ImageButton)?.setImageResource(if(equipmentID == EquipmentID.UNKNOWN) R.drawable.app_extern_link else  R.drawable.app_link)
-    }
+            if (linkButton.visibility == View.VISIBLE)
+                (linkButton as? ImageButton)?.setImageResource(if (equipmentID == EquipmentID.UNKNOWN) R.drawable.app_extern_link else R.drawable.app_link)
+        }
     }
 }

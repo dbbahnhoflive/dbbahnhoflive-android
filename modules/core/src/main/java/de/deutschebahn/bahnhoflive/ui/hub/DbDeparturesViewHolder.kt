@@ -35,8 +35,8 @@ open class DbDeparturesViewHolder internal constructor(
             TrackingManager.TYPE_ACTION,
             TrackingManager.Screen.H0,
             TrackingManager.Action.TAP,
-        itemTag
-    )
+            itemTag
+        )
         searchItemPickedListener?.onSearchItemPicked()
         item?.onClick(it.context, it !== itemView)
     }

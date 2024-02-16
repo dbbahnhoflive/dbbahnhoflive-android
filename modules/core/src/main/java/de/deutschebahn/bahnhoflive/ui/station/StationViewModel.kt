@@ -379,8 +379,8 @@ class StationViewModel(application: Application) : HafasTimetableViewModel(appli
         get() = application.repositories.timetableRepository
 
     private val evaIdsDataObserver = Observer<Station> { station ->
-            accessibilityFeaturesResource.station = station
-        }
+        accessibilityFeaturesResource.station = station
+    }
 
     val shopsResource = ShopsResource()
 

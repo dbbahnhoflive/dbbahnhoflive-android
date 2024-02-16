@@ -28,8 +28,8 @@ class FacilityFirebaseService : FirebaseMessagingService() {
 
     override fun onNewToken(s: String) {
         super.onNewToken(s)
-        if (BuildConfig.DEBUG)
-            Log.d("cr", "Refreshed token: $s")
+        if(BuildConfig.DEBUG)
+          Log.d("cr", "Refreshed token: $s")
     }
 
     // always called !!!! (in foreground AND in background !!!)
@@ -71,8 +71,8 @@ class FacilityFirebaseService : FirebaseMessagingService() {
         try {
             ret = itemList[itemName].toString().trim()
         } catch (e: Exception) {
-            if (BuildConfig.DEBUG)
-                Log.d("cr", "Exception in getValueSafeString2: " + e.message.toString())
+            if(BuildConfig.DEBUG)
+              Log.d("cr", "Exception in getValueSafeString2: " + e.message.toString())
         }
 
         return ret
@@ -85,8 +85,8 @@ class FacilityFirebaseService : FirebaseMessagingService() {
         try {
             ret = itemList[itemName].toString().toInt()
         } catch (e: Exception) {
-            if (BuildConfig.DEBUG)
-                Log.d("cr", "Exception in getValueSafeInt: " + e.message.toString())
+            if(BuildConfig.DEBUG)
+              Log.d("cr", "Exception in getValueSafeInt: " + e.message.toString())
         }
 
         return ret
@@ -303,9 +303,9 @@ class FacilityFirebaseService : FirebaseMessagingService() {
                     }
 
                 } catch (e: Exception) {
-                if (BuildConfig.DEBUG)
-                    Log.d("cr", e.message.toString())
-            }
+                    if(BuildConfig.DEBUG)
+                      Log.d("cr", e.message.toString())
+                }
 
                 // sendNotification(itemList, itemList["message"]) // todo: only for test-equipmentNumber (see BaseApplication, test-equips are not enabled)
         }
@@ -337,11 +337,11 @@ class FacilityFirebaseService : FirebaseMessagingService() {
             fun debugPrintFirebaseToken() {
                 FirebaseMessaging.getInstance().token.addOnSuccessListener { token: String ->
                     if(BuildConfig.DEBUG) {
-                    if (!TextUtils.isEmpty(token)) {
-                        Log.d("cr", "retrieve token successful : $token")
-                    } else {
-                        Log.d("cr", "token should not be null...")
-                    }
+                        if (!TextUtils.isEmpty(token)) {
+                            Log.d("cr", "retrieve token successful : $token")
+                        } else {
+                            Log.d("cr", "token should not be null...")
+                        }
                     }
                 }.addOnFailureListener { e: Exception? ->
                     if (BuildConfig.DEBUG && e != null) Log.d(

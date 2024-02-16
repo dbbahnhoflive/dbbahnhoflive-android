@@ -61,14 +61,14 @@ class DbTimetableFragment : Fragment(), MapPresetProvider {
                     tracks: Array<String>?,
                     track: String?
                 ) {
-                val filterDialogFragment = FilterDialogFragment.create(
-                    trainCategories,
-                    trainCategory,
-                    tracks,
-                    track,
-                    stationViewModel.timetableCollector.lastHourEnd
-                )
-                filterDialogFragment.show(childFragmentManager, "filterDialog")
+                    val filterDialogFragment = FilterDialogFragment.create(
+                        trainCategories,
+                        trainCategory,
+                        tracks,
+                        track,
+                        stationViewModel.timetableCollector.lastHourEnd
+                    )
+                    filterDialogFragment.show(childFragmentManager, "filterDialog")
                 }
 
             },
@@ -80,10 +80,10 @@ class DbTimetableFragment : Fragment(), MapPresetProvider {
         { // onClick
                 trainInfo: TrainInfo?, trainEvent: TrainEvent?, _: Int? ->
             run {
-            val historyFragment = HistoryFragment.parentOf(this)
-            historyFragment.push(JourneyFragment(trainInfo!!, trainEvent!!))
-            Unit
-        }
+                val historyFragment = HistoryFragment.parentOf(this)
+                historyFragment.push(JourneyFragment(trainInfo!!, trainEvent!!))
+                Unit
+            }
         }
         this.adapter = adapter
 

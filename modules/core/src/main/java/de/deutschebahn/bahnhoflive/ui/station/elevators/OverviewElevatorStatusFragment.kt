@@ -104,7 +104,7 @@ class OverviewElevatorStatusFragment : Fragment(), MapPresetProvider {
                         val status2 = Status.of(o2)
                         status2.ordinal - status1.ordinal
                     })
-                    }
+                }
                 super.data = mutableFacilityStatusList
             }
 

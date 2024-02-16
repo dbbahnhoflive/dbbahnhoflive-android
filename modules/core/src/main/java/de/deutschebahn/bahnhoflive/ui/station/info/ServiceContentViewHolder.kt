@@ -74,127 +74,127 @@ open class ServiceContentViewHolder(
         threeButtonsViewHolder.reset()
 
         item?.let {
-        titleView.text = item.title
-        iconView.setImageResource(IconMapper.contentIconForType(item))
+            titleView.text = item.title
+            iconView.setImageResource(IconMapper.contentIconForType(item))
 
-        descriptionLayout.removeAllViews()
+            descriptionLayout.removeAllViews()
 
-        contentHeaderImage.visibility = View.GONE
+            contentHeaderImage.visibility = View.GONE
 
-        when (item.type.lowercase(Locale.GERMAN)) {
-            ServiceContentType.THREE_S -> {
-                val threeSComponents = ServiceContents.ThreeSComponents(item)
+            when (item.type.lowercase(Locale.GERMAN)) {
+                ServiceContentType.THREE_S -> {
+                    val threeSComponents = ServiceContents.ThreeSComponents(item)
 
-                addTextPart(threeSComponents.description)
+                    addTextPart(threeSComponents.description)
 
-                    threeSComponents.phoneNumber?.let {itPhoneNumber->
+                    threeSComponents.phoneNumber?.let { itPhoneNumber ->
                         addPhonePart(itPhoneNumber, item.title)
-                }
-            }
-
-            ServiceContentType.Local.LOST_AND_FOUND -> {
-                run {
-                    FundserviceContentElement.render(
-                        descriptionLayout,
-                        item,
-                        itemView.context,
-                        null
-                    )
-                }
-                run {
-                    val descriptionText = item.descriptionText
-                    val matcher = Patterns.PHONE.matcher(descriptionText)
-                    var cursor = 0
-                    while (matcher.find()) {
-                        val start = matcher.start()
-                        addHtmlPart(descriptionText.substring(cursor, start))
-                        cursor = matcher.end()
-                        addPhonePart(descriptionText.substring(start, cursor), item.title)
-                    }
-                    if (cursor < descriptionText.length) {
-                        addHtmlPart(descriptionText.substring(cursor, descriptionText.length))
-                    }
-
-                    val additionalText = item.additionalText
-                    additionalText.takeUnless { it.isNullOrEmpty() }?.let {
-                        addHtmlPart(it)
                     }
                 }
-            }
 
-            ServiceContentType.Local.TRAVEL_CENTER -> {
-                if (item.address == null) {
-                    defaultRender(item)
-                } else {
-                    IncludeDescriptionLinkPartBinding.inflate(
-                        layoutInflater,
-                        descriptionLayout,
-                        true
-                    ).apply {
-                        text.text =
-                            "<b>Nächstes Reisezentrum</b><br/>${item.address.toString()}".spannedHtml()
-                        item.location?.also { location ->
-                            linkButton.setOnClickListener {
-                                layoutInflater.context.startActivity(
-                                    MapIntent(
-                                        location, item.address.toString().replace(
-                                            "<br/>",
-                                            ","
+                ServiceContentType.Local.LOST_AND_FOUND -> {
+                    run {
+                        FundserviceContentElement.render(
+                            descriptionLayout,
+                            item,
+                            itemView.context,
+                            null
+                        )
+                    }
+                    run {
+                        val descriptionText = item.descriptionText
+                        val matcher = Patterns.PHONE.matcher(descriptionText)
+                        var cursor = 0
+                        while (matcher.find()) {
+                            val start = matcher.start()
+                            addHtmlPart(descriptionText.substring(cursor, start))
+                            cursor = matcher.end()
+                            addPhonePart(descriptionText.substring(start, cursor), item.title)
+                        }
+                        if (cursor < descriptionText.length) {
+                            addHtmlPart(descriptionText.substring(cursor, descriptionText.length))
+                        }
+
+                        val additionalText = item.additionalText
+                        additionalText.takeUnless { it.isNullOrEmpty() }?.let {
+                            addHtmlPart(it)
+                        }
+                    }
+                }
+
+                ServiceContentType.Local.TRAVEL_CENTER -> {
+                    if (item.address == null) {
+                        defaultRender(item)
+                    } else {
+                        IncludeDescriptionLinkPartBinding.inflate(
+                            layoutInflater,
+                            descriptionLayout,
+                            true
+                        ).apply {
+                            text.text =
+                                "<b>Nächstes Reisezentrum</b><br/>${item.address.toString()}".spannedHtml()
+                            item.location?.also { location ->
+                                linkButton.setOnClickListener {
+                                    layoutInflater.context.startActivity(
+                                        MapIntent(
+                                            location, item.address.toString().replace(
+                                                "<br/>",
+                                                ","
+                                            )
                                         )
+                                    )
+                                }
+                            }
+                        }
+                        renderAdditionalText(item)
+                        renderDescriptionText(item)
+                    }
+                }
+
+                ServiceContentType.Local.CHATBOT -> {
+                    addImagePart(R.drawable.chatbot_card)
+                    renderDescriptionText(item, false) { dbActionButton ->
+                        if (Calendar.getInstance().get(Calendar.HOUR_OF_DAY) in 7 until 22)
+                            addButtonPart(
+                                dbActionButton.label ?: "Chatbot",
+                                itemView.resources.getString(R.string.sr_chatbot)
+                            ) {
+                                trackingManager.track(
+                                    TrackingManager.TYPE_ACTION,
+                                    TrackingManager.Screen.D1,
+                                    TrackingManager.Action.TAP,
+                                    TrackingManager.UiElement.CHATBOT
+                                )
+                                it.context.startActivity(
+                                    Intent(
+                                        Intent.ACTION_VIEW,
+                                        Uri.parse("https://bahnhof-bot.deutschebahn.com/")
                                     )
                                 )
                             }
+
+                    }
+                }
+
+                ServiceContentType.MOBILE_SERVICE -> {
+                    val partTextView = addHtmlPart(item.descriptionText)
+                    partTextView.handleUrlClicks { url ->
+                        if (url == "mobilitaetsservice") {
+                            dbActionButtonCallback(DbActionButton(DbActionButton.Type.ACTION, url))
                         }
                     }
                     renderAdditionalText(item)
                     renderDescriptionText(item)
-                }
-            }
-
-            ServiceContentType.Local.CHATBOT -> {
-                addImagePart(R.drawable.chatbot_card)
-                renderDescriptionText(item, false) { dbActionButton ->
-                    if (Calendar.getInstance().get(Calendar.HOUR_OF_DAY) in 7 until 22)
-                        addButtonPart(
-                            dbActionButton.label ?: "Chatbot",
-                            itemView.resources.getString(R.string.sr_chatbot)
-                        ) {
-                            trackingManager.track(
-                                TrackingManager.TYPE_ACTION,
-                                TrackingManager.Screen.D1,
-                                TrackingManager.Action.TAP,
-                                TrackingManager.UiElement.CHATBOT
-                            )
-                            it.context.startActivity(
-                                Intent(
-                                    Intent.ACTION_VIEW,
-                                    Uri.parse("https://bahnhof-bot.deutschebahn.com/")
-                                )
-                            )
-                        }
 
                 }
-            }
 
-            ServiceContentType.MOBILE_SERVICE -> {
-                val partTextView = addHtmlPart(item.descriptionText)
-                partTextView.handleUrlClicks { url ->
-                    if(url == "mobilitaetsservice") {
-                        dbActionButtonCallback(DbActionButton(DbActionButton.Type.ACTION, url))
-                    }
+                ServiceContentType.Local.DB_LOUNGE -> {
+                    renderDescriptionText(item)
+                    renderAdditionalText(item)
                 }
-                renderAdditionalText(item)
-                renderDescriptionText(item)
 
-            }
-
-            ServiceContentType.Local.DB_LOUNGE -> {
-                renderDescriptionText(item)
-                renderAdditionalText(item)
-            }
-
-            else -> {
-                defaultRender(item)
+                else -> {
+                    defaultRender(item)
                 }
             }
         }

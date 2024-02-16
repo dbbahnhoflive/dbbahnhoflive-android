@@ -60,18 +60,18 @@ abstract class FacilityStatusViewHolder(parent: View,
             titleView.text = itFacilityStatus.stationName
             val bookmarked =
                 facilityPushManager.getBookmarked(itemView.context, item.equipmentNumber)
-        bindBookmarkedIndicator(bookmarked)
+            bindBookmarkedIndicator(bookmarked)
 
             var subscribed =
                 facilityPushManager.isPushMessageSubscribed(itemView.context, item.equipmentNumber)
             subscribePushSwitch.isChecked =
                 if (FacilityPushManager.isPushEnabled(itemView.context)) subscribed else {
 //            subscribePushSwitch.compoundButton.isEnabled=false
-            false
-        }
+                    false
+                }
 //        subscribePushSwitch.compoundButton.setAccessibilityText("", AccessibilityNodeInfo.ACTION_CLICK, itemView.context.getText(R.string.general_switch).toString())
 
-        val status = Status.of(item)
+            val status = Status.of(item)
             val accessibilityText =
                 item.description + "  " + iconView.context.getText(item.stateDescription)
             setStatus(

@@ -75,16 +75,16 @@ class HafasDeparturesAdapter(
                     .inflate(R.layout.card_expandable_hafas_event, parent, false)
 
                 HafasEventViewHolder(view, hafasDetailsClickEvent = { _, details ->
-                run {
-                    details.requestDetails() // Daten anfordern
-                }
+                    run {
+                        details.requestDetails() // Daten anfordern
+                    }
                 }, hafasDataReceivedEvent = { v, details, success ->
-                run {
+                    run {
                         hafasDataReceivedCallback(v, details, success)
+                    }
                 }
+                )
             }
-            )
-        }
 
         }
 

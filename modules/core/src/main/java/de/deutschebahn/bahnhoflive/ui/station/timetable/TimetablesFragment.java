@@ -55,11 +55,11 @@ public class TimetablesFragment extends TwoTabsFragment {
     protected void showFragment(int position) {
         final TrackingManager trackingManager = TrackingManager.fromActivity(getActivity());
         if (position == 0) {
-                trackTap(trackingManager, TrackingManager.UiElement.TOGGLE_DB);
-                showDbFragment();
+            trackTap(trackingManager, TrackingManager.UiElement.TOGGLE_DB);
+            showDbFragment();
         } else {
-                trackTap(trackingManager, TrackingManager.UiElement.TOGGLE_OEPNV);
-                showLocalTransportFragment();
+            trackTap(trackingManager, TrackingManager.UiElement.TOGGLE_OEPNV);
+            showLocalTransportFragment();
         }
 
         tabsInitialized = true;
@@ -90,7 +90,7 @@ public class TimetablesFragment extends TwoTabsFragment {
             stationViewModel.setTrackFilter(trackFilter);
             stationViewModel.setShowArrivals(arrivals);
             setTab(0);
-            showTutorialIfNecessary();
+//            showTutorialIfNecessary(); // todo: Wenn Gleisinformationen angezeigt werden sollen wieder rein, Id.TIMETABLE aendern in Id.TRACKINFORMATION
         }
     }
 
