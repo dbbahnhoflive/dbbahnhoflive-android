@@ -13,8 +13,11 @@ import android.view.View;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.core.view.MenuProvider;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
+import androidx.lifecycle.Lifecycle;
+import androidx.lifecycle.LifecycleOwner;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
 
@@ -105,7 +108,7 @@ public class DeparturesActivity extends BaseActivity implements TrackingManager.
 
         navigateBack = intent.getBooleanExtra(ARG_NAVIGATE_BACK, false);
 
-        setContentView(R.layout.activity_departures);
+        setContentView(R.layout.activity_departures_hafas);
 
         if (arguments != null)
             installFragment(getSupportFragmentManager());
@@ -131,33 +134,35 @@ public class DeparturesActivity extends BaseActivity implements TrackingManager.
                                     detailedHafasEvent.hafasEvent.getDisplayName(),
                                     detailedHafasEvent.hafasEvent.direction
                     ));
-                } else if (hafasStation != null)
+                }
+                else
+                  if(hafasStation!=null)
                     toolbarViewHolder.setTitle(hafasStation.name);
 
             }
         });
 
-//        mapButton = findViewById(R.id.btn_map);
-//
-//        if (mapButton != null) {
-//            mapButton.setVisibility(View.VISIBLE);
-//            mapButton.setOnClickListener(new View.OnClickListener() {
-//                @Override
-//                public void onClick(View v) {
-//                    if (hafasDeparturesFragment != null) {
-//                        trackingManager.track(TrackingManager.TYPE_ACTION, TrackingManager.Source.TAB_NAVI, TrackingManager.Action.TAP, TrackingManager.UiElement.MAP_BUTTON);
-//                        GoogleLocationPermissions.startMapActivityIfConsent(hafasDeparturesFragment,
-//                                () -> MapActivity.createIntent(DeparturesActivity.this, hafasStation));
-//                    }
-//                }
-//            });
-//        }
-//
-//        // todo (not working WHY?)
-//        hafasTimetableViewModel.getMapAvailableLiveData().observe(this,
-//                aBoolean -> {
-//                    mapButton.setVisibility(aBoolean ? View.VISIBLE : View.GONE);
-//                });
+        mapButton = findViewById(R.id.btn_map);
+
+        if (mapButton != null) {
+            mapButton.setVisibility(View.VISIBLE);
+            mapButton.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    if (hafasDeparturesFragment != null) {
+                        trackingManager.track(TrackingManager.TYPE_ACTION, TrackingManager.Source.TAB_NAVI, TrackingManager.Action.TAP, TrackingManager.UiElement.MAP_BUTTON);
+                        GoogleLocationPermissions.startMapActivityIfConsent(hafasDeparturesFragment,
+                                () -> MapActivity.createIntent(DeparturesActivity.this, hafasStation));
+                    }
+                }
+            });
+        }
+
+        // todo (not working WHY?)
+        hafasTimetableViewModel.getMapAvailableLiveData().observe(this,
+                aBoolean -> {
+                    mapButton.setVisibility(aBoolean ? View.VISIBLE : View.GONE);
+                });
     }
 
     private void installFragment(FragmentManager fragmentManager) {
@@ -227,4 +232,13 @@ public class DeparturesActivity extends BaseActivity implements TrackingManager.
         return createIntent(context, hafasStation, null, true, station, hafasStations);
     }
 
+    @Override
+    public void addMenuProvider(@NonNull MenuProvider provider, @NonNull LifecycleOwner owner, @NonNull Lifecycle.State state) {
+
+    }
+
+    @Override
+    public void onPointerCaptureChanged(boolean hasCapture) {
+        super.onPointerCaptureChanged(hasCapture);
+    }
 }

@@ -15,11 +15,13 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageButton
 import androidx.core.view.isVisible
+import androidx.core.view.updateMargins
 import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.Observer
 import androidx.lifecycle.switchMap
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
 import de.deutschebahn.bahnhoflive.BaseApplication
+import de.deutschebahn.bahnhoflive.BuildConfig
 import de.deutschebahn.bahnhoflive.R
 import de.deutschebahn.bahnhoflive.analytics.TrackingManager
 import de.deutschebahn.bahnhoflive.backend.hafas.model.HafasEvent
@@ -39,7 +41,7 @@ import de.deutschebahn.bahnhoflive.ui.station.StationViewModel
 import de.deutschebahn.bahnhoflive.util.getParcelableCompatible
 
 
-class HafasDeparturesFragment : RecyclerFragment<HafasDeparturesAdapter>(R.layout.recycler_linear_refreshable),
+class HafasDeparturesFragment : RecyclerFragment<HafasDeparturesAdapter>(R.layout.recycler_linear_refreshable_hafas),
     HafasFilterDialogFragment.Consumer, MapPresetProvider, DetailedHafasEvent.HafasDetailListener {
 
     private val stationViewModel by activityViewModels<StationViewModel>()
@@ -51,7 +53,6 @@ class HafasDeparturesFragment : RecyclerFragment<HafasDeparturesAdapter>(R.layou
 
     val trackingManager: TrackingManager
         get() = TrackingManager.fromActivity(activity)
-
 
     override fun onSaveInstanceState(outState: Bundle) {
         super.onSaveInstanceState(outState)
@@ -141,7 +142,7 @@ class HafasDeparturesFragment : RecyclerFragment<HafasDeparturesAdapter>(R.layou
                 hafasDepartures.intervalInMinutes / 60
             )
 
-            loadingContentDecorationViewHolder!!.showContent()
+            loadingContentDecorationViewHolder?.showContent()
 
             val backNavigationData: BackNavigationData? =
                 stationViewModel.backNavigationLiveData.value
@@ -153,7 +154,8 @@ class HafasDeparturesFragment : RecyclerFragment<HafasDeparturesAdapter>(R.layou
 
                         backNavigationData.hafasEvent?.let { it ->
 
-                            Log.d("cr", "item to find: ${it.direction} ${it.displayName}")
+                            if(BuildConfig.DEBUG)
+                              Log.d("cr", "item to find: ${it.direction} ${it.displayName}")
 
                             val index: Int? = adapter?.findItemIndex(backNavigationData.hafasEvent)
 
@@ -241,9 +243,9 @@ class HafasDeparturesFragment : RecyclerFragment<HafasDeparturesAdapter>(R.layou
 
         loadingContentDecorationViewHolder = LoadingContentDecorationViewHolder(view)
 
-        val imageButton: ImageButton? =
-            container?.findViewById<ImageButton>(R.id.btn_back_to_laststation)
-        imageButton?.setOnClickListener(backToLastStationClickListener)
+        container?.findViewById<ImageButton>(R.id.btn_back_to_laststation)?.setOnClickListener(backToLastStationClickListener)
+
+
 
         return view
     }
@@ -251,7 +253,11 @@ class HafasDeparturesFragment : RecyclerFragment<HafasDeparturesAdapter>(R.layou
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-
+        // dirty hack because Fragment is used in DeparturesActivity and StationActivity
+        if(activity !is DeparturesActivity) {
+            val params = (view.layoutParams as ViewGroup.MarginLayoutParams)
+            params.updateMargins(top=0)
+        }
 
         // todo (see DeparturesFragment)
         hafasTimetableViewModel.mapAvailableLiveData.observe(

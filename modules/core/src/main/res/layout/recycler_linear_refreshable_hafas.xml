@@ -6,10 +6,15 @@
   ~ SPDX-License-Identifier: Apache-2.0
   -->
 
-<androidx.coordinatorlayout.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout
+
+
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/layout"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:layout_marginTop="54dp"
 
     >
 
@@ -29,7 +34,9 @@
         <ViewFlipper
             android:id="@+id/view_flipper"
             android:layout_width="match_parent"
-            android:layout_height="match_parent">
+            android:layout_height="match_parent"
+
+            >
 
             <include layout="@layout/recycler_linear" />
 
@@ -42,12 +49,11 @@
         android:id="@+id/btn_map"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_gravity="bottom|right"
+        android:layout_gravity="bottom|end"
         android:layout_margin="@dimen/default_space_double"
         android:src="@drawable/app_karte"
         android:contentDescription="@string/sr_map" />
 
     </FrameLayout>
 
-
-</androidx.coordinatorlayout.widget.CoordinatorLayout>
+</LinearLayout>
