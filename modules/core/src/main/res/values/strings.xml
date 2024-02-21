@@ -481,6 +481,7 @@
     <string name="notification_advice_systemsettings_reminders">Erinnerungen für diese App müssen in den Systemeinstellungen zugelassen werden.</string>
 
     <string name="template_linkplatform">Gegenüberliegend Gleis %d</string>
+    <string name="station_search_query">Suchen Sie etwas am Bahnhof?</string>
 
 </resources>
 

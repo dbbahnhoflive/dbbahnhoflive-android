@@ -210,7 +210,9 @@
                     android:src="@drawable/station_header_default"
                     app:layout_constraintTop_toTopOf="parent"
                     app:layout_constraintLeft_toLeftOf="parent"
-                    app:layout_constraintRight_toRightOf="parent" />
+                    app:layout_constraintRight_toRightOf="parent"
+                    android:importantForAccessibility="no"
+                    />
 
                 <ImageButton
                     android:id="@+id/btn_back_to_laststation_station"
@@ -234,7 +236,9 @@
                     app:layout_constraintBottom_toBottomOf="@+id/station_image"
                     app:layout_constraintLeft_toLeftOf="@+id/station_image"
                     app:layout_constraintRight_toRightOf="@+id/station_image"
-                    app:layout_constraintTop_toTopOf="@+id/station_image" />
+                    app:layout_constraintTop_toTopOf="@+id/station_image"
+                    android:importantForAccessibility="no"
+                    />
 
                 <androidx.cardview.widget.CardView
                     android:id="@+id/searchCard"
@@ -249,8 +253,7 @@
                     app:layout_constraintEnd_toStartOf="parent">
 
                     <TextView
-                        android:text="Suchen Sie etwas am Bahnhof?"
-                        android:drawableEnd="@drawable/app_lupe"
+                        android:text="@string/station_search_query"
                         android:enabled="false"
                         android:padding="@dimen/default_space"
                         android:layout_gravity="center"
@@ -258,7 +261,8 @@
                         android:textColor="@color/outline_grey"
                         android:layout_margin="@dimen/default_space"
                         android:layout_width="match_parent"
-                        android:layout_height="wrap_content" />
+                        android:layout_height="wrap_content"
+                        app:drawableEndCompat="@drawable/app_lupe" />
                 </androidx.cardview.widget.CardView>
 
 
