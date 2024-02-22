@@ -9,9 +9,7 @@ package de.deutschebahn.bahnhoflive.ui.timetable.localtransport;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.View;
-import android.widget.Button;
 
 import androidx.activity.OnBackPressedCallback;
 import androidx.activity.OnBackPressedDispatcher;
@@ -40,7 +38,6 @@ import de.deutschebahn.bahnhoflive.ui.ToolbarViewHolder;
 import de.deutschebahn.bahnhoflive.ui.hub.HubActivity;
 import de.deutschebahn.bahnhoflive.ui.map.MapActivity;
 import de.deutschebahn.bahnhoflive.ui.station.BackNavigationData;
-import de.deutschebahn.bahnhoflive.ui.station.StationActivity;
 import de.deutschebahn.bahnhoflive.ui.station.StationViewModel;
 import de.deutschebahn.bahnhoflive.util.GoogleLocationPermissions;
 
