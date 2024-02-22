@@ -663,7 +663,8 @@ class StationActivity : BaseActivity(), StationProvider, RootProvider, TrackingM
             if (((station != null) && (station?.id == stationToNavigateBack.id) && (hafasStation == null))) {
                 // something went wrong
                 stationViewModel.backNavigationLiveData.postValue(null)
-            } else stationViewModel.backNavigationLiveData.postValue(
+            } else
+                stationViewModel.backNavigationLiveData.postValue(
                 BackNavigationData(
                     doNavigateBack,
                     station,

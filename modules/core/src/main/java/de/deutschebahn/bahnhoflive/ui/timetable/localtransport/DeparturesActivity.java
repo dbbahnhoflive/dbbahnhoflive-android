@@ -9,17 +9,19 @@ package de.deutschebahn.bahnhoflive.ui.timetable.localtransport;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
+import android.widget.Button;
 
+import androidx.activity.OnBackPressedCallback;
+import androidx.activity.OnBackPressedDispatcher;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-import androidx.core.view.MenuProvider;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
-import androidx.lifecycle.Lifecycle;
-import androidx.lifecycle.LifecycleOwner;
-import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
+
+import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
 import org.jetbrains.annotations.NotNull;
 
@@ -35,7 +37,11 @@ import de.deutschebahn.bahnhoflive.backend.hafas.model.HafasStation;
 import de.deutschebahn.bahnhoflive.repository.InternalStation;
 import de.deutschebahn.bahnhoflive.repository.Station;
 import de.deutschebahn.bahnhoflive.ui.ToolbarViewHolder;
+import de.deutschebahn.bahnhoflive.ui.hub.HubActivity;
 import de.deutschebahn.bahnhoflive.ui.map.MapActivity;
+import de.deutschebahn.bahnhoflive.ui.station.BackNavigationData;
+import de.deutschebahn.bahnhoflive.ui.station.StationActivity;
+import de.deutschebahn.bahnhoflive.ui.station.StationViewModel;
 import de.deutschebahn.bahnhoflive.util.GoogleLocationPermissions;
 
 public class DeparturesActivity extends BaseActivity implements TrackingManager.Provider {
@@ -51,19 +57,25 @@ public class DeparturesActivity extends BaseActivity implements TrackingManager.
     public static final String ARG_NAVIGATE_BACK = "navigate_back";
     public static final String ARG_HAFAS_EVENT = "hafas_event";
 
+    public static final String ARG_NAVIGATE_BACK_HAFAS_STATION = "navigate_back_hafas_station";
+
     private final TrackingManager trackingManager = new TrackingManager(this);
     private ToolbarViewHolder toolbarViewHolder;
 
     public Station station;
-    public HafasStation hafasStation;
-    public HafasEvent hafasEvent;
-    public Boolean navigateBack;
 
-    private View mapButton;
+    public HafasStation hafasStation;
+
+    public HafasEvent hafasEvent;
+
+    private final OnBackPressedDispatcher onBackPressedDispatcher = getOnBackPressedDispatcher();
+
     private HafasDeparturesFragment hafasDeparturesFragment = null;
 
+    HafasTimetableViewModel hafasTimetableViewModel = null;
 
     public static Bundle createArguments(HafasStation hafasStation,
+                                         HafasStation hafasStationToGoBack,
                                          HafasDepartures departures,
                                          boolean filterStrictly,
                                          Station station,
@@ -71,6 +83,7 @@ public class DeparturesActivity extends BaseActivity implements TrackingManager.
         final Bundle bundle = new Bundle();
 
         bundle.putParcelable(ARG_HAFAS_STATION, hafasStation);
+        bundle.putParcelable(ARG_NAVIGATE_BACK_HAFAS_STATION, hafasStationToGoBack);
         bundle.putParcelable(ARG_HAFAS_DEPARTURES, departures);
         bundle.putBoolean(ARG_FILTER_STRICTLY, filterStrictly);
         if (station != null) {
@@ -87,12 +100,16 @@ public class DeparturesActivity extends BaseActivity implements TrackingManager.
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        final HafasTimetableViewModel hafasTimetableViewModel = new ViewModelProvider(this).get(HafasTimetableViewModel.class);
+        final ViewModelProvider viewModelProvider = new ViewModelProvider(this);
+        hafasTimetableViewModel = viewModelProvider.get(HafasTimetableViewModel.class);
+
+        StationViewModel stationViewModel = viewModelProvider.get(StationViewModel.class);
 
         final Intent intent = getIntent();
         final Bundle arguments = intent.getBundleExtra(ARG_HAFAS_LOADER_ARGUMENTS);
 
         hafasEvent = intent.getParcelableExtra(ARG_HAFAS_EVENT);
+        HafasStation hafasStationToNavigateBack = null;
 
         if (arguments == null) {
             hafasStation = null;
@@ -103,10 +120,20 @@ public class DeparturesActivity extends BaseActivity implements TrackingManager.
             final List<HafasStation> hafasStations = arguments.getParcelableArrayList(ARG_DB_STATION_HAFAS_STATIONS);
             station = arguments.getParcelable(ARG_DB_STATION);
             final boolean filterStrictly = arguments.getBoolean(ARG_FILTER_STRICTLY, true);
+            hafasStationToNavigateBack = arguments.getParcelable(ARG_NAVIGATE_BACK_HAFAS_STATION);
             hafasTimetableViewModel.initialize(hafasStation, departures, filterStrictly, station, hafasStations, true);
         }
 
-        navigateBack = intent.getBooleanExtra(ARG_NAVIGATE_BACK, false);
+        final boolean navigateBack = intent.getBooleanExtra(ARG_NAVIGATE_BACK, false);
+        final boolean showNavigateBackChevron =  (hafasStationToNavigateBack!=null || station!=null);
+
+        stationViewModel.getBackNavigationLiveData().postValue(new BackNavigationData(navigateBack,
+                station,
+                null,
+                null,
+                hafasStationToNavigateBack, //hafasStation,
+                hafasEvent,
+                showNavigateBackChevron));
 
         setContentView(R.layout.activity_departures_hafas);
 
@@ -114,19 +141,20 @@ public class DeparturesActivity extends BaseActivity implements TrackingManager.
             installFragment(getSupportFragmentManager());
 
         toolbarViewHolder = new ToolbarViewHolder(findViewById(android.R.id.content)); // hier ist die Ueberschrift und der back-Button drin
-        hafasTimetableViewModel.hafasStationResource.getData().observe(this, new Observer<HafasStation>() {
-            @Override
-            public void onChanged(@Nullable HafasStation hafasStation) {
+
+        hafasTimetableViewModel.hafasStationResource.getData().observe(this, hafasStation -> {
                 if (hafasStation != null) {
                     toolbarViewHolder.setTitle(hafasStation.name);
-                    toolbarViewHolder.showImageButton(navigateBack);
                 }
+        });
+
+        stationViewModel.getBackNavigationLiveData().observe(this, itBackNavigationData ->  {
+            if (itBackNavigationData != null) {
+                toolbarViewHolder.showBackToLastStationButton(itBackNavigationData.getShowChevron());
             }
         });
 
-        hafasTimetableViewModel.getSelectedHafasJourney().observe(this, new Observer<DetailedHafasEvent>() {
-            @Override
-            public void onChanged(DetailedHafasEvent detailedHafasEvent) {
+        hafasTimetableViewModel.getSelectedHafasJourney().observe(this, detailedHafasEvent -> {
 
                 if(detailedHafasEvent!=null && detailedHafasEvent.hafasEvent!=null) {
                     toolbarViewHolder.setTitle(getString(
@@ -134,15 +162,22 @@ public class DeparturesActivity extends BaseActivity implements TrackingManager.
                                     detailedHafasEvent.hafasEvent.getDisplayName(),
                                     detailedHafasEvent.hafasEvent.direction
                     ));
-                }
-                else
-                  if(hafasStation!=null)
+            } else if (hafasStation != null)
                     toolbarViewHolder.setTitle(hafasStation.name);
 
+        });
+
+
+        onBackPressedDispatcher.addCallback(new OnBackPressedCallback(true) {
+            @Override
+            public void handleOnBackPressed() {
+                Intent intent = HubActivity.createIntent(getApplicationContext());
+                startActivity(intent);
+                finish();
             }
         });
 
-        mapButton = findViewById(R.id.btn_map);
+        FloatingActionButton mapButton = findViewById(R.id.btn_map);
 
         if (mapButton != null) {
             mapButton.setVisibility(View.VISIBLE);
@@ -158,9 +193,9 @@ public class DeparturesActivity extends BaseActivity implements TrackingManager.
             });
         }
 
-        // todo (not working WHY?)
         hafasTimetableViewModel.getMapAvailableLiveData().observe(this,
                 aBoolean -> {
+                  if(mapButton!=null)
                     mapButton.setVisibility(aBoolean ? View.VISIBLE : View.GONE);
                 });
     }
@@ -171,7 +206,7 @@ public class DeparturesActivity extends BaseActivity implements TrackingManager.
             hafasDeparturesFragment = (HafasDeparturesFragment) fragment;
             return;
         }
-
+        else
         hafasDeparturesFragment = new HafasDeparturesFragment();
 
         fragmentManager.beginTransaction()
@@ -182,6 +217,7 @@ public class DeparturesActivity extends BaseActivity implements TrackingManager.
 
     public static Intent createIntent(Context context,
                                       HafasStation hafasStation,
+                                      HafasStation hafasStationToGoBack,
                                       HafasDepartures departures,
                                       boolean filterStrictly,
                                       Station station,
@@ -190,24 +226,31 @@ public class DeparturesActivity extends BaseActivity implements TrackingManager.
         final Intent intent = new Intent(context, DeparturesActivity.class);
 
         intent.putExtra(ARG_HAFAS_LOADER_ARGUMENTS, createArguments(
-                hafasStation, departures, filterStrictly, station, hafasStations)
+                hafasStation, hafasStationToGoBack, departures, filterStrictly, station, hafasStations)
         );
 
         return intent;
     }
 
     public static Intent createIntent(Context context, HafasStation hafasStation, HafasDepartures departures) {
-        return createIntent(context, hafasStation, departures, true, null, null);
+        return createIntent(context, hafasStation, null, departures, true, null, null);
     }
 
-    @Nullable
+    public static Intent createIntent(Context context, HafasStation hafasStation, HafasEvent hafasEvent) {
+        final Intent intent = createIntent(context, hafasStation, hafasStation, null, true, null, null);
+        intent.putExtra(ARG_HAFAS_EVENT, hafasEvent);
+        intent.putExtra(ARG_NAVIGATE_BACK, true);
+        return intent;
+    }
+
     public static Intent createIntentForBackNavigation(Context context,
                                                        Station actualStation, // db
                                                        HafasStation stationToGoTo,
+                                                       HafasStation actualHafasStation,
                                                        HafasEvent hafasEvent) {
-        final Intent intent = createIntent(context, stationToGoTo, null, true, actualStation, null);
+        final Intent intent = createIntent(context, stationToGoTo, actualHafasStation, null, true, actualStation, null);
 
-        intent.putExtra(ARG_NAVIGATE_BACK, true);
+        intent.putExtra(ARG_NAVIGATE_BACK, false);
         intent.putExtra(ARG_HAFAS_EVENT, hafasEvent);
 
         return intent;
@@ -229,16 +272,8 @@ public class DeparturesActivity extends BaseActivity implements TrackingManager.
 
     @NonNull
     public static Intent createIntent(@NotNull Context context, @NotNull HafasStation hafasStation, List<HafasStation> hafasStations, @org.jetbrains.annotations.Nullable Station station) {
-        return createIntent(context, hafasStation, null, true, station, hafasStations);
-    }
-
-    @Override
-    public void addMenuProvider(@NonNull MenuProvider provider, @NonNull LifecycleOwner owner, @NonNull Lifecycle.State state) {
-
-    }
-
-    @Override
-    public void onPointerCaptureChanged(boolean hasCapture) {
-        super.onPointerCaptureChanged(hasCapture);
+        final Intent intent = createIntent(context, hafasStation, null, null, true, station, hafasStations);
+        intent.putExtra(ARG_NAVIGATE_BACK, false);
+        return intent;
     }
 }

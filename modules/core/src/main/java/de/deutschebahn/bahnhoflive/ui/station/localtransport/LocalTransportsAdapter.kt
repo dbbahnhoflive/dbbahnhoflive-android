@@ -16,7 +16,7 @@ import de.deutschebahn.bahnhoflive.backend.hafas.model.HafasStation
 import de.deutschebahn.bahnhoflive.backend.local.model.EvaIds
 import de.deutschebahn.bahnhoflive.ui.ViewHolder
 import de.deutschebahn.bahnhoflive.view.ItemClickListener
-import java.util.*
+import java.util.LinkedList
 
 internal class LocalTransportsAdapter(
     private val itemClickListener: ItemClickListener<HafasStation>

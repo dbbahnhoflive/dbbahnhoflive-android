@@ -14,6 +14,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageButton
+import androidx.core.app.ActivityCompat
 import androidx.core.view.isVisible
 import androidx.core.view.updateMargins
 import androidx.fragment.app.activityViewModels
@@ -38,7 +39,9 @@ import de.deutschebahn.bahnhoflive.ui.station.BackNavigationData
 import de.deutschebahn.bahnhoflive.ui.station.HistoryFragment
 import de.deutschebahn.bahnhoflive.ui.station.StationActivity
 import de.deutschebahn.bahnhoflive.ui.station.StationViewModel
+import de.deutschebahn.bahnhoflive.ui.timetable.localtransport.DeparturesActivity.ARG_HAFAS_EVENT
 import de.deutschebahn.bahnhoflive.util.getParcelableCompatible
+
 
 
 class HafasDeparturesFragment : RecyclerFragment<HafasDeparturesAdapter>(R.layout.recycler_linear_refreshable_hafas),
@@ -50,6 +53,8 @@ class HafasDeparturesFragment : RecyclerFragment<HafasDeparturesAdapter>(R.layou
     private var loadingContentDecorationViewHolder: LoadingContentDecorationViewHolder? = null
     private val hafasTimetableViewModel: HafasTimetableViewModel by activityViewModels()
     private val hafasTimetableResource get() = hafasTimetableViewModel.hafasTimetableResource
+
+    private var backNavigationData: BackNavigationData? = null
 
     val trackingManager: TrackingManager
         get() = TrackingManager.fromActivity(activity)
@@ -65,7 +70,9 @@ class HafasDeparturesFragment : RecyclerFragment<HafasDeparturesAdapter>(R.layou
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        setAdapter( HafasDeparturesAdapter(View.OnClickListener {
+        setAdapter(
+            HafasDeparturesAdapter(
+                View.OnClickListener {
             trackingManager.track(
                 TrackingManager.TYPE_ACTION,
                 TrackingManager.Screen.H2,
@@ -74,48 +81,20 @@ class HafasDeparturesFragment : RecyclerFragment<HafasDeparturesAdapter>(R.layou
             )
             val filter = adapter?.filter
             val hafasFilterDialogFragment = HafasFilterDialogFragment.create(
-                hafasTimetableViewModel.hafasTimetableResource.data.value?.intervalEnd?.time ?: -1,
+                        hafasTimetableViewModel.hafasTimetableResource.data.value?.intervalEnd?.time
+                            ?: -1,
                 filter?.label,
                 adapter?.getFilterOptions()
             )
             hafasFilterDialogFragment.show(childFragmentManager, "filter")
-        }, trackingManager, {
+                },
+                trackingManager,
+                {
             hafasTimetableViewModel.loadMore()
         },
-            hafasDataReceivedCallback = {
-                // data received after request in HafasDeparturesAdapter.onCreateViewHolder
-                    _: View?, details: DetailedHafasEvent, success: Boolean ->
-                run {
-
-                    if (success) {
-                        hafasTimetableViewModel.selectedHafasJourney.postValue(details)
-
-                        val hafasJourneyFragment = HafasJourneyFragment()
-
-                        if (parentFragment != null) {
-                            val historyFragment = HistoryFragment.parentOf(this)
-                            historyFragment.push(hafasJourneyFragment)
-                        } else {
-                            // Aufruf aus Favoriten OHNE vorher geladene Station !!!!!! (kein HistoryFragment)
-
-                            activity?.supportFragmentManager?.beginTransaction()
-                                ?.replace(
-                                    R.id.hafas_fragment_container,
-                                    hafasJourneyFragment,
-                                    HafasJourneyFragment.TAG
+                this
+            )
                                 )
-                                ?.addToBackStack(null)
-                                ?.commit()
-
-                        }
-                    } else {
-                        // todo: Fehlermeldung
-                        Log.d("cr", "HafasDeparturesFragment::ERROR")
-                    }
-
-                }
-            }
-        ))
 
         setFilter(hafasTimetableViewModel.filterName)
 
@@ -144,36 +123,37 @@ class HafasDeparturesFragment : RecyclerFragment<HafasDeparturesAdapter>(R.layou
 
             loadingContentDecorationViewHolder?.showContent()
 
-            val backNavigationData: BackNavigationData? =
-                stationViewModel.backNavigationLiveData.value
+            stationViewModel.backNavigationLiveData.observe(viewLifecycleOwner) { itBackNavigationData ->
 
-            backNavigationData?.hafasStation?.let {
+                backNavigationData = itBackNavigationData
 
-                if (backNavigationData.navigateTo) {
-                    recyclerView?.post {
+                itBackNavigationData?.hafasStation?.let {
 
-                        backNavigationData.hafasEvent?.let { it ->
+                    if (itBackNavigationData.navigateTo) {
+
+                        itBackNavigationData.hafasEvent?.let {
 
                             if(BuildConfig.DEBUG)
                               Log.d("cr", "item to find: ${it.direction} ${it.displayName}")
 
-                            val index: Int? = adapter?.findItemIndex(backNavigationData.hafasEvent)
+                            it.let {
+                                val ev = DetailedHafasEvent(
+                                    BaseApplication.get().repositories.localTransportRepository,
+                                    it
+                                )
+                                ev.setListener(this) // -> onDetailUpdated
+                                ev.requestDetails() // Daten anfordern
 
-                            if (index != null && index >= 0) {
-                                recyclerView?.let {itRecyclerView->
-                                    val vh = itRecyclerView.findViewHolderForAdapterPosition(index + 1) as? HafasEventViewHolder
-                                    vh?.performClick()
                                 }
                             }
+                        stationViewModel.finishBackNavigation()
                         }
+
                     }
-
-                    stationViewModel.finishBackNavigation()
                 }
-
-            }
-
         })
+
+
         hafasTimetableResource.loadingStatus.observe(this, Observer { loadingStatus ->
             if (loadingStatus == LoadingStatus.IDLE) {
                 swipeRefreshLayout!!.isRefreshing = false
@@ -187,17 +167,42 @@ class HafasDeparturesFragment : RecyclerFragment<HafasDeparturesAdapter>(R.layou
             }
         })
 
+        hafasTimetableViewModel.selectedHafasJourney.observe(this) {
+            Log.d("cr", "details")
+
+            if (it != null) {
+                val hafasJourneyFragment = HafasJourneyFragment()
+
+                if (parentFragment != null) {
+                    val historyFragment = HistoryFragment.parentOf(this)
+                    historyFragment.push(hafasJourneyFragment)
+                } else {
+                    // Aufruf aus Favoriten OHNE vorher geladene Station !!!!!! (kein HistoryFragment)
+
+                    activity?.supportFragmentManager?.beginTransaction()
+                        ?.replace(
+                            R.id.hafas_fragment_container,
+                            hafasJourneyFragment,
+                            HafasJourneyFragment.TAG
+                        )
+                        ?.addToBackStack(null)
+                        ?.commit()
+
+                }
+            }
+
+        }
     }
 
 
-    fun navigateBack(this_activity: Activity) {
+    private fun navigateBack(thisActivity: Activity) {
 
-        (this_activity as? DeparturesActivity)?.let {
+        (thisActivity as? DeparturesActivity)?.let {
             val intent: Intent?
 
             if (it.station != null) {
                 intent = StationActivity.createIntentForBackNavigation(
-                    this_activity,
+                    thisActivity,
                     it.station,
                     it.station,
                     it.hafasStation,
@@ -206,19 +211,19 @@ class HafasDeparturesFragment : RecyclerFragment<HafasDeparturesAdapter>(R.layou
                     true
                 )
             } else {
-
+// Aufruf aus reiner hafas-Station (NearBy, Favoriten, Suche)
                 intent = DeparturesActivity.createIntent(
                     context,
-                    it.hafasStation,
-                    null  //hafasTimetable.getDepartures()
+                    backNavigationData?.hafasStation,
+                    it.hafasEvent
                 )
 
             }
 
 
             intent?.let {
-                this_activity.finish()
-                this_activity.startActivity(intent)
+                ActivityCompat.finishAffinity(thisActivity)
+                thisActivity.startActivity(intent)
             }
         }
     }
@@ -245,8 +250,6 @@ class HafasDeparturesFragment : RecyclerFragment<HafasDeparturesAdapter>(R.layou
 
         container?.findViewById<ImageButton>(R.id.btn_back_to_laststation)?.setOnClickListener(backToLastStationClickListener)
 
-
-
         return view
     }
 
@@ -257,6 +260,7 @@ class HafasDeparturesFragment : RecyclerFragment<HafasDeparturesAdapter>(R.layou
         if(activity !is DeparturesActivity) {
             val params = (view.layoutParams as ViewGroup.MarginLayoutParams)
             params.updateMargins(top=0)
+//            view.requestLayout()
         }
 
         // todo (see DeparturesFragment)
@@ -300,7 +304,32 @@ class HafasDeparturesFragment : RecyclerFragment<HafasDeparturesAdapter>(R.layou
     }
 
     override fun onDetailUpdated(detailedHafasEvent: DetailedHafasEvent?, success: Boolean) {
+        // HafasJourneyFragment anzeigen
+        if (success) {
         hafasTimetableViewModel.selectedHafasJourney.postValue(detailedHafasEvent)
+
+//            val hafasJourneyFragment = HafasJourneyFragment()
+//
+//            if (parentFragment != null) {
+//                val historyFragment = HistoryFragment.parentOf(this)
+//                historyFragment.push(hafasJourneyFragment)
+//            } else {
+//                // Aufruf aus Favoriten OHNE vorher geladene Station !!!!!! (kein HistoryFragment)
+//
+//                activity?.supportFragmentManager?.beginTransaction()
+//                    ?.replace(
+//                        R.id.hafas_fragment_container,
+//                        hafasJourneyFragment,
+//                        HafasJourneyFragment.TAG
+//                    )
+//                    ?.addToBackStack(null)
+//                    ?.commit()
+//
+//            }
+        } else {
+            // todo: Fehlermeldung
+            Log.d("cr", "HafasDeparturesFragment::ERROR")
+        }
     }
 
     override fun onDestroyView() {
@@ -329,8 +358,7 @@ class HafasDeparturesFragment : RecyclerFragment<HafasDeparturesAdapter>(R.layou
     }
 
     companion object {
-        val TAG = HafasDeparturesFragment::class.java.simpleName
-        const val ARG_HAFAS_EVENT = "ARG_HAFAS_EVENT"
+        val TAG: String = HafasDeparturesFragment::class.java.simpleName
     }
 
 }

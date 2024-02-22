@@ -185,7 +185,7 @@ public class TimetablesFragment extends TwoTabsFragment {
                 stationViewModel.navigateBack(activity);
             };
 
-            toolbarViewHolder.setImageButtonClickListener(backToLastStationClickListener);
+            toolbarViewHolder.setBackToLastStationButtonClickListener(backToLastStationClickListener);
 
             stationViewModel.getStationResource().getData().observe(getViewLifecycleOwner(), station -> {
                 if (station != null) {
@@ -195,7 +195,7 @@ public class TimetablesFragment extends TwoTabsFragment {
 
             stationViewModel.getBackNavigationLiveData().observe(getViewLifecycleOwner(),
                     backNavigationData -> {
-                        toolbarViewHolder.showImageButton(backNavigationData != null && backNavigationData.getShowChevron());
+                        toolbarViewHolder.showBackToLastStationButton(backNavigationData != null && backNavigationData.getShowChevron());
 
                         if(backNavigationData!=null) {
 

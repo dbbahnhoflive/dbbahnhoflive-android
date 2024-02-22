@@ -43,6 +43,7 @@ class FullJourneyContentFragment : Fragment() {
                         journeyStop.name,
                         null,
                         null,
+                        null,
                         trainInfo
                     )
                 }

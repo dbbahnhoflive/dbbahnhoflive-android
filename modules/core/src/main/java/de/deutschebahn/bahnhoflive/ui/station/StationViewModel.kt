@@ -11,8 +11,16 @@ import android.app.Application
 import android.content.Context
 import android.util.Log
 import android.view.View
-import androidx.lifecycle.*
+import androidx.lifecycle.LiveData
+import androidx.lifecycle.MediatorLiveData
+import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.Observer
+import androidx.lifecycle.asFlow
+import androidx.lifecycle.asLiveData
+import androidx.lifecycle.distinctUntilChanged
+import androidx.lifecycle.map
+import androidx.lifecycle.switchMap
+import androidx.lifecycle.viewModelScope
 import com.android.volley.VolleyError
 import com.google.gson.GsonBuilder
 import de.deutschebahn.bahnhoflive.BaseApplication
@@ -40,8 +48,20 @@ import de.deutschebahn.bahnhoflive.backend.ris.model.RISTimetable
 import de.deutschebahn.bahnhoflive.backend.ris.model.TrainEvent
 import de.deutschebahn.bahnhoflive.backend.ris.model.TrainInfo
 import de.deutschebahn.bahnhoflive.persistence.RecentContentQueriesStore
-import de.deutschebahn.bahnhoflive.repository.*
+import de.deutschebahn.bahnhoflive.repository.ElevatorsResource
+import de.deutschebahn.bahnhoflive.repository.EvaIdsProvider
+import de.deutschebahn.bahnhoflive.repository.LoadingStatus
+import de.deutschebahn.bahnhoflive.repository.PlatformLevelResource
+import de.deutschebahn.bahnhoflive.repository.RimapRRTResource
+import de.deutschebahn.bahnhoflive.repository.RimapStationFeatureCollectionResource
+import de.deutschebahn.bahnhoflive.repository.RisServiceAndCategoryResource
+import de.deutschebahn.bahnhoflive.repository.ShopsResource
+import de.deutschebahn.bahnhoflive.repository.Station
+import de.deutschebahn.bahnhoflive.repository.StationOccupancyResource
+import de.deutschebahn.bahnhoflive.repository.StationResource
+import de.deutschebahn.bahnhoflive.repository.VenueFeature
 import de.deutschebahn.bahnhoflive.repository.accessibility.AccessibilityFeaturesResource
+import de.deutschebahn.bahnhoflive.repository.appRepositories
 import de.deutschebahn.bahnhoflive.repository.feedback.WhatsAppFeeback
 import de.deutschebahn.bahnhoflive.repository.locker.LockersViewModel
 import de.deutschebahn.bahnhoflive.repository.map.RrtRequestResult
@@ -52,7 +72,13 @@ import de.deutschebahn.bahnhoflive.stream.livedata.MergedLiveData
 import de.deutschebahn.bahnhoflive.ui.map.Content
 import de.deutschebahn.bahnhoflive.ui.map.MapActivity
 import de.deutschebahn.bahnhoflive.ui.station.elevators.ElevatorStatusListsFragment
-import de.deutschebahn.bahnhoflive.ui.station.features.*
+import de.deutschebahn.bahnhoflive.ui.station.features.AccessibilityLink
+import de.deutschebahn.bahnhoflive.ui.station.features.Link
+import de.deutschebahn.bahnhoflive.ui.station.features.MapLink
+import de.deutschebahn.bahnhoflive.ui.station.features.MapOrInfoLink
+import de.deutschebahn.bahnhoflive.ui.station.features.StationFeature
+import de.deutschebahn.bahnhoflive.ui.station.features.StationFeatureDefinition
+import de.deutschebahn.bahnhoflive.ui.station.features.StationFeatureTemplate
 import de.deutschebahn.bahnhoflive.ui.station.info.InfoAndServicesLiveData
 import de.deutschebahn.bahnhoflive.ui.station.info.ServiceNumbersLiveData
 import de.deutschebahn.bahnhoflive.ui.station.localtransport.LocalTransportViewModel
@@ -73,16 +99,24 @@ import de.deutschebahn.bahnhoflive.util.execBrowser
 import de.deutschebahn.bahnhoflive.util.openhours.OpenHoursParser
 import de.deutschebahn.bahnhoflive.util.then
 import de.deutschebahn.bahnhoflive.util.toLiveData
-import kotlinx.coroutines.*
-import kotlinx.coroutines.flow.*
+import kotlinx.coroutines.CoroutineDispatcher
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.ExperimentalCoroutinesApi
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.combine
+import kotlinx.coroutines.flow.filterNotNull
+import kotlinx.coroutines.flow.flowOn
+import kotlinx.coroutines.flow.map
+import kotlinx.coroutines.flow.mapLatest
+import kotlinx.coroutines.launch
 import java.io.InputStreamReader
 import java.text.Collator
-import java.util.*
+import java.util.Locale
 import java.util.concurrent.Executors
 
 class BackNavigationData(var navigateTo: Boolean,
                          val stationToShow : Station?,
-                         val stationToNavigateTo : Station,
+                         val stationToNavigateTo : Station?,
                          val trainInfo:TrainInfo?,
                          val hafasStation: HafasStation?,
                          val hafasEvent: HafasEvent?,

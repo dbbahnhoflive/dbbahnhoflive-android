@@ -6,6 +6,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.view.accessibility.AccessibilityEvent
+import androidx.core.view.isVisible
 import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.Observer
 import de.deutschebahn.bahnhoflive.R
@@ -59,11 +60,7 @@ class HafasJourneyFragment : JourneyCoreFragment(), MapPresetProvider
         stationViewModel.backNavigationLiveData.observe(
             viewLifecycleOwner,
             Observer<BackNavigationData> { stationToNavigateBack: BackNavigationData? ->
-                binding.titleBar.btnBackToLaststation.visibility = if(
-                    stationToNavigateBack != null && stationToNavigateBack.showChevron)
-                    View.VISIBLE
-                else
-                    View.GONE
+                  binding.titleBar.btnBackToLaststation.isVisible = activity !is DeparturesActivity && stationToNavigateBack != null && stationToNavigateBack.showChevron
             }
         )
 
@@ -138,6 +135,7 @@ class HafasJourneyFragment : JourneyCoreFragment(), MapPresetProvider
                                 stop.hafasStop?.extId,
                                 stop.hafasStop?.name, // ziel
                                 stop.hafasStop,
+                                (activity as? DeparturesActivity)?.hafasTimetableViewModel?.hafasStation,
                                 itDetailedHafasEvent.hafasEvent
                             )
                         }

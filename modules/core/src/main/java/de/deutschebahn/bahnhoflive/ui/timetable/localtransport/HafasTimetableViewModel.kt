@@ -59,6 +59,8 @@ open class HafasTimetableViewModel(val hafasapplication: Application) : AndroidV
         return mediatorResource
     }
 
+    var hafasStation: HafasStation? = null
+
     val mapAvailableLiveData =
         SpokenFeedbackAccessibilityLiveData(hafasapplication).switchMap { spokenFeedbackAccessibilityEnabled ->
             if (stationResource != null) {
@@ -94,6 +96,7 @@ open class HafasTimetableViewModel(val hafasapplication: Application) : AndroidV
             )
             hafasStationResource.initialize(hafasStation)
             this.station = station
+            this.hafasStation = hafasStation
             this.hafasStations = hafasStations
         }
     }

@@ -110,7 +110,6 @@ public class StationFragment extends androidx.fragment.app.Fragment implements
     private LiveData<MergedStation> stationLiveData;
 
     private ShopsResource shopsResource;
-    //    private ParkingsResource parkingsResource;
     private ElevatorsResource elevatorsResource;
     private View stationFeaturesButton;
     private StationDetailCardCoordinator stationDetailCardCoordinator;
@@ -119,7 +118,7 @@ public class StationFragment extends androidx.fragment.app.Fragment implements
 
     private final GeneralPurposeMillisecondsTimer lastChangeTimer = new GeneralPurposeMillisecondsTimer();
 
-    private View btnBackToLaststation;
+    private View btnBackToLastStation;
 
     @Override
     public void onStart() {
@@ -474,9 +473,9 @@ public class StationFragment extends androidx.fragment.app.Fragment implements
             stationViewModel.navigateBack(getActivity());
         };
 
-        btnBackToLaststation = view.findViewById(R.id.btn_back_to_laststation_station);
-        btnBackToLaststation.setOnClickListener(backToLastStationClickListener);
-        toolbarViewHolder.setImageButtonClickListener(backToLastStationClickListener);
+        btnBackToLastStation = view.findViewById(R.id.btn_back_to_laststation_station);
+        btnBackToLastStation.setOnClickListener(backToLastStationClickListener);
+        toolbarViewHolder.setBackToLastStationButtonClickListener(backToLastStationClickListener);
 
         stationViewModel.getBackNavigationLiveData().observe(getViewLifecycleOwner(),
                 backNavigationData -> {
@@ -492,11 +491,11 @@ public class StationFragment extends androidx.fragment.app.Fragment implements
 
                     } else {
                         if (backNavigationData != null && backNavigationData.getShowChevron()) {
-                      btnBackToLaststation.setVisibility(View.VISIBLE);
-                      toolbarViewHolder.showImageButton(true);
+                            btnBackToLastStation.setVisibility(View.VISIBLE);
+                            toolbarViewHolder.showBackToLastStationButton(true);
                         } else {
-                      btnBackToLaststation.setVisibility(View.GONE);
-                      toolbarViewHolder.showImageButton(false);
+                            btnBackToLastStation.setVisibility(View.GONE);
+                            toolbarViewHolder.showBackToLastStationButton(false);
                   }
 
                     }

@@ -6,7 +6,7 @@
 
 package de.deutschebahn.bahnhoflive.ui.timetable.localtransport
 
-import android.util.Log
+import android.annotation.SuppressLint
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -29,7 +29,7 @@ class HafasDeparturesAdapter(
     private val onFilterClickListener: View.OnClickListener,
     private val trackingManager: TrackingManager,
     private val loadMoreCallback: View.OnClickListener,
-    private val hafasDataReceivedCallback : (view:View?, item:DetailedHafasEvent, success:Boolean)->Unit
+    private val listener : DetailedHafasEvent.HafasDetailListener
 ) : androidx.recyclerview.widget.RecyclerView.Adapter<ViewHolder<out Any>>() {
 
     private val singleSelectionManager = SingleSelectionManager(this)
@@ -59,7 +59,7 @@ class HafasDeparturesAdapter(
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder<out Any> =
         when (viewType) {
 
-            VIEW_TYPE_HEADER -> {
+            VIEW_TYPE_HEADER -> { // contains filter-button
                 val view = LayoutInflater.from(parent.context)
                     .inflate(R.layout.header_timetable_local, parent, false)
 
@@ -86,11 +86,8 @@ class HafasDeparturesAdapter(
 
                         details.requestDetails() // Daten anfordern
                     }
-                }, hafasDataReceivedEvent = { v, details, success ->
-                    run {
-                        hafasDataReceivedCallback(v, details, success)
-                    }
-                }
+                },
+                    listener
                 )
             }
 
@@ -148,6 +145,7 @@ class HafasDeparturesAdapter(
         filterOptions.addFirst("Alle")
     }
 
+    @SuppressLint("NotifyDataSetChanged")
     private fun applyFilter() {
         filteredEvents.clear()
 
@@ -206,36 +204,6 @@ class HafasDeparturesAdapter(
         }.plus(filterItemOffset).also {
             singleSelectionManager.selection = it
         }
-    }
-
-    private fun isEqual(h1: HafasEvent, h2: HafasEvent) : Boolean {
-
-        return h1.displayName==h2.displayName &&
-                h1.trainNumber==h2.trainNumber &&
-                h1.scheduledTime == h2.scheduledTime
-    }
-    fun findItemIndex(hafasEvent: HafasEvent): Int {
-
-        if (filteredEvents.isNotEmpty()) {
-            for (i in filteredEvents.indices) {
-                if (isEqual(hafasEvent, filteredEvents[i].hafasEvent )) {
-                    Log.d("cr", "item fi foud: $i ${hafasEvent.direction} ${hafasEvent.displayName}")
-                    return i
-                }
-            }
-        } else {
-            hafasEvents?.let {
-                for (i in it.indices) {
-                    if (isEqual(hafasEvent, it[i].hafasEvent)) {
-                        Log.d("cr", "item foud: $i ${hafasEvent.direction}  ${hafasEvent.displayName}")
-                        return i
-                    }
-                }
-            }
-
-        }
-
-        return -1
     }
 
     fun preselect(hafasStationProduct: HafasStationProduct): Int? {

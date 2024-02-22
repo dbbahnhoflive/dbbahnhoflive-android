@@ -27,6 +27,7 @@ import de.deutschebahn.bahnhoflive.backend.VolleyRestListener
 import de.deutschebahn.bahnhoflive.backend.db.ris.model.Platform
 import de.deutschebahn.bahnhoflive.backend.db.ris.model.StopPlace
 import de.deutschebahn.bahnhoflive.backend.hafas.model.HafasEvent
+import de.deutschebahn.bahnhoflive.backend.hafas.model.HafasStation
 import de.deutschebahn.bahnhoflive.backend.hafas.model.HafasStop
 import de.deutschebahn.bahnhoflive.backend.local.model.EvaIds
 import de.deutschebahn.bahnhoflive.backend.ris.model.TrainEvent
@@ -165,6 +166,7 @@ class RegularJourneyContentFragment : Fragment() {
                             journeyStop.name,
                             null,
                             null,
+                            null,
                             trainInfo
                         )
 
@@ -176,6 +178,7 @@ class RegularJourneyContentFragment : Fragment() {
                             stationViewModel.stationResource.data.value?.evaIds,
                             journeyStop.evaId,
                             journeyStop.name,
+                            null,
                             null,
                             null,
                             trainInfo
@@ -371,6 +374,7 @@ class RegularJourneyContentFragment : Fragment() {
             stopEvaId: String?,
             stopStationName: String?,
             hafasStop: HafasStop? = null, // ziel
+            hafasActualStation : HafasStation? = null,
             hafasEvent: HafasEvent? = null, // quelle
             trainInfo: TrainInfo? = null
         ) {
@@ -432,6 +436,7 @@ class RegularJourneyContentFragment : Fragment() {
                                                             view.context,
                                                             stationViewModel?.station,
                                                             hafasStation,
+                                                            hafasActualStation,
                                                             hafasEvent
                                                         )
 

@@ -119,18 +119,6 @@ public class MapActivity extends AppCompatActivity implements
 
         initializeMap();
 
-//        if (!Boolean.TRUE.equals(mapViewModel.getMapConsentedLiveData().getValue())) {
-//            new MapConsentDialogFragment().show(getSupportFragmentManager(), null);
-//        }
-
-
-//        Transformations.distinctUntilChanged(mapViewModel.getMapConsentedLiveData()).observe(this, aBoolean -> {
-//            if (aBoolean) {
-//                initializeMap();
-//            } else {
-////                new MapConsentDialogFragment().show(getSupportFragmentManager(), null);
-//            }
-//        });
     }
 
     private void initializeMap() {

@@ -9,6 +9,7 @@ import android.view.View
 import android.widget.ImageButton
 import android.widget.TextView
 import androidx.annotation.StringRes
+import androidx.core.view.isVisible
 import androidx.recyclerview.widget.RecyclerView
 import de.deutschebahn.bahnhoflive.R
 
@@ -37,11 +38,11 @@ class ToolbarViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
         titleView?.contentDescription = contentDescription
     }
 
-    fun showImageButton(show:Boolean) {
-        btnBackToLastStation?.visibility = if(show) View.VISIBLE else View.GONE
+    fun showBackToLastStationButton(show:Boolean) {
+        btnBackToLastStation?.isVisible = show
     }
 
-    fun setImageButtonClickListener(listener:View.OnClickListener) {
+    fun setBackToLastStationButtonClickListener(listener:View.OnClickListener) {
         btnBackToLastStation?.setOnClickListener(listener)
     }
 

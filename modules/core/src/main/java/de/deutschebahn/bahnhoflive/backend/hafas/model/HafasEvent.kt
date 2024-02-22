@@ -5,11 +5,9 @@
  */
 package de.deutschebahn.bahnhoflive.backend.hafas.model
 
-import android.os.Build
 import android.os.Parcel
 import android.os.Parcelable
 import android.util.Log
-import androidx.core.app.BundleCompat
 import com.google.gson.annotations.SerializedName
 import de.deutschebahn.bahnhoflive.util.readParcelableCompatible
 import java.text.DateFormat
