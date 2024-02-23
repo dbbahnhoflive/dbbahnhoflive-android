@@ -193,14 +193,11 @@ public class DeparturesActivity extends BaseActivity implements TrackingManager.
 
         if (mapButton != null) {
             mapButton.setVisibility(View.VISIBLE);
-            mapButton.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    if (hafasDeparturesFragment != null) {
-                        trackingManager.track(TrackingManager.TYPE_ACTION, TrackingManager.Source.TAB_NAVI, TrackingManager.Action.TAP, TrackingManager.UiElement.MAP_BUTTON);
-                        GoogleLocationPermissions.startMapActivityIfConsent(hafasDeparturesFragment,
-                                () -> MapActivity.createIntent(DeparturesActivity.this, hafasStation));
-                    }
+            mapButton.setOnClickListener(v -> {
+                if (hafasDeparturesFragment != null) {
+                    trackingManager.track(TrackingManager.TYPE_ACTION, TrackingManager.Source.TAB_NAVI, TrackingManager.Action.TAP, TrackingManager.UiElement.MAP_BUTTON);
+                    GoogleLocationPermissions.startMapActivityIfConsent(hafasDeparturesFragment,
+                            () -> MapActivity.createIntent(DeparturesActivity.this, hafasStation));
                 }
             });
         }
@@ -219,7 +216,7 @@ public class DeparturesActivity extends BaseActivity implements TrackingManager.
             return;
         }
         else
-        hafasDeparturesFragment = new HafasDeparturesFragment();
+          hafasDeparturesFragment = new HafasDeparturesFragment();
 
         fragmentManager.beginTransaction()
                 .replace(R.id.fragment_container, hafasDeparturesFragment)
