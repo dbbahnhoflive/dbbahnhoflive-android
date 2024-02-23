@@ -128,6 +128,7 @@
                             android:text="@string/main_tabTitleDepartures" />
 
                         <View
+                            android:background="@color/red"
                             android:layout_width="match_parent"
                             android:layout_height="2dp" />
 

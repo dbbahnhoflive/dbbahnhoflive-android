@@ -6,6 +6,7 @@
 
 package de.deutschebahn.bahnhoflive.ui.timetable.localtransport;
 
+import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
@@ -69,7 +70,10 @@ public class DeparturesActivity extends BaseActivity implements TrackingManager.
 
     private HafasDeparturesFragment hafasDeparturesFragment = null;
 
+
     HafasTimetableViewModel hafasTimetableViewModel = null;
+
+    private Activity activity;
 
     public static Bundle createArguments(HafasStation hafasStation,
                                          HafasStation hafasStationToGoBack,
@@ -96,6 +100,8 @@ public class DeparturesActivity extends BaseActivity implements TrackingManager.
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        activity = this;
 
         final ViewModelProvider viewModelProvider = new ViewModelProvider(this);
         hafasTimetableViewModel = viewModelProvider.get(HafasTimetableViewModel.class);
@@ -168,9 +174,18 @@ public class DeparturesActivity extends BaseActivity implements TrackingManager.
         onBackPressedDispatcher.addCallback(new OnBackPressedCallback(true) {
             @Override
             public void handleOnBackPressed() {
+
+                final BackNavigationData backNavigationData = stationViewModel.getBackNavigationLiveData().getValue();
+
+                if(backNavigationData!=null && backNavigationData.getShowChevron()) {
+                    hafasDeparturesFragment.navigateBack(activity);
+                }
+                else {
+
                 Intent intent = HubActivity.createIntent(getApplicationContext());
                 startActivity(intent);
                 finish();
+            }
             }
         });
 

@@ -195,7 +195,7 @@ class HafasDeparturesFragment : RecyclerFragment<HafasDeparturesAdapter>(R.layou
     }
 
 
-    private fun navigateBack(thisActivity: Activity) {
+    fun navigateBack(thisActivity: Activity) {
 
         (thisActivity as? DeparturesActivity)?.let {
             val intent: Intent?
