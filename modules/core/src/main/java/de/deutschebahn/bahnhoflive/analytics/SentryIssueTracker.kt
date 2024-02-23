@@ -26,6 +26,7 @@ class SentryIssueTracker(app: BaseApplication, dsn: String) : IssueTracker(app) 
     }
 
     override fun log(msg: String) {
+      if(msg != "do not log")
         Sentry.captureMessage(msg)
     }
 
