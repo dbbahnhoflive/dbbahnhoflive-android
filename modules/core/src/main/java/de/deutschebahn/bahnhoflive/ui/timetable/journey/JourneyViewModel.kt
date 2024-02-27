@@ -1,7 +1,12 @@
 package de.deutschebahn.bahnhoflive.ui.timetable.journey
 
 import android.app.Application
-import androidx.lifecycle.*
+import androidx.lifecycle.AndroidViewModel
+import androidx.lifecycle.LiveData
+import androidx.lifecycle.MutableLiveData
+import androidx.lifecycle.SavedStateHandle
+import androidx.lifecycle.map
+import androidx.lifecycle.switchMap
 import com.android.volley.VolleyError
 import de.deutschebahn.bahnhoflive.BaseApplication
 import de.deutschebahn.bahnhoflive.backend.VolleyRestListener

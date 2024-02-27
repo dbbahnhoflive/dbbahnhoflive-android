@@ -17,6 +17,8 @@ import com.google.gson.Gson;
 import java.io.ByteArrayInputStream;
 import java.io.InputStreamReader;
 
+import de.deutschebahn.bahnhoflive.util.DebugX;
+
 public class GsonRequest<T> extends Request<T> {
     protected final VolleyRestListener<T> listener;
 
@@ -26,6 +28,7 @@ public class GsonRequest<T> extends Request<T> {
         super(method, url, new RestErrorListener(listener));
         this.listener = listener;
         this.classOfT = classOfT;
+        DebugX.Companion.logVolleyRequest(this, getUrl());
     }
 
     @Override
@@ -33,14 +36,17 @@ public class GsonRequest<T> extends Request<T> {
         try {
             final Gson gson = new Gson();
             final T result = gson.fromJson(new InputStreamReader(new ByteArrayInputStream(response.data)), classOfT);
+            DebugX.Companion.logVolleyResponseOk(this, getUrl());
             return Response.success(onProcessParsedResult(result), createCacheEntry(response));
         } catch (Exception e) {
+            DebugX.Companion.logVolleyResponseException(this,getUrl(),e);
             return Response.error(new DetailedVolleyError(this, e));
         }
     }
 
     @Override
     protected VolleyError parseNetworkError(VolleyError volleyError) {
+        DebugX.Companion.logVolleyResponseError(this,getUrl(),volleyError);
         return new DetailedVolleyError(this, volleyError);
     }
 
