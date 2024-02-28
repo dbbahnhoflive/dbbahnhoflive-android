@@ -63,9 +63,9 @@ class JourneyItemViewHolder(
 
             item?.let {
 
-//                linkPlatform.isVisible = it.current==true && it.platform!=null // todo: wenn Gleisinformationen eingebaut werden sollen, diese Zeile einbauen raus und
+                linkPlatform.isVisible = it.current==true && it.platform!=null // todo: wenn Gleisinformationen eingebaut werden sollen, diese Zeile einbauen raus und
                                                                                  //      linkPlatform.isVisible = false löschen
-                linkPlatform.isVisible = false
+//                linkPlatform.isVisible = false
 
                 if (linkPlatform.isVisible) { // > Gleisinfomationen
 

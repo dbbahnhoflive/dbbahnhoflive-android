@@ -90,7 +90,7 @@ public class TimetablesFragment extends TwoTabsFragment {
             stationViewModel.setTrackFilter(trackFilter);
             stationViewModel.setShowArrivals(arrivals);
             setTab(0);
-//            showTutorialIfNecessary(); // todo: Wenn Gleisinformationen angezeigt werden sollen wieder rein, Id.TIMETABLE aendern in Id.TRACKINFORMATION
+            showTutorialIfNecessary(); // todo: Wenn Gleisinformationen angezeigt werden sollen wieder rein, Id.TIMETABLE aendern in Id.TRACKINFORMATION
         }
     }
 
@@ -227,7 +227,7 @@ public class TimetablesFragment extends TwoTabsFragment {
             int countLinkedPlatformsTutorialGeneralSeen = versionManager.getLinkedPlatformsTutorialGeneralShowCounter();
 
             final boolean isUpdate = versionManager.isUpdate() &&
-                    versionManager.getLastVersion().compareTo(new VersionManager.SoftwareVersion("3.24.0")) < 0;
+                    versionManager.getLastVersion().compareTo(new VersionManager.SoftwareVersion("3.26.0")) < 0;
             final boolean isFreshInstallation = versionManager.isFreshInstallation();
 
             if (countLinkedPlatformsTutorialGeneralSeen <= 3 && (
