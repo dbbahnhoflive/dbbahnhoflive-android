@@ -54,7 +54,11 @@ class FullJourneyContentFragment : Fragment() {
                     run {
                         val trainEvent = journeyViewModel.essentialParametersLiveData.value?.third
                         val trainInfo = journeyViewModel.essentialParametersLiveData.value?.second
-                        val fragment = JourneyPlatformInformationFragment.create(trainInfo, trainEvent, journeyStop)
+                        val fragment = JourneyPlatformInformationFragment.create(
+                            trainInfo,
+                            trainEvent,
+                            journeyStop
+                        )
                         HistoryFragment.parentOf(this@FullJourneyContentFragment).push(fragment)
                     }
                 }

@@ -20,6 +20,40 @@ import de.deutschebahn.bahnhoflive.backend.db.ris.model.StopPlaces
 import java.net.URLEncoder
 import kotlin.math.roundToInt
 
+
+//class RISStationsStopPlacesRequest(
+//    listener: VolleyRestListener<List<StopPlace>>,
+//    dbAuthorizationTool: DbAuthorizationTool,
+//    query: String? = null,
+//    private val location: Location? = null,
+//    force: Boolean = false,
+//    private val limit: Int = 100,
+//    radius: Int = 2000,
+//    private val mixedResults: Boolean,
+//    private val collapseNeighbours: Boolean,
+//    private val pullUpFirstDbStation: Boolean
+//) : RISStationsRequest<List<StopPlace>>( //         "https://apis.deutschebahn.com/db/apis/ris-stations/v1/$urlSuffix",
+//    "stop-places/" +
+//            (query?.trim()?.takeUnless { it.isEmpty() }
+//                ?.let { "by-name/" + URLEncoder.encode(it, "UTF-8") }
+//                ?: "by-position")
+//            + sequenceOf("limit" to (limit).toString()).let { sequence ->
+//        location?.let { location ->
+//            sequence.plus(
+//                sequenceOf(
+//                    "latitude" to location.latitude.obfuscate().toString(),
+//                    "longitude" to location.longitude.obfuscate().toString(),
+//                    "radius" to radius.toString()
+//                )
+//            )
+//        }
+//            ?: sequence
+//    }.filterNotNull().joinToString("&", "?") {
+//        "${it.first}=${it.second}"
+//    },
+//    dbAuthorizationTool,
+//    listener)
+
 class RISStationsStopPlacesRequest(
     listener: VolleyRestListener<List<StopPlace>>,
     dbAuthorizationTool: DbAuthorizationTool,
@@ -32,25 +66,7 @@ class RISStationsStopPlacesRequest(
     private val collapseNeighbours: Boolean,
     private val pullUpFirstDbStation: Boolean
 ) : RISStationsRequest<List<StopPlace>>( //         "https://apis.deutschebahn.com/db/apis/ris-stations/v1/$urlSuffix",
-    "stop-places/" +
-            (query?.trim()?.takeUnless { it.isEmpty() }
-                ?.let { "by-name/" + URLEncoder.encode(it, "UTF-8") }
-                ?: "by-position")
-            + sequenceOf("limit" to (limit).toString()
-    ).let { sequence ->
-        location?.let { location ->
-            sequence.plus(
-                sequenceOf(
-                    "latitude" to location.latitude.obfuscate().toString(),
-                    "longitude" to location.longitude.obfuscate().toString(),
-                    "radius" to radius.toString()
-                )
-            )
-        }
-            ?: sequence
-    }.filterNotNull().joinToString("&", "?") {
-        "${it.first}=${it.second}"
-    },
+    BuildUrlSuffix(query, radius, limit, location),
     dbAuthorizationTool,
     listener
 ) {
@@ -58,6 +74,7 @@ class RISStationsStopPlacesRequest(
     init {
         setShouldCache(!force)
     }
+
 
     override fun getCountKey() = "RIS/stations/stop-places"
 
@@ -138,5 +155,37 @@ class RISStationsStopPlacesRequest(
 
     companion object {
         fun Double.obfuscate() = (this * 1000).roundToInt() / 1000.0
+
+        fun BuildUrlSuffix(query: String?, radius: Int, limit: Int, location: Location?): String {
+
+            var ret: String = ""
+
+            if(query!=null && query.endsWith("groups"))
+                ret = query
+            else {
+                ret = "stop-places/" +
+                        (query?.trim()?.takeUnless { it.isEmpty() }
+                            ?.let { "by-name/" + URLEncoder.encode(it, "UTF-8") }
+                            ?: "by-position")
+
+                ret += sequenceOf("limit" to (limit).toString()).let { sequence ->
+                    location?.let { location ->
+                        sequence.plus(
+                            sequenceOf(
+                                "latitude" to location.latitude.obfuscate().toString(),
+                                "longitude" to location.longitude.obfuscate().toString(),
+                                "radius" to radius.toString()
+                            )
+                        )
+                    }
+                        ?: sequence
+                }.filterNotNull().joinToString("&", "?") {
+                    "${it.first}=${it.second}"
+                }
+            }
+
+            return ret
+        }
+
     }
 }

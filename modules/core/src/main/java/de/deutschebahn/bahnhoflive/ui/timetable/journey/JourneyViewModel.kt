@@ -5,6 +5,8 @@ import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.SavedStateHandle
+import androidx.lifecycle.asFlow
+import androidx.lifecycle.asLiveData
 import androidx.lifecycle.map
 import androidx.lifecycle.switchMap
 import com.android.volley.VolleyError
@@ -18,6 +20,7 @@ import de.deutschebahn.bahnhoflive.repository.trainformation.TrainFormation
 import de.deutschebahn.bahnhoflive.ui.timetable.routeStops
 import de.deutschebahn.bahnhoflive.util.ProxyLiveData
 import de.deutschebahn.bahnhoflive.util.emptyLiveData
+import kotlinx.coroutines.flow.combine
 
 class JourneyViewModel(app: Application, savedStateHandle: SavedStateHandle) :
     AndroidViewModel(app) {
@@ -148,6 +151,15 @@ class JourneyViewModel(app: Application, savedStateHandle: SavedStateHandle) :
             journeyStops == null && routeStops == null
         }
     }
+
+    val trainInfoAndTrainEventAndJourneyStopsLiveData: LiveData<Triple<TrainInfo, TrainEvent, List<JourneyStop>?>> =
+        journeysByRelationLiveData.asFlow()
+            .combine(essentialParametersLiveData.asFlow()) { journeysByRelation, essentialParameters ->
+
+                Triple(essentialParameters.second,
+                    essentialParameters.third,
+                    journeysByRelationLiveData.value?.getOrNull())
+            }.asLiveData()
 
 
     override fun onCleared() {

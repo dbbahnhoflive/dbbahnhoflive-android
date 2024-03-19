@@ -11,6 +11,7 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.core.app.ActivityCompat
 import androidx.core.view.isGone
+import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentActivity
 import androidx.fragment.app.activityViewModels
@@ -95,17 +96,10 @@ class RegularJourneyContentFragment : Fragment() {
             stationViewModel.startDbCompanionWebSite(requireContext())
         }
 
-
-
         journeyViewModel.essentialParametersLiveData.observe(viewLifecycleOwner) { (_, trainInfo, trainEvent) ->
 
             journeyViewModel.showSEVLiveData.observe(viewLifecycleOwner) {itShowSEV->
-
-                if(itShowSEV && stationViewModel.hasSEV()) {
-                    sev.visibility = View.VISIBLE
-                }
-                else
-                    sev.visibility = View.GONE
+                sev.isVisible = itShowSEV && stationViewModel.hasSEV()
             }
 
             try {

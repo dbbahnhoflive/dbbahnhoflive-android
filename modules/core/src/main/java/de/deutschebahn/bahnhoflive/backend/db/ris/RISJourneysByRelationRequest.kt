@@ -3,15 +3,12 @@ package de.deutschebahn.bahnhoflive.backend.db.ris
 import com.android.volley.DefaultRetryPolicy
 import com.android.volley.NetworkResponse
 import com.android.volley.Response
-import com.android.volley.VolleyError
 import com.google.gson.Gson
 import de.deutschebahn.bahnhoflive.backend.DetailedVolleyError
 import de.deutschebahn.bahnhoflive.backend.ForcedCacheEntryFactory
 import de.deutschebahn.bahnhoflive.backend.VolleyRestListener
 import de.deutschebahn.bahnhoflive.backend.db.DbAuthorizationTool
 import de.deutschebahn.bahnhoflive.backend.db.ris.model.DepartureMatches
-import de.deutschebahn.bahnhoflive.util.DebugX
-import de.deutschebahn.bahnhoflive.util.DebugX.Companion.logVolleyResponseError
 import java.io.ByteArrayInputStream
 import java.net.URLEncoder
 import java.text.SimpleDateFormat

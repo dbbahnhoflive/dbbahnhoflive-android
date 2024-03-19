@@ -6,8 +6,14 @@ import de.deutschebahn.bahnhoflive.backend.VolleyRestListener
 import de.deutschebahn.bahnhoflive.backend.db.ris.model.StopPlace
 import de.deutschebahn.bahnhoflive.repository.InternalStation
 import de.deutschebahn.bahnhoflive.repository.Station
-import kotlinx.coroutines.*
+import kotlinx.coroutines.CancellableContinuation
+import kotlinx.coroutines.CoroutineDispatcher
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.suspendCancellableCoroutine
+import kotlin.coroutines.Continuation
 
 class UpdatedStationRepository(
     private val stationRepository: StationRepository,
@@ -29,23 +35,28 @@ class UpdatedStationRepository(
                                 payload?.firstOrNull {
                                     it.stationID == station.id
                                 }?.also {
-                                    continuation.resumeWith(
-                                        Result.success(
-                                            InternalStation(
+                                    Log.d("cr", "try resumewith")
+                                    continuation.safeResumeWith(
+                                            Result.success(InternalStation(
                                                 station.id,
                                                 station.title,
                                                 station.location,
                                                 it.evaIds
+                                            ))
+                                        , {
+                                            Log.d("cr", "Job has already done")
+                                        }
                                             )
-                                        )
-                                    )
+                                    Log.d("cr", "end resumewith")
+
                                 } ?: kotlin.run {
-                                    continuation.resumeWith(Result.failure(Exception("Not found")))
+                                    continuation.safeResumeWith(Result.failure(Exception("Not found")), {})
                                 }
                             }
 
                             override fun onFail(reason: VolleyError) {
-                                continuation.resumeWith(Result.failure(reason))
+//                                continuation.resumeWith(Result.failure(reason))
+                                continuation.safeResumeWith(Result.failure(reason)) {}
                             }
                         },
                         station.title,
@@ -71,4 +82,14 @@ class UpdatedStationRepository(
             null
         }
 
+}
+
+
+inline fun <T> Continuation<T>.safeResumeWith(value: Result<T>, onExceptionCalled: () -> Unit) {
+    if (this is CancellableContinuation) {
+        if (isActive)
+            resumeWith(value)
+        else
+            onExceptionCalled()
+    } else throw Exception("Must use suspendCancellableCoroutine instead of suspendCoroutine")
 }

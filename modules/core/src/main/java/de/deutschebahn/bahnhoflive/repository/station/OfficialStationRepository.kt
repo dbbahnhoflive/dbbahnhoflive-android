@@ -7,18 +7,23 @@
 package de.deutschebahn.bahnhoflive.repository.station
 
 import android.location.Location
+import android.util.Log
 import com.android.volley.VolleyError
 import de.deutschebahn.bahnhoflive.analytics.TrackingManager
 import de.deutschebahn.bahnhoflive.backend.RestHelper
 import de.deutschebahn.bahnhoflive.backend.VolleyRestListener
 import de.deutschebahn.bahnhoflive.backend.db.DbAuthorizationTool
-import de.deutschebahn.bahnhoflive.backend.db.ris.*
+import de.deutschebahn.bahnhoflive.backend.db.ris.RISPlatformsRequest
+import de.deutschebahn.bahnhoflive.backend.db.ris.RISStationsLocalServicesRequest
+import de.deutschebahn.bahnhoflive.backend.db.ris.RISStationsStationRequest
+import de.deutschebahn.bahnhoflive.backend.db.ris.RISStationsStopPlacesGroupRequest
+import de.deutschebahn.bahnhoflive.backend.db.ris.RISStationsStopPlacesRequest
+import de.deutschebahn.bahnhoflive.backend.db.ris.RISStationsStopPlacesRequestByEvaId
 import de.deutschebahn.bahnhoflive.backend.db.ris.model.LocalServices
 import de.deutschebahn.bahnhoflive.backend.db.ris.model.Platform
 import de.deutschebahn.bahnhoflive.backend.db.ris.model.RISStation
 import de.deutschebahn.bahnhoflive.backend.db.ris.model.StopPlace
 import de.deutschebahn.bahnhoflive.repository.InternalStation
-import de.deutschebahn.bahnhoflive.ui.station.railreplacement.SEV_Static
 import de.deutschebahn.bahnhoflive.util.Cancellable
 import de.deutschebahn.bahnhoflive.util.volley.VolleyRequestCancellable
 import de.deutschebahn.bahnhoflive.util.volley.cancellable
@@ -30,6 +35,46 @@ class OfficialStationRepository(
 ) : StationRepository() {
 
     private val trackingManager = TrackingManager()
+
+    fun queryStationGroups(
+        listener: VolleyRestListener<List<StopPlace>?>,
+        evaId : String,
+        stopPlace: List<StopPlace>,
+        force: Boolean = false
+    ) = restHelper
+        .add(
+            RISStationsStopPlacesGroupRequest(
+                object :
+                    VolleyRestListener<Array<String>> {
+                    override fun onSuccess(payload: Array<String>) {
+
+                        try {
+                            stopPlace[0].evaIds.ids.let {itIds->
+                                payload.forEach {
+                                    if(!itIds.contains(it))
+                                        itIds.add(it)
+                                    Log.d("cr", it)
+                                }
+                            }
+                        }
+                        catch(_:Exception) {
+
+                        }
+
+                        listener.onSuccess(stopPlace)
+                    }
+
+                    override fun onFail(reason: VolleyError) {
+                        listener.onFail(reason)
+                    }
+
+                },
+                dbAuthorizationTool,
+                evaId,
+                force,
+            )
+        )
+        .cancellable()
 
     override fun queryStations(
         listener: VolleyRestListener<List<StopPlace>?>,
@@ -48,13 +93,20 @@ class OfficialStationRepository(
                     VolleyRestListener<List<StopPlace>> {
                     override fun onSuccess(payload: List<StopPlace>) {
 
-                        if(payload.isNotEmpty()) {
-                            SEV_Static.addEvaIds(payload[0].stationID, payload[0].evaIds.ids)
+                        if(payload.isNotEmpty() && payload[0].isDbStation) {
+//                            SEV_Static.addEvaIds(payload[0].stationID, payload[0].evaIds.ids)
+
+                               payload[0].evaIds.main?.let {
+                                   queryStationGroups(listener,
+                                       it, payload)
                         }
 
-                        listener.onSuccess(payload)
 
+                        }
+                        else {
+                        listener.onSuccess(payload)
                         track("success")
+                        }
                     }
 
                     override fun onFail(reason: VolleyError) {
