@@ -25,6 +25,7 @@ class DebugX {
 //            return keyobj.javaClass.name // get class name
 //        }
         private const val MAX_CLSNAME_LENGTH = 35
+        private const val MAX_PRETEXT_LENGTH = 10
 
         fun logBundle(preString: String, bundle: Bundle?) {
 
@@ -130,39 +131,51 @@ class DebugX {
             Log.d("cr", msg_final)
         }
 
-        fun logVolleyRequest(preText: String = "", url: String?) {
-            var msg = "${preText.padEnd(MAX_CLSNAME_LENGTH)} request  :       "
+        private fun logVolleyRequest(clsName:String, preText: String = "", url: String?) {
+            var msg = "${clsName.padEnd(MAX_CLSNAME_LENGTH)} ${preText.padEnd(MAX_PRETEXT_LENGTH)} request  :       "
             if (url != null)
                 msg += url
             logVolleyMsg(msg)
     }
 
         fun logVolleyRequest(cls: Any, url: String?) {
-            logVolleyRequest(cls.javaClass.simpleName, url)
+            logVolleyRequest(cls.javaClass.simpleName, "", url)
         }
 
-        fun logVolleyResponseOk(preText: String = "", url: String?) {
-            var msg = "${preText.padEnd(MAX_CLSNAME_LENGTH)} response : ok    "
+        fun logVolleyRequest(cls: Any, pretext: String, url: String?) {
+            logVolleyRequest(cls.javaClass.simpleName, pretext, url)
+        }
+
+        private fun logVolleyResponseOk(clsName:String, preText: String = "", url: String?) {
+            var msg = "${clsName.padEnd(MAX_CLSNAME_LENGTH)} ${preText.padEnd(MAX_PRETEXT_LENGTH)} response : ok    "
             url?.let { msg += url }
             logVolleyMsg(msg)
         }
 
         fun logVolleyResponseOk(cls: Any, url: String?) {
-            logVolleyResponseOk(cls.javaClass.simpleName, url)
+            logVolleyResponseOk(cls.javaClass.simpleName, "", url)
+        }
+        fun logVolleyResponseOk(cls: Any, preText:String, url: String?) {
+            logVolleyResponseOk(cls.javaClass.simpleName, preText, url)
         }
 
-        fun logVolleyResponseException(preText: String = "", url: String?, e: Exception?) {
-            var msg = "${preText.padEnd(MAX_CLSNAME_LENGTH)} response : excep "
+        private fun logVolleyResponseException(clsName:String, preText: String = "", url: String?, e: Exception?) {
+            var msg = "${clsName.padEnd(MAX_CLSNAME_LENGTH)} ${preText.padEnd(MAX_PRETEXT_LENGTH)} response : excep "
             url?.let { msg += url }
             if (e?.message != null)
                 msg += e.message
             logVolleyMsg(msg)
         }
-        fun logVolleyResponseException(cls: Any, url: String?, e: Exception?) {
-            logVolleyResponseException(cls.javaClass.simpleName, url, e)
+        fun logVolleyResponseException(cls: Any, preText:String, url: String?, e: Exception?) {
+            logVolleyResponseException(cls.javaClass.simpleName, preText, url, e)
         }
-        fun logVolleyResponseError(preText: String = "", url: String?, volleyError: VolleyError?) {
-            var msg = "${preText.padEnd(MAX_CLSNAME_LENGTH)} response : error "
+
+        fun logVolleyResponseException(cls: Any, url: String?, e: Exception?) {
+            logVolleyResponseException(cls.javaClass.simpleName, "", url, e)
+        }
+
+        private fun logVolleyResponseError(clsName:String, preText: String = "", url: String?, volleyError: VolleyError?) {
+            var msg = "${clsName.padEnd(MAX_CLSNAME_LENGTH)} ${preText.padEnd(MAX_PRETEXT_LENGTH)} response : error "
             url?.let { msg += url }
             volleyError?.let {
                 if (it.networkResponse != null)
@@ -173,7 +186,11 @@ class DebugX {
             logVolleyMsg(msg)
         }
         fun logVolleyResponseError(cls: Any, url: String?, volleyError: VolleyError?) {
-            logVolleyResponseError(cls.javaClass.simpleName, url, volleyError)
+            logVolleyResponseError(cls.javaClass.simpleName, "", url, volleyError)
+        }
+
+        fun logVolleyResponseError(cls: Any, preText:String, url: String?, volleyError: VolleyError?) {
+            logVolleyResponseError(cls.javaClass.simpleName, preText, url, volleyError)
         }
 
     }

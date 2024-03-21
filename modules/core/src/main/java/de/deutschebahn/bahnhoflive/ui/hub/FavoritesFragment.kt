@@ -16,15 +16,20 @@ import de.deutschebahn.bahnhoflive.BaseApplication
 import de.deutschebahn.bahnhoflive.analytics.TrackingManager
 import de.deutschebahn.bahnhoflive.backend.hafas.model.HafasStation
 import de.deutschebahn.bahnhoflive.backend.hafas.model.HafasTimetable
+import de.deutschebahn.bahnhoflive.backend.local.model.EvaIds
 import de.deutschebahn.bahnhoflive.databinding.FragmentFavoritesBinding
 import de.deutschebahn.bahnhoflive.persistence.FavoriteStationsStore
+import de.deutschebahn.bahnhoflive.repository.EvaIdsProvider
 import de.deutschebahn.bahnhoflive.repository.InternalStation
+import de.deutschebahn.bahnhoflive.repository.Station
 import de.deutschebahn.bahnhoflive.repository.timetable.CyclicTimetableCollector
 import de.deutschebahn.bahnhoflive.repository.timetable.TimetableCollector
 import de.deutschebahn.bahnhoflive.ui.DbStationWrapper
 import de.deutschebahn.bahnhoflive.ui.search.HafasStationSearchResult
 import de.deutschebahn.bahnhoflive.ui.search.StoredStationSearchResult
-import kotlinx.coroutines.flow.flow
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.filterNotNull
+import kotlinx.coroutines.flow.map
 
 class FavoritesFragment : HubCoreFragment() {
 
@@ -38,6 +43,13 @@ class FavoritesFragment : HubCoreFragment() {
     private var favoritesAdapter: FavoritesAdapter? = null
 
     private val cyclicTimetableCollector : CyclicTimetableCollector = CyclicTimetableCollector(this)
+
+    private val evaIdsProvider: suspend (Station) -> EvaIds? = object : EvaIdsProvider {
+        override suspend fun invoke(station: Station): EvaIds? =
+            BaseApplication.get().applicationServices.updatedStationRepository.getUpdatedStation(station)?.evaIds
+                ?: station.evaIds
+    }
+
 
     private val dbFavoritesListener = FavoriteStationsStore.Listener<InternalStation> {
         refreshFavorites()
@@ -142,13 +154,24 @@ class FavoritesFragment : HubCoreFragment() {
                         )
                         is DbStationWrapper -> {
 
+                            val stationStateFlow = MutableStateFlow<InternalStation?>(it.wrappedStation)
+
                             StoredStationSearchResult(
                                 it.wrappedStation,
                                 recentSearchesStore,
                                 favoriteDbStationsStore,
-                                timetableRepository.createTimetableCollector(flow {
-                                    it.wrappedStation.evaIds?.let { it1 -> emit(it1) }
-                                }, lifecycleScope)
+
+                                timetableRepository.createTimetableCollector(
+
+                                    stationStateFlow.filterNotNull().map { station ->
+                                        evaIdsProvider(station)
+                                    }.filterNotNull(),
+                                    lifecycleScope)
+
+//                                timetableRepository.createTimetableCollector(flow {
+//                                    it.wrappedStation.evaIds?.let { it1 -> emit(it1) }
+//                                }, lifecycleScope)
+
                             )
                         }
                         else -> it

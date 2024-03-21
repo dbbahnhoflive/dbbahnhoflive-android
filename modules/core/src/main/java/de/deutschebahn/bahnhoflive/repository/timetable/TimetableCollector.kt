@@ -6,35 +6,38 @@ import androidx.lifecycle.asLiveData
 import de.deutschebahn.bahnhoflive.backend.local.model.EvaIds
 import de.deutschebahn.bahnhoflive.backend.ris.getCurrentHour
 import de.deutschebahn.bahnhoflive.backend.ris.model.TrainInfo
-import kotlinx.coroutines.*
-import kotlinx.coroutines.flow.*
+import kotlinx.coroutines.CancellationException
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.Job
+import kotlinx.coroutines.async
+import kotlinx.coroutines.awaitAll
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.SharingStarted
+import kotlinx.coroutines.flow.collectLatest
+import kotlinx.coroutines.flow.combine
+import kotlinx.coroutines.flow.distinctUntilChanged
+import kotlinx.coroutines.flow.first
+import kotlinx.coroutines.flow.flow
+import kotlinx.coroutines.flow.map
+import kotlinx.coroutines.flow.shareIn
+import kotlinx.coroutines.flow.update
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.runBlocking
+import kotlinx.coroutines.yield
 import java.util.concurrent.TimeUnit
 import kotlin.coroutines.CoroutineContext
 
 
 class TimetableCollector(
-    val evaIdsFlow: Flow<EvaIds>,
-    val coroutineScope: CoroutineScope,
+    private val evaIdsFlow: Flow<EvaIds>,
+    private val coroutineScope: CoroutineScope,
     val timetableHourProvider: suspend (evaId: String, hour: Long) -> TimetableHour,
     val timetableChangesProvider: suspend (evaId: String) -> TimetableChanges,
     val currentHourProvider: suspend () -> Long = { getCurrentHour() },
     private val defaultDispatcher: CoroutineContext = Dispatchers.Default
 ) {
-
-    constructor(
-        evaIdsFlow: Flow<EvaIds>,
-        coroutineScope: CoroutineScope,
-        timetableRepository: TimetableRepository,
-        currentHourProvider: suspend () -> Long = { getCurrentHour() },
-        defaultDispatcher: CoroutineContext = Dispatchers.Default
-    ) : this(
-        evaIdsFlow,
-        coroutineScope,
-        timetableRepository::fetchTimetableHour,
-        timetableRepository::fetchTimetableChanges,
-        currentHourProvider,
-        defaultDispatcher
-    )
 
     private val hourInMillis = TimeUnit.HOURS.toMillis(1)
 
@@ -73,8 +76,7 @@ class TimetableCollector(
             firstHour to hourCount
         }
     ) {
-            evaIds: EvaIds, (firstHour, hourCount) ->
-        Parameters(firstHour, hourCount, evaIds)
+        evaIds: EvaIds, (firstHour, hourCount) -> Parameters(firstHour, hourCount, evaIds)
     } //.shareIn(coroutineScope, SharingStarted.Lazily,1)
 
 
@@ -116,6 +118,7 @@ class TimetableCollector(
                         }
                     }.awaitAll()
 
+
                     val initialsResults = parameters.evaIds.ids.flatMap { evaId ->
                         (-1 until parameters.hourCount).map { hourOffset ->
                             async {
@@ -127,10 +130,7 @@ class TimetableCollector(
                                             val hour =
                                                 parameters.firstHourInMillisRounded + hourOffset * hourInMillis
 
-                                        timetableHourProvider(
-                                            evaId,
-                                                hour
-                                        )
+                                        timetableHourProvider(evaId,hour)
                                     }
                                 }
 
@@ -154,25 +154,11 @@ class TimetableCollector(
                             }
                         } // .toMutableMap()
 
-//                    mergedInitials.remove("2686007473625185344-2303220001-18")// todo: cr test
-
-//                    Log.d("dbg", "--mergedInitials")
-//                    mergedInitials.forEach {
-//                        it.value.logDeparture(true)
-//                    }
-//                    Log.d("dbg", "--mergedInitials")
-
                     yield()
 
                     val changes = changesResults.mapNotNull {
                         it.payload
                     }.flatMap { it.trainInfos }
-
-//                    Log.d("dbg", "--changes")
-//                    changes.forEach {
-//                        it.logDeparture(true)
-//                    }
-//                    Log.d("dbg", "--changes")
 
                     yield()
 

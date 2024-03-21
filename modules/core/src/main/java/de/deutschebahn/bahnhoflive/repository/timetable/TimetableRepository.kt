@@ -19,7 +19,7 @@ open class TimetableRepository {
         evaIdsFlow: Flow<EvaIds>,
         coroutineScope: CoroutineScope
     ): TimetableCollector =
-        TimetableCollector(evaIdsFlow, coroutineScope, this)
+        TimetableCollector(evaIdsFlow, coroutineScope, ::fetchTimetableHour, ::fetchTimetableChanges)
 
     open fun queryJourneys(
         evaIds: EvaIds,

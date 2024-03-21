@@ -182,26 +182,20 @@ internal class StationSearchAdapter(
             }
         }
 
-//        hafasStations?.let {
-//            for (hafasStation in it) {
-//                searchResults.add(
-//                    HafasStationSearchResult(
-//                        hafasStation,
-//                        recentSearchesStore,
-//                        favoriteHafasStationsStore
-//                    )
-//                )
-//            }
-//        }
         notifyDataSetChanged()
     }
 
     fun showRecents(coroutineScope: CoroutineScope?, timetableRepository: TimetableRepository?) {
         singleSelectionManager.clearSelection()
         searchResults.clear()
-        searchResults.addAll(recentSearchesStore.loadRecentStations(coroutineScope, timetableRepository!!))
-
-//            recentSearchesStore.loadRecentStations(coroutineScope, timetableRepository!!)
+        timetableRepository?.let {
+            searchResults.addAll(
+                recentSearchesStore.loadRecentStations(
+                    coroutineScope,
+                    it
+                )
+            )
+        }
         notifyDataSetChanged()
     }
 

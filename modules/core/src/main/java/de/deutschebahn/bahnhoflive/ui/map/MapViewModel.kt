@@ -8,16 +8,32 @@ package de.deutschebahn.bahnhoflive.ui.map
 
 import android.app.Application
 import android.content.Context
-import androidx.lifecycle.*
+import androidx.lifecycle.LiveData
+import androidx.lifecycle.MediatorLiveData
+import androidx.lifecycle.MutableLiveData
+import androidx.lifecycle.Observer
+import androidx.lifecycle.SavedStateHandle
+import androidx.lifecycle.asFlow
+import androidx.lifecycle.asLiveData
+import androidx.lifecycle.distinctUntilChanged
+import androidx.lifecycle.switchMap
+import androidx.lifecycle.viewModelScope
 import com.android.volley.VolleyError
 import com.google.android.gms.maps.model.LatLng
 import de.deutschebahn.bahnhoflive.BaseApplication
 import de.deutschebahn.bahnhoflive.backend.BaseRestListener
 import de.deutschebahn.bahnhoflive.backend.hafas.model.HafasStation
+import de.deutschebahn.bahnhoflive.backend.local.model.EvaIds
 import de.deutschebahn.bahnhoflive.backend.rimap.model.RimapPOI
 import de.deutschebahn.bahnhoflive.backend.rimap.model.RimapStation
 import de.deutschebahn.bahnhoflive.backend.ris.model.TrainInfo
-import de.deutschebahn.bahnhoflive.repository.*
+import de.deutschebahn.bahnhoflive.repository.EvaIdsProvider
+import de.deutschebahn.bahnhoflive.repository.LoadingStatus
+import de.deutschebahn.bahnhoflive.repository.RimapRRTResource
+import de.deutschebahn.bahnhoflive.repository.RimapStationFeatureCollectionResource
+import de.deutschebahn.bahnhoflive.repository.RisServiceAndCategoryResource
+import de.deutschebahn.bahnhoflive.repository.Station
+import de.deutschebahn.bahnhoflive.repository.StationResource
 import de.deutschebahn.bahnhoflive.repository.locker.LockerResource
 import de.deutschebahn.bahnhoflive.repository.parking.ViewModelParking
 import de.deutschebahn.bahnhoflive.repository.timetable.TimetableCollector
@@ -88,9 +104,16 @@ class MapViewModel(
     private val timetableRepository: TimetableRepository
         get() = baseApplication.repositories.timetableRepository
 
+    private val evaIdsProvider: suspend (Station) -> EvaIds? = object : EvaIdsProvider {
+        override suspend fun invoke(station: Station): EvaIds? =
+            BaseApplication.get().applicationServices.updatedStationRepository.getUpdatedStation(station)?.evaIds
+                ?: station.evaIds
+    }
+
     val timetableCollector =
         timetableRepository.createTimetableCollector(
-            stationResource.data.asFlow().mapNotNull { it.evaIds }, viewModelScope
+            stationResource.data.asFlow().mapNotNull { station ->  evaIdsProvider(station) }, viewModelScope
+//            stationResource.data.asFlow().mapNotNull { it.evaIds }, viewModelScope
         )
 
     val activeTimetableCollector
@@ -286,11 +309,12 @@ class MapViewModel(
         }, viewModelScope)
 
 
-    fun createActiveTimetableCollector() : TimetableCollector =
-        timetableRepository.createTimetableCollector(flow {
+    fun createActiveTimetableCollector() : TimetableCollector {
+
+        return timetableRepository.createTimetableCollector(flow {
             originalStationLiveData.value?.evaIds?.let { emit(it) }
         }, viewModelScope)
-
+    }
 
 
     // check if Marker-Type exists in Station

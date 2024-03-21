@@ -6,9 +6,11 @@
 package de.deutschebahn.bahnhoflive.persistence
 
 import android.content.Context
+import de.deutschebahn.bahnhoflive.BaseApplication
 import de.deutschebahn.bahnhoflive.BaseApplication.Companion.get
 import de.deutschebahn.bahnhoflive.backend.hafas.model.HafasStation
 import de.deutschebahn.bahnhoflive.backend.local.model.EvaIds
+import de.deutschebahn.bahnhoflive.repository.EvaIdsProvider
 import de.deutschebahn.bahnhoflive.repository.InternalStation
 import de.deutschebahn.bahnhoflive.repository.Station
 import de.deutschebahn.bahnhoflive.repository.timetable.TimetableRepository
@@ -17,16 +19,21 @@ import de.deutschebahn.bahnhoflive.ui.search.HafasStationSearchResult
 import de.deutschebahn.bahnhoflive.ui.search.SearchResult
 import de.deutschebahn.bahnhoflive.ui.search.StoredStationSearchResult
 import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.FlowCollector
-import kotlinx.coroutines.flow.flow
-import kotlin.coroutines.Continuation
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.filterNotNull
+import kotlinx.coroutines.flow.map
 
 class RecentSearchesStore(context: Context?) {
     private val favoriteStationsStore: FavoriteStationsStore<InternalStation>
     private val recentDbStationsStore: FavoriteStationsStore<InternalStation>
     private val favoriteHafasStationsStore: FavoriteStationsStore<HafasStation>
     private val recentHafasStationsStore: FavoriteStationsStore<HafasStation>
+
+    private val evaIdsProvider: suspend (Station) -> EvaIds? = object : EvaIdsProvider {
+        override suspend fun invoke(station: Station): EvaIds? =
+            BaseApplication.get().applicationServices.updatedStationRepository.getUpdatedStation(station)?.evaIds
+                ?: station.evaIds
+    }
 
     init {
         val applicationServices = get().applicationServices
@@ -62,18 +69,26 @@ class RecentSearchesStore(context: Context?) {
         val all = recentDbStationsStore.all
         val allHafas = recentHafasStationsStore.all
         val searchResults = ArrayList<SearchResult>()
+
         for (stationWrapper in all) {
             searchResults.add(
                 StoredStationSearchResult(stationWrapper.wrappedStation,
                     this,
                     favoriteStationsStore,
                     coroutineScope?.let {itCoroutineScope ->
+
+                        val stationStateFlow = MutableStateFlow<InternalStation?>(stationWrapper.wrappedStation)
+
                         timetableRepository.createTimetableCollector(
-                            flow {
-                                stationWrapper.wrappedStation.evaIds?.let {itEvaIds->
-                                  emit(itEvaIds)
-                                }
-                            }, itCoroutineScope
+//                            flow {
+//                                stationWrapper.wrappedStation.evaIds?.let {itEvaIds->
+//                                  emit(itEvaIds)
+//                                }
+//                            },
+                            stationStateFlow.filterNotNull().map { station ->
+                                evaIdsProvider(station)
+                            }.filterNotNull(),
+                            itCoroutineScope
                         )
                     }
                 )
