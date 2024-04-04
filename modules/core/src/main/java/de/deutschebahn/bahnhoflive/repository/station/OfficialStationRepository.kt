@@ -53,7 +53,7 @@ class OfficialStationRepository(
                                 payload.forEach {
                                     if(!itIds.contains(it))
                                         itIds.add(it)
-                                    Log.d("cr", it)
+                                    Log.d("cr", "evaId: ${it}")
                                 }
                             }
                         }

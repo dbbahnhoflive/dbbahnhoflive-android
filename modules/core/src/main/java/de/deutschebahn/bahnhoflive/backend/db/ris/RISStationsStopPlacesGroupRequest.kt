@@ -21,7 +21,7 @@ class RISStationsStopPlacesGroupRequest(
     evaId: String,
     force: Boolean = false
 ) : RISStationsRequest<Array<String>>( //         "https://apis.deutschebahn.com/db/apis/ris-stations/v1/$urlSuffix",
-    BuildUrlSuffix(evaId),
+    buildUrlSuffix(evaId),
     dbAuthorizationTool,
     listener
 ) {
@@ -48,7 +48,13 @@ class RISStationsStopPlacesGroupRequest(
             val gson = Gson()
             val groups: XGroups = gson.fromJson(json, XGroups::class.java)
 
-            val evaIds = groups.groups.flatMap {it.members}.toSet().toTypedArray()
+//            val evaIds = groups.groups.flatMap {it.members}.toSet().toTypedArray()
+// Option 1.1 nur SALES verwenden, STATION raus
+            val salesGroup = groups.groups.firstOrNull{it.type=="SALES"}
+
+            val evaIds: Array<String> = if (salesGroup?.members != null) {
+                salesGroup.members.toTypedArray()
+            } else arrayOf()
 
             val forcedCacheEntryFactory =
                 ForcedCacheEntryFactory(ForcedCacheEntryFactory.HOUR_IN_MILLISECONDS)
@@ -61,9 +67,8 @@ class RISStationsStopPlacesGroupRequest(
 
     companion object {
 
-        fun BuildUrlSuffix(evaId: String): String {
-            var ret: String = "stop-places/" + evaId + "/groups"
-            return ret
+        fun buildUrlSuffix(evaId: String): String {
+            return "stop-places/" + evaId + "/groups"
         }
 
     }
