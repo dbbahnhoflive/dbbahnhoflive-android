@@ -69,13 +69,12 @@ class JourneyFragment() : JourneyCoreFragment(), MapPresetProvider {
     ): View = FragmentJourneyBinding.inflate(inflater).apply {
 
 
-
         journeyViewModel.trainInfoAndTrainEventAndJourneyStopsLiveData.observe(viewLifecycleOwner) {
             val trainInfo: TrainInfo = it.first
             val trainEvent: TrainEvent = it.second
             val journeyStops: List<JourneyStop>? = it.third
 
-        var isSEV=false
+            var isSEV = false
 
             if (trainEvent == TrainEvent.DEPARTURE) {
                 trainInfo.departure?.let { itTrainMoveMentInfo ->
@@ -87,8 +86,10 @@ class JourneyFragment() : JourneyCoreFragment(), MapPresetProvider {
             if (!isSEV) {
                 stationViewModel.station?.evaIds?.let { itEvaIds ->
                     isSEV =
-                        journeyStops?.find { itJourneyStop -> itEvaIds.ids?.contains(itJourneyStop.evaId) == true &&
-                                itJourneyStop.departure?.hasReplacement == true } != null
+                        journeyStops?.find { itJourneyStop ->
+                            itEvaIds.ids?.contains(itJourneyStop.evaId) == true &&
+                                    itJourneyStop.departure?.hasReplacement == true
+                        } != null
                 }
             }
 
