@@ -73,7 +73,6 @@ internal class NearbyDeparturesAdapter(
 
                 when (val selected = currentList[selection]) {
                     is NearbyDbStationItem -> {
-                        Log.d("dbg", "select")
                         startOrStopCyclicLoadingOfTimetable(selected.dbStationSearchResult.timetable,
                             null,
                             selection) // permanentes laden (wieder) starten

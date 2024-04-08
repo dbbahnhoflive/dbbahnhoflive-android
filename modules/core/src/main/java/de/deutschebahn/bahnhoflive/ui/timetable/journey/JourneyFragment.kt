@@ -44,7 +44,7 @@ class JourneyFragment() : JourneyCoreFragment(), MapPresetProvider {
 
     val stationViewModel: StationViewModel by activityViewModels()
 
-    val journeyViewModel: JourneyViewModel by viewModels()
+    private val journeyViewModel: JourneyViewModel by viewModels()
 
     private val backToLastStationClickListener =
         View.OnClickListener { _: View? ->
@@ -68,7 +68,32 @@ class JourneyFragment() : JourneyCoreFragment(), MapPresetProvider {
         savedInstanceState: Bundle?
     ): View = FragmentJourneyBinding.inflate(inflater).apply {
 
+
+
+        journeyViewModel.trainInfoAndTrainEventAndJourneyStopsLiveData.observe(viewLifecycleOwner) {
+            val trainInfo: TrainInfo = it.first
+            val trainEvent: TrainEvent = it.second
+            val journeyStops: List<JourneyStop>? = it.third
+
         var isSEV=false
+
+            if (trainEvent == TrainEvent.DEPARTURE) {
+                trainInfo.departure?.let { itTrainMoveMentInfo ->
+                    isSEV = itTrainMoveMentInfo.lineIdentifier.equals("ev", true) ||
+                            itTrainMoveMentInfo.lineIdentifier.equals("sev", true)
+                }
+            }
+
+            if (!isSEV) {
+                stationViewModel.station?.evaIds?.let { itEvaIds ->
+                    isSEV =
+                        journeyStops?.find { itJourneyStop -> itEvaIds.ids?.contains(itJourneyStop.evaId) == true &&
+                                itJourneyStop.departure?.hasReplacement == true } != null
+                }
+            }
+
+            journeyViewModel.showSEVLiveData.postValue(isSEV)
+        }
 
         journeyViewModel.essentialParametersLiveData.observe(viewLifecycleOwner) { (_, trainInfo, trainEvent) ->
 
@@ -85,11 +110,6 @@ class JourneyFragment() : JourneyCoreFragment(), MapPresetProvider {
            }
            else {
 
-               trainInfo.departure?.let {
-                 isSEV = it.lineIdentifier.equals("ev", true) ||
-                         it.lineIdentifier.equals("sev", true)
-               }
-
                screenTitle = getString(
                 R.string.template_journey_title,
                 TimetableViewHelper.composeName(trainInfo, trainInfo.departure),
@@ -100,16 +120,14 @@ class JourneyFragment() : JourneyCoreFragment(), MapPresetProvider {
 
            }
 
-            if(screenTitle.contains("SEV", true))
-                isSEV = true
-
+//            if(screenTitle.contains("SEV", true))
+//                isSEV = true
 
             if (showWagonOrderFromExtern) // trick: eigentlich soll Wagenreihung angezeigt werden... (dieses Fragment wird gleich überdeckkt)
                 journeyViewModel.showWagonOrderLiveData.value = true
 
             showWagonOrderFromExtern = false
             titleBar.screenTitle.text = screenTitle
-            journeyViewModel.showSEVLiveData.value = isSEV
 
         }
 

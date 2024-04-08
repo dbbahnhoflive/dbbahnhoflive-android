@@ -338,6 +338,11 @@ class HafasDeparturesFragment : RecyclerFragment<HafasDeparturesAdapter>(R.layou
         hafasTimetableViewModel.filterName = adapter?.filter?.label
     }
 
+    override fun onDestroy() {
+        hafasTimetableViewModel.selectedHafasJourney.value=null
+        super.onDestroy()
+    }
+
     override fun setFilter(trainCategory: String?) {
         adapter?.filter = ProductCategory.ofLabel(trainCategory)
     }

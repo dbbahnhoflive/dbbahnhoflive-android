@@ -6,8 +6,6 @@
 
 package de.deutschebahn.bahnhoflive.ui.search;
 
-import static de.deutschebahn.bahnhoflive.util.KeyboardXKt.hideKeyboard;
-
 import android.location.Location;
 import android.os.Bundle;
 import android.os.Handler;

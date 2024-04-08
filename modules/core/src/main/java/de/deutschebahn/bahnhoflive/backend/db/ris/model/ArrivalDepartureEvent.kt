@@ -1,5 +1,14 @@
 package de.deutschebahn.bahnhoflive.backend.db.ris.model
 
+class ReplacementTransport(val realType: String)
+
+class Transport(
+    val type: String,
+    val category: String,
+    val replacementTransport : ReplacementTransport?
+)
+
+
 class ArrivalDepartureEvent(
     val station: StationShort,
     /**
@@ -31,7 +40,12 @@ class ArrivalDepartureEvent(
      * Indicates whether this event is additional, meaning not be part of the regular schedule.
      */
     val additional: Boolean,
+
+    private val transport : Transport
 ) {
     val eventType: EventType?
         get() = EventType.VALUES.firstOrNull { it.key == type }
+
+    val hasReplacement : Boolean
+        get() = transport.replacementTransport!=null
 }
