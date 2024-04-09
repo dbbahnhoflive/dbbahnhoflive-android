@@ -10,6 +10,9 @@ import de.deutschebahn.bahnhoflive.repository.InternalStation
 import java.text.SimpleDateFormat
 import java.util.Calendar
 import java.util.Locale
+import java.util.regex.Matcher
+import java.util.regex.Pattern
+
 
 class DebugX {
 
@@ -99,11 +102,39 @@ class DebugX {
 
         }
 
+        private fun logVolleyMsg(msg:String) {
+
+            // remove secrets
+            var msg_final: String
+
+            try {
+                val repl1 = Regex("(?<=(accessId=))(.*?)(?=(&|\$))")
+                val msgWithReplacedAccessId = msg.replace(repl1, "---")
+
+                msg_final=msgWithReplacedAccessId
+                val repl2 = Regex("(?<=(key=))(.*?)(?=(\\&|\$))")
+                val pattern: Pattern = Pattern.compile(repl2.pattern)
+                val matcher: Matcher = pattern.matcher(msg)
+                if (matcher.find()) {
+                    val key = matcher.group(0)
+                    if (key != null) {
+                        if (key.length > 10) {
+                            msg_final = msgWithReplacedAccessId.replace(repl2, "---")
+                        }
+                    }
+                }
+            }
+            catch(_:Exception) {
+                msg_final=msg
+            }
+            Log.d("cr", msg_final)
+        }
+
         fun logVolleyRequest(preText: String = "", url: String?) {
             var msg = "${preText.padEnd(MAX_CLSNAME_LENGTH)} request  :       "
             if (url != null)
                 msg += url
-            Log.d("cr", msg)
+            logVolleyMsg(msg)
     }
 
         fun logVolleyRequest(cls: Any, url: String?) {
@@ -113,7 +144,7 @@ class DebugX {
         fun logVolleyResponseOk(preText: String = "", url: String?) {
             var msg = "${preText.padEnd(MAX_CLSNAME_LENGTH)} response : ok    "
             url?.let { msg += url }
-            Log.d("cr", msg)
+            logVolleyMsg(msg)
         }
 
         fun logVolleyResponseOk(cls: Any, url: String?) {
@@ -125,7 +156,7 @@ class DebugX {
             url?.let { msg += url }
             if (e?.message != null)
                 msg += e.message
-            Log.d("cr", msg)
+            logVolleyMsg(msg)
         }
         fun logVolleyResponseException(cls: Any, url: String?, e: Exception?) {
             logVolleyResponseException(cls.javaClass.simpleName, url, e)
@@ -139,7 +170,7 @@ class DebugX {
                 if (it.message != null)
                     msg += " message: <" + it.message + ">"
             }
-            Log.d("cr", msg)
+            logVolleyMsg(msg)
         }
         fun logVolleyResponseError(cls: Any, url: String?, volleyError: VolleyError?) {
             logVolleyResponseError(cls.javaClass.simpleName, url, volleyError)
