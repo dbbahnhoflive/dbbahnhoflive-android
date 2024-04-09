@@ -6,17 +6,25 @@
 package de.deutschebahn.bahnhoflive.ui.map
 
 import android.content.Intent
+import android.view.View
 import android.view.ViewGroup
 import de.deutschebahn.bahnhoflive.R
-import de.deutschebahn.bahnhoflive.databinding.FlyoutElevatorBinding
-import de.deutschebahn.bahnhoflive.databinding.FlyoutLockersBinding
-import de.deutschebahn.bahnhoflive.push.FacilityPushManager
 
 internal class ElevatorFlyoutViewHolder(parent: ViewGroup, private val stationActivityStarter: StationActivityStarter)
     : StatusFlyoutViewHolder(parent, R.layout.flyout_elevator) {
 
+    private var linkButton: View? = null
     init {
         equipmentID = EquipmentID.ELEVATORS
+        linkButton = itemView.findViewById(R.id.external_link)
+        linkButton?.setOnClickListener {
+            stationActivityStarter.startStationActivity(
+                {
+                    addFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT)
+                },
+                equipmentID
+            )
+        }
     }
 
 //    private val binding = FlyoutElevatorBinding.bind(itemView).apply {
