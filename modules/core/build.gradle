@@ -57,8 +57,8 @@ android {
         buildConfigField "String", "RIS_STATIONS_API_KEY", "\"ae429e8b34b1366eb37ca466260f92f8\""
         buildConfigField "String", "RIS_STATIONS_CLIENT_ID", "\"be998c9dd20ae7b9440839580644fc47\""
 
-        buildConfigField "String", "FASTA_API_KEY", "\"15d020725ecb768ea41a5925a26bf50e\""
-        buildConfigField "String", "FASTA_CLIENT_ID", "\"1c5f5114b79924f8d34d50cb601d4dd6\""
+        buildConfigField "String", "FASTA_API_KEY", "\"6a00a0833a04b35f074b2a307d9a99f4\""
+        buildConfigField "String", "FASTA_CLIENT_ID", "\"8e4ed585d11c6e8fc8b39d61553f24ea\""
 
         buildConfigField "String", "PARKING_INFORMATION_BASE_URL", "\"https://apis.deutschebahn.com/db/apis/parking-information/db-bahnpark/v2/\""
     }
