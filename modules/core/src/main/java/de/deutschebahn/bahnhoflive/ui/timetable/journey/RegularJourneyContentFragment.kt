@@ -77,6 +77,17 @@ class RegularJourneyContentFragment : Fragment() {
         }
     }
 
+
+    override fun onStart() {
+        super.onStart()
+        stationViewModel.topFragmentTag = TAG
+    }
+
+    override fun onStop() {
+        super.onStop()
+        stationViewModel.topFragmentTag = null
+    }
+
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
@@ -359,6 +370,8 @@ class RegularJourneyContentFragment : Fragment() {
 
 
     companion object {
+
+        val TAG: String = this::class.java.simpleName
 
         fun openJourneyStopStation(
             activity: FragmentActivity,

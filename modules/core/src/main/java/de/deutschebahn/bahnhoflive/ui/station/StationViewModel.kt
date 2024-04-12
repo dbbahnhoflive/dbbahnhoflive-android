@@ -285,6 +285,7 @@ class StationViewModel(application: Application) : HafasTimetableViewModel(appli
     val localTransportViewModel = LocalTransportViewModel()
 
     var topInfoFragmentTag: String? = null
+    var topFragmentTag : String? = null
 
     val repositories get() = application.repositories
 

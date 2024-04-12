@@ -2,6 +2,7 @@ package de.deutschebahn.bahnhoflive.ui.timetable.journey
 
 import android.content.Intent
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -18,6 +19,7 @@ import de.deutschebahn.bahnhoflive.databinding.FragmentJourneyBinding
 import de.deutschebahn.bahnhoflive.ui.map.Content
 import de.deutschebahn.bahnhoflive.ui.map.InitialPoiManager
 import de.deutschebahn.bahnhoflive.ui.map.MapPresetProvider
+import de.deutschebahn.bahnhoflive.ui.map.content.rimap.RimapFilter
 import de.deutschebahn.bahnhoflive.ui.map.content.rimap.Track
 import de.deutschebahn.bahnhoflive.ui.station.BackNavigationData
 import de.deutschebahn.bahnhoflive.ui.station.HistoryFragment
@@ -26,9 +28,13 @@ import de.deutschebahn.bahnhoflive.ui.station.timetable.TimetableViewHelper
 import de.deutschebahn.bahnhoflive.ui.timetable.WagenstandFragment
 
 // fragment_journey_regular_content bzw. RegularJourneyContentFragment wird aus dem layout erzeugt !
+// FullJourneyContentFragment, sobald alle Daten da sind
+
 class JourneyFragment() : JourneyCoreFragment(), MapPresetProvider {
 
     private lateinit var trainEvent : TrainEvent
+    private var isSEV=false
+
     constructor(
         trainInfo: TrainInfo,
         trainEvent: TrainEvent,
@@ -68,30 +74,29 @@ class JourneyFragment() : JourneyCoreFragment(), MapPresetProvider {
         savedInstanceState: Bundle?
     ): View = FragmentJourneyBinding.inflate(inflater).apply {
 
-
-
         journeyViewModel.trainInfoAndTrainEventAndJourneyStopsLiveData.observe(viewLifecycleOwner) {
             val trainInfo: TrainInfo = it.first
             val trainEvent: TrainEvent = it.second
             val journeyStops: List<JourneyStop>? = it.third
 
-            var isSEV = false
+            var _isSEV = false
 
             if (trainEvent == TrainEvent.DEPARTURE) {
                 trainInfo.departure?.let { itTrainMoveMentInfo ->
-                    isSEV = itTrainMoveMentInfo.lineIdentifier.equals("ev", true) ||
+                    _isSEV = itTrainMoveMentInfo.lineIdentifier.equals("ev", true) ||
                             itTrainMoveMentInfo.lineIdentifier.equals("sev", true)
                         }
             }
 
-            if (!isSEV) {
+            if (!_isSEV) {
                 stationViewModel.station?.evaIds?.let { itEvaIds ->
-                    isSEV =
+                    _isSEV =
                         journeyStops?.find { itJourneyStop -> itEvaIds.ids?.contains(itJourneyStop.evaId) == true &&
                                 itJourneyStop.departure?.hasReplacement == true } != null
                     }
                 }
 
+            isSEV=_isSEV
             journeyViewModel.showSEVLiveData.postValue(isSEV)
         }
 
@@ -175,6 +180,13 @@ class JourneyFragment() : JourneyCoreFragment(), MapPresetProvider {
 
 
     override fun prepareMapIntent(intent: Intent): Boolean {
+
+        if (stationViewModel.topFragmentTag?.equals(RegularJourneyContentFragment.TAG) == true &&  isSEV) {
+            Log.d("cr", "${stationViewModel.station?.title} hasSEV: ${stationViewModel.hasSEV()}")
+            RimapFilter.putPreset(intent, RimapFilter.PRESET_RAIL_REPLACEMENT)
+            return true
+        }
+        else  {
         journeyViewModel.essentialParametersLiveData.value?.also { (_, trainInfo, trainEvent) ->
 
             trainInfo?.let {
@@ -184,8 +196,9 @@ class JourneyFragment() : JourneyCoreFragment(), MapPresetProvider {
                         return true
                     }
             }
-
+            }
         }
+
         return false
     }
 

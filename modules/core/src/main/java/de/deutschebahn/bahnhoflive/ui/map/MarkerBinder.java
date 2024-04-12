@@ -90,7 +90,8 @@ public class MarkerBinder {
     }
 
     public boolean isVisible() {
-        return isFilterChecked() && markerContent.acceptsLevel(level);
+        return (isFilterChecked() && markerContent.acceptsLevel(level)) ||
+                ( markerContent instanceof StationMarkerContent);
     }
 
     public boolean isFilterChecked() {
