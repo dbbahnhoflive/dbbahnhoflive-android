@@ -81,8 +81,8 @@ internal class TrackFlyoutViewHolder(
 
         super.onBind(markerContent)
 
-        val timetableCollector = mapViewModel.timetableCollector
-//        val timetableCollector = mapViewModel.createActiveTimetableCollector()
+//        val timetableCollector = mapViewModel.timetableCollector
+        val timetableCollector = mapViewModel.createActiveTimetableCollector()
 
         timetableCollector.let {
 
