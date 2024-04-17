@@ -55,15 +55,22 @@ class JourneyItemViewHolder(
     override fun onBind(item: JourneyStop?) {
         super.onBind(item)
 
+        if (item == null)
+            itemJourneyDetailedBinding.root.visibility = View.INVISIBLE
+        else
         with(itemJourneyDetailedBinding) {
-            stopName.text = item?.name
 
-            platform.text = item?.platform?.let { "Gl. $it" }
-            platform.isSelected = item?.isPlatformChange == true
+                item.let { itJourneyStop ->
+                    run {
 
-            item?.let {
+                        stopName.text = itJourneyStop.name
 
-//                linkPlatform.isVisible = it.current==true && it.platform!=null // todo: wenn Gleisinformationen eingebaut werden sollen, diese Zeile einbauen raus und
+                        platform.text = itJourneyStop.platform?.let { "Gl. $it" }
+                        platform.isSelected = itJourneyStop.isPlatformChange == true
+
+                        linkPlatform.isVisible =
+                            itJourneyStop.current == true && itJourneyStop.platform != null
+                        // todo: wenn Gleisinformationen eingebaut werden sollen, diese Zeile einbauen raus und
                                                                                  //      linkPlatform.isVisible = false löschen
                 linkPlatform.isVisible = false
 
@@ -73,7 +80,7 @@ class JourneyItemViewHolder(
                         platformList.let { it1 ->
                             onClickPlatformInformation(
                                 it,
-                                item,
+                                        itJourneyStop,
                                 it1
                             )
                         }
@@ -83,7 +90,7 @@ class JourneyItemViewHolder(
                         platformList.let { it1 ->
                                     onClickPlatformInformation(
                                         it,
-                                        item,
+                                        itJourneyStop,
                                 it1
                                     )
                                 }
@@ -92,75 +99,120 @@ class JourneyItemViewHolder(
                     root.changeAccessibilityActionClickText(itemView.resources.getString(R.string.sr_open_platform_information)) // -> Zum * Doppeltippen
                 } else
                     root.changeAccessibilityActionClickText(itemView.resources.getString(R.string.sr_open_station))
+
+
+                        var additionTextResId: Int = 0
+                        var additionalSymbolResInt: Int = 0
+
+                        when {
+                            itJourneyStop.isAdditional -> {
+                                additionTextResId = R.string.journey_stop_additional
+                                advice.setText(R.string.journey_stop_additional)
             }
 
-            when {
+                            itJourneyStop.isPlatformChange -> {
+                                additionTextResId = R.string.journey_stop_platform_change
+                                additionalSymbolResInt = R.drawable.app_warndreieck
+                            }
 
-                item?.isAdditional == true -> {
-                    advice.setText(R.string.journey_stop_additional)
+                            (itJourneyStop.departure?.canceled == true || itJourneyStop.arrival?.canceled == true) -> {
+                                additionTextResId = R.string.journey_stop_canceled
+                                additionalSymbolResInt = R.drawable.app_warndreieck
+                            }
+                }
+
+
+                    advice.isGone = false
+
+                        if (additionTextResId != 0) {
+                            advice.setText(additionTextResId)
+                            advice.isSelected = additionalSymbolResInt != 0
+                }
+
                     TextViewCompat.setCompoundDrawablesRelativeWithIntrinsicBounds(
                         advice,
-                        0,
+                            additionalSymbolResInt,
                         0,
                         0,
                         0
                     )
-                    advice.isSelected = false
-                    advice.isGone = false
-                }
 
-                item?.isPlatformChange == true -> {
-                    advice.setText(R.string.journey_stop_platform_change)
-                    TextViewCompat.setCompoundDrawablesRelativeWithIntrinsicBounds(
-                        advice,
-                        R.drawable.app_warndreieck,
-                        0,
-                        0,
-                        0
-                    )
-                    advice.isSelected = true
-                    advice.isGone = false
+                        val hasArrivalTime: Boolean = itJourneyStop.let {
+                            it.arrival?.let { it.parsedScheduledTime != null } ?: false
                 }
+                        val hasDepartureTime = itJourneyStop.let {
+                            it.departure?.let { it.parsedScheduledTime != null } ?: false
+                        }
+                        val hasAdvice = additionTextResId != 0
 
-                (item?.departure?.canceled == true || item?.arrival?.canceled == true) -> {
-                    advice.setText(R.string.journey_stop_canceled)
-                    TextViewCompat.setCompoundDrawablesRelativeWithIntrinsicBounds(
-                        advice,
-                        R.drawable.app_warndreieck,
-                        0,
-                        0,
-                        0
-                    )
-                    advice.isSelected = true
-                    advice.isGone = false
+                        // layout is so designt, das elemente sich automatisch vertikal zentrieren
+                        // ab 16.4.2024 nicht mehr gewünscht -> Anpassung an IOS design
 
-                }
-                else -> {
-                    advice.text = null
+                        // Normalfall: ankunft+abfahrt vorhanden, mit od. ohne advice -> 2 Zeilen
+                        // Sonderfall 1 : keine ankunft, kein advice  -> advice GONE, arrival GONE
+                        // Sonderfall 2 : keine abfahrt, kein advice  -> advice GONE, departure GONE
+                        // Sonderfall 3 : keine ankunft, advice  -> departure INVISIBLE, departure an arrival-position
+                        // Sonderfall 4 : keine abfahrt, advice  -> departure INVISIBLE
+
+                        var arrivalViewMode = View.VISIBLE
+                        var departureViewMode = View.VISIBLE
+
+                        if (!hasArrivalTime && !hasAdvice) {
+                            advice.isGone = true
+                            arrivalViewMode = View.GONE
+                        } else
+                            if (!hasDepartureTime && !hasAdvice) {
                     advice.isGone = true
+                                departureViewMode = View.GONE
+                            } else
+                                if (!hasArrivalTime && hasAdvice) {
+                                    departureViewMode = View.INVISIBLE
+                                } else
+                                    if (!hasDepartureTime && hasAdvice) {
+                                        departureViewMode = View.INVISIBLE
+
                 }
 
-            }
 
-            bindTimes(scheduledArrival, expectedArrival, item?.arrival)
-            bindTimes(scheduledDeparture, expectedDeparture, item?.departure)
+                        if (!hasArrivalTime && hasAdvice)
+                            bindTimes(
+                                scheduledArrival,
+                                expectedArrival,
+                                itJourneyStop.departure,
+                                arrivalViewMode
+                            )
+                        else
+                            bindTimes(
+                                scheduledArrival,
+                                expectedArrival,
+                                itJourneyStop.arrival,
+                                arrivalViewMode
+                            )
 
-            trackStop.isSelected = item?.current == true
-            trackStop.isActivated = item?.progress?.let { it >= 0f } == true
-            upperTrack.isVisible = item?.first == false
-            upperTrackHighlight.isVisible = item?.first == false
-            lowerTrack.isVisible = item?.last == false
-            lowerTrack.isVisible = item?.last == false
+                        bindTimes(
+                            scheduledDeparture,
+                            expectedDeparture,
+                            itJourneyStop.departure,
+                            departureViewMode
+                        )
 
-            item?.progress?.let {
+                        trackStop.isSelected = itJourneyStop.current == true
+                        trackStop.isActivated = itJourneyStop.progress.let { it >= 0f } == true
+                        upperTrack.isVisible = itJourneyStop.first == false
+                        upperTrackHighlight.isVisible = itJourneyStop.first == false
+                        lowerTrack.isVisible = itJourneyStop.last == false
+                        lowerTrack.isVisible = itJourneyStop.last == false
+
+                        itJourneyStop.progress.let {
                 upperTrackHighlight.setImageLevel(
                     (MAX_LEVEL + it * MAX_LEVEL).toInt().coerceIn(0, MAX_LEVEL)
                 )
-                lowerTrackHighlight.setImageLevel((it * MAX_LEVEL).toInt().coerceIn(0, MAX_LEVEL))
+                            lowerTrackHighlight.setImageLevel(
+                                (it * MAX_LEVEL).toInt().coerceIn(0, MAX_LEVEL)
+                            )
             }
 
-
-            (if (item?.highlight == true) Typeface.BOLD else Typeface.NORMAL).let { textStyle ->
+                        (if (itJourneyStop.highlight) Typeface.BOLD else Typeface.NORMAL).let { textStyle ->
                 highlightableTextViews.forEach { textView ->
                     textView.setTypeface(
                         Typeface.create(textView.typeface, textStyle),
@@ -169,8 +221,12 @@ class JourneyItemViewHolder(
                 }
             }
 
-            item?.let {
-                root.contentDescription = renderContentDescription(it)
+                        itJourneyStop.let { itJourneyStop ->
+                            root.contentDescription = renderContentDescription(itJourneyStop)
+                        }
+
+                    }
+
             }
 
         }
@@ -257,7 +313,8 @@ class JourneyItemViewHolder(
     private fun bindTimes(
         scheduledTimeView: TextView,
         estimatedTimeView: TextView,
-        journeyStopEvent: JourneyStopEvent?
+        journeyStopEvent: JourneyStopEvent?,
+        viewMode:Int
     ) {
         val parsedScheduledTime = journeyStopEvent?.parsedScheduledTime
 
@@ -278,8 +335,14 @@ class JourneyItemViewHolder(
         )
 
         val viewsGone = parsedScheduledTime == null
-        scheduledTimeView.isGone = viewsGone
-        estimatedTimeView.isGone = viewsGone
+//        scheduledTimeView.isGone = !show//viewsGone
+//        estimatedTimeView.isGone = !show//viewsGone
+//        scheduledTimeView.visibility = if(show) View.VISIBLE else View.INVISIBLE
+//        estimatedTimeView.visibility = if(show) View.VISIBLE else View.INVISIBLE
+
+        scheduledTimeView.visibility = viewMode
+        estimatedTimeView.visibility = viewMode
+
     }
 
     companion object {
