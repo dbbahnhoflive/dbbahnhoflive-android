@@ -182,20 +182,30 @@ class JourneyFragment() : JourneyCoreFragment(), MapPresetProvider {
     override fun prepareMapIntent(intent: Intent): Boolean {
 
         if (stationViewModel.topFragmentTag?.equals(RegularJourneyContentFragment.TAG) == true &&  isSEV) {
-            Log.d("cr", "${stationViewModel.station?.title} hasSEV: ${stationViewModel.hasSEV()}")
+//            Log.d("cr", "${stationViewModel.station?.title} hasSEV: ${stationViewModel.hasSEV()}")
             RimapFilter.putPreset(intent, RimapFilter.PRESET_RAIL_REPLACEMENT)
             return true
         }
         else  {
         journeyViewModel.essentialParametersLiveData.value?.also { (_, trainInfo, trainEvent) ->
 
+              try {
             trainInfo?.let {
                 trainEvent?.movementRetriever?.getTrainMovementInfo(trainInfo)
                     ?.purePlatform?.let {
-                        InitialPoiManager.putInitialPoi(intent, Content.Source.RIMAP, Track(it))
-                        return true
+                              InitialPoiManager.putInitialPoi(
+                                  intent,
+                                  Content.Source.RIMAP,
+                                  Track(it)
+                              )
+                          }
+                  }
+
                     }
+              catch(_:Exception) {
+
             }
+
             }
         }
 
