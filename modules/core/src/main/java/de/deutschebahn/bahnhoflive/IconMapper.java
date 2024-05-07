@@ -92,6 +92,10 @@ public class IconMapper {
                 return R.drawable.app_probleme_app_melden;
             case ServiceContentType.Local.STATION_COMPLAINT:
                 return R.drawable.app_verschmutzungmelden;
+            case ServiceContentType.Local.DB_COMPANION:
+                return R.drawable.app_nev_icon_round;
+            case ServiceContentType.Local.STOP_PLACE:
+                return R.drawable.app_rail_replacement;
             default:
                 return defaultResource;
         }

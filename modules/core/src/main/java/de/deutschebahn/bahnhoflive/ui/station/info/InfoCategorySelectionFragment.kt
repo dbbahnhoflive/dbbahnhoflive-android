@@ -20,13 +20,16 @@ import de.deutschebahn.bahnhoflive.backend.local.model.ServiceContentType
 import de.deutschebahn.bahnhoflive.repository.locker.LockerResource
 import de.deutschebahn.bahnhoflive.repository.parking.ParkingsResource
 import de.deutschebahn.bahnhoflive.ui.ServiceContentFragment
-import de.deutschebahn.bahnhoflive.ui.station.*
+import de.deutschebahn.bahnhoflive.ui.station.Category
+import de.deutschebahn.bahnhoflive.ui.station.CategorySelectionFragment
+import de.deutschebahn.bahnhoflive.ui.station.HistoryFragment
+import de.deutschebahn.bahnhoflive.ui.station.StaticInfoCollection
+import de.deutschebahn.bahnhoflive.ui.station.StationViewModel
 import de.deutschebahn.bahnhoflive.ui.station.accessibility.AccessibilityFragment
 import de.deutschebahn.bahnhoflive.ui.station.elevators.ElevatorStatusListsFragment
 import de.deutschebahn.bahnhoflive.ui.station.features.RISServicesAndCategory
 import de.deutschebahn.bahnhoflive.ui.station.locker.LockerFragment
 import de.deutschebahn.bahnhoflive.ui.station.parking.ParkingListFragment
-import de.deutschebahn.bahnhoflive.ui.station.railreplacement.RailReplacementFragment
 import de.deutschebahn.bahnhoflive.ui.station.railreplacement.SEV_Static
 import de.deutschebahn.bahnhoflive.util.Collections
 
@@ -119,15 +122,15 @@ class InfoCategorySelectionFragment : CategorySelectionFragment(
         infoAndServicesList?.takeUnless { it.isEmpty() }?.let {
             SimpleDynamicCategory(getText(R.string.stationinfo_infos_and_services),
                 R.drawable.app_info,
-                TrackingManager.Category.INFOS_UND_SERVICES,
-                Category.CategorySelectionListener { category ->
+                TrackingManager.Category.INFOS_UND_SERVICES)
+                { category ->
                     trackCategoryTap(category)
                     startStationInfoDetailsFragment(
                         it,
                         category,
                         R.string.stationinfo_infos_and_services
                     )
-                })
+                }
         }
 
     private fun startStationInfoDetailsFragment(
@@ -164,7 +167,7 @@ class InfoCategorySelectionFragment : CategorySelectionFragment(
                 })
         }
 
-    private fun addAccessibility(): SimpleDynamicCategory? {
+    private fun addAccessibility(): SimpleDynamicCategory {
         return SimpleDynamicCategory(
             "Barrierefreiheit", R.drawable.app_zugang_wege,
             TrackingManager.Category.BARRIEREFREIHEIT
@@ -174,14 +177,37 @@ class InfoCategorySelectionFragment : CategorySelectionFragment(
         }
     }
 
-    private fun addRailReplacement(): SimpleDynamicCategory? {
+    private fun addRailReplacement(): SimpleDynamicCategory {
+
+        val railReplacementServicesList : MutableList<ServiceContent> = mutableListOf()
+
+
+        railReplacementServicesList.add(ServiceContent(StaticInfo(ServiceContentType.Local.STOP_PLACE, "Haltestelleninformation", "description2")))
+        railReplacementServicesList.add(ServiceContent(StaticInfo(ServiceContentType.Local.DB_COMPANION, "DB Wegbegleitung", "description1")))
+
+
         return SimpleDynamicCategory(
-            getText(R.string.rail_replacement), R.drawable.app_rail_replacement,
+            getText(R.string.rail_replacement),
+            R.drawable.app_rail_replacement,
             TrackingManager.Category.SCHIENENERSATZVERKEHR
         ) { category ->
             trackCategoryTap(category)
-            startFragment(RailReplacementFragment())
+            startRailReplacementDetailsFragment(railReplacementServicesList, category, R.string.rail_replacement)
+//            startFragment(RailReplacementFragment())
         }
+    }
+
+    private fun startRailReplacementDetailsFragment(
+        serviceContents: List<ServiceContent>,
+        category: Category,
+        titleResource: Int
+    ) {
+        val railReplacementDetailsFragment = RailReplacementDetailsFragment.create(
+            ArrayList(serviceContents), getText(
+                titleResource
+            ), category.trackingTag
+        )
+        startFragment(railReplacementDetailsFragment)
     }
 
     private fun addWifi(

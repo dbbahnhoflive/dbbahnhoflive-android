@@ -1,12 +1,31 @@
 package de.deutschebahn.bahnhoflive.ui.station.railreplacement
 
 import de.deutschebahn.bahnhoflive.repository.MergedStation
+import java.util.Calendar
 import java.util.GregorianCalendar
 
+typealias DateArray = Array<Int>
+
+fun Calendar.getMillisFromDatesArray(dates: DateArray): Long {
+    var ret = 0L
+    try {
+        if (dates.size >= 6)
+            this.set(dates[0], dates[1] - 1, dates[2], dates[3], dates[4], dates[5])
+    } catch (_: Exception) {
+
+    }
+
+    try {
+        ret = this.timeInMillis
+    } catch (_: Exception) {
+
+    }
+
+    return ret
+
+}
 
 object SEV_Static {
-
-
 
 class SEV_Item(
     val stationId:Int=0,
@@ -18,7 +37,31 @@ class SEV_Item(
     val showCompanionAppLink:Boolean=false // ab 6.8. (isInBauPhase2=true)
 )
 
+    // // cal-format: year (2024), month (1..12), day (1..31), hour (0..23), minute (0..59), second (0..59)
+    private val startOfAnnouncementPhase = arrayOf(2024, 5, 1, 0, 0, 0) // dummy
+    private val endOfAnnouncementPhase = arrayOf(2024, 5, 10, 20, 59, 59)
+
+    private val startOfConstructionPhase1 =  arrayOf(2024, 6, 29,  0,0,0)
+    private val endOfConstructionPhase1 = arrayOf(2024, 8, 1,  23,59,59)
+
+    private val startOfConstructionPhase2 =  arrayOf(2024, 6, 29,  0,0,0)
+    private val endOfConstructionPhase2 = arrayOf(2024, 8, 1,  23,59,59)
+
+    // AR-companion 6945=Würzburg, 4593=Nürnberg
+    private val startOfShowArCompanion_6945 = arrayOf(2023, 5, 29,  0,0,0)
+    private val endOfShowArCompanion_6945 = arrayOf(2023, 9, 11,  23,59,59)
+
+    private val startOfShowArCompanion_4593 = arrayOf(2023, 5, 29,  0,0,0)
+    private val endOfShowArCompanion_4593 = arrayOf(2023, 8, 1,  23,59,59)
+
+
+    private val startOfShowAdHocBox = arrayOf(2024, 4, 29, 0, 0, 0) // dummy
+    private val endOfShowAdHocBox = arrayOf(2024, 9, 11, 20, 59, 59)
+
 private val sev_items = arrayOf<SEV_Item>(
+
+    SEV_Item(2545, 8000152, 8089299, "Hannover",true,true, true), // Test Hannover
+
 
     SEV_Item(6945, 8000260, 8089299, "Würzburg Busbahnhof",true,false, true), // 1 Würzburg Hbf
 
@@ -84,79 +127,41 @@ private val sev_items = arrayOf<SEV_Item>(
         }
     }
 
-
-    fun isInAnnouncementPhase() : Boolean {
-        val cal = GregorianCalendar.getInstance()
-        val now = cal.timeInMillis
-
-        // announcementPhase
-        cal.set(2023, 5 - 1, 26, 20, 59, 59)
-        val endAnnouncement = cal.timeInMillis
-        val isInAnnouncementPhase = now <= endAnnouncement  // ab sofort bis 26.05.2023, 20:59 Uhr
-
-        return isInAnnouncementPhase
-    }
-
     /**
      * checks if now >start and<=end
-     *
-     * year 2022...
-     *
-     * month: 1..12
-     *
-     * day: 1..31
      */
-    private fun isActualDateInRange(startYear:Int, startMonth:Int, startDay:Int, endYear:Int, endMonth:Int, endDay:Int) : Boolean {
+    private fun isActualDateInRange(startDate:DateArray, endDate:DateArray) : Boolean {
 
         val cal = GregorianCalendar.getInstance()
         val now = cal.timeInMillis
 
-        cal.set(startYear, startMonth - 1, startDay, 0, 0, 0)
-        val start = cal.timeInMillis
+        val start = cal.getMillisFromDatesArray(startDate)
+        val end = cal.getMillisFromDatesArray(endDate)
 
-        cal.set(endYear, endMonth - 1, endDay, 23, 59, 59)
-        val end = cal.timeInMillis
-
-        val isInRange = now > start && now <= end
+        val isInRange = (now > start) && (now <= end)
 
         return isInRange
     }
 
-    fun isInConstructionPhase1() : Boolean {
-// 26.5.23 bis 6.8.23
-        val cal = GregorianCalendar.getInstance()
-        val now = cal.timeInMillis
-
-        // start 26.5.23
-        cal.set(2023, 5 - 1, 26, 0, 0, 0)
-        val start = cal.timeInMillis
-
-        // end : 6.08.2023
-        cal.set(2023, 8 - 1, 6, 23, 59, 59)
-        val end = cal.timeInMillis
-
-        val isInConstructionPhase = now > start && now < end
-
-        return isInConstructionPhase
+    fun isInAnnouncementPhase() : Boolean {
+        return isActualDateInRange(startOfAnnouncementPhase, endOfAnnouncementPhase)
     }
 
-    fun isInConstructionPhase2() : Boolean {
-// 6.8.23 bis 11.9.23 23.59
-        val cal = GregorianCalendar.getInstance()
-        val now = cal.timeInMillis
-
-        // start 6.8.23
-        cal.set(2023, 8 - 1, 6, 0, 0, 0) // todo: 2023
-        val start = cal.timeInMillis
-
-        // end : 12.09.2023
-        cal.set(2023, 9 - 1, 11, 23, 59, 59)
-        val end = cal.timeInMillis
-
-        val isInConstructionPhase = now > start && now <= end
-
-        return isInConstructionPhase
+    private fun isInConstructionPhase1() : Boolean {
+        return isActualDateInRange(startOfConstructionPhase1, endOfConstructionPhase1)
     }
+
+    private fun isInConstructionPhase2() : Boolean {
+        return isActualDateInRange(startOfConstructionPhase2, endOfConstructionPhase2)
+    }
+
+    // Box auch anzeigen wenn Bauphase noch nicht begonnen hat !
+    // siehe NewsAdapter,  "Ankündigung Ersatzverkehr"
+    fun shouldShowAdhocBox() : Boolean {
+        return isActualDateInRange(startOfShowAdHocBox, endOfShowAdHocBox)
+    }
+
+
 
     fun isStationInConstructionPhase(stationId: String?) : Boolean {
 
@@ -176,8 +181,11 @@ private val sev_items = arrayOf<SEV_Item>(
         return false
     }
 
+    fun isStationInConstructionPhase(station: MergedStation): Boolean {
+        return isStationInConstructionPhase(station.id)
+    }
+
     fun hasStationWebAppCompanionLink(stationId: String?): Boolean { // webApp DB Wegbegleitung
-        // ab 6.8. bis 12.9.
         val stationIdAsInt = stationId?.toIntOrNull() ?: 0
         if (isInConstructionPhase2()) {
             sev_items.forEach {
@@ -189,7 +197,6 @@ private val sev_items = arrayOf<SEV_Item>(
     }
 
     fun hasSEVStationWebAppCompanionLink(evaId: String?): Boolean { // webApp DB Wegbegleitung
-        // ab 6.8. bis 12.9.
         val evaIdAsInt = evaId?.toIntOrNull() ?: 0
         if (isInConstructionPhase2()) {
             sev_items.forEach {
@@ -209,27 +216,24 @@ private val sev_items = arrayOf<SEV_Item>(
         when (stationIdAsInt) {
             6945 -> {
                 // Würzburg ab 29.5.
-                return isActualDateInRange(2023, 5, 29, 2023, 9, 11)
+                return isActualDateInRange(startOfShowArCompanion_6945, endOfShowArCompanion_6945)
             }
             4593 -> {
                 // Nürnberg ab 4.8.
-                return isActualDateInRange(2023, 8, 4, 2023, 9, 11)
+                return isActualDateInRange(startOfShowArCompanion_4593, endOfShowArCompanion_4593)
 
             }
             else -> return false
         }
     }
 
-    fun isStationInConstructionPhase(station: MergedStation): Boolean {
-        return isStationInConstructionPhase(station.id)
-    }
 
     fun isReplacementStopFrom(evaId: String, evaIds: MutableList<String>): Boolean {
 
         if (!isInConstructionPhase1() && !isInConstructionPhase2()) return false
 
         for (item in sev_items) {
-            if (item.sev_evaId.toString().equals(evaId))
+            if (item.sev_evaId.toString() == evaId)
                 if (evaIds.contains(item.evaId.toString()) && isStationInConstructionPhase(item.stationId.toString()))
                     return true
         }
@@ -260,8 +264,5 @@ private val sev_items = arrayOf<SEV_Item>(
 
     }
 
-    // Box auch abzeigen wenn Bauphase noch nicht begonnen hat !
-    fun shouldShowAdhocBox() : Boolean {
-        return isActualDateInRange(2023, 5, 29, 2023, 9, 11)
-    }
+
 }

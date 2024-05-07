@@ -60,7 +60,8 @@ open class ServiceContentViewHolder(
 
     init {
         statusView.visibility = View.GONE
-        titleView.setLines(2)
+        titleView.maxLines = 2
+//        titleView.setLines(2)
     }
 
 //    val timeFormat = SimpleDateFormat("HH:mm", Locale.GERMANY)
