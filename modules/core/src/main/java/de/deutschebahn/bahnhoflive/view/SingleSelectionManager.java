@@ -97,6 +97,7 @@ public class SingleSelectionManager {
     }
 
     public void addListener(Listener listener) {
+//        if(!listeners.contains(listener))
         listeners.add(listener);
     }
 

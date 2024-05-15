@@ -72,28 +72,6 @@
                     android:paddingBottom="@dimen/default_space"
                     />
 
-                <LinearLayout
-                    android:id="@+id/dbCompanionTeaser"
-
-                    android:layout_width="match_parent"
-                    android:layout_height="110dp"
-                    android:layout_marginTop="@dimen/default_space"
-                    android:layout_marginBottom="@dimen/default_space"
-                    android:layout_marginHorizontal="@dimen/default_space"
-
-                    android:visibility="gone"
-                    tools:visibility="visible"
-
-                    style="@style/App.Widget.CardContainer.Row">
-
-                    <include
-                        layout="@layout/card_db_companion_teaser"
-                        android:layout_width="match_parent"
-                        android:layout_height="match_parent"
-                        />
-
-                </LinearLayout>
-
                 <android.widget.Space
                     android:layout_width="match_parent"
                     android:layout_height="@dimen/default_space">
@@ -139,6 +117,12 @@
 
                     </LinearLayout>
                 </androidx.cardview.widget.CardView>
+
+                <include
+                   android:id="@+id/dbCompanionTeaserVO"
+                   android:visibility="gone"
+                   layout="@layout/fragment_station_db_companion">
+                </include>
 
                 <include
                     layout="@layout/include_occupancy"

@@ -1,4 +1,4 @@
-package de.deutschebahn.bahnhoflive.ui.station.railreplacement
+package de.deutschebahn.bahnhoflive.ui.station.info
 
 import android.content.Intent
 import android.net.Uri
@@ -19,7 +19,7 @@ import de.deutschebahn.bahnhoflive.ui.map.content.rimap.RimapFilter
 import de.deutschebahn.bahnhoflive.ui.station.StationViewModel
 import de.deutschebahn.bahnhoflive.util.startSafely
 
-class RailReplacementFragment : Fragment(), MapPresetProvider {
+class RailReplacementFragmentOLD : Fragment(), MapPresetProvider {
 
     val stationViewModel by activityViewModels<StationViewModel>()
 
@@ -208,7 +208,7 @@ class RailReplacementFragment : Fragment(), MapPresetProvider {
     }
 
     companion object {
-        val TAG: String = RailReplacementFragment::class.java.simpleName
+        val TAG: String = RailReplacementFragmentOLD::class.java.simpleName
     }
 
  }

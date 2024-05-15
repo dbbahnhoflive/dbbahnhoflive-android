@@ -2,8 +2,14 @@ package de.deutschebahn.bahnhoflive.util
 
 import android.content.Context
 import android.graphics.Typeface
+import android.view.Gravity
+import android.view.View
+import android.widget.Button
 import android.widget.CheckBox
+import android.widget.LinearLayout
+import android.widget.TextView
 import androidx.appcompat.app.AlertDialog
+import androidx.core.view.isVisible
 import de.deutschebahn.bahnhoflive.R
 
 
@@ -37,10 +43,13 @@ class AlertX {
             buttonNeutralText:String="", // middle
             buttonNeutralClicked: (() -> Unit)? = null,
             checkboxText:String="",
-            checkboxClicked: ((Boolean)->Unit)? = null
+            checkboxClicked: ((Boolean)->Unit)? = null,
+            spokenTitleText : String="",
+            spokenMainText:String=""
         ) {
 
-            val builder: AlertDialog.Builder = AlertDialog.Builder(context, R.style.App_Dialog_Theme)
+            val builder: AlertDialog.Builder =
+                AlertDialog.Builder(context, R.style.App_Dialog_Theme)
 
             if(titleText.isNotEmpty())
                 builder.setTitle(titleText)
@@ -117,12 +126,51 @@ class AlertX {
 
                     else -> {}
                 }
-            }
-            catch(_:Exception) {
+            } catch (_: Exception) {
 
             }
 //            dialog.getButton(androidx.appcompat.app.AlertDialog.BUTTON_NEUTRAL)?.isAllCaps=false
 //            dialog.getButton(androidx.appcompat.app.AlertDialog.BUTTON_NEGATIVE)?.isAllCaps=false
+
+            // if single-button -> center
+            val btnPositive: Button =
+                dialog.getButton(androidx.appcompat.app.AlertDialog.BUTTON_POSITIVE)
+            val btnNeutral: Button =
+                dialog.getButton(androidx.appcompat.app.AlertDialog.BUTTON_NEUTRAL)
+            val btnNegative: Button =
+                dialog.getButton(androidx.appcompat.app.AlertDialog.BUTTON_NEGATIVE)
+
+            var btnCount: Int = if (btnPositive.isVisible) 1 else 0
+            btnCount += if (btnNeutral.isVisible) 1 else 0
+            btnCount += if (btnNegative.isVisible) 1 else 0
+
+            if (btnCount == 1) {
+
+                val btn = if (btnPositive.isVisible) btnPositive else
+                    if (btnNeutral.isVisible) btnNeutral else
+                        btnNegative
+
+                btn.let {
+
+                    val parentLayout: LinearLayout? = it.parent as? LinearLayout
+                    parentLayout?.gravity = Gravity.CENTER_HORIZONTAL
+
+                    val leftSpacer: View? = parentLayout?.getChildAt(1)
+                    leftSpacer?.isVisible = false
+                }
+
+            }
+
+            // spoken text
+            if(spokenTitleText.isNotEmpty())
+             (dialog.findViewById(android.R.id.message) as? TextView)?.contentDescription = spokenTitleText
+
+            if(spokenMainText.isNotEmpty()) {
+                val titleId: Int = context.resources.getIdentifier("alertTitle", "id", "android")
+                if (titleId > 0) {
+                    (dialog.findViewById(titleId) as? TextView)?.contentDescription = spokenMainText
+                }
+            }
 
         }
 

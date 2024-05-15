@@ -61,6 +61,7 @@
 
     <dimen name="default_space_double">16dp</dimen>
     <dimen name="default_space_triple">24dp</dimen>
+    <dimen name="default_space_quadruple">32dp</dimen>
     <dimen name="default_space">8dp</dimen>
     <dimen name="default_space_reverse">-8dp</dimen>
     <dimen name="default_space_half">4dp</dimen>

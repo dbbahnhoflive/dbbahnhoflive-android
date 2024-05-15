@@ -111,6 +111,7 @@ import kotlinx.coroutines.flow.mapLatest
 import kotlinx.coroutines.launch
 import java.io.InputStreamReader
 import java.text.Collator
+import java.util.Calendar
 import java.util.Locale
 import java.util.concurrent.Executors
 
@@ -1393,6 +1394,33 @@ class StationViewModel(application: Application) : HafasTimetableViewModel(appli
         }
     }
 
+    private val _railReplacementInfoSelectedItemLiveData : MutableLiveData<RailReplacementInfoType> =
+        MutableLiveData<RailReplacementInfoType>(RailReplacementInfoType.TOP)
+    val railReplacementInfoSelectedItemLiveData : LiveData<RailReplacementInfoType> = _railReplacementInfoSelectedItemLiveData
+    fun setRailReplacementInfoSelectedItem(type : RailReplacementInfoType) {
+        _railReplacementInfoSelectedItemLiveData.value = type
+    }
+
+    private val _dbCompanionServiceAvaliable = MutableLiveData<Boolean>().apply {
+        val c = Calendar.getInstance()
+
+        val now = c.timeInMillis
+
+        c.set(Calendar.MILLISECOND, 0)
+
+        c.set(Calendar.HOUR_OF_DAY, 7)
+        c.set(Calendar.MINUTE, 30)
+        val today7_30h = c.timeInMillis
+
+        c.set(Calendar.HOUR_OF_DAY, 18)
+        c.set(Calendar.MINUTE, 30)
+        val today18_30h = c.timeInMillis
+
+        value =   (now >= today7_30h && now < today18_30h)
+    }
+    val dbCompanionServiceAvaliableLiveData: LiveData<Boolean> = _dbCompanionServiceAvaliable
+
+
     val couponsLiveData = newsLiveData.map { newsList ->
         newsList?.run {
             val couponGroupId = GroupId.COUPON.id
@@ -1570,7 +1598,7 @@ class StationViewModel(application: Application) : HafasTimetableViewModel(appli
 
     val showDbCompanionTeaser : LiveData<Boolean> =
         stationResource.data.map {itStation ->
-            SEV_Static.hasStationWebAppCompanionLink(itStation.id)
+            SEV_Static.hasStationDbCompanion(itStation.id)
     }
 
 

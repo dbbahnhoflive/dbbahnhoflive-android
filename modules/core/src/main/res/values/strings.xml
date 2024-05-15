@@ -437,12 +437,12 @@
 
     <string name="nev_announcement_headline">Ankündigung Ersatzverkehr</string>
     <string name="nev_phase_headline">Ersatzverkehr beachten</string>
-    <string name="nev_copy">Ersatzverkehr auf der Strecke Würzburg – Nürnberg aufgrund von Baumaßnahmen.</string>
-    <string name="nev_text_1">Aufgrund von Bauarbeiten kommt es zwischen Würzburg und Nürnberg vom 26. Mai bis zum 11. September 2023 zu Einschränkungen im Zugverkehr.\n\nEin Ersatzverkehr mit Bussen ist teilweise eingerichtet.</string>
+    <string name="nev_copy">Ersatzverkehr zwischen Frankfurt (Main) Stadion und Mannheim Hbf.</string>
+    <string name="nev_text_1">Aufgrund von Bauarbeiten auf der „Riedbahn“ kommt es zwischen Frankfurt (Main) Stadion und Mannheim Hauptbahnhof von Juli bis Dezember 2024 zu Einschränkungen im Zugverkehr. Ein Ersatzverkehr mit Bussen ist eingerichtet.</string>
     <string name="nev_text_2">Die Sanierung erfolgt in zwei Abschnitten. Zunächst wird die Strecke zwischen Rottendorf und Neustadt (Aisch) Bahnhof vom 26. Mai bis 05. August 2023 für den Zugverkehr komplett gesperrt. Anschließend erfolgt eine Sperrung der Strecke zwischen Neustadt (Aisch) Bahnhof und Fürth (Bay) Hauptbahnhof vom 06. August bis 11. September 2023. Durch die Sperrung in dem zweiten genannten Zeitraum erfolgt auf der Strecke Markt Erlbach - Siegelsdorf - Fürth (Bay) Hauptbahnhof zudem ebenfalls kein Zugverkehr.\n\nDarüber hinaus entfallen über beide Bauphasen die meisten Züge der Linie RB80 zwischen Würzburg Hauptbahnhof und Marktbreit.\n\nWeiterhin kommt es in den späten Abend- und frühen Morgenstunden zwischen Nürnberg Hauptbahnhof und Würzburg Hauptbahnhof über den gesamten Zeitraum hinweg zu Zugausfällen.\n\nWeiterführende Informationen finden Sie unter bahnhof.de"</string>
 
-    <string name="nev_date_range">26.05. - 11.09.2023</string>
-    <string name="sr_nev_date_range">vom 26.5.2023 bis 11.9.2023</string>
+    <string name="nev_date_range">15.07.24 - 31.12.24</string>
+    <string name="sr_nev_date_range">vom 15.7.24 bis 31.12.24</string>
 
     <string name="open_link_bahnhof_de">"bahnhof.de öffnen"</string>
 
@@ -463,6 +463,21 @@
     <string name="nev_db_companion_copy">Während des Ersatzverkehrs an den Bahnhöfen zwischen Würzburg und Nürnberg begleitet unser geschultes Personal Sie sicher vom Gleis zur Ersatzhaltestelle und zurück.</string>
     <string name="nev_db_companion_link_description">Sie können uns unter folgendem Link einfach per Videoanruf kontaktieren und Unterstützung erhalten.</string>
     <string name="nev_db_companion_button_text">DB Wegbegleitung öffnen</string>
+
+
+    <string name="rail_replacement_db_companion_text">An diesem Bahnhof mit Ersatzverkehr begleitet Sie unser geschultes Personal per Videoanruf sicher und schnell zu Ihrer Ersatzhaltestelle und zurück.</string>
+    <string name="rail_replacement_db_companion_service_times">Servicezeiten</string>
+    <string name="rail_replacement_db_companion_call_video">Video-Anruf starten</string>
+    <string name="rail_replacement_db_companion_legal_notice">Rechtliche Hinweise</string>
+    <string name="rail_replacement_db_companion_hint">So funktioniert der Service</string>
+    <string name="rail_replacement_db_companion_imprint">Impressum</string>
+    <string name="rail_replacement_db_companion_video_call_url">https://int.help-me-iat.comp.db.de/</string>
+    <string name="rail_replacement_db_companion_imprint_url">https://www.dbsystel.de/dbsystel/impressum-3712044</string>
+    <string name="rail_replacement_db_companion_legal_notice_url">https://www.dbsystel.de/dbsystel/datenschutzgrundsaetze-3712042</string>
+    <string name="rail_replacement_db_companion_no_service_headline">Aktuell kein Service</string>
+    <string name="rail_replacement_db_companion_no_service_body">Dieser Service ist täglich zwischen 7:30 und 18:30 Uhr verfügbar.</string>
+    <string name="rail_replacement_db_companion_service_state_available">Service verfügbar</string>
+    <string name="rail_replacement_db_companion_service_state_not_available">Zur Zeit nicht verfügbar</string>
 
     <string name="platform_information">Gleisinformationen</string>
     <string name="platform_information_headline">Informationen zu den Gleisen vor Ort</string>

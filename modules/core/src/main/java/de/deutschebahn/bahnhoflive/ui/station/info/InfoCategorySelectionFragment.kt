@@ -23,6 +23,7 @@ import de.deutschebahn.bahnhoflive.ui.ServiceContentFragment
 import de.deutschebahn.bahnhoflive.ui.station.Category
 import de.deutschebahn.bahnhoflive.ui.station.CategorySelectionFragment
 import de.deutschebahn.bahnhoflive.ui.station.HistoryFragment
+import de.deutschebahn.bahnhoflive.ui.station.RailReplacementInfoType
 import de.deutschebahn.bahnhoflive.ui.station.StaticInfoCollection
 import de.deutschebahn.bahnhoflive.ui.station.StationViewModel
 import de.deutschebahn.bahnhoflive.ui.station.accessibility.AccessibilityFragment
@@ -181,7 +182,6 @@ class InfoCategorySelectionFragment : CategorySelectionFragment(
 
         val railReplacementServicesList : MutableList<ServiceContent> = mutableListOf()
 
-
         railReplacementServicesList.add(ServiceContent(StaticInfo(ServiceContentType.Local.STOP_PLACE, "Haltestelleninformation", "description2")))
         railReplacementServicesList.add(ServiceContent(StaticInfo(ServiceContentType.Local.DB_COMPANION, "DB Wegbegleitung", "description1")))
 
@@ -192,21 +192,22 @@ class InfoCategorySelectionFragment : CategorySelectionFragment(
             TrackingManager.Category.SCHIENENERSATZVERKEHR
         ) { category ->
             trackCategoryTap(category)
-            startRailReplacementDetailsFragment(railReplacementServicesList, category, R.string.rail_replacement)
+            startRailReplacementFragment(railReplacementServicesList, category, R.string.rail_replacement)
 //            startFragment(RailReplacementFragment())
         }
     }
 
-    private fun startRailReplacementDetailsFragment(
+    private fun startRailReplacementFragment(
         serviceContents: List<ServiceContent>,
         category: Category,
         titleResource: Int
     ) {
-        val railReplacementDetailsFragment = RailReplacementDetailsFragment.create(
-            ArrayList(serviceContents), getText(
-                titleResource
-            ), category.trackingTag
+        val railReplacementDetailsFragment = RailReplacementFragment.create(
+            ArrayList(serviceContents),
+            getText(titleResource),
+            category.trackingTag
         )
+        stationViewModel.setRailReplacementInfoSelectedItem(RailReplacementInfoType.TOP)
         startFragment(railReplacementDetailsFragment)
     }
 

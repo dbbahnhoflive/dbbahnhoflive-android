@@ -125,6 +125,10 @@
     <string name = "sr_open_accessibility">Wechseln in die Informationen zur Barrierefreiheit</string>
     <string name = "sr_opposite_track">gegenüber Gleis</string>
 
+    <string name="sr_rail_replacement_db_companion_no_service_headline">Der Service DB Wegbegleitung ist aktuell nicht vefügbar</string>
+    <string name="sr_rail_replacement_db_companion_no_service_body">Leider rufen Sie außerhalb der Service Zeiten an. Diese sind täglich zwischen 7 Uhr 30 und 18 Uhr 30</string>
+
+
 
 
 </resources>

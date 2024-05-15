@@ -7,97 +7,74 @@
   -->
 
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="0dp"
-    android:layout_weight="@integer/single_cell_weight"
-    android:layout_height="match_parent"
     style="@style/App.Widget.CardContainer"
-    tools:showIn="@layout/fragment_station"
-    >
+    android:layout_width="0dp"
+    android:layout_height="match_parent"
+    android:layout_weight="@integer/single_cell_weight"
+    tools:showIn="@layout/fragment_station">
 
     <androidx.cardview.widget.CardView
         style="@style/App.Widget.Card"
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
-        <LinearLayout
-            android:orientation="horizontal"
+        <RelativeLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            >
+            android:background="@color/db_way_companion">
+
+            <View
+                android:id="@+id/top_frame"
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/default_space_double"
+                tools:ignore="NestedWeights">
+
+            </View>
+
+
+            <TextView
+                android:id="@+id/headline"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/top_frame"
+                android:layout_marginStart="@dimen/default_space_double"
+                android:contentDescription="@string/teaser_db_companion_sr_content_description"
+                android:text="@string/teaser_db_companion_headline"
+                android:textColor="@android:color/white"
+                android:textSize="@dimen/textsize_h3plus"
+                android:textStyle="bold" />
+
+            
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/headline"
+                android:layout_alignStart="@+id/headline"
+                android:layout_toStartOf="@+id/icon"
+                android:layout_marginTop="@dimen/default_space_half"
+                android:importantForAccessibility="no"
+                android:text="@string/teaser_db_companion_copy"
+                android:textColor="@android:color/white"
+                android:textSize="@dimen/textsize_h3" />
+
 
             <ImageView
+                android:id="@+id/icon"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
 
-                android:layout_width="0dp"
-                android:layout_weight="0.8"
+                android:layout_below="@+id/top_frame"
+                android:layout_alignParentEnd="true"
+
+                android:layout_marginEnd="@dimen/default_space_quadruple"
                 android:importantForAccessibility="no"
-                android:layout_height="match_parent"
-                android:layout_marginBottom="@dimen/default_space"
-                android:layout_gravity="top|center_horizontal"
-                android:src="@drawable/teaser_db_companion_card"
-                android:paddingHorizontal="@dimen/default_space"
+                android:paddingHorizontal="@dimen/default_space_half"
+                android:src="@drawable/app_nev_icon_round"
 
                 />
 
-            <androidx.legacy.widget.Space
-                android:layout_width="0dp"
-                android:layout_weight="0.1"
-                android:layout_height="match_parent"
-                />
-
-            <LinearLayout
-                android:layout_width="0dp"
-                android:layout_weight="3"
-                android:layout_height="match_parent"
-                android:paddingEnd="24dp"
-                android:paddingStart="0dp"
-                android:orientation="vertical"
-                >
-
-                <androidx.legacy.widget.Space
-                    android:layout_width="match_parent"
-                    android:layout_height="0dp"
-                    android:layout_weight="0.5"
-                    tools:ignore="NestedWeights" />
-
-                <TextView
-                    android:layout_width="match_parent"
-                    android:layout_height="0dp"
-                    android:layout_weight="1"
-                    android:text="@string/teaser_db_companion_headline"
-                    android:textSize="@dimen/textsize_h3plus"
-                    android:textStyle="bold"
-                    android:contentDescription="@string/teaser_db_companion_sr_content_description"
-                    />
-
-                <TextView
-                    android:layout_width="match_parent"
-                    android:layout_height="0dp"
-                    android:layout_weight="2"
-                    android:textSize="14sp"
-                    android:importantForAccessibility="no"
-                    android:text="@string/teaser_db_companion_copy" />
-
-            </LinearLayout>
-
-        </LinearLayout>
-
-        <ImageButton
-            android:id="@+id/dbCompanionButton"
-            android:layout_width="@dimen/round_button_size"
-            android:layout_height="@dimen/round_button_size"
-            android:layout_gravity="end|top"
-            android:layout_marginTop="@dimen/default_space"
-            android:layout_marginEnd="@dimen/default_space"
-            android:background="@drawable/shape_circle_button"
-            android:elevation="@dimen/default_elevation"
-            android:scaleType="center"
-            android:src="@drawable/app_extern_link"
-            android:contentDescription="@string/teaser_db_companion_link_to_external_website"
-            app:elevation="@dimen/default_elevation"
-            tools:targetApi="lollipop" />
-
+        </RelativeLayout>
 
     </androidx.cardview.widget.CardView>
 </FrameLayout>
