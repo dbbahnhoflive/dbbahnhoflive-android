@@ -447,6 +447,8 @@
     <string name="nev_date_range">15.07.24 - 31.12.24</string>
     <string name="sr_nev_date_range">vom Fünfzehnten Juli 24 bis Einundreissigsten Dezember 24</string>
 
+
+    <string name="link_hint_bahnhof_de">Weiterführende Informationen finden Sie unter bahnhof.de</string>
     <string name="open_link_bahnhof_de">"bahnhof.de öffnen"</string>
 
     <string name="info_sev">Übersicht Ersatzverkehr</string>

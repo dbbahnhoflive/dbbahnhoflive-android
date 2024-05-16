@@ -190,7 +190,7 @@
                     android:layout_height="wrap_content"
                     android:layout_marginTop="@dimen/default_space"
                     android:layout_marginHorizontal="@dimen/default_space_double"
-                    android:text="Weiterführende Informationen finden Sie unter bahnhof.de"
+                    android:text="@string/link_hint_bahnhof_de"
                     android:textSize="@dimen/textsize_28" />
 
                 <TextView
