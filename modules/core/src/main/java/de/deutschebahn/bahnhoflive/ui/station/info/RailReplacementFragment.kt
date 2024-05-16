@@ -78,7 +78,7 @@ class RailReplacementFragment :
             },
             { // checkIfServiceIsAvailable
 
-                if (stationViewModel.dbCompanionServiceAvaliableLiveData.value==false) {
+                if (stationViewModel.dbCompanionServiceAvailableLiveData.value==false) {
                     context?.let {
                         AlertX.execAlert(
                             it,

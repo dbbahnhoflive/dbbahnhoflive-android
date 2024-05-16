@@ -8,7 +8,7 @@ package de.deutschebahn.bahnhoflive.backend.db.newsapi.model
 
 import android.net.Uri
 import android.util.Base64
-import java.util.*
+import java.util.Date
 
 class News {
 
@@ -22,6 +22,8 @@ class News {
     var subtitle: String? = null
 
     lateinit var content: String
+    var contentForScreenReader: String? = null
+
 
     var version = -1
 

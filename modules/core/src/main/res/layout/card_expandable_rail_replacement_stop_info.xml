@@ -41,6 +41,7 @@
 
                     <View
                         android:id="@+id/divider"
+                        android:visibility="gone"
                         android:layout_marginTop="@dimen/default_space"
                         android:layout_marginBottom="@dimen/default_space"
                         android:background="@color/filter_header_divider"
@@ -53,6 +54,7 @@
                     <ImageView
                         android:id="@+id/icon"
                         android:padding="@dimen/default_space_double"
+                        android:visibility="gone"
                         android:src="@drawable/app_nev_icon_round"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
@@ -68,9 +70,8 @@
                         android:id="@+id/newsHeadline"
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
-                        android:layout_marginStart="@dimen/default_space"
+                        android:layout_marginHorizontal="@dimen/default_space_double"
                         android:layout_marginTop="@dimen/default_space"
-                        android:layout_marginEnd="@dimen/default_space"
                         android:layout_marginBottom="@dimen/default_space_half"
                         android:ellipsize="end"
                         android:gravity="bottom"
@@ -108,9 +109,8 @@
                         android:id="@+id/newsCopy"
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
-                        android:layout_marginStart="@dimen/default_space"
+                        android:layout_marginHorizontal="@dimen/default_space_double"
                         android:layout_marginTop="@dimen/default_space_half"
-                        android:layout_marginEnd="@dimen/default_space"
                         android:layout_marginBottom="@dimen/default_space"
                         android:ellipsize="end"
                         android:importantForAccessibility="yes"
@@ -181,6 +181,18 @@
                     android:text="@string/nev_text_2"
                     android:textSize="@dimen/textsize_28" />
 
+                <Space
+                    android:layout_width="match_parent"
+                    android:layout_height="@dimen/default_space_double"/>
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/default_space"
+                    android:layout_marginHorizontal="@dimen/default_space_double"
+                    android:text="Weiterführende Informationen finden Sie unter bahnhof.de"
+                    android:textSize="@dimen/textsize_28" />
+
                 <TextView
                     android:id="@+id/linkReplacementTraffic"
                     android:layout_marginTop="@dimen/default_space"
@@ -189,10 +201,11 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     tools:visibility="visible"
-                    android:visibility="gone"
                     android:background="@drawable/shape_round_button_grey"
                     android:gravity="center"
                     android:minHeight="64dp"
+                    android:clickable="true"
+                    android:focusable="true"
                     android:text="@string/open_link_bahnhof_de"
                     android:textColor="@color/white"
                     android:textStyle="bold" />

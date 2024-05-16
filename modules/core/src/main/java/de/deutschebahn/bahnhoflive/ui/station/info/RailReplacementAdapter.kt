@@ -101,9 +101,11 @@ class RailReplacementAdapter(
                     companionHintStarter
                 )
 
-            stationViewModel.dbCompanionServiceAvaliableLiveData.observe(holder.itemView.context as LifecycleOwner) { serviceIsAvailable->
+            stationViewModel.dbCompanionServiceAvailableLiveData.observe(holder.itemView.context as LifecycleOwner) { serviceIsAvailable->
                 holder.setDbCompanionServiceState(serviceIsAvailable)
             }
+
+            holder.setDbCompanionServiceState(stationViewModel.isCompanionServiceAvailable())
 
             holder
         }

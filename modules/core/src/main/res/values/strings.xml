@@ -436,13 +436,16 @@
     <string name="elevator_flyout_description_link">"Übersicht der Aufzüge\nund Merkliste"</string>
 
     <string name="nev_announcement_headline">Ankündigung Ersatzverkehr</string>
+    <string name="sr_nev_announcement_headline">Ankündigung Ersatzverkehr</string>
     <string name="nev_phase_headline">Ersatzverkehr beachten</string>
+    <string name="sr_nev_phase_headline">Beachten Sie den Ersatzverkehr</string>
     <string name="nev_copy">Ersatzverkehr zwischen Frankfurt (Main) Stadion und Mannheim Hbf.</string>
+    <string name="sr_nev_copy">Vom Fünfzehnten Juli bis zum Einundreissigsten Dezember 2024 ist aufgrund von Baumaßnahmen ein Ersatzverkehr zwischen Frankfurt (Main) Stadion und Mannheim Hbf eingerichtet</string>
     <string name="nev_text_1">Aufgrund von Bauarbeiten auf der „Riedbahn“ kommt es zwischen Frankfurt (Main) Stadion und Mannheim Hauptbahnhof von Juli bis Dezember 2024 zu Einschränkungen im Zugverkehr. Ein Ersatzverkehr mit Bussen ist eingerichtet.</string>
     <string name="nev_text_2">Die Sanierung erfolgt in zwei Abschnitten. Zunächst wird die Strecke zwischen Rottendorf und Neustadt (Aisch) Bahnhof vom 26. Mai bis 05. August 2023 für den Zugverkehr komplett gesperrt. Anschließend erfolgt eine Sperrung der Strecke zwischen Neustadt (Aisch) Bahnhof und Fürth (Bay) Hauptbahnhof vom 06. August bis 11. September 2023. Durch die Sperrung in dem zweiten genannten Zeitraum erfolgt auf der Strecke Markt Erlbach - Siegelsdorf - Fürth (Bay) Hauptbahnhof zudem ebenfalls kein Zugverkehr.\n\nDarüber hinaus entfallen über beide Bauphasen die meisten Züge der Linie RB80 zwischen Würzburg Hauptbahnhof und Marktbreit.\n\nWeiterhin kommt es in den späten Abend- und frühen Morgenstunden zwischen Nürnberg Hauptbahnhof und Würzburg Hauptbahnhof über den gesamten Zeitraum hinweg zu Zugausfällen.\n\nWeiterführende Informationen finden Sie unter bahnhof.de"</string>
 
     <string name="nev_date_range">15.07.24 - 31.12.24</string>
-    <string name="sr_nev_date_range">vom 15.7.24 bis 31.12.24</string>
+    <string name="sr_nev_date_range">vom Fünfzehnten Juli 24 bis Einundreissigsten Dezember 24</string>
 
     <string name="open_link_bahnhof_de">"bahnhof.de öffnen"</string>
 
@@ -454,9 +457,9 @@
     <string name="teaser_ar_linkbutton_text">zum playstore</string>
 
     <string name="teaser_db_companion_headline">DB Wegbegleitung</string>
-    <string name="teaser_db_companion_copy">Orientierungshilfe für blinde und sehbeeinträchtigte Reisende.</string>
+    <string name="teaser_db_companion_copy">Orientierung für blinde und sehbeeinträchtigte Reisende.</string>
     <string name="teaser_db_companion_url">https://db.de/wegbegleitung</string>
-    <string name="teaser_db_companion_sr_content_description">DB Wegbegleitung\n Für blinde und stark sehbeeinträchtigte Reisende bieten wir an diesem Bahnhof, für den Zeitraum des Ersatzverkehrs, Unterstützung bei der Orientierung vor Ort per Videoanruf.</string>
+    <string name="teaser_db_companion_sr_content_description">DB Wegbegleitung\n Dieser Service dient als Orientierungshilfe für blinde und sehbeeinträchtigte Reisende. Sie werden über Video-Telefonie mit einem Mitarbeiter im Kundencenter der Deutschen Bahn verbunden</string>
     <string name="teaser_db_companion_link_to_external_website">Zur externen Website www.db.de/wegbegleitung</string>
 
     <string name="nev_db_companion_headline">DB Wegbegleitung - Unterstützung per Videoanruf für blinde und sehbeeinträchtigte Reisende</string>
@@ -465,7 +468,8 @@
     <string name="nev_db_companion_button_text">DB Wegbegleitung öffnen</string>
 
 
-    <string name="rail_replacement_db_companion_text">An diesem Bahnhof mit Ersatzverkehr begleitet Sie unser geschultes Personal per Videoanruf sicher und schnell zu Ihrer Ersatzhaltestelle und zurück.</string>
+    <string name="rail_replacement_db_companion_text1">An Bahnhöfen mit Ersatzverkehr begleitet Sie unser geschultes Personal per Videoanruf sicher und schnell zu Ihrer Ersatzhaltestelle und zurück.</string>
+    <string name="rail_replacement_db_companion_text2">Dieser Service steht Ihnen für die Zeit der Baumaßnahmen, ab dem 15. Juli bis voraussichtlich Dezember 2024, täglich zwischen 07:30 und 18:30, zur Verfügung.</string>
     <string name="rail_replacement_db_companion_service_times">Servicezeiten</string>
     <string name="rail_replacement_db_companion_call_video">Video-Anruf starten</string>
     <string name="rail_replacement_db_companion_legal_notice">Rechtliche Hinweise</string>

@@ -38,11 +38,11 @@ class SEV_Item(
 )
 
     // // cal-format: year (2024), month (1..12), day (1..31), hour (0..23), minute (0..59), second (0..59)
-    private val startOfAnnouncementPhase = arrayOf(2024, 5, 1, 0, 0, 0) // dummy
+    private val startOfAnnouncementPhase = arrayOf(2024, 7, 8, 0, 0, 0) // dummy
     private val endOfAnnouncementPhase = arrayOf(2024, 7, 14, 23, 59, 59)
 
-    private val startOfConstructionPhase1 =  arrayOf(2024, 7, 15,  0,0,0)
-    private val endOfConstructionPhase1 = arrayOf(2024, 12, 31,  23,59,59)
+    private val startOfConstructionPhase1 =  arrayOf(2024, 7, 15,  0,0,0) // Wegbegleitung
+    private val endOfConstructionPhase1 = arrayOf(2024, 12, 14,  23,59,59)
 
     private val startOfConstructionPhase2 =  arrayOf(2023, 1, 1,  0,0,0)
     private val endOfConstructionPhase2 = arrayOf(2023, 8, 1,  23,59,59)
@@ -51,8 +51,8 @@ class SEV_Item(
     private val startOfShowArCompanion_2545 = arrayOf(2023, 1, 1,  0,0,0)
     private val endOfShowArCompanion_2545 = arrayOf(2023, 8, 1,  23,59,59)
 
-    private val startOfShowAdHocBox = arrayOf(2024, 7, 15, 0, 0, 0) // dummy
-    private val endOfShowAdHocBox = arrayOf(2024, 12, 31, 23, 59, 59)
+    private val startOfShowAdHocBox = arrayOf(2024, 7, 8, 0, 0, 0) // dummy
+    private val endOfShowAdHocBox = arrayOf(2034, 12, 31, 23, 59, 59)
 
 private val sev_items = arrayOf<SEV_Item>(
 
@@ -105,11 +105,11 @@ private val sev_items = arrayOf<SEV_Item>(
         return isActualDateInRange(startOfAnnouncementPhase, endOfAnnouncementPhase)
     }
 
-    private fun isInConstructionPhase1() : Boolean {
+    fun isInConstructionPhase1() : Boolean {
         return isActualDateInRange(startOfConstructionPhase1, endOfConstructionPhase1)
     }
 
-    private fun isInConstructionPhase2() : Boolean {
+    fun isInConstructionPhase2() : Boolean {
         return isActualDateInRange(startOfConstructionPhase2, endOfConstructionPhase2)
     }
 
@@ -153,6 +153,16 @@ private val sev_items = arrayOf<SEV_Item>(
         }
         return false
     }
+
+    fun isStationSEV(stationId: String?): Boolean {
+        val stationIdAsInt = stationId?.toIntOrNull() ?: 0
+            sev_items.forEach {
+                if (it.stationId == stationIdAsInt)
+                    return true
+            }
+        return false
+    }
+
 
     fun hasSEVStationWebAppCompanionLink(evaId: String?): Boolean {
         val evaIdAsInt = evaId?.toIntOrNull() ?: 0

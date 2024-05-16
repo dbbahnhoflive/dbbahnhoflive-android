@@ -12,6 +12,11 @@
     tools:showIn="@layout/fragment_rail_replacement"
     >
 
+    <Space
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/default_space">
+    </Space>
+
     <TextView
         android:id="@+id/rail_replacement_texts"
         android:layout_width="match_parent"

@@ -43,6 +43,11 @@ public class SingleSelectionManager {
             return;
         }
 
+//        if (adapter != null) {
+//            if (selection < 0 || selection >= adapter.getItemCount())
+//                return;
+//        }
+
         final int previousSelection = this.selection;
         this.selection = selection;
 

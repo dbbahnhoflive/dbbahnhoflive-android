@@ -130,10 +130,14 @@ class NewsViewHolder(
         newsTopHeadline.text = item?.group?.title?:"" // animierte Überschrift
 
         newsHeadline.text = item?.title
-        if(item?.titleForScreenReader!=null)
-         newsHeadline.contentDescription = item.titleForScreenReader
+//        if(item?.titleForScreenReader!=null)
+//            newsHeadline.contentDescription = newsTopHeadline.text + " " + item.titleForScreenReader + "   "
+        if(item?.group?.optionalData!=null)
+            newsHeadline.contentDescription = item?.group?.optionalData
 
         newsCopy.text = item?.summary
+        if(item?.contentForScreenReader!=null)
+            newsCopy.contentDescription = item?.contentForScreenReader
 
         iconView.setImageResource(item?.groupIcon()?.icon ?: 0)
         iconView.contentDescription = item?.group?.title?:""

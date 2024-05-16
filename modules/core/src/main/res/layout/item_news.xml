@@ -13,7 +13,10 @@
     android:layout_marginStart="@dimen/default_space"
     android:layout_marginEnd="@dimen/default_space"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    android:importantForAccessibility="no"
+
+    >
 
     <LinearLayout
         android:orientation="vertical"
@@ -26,7 +29,6 @@
             android:id="@+id/animatedHeadlineScroller"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:importantForAccessibility="no"
             android:scrollbars="none">
 
             <LinearLayout
@@ -34,6 +36,7 @@
                 android:id="@+id/animatedHeadlineContainer"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+
                 >
 
                 <include android:id="@+id/line1"  layout="@layout/item_news_headline" />
@@ -140,6 +143,7 @@
 
                         android:textSize="14sp"
                         android:importantForAccessibility="yes"
+                        android:contentDescription="@string/sr_nev_copy"
                         android:text="@string/nev_copy"
 
                         />

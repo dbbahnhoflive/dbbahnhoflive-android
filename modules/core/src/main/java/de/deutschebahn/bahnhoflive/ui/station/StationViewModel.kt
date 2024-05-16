@@ -1401,7 +1401,7 @@ class StationViewModel(application: Application) : HafasTimetableViewModel(appli
         _railReplacementInfoSelectedItemLiveData.value = type
     }
 
-    private val _dbCompanionServiceAvaliable = MutableLiveData<Boolean>().apply {
+    fun isCompanionServiceAvailable() : Boolean   {
         val c = Calendar.getInstance()
 
         val now = c.timeInMillis
@@ -1416,9 +1416,14 @@ class StationViewModel(application: Application) : HafasTimetableViewModel(appli
         c.set(Calendar.MINUTE, 30)
         val today18_30h = c.timeInMillis
 
-        value =   (now >= today7_30h && now < today18_30h)
+        return (now >= today7_30h && now < today18_30h)
+
     }
-    val dbCompanionServiceAvaliableLiveData: LiveData<Boolean> = _dbCompanionServiceAvaliable
+
+    private val _dbCompanionServiceAvailable = MutableLiveData<Boolean>().apply {
+            value = isCompanionServiceAvailable()
+    }
+    val dbCompanionServiceAvailableLiveData: LiveData<Boolean> = _dbCompanionServiceAvailable
 
 
     val couponsLiveData = newsLiveData.map { newsList ->

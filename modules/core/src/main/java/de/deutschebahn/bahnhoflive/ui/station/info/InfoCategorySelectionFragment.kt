@@ -183,6 +183,7 @@ class InfoCategorySelectionFragment : CategorySelectionFragment(
         val railReplacementServicesList : MutableList<ServiceContent> = mutableListOf()
 
         railReplacementServicesList.add(ServiceContent(StaticInfo(ServiceContentType.Local.STOP_PLACE, "Haltestelleninformation", "description2")))
+        if(SEV_Static.isStationSEV(stationViewModel.station?.id))
         railReplacementServicesList.add(ServiceContent(StaticInfo(ServiceContentType.Local.DB_COMPANION, "DB Wegbegleitung", "description1")))
 
 
@@ -207,7 +208,11 @@ class InfoCategorySelectionFragment : CategorySelectionFragment(
             getText(titleResource),
             category.trackingTag
         )
+        if(serviceContents.size==1)
+         stationViewModel.setRailReplacementInfoSelectedItem(RailReplacementInfoType.STOP_PLACE)
+        else
         stationViewModel.setRailReplacementInfoSelectedItem(RailReplacementInfoType.TOP)
+
         startFragment(railReplacementDetailsFragment)
     }
 

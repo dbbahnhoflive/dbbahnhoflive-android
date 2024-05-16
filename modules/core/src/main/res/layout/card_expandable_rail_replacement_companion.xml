@@ -40,7 +40,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginTop="@dimen/default_space"
                 android:importantForAccessibility="yes"
-                android:text="@string/rail_replacement_db_companion_text"
+                android:text="@string/rail_replacement_db_companion_text1"
                 android:textSize="@dimen/textsize_28" />
 
             <Space
@@ -48,6 +48,20 @@
                 android:layout_height="@dimen/default_space_triple" />
 
             <TextView
+                android:id="@+id/service_announcement"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/default_space"
+                android:importantForAccessibility="yes"
+                android:text="@string/rail_replacement_db_companion_text2"
+                android:textSize="@dimen/textsize_28" />
+
+            <Space
+                android:layout_width="wrap_content"
+                android:layout_height="@dimen/default_space_triple" />
+
+            <TextView
+                android:id="@+id/text_servicetime"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:text="@string/rail_replacement_db_companion_service_times"
@@ -55,7 +69,6 @@
                 android:textStyle="bold" />
 
             <Space
-
                 android:layout_width="wrap_content"
                 android:layout_height="@dimen/default_space_half" />
 
@@ -64,6 +77,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:text="Mo - So: 07:30 - 18:30"
+                android:contentDescription="Montag bis Sonntag 7 Uhr dreissig bis achtzehn Uhr dreissig"
                 android:textSize="@dimen/textsize_28" />
 
             <Space
@@ -94,13 +108,21 @@
                 android:layout_width="wrap_content"
                 android:layout_height="@dimen/default_space_double" />
 
-            <include android:id="@+id/layout_imprint" layout="@layout/link_with_text"/>
+            <include
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+
+                android:id="@+id/layout_imprint" layout="@layout/link_with_text"/>
 
             <Space
                 android:layout_width="wrap_content"
                 android:layout_height="@dimen/default_space_double" />
 
-            <include android:id="@+id/layout_legal_policy" layout="@layout/link_with_text"/>
+            <include
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+
+                android:id="@+id/layout_legal_policy" layout="@layout/link_with_text"/>
 
 
         </LinearLayout>

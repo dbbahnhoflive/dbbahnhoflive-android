@@ -34,6 +34,16 @@ class RailReplacementStopInfoViewHolder(
             iconView.setImageResource(IconMapper.contentIconForType(it))
         }
 
+        // bahnhof.de öffnen
+        binding.linkReplacementTraffic.visibility = View.VISIBLE
+        binding.linkReplacementTraffic.setOnClickListener {
+            itemView.context?.let { it1 ->
+                Intent(
+                    Intent.ACTION_VIEW,
+                    Uri.parse("http://bahnhof.de/bfl/ev-nw")
+                ).startSafely(it1)
+            }
+        }
     }
 
     private fun setScreenReaderText()  {
@@ -89,16 +99,8 @@ class RailReplacementStopInfoViewHolder(
             newsCopy.visibility = View.VISIBLE
 
             railReplacementNev.visibility = View.VISIBLE
-            railReplacementNev2.visibility = View.VISIBLE
-            linkReplacementTraffic.visibility = View.VISIBLE
-            linkReplacementTraffic.setOnClickListener {
-                itemView.context?.let { it1 ->
-                    Intent(
-                        Intent.ACTION_VIEW,
-                        Uri.parse("http://bahnhof.de/bfl/ev-nw")
-                    ).startSafely(it1)
-                }
-            }
+//            railReplacementNev2.visibility = View.VISIBLE
+
             setScreenReaderText()
         }
     }
@@ -138,9 +140,13 @@ class RailReplacementStopInfoViewHolder(
                     binding.railReplacementEntryLabel.isVisible = true
                 }
 
+//                binding.railReplacementEntryLabel.text = "An diesem Bahnhof finden Sie folgende Ersatzhaltestelle(n):"
+//                binding.railReplacementEntryLabel.isVisible = true
+
                 railReplacementText += railReplacementTexts.text
                 railReplacementText += itemView.context.getString(R.string.rail_replacement_directions)
                 railReplacementText += directions
+
 
             }
 
