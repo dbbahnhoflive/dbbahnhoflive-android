@@ -104,7 +104,6 @@ class RailReplacementAdapter(
             stationViewModel.dbCompanionServiceAvailableLiveData.observe(holder.itemView.context as LifecycleOwner) { serviceIsAvailable->
                 holder.setDbCompanionServiceState(serviceIsAvailable)
             }
-
             holder.setDbCompanionServiceState(stationViewModel.isCompanionServiceAvailable())
 
             holder
@@ -131,6 +130,9 @@ class RailReplacementAdapter(
     }
 
     val selectedItem get() = singleSelectionManager.getSelectedItem(serviceContents)
+
+    var selectedItemIndex : Int get() = singleSelectionManager.selection
+        set(value) = if(value>=0 && value<serviceContents.size) singleSelectionManager.selection=value else {}
 
     companion object {
         const val VIEW_TYPE_STOP_PLACE_INFORMATION = 0

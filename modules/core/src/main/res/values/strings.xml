@@ -476,6 +476,7 @@
     <string name="rail_replacement_db_companion_call_video">Video-Anruf starten</string>
     <string name="rail_replacement_db_companion_legal_notice">Rechtliche Hinweise</string>
     <string name="rail_replacement_db_companion_hint">So funktioniert der Service</string>
+    <string name="rail_replacement_db_companion_help_headline">So funktioniert DB-Wegbegleitung</string>
     <string name="rail_replacement_db_companion_imprint">Impressum</string>
     <string name="rail_replacement_db_companion_video_call_url">https://int.help-me-iat.comp.db.de/</string>
     <string name="rail_replacement_db_companion_imprint_url">https://feat-bahnhof-live-pages.help-me-iat.comp.db.de/static/bahnhof-live/imprint</string>
@@ -484,6 +485,10 @@
     <string name="rail_replacement_db_companion_no_service_body">Dieser Service ist täglich zwischen 7:30 und 18:30 Uhr verfügbar.</string>
     <string name="rail_replacement_db_companion_service_state_available">Service verfügbar</string>
     <string name="rail_replacement_db_companion_service_state_not_available">Zur Zeit nicht verfügbar</string>
+
+    <string name="rail_replacement_db_companion_help_text">Starten Sie Ihren Videoanruf am Bahnhof und lassen Sie sich von unserem geschulten Personal zu Ihrer Ersatzhaltestelle begleiten.\n\nUm den Anruf zu starten müssen Sie die Kamera, das Mikrofon und den Standort freigeben. Ansonsten kann der Anruf nicht gestartet werden. Bleiben Sie sich Ihrer eigenen Fähigkeiten bewusst und verlassen Sie sich stets auf Ihre eigenen Sinne. Mehr dazu erfahren Sie unter Nutzungsbedingungen.\n\nDer Service ist täglich von 07:30 Uhr bis 18:30 Uhr an folgenden Bahnhöfen mit Ersatzverkehr erreichbar.</string>
+
+
 
     <string name="platform_information">Gleisinformationen</string>
     <string name="platform_information_headline">Informationen zu den Gleisen vor Ort</string>

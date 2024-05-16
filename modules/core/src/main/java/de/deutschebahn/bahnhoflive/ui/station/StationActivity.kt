@@ -53,6 +53,7 @@ import de.deutschebahn.bahnhoflive.ui.station.accessibility.AccessibilityFragmen
 import de.deutschebahn.bahnhoflive.ui.station.elevators.ElevatorStatusListsFragment
 import de.deutschebahn.bahnhoflive.ui.station.features.StationFeaturesFragment
 import de.deutschebahn.bahnhoflive.ui.station.info.InfoCategorySelectionFragment
+import de.deutschebahn.bahnhoflive.ui.station.info.RailReplacementCompanionHelpFragment
 import de.deutschebahn.bahnhoflive.ui.station.info.RailReplacementFragment
 import de.deutschebahn.bahnhoflive.ui.station.info.StaticInfo
 import de.deutschebahn.bahnhoflive.ui.station.localtransport.LocalTransportFragment
@@ -532,10 +533,19 @@ class StationActivity : BaseActivity(), StationProvider, RootProvider, TrackingM
         }
     }
 
-    private fun showRailReplacementDetailed(what:RailReplacementInfoType) {
+
+    override fun showDbCompanionHelp() {
+//        if (removeFeaturesFragment) removeFeaturesFragment()
+        showInfoFragment(false)
+        if (RailReplacementCompanionHelpFragment.TAG != stationViewModel.topInfoFragmentTag) {
+            infoFragment?.push(RailReplacementCompanionHelpFragment())
+        }
+    }
+
+    private fun showRailReplacementDetailed(_what:RailReplacementInfoType) {
         showInfoFragment(false)
 
-        var w = what
+        var what = _what
 
         if (RailReplacementFragment.TAG != stationViewModel.topInfoFragmentTag) {
 
@@ -546,7 +556,7 @@ class StationActivity : BaseActivity(), StationProvider, RootProvider, TrackingM
             if(SEV_Static.isStationSEV(station?.id))
             railReplacementServicesList.add(ServiceContent(StaticInfo(ServiceContentType.Local.DB_COMPANION, "DB Wegbegleitung", "description1")))
             else
-             w = RailReplacementInfoType.STOP_PLACE
+             what = RailReplacementInfoType.STOP_PLACE
 
             infoFragment?.push(RailReplacementFragment.create(
                 ArrayList(railReplacementServicesList),
@@ -554,7 +564,7 @@ class StationActivity : BaseActivity(), StationProvider, RootProvider, TrackingM
                 TrackingManager.Category.SCHIENENERSATZVERKEHR))
         }
 
-        stationViewModel.setRailReplacementInfoSelectedItem(w)
+        stationViewModel.setRailReplacementInfoSelectedItem(what)
 
     }
     override fun showRailReplacement() {
@@ -632,9 +642,7 @@ class StationActivity : BaseActivity(), StationProvider, RootProvider, TrackingM
         stationViewModel.navigateToInfo(serviceContentType)
     }
 
-//    fun getStation(): Station? {
-//        return station
-//    }
+
 
     override fun createRootFragment(historyFragment: HistoryFragment): Fragment {
         if (historyFragment === overviewFragment) {

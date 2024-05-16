@@ -33,29 +33,29 @@ class RailReplacementCompanionViewHolder(
         }
 
 
-
-        if(SEV_Static.isInAnnouncementPhase()) {
-
-            binding.serviceAnnouncement.isVisible=true
-
-            binding.servicetimes.isVisible=false
-            binding.textServicetime.isVisible=false
-            binding.linkVideoCall.isVisible=false
-        }
-        else
-            if(SEV_Static.isInConstructionPhase1()) {
+// todo
+//        if(SEV_Static.isInAnnouncementPhase()) {
+//
+//            binding.serviceAnnouncement.isVisible=true
+//
+//            binding.servicetimes.isVisible=false
+//            binding.textServicetime.isVisible=false
+//            binding.linkVideoCall.isVisible=false
+//        } else
+//            if(SEV_Static.isInConstructionPhase1()) {
                 binding.serviceAnnouncement.isVisible=false
                 binding.servicetimes.isVisible=true
                 binding.textServicetime.isVisible=true
                 binding.linkVideoCall.isVisible=true
-            }
+//            }
 
 
 
 
         binding.linkVideoCall.setOnClickListener {
 
-            val url = itemView.context.getString(R.string.rail_replacement_db_companion_video_call_url)
+            val url =
+                itemView.context.getString(R.string.rail_replacement_db_companion_video_call_url)
             val intent = CustomTabsIntent.Builder()
                 .setShowTitle(false)
                 .setUrlBarHidingEnabled(true)
@@ -67,20 +67,21 @@ class RailReplacementCompanionViewHolder(
 
         binding.layoutHint.let {
             it.linkButton.setImageResource(R.drawable.app_links_pfeil)
-            it.linkText.text = itemView.context.getString(R.string.rail_replacement_db_companion_hint)
+            it.linkText.text =
+                itemView.context.getString(R.string.rail_replacement_db_companion_hint)
             it.layout.contentDescription = it.linkText.text
             it.layout.setOnClickListener{
-
-                selectionManager.clearSelection()
                 companionHintStarter()
             }
         }
 
         binding.layoutImprint.let {
-            it.linkText.text = itemView.context.getString(R.string.rail_replacement_db_companion_imprint)
+            it.linkText.text =
+                itemView.context.getString(R.string.rail_replacement_db_companion_imprint)
             it.layout.contentDescription = it.linkText.text
             it.layout.setOnClickListener {
-                val url = itemView.context.getString(R.string.rail_replacement_db_companion_imprint_url)
+                val url =
+                    itemView.context.getString(R.string.rail_replacement_db_companion_imprint_url)
                 val intent = CustomTabsIntent.Builder()
                     .build()
                 activityStarter(intent, url)
@@ -88,11 +89,13 @@ class RailReplacementCompanionViewHolder(
         }
 
         binding.layoutLegalPolicy.let {
-            it.linkText.text = itemView.context.getString(R.string.rail_replacement_db_companion_legal_notice)
+            it.linkText.text =
+                itemView.context.getString(R.string.rail_replacement_db_companion_legal_notice)
             it.layout.contentDescription = it.linkText.text
 
             it.layout.setOnClickListener {
-                val url = itemView.context.getString(R.string.rail_replacement_db_companion_legal_notice_url)
+                val url =
+                    itemView.context.getString(R.string.rail_replacement_db_companion_legal_notice_url)
                 val intent = CustomTabsIntent.Builder()
                     .build()
                 activityStarter(intent, url)
@@ -113,7 +116,9 @@ class RailReplacementCompanionViewHolder(
         if(SEV_Static.isInConstructionPhase1()==false)
             isAvailable=false
 
-        binding.linkVideoCall.isEnabled = isAvailable
+        isAvailable=true // todo
+
+//        binding.linkVideoCall.isEnabled = isAvailable
 
 
         @StringRes

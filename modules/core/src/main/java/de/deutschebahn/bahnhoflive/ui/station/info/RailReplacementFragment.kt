@@ -34,7 +34,7 @@ class RailReplacementFragment :
 
     private lateinit var serviceContents: List<ServiceContent>
 
-
+    var selectedIndex : Int? = 0
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -74,7 +74,7 @@ class RailReplacementFragment :
             },
             {
                 // companionHintStarter
-                (activity as StationActivity).showAccessibility()
+                (activity as StationActivity).showDbCompanionHelp()
             },
             { // checkIfServiceIsAvailable
 
@@ -114,12 +114,20 @@ class RailReplacementFragment :
                 arguments
             )
         )
+
+        selectedIndex?.let {
+            if (it != 0) {
+                adapter?.selectedItemIndex = it
+            }
+        }
     }
 
     override fun onStop() {
         if (stationViewModel.topInfoFragmentTag == RailReplacementFragment.TAG) {
             stationViewModel.topInfoFragmentTag = null
         }
+
+        selectedIndex = adapter?.selectedItemIndex
 
         super.onStop()
     }

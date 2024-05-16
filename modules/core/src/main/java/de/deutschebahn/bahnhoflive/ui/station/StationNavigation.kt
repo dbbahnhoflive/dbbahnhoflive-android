@@ -33,4 +33,6 @@ interface StationNavigation : TimetablesFragment.Host {
     fun showLockers(removeFeaturesFragment: Boolean)
     fun showMobilityServiceNumbers()
     fun showInfo(serviceContentType: String, removeFeaturesFragment: Boolean)
+
+    fun showDbCompanionHelp()
 }

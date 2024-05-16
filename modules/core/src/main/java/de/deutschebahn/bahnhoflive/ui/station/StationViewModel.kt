@@ -1416,8 +1416,8 @@ class StationViewModel(application: Application) : HafasTimetableViewModel(appli
         c.set(Calendar.MINUTE, 30)
         val today18_30h = c.timeInMillis
 
-        return (now >= today7_30h && now < today18_30h)
-
+     //   return (now >= today7_30h && now < today18_30h)
+return true // todo
     }
 
     private val _dbCompanionServiceAvailable = MutableLiveData<Boolean>().apply {
