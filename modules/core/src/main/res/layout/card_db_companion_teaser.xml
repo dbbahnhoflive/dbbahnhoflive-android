@@ -7,74 +7,94 @@
   -->
 
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    style="@style/App.Widget.CardContainer"
     android:layout_width="0dp"
     android:layout_height="match_parent"
-    android:layout_weight="@integer/single_cell_weight"
-    tools:showIn="@layout/fragment_station">
+    android:layout_weight="1"
+    style="@style/App.Widget.CardContainer"
+    android:padding="@dimen/card_margin"
+    tools:layout_height="90dp"
+    tools:layout_width="match_parent"
+    >
+
+<!--    tools:showIn="@layout/fragment_station">-->
 
     <androidx.cardview.widget.CardView
         style="@style/App.Widget.Card"
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
-        <RelativeLayout
+        <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:background="@color/db_way_companion">
+            android:background="@color/db_way_companion"
+            android:orientation="vertical">
 
             <View
-                android:id="@+id/top_frame"
                 android:layout_width="match_parent"
                 android:layout_height="@dimen/default_space_double"
-                tools:ignore="NestedWeights">
-
-            </View>
+                android:background="@drawable/schraege_linie"/>
 
 
-            <TextView
-                android:id="@+id/headline"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_below="@+id/top_frame"
-                android:layout_marginStart="@dimen/default_space_double"
-                android:contentDescription="@string/teaser_db_companion_sr_content_description"
-                android:text="@string/teaser_db_companion_headline"
-                android:textColor="@android:color/white"
-                android:textSize="@dimen/textsize_h3plus"
-                android:textStyle="bold" />
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:orientation="horizontal">
 
-            
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_below="@+id/headline"
-                android:layout_alignStart="@+id/headline"
-                android:layout_toStartOf="@+id/icon"
-                android:layout_marginTop="@dimen/default_space_half"
-                android:importantForAccessibility="no"
-                android:text="@string/teaser_db_companion_copy"
-                android:textColor="@android:color/white"
-                android:textSize="@dimen/textsize_h3" />
+                <LinearLayout
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="3"
+                    android:paddingStart="@dimen/default_space_double"
+                    android:paddingTop="@dimen/default_space"
+                    android:orientation="vertical"
+                    tools:ignore="RtlSymmetry">
+
+                    <TextView
+                        android:id="@+id/headline"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:contentDescription="@string/teaser_db_companion_sr_content_description"
+                        android:text="@string/teaser_db_companion_headline"
+                        android:textColor="@android:color/white"
+                        android:textSize="@dimen/textsize_h3plus"
+                        android:textStyle="bold" />
 
 
-            <ImageView
-                android:id="@+id/icon"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="@dimen/default_space_half"
+                        android:importantForAccessibility="no"
+                        android:text="@string/teaser_db_companion_copy"
+                        android:textColor="@android:color/white"
+                        android:textSize="@dimen/textsize_h3" />
 
-                android:layout_below="@+id/top_frame"
-                android:layout_alignParentEnd="true"
+                </LinearLayout>
 
-                android:layout_marginEnd="@dimen/default_space_quadruple"
-                android:importantForAccessibility="no"
-                android:paddingHorizontal="@dimen/default_space_half"
-                android:src="@drawable/app_nev_icon_round"
+                <ImageView
+                    android:id="@+id/icon"
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_gravity="center"
+                    android:paddingVertical="4dp"
+                    android:layout_weight="1"
 
-                />
+                    android:adjustViewBounds="true"
+                    android:importantForAccessibility="no"
 
-        </RelativeLayout>
+                    android:scaleType="fitCenter"
+                    android:src="@drawable/app_nev_icon_round"
+                    tools:src="@drawable/app_aufzug_h1" />
+
+                <androidx.legacy.widget.Space
+                    android:layout_width="24dp"
+                    android:layout_height="wrap_content" />
+
+            </LinearLayout>
+
+        </LinearLayout>
 
     </androidx.cardview.widget.CardView>
 </FrameLayout>

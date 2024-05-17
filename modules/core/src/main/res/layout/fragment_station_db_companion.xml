@@ -6,7 +6,7 @@
     android:id="@+id/dbCompanionTeaser"
 
     android:layout_width="match_parent"
-    android:layout_height="86dp"
+    android:layout_height="90dp"
     android:layout_marginTop="@dimen/default_space"
     android:layout_marginBottom="@dimen/default_space"
     android:layout_marginHorizontal="@dimen/default_space"

@@ -34,7 +34,7 @@ class SEV_Item(
     val sev_Name:String="",
     val isInBauPhase1:Boolean=false,
     val isInBauPhase2:Boolean=false,
-    val showDbCompanionAdHocBox:Boolean=false // ab 6.8. (isInBauPhase2=true)
+    val showDbCompanionAdHocBox:Boolean=false
 )
 
     // // cal-format: year (2024), month (1..12), day (1..31), hour (0..23), minute (0..59), second (0..59)
