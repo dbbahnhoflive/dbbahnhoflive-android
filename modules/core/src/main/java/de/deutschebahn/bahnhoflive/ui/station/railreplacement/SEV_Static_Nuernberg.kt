@@ -109,10 +109,10 @@ class SEV_Item(
 
     fun isStationSEV(stationId: String?): Boolean {
         val stationIdAsInt = stationId?.toIntOrNull() ?: 0
-            sev_items.forEach {
-                if (it.stationId == stationIdAsInt)
-                    return true
-            }
+        sev_items.forEach {
+            if (it.stationId == stationIdAsInt)
+                return true
+        }
         return false
     }
 

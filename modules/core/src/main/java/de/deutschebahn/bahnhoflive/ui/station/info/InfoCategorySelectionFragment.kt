@@ -181,11 +181,27 @@ class InfoCategorySelectionFragment : CategorySelectionFragment(
 
     private fun addRailReplacement(): SimpleDynamicCategory {
 
-        val railReplacementServicesList : MutableList<ServiceContent> = mutableListOf()
+        val railReplacementServicesList: MutableList<ServiceContent> = mutableListOf()
 
-        railReplacementServicesList.add(ServiceContent(StaticInfo(ServiceContentType.Local.STOP_PLACE, "Haltestelleninformation", "description2")))
-        if(SEV_Static_Nuernberg.isStationSEV(stationViewModel.station?.id))
-        railReplacementServicesList.add(ServiceContent(StaticInfo(ServiceContentType.Local.DB_COMPANION, "DB Wegbegleitung", "description1")))
+        railReplacementServicesList.add(
+            ServiceContent(
+                StaticInfo(
+                    ServiceContentType.Local.STOP_PLACE,
+                    "Haltestelleninformation",
+                    "description2"
+                )
+            )
+        )
+        if (SEV_Static_Nuernberg.isStationSEV(stationViewModel.station?.id))
+            railReplacementServicesList.add(
+                ServiceContent(
+                    StaticInfo(
+                        ServiceContentType.Local.DB_COMPANION,
+                        "DB Wegbegleitung",
+                        "description1"
+                    )
+                )
+            )
 
 
         return SimpleDynamicCategory(
@@ -194,7 +210,11 @@ class InfoCategorySelectionFragment : CategorySelectionFragment(
             TrackingManager.Category.SCHIENENERSATZVERKEHR
         ) { category ->
             trackCategoryTap(category)
-            startRailReplacementFragment(railReplacementServicesList, category, R.string.rail_replacement)
+            startRailReplacementFragment(
+                railReplacementServicesList,
+                category,
+                R.string.rail_replacement
+            )
 //            startFragment(RailReplacementFragment())
         }
     }
@@ -209,10 +229,10 @@ class InfoCategorySelectionFragment : CategorySelectionFragment(
             getText(titleResource),
             category.trackingTag
         )
-        if(serviceContents.size==1)
-         stationViewModel.setRailReplacementInfoSelectedItem(RailReplacementInfoType.STOP_PLACE)
+        if (serviceContents.size == 1)
+            stationViewModel.setRailReplacementInfoSelectedItem(RailReplacementInfoType.STOP_PLACE)
         else
-        stationViewModel.setRailReplacementInfoSelectedItem(RailReplacementInfoType.TOP)
+            stationViewModel.setRailReplacementInfoSelectedItem(RailReplacementInfoType.TOP)
 
         startFragment(railReplacementDetailsFragment)
     }

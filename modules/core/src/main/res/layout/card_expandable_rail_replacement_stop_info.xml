@@ -181,7 +181,7 @@
                     android:text="@string/nev_text_2"
                     android:textSize="@dimen/textsize_28" />
 
-                <Space
+                <android.widget.Space
                     android:layout_width="match_parent"
                     android:layout_height="@dimen/default_space_double"/>
 
