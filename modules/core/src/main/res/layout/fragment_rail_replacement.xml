@@ -110,8 +110,8 @@
                         app:layout_constraintStart_toEndOf="@+id/icon"
                         app:layout_constraintTop_toBottomOf="@id/divider"
                         app:layout_constraintVertical_chainStyle="packed"
-                        android:text="@string/nev_date_range"
-                        android:contentDescription="@string/sr_nev_date_range"
+                        android:text="@string/sev_date_range"
+                        android:contentDescription="@string/sr_sev_date_range"
                         tools:text="@tools:sample/lorem/random" />
 
                     <ImageButton

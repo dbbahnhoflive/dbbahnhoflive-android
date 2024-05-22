@@ -76,8 +76,8 @@
                 android:id="@+id/servicetimes"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="Mo - So: 07:30 - 18:30"
-                android:contentDescription="Montag bis Sonntag 7 Uhr dreissig bis achtzehn Uhr dreissig"
+                android:text="@string/sev_db_companion_service_time_range"
+                android:contentDescription="@string/sr_sev_db_companion_service_time_range"
                 android:textSize="@dimen/textsize_28" />
 
             <Space

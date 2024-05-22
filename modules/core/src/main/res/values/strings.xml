@@ -444,9 +444,12 @@
     <string name="nev_text_1">Aufgrund von Bauarbeiten auf der „Riedbahn“ kommt es zwischen Frankfurt (Main) Stadion und Mannheim Hauptbahnhof von Juli bis Dezember 2024 zu Einschränkungen im Zugverkehr. Ein Ersatzverkehr mit Bussen ist eingerichtet.</string>
     <string name="nev_text_2">Die Sanierung erfolgt in zwei Abschnitten. Zunächst wird die Strecke zwischen Rottendorf und Neustadt (Aisch) Bahnhof vom 26. Mai bis 05. August 2023 für den Zugverkehr komplett gesperrt. Anschließend erfolgt eine Sperrung der Strecke zwischen Neustadt (Aisch) Bahnhof und Fürth (Bay) Hauptbahnhof vom 06. August bis 11. September 2023. Durch die Sperrung in dem zweiten genannten Zeitraum erfolgt auf der Strecke Markt Erlbach - Siegelsdorf - Fürth (Bay) Hauptbahnhof zudem ebenfalls kein Zugverkehr.\n\nDarüber hinaus entfallen über beide Bauphasen die meisten Züge der Linie RB80 zwischen Würzburg Hauptbahnhof und Marktbreit.\n\nWeiterhin kommt es in den späten Abend- und frühen Morgenstunden zwischen Nürnberg Hauptbahnhof und Würzburg Hauptbahnhof über den gesamten Zeitraum hinweg zu Zugausfällen.\n\nWeiterführende Informationen finden Sie unter bahnhof.de"</string>
 
-    <string name="nev_date_range">15.07.24 - 31.12.24</string>
-    <string name="sr_nev_date_range">vom Fünfzehnten Juli 24 bis Einundreissigsten Dezember 24</string>
+    <string name="sev_date_range">15.07.24 - 14.12.24</string>
+    <string name="sr_sev_date_range">vom Fünfzehnten Juli 24 bis Vierzehnten Dezember 24</string>
 
+    <string name="sev_db_companion_service_time_range_help">Montag bis Freitag von 7 - 22 Uhr</string>
+    <string name="sev_db_companion_service_time_range">Mo. - Fr.: 7 - 22 Uhr</string>
+    <string name="sr_sev_db_companion_service_time_range">Montag bis Freitag. Sieben bis Zweiundzwanzig Uhr</string>
 
     <string name="link_hint_bahnhof_de">Weiterführende Informationen finden Sie unter bahnhof.de</string>
     <string name="open_link_bahnhof_de">"bahnhof.de öffnen"</string>

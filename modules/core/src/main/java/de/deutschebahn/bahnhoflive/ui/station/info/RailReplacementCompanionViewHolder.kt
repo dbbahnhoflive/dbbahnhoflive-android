@@ -9,7 +9,7 @@ import de.deutschebahn.bahnhoflive.backend.local.model.ServiceContent
 import de.deutschebahn.bahnhoflive.databinding.CardExpandableRailReplacementCompanionBinding
 import de.deutschebahn.bahnhoflive.ui.Status
 import de.deutschebahn.bahnhoflive.ui.station.CommonDetailsCardViewHolder
-import de.deutschebahn.bahnhoflive.ui.station.railreplacement.SEV_Static
+import de.deutschebahn.bahnhoflive.ui.station.railreplacement.SEV_Static_Riedbahn
 import de.deutschebahn.bahnhoflive.view.SingleSelectionManager
 
 
@@ -33,21 +33,20 @@ class RailReplacementCompanionViewHolder(
         }
 
 
-// todo
-//        if(SEV_Static.isInAnnouncementPhase()) {
-//
-//            binding.serviceAnnouncement.isVisible=true
-//
-//            binding.servicetimes.isVisible=false
-//            binding.textServicetime.isVisible=false
-//            binding.linkVideoCall.isVisible=false
-//        } else
-//            if(SEV_Static.isInConstructionPhase1()) {
+        if (SEV_Static_Riedbahn.isInAnnouncementPhase()) {
+
+            binding.serviceAnnouncement.isVisible = true
+
+            binding.servicetimes.isVisible = false
+            binding.textServicetime.isVisible = false
+            binding.linkVideoCall.isVisible = false
+        } else
+            if (SEV_Static_Riedbahn.isInConstructionPhase()) {
                 binding.serviceAnnouncement.isVisible=false
                 binding.servicetimes.isVisible=true
                 binding.textServicetime.isVisible=true
                 binding.linkVideoCall.isVisible=true
-//            }
+            }
 
 
 
@@ -103,33 +102,16 @@ class RailReplacementCompanionViewHolder(
         }
 
 
-
-
     }
 
-    fun setDbCompanionServiceState(_isAvailable : Boolean ) {
-
-
-        var isAvailable = _isAvailable
-
-
-        if(SEV_Static.isInConstructionPhase1()==false)
-            isAvailable=false
-
-        isAvailable=true // todo
-
-//        binding.linkVideoCall.isEnabled = isAvailable
-
+    fun setDbCompanionServiceState(isAvailable : Boolean ) {
+        binding.linkVideoCall.isEnabled = isAvailable
 
         @StringRes
         val statusText = if(isAvailable) R.string.rail_replacement_db_companion_service_state_available else R.string.rail_replacement_db_companion_service_state_not_available
-
         val status : Status = if(isAvailable) Status.POSITIVE else Status.NEGATIVE
 
         this.setStatus(status, statusText)
-//        statusView?.text = if(isAvailable) itemView.context.getString(R.string.rail_replacement_db_companion_service_state_available) else
-//            itemView.context.getString(R.string.rail_replacement_db_companion_service_state_not_available)
-
     }
     private fun setScreenReaderText()  {
 

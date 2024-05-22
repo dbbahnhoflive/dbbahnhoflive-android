@@ -1,31 +1,10 @@
 package de.deutschebahn.bahnhoflive.ui.station.railreplacement
 
 import de.deutschebahn.bahnhoflive.repository.MergedStation
-import java.util.Calendar
-import java.util.GregorianCalendar
+import de.deutschebahn.bahnhoflive.util.isActualDateInRange
 
-typealias DateArray = Array<Int>
 
-fun Calendar.getMillisFromDatesArray(dates: DateArray): Long {
-    var ret = 0L
-    try {
-        if (dates.size >= 6)
-            this.set(dates[0], dates[1] - 1, dates[2], dates[3], dates[4], dates[5])
-    } catch (_: Exception) {
-
-    }
-
-    try {
-        ret = this.timeInMillis
-    } catch (_: Exception) {
-
-    }
-
-    return ret
-
-}
-
-object SEV_Static {
+object SEV_Static_Nuernberg {
 
 class SEV_Item(
     val stationId:Int=0,
@@ -54,12 +33,12 @@ class SEV_Item(
     private val startOfShowAdHocBox = arrayOf(2024, 7, 8, 0, 0, 0) // dummy
     private val endOfShowAdHocBox = arrayOf(2034, 12, 31, 23, 59, 59)
 
-private val sev_items = arrayOf<SEV_Item>(
+    private val sev_items = arrayOf<SEV_Item>(
 
 //    SEV_Item(2545, 8000152, 8089299, "Hannover",true,true, true), // Test Hannover
-    SEV_Item(1866, 8000105, 8098105, "Frankfurt (Main) Hbf",true,false, true), // Test Hannover
+     SEV_Item(1866, 8000105, 8098105, "Frankfurt (Main) Hbf",true,false, true), // Test Hannover
 
-)
+   )
 
 
     fun containsStationId(stationId: String?): Boolean {
@@ -83,22 +62,6 @@ private val sev_items = arrayOf<SEV_Item>(
                 list.add(it.sev_evaId.toString())
             }
         }
-    }
-
-    /**
-     * checks if now >start and<=end
-     */
-    private fun isActualDateInRange(startDate:DateArray, endDate:DateArray) : Boolean {
-
-        val cal = GregorianCalendar.getInstance()
-        val now = cal.timeInMillis
-
-        val start = cal.getMillisFromDatesArray(startDate)
-        val end = cal.getMillisFromDatesArray(endDate)
-
-        val isInRange = (now > start) && (now <= end)
-
-        return isInRange
     }
 
     fun isInAnnouncementPhase() : Boolean {
@@ -143,16 +106,6 @@ private val sev_items = arrayOf<SEV_Item>(
         return isStationInConstructionPhase(station.id)
     }
 
-    fun hasStationDbCompanion(stationId: String?): Boolean {
-        val stationIdAsInt = stationId?.toIntOrNull() ?: 0
-        if (isInConstructionPhase1()) {
-            sev_items.forEach {
-                if (it.stationId == stationIdAsInt)
-                    return it.showDbCompanionAdHocBox
-            }
-        }
-        return false
-    }
 
     fun isStationSEV(stationId: String?): Boolean {
         val stationIdAsInt = stationId?.toIntOrNull() ?: 0

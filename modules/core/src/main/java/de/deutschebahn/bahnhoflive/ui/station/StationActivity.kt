@@ -61,7 +61,7 @@ import de.deutschebahn.bahnhoflive.ui.station.localtransport.LocalTransportViewM
 import de.deutschebahn.bahnhoflive.ui.station.locker.LockerFragment
 import de.deutschebahn.bahnhoflive.ui.station.occupancy.OccupancyExplanationFragment
 import de.deutschebahn.bahnhoflive.ui.station.parking.ParkingListFragment
-import de.deutschebahn.bahnhoflive.ui.station.railreplacement.SEV_Static
+import de.deutschebahn.bahnhoflive.ui.station.railreplacement.SEV_Static_Riedbahn
 import de.deutschebahn.bahnhoflive.ui.station.search.ContentSearchFragment
 import de.deutschebahn.bahnhoflive.ui.station.settings.SettingsFragment
 import de.deutschebahn.bahnhoflive.ui.station.shop.ShopCategorySelectionFragment
@@ -553,7 +553,7 @@ class StationActivity : BaseActivity(), StationProvider, RootProvider, TrackingM
 
             railReplacementServicesList.add(ServiceContent(StaticInfo(ServiceContentType.Local.STOP_PLACE, "Haltestelleninformation", "description2")))
 
-            if(SEV_Static.isStationSEV(station?.id))
+            if(SEV_Static_Riedbahn.isStationSPNV_Stop(station?.id))
             railReplacementServicesList.add(ServiceContent(StaticInfo(ServiceContentType.Local.DB_COMPANION, "DB Wegbegleitung", "description1")))
             else
              what = RailReplacementInfoType.STOP_PLACE

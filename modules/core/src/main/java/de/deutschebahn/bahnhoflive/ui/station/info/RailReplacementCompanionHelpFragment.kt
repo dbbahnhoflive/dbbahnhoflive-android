@@ -19,11 +19,10 @@ import androidx.fragment.app.activityViewModels
 import de.deutschebahn.bahnhoflive.R
 import de.deutschebahn.bahnhoflive.databinding.FragmentDbCompanionHelpBinding
 import de.deutschebahn.bahnhoflive.ui.station.StationViewModel
-import java.io.BufferedReader
+import de.deutschebahn.bahnhoflive.ui.station.railreplacement.SEV_Static_Riedbahn
+import de.deutschebahn.bahnhoflive.util.AssetX
 import java.io.IOException
-import java.io.InputStream
-import java.io.InputStreamReader
-import java.nio.charset.StandardCharsets
+
 
 class RailReplacementCompanionHelpFragment : Fragment() {
 
@@ -61,18 +60,6 @@ class RailReplacementCompanionHelpFragment : Fragment() {
         super.onStop()
     }
 
-    @Throws(IOException::class)
-    private fun getString(`is`: InputStream): String {
-        val inputStreamReader = InputStreamReader(`is`, StandardCharsets.UTF_8)
-        val br = BufferedReader(inputStreamReader)
-        var line: String?
-        val sb = StringBuilder()
-        while ((br.readLine().also { line = it }) != null) {
-            sb.append(line)
-        }
-        return sb.toString()
-    }
-
     private fun createWebViewAndLoadContent(binding: FragmentDbCompanionHelpBinding) {
 
         binding.webview.getSettings().javaScriptEnabled = true
@@ -84,70 +71,38 @@ class RailReplacementCompanionHelpFragment : Fragment() {
                 startActivity(intent)
                 return true
             }
-//            override fun shouldOverrideUrlLoading(view: WebView, url: String): Boolean {
-//                if (url.startsWith("mailto:")) {
-//                    val emailIntent = Intent(Intent.ACTION_SENDTO, Uri.parse(url))
-//                    try {
-//                        startActivity(emailIntent)
-//                    } catch (ignored: ActivityNotFoundException) {
-//                    }
-//                    return true
-//                } else if ("app:lizenzen.html" == url) {
-//                    val intent = WebViewActivity.createIntent(context, "lizenzen.html", "Lizenzen")
-//                    startActivity(intent)
-//                    return true
-//                } else if (url.startsWith("settings")) {
-//                    //FIXME url.contains() should not be used for these. Yes, maybe there are no 'normal' links containing these keywords, but still.
-//
-//                    if (url.contains("location")) {
-//                        val i = Intent()
-//                        i.setAction(Settings.ACTION_LOCATION_SOURCE_SETTINGS)
-//                        startActivity(i)
-//                    } else if (url.contains("bluetooth")) {
-//                        //
-//                        val i = Intent()
-//                        i.setAction(Settings.ACTION_BLUETOOTH_SETTINGS)
-//                        startActivity(i)
-//                    } else if (url.contains("push")) {
-//                        val i = Intent()
-//                        i.setAction(Settings.ACTION_NOTIFICATION_LISTENER_SETTINGS)
-//                        startActivity(i)
-//                    } else if (url.contains("analytics")) {
-//                        val consentState: ConsentState = trackingManager.consentState
-//                        var alertMessage = R.string.settings_tracking_active_msg
-//                        if (!consentState.trackingAllowed) {
-//                            alertMessage = R.string.settings_tracking_not_active_msg
-//                        }
-//
-//
-//                    }
-//
-//                    return true
-//                } else {
-//                    val intent = Intent(Intent.ACTION_VIEW, Uri.parse(url))
-//                    startActivity(intent)
-//                }
-//                return true
-//            }
+
         }
 
         binding.webview.setWebViewClient(mWebClient)
-        binding.webview.getSettings().setDefaultFontSize(14)
+        binding.webview.getSettings().defaultFontSize = 14
 
-        val `in`: InputStream
         try {
-            `in` = resources.assets.open("db_companion_help.html")
+            var content = AssetX.loadAssetAsString(requireContext(), "db_companion_help.html")
+
+            // Service-Zeiten
+            content = content.replace("{SERVICE_TIME}", getString(R.string.sev_db_companion_service_time_range_help))
+
+            // Liste der SEV-Stationen
+//            <p>Frankfurt (Main)</p>
+//            <p>Nürnberg</p>
+            content = content.replace(
+                "{STATION_LIST}",
+                SEV_Static_Riedbahn.getSEVStationNames().joinToString("</p><p>", "<p>", "</p>")
+            )
 
              binding.webview.loadDataWithBaseURL(
                 "file:///android_asset/",
-                getString(`in`),
+                content,
                 "text/html",
                 "UTF-8",
                 null
             )
+
         } catch (e: IOException) {
             e.printStackTrace()
         }
+
     }
 
     companion object {

@@ -10,6 +10,7 @@ import de.deutschebahn.bahnhoflive.databinding.CardExpandableRailReplacementComp
 import de.deutschebahn.bahnhoflive.databinding.CardExpandableRailReplacementStopInfoBinding
 import de.deutschebahn.bahnhoflive.ui.station.CommonDetailsCardViewHolder
 import de.deutschebahn.bahnhoflive.ui.station.StationViewModel
+import de.deutschebahn.bahnhoflive.ui.station.railreplacement.SEV_Static_Riedbahn
 import de.deutschebahn.bahnhoflive.view.SingleSelectionManager
 import de.deutschebahn.bahnhoflive.view.inflater
 import java.util.Locale
@@ -102,9 +103,9 @@ class RailReplacementAdapter(
                 )
 
             stationViewModel.dbCompanionServiceAvailableLiveData.observe(holder.itemView.context as LifecycleOwner) { serviceIsAvailable->
-                holder.setDbCompanionServiceState(serviceIsAvailable)
+                holder.setDbCompanionServiceState(serviceIsAvailable && SEV_Static_Riedbahn.isInConstructionPhase())
             }
-            holder.setDbCompanionServiceState(stationViewModel.isCompanionServiceAvailable())
+            holder.setDbCompanionServiceState(SEV_Static_Riedbahn.isCompanionServiceAvailable() && SEV_Static_Riedbahn.isInConstructionPhase())
 
             holder
         }

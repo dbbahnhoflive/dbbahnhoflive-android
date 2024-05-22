@@ -117,7 +117,7 @@
                         android:ellipsize="end"
                         android:maxLines="2"
 
-                        android:text="@string/nev_date_range"
+                        android:text="@string/sev_date_range"
                         android:textSize="@dimen/textsize_h3plus"
                         android:textStyle="bold"
 

@@ -31,7 +31,8 @@ import de.deutschebahn.bahnhoflive.ui.station.elevators.ElevatorStatusListsFragm
 import de.deutschebahn.bahnhoflive.ui.station.features.RISServicesAndCategory
 import de.deutschebahn.bahnhoflive.ui.station.locker.LockerFragment
 import de.deutschebahn.bahnhoflive.ui.station.parking.ParkingListFragment
-import de.deutschebahn.bahnhoflive.ui.station.railreplacement.SEV_Static
+import de.deutschebahn.bahnhoflive.ui.station.railreplacement.SEV_Static_Nuernberg
+import de.deutschebahn.bahnhoflive.ui.station.railreplacement.SEV_Static_Riedbahn
 import de.deutschebahn.bahnhoflive.util.Collections
 
 class InfoCategorySelectionFragment : CategorySelectionFragment(
@@ -72,7 +73,7 @@ class InfoCategorySelectionFragment : CategorySelectionFragment(
             parkingsCategory = addParkings()
 
             if (station != null) {
-                if (!railReplacementSummaryLiveData.value.isNullOrEmpty() ||  SEV_Static.containsStationId(
+                if (!railReplacementSummaryLiveData.value.isNullOrEmpty() ||  SEV_Static_Riedbahn.containsStationId(
                         station.station?.stationID
                     )) {
                         railReplacementCategory = addRailReplacement()
@@ -183,7 +184,7 @@ class InfoCategorySelectionFragment : CategorySelectionFragment(
         val railReplacementServicesList : MutableList<ServiceContent> = mutableListOf()
 
         railReplacementServicesList.add(ServiceContent(StaticInfo(ServiceContentType.Local.STOP_PLACE, "Haltestelleninformation", "description2")))
-        if(SEV_Static.isStationSEV(stationViewModel.station?.id))
+        if(SEV_Static_Nuernberg.isStationSEV(stationViewModel.station?.id))
         railReplacementServicesList.add(ServiceContent(StaticInfo(ServiceContentType.Local.DB_COMPANION, "DB Wegbegleitung", "description1")))
 
 
