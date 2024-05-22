@@ -6,6 +6,8 @@
 
 package de.deutschebahn.bahnhoflive.ui.station;
 
+import static de.deutschebahn.bahnhoflive.util.accessibility.AccessibilityUtilitiesKt.isTalkbackOrSelectToSpeakEnabled;
+
 import android.app.Activity;
 import android.content.Intent;
 import android.net.Uri;
@@ -63,6 +65,7 @@ import de.deutschebahn.bahnhoflive.ui.timetable.localtransport.HafasTimetableVie
 import de.deutschebahn.bahnhoflive.ui.timetable.localtransport.ReducedDbDeparturesViewHolder;
 import de.deutschebahn.bahnhoflive.util.GeneralPurposeMillisecondsTimer;
 import de.deutschebahn.bahnhoflive.util.GoogleLocationPermissions;
+import de.deutschebahn.bahnhoflive.util.accessibility.AccessibilityUtilities;
 import de.deutschebahn.bahnhoflive.view.StatusPreviewButton;
 import kotlin.Unit;
 
@@ -547,18 +550,32 @@ public class StationFragment extends androidx.fragment.app.Fragment implements
                 stationViewModel.startAugmentedRealityWebSite(requireContext())
         );
 
-        final View dbCompanionTeaser = view.findViewById(R.id.dbCompanionTeaser);
 
         stationViewModel.getShowDbCompanionTeaser().observe(getViewLifecycleOwner(), it -> {
+
+            View dbCompanionTeaser;
+
+            if (isTalkbackOrSelectToSpeakEnabled(getContext())) {
+                dbCompanionTeaser = view.findViewById(R.id.dbCompanionTeaserVO);
+            } else {
+                dbCompanionTeaser = view.findViewById(R.id.dbCompanionTeaserNoVO);
+            }
+
+            if (dbCompanionTeaser != null) {
             dbCompanionTeaser.setVisibility(it ? View.VISIBLE : View.GONE);
+                dbCompanionTeaser.setOnClickListener(v -> {
+                            final StationNavigation stationNavigation = stationViewModel.getStationNavigation();
+                            if (stationNavigation != null)
+                                stationNavigation.showRailReplacementDbCompanionInformation();
+                        }
+                );
+            }
         });
 
-        dbCompanionTeaser.findViewById(R.id.dbCompanionButton).setOnClickListener(v ->
-            stationViewModel.startDbCompanionWebSite(requireContext())
-        );
-        dbCompanionTeaser.setOnClickListener(v ->
-                stationViewModel.startDbCompanionWebSite(requireContext())
-        );
+//        dbCompanionTeaser.findViewById(R.id.dbCompanionButton).setOnClickListener(v ->
+//            stationViewModel.startDbCompanionWebSite(requireContext())
+//        );
+
 
         stationViewModel.getNewsLiveData().observe(getViewLifecycleOwner(), new NewsViewManager(view, new NewsAdapter((news, index) -> {
             final boolean isCoupon = GroupId.COUPON.appliesTo(news);
@@ -570,7 +587,7 @@ public class StationFragment extends androidx.fragment.app.Fragment implements
                     stationViewModel.getSelectedNews().setValue(news);
                 } else {
                     if (GroupId.REPLACEMENT_ANNOUNCEMENT.appliesTo(news) || GroupId.REPLACEMENT.appliesTo(news)) {
-                        stationNavigation.showRailReplacement();
+                        stationNavigation.showRailReplacementStopPlaceInformation();
                     } else
                         stationNavigation.showNewsDetails(index);
                 }

@@ -115,6 +115,11 @@ class JourneyFragment() : JourneyCoreFragment(), MapPresetProvider {
            }
            else {
 
+               trainInfo.departure?.let {
+                 isSEV = it.lineIdentifier.equals("ev", true) ||
+                         it.lineIdentifier.equals("sev", true)
+               }
+
                screenTitle = getString(
                 R.string.template_journey_title,
                 TimetableViewHelper.composeName(trainInfo, trainInfo.departure),
@@ -133,6 +138,7 @@ class JourneyFragment() : JourneyCoreFragment(), MapPresetProvider {
 
             showWagonOrderFromExtern = false
             titleBar.screenTitle.text = screenTitle
+            journeyViewModel.showSEVLiveData.value = isSEV
 
         }
 

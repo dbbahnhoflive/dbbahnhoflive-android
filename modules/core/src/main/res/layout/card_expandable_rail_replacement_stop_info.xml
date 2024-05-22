@@ -6,54 +6,28 @@
   ~
   ~ SPDX-License-Identifier: Apache-2.0
   -->
-
-<androidx.coordinatorlayout.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<de.deutschebahn.bahnhoflive.view.DecoratedCard xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/services_details_container"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:overScrollMode="never">
+    android:layout_height="wrap_content"
+    xmlns:tools="http://schemas.android.com/tools">
 
-    <include
-        android:id="@+id/title_bar"
-        layout="@layout/titlebar_common" />
-
-    <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
-        android:id="@+id/refresher"
+    <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        app:layout_behavior="@string/appbar_scrolling_view_behavior">
+        android:layout_height="wrap_content"
 
-        <ScrollView
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:fillViewport="true">
+        android:background="@color/card_background"
+        android:orientation="vertical">
+
+        <include layout="@layout/common_detail_overview" />
 
             <LinearLayout
-                android:id="@+id/services_details"
+                android:id="@+id/details"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="vertical"
                 android:importantForAccessibility="no"
                 android:paddingBottom="@dimen/overscroll_height">
-
-                <FrameLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:background="@drawable/shape_gradient_background"
-                    android:padding="@dimen/default_space_double">
-
-                    <ImageView
-                        android:id="@+id/service_icon"
-                        android:layout_width="@dimen/icon_size"
-                        android:layout_height="@dimen/icon_size"
-                        android:layout_gravity="center"
-                        android:contentDescription="@null"
-                        android:importantForAccessibility="no"
-                        android:src="@drawable/app_rail_replacement" />
-
-                </FrameLayout>
 
 
                 <androidx.constraintlayout.widget.ConstraintLayout
@@ -67,6 +41,7 @@
 
                     <View
                         android:id="@+id/divider"
+                        android:visibility="gone"
                         android:layout_marginTop="@dimen/default_space"
                         android:layout_marginBottom="@dimen/default_space"
                         android:background="@color/filter_header_divider"
@@ -79,6 +54,7 @@
                     <ImageView
                         android:id="@+id/icon"
                         android:padding="@dimen/default_space_double"
+                        android:visibility="gone"
                         android:src="@drawable/app_nev_icon_round"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
@@ -94,9 +70,8 @@
                         android:id="@+id/newsHeadline"
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
-                        android:layout_marginStart="@dimen/default_space"
+                        android:layout_marginHorizontal="@dimen/default_space_double"
                         android:layout_marginTop="@dimen/default_space"
-                        android:layout_marginEnd="@dimen/default_space"
                         android:layout_marginBottom="@dimen/default_space_half"
                         android:ellipsize="end"
                         android:gravity="bottom"
@@ -134,9 +109,8 @@
                         android:id="@+id/newsCopy"
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
-                        android:layout_marginStart="@dimen/default_space"
+                        android:layout_marginHorizontal="@dimen/default_space_double"
                         android:layout_marginTop="@dimen/default_space_half"
-                        android:layout_marginEnd="@dimen/default_space"
                         android:layout_marginBottom="@dimen/default_space"
                         android:ellipsize="end"
                         android:importantForAccessibility="yes"
@@ -196,24 +170,6 @@
                 </LinearLayout>
 
 
-                <include
-                    android:id="@+id/ar_teaser_nev"
-                    layout="@layout/card_ar_teaser_nev"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginHorizontal="@dimen/default_space" />
-
-                <include
-                    android:id="@+id/db_companion_teaser_nev"
-                    layout="@layout/card_db_companion_teaser_nev"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginBottom="@dimen/default_space"
-                    android:layout_marginHorizontal="@dimen/default_space_double"
-                    android:layout_marginTop="@dimen/default_space"
-                    />
-
-
                 <TextView
                     android:id="@+id/rail_replacement_nev2"
                     android:layout_width="match_parent"
@@ -225,6 +181,18 @@
                     android:text="@string/nev_text_2"
                     android:textSize="@dimen/textsize_28" />
 
+                <android.widget.Space
+                    android:layout_width="match_parent"
+                    android:layout_height="@dimen/default_space_double"/>
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/default_space"
+                    android:layout_marginHorizontal="@dimen/default_space_double"
+                    android:text="@string/link_hint_bahnhof_de"
+                    android:textSize="@dimen/textsize_28" />
+
                 <TextView
                     android:id="@+id/linkReplacementTraffic"
                     android:layout_marginTop="@dimen/default_space"
@@ -233,17 +201,16 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     tools:visibility="visible"
-                    android:visibility="gone"
                     android:background="@drawable/shape_round_button_grey"
                     android:gravity="center"
                     android:minHeight="64dp"
+                    android:clickable="true"
+                    android:focusable="true"
                     android:text="@string/open_link_bahnhof_de"
                     android:textColor="@color/white"
                     android:textStyle="bold" />
 
-
-
             </LinearLayout>
-        </ScrollView>
-    </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
-</androidx.coordinatorlayout.widget.CoordinatorLayout>
+    </LinearLayout>
+
+</de.deutschebahn.bahnhoflive.view.DecoratedCard>

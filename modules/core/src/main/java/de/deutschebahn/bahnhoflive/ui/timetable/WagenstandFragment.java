@@ -440,7 +440,9 @@ public class WagenstandFragment extends Fragment implements View.OnLayoutChangeL
                                         return null;
                                     },
                                     "", () -> null,
-                                    "", (x) -> null
+                                    "", (x) -> null,
+                                    "",
+                                    ""
                             );
 
                         } else {
@@ -454,7 +456,9 @@ public class WagenstandFragment extends Fragment implements View.OnLayoutChangeL
                                     },
                                     "", () -> null,
                                     "", () -> null,
-                                    "", (x) -> null
+                                    "", (x) -> null,
+                                    "",
+                                    ""
                             );
                         }
                     }
@@ -472,7 +476,9 @@ public class WagenstandFragment extends Fragment implements View.OnLayoutChangeL
                                     return null;
                                 },
                                 "", null,
-                                "", null
+                                "", null,
+                                "",
+                                ""
                         );
 
 
@@ -507,7 +513,9 @@ public class WagenstandFragment extends Fragment implements View.OnLayoutChangeL
                                     getString(R.string.dlg_ok), null,
                                     "", null,
                                     "", null,
-                                    "", null
+                                    "", null,
+                                    "",
+                                    ""
                             );
 
                         }

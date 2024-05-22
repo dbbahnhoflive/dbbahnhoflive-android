@@ -42,7 +42,7 @@ import de.deutschebahn.bahnhoflive.repository.trainformation.TrainFormation
 import de.deutschebahn.bahnhoflive.ui.station.HistoryFragment
 import de.deutschebahn.bahnhoflive.ui.station.StationActivity
 import de.deutschebahn.bahnhoflive.ui.station.StationViewModel
-import de.deutschebahn.bahnhoflive.ui.station.railreplacement.SEV_Static
+import de.deutschebahn.bahnhoflive.ui.station.railreplacement.SEV_Static_Nuernberg
 import de.deutschebahn.bahnhoflive.ui.station.timetable.IssueIndicatorBinder
 import de.deutschebahn.bahnhoflive.ui.station.timetable.IssuesBinder
 import de.deutschebahn.bahnhoflive.ui.station.timetable.TimetableViewHelper
@@ -159,7 +159,7 @@ class RegularJourneyContentFragment : Fragment() {
                 activity?.let {
 
                     val staticStopData =
-                        SEV_Static.getStationEvaIdByReplacementId(journeyStop.evaId)
+                        SEV_Static_Nuernberg.getStationEvaIdByReplacementId(journeyStop.evaId)
 
                     if (staticStopData != null) {
                         openJourneyStopStation(
@@ -276,11 +276,11 @@ class RegularJourneyContentFragment : Fragment() {
                         val lastStation = journeyStops.last()
 
                         sev.visibility =
-                            if (SEV_Static.isReplacementStopFrom(lastStation.evaId)) View.VISIBLE else View.GONE // default=gone
+                            if (SEV_Static_Nuernberg.isReplacementStopFrom(lastStation.evaId)) View.VISIBLE else View.GONE // default=gone
 
                         sevLinkDbCompanion.visibility =
                             if ((stationViewModel.mapAvailableLiveData.value != true) &&
-                                SEV_Static.hasSEVStationWebAppCompanionLink(lastStation.evaId)
+                                SEV_Static_Nuernberg.hasSEVStationWebAppCompanionLink(lastStation.evaId)
                             ) sev.visibility else View.GONE
 
                     }

@@ -43,7 +43,7 @@ open class ServiceContentViewHolder(
     singleSelectionManager
 ), View.OnClickListener {
 
-    protected val threeButtonsViewHolder: ThreeButtonsViewHolder = ThreeButtonsViewHolder(
+    private val threeButtonsViewHolder: ThreeButtonsViewHolder = ThreeButtonsViewHolder(
         itemView,
         R.id.buttons_container,
         this
@@ -60,6 +60,7 @@ open class ServiceContentViewHolder(
 
     init {
         statusView.visibility = View.GONE
+//        titleView.maxLines = 2
         titleView.setLines(2)
     }
 

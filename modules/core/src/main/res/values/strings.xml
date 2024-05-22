@@ -436,14 +436,22 @@
     <string name="elevator_flyout_description_link">"Übersicht der Aufzüge\nund Merkliste"</string>
 
     <string name="nev_announcement_headline">Ankündigung Ersatzverkehr</string>
+    <string name="sr_nev_announcement_headline">Ankündigung Ersatzverkehr</string>
     <string name="nev_phase_headline">Ersatzverkehr beachten</string>
-    <string name="nev_copy">Ersatzverkehr auf der Strecke Würzburg – Nürnberg aufgrund von Baumaßnahmen.</string>
-    <string name="nev_text_1">Aufgrund von Bauarbeiten kommt es zwischen Würzburg und Nürnberg vom 26. Mai bis zum 11. September 2023 zu Einschränkungen im Zugverkehr.\n\nEin Ersatzverkehr mit Bussen ist teilweise eingerichtet.</string>
+    <string name="sr_nev_phase_headline">Beachten Sie den Ersatzverkehr</string>
+    <string name="nev_copy">Ersatzverkehr zwischen Frankfurt (Main) Stadion und Mannheim Hbf.</string>
+    <string name="sr_nev_copy">Vom Fünfzehnten Juli bis zum Einundreissigsten Dezember 2024 ist aufgrund von Baumaßnahmen ein Ersatzverkehr zwischen Frankfurt (Main) Stadion und Mannheim Hbf eingerichtet</string>
+    <string name="nev_text_1">Aufgrund von Bauarbeiten auf der „Riedbahn“ kommt es zwischen Frankfurt (Main) Stadion und Mannheim Hauptbahnhof von Juli bis Dezember 2024 zu Einschränkungen im Zugverkehr. Ein Ersatzverkehr mit Bussen ist eingerichtet.</string>
     <string name="nev_text_2">Die Sanierung erfolgt in zwei Abschnitten. Zunächst wird die Strecke zwischen Rottendorf und Neustadt (Aisch) Bahnhof vom 26. Mai bis 05. August 2023 für den Zugverkehr komplett gesperrt. Anschließend erfolgt eine Sperrung der Strecke zwischen Neustadt (Aisch) Bahnhof und Fürth (Bay) Hauptbahnhof vom 06. August bis 11. September 2023. Durch die Sperrung in dem zweiten genannten Zeitraum erfolgt auf der Strecke Markt Erlbach - Siegelsdorf - Fürth (Bay) Hauptbahnhof zudem ebenfalls kein Zugverkehr.\n\nDarüber hinaus entfallen über beide Bauphasen die meisten Züge der Linie RB80 zwischen Würzburg Hauptbahnhof und Marktbreit.\n\nWeiterhin kommt es in den späten Abend- und frühen Morgenstunden zwischen Nürnberg Hauptbahnhof und Würzburg Hauptbahnhof über den gesamten Zeitraum hinweg zu Zugausfällen.\n\nWeiterführende Informationen finden Sie unter bahnhof.de"</string>
 
-    <string name="nev_date_range">26.05. - 11.09.2023</string>
-    <string name="sr_nev_date_range">vom 26.5.2023 bis 11.9.2023</string>
+    <string name="sev_date_range">15.07.24 - 14.12.24</string>
+    <string name="sr_sev_date_range">vom Fünfzehnten Juli 24 bis Vierzehnten Dezember 24</string>
 
+    <string name="sev_db_companion_service_time_range_help">Montag bis Freitag von 7 - 22 Uhr</string>
+    <string name="sev_db_companion_service_time_range">Mo. - Fr.: 7 - 22 Uhr</string>
+    <string name="sr_sev_db_companion_service_time_range">Montag bis Freitag. Sieben bis Zweiundzwanzig Uhr</string>
+
+    <string name="link_hint_bahnhof_de">Weiterführende Informationen finden Sie unter bahnhof.de</string>
     <string name="open_link_bahnhof_de">"bahnhof.de öffnen"</string>
 
     <string name="info_sev">Übersicht Ersatzverkehr</string>
@@ -454,15 +462,36 @@
     <string name="teaser_ar_linkbutton_text">zum playstore</string>
 
     <string name="teaser_db_companion_headline">DB Wegbegleitung</string>
-    <string name="teaser_db_companion_copy">Orientierungshilfe für blinde und sehbeeinträchtigte Reisende.</string>
+    <string name="teaser_db_companion_copy">Orientierung für blinde und sehbeeinträchtigte Reisende.</string>
     <string name="teaser_db_companion_url">https://db.de/wegbegleitung</string>
-    <string name="teaser_db_companion_sr_content_description">DB Wegbegleitung\n Für blinde und stark sehbeeinträchtigte Reisende bieten wir an diesem Bahnhof, für den Zeitraum des Ersatzverkehrs, Unterstützung bei der Orientierung vor Ort per Videoanruf.</string>
+    <string name="teaser_db_companion_sr_content_description">DB Wegbegleitung\n Dieser Service dient als Orientierungshilfe für blinde und sehbeeinträchtigte Reisende. Sie werden über Video-Telefonie mit einem Mitarbeiter im Kundencenter der Deutschen Bahn verbunden</string>
     <string name="teaser_db_companion_link_to_external_website">Zur externen Website www.db.de/wegbegleitung</string>
 
     <string name="nev_db_companion_headline">DB Wegbegleitung - Unterstützung per Videoanruf für blinde und sehbeeinträchtigte Reisende</string>
     <string name="nev_db_companion_copy">Während des Ersatzverkehrs an den Bahnhöfen zwischen Würzburg und Nürnberg begleitet unser geschultes Personal Sie sicher vom Gleis zur Ersatzhaltestelle und zurück.</string>
     <string name="nev_db_companion_link_description">Sie können uns unter folgendem Link einfach per Videoanruf kontaktieren und Unterstützung erhalten.</string>
     <string name="nev_db_companion_button_text">DB Wegbegleitung öffnen</string>
+
+
+    <string name="rail_replacement_db_companion_text1">An Bahnhöfen mit Ersatzverkehr begleitet Sie unser geschultes Personal per Videoanruf sicher und schnell zu Ihrer Ersatzhaltestelle und zurück.</string>
+    <string name="rail_replacement_db_companion_text2">Dieser Service steht Ihnen für die Zeit der Baumaßnahmen, ab dem 15. Juli bis voraussichtlich Dezember 2024, täglich zwischen 07:30 und 18:30, zur Verfügung.</string>
+    <string name="rail_replacement_db_companion_service_times">Servicezeiten</string>
+    <string name="rail_replacement_db_companion_call_video">Video-Anruf starten</string>
+    <string name="rail_replacement_db_companion_legal_notice">Rechtliche Hinweise</string>
+    <string name="rail_replacement_db_companion_hint">So funktioniert der Service</string>
+    <string name="rail_replacement_db_companion_help_headline">So funktioniert DB-Wegbegleitung</string>
+    <string name="rail_replacement_db_companion_imprint">Impressum</string>
+    <string name="rail_replacement_db_companion_video_call_url">https://int.help-me-iat.comp.db.de/</string>
+    <string name="rail_replacement_db_companion_imprint_url">https://feat-bahnhof-live-pages.help-me-iat.comp.db.de/static/bahnhof-live/imprint</string>
+    <string name="rail_replacement_db_companion_legal_notice_url">https://feat-bahnhof-live-pages.help-me-iat.comp.db.de/static/bahnhof-live/legal-notice</string>
+    <string name="rail_replacement_db_companion_no_service_headline">Aktuell kein Service</string>
+    <string name="rail_replacement_db_companion_no_service_body">Dieser Service ist täglich zwischen 7:30 und 18:30 Uhr verfügbar.</string>
+    <string name="rail_replacement_db_companion_service_state_available">Service verfügbar</string>
+    <string name="rail_replacement_db_companion_service_state_not_available">Zur Zeit nicht verfügbar</string>
+
+    <string name="rail_replacement_db_companion_help_text">Starten Sie Ihren Videoanruf am Bahnhof und lassen Sie sich von unserem geschulten Personal zu Ihrer Ersatzhaltestelle begleiten.\n\nUm den Anruf zu starten müssen Sie die Kamera, das Mikrofon und den Standort freigeben. Ansonsten kann der Anruf nicht gestartet werden. Bleiben Sie sich Ihrer eigenen Fähigkeiten bewusst und verlassen Sie sich stets auf Ihre eigenen Sinne. Mehr dazu erfahren Sie unter Nutzungsbedingungen.\n\nDer Service ist täglich von 07:30 Uhr bis 18:30 Uhr an folgenden Bahnhöfen mit Ersatzverkehr erreichbar.</string>
+
+
 
     <string name="platform_information">Gleisinformationen</string>
     <string name="platform_information_headline">Informationen zu den Gleisen vor Ort</string>

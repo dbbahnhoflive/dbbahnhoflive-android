@@ -84,7 +84,8 @@ import de.deutschebahn.bahnhoflive.ui.station.info.ServiceNumbersLiveData
 import de.deutschebahn.bahnhoflive.ui.station.localtransport.LocalTransportViewModel
 import de.deutschebahn.bahnhoflive.ui.station.locker.LockerFragment
 import de.deutschebahn.bahnhoflive.ui.station.parking.ParkingListFragment
-import de.deutschebahn.bahnhoflive.ui.station.railreplacement.SEV_Static
+import de.deutschebahn.bahnhoflive.ui.station.railreplacement.SEV_Static_Nuernberg
+import de.deutschebahn.bahnhoflive.ui.station.railreplacement.SEV_Static_Riedbahn
 import de.deutschebahn.bahnhoflive.ui.station.search.ContentSearchResult
 import de.deutschebahn.bahnhoflive.ui.station.search.QueryPart
 import de.deutschebahn.bahnhoflive.ui.station.search.ResultSetType
@@ -1392,6 +1393,19 @@ class StationViewModel(application: Application) : HafasTimetableViewModel(appli
         }
     }
 
+    private val _railReplacementInfoSelectedItemLiveData : MutableLiveData<RailReplacementInfoType> =
+        MutableLiveData<RailReplacementInfoType>(RailReplacementInfoType.TOP)
+    val railReplacementInfoSelectedItemLiveData : LiveData<RailReplacementInfoType> = _railReplacementInfoSelectedItemLiveData
+    fun setRailReplacementInfoSelectedItem(type : RailReplacementInfoType) {
+        _railReplacementInfoSelectedItemLiveData.value = type
+    }
+
+    private val _dbCompanionServiceAvailable = MutableLiveData<Boolean>().apply {
+            value = SEV_Static_Riedbahn.isCompanionServiceAvailable()
+    }
+    val dbCompanionServiceAvailableLiveData: LiveData<Boolean> = _dbCompanionServiceAvailable
+
+
     val couponsLiveData = newsLiveData.map { newsList ->
         newsList?.run {
             val couponGroupId = GroupId.COUPON.id
@@ -1563,13 +1577,14 @@ class StationViewModel(application: Application) : HafasTimetableViewModel(appli
 
     val showAugmentedRealityTeaser : LiveData<Boolean> = mapAvailableLiveData.switchMap {itMapAvailable->
         stationResource.data.map {itStation ->
-            itMapAvailable && SEV_Static.hasStationArAppLink(itStation.id)
+            itMapAvailable && SEV_Static_Nuernberg.hasStationArAppLink(itStation.id)
         }
     }
 
     val showDbCompanionTeaser : LiveData<Boolean> =
         stationResource.data.map {itStation ->
-            SEV_Static.hasStationWebAppCompanionLink(itStation.id)
+            SEV_Static_Riedbahn.hasStationDbCompanion(itStation.id)
+//            SEV_Static.hasStationDbCompanion(itStation.id)
     }
 
 

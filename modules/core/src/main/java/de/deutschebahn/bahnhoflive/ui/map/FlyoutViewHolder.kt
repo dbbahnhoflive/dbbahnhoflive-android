@@ -14,8 +14,8 @@ import de.deutschebahn.bahnhoflive.ui.ViewHolder
 
 open class FlyoutViewHolder(view: View, protected var equipmentID: EquipmentID) :
     ViewHolder<MarkerBinder>(view) {
-    private val titleView: TextView = findTextView(R.id.title)
-    private val iconView: ImageView = itemView.findViewById(R.id.icon)
+    private val titleView: TextView? = findTextView(R.id.title)
+    private val iconView: ImageView? = itemView.findViewById(R.id.icon)
 
     override fun onBind(item: MarkerBinder?) {
         item?.let {
@@ -25,8 +25,8 @@ open class FlyoutViewHolder(view: View, protected var equipmentID: EquipmentID) 
 
     protected open fun onBind(markerContent: MarkerContent) {
         markerContent.let {
-            iconView.setImageResource(it.flyoutIcon)
-            titleView.text = it.title
+            iconView?.setImageResource(it.flyoutIcon)
+            titleView?.text = it.title
         }
     }
 

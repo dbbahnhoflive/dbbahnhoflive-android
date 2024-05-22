@@ -36,6 +36,7 @@ import de.deutschebahn.bahnhoflive.backend.db.fasta2.model.FacilityStatus
 import de.deutschebahn.bahnhoflive.backend.hafas.model.HafasEvent
 import de.deutschebahn.bahnhoflive.backend.hafas.model.HafasStation
 import de.deutschebahn.bahnhoflive.backend.local.model.RrtPoint
+import de.deutschebahn.bahnhoflive.backend.local.model.ServiceContent
 import de.deutschebahn.bahnhoflive.backend.local.model.ServiceContentType
 import de.deutschebahn.bahnhoflive.backend.ris.model.TrainInfo
 import de.deutschebahn.bahnhoflive.repository.InternalStation
@@ -52,12 +53,15 @@ import de.deutschebahn.bahnhoflive.ui.station.accessibility.AccessibilityFragmen
 import de.deutschebahn.bahnhoflive.ui.station.elevators.ElevatorStatusListsFragment
 import de.deutschebahn.bahnhoflive.ui.station.features.StationFeaturesFragment
 import de.deutschebahn.bahnhoflive.ui.station.info.InfoCategorySelectionFragment
+import de.deutschebahn.bahnhoflive.ui.station.info.RailReplacementCompanionHelpFragment
+import de.deutschebahn.bahnhoflive.ui.station.info.RailReplacementFragment
+import de.deutschebahn.bahnhoflive.ui.station.info.StaticInfo
 import de.deutschebahn.bahnhoflive.ui.station.localtransport.LocalTransportFragment
 import de.deutschebahn.bahnhoflive.ui.station.localtransport.LocalTransportViewModel
 import de.deutschebahn.bahnhoflive.ui.station.locker.LockerFragment
 import de.deutschebahn.bahnhoflive.ui.station.occupancy.OccupancyExplanationFragment
 import de.deutschebahn.bahnhoflive.ui.station.parking.ParkingListFragment
-import de.deutschebahn.bahnhoflive.ui.station.railreplacement.RailReplacementFragment
+import de.deutschebahn.bahnhoflive.ui.station.railreplacement.SEV_Static_Riedbahn
 import de.deutschebahn.bahnhoflive.ui.station.search.ContentSearchFragment
 import de.deutschebahn.bahnhoflive.ui.station.settings.SettingsFragment
 import de.deutschebahn.bahnhoflive.ui.station.shop.ShopCategorySelectionFragment
@@ -71,6 +75,8 @@ import de.deutschebahn.bahnhoflive.util.VersionManager.SoftwareVersion
 import de.deutschebahn.bahnhoflive.util.getParcelableExtraCompatible
 import de.deutschebahn.bahnhoflive.widgets.CeCheckableImageButton
 import kotlin.math.abs
+
+enum class RailReplacementInfoType(val value:Int) {TOP(0), STOP_PLACE(1), COMPANION(2)}
 
 class StationActivity : BaseActivity(), StationProvider, RootProvider, TrackingManager.Provider,
     StationNavigation {
@@ -527,12 +533,51 @@ class StationActivity : BaseActivity(), StationProvider, RootProvider, TrackingM
         }
     }
 
-    override fun showRailReplacement() {
+
+    override fun showDbCompanionHelp() {
+//        if (removeFeaturesFragment) removeFeaturesFragment()
         showInfoFragment(false)
-        if (RailReplacementFragment.TAG != stationViewModel.topInfoFragmentTag) {
-            infoFragment?.push(RailReplacementFragment())
+        if (RailReplacementCompanionHelpFragment.TAG != stationViewModel.topInfoFragmentTag) {
+            infoFragment?.push(RailReplacementCompanionHelpFragment())
         }
     }
+
+    private fun showRailReplacementDetailed(_what:RailReplacementInfoType) {
+        showInfoFragment(false)
+
+        var what = _what
+
+        if (RailReplacementFragment.TAG != stationViewModel.topInfoFragmentTag) {
+
+            val railReplacementServicesList : MutableList<ServiceContent> = mutableListOf()
+
+            railReplacementServicesList.add(ServiceContent(StaticInfo(ServiceContentType.Local.STOP_PLACE, "Haltestelleninformation", "description2")))
+
+            if(SEV_Static_Riedbahn.isStationSPNV_Stop(station?.id))
+            railReplacementServicesList.add(ServiceContent(StaticInfo(ServiceContentType.Local.DB_COMPANION, "DB Wegbegleitung", "description1")))
+            else
+             what = RailReplacementInfoType.STOP_PLACE
+
+            infoFragment?.push(RailReplacementFragment.create(
+                ArrayList(railReplacementServicesList),
+                getText( R.string.rail_replacement),
+                TrackingManager.Category.SCHIENENERSATZVERKEHR))
+        }
+
+        stationViewModel.setRailReplacementInfoSelectedItem(what)
+
+    }
+    override fun showRailReplacement() {
+        showRailReplacementDetailed(RailReplacementInfoType.TOP)
+        }
+
+    override fun showRailReplacementStopPlaceInformation() {
+        showRailReplacementDetailed(RailReplacementInfoType.STOP_PLACE)
+    }
+    override fun showRailReplacementDbCompanionInformation() {
+        showRailReplacementDetailed(RailReplacementInfoType.COMPANION)
+    }
+
 
     override fun showMobilityServiceNumbers() {
         stationViewModel.navigateToInfo(ServiceContentType.MOBILITY_SERVICE)
@@ -597,9 +642,7 @@ class StationActivity : BaseActivity(), StationProvider, RootProvider, TrackingM
         stationViewModel.navigateToInfo(serviceContentType)
     }
 
-//    fun getStation(): Station? {
-//        return station
-//    }
+
 
     override fun createRootFragment(historyFragment: HistoryFragment): Fragment {
         if (historyFragment === overviewFragment) {

@@ -41,6 +41,9 @@ public interface ServiceContentType {
         String APP_ISSUE = "problemmelden";
         String RATE_APP = "bewertung";
         String RAIL_REPLACEMENT = "rail_replacement";
+
+        String DB_COMPANION = "db-companion";
+        String STOP_PLACE = "stop-place";
     }
 
     interface DummyForCategory {
