@@ -43,7 +43,7 @@
                 android:text="@string/rail_replacement_db_companion_text1"
                 android:textSize="@dimen/textsize_28" />
 
-            <androidx.legacy.widget.Space
+            <android.widget.Space
                 android:layout_width="wrap_content"
                 android:layout_height="@dimen/default_space_triple" />
 
