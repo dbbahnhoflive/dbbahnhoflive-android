@@ -43,7 +43,7 @@
                 android:text="@string/rail_replacement_db_companion_text1"
                 android:textSize="@dimen/textsize_28" />
 
-            <Space
+            <androidx.legacy.widget.Space
                 android:layout_width="wrap_content"
                 android:layout_height="@dimen/default_space_triple" />
 
@@ -56,7 +56,7 @@
                 android:text="@string/rail_replacement_db_companion_text2"
                 android:textSize="@dimen/textsize_28" />
 
-            <Space
+            <android.widget.Space
                 android:layout_width="wrap_content"
                 android:layout_height="@dimen/default_space_triple" />
 
@@ -68,7 +68,7 @@
                 android:textSize="@dimen/textsize_28"
                 android:textStyle="bold" />
 
-            <Space
+            <android.widget.Space
                 android:layout_width="wrap_content"
                 android:layout_height="@dimen/default_space_half" />
 
@@ -80,7 +80,7 @@
                 android:contentDescription="@string/sr_sev_db_companion_service_time_range"
                 android:textSize="@dimen/textsize_28" />
 
-            <Space
+            <android.widget.Space
                 android:layout_width="wrap_content"
                 android:layout_height="@dimen/default_space_quadruple" />
 
@@ -96,7 +96,7 @@
                 android:textColor="@color/white"
                 android:textStyle="bold" />
 
-            <Space
+            <android.widget.Space
                 android:layout_width="wrap_content"
                 android:layout_height="@dimen/default_space_quadruple" />
 
@@ -104,7 +104,7 @@
                 android:id="@+id/layout_hint" layout="@layout/link_with_text"
                 />
 
-            <Space
+            <android.widget.Space
                 android:layout_width="wrap_content"
                 android:layout_height="@dimen/default_space_double" />
 
@@ -114,7 +114,7 @@
 
                 android:id="@+id/layout_imprint" layout="@layout/link_with_text"/>
 
-            <Space
+            <android.widget.Space
                 android:layout_width="wrap_content"
                 android:layout_height="@dimen/default_space_double" />
 
