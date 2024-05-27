@@ -13,13 +13,10 @@ import java.util.Calendar
 object SEV_Static_Riedbahn {
 // Juli-Dezember 2024
 class EvItem(
-    val stationId:Int=0,
-    val stationName : String = "",  // SPNV-Halt = Schienenpersonennahverkehr
-    val hasDbCompanion:Boolean=false,
-    val evStopName:String="" // ev = Ersatzverkehr
+    val evaId:Int=0,
+    val stationName : String = ""  // SPNV-Halt = Schienenpersonennahverkehr
 )
     private val testIsDbCompanionServiceAvailable=true // todo: false in production
-    private val testHasDbCompanion=true // todo: false in production
     private val testIsInAnnouncementPhase=true // todo: false in production
     private val testIsInConstructionPhase=false // todo: false in production
 
@@ -33,12 +30,78 @@ class EvItem(
     private val startOfShowAdHocBox = arrayOf(2024, 7, 8, 0, 0, 0)
     private val endOfShowAdHocBox = arrayOf(2034, 12, 31, 23, 59, 59) // dummy
 
-    private val ev_items = arrayOf<EvItem>(
+//         EvItem(2545,  8000152,"Hannover Hbf"), // Test Hannover
 
-        EvItem(2545,  "Hannover",true,"hinten"), // Test Hannover
-        EvItem(1866, "Frankfurt (Main) Hbf", true,"Hbf Südseite (Mannheimer Straße, vor Parkhaus neben IC-Hotel)")
+    private val evMap : Map<Int, EvItem> = mapOf(
+//        2545 to EvItem(8000152,"Hannover Hbf"), // Test Hannover
+        1866 to EvItem(8000105, "Frankfurt Hbf"),
+        1876 to EvItem(8002050, "Frankfurt-Niederrad"),
+        1854 to EvItem(8002040, "Frankfurt Stadion"),
+        8268 to EvItem(8002060, "Frankfurt-Gateway Gardens"),
+        6999 to EvItem(8006648, "NI-Zeppelinheim"),
+        6503 to EvItem(8006421, "Wiesloch-Walldorf"),
+        4174 to EvItem(8004065, "Mörfelden"),
+        2299 to EvItem(8000136, "Groß-Gerau"),
+        2300 to EvItem(8002386, "Groß Gerau-Dornberg"),
+        1278 to EvItem(8001511, "Groß Gerau-Dornheim"),
+        3608 to EvItem(8003605, "Riedstadt-Wolfskehlen"),
+        2161 to EvItem(8000126, "Riedstadt-Goddelau"),
+        6035 to EvItem(8005739, "Stockstadt (Rhein)"),
+        619 to EvItem(8000951, "Biebesheim"),
+        2097 to EvItem(8002249, "Gernsheim"),
+        2316 to EvItem(8002391, "Groß-Rohrheim"),
+        614 to EvItem(8000503, "Biblis"),
+        721 to EvItem(8001034, "Bobstadt"),
+        1002 to EvItem(8098360, "Bürstadt"),
+        3500 to EvItem(8003503, "Lampertheim"),
+        3936 to EvItem(8003848, "Mannheim-Waldhof"),
+        3931 to EvItem(8006509, "Mannheim-Luzenberg"),
+        3933 to EvItem(8006511, "Mannheim-Neckarstadt"),
+        3929 to EvItem(8006508, "Mannheim Handelshafen"),
+        3925 to EvItem(8000244, "Mannheim Hbf"),
+        3898 to EvItem(8000240, "Mainz Hbf"),
+        3900 to EvItem(8003816, "Mainz Röm. Theater"),
+        3905 to EvItem(8003819, "Mainz-Laubenheim"),
+        739 to EvItem(8000359, "Bodenheim"),
+        4293 to EvItem(8004193, "Nackenheim"),
+        4551 to EvItem(8004432, "Nierstein"),
+        4772 to EvItem(8004680, "Oppenheim"),
+        8252 to EvItem(8001448, "Dienheim"),
+        2419 to EvItem(8002474, "Guntersblum"),
+        66 to EvItem(8000506, "Alsheim"),
+        4082 to EvItem(8004003, "Mettenheim"),
+        4808 to EvItem(8004714, "Osthofen"),
+        6887 to EvItem(8000257, "Worms Hbf"),
+        716 to EvItem(8001032, "Bobenheim"),
+        1848 to EvItem(8000332, "Frankenthal Hbf"),
+        8210 to EvItem(8002025, "Frankenthal Süd"),
+        3839 to EvItem(8003766, "Ludwigshafen-Oggersheim"),
+        3836 to EvItem(8000236, "Ludwigshafen (Rhein) Hbf"),
+        7385 to EvItem(8003759, "Ludwigshafen Mitte"),
+        4351 to EvItem(8004246, "Neu-Isenburg"),
+        3524 to EvItem(8003523, "Langen"),
+        1126 to EvItem(8000068, "Darmstadt Hbf"),
+        1129 to EvItem(8001377, "Darmstadt Süd"),
+        1131 to EvItem(8001379, "Darmstadt-Eberstadt"),
+        8264 to EvItem(8004816, "Pfungstadt"),
+        618 to EvItem(8000948, "Bickenbach"),
+        2471 to EvItem(8002498, "Hähnlein-Alsbach"),
+        7075 to EvItem(8006687, "Zwingenberg"),
+        489 to EvItem(8000877, "Bensheim-Auerbach"),
+        488 to EvItem(8000031, "Bensheim"),
+        2693 to EvItem(8002757, "Heppenheim"),
+        3578 to EvItem(8003571, "Laudenbach"),
+        2684 to EvItem(8002748, "Hemsbach"),
+        8290 to EvItem(8006283, "Sulzbach"),
+        6622 to EvItem(8000377, "Weinheim Hbf"),
+        3873 to EvItem(8003792, "Weinheim-Lützelsachsen"),
+        2362 to EvItem(8002430, "Heddesheim/Hirschberg"),
+        3490 to EvItem(8003489, "Ladenburg"),
+        5272 to EvItem(8005089, "Riedrode"),
+        3786 to EvItem(8003755, "Lorsch")
+    )
 
-   )
+
 
     // Mo-Fr 7-22 Uhr
     fun isCompanionServiceAvailable() : Boolean   {
@@ -62,7 +125,7 @@ class EvItem(
 
     fun containsStationId(stationId: String?): Boolean {
         val stationIdAsInt = stationId?.toIntOrNull()
-        return (stationIdAsInt != null && ev_items.map { it.stationId }.contains(stationIdAsInt))
+        return (stationIdAsInt != null && evMap.containsKey(stationIdAsInt))
     }
 
 
@@ -85,7 +148,7 @@ class EvItem(
     fun isStationInConstructionPhase(stationId: String?): Boolean {
         val stationIdAsInt = stationId?.toIntOrNull() ?: 0
         val isInConstructionPhase = isInConstructionPhase()
-        return ev_items.indexOfFirst { (it.stationId == stationIdAsInt) && isInConstructionPhase } >= 0
+        return isInConstructionPhase && evMap[stationIdAsInt] !=null
     }
 
     fun isStationInConstructionPhase(station: MergedStation): Boolean {
@@ -94,16 +157,12 @@ class EvItem(
 
     fun hasStationDbCompanion(stationId: String?): Boolean {
         val stationIdAsInt = stationId?.toIntOrNull() ?: 0
-        return ev_items.indexOfFirst {
-            (it.stationId == stationIdAsInt) && (it.hasDbCompanion || testHasDbCompanion)
-        } >= 0
+        return evMap[stationIdAsInt] !=null
     }
 
     fun isStationSPNV_Stop(stationId: String?): Boolean {
         val stationIdAsInt = stationId?.toIntOrNull() ?: 0
-        return ev_items.indexOfFirst {
-            (it.stationId == stationIdAsInt)
-        } >= 0
+        return evMap[stationIdAsInt] !=null
     }
 
     fun getSEV_News(stationId: String?) : List<News>? {
@@ -152,6 +211,6 @@ class EvItem(
     }
 
     fun getSEVStationNames() : List<String> {
-        return ev_items.map {it.stationName}
+        return evMap.map{it.value.stationName}.sortedBy { it }
     }
 }

@@ -9,7 +9,7 @@
     android:orientation="vertical"
     android:paddingLeft="@dimen/default_space_double"
     android:paddingRight="@dimen/default_space_double"
-    tools:showIn="@layout/fragment_rail_replacement"
+    tools:showIn="@layout/card_expandable_rail_replacement_stop_info"
     >
 
     <Space

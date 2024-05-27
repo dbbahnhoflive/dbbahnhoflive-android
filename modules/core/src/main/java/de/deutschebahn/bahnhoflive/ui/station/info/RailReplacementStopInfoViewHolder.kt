@@ -34,6 +34,8 @@ class RailReplacementStopInfoViewHolder(
             iconView.setImageResource(IconMapper.contentIconForType(it))
         }
 
+//        binding.contentList.isVisible = false
+
         // bahnhof.de öffnen
         binding.linkReplacementTraffic.visibility = View.VISIBLE
         binding.linkReplacementTraffic.setOnClickListener {
@@ -93,13 +95,13 @@ class RailReplacementStopInfoViewHolder(
 
     fun setNevContent(nevData: List<News>) {
         binding.apply {
-            nevInfoTop.visibility = View.VISIBLE
-            icon.visibility = View.VISIBLE
-            newsHeadline.visibility = View.VISIBLE
-            newsCopy.visibility = View.VISIBLE
+            nevInfoTop.isVisible = true
+            icon.isVisible = true
+            newsHeadline.isVisible = true
+            newsCopy.isVisible = true
 
-            railReplacementNev.visibility = View.VISIBLE
-//            railReplacementNev2.visibility = View.VISIBLE
+            railReplacementNev.isVisible = true
+            railReplacementNev2.isVisible = false
 
             setScreenReaderText()
         }
@@ -152,6 +154,7 @@ class RailReplacementStopInfoViewHolder(
 
         }
 
+        binding.contentList.isVisible = railReplacementText.isNotEmpty()
         setScreenReaderText()
     }
 

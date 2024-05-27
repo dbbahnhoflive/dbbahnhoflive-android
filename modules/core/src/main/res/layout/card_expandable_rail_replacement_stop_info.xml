@@ -160,6 +160,8 @@
                     android:divider="@drawable/shape_divider_occupancy"
                     android:orientation="vertical"
                     android:showDividers="middle"
+                    android:visibility="gone"
+                    tools:visibility="visible"
                     android:importantForAccessibility="no"
                     >
 
@@ -168,7 +170,6 @@
                     <include layout="@layout/include_item_rail_replacement" />
 
                 </LinearLayout>
-
 
                 <TextView
                     android:id="@+id/rail_replacement_nev2"

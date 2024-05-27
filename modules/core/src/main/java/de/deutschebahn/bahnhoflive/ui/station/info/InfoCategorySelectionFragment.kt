@@ -31,7 +31,6 @@ import de.deutschebahn.bahnhoflive.ui.station.elevators.ElevatorStatusListsFragm
 import de.deutschebahn.bahnhoflive.ui.station.features.RISServicesAndCategory
 import de.deutschebahn.bahnhoflive.ui.station.locker.LockerFragment
 import de.deutschebahn.bahnhoflive.ui.station.parking.ParkingListFragment
-import de.deutschebahn.bahnhoflive.ui.station.railreplacement.SEV_Static_Nuernberg
 import de.deutschebahn.bahnhoflive.ui.station.railreplacement.SEV_Static_Riedbahn
 import de.deutschebahn.bahnhoflive.util.Collections
 
@@ -192,7 +191,7 @@ class InfoCategorySelectionFragment : CategorySelectionFragment(
                 )
             )
         )
-        if (SEV_Static_Nuernberg.isStationSEV(stationViewModel.station?.id))
+        if (SEV_Static_Riedbahn.isStationSPNV_Stop(stationViewModel.station?.id))
             railReplacementServicesList.add(
                 ServiceContent(
                     StaticInfo(
