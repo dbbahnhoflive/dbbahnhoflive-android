@@ -12,10 +12,10 @@
     tools:showIn="@layout/card_expandable_rail_replacement_stop_info"
     >
 
-    <Space
+    <android.widget.Space
         android:layout_width="match_parent"
         android:layout_height="@dimen/default_space">
-    </Space>
+    </android.widget.Space>
 
     <TextView
         android:id="@+id/rail_replacement_texts"

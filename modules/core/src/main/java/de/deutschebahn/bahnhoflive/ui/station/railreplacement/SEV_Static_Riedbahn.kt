@@ -160,9 +160,14 @@ class EvItem(
         return evMap[stationIdAsInt] !=null
     }
 
-    fun isStationSPNV_Stop(stationId: String?): Boolean {
+    fun isStationReplacementStopByStadaID(stationId: String?): Boolean {
         val stationIdAsInt = stationId?.toIntOrNull() ?: 0
         return evMap[stationIdAsInt] !=null
+    }
+
+    fun isStationReplacementStopByEvaID(evaId: String?): Boolean {
+        val evaIdAsInt = evaId?.toIntOrNull() ?: 0
+        return evMap.filter { it.value.evaId==evaIdAsInt  }.isNotEmpty()
     }
 
     fun getSEV_News(stationId: String?) : List<News>? {
