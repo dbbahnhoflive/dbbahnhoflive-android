@@ -553,7 +553,7 @@ class StationActivity : BaseActivity(), StationProvider, RootProvider, TrackingM
 
             railReplacementServicesList.add(ServiceContent(StaticInfo(ServiceContentType.Local.STOP_PLACE, "Haltestelleninformation", "description2")))
 
-            if(SEV_Static_Riedbahn.isStationReplacementStopByStadaID(station?.id))
+            if(SEV_Static_Riedbahn.isStationReplacementStopByStationID(station?.id))
             railReplacementServicesList.add(ServiceContent(StaticInfo(ServiceContentType.Local.DB_COMPANION, "DB Wegbegleitung", "description1")))
             else
              what = RailReplacementInfoType.STOP_PLACE

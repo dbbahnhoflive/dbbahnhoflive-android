@@ -539,9 +539,9 @@ public class StationFragment extends androidx.fragment.app.Fragment implements
 
         final View arTeaser = view.findViewById(R.id.rowArTeaser);
 
-        stationViewModel.getShowAugmentedRealityTeaser().observe(getViewLifecycleOwner(), hasAugmentedRealityLink -> {
-            arTeaser.setVisibility(hasAugmentedRealityLink ? View.VISIBLE : View.GONE);
-        });
+//        stationViewModel.getShowAugmentedRealityTeaser().observe(getViewLifecycleOwner(), hasAugmentedRealityLink -> {
+//            arTeaser.setVisibility(hasAugmentedRealityLink ? View.VISIBLE : View.GONE);
+//        });
 
         arTeaser.findViewById(R.id.webLink_ar).setOnClickListener(v ->
             stationViewModel.startAugmentedRealityWebSite(requireContext())

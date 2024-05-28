@@ -42,7 +42,6 @@ import de.deutschebahn.bahnhoflive.repository.trainformation.TrainFormation
 import de.deutschebahn.bahnhoflive.ui.station.HistoryFragment
 import de.deutschebahn.bahnhoflive.ui.station.StationActivity
 import de.deutschebahn.bahnhoflive.ui.station.StationViewModel
-import de.deutschebahn.bahnhoflive.ui.station.railreplacement.SEV_Static_Nuernberg
 import de.deutschebahn.bahnhoflive.ui.station.railreplacement.SEV_Static_Riedbahn
 import de.deutschebahn.bahnhoflive.ui.station.timetable.IssueIndicatorBinder
 import de.deutschebahn.bahnhoflive.ui.station.timetable.IssuesBinder
@@ -159,24 +158,6 @@ class RegularJourneyContentFragment : Fragment() {
                 val trainInfo = journeyViewModel.essentialParametersLiveData.value?.second
                 activity?.let {
 
-                    val staticStopData =
-                        SEV_Static_Nuernberg.getStationEvaIdByReplacementId(journeyStop.evaId)
-
-                    if (staticStopData != null) {
-                        openJourneyStopStation(
-                            it,
-                            stationViewModel,
-                            view,
-                            stationViewModel.stationResource.data.value?.evaIds,
-                            staticStopData.first,
-                            journeyStop.name,
-                            null,
-                            null,
-                            null,
-                            trainInfo
-                        )
-
-                    } else
                         openJourneyStopStation(
                             it,
                             stationViewModel,
@@ -198,7 +179,11 @@ class RegularJourneyContentFragment : Fragment() {
                     run {
                         val trainInfo = journeyViewModel.essentialParametersLiveData.value?.second
                         val trainEvent = journeyViewModel.essentialParametersLiveData.value?.third
-                        val fragment = JourneyPlatformInformationFragment.create(trainInfo, trainEvent, journeyStop)
+                        val fragment = JourneyPlatformInformationFragment.create(
+                            trainInfo,
+                            trainEvent,
+                            journeyStop
+                        )
                         HistoryFragment.parentOf(this@RegularJourneyContentFragment).push(fragment)
                     }
                 }
@@ -224,12 +209,6 @@ class RegularJourneyContentFragment : Fragment() {
             val journeyConcatAdapter = ConcatAdapter(journeyAdapter, filterAdapter)
 
             journeyViewModel.eventuallyFilteredJourneysLiveData.observe(viewLifecycleOwner) { pairResult ->
-
-//                if(isFirstUpdate) {
-//                    isFirstUpdate=false
-//                }
-//                else
-//                    return@observe
 
                 pairResult.fold({ (filtered, journeyStops) ->
                     if (recycler.adapter != journeyConcatAdapter) {
@@ -260,7 +239,6 @@ class RegularJourneyContentFragment : Fragment() {
                     })
 
 //                    val pos = recycler.getChildAdapterPosition(recycler.getChildAt(0)) BhfLive au
-
 //                    recycler.scrollToPosition(0)
 //                    scrollRecyclerToStation(recycler, journeyAdapter.currentList)
 
@@ -276,13 +254,16 @@ class RegularJourneyContentFragment : Fragment() {
                     if (journeyStops.isNotEmpty()) { // empty happens if train is cancelled !!
                         val lastStation = journeyStops.last()
 
-                        sev.isVisible = true
+                        // not working/necessary : put to viewmodel if needed
+//                        sev.isVisible =
 //                            SEV_Static_Riedbahn.isStationReplacementStopByEvaID(lastStation.evaId)
 
-                        sevLinkDbCompanion.visibility =
-                            if ((stationViewModel.mapAvailableLiveData.value != true) &&
-                                SEV_Static_Riedbahn.hasStationDbCompanion(lastStation.evaId)
-                            ) sev.visibility else View.GONE
+
+                        // nur anzeigen, wenn talkback aktiviert ist
+                        sevLinkDbCompanion.isVisible =
+                            ((stationViewModel.mapAvailableLiveData.value != true) &&
+                                SEV_Static_Riedbahn.hasStationDbCompanionByEvaId(lastStation.evaId)
+                            )
 
                     }
 

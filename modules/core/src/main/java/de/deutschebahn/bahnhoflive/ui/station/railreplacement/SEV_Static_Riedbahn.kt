@@ -155,12 +155,18 @@ class EvItem(
         return isStationInConstructionPhase(station.id)
     }
 
-    fun hasStationDbCompanion(stationId: String?): Boolean {
+    fun hasStationDbCompanionByStationId(stationId: String?): Boolean {
         val stationIdAsInt = stationId?.toIntOrNull() ?: 0
         return evMap[stationIdAsInt] !=null
     }
 
-    fun isStationReplacementStopByStadaID(stationId: String?): Boolean {
+    fun hasStationDbCompanionByEvaId(evaId: String?): Boolean {
+        val evaIdAsInt = evaId?.toIntOrNull() ?: 0
+        return evMap.filter { it.value.evaId==evaIdAsInt }.isNotEmpty()
+    }
+
+
+    fun isStationReplacementStopByStationID(stationId: String?): Boolean {
         val stationIdAsInt = stationId?.toIntOrNull() ?: 0
         return evMap[stationIdAsInt] !=null
     }

@@ -13,10 +13,10 @@ import de.deutschebahn.bahnhoflive.backend.db.ris.model.EventType
 import de.deutschebahn.bahnhoflive.backend.db.ris.model.JourneyEventBased
 import de.deutschebahn.bahnhoflive.backend.local.model.EvaIds
 import de.deutschebahn.bahnhoflive.backend.ris.model.TrainEvent
-import de.deutschebahn.bahnhoflive.ui.station.railreplacement.SEV_Static_Nuernberg
 import de.deutschebahn.bahnhoflive.ui.timetable.journey.JourneyStop
 import de.deutschebahn.bahnhoflive.ui.timetable.journey.toJourneyStopEvent
-import java.util.*
+import java.util.Calendar
+import java.util.Locale
 
 open class RisTimetableRepository(
     protected val restHelper: RestHelper,
@@ -130,12 +130,7 @@ open class RisTimetableRepository(
                                 payload.apply {
                                     events.firstOrNull { arrivalDepartureEvent ->
                                         arrivalDepartureEvent.eventType == trainEvent.correspondingEventType &&
-                                                ((arrivalDepartureEvent.station.evaNumber in evaIds.ids) || (
-                                                        SEV_Static_Nuernberg.isReplacementStopFrom(
-                                                            arrivalDepartureEvent.station.evaNumber,
-                                                            evaIds.ids
-                                                        )
-                                                        ))
+                                                (arrivalDepartureEvent.station.evaNumber in evaIds.ids)
                                     }?.also {
                                         if (it.toJourneyStopEvent()?.parsedScheduledTime != scheduledTime) {
                                             tryYesterdayListener?.invoke() ?: listener.onFail(

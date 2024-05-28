@@ -84,7 +84,6 @@ import de.deutschebahn.bahnhoflive.ui.station.info.ServiceNumbersLiveData
 import de.deutschebahn.bahnhoflive.ui.station.localtransport.LocalTransportViewModel
 import de.deutschebahn.bahnhoflive.ui.station.locker.LockerFragment
 import de.deutschebahn.bahnhoflive.ui.station.parking.ParkingListFragment
-import de.deutschebahn.bahnhoflive.ui.station.railreplacement.SEV_Static_Nuernberg
 import de.deutschebahn.bahnhoflive.ui.station.railreplacement.SEV_Static_Riedbahn
 import de.deutschebahn.bahnhoflive.ui.station.search.ContentSearchResult
 import de.deutschebahn.bahnhoflive.ui.station.search.QueryPart
@@ -1575,15 +1574,15 @@ class StationViewModel(application: Application) : HafasTimetableViewModel(appli
 //        }
 
 
-    val showAugmentedRealityTeaser : LiveData<Boolean> = mapAvailableLiveData.switchMap {itMapAvailable->
-        stationResource.data.map {itStation ->
-            itMapAvailable && SEV_Static_Nuernberg.hasStationArAppLink(itStation.id)
-        }
-    }
+//    val showAugmentedRealityTeaser : LiveData<Boolean> = mapAvailableLiveData.switchMap {itMapAvailable->
+//        stationResource.data.map {itStation ->
+//            itMapAvailable && SEV_Static_Nuernberg.hasStationArAppLink(itStation.id)
+//        }
+//    }
 
     val showDbCompanionTeaser : LiveData<Boolean> =
         stationResource.data.map {itStation ->
-            SEV_Static_Riedbahn.hasStationDbCompanion(itStation.id)
+            SEV_Static_Riedbahn.hasStationDbCompanionByEvaId(itStation.id)
 //            SEV_Static.hasStationDbCompanion(itStation.id)
     }
 

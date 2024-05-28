@@ -191,7 +191,7 @@ class InfoCategorySelectionFragment : CategorySelectionFragment(
                 )
             )
         )
-        if (SEV_Static_Riedbahn.isStationReplacementStopByStadaID(stationViewModel.station?.id))
+        if (SEV_Static_Riedbahn.isStationReplacementStopByStationID(stationViewModel.station?.id))
             railReplacementServicesList.add(
                 ServiceContent(
                     StaticInfo(
