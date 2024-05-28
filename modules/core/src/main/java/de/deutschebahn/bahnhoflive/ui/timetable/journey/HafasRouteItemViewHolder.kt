@@ -2,9 +2,11 @@ package de.deutschebahn.bahnhoflive.ui.timetable.journey
 
 import android.graphics.Typeface
 import android.view.LayoutInflater
+import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
 import androidx.core.content.ContextCompat
+import androidx.core.view.isGone
 import androidx.core.view.isVisible
 import de.deutschebahn.bahnhoflive.R
 import de.deutschebahn.bahnhoflive.databinding.ItemJourneyDetailedBinding
@@ -45,14 +47,17 @@ class HafasRouteItemViewHolder(private val itemJourneyBinding: ItemJourneyDetail
     override fun onBind(item: HafasRouteStop?) {
         super.onBind(item)
 
+        if(item==null)
+            itemJourneyBinding.root.visibility=View.INVISIBLE
+        else
         with(itemJourneyBinding) {
 
-            item?.let { it ->
-                stopName.text = it.name
+            item.let { itHafasRouteStop ->
+                stopName.text = itHafasRouteStop.name
 
-                val isLastOrFirst = it.isLast || it.isFirst
+                val isLastOrFirst = itHafasRouteStop.isLast || itHafasRouteStop.isFirst
 
-                (if (it.highlight) Typeface.BOLD else Typeface.NORMAL).let { textStyle ->
+                (if (itHafasRouteStop.highlight) Typeface.BOLD else Typeface.NORMAL).let { textStyle ->
                     highlightableTextViews.forEach { textView ->
                         textView.setTypeface(
                             Typeface.create(textView.typeface, textStyle),
@@ -61,16 +66,15 @@ class HafasRouteItemViewHolder(private val itemJourneyBinding: ItemJourneyDetail
                     }
                 }
 
-                upperTrack.visibleElseGone(!it.isFirst)
-                lowerTrack.visibleElseGone(!it.isLast)
+                upperTrack.visibleElseGone(!itHafasRouteStop.isFirst)
+                lowerTrack.visibleElseGone(!itHafasRouteStop.isLast)
                 trackStop.isSelected = isLastOrFirst
 
-                item.hafasStop?.let { itHafasStop ->
-                    bindTimes(scheduledArrival,  expectedArrival, itHafasStop.arrivalTime())
-                    bindTimes(scheduledDeparture,  expectedDeparture, itHafasStop.departureTime())
+                itHafasRouteStop.hafasStop?.let { itHafasStop ->
 
+                    advice.isGone = false
 
-                    advice.text =
+                    val adviceText =
                         when {
                             itHafasStop.cancelled -> "Halt fällt aus"
                             itHafasStop.additional -> "Zusätzlicher Halt"
@@ -78,14 +82,80 @@ class HafasRouteItemViewHolder(private val itemJourneyBinding: ItemJourneyDetail
                             else -> ""
                     }
 
+                    val hasAdviceText = adviceText.isNotEmpty()
 
-                    advice.isVisible = advice.text.isNotEmpty()
                     advice.setCompoundDrawablesWithIntrinsicBounds(
-                        if (advice.isVisible) R.drawable.app_warndreieck else 0,
+                        if (hasAdviceText && !itHafasStop.additional) R.drawable.app_warndreieck else 0,
                         0,
                         0,
                         0
                     )
+
+                    advice.text = adviceText
+                    advice.isSelected = hasAdviceText && !itHafasStop.additional
+
+                    val arrivalTime = itHafasStop.arrivalTime()
+                    val departureTime = itHafasStop.departureTime()
+
+
+
+                    val hasArrivalTime: Boolean = arrivalTime.first!=null
+                    val hasDepartureTime : Boolean = departureTime.first!=null
+
+
+                    // layout is so designt, das elemente sich automatisch vertikal zentrieren
+                    // ab 16.4.2024 nicht mehr gewünscht -> Anpassung an IOS design
+
+                    // Normalfall: ankunft+abfahrt vorhanden, mit od. ohne advice -> 2 Zeilen
+                    // Sonderfall 1 : keine ankunft, kein advice  -> advice GONE, arrival GONE
+                    // Sonderfall 2 : keine abfahrt, kein advice  -> advice GONE, departure GONE
+                    // Sonderfall 3 : keine ankunft, advice  -> departure INVISIBLE, departure an arrival-position
+                    // Sonderfall 4 : keine abfahrt, advice  -> departure INVISIBLE
+
+                    var arrivalViewMode = View.VISIBLE
+                    var departureViewMode = View.VISIBLE
+
+                    if (!hasArrivalTime && !hasAdviceText) {
+                        advice.isGone = true
+                        arrivalViewMode = View.GONE
+                    } else
+                        if (!hasDepartureTime && !hasAdviceText) {
+                            advice.isGone = true
+                            departureViewMode = View.GONE
+                        } else
+                            if (!hasArrivalTime && hasAdviceText) {
+                                departureViewMode = View.INVISIBLE
+                            } else
+                                if (!hasDepartureTime && hasAdviceText) {
+                                    departureViewMode = View.INVISIBLE
+
+                                }
+
+                    if (!hasArrivalTime && hasAdviceText)
+                        bindTimes(
+                            scheduledArrival,
+                            expectedArrival,
+                            departureTime,
+                            arrivalViewMode
+                        )
+                    else
+                        bindTimes(
+                            scheduledArrival,
+                            expectedArrival,
+                            arrivalTime,
+                            arrivalViewMode
+                        )
+
+                    bindTimes(
+                        scheduledDeparture,
+                        expectedDeparture,
+                        departureTime,
+                        departureViewMode
+                    )
+
+//                    bindTimes(scheduledArrival,  expectedArrival, arrivalTime, arrivalViewMode)
+//                    bindTimes(scheduledDeparture,  expectedDeparture, departureTime, departureViewMode)
+
 
                     var platformText: String
                     var sr_platformText: String? = null
@@ -105,7 +175,7 @@ class HafasRouteItemViewHolder(private val itemJourneyBinding: ItemJourneyDetail
                         else
                             sr_platformText = ""
 
-                        if (item.hafasEvent?.product?.onTrack() == true) {
+                        if (itHafasRouteStop.hafasEvent?.product?.onTrack() == true) {
                             platformText = "Gl. $it"
                             sr_platformText += "Gleis $it"
                         } else {
@@ -115,10 +185,10 @@ class HafasRouteItemViewHolder(private val itemJourneyBinding: ItemJourneyDetail
                         platform.text = platformText
                     }
 
-                    platform.visibleElseGone(track != null)
+                    platform.isVisible = track != null
 
                     // for screenreader
-                    root.contentDescription = item.run {
+                    root.contentDescription = itHafasRouteStop.run {
                         listOfNotNull(
                             listOfNotNull(
                                 name,
@@ -173,19 +243,20 @@ class HafasRouteItemViewHolder(private val itemJourneyBinding: ItemJourneyDetail
     private fun bindTimes(
         scheduledTimeView: TextView,
         estimatedTimeView: TextView,
-        time: Pair<Date?, Date?>
+        time: Pair<Date?, Date?>,
+        viewMode : Int
     ) {
         val parsedScheduledTime: Long? = time.first?.time
         var parsedEstimatedTime: Long? = time.second?.time
 
         scheduledTimeView.text =
-            parsedScheduledTime?.let { it.formatShortTime() /*dateFormat.format(it)*/ }
+            parsedScheduledTime?.formatShortTime()
 
         if (parsedEstimatedTime == null)
             parsedEstimatedTime = parsedScheduledTime
 
         estimatedTimeView.text =
-            parsedEstimatedTime?.let { it.formatShortTime() /*dateFormat.format(it)*/ }
+            parsedEstimatedTime?.formatShortTime()
 
         val colorId =
                 parsedScheduledTime?.let {
@@ -199,7 +270,7 @@ class HafasRouteItemViewHolder(private val itemJourneyBinding: ItemJourneyDetail
         estimatedTimeView.setTextColor(ContextCompat.getColor(estimatedTimeView.context, colorId))
 
         val viewsVisible = parsedScheduledTime != null
-        scheduledTimeView.visibleElseGone(viewsVisible)
-        estimatedTimeView.visibleElseGone(viewsVisible)
+        scheduledTimeView.visibility = viewMode
+        estimatedTimeView.visibility = viewMode
     }
 }

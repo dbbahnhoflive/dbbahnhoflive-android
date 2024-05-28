@@ -104,6 +104,8 @@
         android:id="@+id/scheduledArrival"
         android:layout_width="@dimen/journey_time_width"
         android:layout_height="wrap_content"
+        android:minHeight="24dp"
+
         android:textSize="@dimen/textsize_h2"
         app:layout_constraintBottom_toTopOf="@+id/scheduledDeparture"
         app:layout_constraintStart_toEndOf="@+id/track_guide"
@@ -116,6 +118,8 @@
         android:layout_width="@dimen/journey_time_width"
         android:layout_height="wrap_content"
         android:textSize="@dimen/textsize_h2"
+        android:minHeight="24dp"
+
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toEndOf="@+id/track_guide"
         app:layout_constraintTop_toBottomOf="@+id/scheduledArrival"
@@ -125,6 +129,8 @@
         android:id="@+id/expectedArrival"
         android:layout_width="@dimen/journey_time_width"
         android:layout_height="wrap_content"
+        android:minHeight="24dp"
+
         android:textSize="@dimen/textsize_h2"
         app:layout_constraintBaseline_toBaselineOf="@+id/scheduledArrival"
         app:layout_constraintStart_toEndOf="@id/scheduledArrival"
@@ -135,6 +141,7 @@
         android:layout_width="@dimen/journey_time_width"
         android:layout_height="wrap_content"
         android:textSize="@dimen/textsize_h2"
+        android:minHeight="24dp"
         app:layout_constraintBaseline_toBaselineOf="@id/scheduledDeparture"
         app:layout_constraintStart_toEndOf="@id/scheduledDeparture"
         tools:text="@tools:sample/date/hhmm" />
@@ -150,6 +157,7 @@
         android:id="@+id/stop_name"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
+        android:minHeight="24dp"
         android:ellipsize="end"
         android:lines="1"
         android:textSize="@dimen/textsize_h2"
@@ -164,6 +172,7 @@
         android:id="@+id/advice"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
+        android:minHeight="24dp"
         android:ellipsize="end"
         android:gravity="fill_vertical"
         android:lines="1"
