@@ -99,6 +99,8 @@ open class TrackingManager(activity: ComponentActivity? = null) {
             const val POI_SEARCH_QUERY = "such-aktion"
             const val ECO_TEASER = "oekostrom-teaser"
             const val CHATBOT = "chatbot"
+            const val ERSATZVERKEHRTEASER = "ersatzverkehrteaser"
+            const val DBWEGBEGLEITUNGSTEASER = "wegbegleitungsteaser"
         }
     }
 
@@ -138,6 +140,9 @@ open class TrackingManager(activity: ComponentActivity? = null) {
             const val WEBSITE = "website"
             const val APP = "app"
             const val NEWS_TYPE = "newstype"
+            const val HALTESTELLENINFORMATIONEN = "haltestelleninformationen"
+            const val WEGBEGLEITUNG = "wegbegleitung"
+            const val WEGBEGLEITUNG_VIDEO = "video"
         }
     }
 
@@ -165,6 +170,7 @@ open class TrackingManager(activity: ComponentActivity? = null) {
             const val SHOPS = Entity.SHOPS
             const val COUPONS = "rabatt_coupons"
             const val SCHLIESSFAECHER = "locker"
+
         }
     }
 

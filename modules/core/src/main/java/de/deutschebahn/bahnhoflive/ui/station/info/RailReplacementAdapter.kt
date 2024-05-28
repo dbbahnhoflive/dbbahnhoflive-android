@@ -17,15 +17,14 @@ import java.util.Locale
 
 class RailReplacementAdapter(
     private val serviceContents: List<ServiceContent>,
-    val trackingManager: TrackingManager,
+    private val trackingManager: TrackingManager,
     private val dbActionButtonParser: DbActionButtonParser,
     private val stationViewModel: StationViewModel,
-    private val activityStarter: (intent:CustomTabsIntent, url:String) -> Unit,
+    private val webPageStarter: (intent:CustomTabsIntent, url:String) -> Unit,
     private val companionHintStarter : () -> Unit,
     private val checkIfServiceIsAvailable : () -> Unit
 
 ) : androidx.recyclerview.widget.RecyclerView.Adapter<CommonDetailsCardViewHolder<ServiceContent>>() {
-
 
     val singleSelectionManager: SingleSelectionManager = SingleSelectionManager(this)
 
@@ -33,6 +32,22 @@ class RailReplacementAdapter(
         SingleSelectionManager.Listener { selectionManager ->
             if (selectionManager?.isSelected(VIEW_TYPE_COMPANION) == true) {
                 checkIfServiceIsAvailable()
+                trackingManager.track(
+                    TrackingManager.TYPE_ACTION,
+                    TrackingManager.Action.TAP,
+                    TrackingManager.Screen.D1,
+                    TrackingManager.Category.SCHIENENERSATZVERKEHR,
+                    TrackingManager.Entity.WEGBEGLEITUNG
+
+                )
+            } else if (selectionManager?.isSelected(VIEW_TYPE_STOP_PLACE_INFORMATION) == true) {
+                trackingManager.track(
+                    TrackingManager.TYPE_ACTION,
+                    TrackingManager.Action.TAP,
+                    TrackingManager.Screen.D1,
+                    TrackingManager.Category.SCHIENENERSATZVERKEHR,
+                    TrackingManager.Entity.HALTESTELLENINFORMATIONEN
+                )
             }
         }
 
@@ -98,7 +113,8 @@ class RailReplacementAdapter(
                         false
                     ),
                     singleSelectionManager,
-                    activityStarter,
+                    trackingManager,
+                    webPageStarter,
                     companionHintStarter
                 )
 

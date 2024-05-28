@@ -187,7 +187,7 @@ class InfoCategorySelectionFragment : CategorySelectionFragment(
                 StaticInfo(
                     ServiceContentType.Local.STOP_PLACE,
                     "Haltestelleninformation",
-                    "description2"
+                    "Haltestelleninformation"
                 )
             )
         )
@@ -197,7 +197,7 @@ class InfoCategorySelectionFragment : CategorySelectionFragment(
                     StaticInfo(
                         ServiceContentType.Local.DB_COMPANION,
                         "DB Wegbegleitung",
-                        "description1"
+                        "DB Wegbegleitung"
                     )
                 )
             )
@@ -231,7 +231,7 @@ class InfoCategorySelectionFragment : CategorySelectionFragment(
         if (serviceContents.size == 1)
             stationViewModel.setRailReplacementInfoSelectedItem(RailReplacementInfoType.STOP_PLACE)
         else
-            stationViewModel.setRailReplacementInfoSelectedItem(RailReplacementInfoType.TOP)
+            stationViewModel.setRailReplacementInfoSelectedItem(RailReplacementInfoType.ROOT)
 
         startFragment(railReplacementDetailsFragment)
     }

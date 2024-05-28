@@ -109,7 +109,8 @@
 
     <LinearLayout
         android:id="@+id/rowArTeaser"
-
+        android:visibility="gone"
+        tools:visibility="visible"
         app:layout_constraintDimensionRatio="2"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"

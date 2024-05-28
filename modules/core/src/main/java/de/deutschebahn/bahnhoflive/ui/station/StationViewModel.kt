@@ -1393,7 +1393,7 @@ class StationViewModel(application: Application) : HafasTimetableViewModel(appli
     }
 
     private val _railReplacementInfoSelectedItemLiveData : MutableLiveData<RailReplacementInfoType> =
-        MutableLiveData<RailReplacementInfoType>(RailReplacementInfoType.TOP)
+        MutableLiveData<RailReplacementInfoType>(RailReplacementInfoType.ROOT)
     val railReplacementInfoSelectedItemLiveData : LiveData<RailReplacementInfoType> = _railReplacementInfoSelectedItemLiveData
     fun setRailReplacementInfoSelectedItem(type : RailReplacementInfoType) {
         _railReplacementInfoSelectedItemLiveData.value = type
@@ -1582,8 +1582,7 @@ class StationViewModel(application: Application) : HafasTimetableViewModel(appli
 
     val showDbCompanionTeaser : LiveData<Boolean> =
         stationResource.data.map {itStation ->
-            SEV_Static_Riedbahn.hasStationDbCompanionByEvaId(itStation.id)
-//            SEV_Static.hasStationDbCompanion(itStation.id)
+            SEV_Static_Riedbahn.hasStationDbCompanionByStationId(itStation.id)
     }
 
 

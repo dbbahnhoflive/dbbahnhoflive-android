@@ -76,7 +76,7 @@ import de.deutschebahn.bahnhoflive.util.getParcelableExtraCompatible
 import de.deutschebahn.bahnhoflive.widgets.CeCheckableImageButton
 import kotlin.math.abs
 
-enum class RailReplacementInfoType(val value:Int) {TOP(0), STOP_PLACE(1), COMPANION(2)}
+enum class RailReplacementInfoType(val value:Int) {ROOT(0), STOP_PLACE(1), COMPANION(2)}
 
 class StationActivity : BaseActivity(), StationProvider, RootProvider, TrackingManager.Provider,
     StationNavigation {
@@ -551,24 +551,43 @@ class StationActivity : BaseActivity(), StationProvider, RootProvider, TrackingM
 
             val railReplacementServicesList : MutableList<ServiceContent> = mutableListOf()
 
-            railReplacementServicesList.add(ServiceContent(StaticInfo(ServiceContentType.Local.STOP_PLACE, "Haltestelleninformation", "description2")))
+            railReplacementServicesList.add(
+                ServiceContent(
+                    StaticInfo(
+                        ServiceContentType.Local.STOP_PLACE,
+                        "Haltestelleninformation",
+                        "Haltestelleninformation"
+                    )
+                )
+            )
 
             if(SEV_Static_Riedbahn.isStationReplacementStopByStationID(station?.id))
-            railReplacementServicesList.add(ServiceContent(StaticInfo(ServiceContentType.Local.DB_COMPANION, "DB Wegbegleitung", "description1")))
+                railReplacementServicesList.add(
+                    ServiceContent(
+                        StaticInfo(
+                            ServiceContentType.Local.DB_COMPANION,
+                            "DB Wegbegleitung",
+                            "DB Wegbegleitung"
+                        )
+                    )
+                )
             else
              what = RailReplacementInfoType.STOP_PLACE
 
-            infoFragment?.push(RailReplacementFragment.create(
+            infoFragment?.push(
+                RailReplacementFragment.create(
                 ArrayList(railReplacementServicesList),
                 getText( R.string.rail_replacement),
-                TrackingManager.Category.SCHIENENERSATZVERKEHR))
+                    TrackingManager.Category.SCHIENENERSATZVERKEHR
+                )
+            )
         }
 
         stationViewModel.setRailReplacementInfoSelectedItem(what)
 
     }
     override fun showRailReplacement() {
-        showRailReplacementDetailed(RailReplacementInfoType.TOP)
+        showRailReplacementDetailed(RailReplacementInfoType.ROOT)
         }
 
     override fun showRailReplacementStopPlaceInformation() {

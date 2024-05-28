@@ -537,18 +537,18 @@ public class StationFragment extends androidx.fragment.app.Fragment implements
                 }
         );
 
-        final View arTeaser = view.findViewById(R.id.rowArTeaser);
+//        final View arTeaser = view.findViewById(R.id.rowArTeaser);
 
 //        stationViewModel.getShowAugmentedRealityTeaser().observe(getViewLifecycleOwner(), hasAugmentedRealityLink -> {
 //            arTeaser.setVisibility(hasAugmentedRealityLink ? View.VISIBLE : View.GONE);
 //        });
 
-        arTeaser.findViewById(R.id.webLink_ar).setOnClickListener(v ->
-            stationViewModel.startAugmentedRealityWebSite(requireContext())
-        );
-        arTeaser.setOnClickListener(v ->
-                stationViewModel.startAugmentedRealityWebSite(requireContext())
-        );
+//        arTeaser.findViewById(R.id.webLink_ar).setOnClickListener(v ->
+//            stationViewModel.startAugmentedRealityWebSite(requireContext())
+//        );
+//        arTeaser.setOnClickListener(v ->
+//                stationViewModel.startAugmentedRealityWebSite(requireContext())
+//        );
 
 
         stationViewModel.getShowDbCompanionTeaser().observe(getViewLifecycleOwner(), it -> {
@@ -565,8 +565,10 @@ public class StationFragment extends androidx.fragment.app.Fragment implements
             dbCompanionTeaser.setVisibility(it ? View.VISIBLE : View.GONE);
                 dbCompanionTeaser.setOnClickListener(v -> {
                             final StationNavigation stationNavigation = stationViewModel.getStationNavigation();
-                            if (stationNavigation != null)
+                            if (stationNavigation != null) {
+                                getTrackingManager().track(TrackingManager.TYPE_ACTION,TrackingManager.Screen.H1, TrackingManager.Action.TAP, TrackingManager.UiElement.DBWEGBEGLEITUNGSTEASER);
                                 stationNavigation.showRailReplacementDbCompanionInformation();
+                        }
                         }
                 );
             }
@@ -599,7 +601,7 @@ public class StationFragment extends androidx.fragment.app.Fragment implements
 
             final Group group = news.group;
             if (group != null) {
-                trackingManager.track(TrackingManager.TYPE_ACTION, TrackingManager.Screen.H1, TrackingManager.Action.TAP, TrackingManager.Entity.NEWS_TYPE, String.valueOf(group.getId()));
+                trackingManager.track(TrackingManager.TYPE_ACTION, TrackingManager.Screen.H1, TrackingManager.Action.TAP, TrackingManager.UiElement.ERSATZVERKEHRTEASER);
             }
 
             return Unit.INSTANCE;

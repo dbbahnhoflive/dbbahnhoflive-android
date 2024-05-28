@@ -58,7 +58,7 @@ class RailReplacementFragment :
         }
 
         stationViewModel.railReplacementInfoSelectedItemLiveData.observe(this) {
-           if(it!=RailReplacementInfoType.TOP)
+            if(it!=RailReplacementInfoType.ROOT)
             adapter?.singleSelectionManager?.selection = it.value-1
         }
 
@@ -68,7 +68,7 @@ class RailReplacementFragment :
             TrackingManager.fromActivity(activity),
             dbActionButtonParser,
             stationViewModel,
-            { // activityStarter
+            { // webPageStarter (starte video)
                     intent, url ->
                 context?.let { intent.launchUrl(it, Uri.parse(url)) }
             },
@@ -77,7 +77,6 @@ class RailReplacementFragment :
                 (activity as StationActivity).showDbCompanionHelp()
             },
             { // checkIfServiceIsAvailable
-
                 if (stationViewModel.dbCompanionServiceAvailableLiveData.value==false) {
                     context?.let {
                         AlertX.execAlert(
@@ -109,11 +108,11 @@ class RailReplacementFragment :
 
         stationViewModel.topInfoFragmentTag = RailReplacementFragment.TAG
 
-        TrackingManager.fromActivity(activity).track(
-            TrackingManager.TYPE_STATE, TrackingManager.Screen.D1, TrackingManager.tagFromArguments(
-                arguments
-            )
-        )
+//        TrackingManager.fromActivity(activity).track(
+//            TrackingManager.TYPE_STATE, TrackingManager.Screen.D1, TrackingManager.tagFromArguments(
+//                arguments
+//            )
+//        )
 
         selectedIndex?.let {
             if (it != 0) {
