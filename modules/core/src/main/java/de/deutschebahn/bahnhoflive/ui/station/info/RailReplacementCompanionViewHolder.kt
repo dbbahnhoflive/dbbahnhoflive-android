@@ -5,6 +5,7 @@ import androidx.browser.customtabs.CustomTabsIntent
 import androidx.core.view.isVisible
 import de.deutschebahn.bahnhoflive.IconMapper
 import de.deutschebahn.bahnhoflive.R
+import de.deutschebahn.bahnhoflive.analytics.TrackingManager
 import de.deutschebahn.bahnhoflive.backend.local.model.ServiceContent
 import de.deutschebahn.bahnhoflive.databinding.CardExpandableRailReplacementCompanionBinding
 import de.deutschebahn.bahnhoflive.ui.Status
@@ -16,7 +17,8 @@ import de.deutschebahn.bahnhoflive.view.SingleSelectionManager
 class RailReplacementCompanionViewHolder(
     private val binding : CardExpandableRailReplacementCompanionBinding,
     private val selectionManager: SingleSelectionManager,
-    private val activityStarter: (intent:CustomTabsIntent, url:String) -> Unit,
+    private val trackingManager: TrackingManager,
+    private val webPageStarter: (intent:CustomTabsIntent, url:String) -> Unit,
     private val companionHintStarter : () -> Unit
 ) : CommonDetailsCardViewHolder<ServiceContent>(
     binding.root,
@@ -32,11 +34,8 @@ class RailReplacementCompanionViewHolder(
             iconView.setImageResource(IconMapper.contentIconForType(it))
         }
 
-
         if (SEV_Static_Riedbahn.isInAnnouncementPhase()) {
-
             binding.serviceAnnouncement.isVisible = true
-
             binding.servicetimes.isVisible = false
             binding.textServicetime.isVisible = false
             binding.linkVideoCall.isVisible = false
@@ -48,10 +47,17 @@ class RailReplacementCompanionViewHolder(
                 binding.linkVideoCall.isVisible=true
             }
 
-
-
-
         binding.linkVideoCall.setOnClickListener {
+
+            // on click
+            trackingManager.track(
+                TrackingManager.TYPE_ACTION,
+                TrackingManager.Action.TAP,
+                TrackingManager.Screen.D1,
+                TrackingManager.Category.SCHIENENERSATZVERKEHR,
+                TrackingManager.Entity.WEGBEGLEITUNG,
+                TrackingManager.Entity.WEGBEGLEITUNG_VIDEO
+            )
 
             val url =
                 itemView.context.getString(R.string.rail_replacement_db_companion_video_call_url)
@@ -59,7 +65,7 @@ class RailReplacementCompanionViewHolder(
                 .setShowTitle(false)
                 .setUrlBarHidingEnabled(true)
                 .build()
-            activityStarter(intent, url)
+            webPageStarter(intent, url)
 
         }
 
@@ -83,7 +89,7 @@ class RailReplacementCompanionViewHolder(
                     itemView.context.getString(R.string.rail_replacement_db_companion_imprint_url)
                 val intent = CustomTabsIntent.Builder()
                     .build()
-                activityStarter(intent, url)
+                webPageStarter(intent, url)
             }
         }
 
@@ -97,7 +103,7 @@ class RailReplacementCompanionViewHolder(
                     itemView.context.getString(R.string.rail_replacement_db_companion_legal_notice_url)
                 val intent = CustomTabsIntent.Builder()
                     .build()
-                activityStarter(intent, url)
+                webPageStarter(intent, url)
             }
         }
 
