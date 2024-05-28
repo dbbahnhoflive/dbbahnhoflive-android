@@ -78,7 +78,7 @@ class EvItem(
         3839 to EvItem(8003766, "Ludwigshafen-Oggersheim"),
         3836 to EvItem(8000236, "Ludwigshafen (Rhein) Hbf"),
         7385 to EvItem(8003759, "Ludwigshafen Mitte"),
-        4351 to EvItem(8004246, "Neu-Isenburg"),
+//        4351 to EvItem(8004246, "Neu-Isenburg"),
         3524 to EvItem(8003523, "Langen"),
         1126 to EvItem(8000068, "Darmstadt Hbf"),
         1129 to EvItem(8001377, "Darmstadt Süd"),
