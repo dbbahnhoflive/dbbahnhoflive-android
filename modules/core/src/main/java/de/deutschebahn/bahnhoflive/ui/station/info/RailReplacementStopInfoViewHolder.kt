@@ -35,14 +35,13 @@ class RailReplacementStopInfoViewHolder(
         }
 
 //        binding.contentList.isVisible = false
-
-        // bahnhof.de öffnen
-        binding.linkReplacementTraffic.visibility = View.VISIBLE
-        binding.linkReplacementTraffic.setOnClickListener {
+        binding.moreInfoLink.layout.isVisible = true
+        binding.moreInfoLink.linkText.text = itemView.context.getString(R.string.sev_stop_info_more_information_url_link_text)
+        binding.moreInfoLink.layout.setOnClickListener {
             itemView.context?.let { it1 ->
                 Intent(
                     Intent.ACTION_VIEW,
-                    Uri.parse("http://bahnhof.de/bfl/ev-nw")
+                    Uri.parse( itemView.context.getString(R.string.sev_stop_info_more_information_url))
                 ).startSafely(it1)
             }
         }
@@ -98,7 +97,7 @@ class RailReplacementStopInfoViewHolder(
             nevInfoTop.isVisible = true
             icon.isVisible = true
             newsHeadline.isVisible = true
-            newsCopy.isVisible = true
+            newsCopy.isVisible = false
 
             railReplacementNev.isVisible = true
             railReplacementNev2.isVisible = false

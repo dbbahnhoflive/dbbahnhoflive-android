@@ -54,40 +54,23 @@
                 android:layout_marginTop="@dimen/default_space"
                 android:importantForAccessibility="yes"
                 android:text="@string/rail_replacement_db_companion_text2"
+                android:contentDescription="@string/sr_rail_replacement_db_companion_text2"
                 android:textSize="@dimen/textsize_28" />
 
-            <android.widget.Space
-                android:layout_width="wrap_content"
-                android:layout_height="@dimen/default_space_triple" />
-
             <TextView
-                android:id="@+id/text_servicetime"
+                android:id="@+id/service_active"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:text="@string/rail_replacement_db_companion_service_times"
+                android:contentDescription="@string/sr_rail_replacement_db_companion_service_times"
                 android:textSize="@dimen/textsize_28"
-                android:textStyle="bold" />
-
-            <android.widget.Space
-                android:layout_width="wrap_content"
-                android:layout_height="@dimen/default_space_half" />
-
-            <TextView
-                android:id="@+id/servicetimes"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="@string/sev_db_companion_service_time_range"
-                android:contentDescription="@string/sr_sev_db_companion_service_time_range"
-                android:textSize="@dimen/textsize_28" />
-
-            <android.widget.Space
-                android:layout_width="wrap_content"
-                android:layout_height="@dimen/default_space_quadruple" />
+                />
 
             <TextView
                 android:id="@+id/linkVideoCall"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:layout_marginVertical="@dimen/default_space_double"
                 android:background="@drawable/shape_round_button_grey"
                 android:gravity="center"
                 android:importantForAccessibility="yes"
@@ -96,9 +79,17 @@
                 android:textColor="@color/white"
                 android:textStyle="bold" />
 
+            <TextView
+                android:id="@+id/service_active_hint"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/rail_replacement_db_companion_service_hint"
+                android:textSize="@dimen/textsize_28"
+                />
+
             <android.widget.Space
                 android:layout_width="wrap_content"
-                android:layout_height="@dimen/default_space_quadruple" />
+                android:layout_height="@dimen/default_space_double" />
 
             <include
                 android:id="@+id/layout_hint" layout="@layout/link_with_text"

@@ -116,11 +116,11 @@ class EvItem(
         c.set(Calendar.MINUTE, 0)
         val today7_00h = c.timeInMillis
 
-        c.set(Calendar.HOUR_OF_DAY, 22)
+        c.set(Calendar.HOUR_OF_DAY, 19)
         c.set(Calendar.MINUTE, 0)
-        val today22_00h = c.timeInMillis
+        val today19_00h = c.timeInMillis
 
-        return (((day >= Calendar.MONDAY && day <= Calendar.FRIDAY) && (now >= today7_00h && now < today22_00h)) || testIsDbCompanionServiceAvailable)
+        return (((day >= Calendar.MONDAY && day <= Calendar.FRIDAY) && (now >= today7_00h && now < today19_00h)) || testIsDbCompanionServiceAvailable)
     }
 
     fun containsStationId(stationId: String?): Boolean {

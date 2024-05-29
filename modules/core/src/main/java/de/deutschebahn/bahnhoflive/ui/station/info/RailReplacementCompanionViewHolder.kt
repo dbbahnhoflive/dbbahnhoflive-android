@@ -36,15 +36,26 @@ class RailReplacementCompanionViewHolder(
 
         if (SEV_Static_Riedbahn.isInAnnouncementPhase()) {
             binding.serviceAnnouncement.isVisible = true
-            binding.servicetimes.isVisible = false
-            binding.textServicetime.isVisible = false
+            binding.serviceActive.isVisible = false
             binding.linkVideoCall.isVisible = false
+            binding.serviceActiveHint.isVisible = false
         } else
             if (SEV_Static_Riedbahn.isInConstructionPhase()) {
                 binding.serviceAnnouncement.isVisible=false
-                binding.servicetimes.isVisible=true
-                binding.textServicetime.isVisible=true
+
+                binding.serviceActive.isVisible=true
+
+//                val htmlText =
+//                    itemView.context.getString(R.string.rail_replacement_db_companion_service_times)
+//                binding.serviceActive.text = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
+//                    Html.fromHtml(htmlText, Html.FROM_HTML_MODE_COMPACT)
+//                } else {
+//                    Html.fromHtml(htmlText)
+//                }
+
                 binding.linkVideoCall.isVisible=true
+                binding.serviceActiveHint.isVisible = true
+
             }
 
         binding.linkVideoCall.setOnClickListener {

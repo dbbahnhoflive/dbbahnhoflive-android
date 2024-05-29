@@ -441,17 +441,19 @@
     <string name="sr_nev_phase_headline">Beachten Sie den Ersatzverkehr</string>
     <string name="nev_copy">Ersatzverkehr zwischen Frankfurt (Main) Stadion und Mannheim Hbf.</string>
     <string name="sr_nev_copy">Vom Fünfzehnten Juli bis zum Einundreissigsten Dezember 2024 ist aufgrund von Baumaßnahmen ein Ersatzverkehr zwischen Frankfurt (Main) Stadion und Mannheim Hbf eingerichtet</string>
-    <string name="nev_text_1">Aufgrund von Bauarbeiten auf der „Riedbahn“ kommt es zwischen Frankfurt (Main) Stadion und Mannheim Hauptbahnhof von Juli bis Dezember 2024 zu Einschränkungen im Zugverkehr. Ein Ersatzverkehr mit Bussen ist eingerichtet.</string>
+    <string name="nev_text_1">Aufgrund von Bauarbeiten an der Riedbahn kommt es von Juli bis Dezember 2024 zu Einschränkungen im Zugverkehr auf der Strecke zwischen Frankfurt (Main) Hauptbahnhof und Mannheim Hauptbahnhof. Darüber hinaus sind auch die Nebenverbindungen der Riedbahn, der Main-Neckar-Bahn sowie die Linien auf der Strecke Mainz – Mannheim betroffen. Ein Ersatzverkehr mit Bussen ist eingerichtet.</string>
     <string name="nev_text_2">Die Sanierung erfolgt in zwei Abschnitten. Zunächst wird die Strecke zwischen Rottendorf und Neustadt (Aisch) Bahnhof vom 26. Mai bis 05. August 2023 für den Zugverkehr komplett gesperrt. Anschließend erfolgt eine Sperrung der Strecke zwischen Neustadt (Aisch) Bahnhof und Fürth (Bay) Hauptbahnhof vom 06. August bis 11. September 2023. Durch die Sperrung in dem zweiten genannten Zeitraum erfolgt auf der Strecke Markt Erlbach - Siegelsdorf - Fürth (Bay) Hauptbahnhof zudem ebenfalls kein Zugverkehr.\n\nDarüber hinaus entfallen über beide Bauphasen die meisten Züge der Linie RB80 zwischen Würzburg Hauptbahnhof und Marktbreit.\n\nWeiterhin kommt es in den späten Abend- und frühen Morgenstunden zwischen Nürnberg Hauptbahnhof und Würzburg Hauptbahnhof über den gesamten Zeitraum hinweg zu Zugausfällen.\n\nWeiterführende Informationen finden Sie unter bahnhof.de"</string>
 
-    <string name="sev_date_range">15.07.24 - 14.12.24</string>
+    <string name="sev_date_range">15.07. - 14.12.2024</string>
     <string name="sr_sev_date_range">vom Fünfzehnten Juli 24 bis Vierzehnten Dezember 24</string>
 
-    <string name="sev_db_companion_service_time_range_help">Montag bis Freitag von 7 - 22 Uhr</string>
-    <string name="sev_db_companion_service_time_range">Mo. - Fr.: 7 - 22 Uhr</string>
-    <string name="sr_sev_db_companion_service_time_range">Montag bis Freitag. Sieben bis Zweiundzwanzig Uhr</string>
+    <string name="sev_db_companion_service_time_range_help">täglich von 7:00 bis 19:00 Uhr</string>
+    <string name="sev_db_companion_service_time_range">täglich von 7:00 bis 19:00 Uhr</string>
+    <string name="sr_sev_db_companion_service_time_range">Montag bis Freitag. Sieben bis Neunzehn Uhr</string>
 
-    <string name="link_hint_bahnhof_de">Weiterführende Informationen finden Sie unter bahnhof.de</string>
+    <string name="sev_stop_info_more_information">Weiterführende Informationen finden Sie unter</string>
+    <string name="sev_stop_info_more_information_url">http://bahnhof.de/entdecken/bauarbeiten-riedbahn</string>
+    <string name="sev_stop_info_more_information_url_link_text">bahnhof.de/entdecken/bauarbeiten-riedbahn</string>
     <string name="open_link_bahnhof_de">"bahnhof.de öffnen"</string>
 
     <string name="info_sev">Übersicht Ersatzverkehr</string>
@@ -473,9 +475,12 @@
     <string name="nev_db_companion_button_text">DB Wegbegleitung öffnen</string>
 
 
-    <string name="rail_replacement_db_companion_text1">An Bahnhöfen mit Ersatzverkehr begleitet Sie unser geschultes Personal per Videoanruf sicher und schnell zu Ihrer Ersatzhaltestelle und zurück.</string>
-    <string name="rail_replacement_db_companion_text2">Dieser Service steht Ihnen für die Zeit der Baumaßnahmen, ab dem 15. Juli bis voraussichtlich Dezember 2024, täglich zwischen 07:30 und 18:30, zur Verfügung.</string>
-    <string name="rail_replacement_db_companion_service_times">Servicezeiten</string>
+    <string name="rail_replacement_db_companion_text1">Blinde und stark sehbeeinträchtigte Reisende können sich an Bahnhöfen mit Ersatzverkehr sicher und schnell durch unser geschultes Personal per Videoanruf zur Ersatzhaltestelle und zurück begleiten lassen. Dies ist ein Service der DB Regio AG.</string>
+    <string name="rail_replacement_db_companion_text2">Dieser Service steht Ihnen für die Zeit der Baumaßnahmen ab dem 15. Juli bis 14. Dezember 2024, täglich von 07:00 bis 19:00 Uhr zur Verfügung.</string>
+    <string name="sr_rail_replacement_db_companion_text2">Dieser Service steht Ihnen für die Zeit der Baumaßnahmen ab dem fünfzehnten Juli bis vierzehnten Dezember 2024, täglich von sieben bis neunzehn Uhr zur Verfügung.</string>
+    <string name="rail_replacement_db_companion_service_times">Der Service ist <b>täglich von 07:00 Uhr bis 19:00 Uhr</b> erreichbar.</string>
+    <string name="rail_replacement_db_companion_service_hint">Bitte beachten Sie: Dieser Service richtet sich an sinneseingeschränkte Reisende. Für allgemeine Fragen zu Ihrer Reise wenden Sie sich bitte an das Reisezentrum oder Bahn-Mitarbeitenden vor Ort.</string>
+    <string name="sr_rail_replacement_db_companion_service_times">Der Service ist täglich von sieben Uhr bis neunzehn Uhr erreichbar.</string>
     <string name="rail_replacement_db_companion_call_video">Video-Anruf starten</string>
     <string name="rail_replacement_db_companion_legal_notice">Rechtliche Hinweise</string>
     <string name="rail_replacement_db_companion_hint">So funktioniert der Service</string>
@@ -483,8 +488,6 @@
     <string name="rail_replacement_db_companion_imprint">Impressum</string>
     <string name="rail_replacement_db_companion_video_call_url">https://int.help-me-iat.comp.db.de/</string>
     <string name="rail_replacement_db_companion_imprint_url">https://wegbegleitung-schulung.deutschebahn.com/static/bahnhof-live/imprint</string>
-<!--    <string name="rail_replacement_db_companion_imprint_url">https://feat-bahnhof-live-pages.help-me-iat.comp.db.de/static/bahnhof-live/imprint</string>-->
-<!--    <string name="rail_replacement_db_companion_legal_notice_url">https://feat-bahnhof-live-pages.help-me-iat.comp.db.de/static/bahnhof-live/legal-notice</string>-->
     <string name="rail_replacement_db_companion_legal_notice_url">https://wegbegleitung-schulung.deutschebahn.com/static/bahnhof-live/legal-notice</string>
     <string name="rail_replacement_db_companion_no_service_headline">Aktuell kein Service</string>
     <string name="rail_replacement_db_companion_no_service_body">Dieser Service ist täglich zwischen 7:30 und 18:30 Uhr verfügbar.</string>

@@ -124,7 +124,7 @@
                         app:layout_constraintStart_toEndOf="@+id/icon"
                         app:layout_constraintTop_toBottomOf="@+id/newsHeadline"
                         android:text="@string/nev_copy"
-                        tools:text="@tools:sample/lorem/random" />
+                        />
 
                 </androidx.constraintlayout.widget.ConstraintLayout>
 
@@ -180,6 +180,7 @@
                     android:visibility="gone"
                     android:layout_marginHorizontal="@dimen/default_space_double"
                     android:text="@string/nev_text_2"
+                    tools:text="service hint"
                     android:textSize="@dimen/textsize_28" />
 
                 <android.widget.Space
@@ -189,27 +190,17 @@
                 <TextView
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="@dimen/default_space"
+                    android:layout_marginVertical="@dimen/default_space"
                     android:layout_marginHorizontal="@dimen/default_space_double"
-                    android:text="@string/link_hint_bahnhof_de"
+                    android:text="@string/sev_stop_info_more_information"
                     android:textSize="@dimen/textsize_28" />
 
-                <TextView
-                    android:id="@+id/linkReplacementTraffic"
-                    android:layout_marginTop="@dimen/default_space"
-                    android:layout_marginHorizontal="@dimen/default_space_double"
-                    android:importantForAccessibility="yes"
+                <include
+                    android:id="@+id/more_info_link"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    tools:visibility="visible"
-                    android:background="@drawable/shape_round_button_grey"
-                    android:gravity="center"
-                    android:minHeight="64dp"
-                    android:clickable="true"
-                    android:focusable="true"
-                    android:text="@string/open_link_bahnhof_de"
-                    android:textColor="@color/white"
-                    android:textStyle="bold" />
+                    android:layout_marginHorizontal="@dimen/default_space_double"
+                    layout="@layout/link_with_text"/>
 
             </LinearLayout>
     </LinearLayout>
