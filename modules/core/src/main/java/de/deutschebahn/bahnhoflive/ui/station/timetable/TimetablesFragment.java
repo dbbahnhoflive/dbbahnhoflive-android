@@ -90,7 +90,7 @@ public class TimetablesFragment extends TwoTabsFragment {
             stationViewModel.setTrackFilter(trackFilter);
             stationViewModel.setShowArrivals(arrivals);
             setTab(0);
-            showTutorialIfNecessary(); // todo: Wenn Gleisinformationen angezeigt werden sollen wieder rein, Id.TIMETABLE aendern in Id.TRACKINFORMATION
+            //showTutorialIfNecessary(); // todo: Wenn Gleisinformationen angezeigt werden sollen wieder rein, Id.TIMETABLE aendern in Id.TRACKINFORMATION
         }
     }
 
