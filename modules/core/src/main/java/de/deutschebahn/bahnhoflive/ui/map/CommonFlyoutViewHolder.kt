@@ -42,7 +42,7 @@ class CommonFlyoutViewHolder(
 
     }
 
-    override fun onBind(item: MarkerBinder?) {
+    override fun onBind(item:           MarkerBinder?) {
         super.onBind(item)
         item?.let {
             descriptionView.text = it.markerContent.getDescription(context)

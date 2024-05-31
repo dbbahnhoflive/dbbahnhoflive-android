@@ -7,7 +7,7 @@ package de.deutschebahn.bahnhoflive.ui.station.timetable
 
 import de.deutschebahn.bahnhoflive.backend.ris.model.TrainInfo
 import de.deutschebahn.bahnhoflive.backend.ris.model.TrainMovementInfo
-import java.util.*
+import java.util.Locale
 
 object TimetableViewHelper {
     fun composeName(trainInfo: TrainInfo, trainMovementInfo: TrainMovementInfo?): String =
@@ -29,11 +29,11 @@ object TimetableViewHelper {
     /**
      * @return Might return null if the train doesn't support Wagenstand Requests.
      */
-    fun buildQueryParameters(trainInfo: TrainInfo, event: TrainMovementInfo): Map<String, Any?> {
+    fun buildQueryParameters(trainInfo: TrainInfo, event: TrainMovementInfo?): Map<String, Any?> {
         val parameters: MutableMap<String, Any?> = HashMap()
         try {
             val trainType = trainInfo.trainCategory
-            parameters["platform"] = event.platform.replace("\\D+".toRegex(), "")
+            parameters["platform"] = event?.platform?.replace("\\D+".toRegex(), "")?:""
             if (trainType == "RE" || trainType == "RB") {
                 if (trainInfo.trainGenericName != null) {
                     parameters["trainNumber"] = trainInfo.trainGenericName
@@ -41,7 +41,7 @@ object TimetableViewHelper {
                     parameters["trainNumber"] = trainInfo.trainName
                 }
             } else {
-                parameters["time"] = event.formattedTime
+                parameters["time"] = event?.formattedTime?:""
                 parameters["trainNumber"] = trainInfo.trainName
             }
             val timeOffset: MutableMap<String, String> = HashMap()

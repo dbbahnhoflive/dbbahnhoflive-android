@@ -12,6 +12,7 @@ import de.deutschebahn.bahnhoflive.BaseApplication
 import de.deutschebahn.bahnhoflive.backend.VolleyRestListener
 import de.deutschebahn.bahnhoflive.backend.ris.model.TrainEvent
 import de.deutschebahn.bahnhoflive.backend.ris.model.TrainInfo
+import de.deutschebahn.bahnhoflive.backend.ris.model.TrainMovementInfo
 import de.deutschebahn.bahnhoflive.repository.MergedStation
 import de.deutschebahn.bahnhoflive.repository.timetable.Timetable
 import de.deutschebahn.bahnhoflive.repository.trainformation.TrainFormation
@@ -137,8 +138,8 @@ class JourneyViewModel(app: Application, savedStateHandle: SavedStateHandle) :
         essentialParametersLiveData.switchMap { (station, trainInfo, trainEvent) ->
             journeysByRelationLiveData.map { journeys ->
                 if (journeys.isFailure) {
-                    trainEvent.movementRetriever.getTrainMovementInfo(trainInfo)
-                        .routeStops(station.title, trainEvent.isDeparture)
+                    val trainMovementInfo : TrainMovementInfo? = trainEvent.movementRetriever.getTrainMovementInfo(trainInfo)
+                    trainMovementInfo?.routeStops(station.title, trainEvent.isDeparture)
                 } else null
             }
         }

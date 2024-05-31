@@ -254,9 +254,8 @@ internal class DbTimetableAdapter(
             if (trainCategory != null && trainCategory != selectedTrainInfo.trainCategory) {
                 continue
             }
-            if (track != null && track != trainEvent.movementRetriever.getTrainMovementInfo(
-                    selectedTrainInfo
-                ).platformWithoutExtensions
+            if (track != null &&
+                track != trainEvent.movementRetriever.getTrainMovementInfo(selectedTrainInfo)?.platformWithoutExtensions
             ) {
                 continue
             }

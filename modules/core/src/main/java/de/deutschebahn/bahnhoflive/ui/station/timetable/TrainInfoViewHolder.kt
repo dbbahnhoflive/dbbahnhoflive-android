@@ -7,7 +7,6 @@
 package de.deutschebahn.bahnhoflive.ui.station.timetable
 
 import android.view.View
-import android.view.ViewGroup
 import de.deutschebahn.bahnhoflive.R
 import de.deutschebahn.bahnhoflive.backend.db.ris.model.Platform
 import de.deutschebahn.bahnhoflive.backend.db.ris.model.firstLinkedPlatform
@@ -67,7 +66,8 @@ class TrainInfoViewHolder internal constructor(
         val trainMovementInfo =
             timetableAdapter.trainEvent.movementRetriever.getTrainMovementInfo(item)
 
-        itemView.contentDescription = item?.let { renderContentDescription(it, trainMovementInfo) }
+        if(trainMovementInfo!=null)
+          itemView.contentDescription = item?.let { renderContentDescription(it, trainMovementInfo) }
 
         updateWagonOrderViews(item)
 

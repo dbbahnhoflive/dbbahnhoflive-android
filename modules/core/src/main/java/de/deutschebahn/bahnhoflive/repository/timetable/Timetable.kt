@@ -11,6 +11,7 @@ import android.os.Parcelable
 import de.deutschebahn.bahnhoflive.backend.ris.model.RISTimetable
 import de.deutschebahn.bahnhoflive.backend.ris.model.TrainEvent
 import de.deutschebahn.bahnhoflive.backend.ris.model.TrainInfo
+import de.deutschebahn.bahnhoflive.backend.ris.model.TrainMovementInfo
 
 
 class Timetable(private val trainInfos: List<TrainInfo>, val endTime: Long, val duration: Int = 2) :
@@ -26,23 +27,32 @@ class Timetable(private val trainInfos: List<TrainInfo>, val endTime: Long, val 
             TrainEvent.ARRIVAL), TrainEvent.ARRIVAL)
         .prepare(TrainEvent.ARRIVAL)
 
-    fun List<TrainInfo>.prepare(trainEvent: TrainEvent) =
+    private fun List<TrainInfo>.prepare(trainEvent: TrainEvent) =
         filter { itTrainInfo ->
-            trainEvent.movementRetriever.getTrainMovementInfo(itTrainInfo)
-                .let { itTrainMovementInfo ->
-                    if (itTrainMovementInfo != null)
-                        itTrainMovementInfo.plannedDateTime.before(endTime) || itTrainMovementInfo.correctedDateTime.before(
-                            endTime
-                        )
-                    else false
-                }
+
+            val trainMovementInfo: TrainMovementInfo? =
+                trainEvent.movementRetriever.getTrainMovementInfo(itTrainInfo)
+
+            if(trainMovementInfo!=null) {
+                trainEvent.movementRetriever.getTrainMovementInfo(itTrainInfo)
+                    .let { itTrainMovementInfo ->
+                        if (itTrainMovementInfo != null)
+                            itTrainMovementInfo.plannedDateTime.before(endTime) || itTrainMovementInfo.correctedDateTime.before(
+                                endTime
+                            )
+                        else false
+                    }
+            }
+            else
+                false
         }
-            .sortedBy {itTrainInfo->
+            .sortedBy { itTrainInfo ->
                 trainEvent.movementRetriever.getTrainMovementInfo(itTrainInfo)
                     ?.let { itTrainMovementInfo ->
                         itTrainMovementInfo.plannedDateTime.takeUnless { it < 0 }
                             ?: itTrainMovementInfo.correctedDateTime
                     }
+                
             }
 
     protected constructor(`in`: Parcel) : this(
