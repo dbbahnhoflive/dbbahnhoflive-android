@@ -464,7 +464,7 @@
     <string name="teaser_ar_linkbutton_text">zum playstore</string>
 
     <string name="teaser_db_companion_headline">DB Wegbegleitung</string>
-    <string name="teaser_db_companion_copy">Orientierung für blinde und sehbeeinträchtigte Reisende.</string>
+    <string name="teaser_db_companion_copy">Orientierungshilfe per Videoanruf für sehbeeinträchtigte Reisende</string>
     <string name="teaser_db_companion_url">https://db.de/wegbegleitung</string>
     <string name="teaser_db_companion_sr_content_description">DB Wegbegleitung\n Dieser Service dient als Orientierungshilfe für blinde und sehbeeinträchtigte Reisende. Sie werden über Video-Telefonie mit einem Mitarbeiter im Kundencenter der Deutschen Bahn verbunden</string>
     <string name="teaser_db_companion_link_to_external_website">Zur externen Website www.db.de/wegbegleitung</string>
@@ -513,10 +513,14 @@
     <string name="template_linkplatform">Gegenüberliegend Gleis %d</string>
     <string name="station_search_query">Suchen Sie etwas am Bahnhof?</string>
 
-    <string name="permissionrequest_title">Wegbegleitung Erlaubnisanfrage</string>
-    <string name="permissionrequest_message">Um die Wegbegleitung zu nutzen, sind die Kamera, das Mikrofon und der aktuelle Standort notwendig.</string>
+    <string name="permissionrequest_permission_missing_title">Anruf kann nicht gestartet werden</string>
+    <string name="permissionrequest_title">Freigaben für die Wegbegleitung</string>
+    <string name="permissionrequest_message">Um die Wegbegleitung zu nutzen, müssen Sie die Kamera, das Mikrofon und den Standort freigeben.</string>
     <string name="permissionrequest_accept">Erlauben</string>
     <string name="permissionrequest_deny">Ablehnen</string>
+
+    <string name="security_query">Sicherheitsabfrage</string>
+    <string name="permission_fine_location">Standortfreigabe</string>
 
 </resources>
 

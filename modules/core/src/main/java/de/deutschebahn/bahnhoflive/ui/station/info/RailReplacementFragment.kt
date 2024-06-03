@@ -7,7 +7,6 @@
 package de.deutschebahn.bahnhoflive.ui.station.info
 
 import android.Manifest
-import android.app.AlertDialog
 import android.content.Intent
 import android.net.Uri
 import android.os.Build
@@ -39,9 +38,9 @@ class RailReplacementFragment :
 
     private lateinit var serviceContents: List<ServiceContent>
 
-    var selectedIndex : Int? = 0
+    private var selectedIndex: Int? = 0
 
-    val dbPermRequest = DBCompanionPermissionRequestBuilder
+    private val dbPermissionRequest = DBCompanionPermissionRequestBuilder
         .from(BaseApplication.activityManager.activity as ComponentActivity) {
             permissions = setOf(
                 Manifest.permission.CAMERA,
@@ -55,18 +54,6 @@ class RailReplacementFragment :
             showWebView()
         }
 
-
-//    val dbPermRequest = DBCompanionPermissionRequestBuilder
-//        .from(BaseApplication.activityManager.activity as ComponentActivity) {
-//            permissions = setOf(
-//                Manifest.permission.CAMERA,
-//                Manifest.permission.RECORD_AUDIO,
-//                Manifest.permission.ACCESS_FINE_LOCATION
-//            )
-//            permissionRequestDialogCallback = ::showPermissionRequestDialog
-//            cbPermissionDenied = ::showPermissionDeniedDialog
-//        }
-//        .build { showWebView() }
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -111,7 +98,7 @@ class RailReplacementFragment :
             { // videoCallStarter (starte video wenn alle Permissions da sind)
                     url ->
                 run {
-                    dbPermRequest.permissionsRequestUser()
+                    dbPermissionRequest.permissionsRequestUser()
                 }
 
             },
@@ -145,6 +132,10 @@ class RailReplacementFragment :
 
     }
 
+    override fun onDestroy() {
+        super.onDestroy()
+        dbPermissionRequest.unregisterResponseFunction()
+    }
 
     override fun onStart() {
         super.onStart()
@@ -182,36 +173,57 @@ class RailReplacementFragment :
         request: DBCompanionPermissionRequestBuilder.DBPermRequest,
         denied: List<String>
     ) {
-        AlertDialog.Builder(requireContext())
-            .setTitle("Wegbegleitung keine Erlaubnis")
-            .setMessage("Um die Wegbegleitung verwenden zu können, sind folgende Berechtigungen notwendig: \n\n $denied\n\n Möchten sie ihre Auswahl ändern?")
-            .setPositiveButton("Einstellungen") { dialog, _ ->
-                dialog.dismiss()
+        var msg : String = "Um den Anruf zu starten müssen Sie "
+        var partMsg  = ""
+        val parts = arrayOf("","","")
+        var n=0
+
+        if(denied.find { it.contains("CAMERA", true)==true  } != null)
+            parts[n++] = "die Kamera"
+
+        if(denied.find { it.contains("RECORD_AUDIO", true)==true  } != null)
+            parts[n++] = "das Mikrofon"
+
+        if(denied.find { it.contains("ACCESS_FINE_LOCATION", true)==true  } != null)
+            parts[n++] = "den Standort"
+
+        if(n>1) {
+           parts[n - 1] = " und " + parts[n - 1]
+            if(n>2)
+                parts[n - 2] = ", " + parts[n - 2]
+        }
+
+        partMsg = parts[0]+parts[1]+parts[2]
+        msg += partMsg + " freigeben. Ansonsten kann der Anruf nicht gestartet werden.\nMöchten Sie Ihre Auswahl ändern ?"
+
+        AlertX.execAlert(requireContext(),
+            getString(R.string.permissionrequest_permission_missing_title),
+            msg,
+            AlertX.buttonPositive(),
+            getString(R.string.settings), {
                 request.openAppSystemSettings()
+            },
+            getString(R.string.permissionrequest_deny), {
             }
-            .setNegativeButton(R.string.permissionrequest_deny) { dialog, _ ->
-                dialog.dismiss()
-            }
-            .create()
-            .show()
+        )
+
     }
 
     /**
      * DIALOG: This Dialog is opened, if the user has previously denied the use of essential permissions
      */
     private fun showPermissionRequestDialog(accepted: () -> Unit) {
-        AlertDialog.Builder(requireContext())
-            .setTitle(R.string.permissionrequest_title)
-            .setMessage(R.string.permissionrequest_message)
-            .setPositiveButton(R.string.permissionrequest_accept) { _, _ ->
-                // all outstanding and denied permissions must be accepted
+
+        AlertX.execAlert(requireContext(),
+            getString(R.string.permissionrequest_title),
+            getString(R.string.permissionrequest_message),
+            AlertX.buttonPositive(),
+            getString(R.string.permissionrequest_accept), {
                 accepted()
+            },
+            getString(R.string.permissionrequest_deny), {
             }
-            .setNegativeButton(R.string.permissionrequest_deny) { dialog, _ ->
-                dialog.dismiss()
-            }
-            .create()
-            .show()
+        )
 
     }
 

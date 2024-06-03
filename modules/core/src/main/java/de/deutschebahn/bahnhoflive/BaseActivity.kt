@@ -14,8 +14,12 @@ open class BaseActivity : AppCompatActivity() {
         registerForActivityResult(
             ActivityResultContracts.RequestMultiplePermissions()
         ) { isGranted ->
+            try {
             permissionResponseFunction?.invoke(isGranted) //isGranted.count { it.value } > 0)
-            permissionResponseFunction=null
+            }
+            catch (_:Exception) {
+            }
+//            permissionResponseFunction=null
         }
 
     fun requestAtleastOneOfThePermissions(permissionNames:Array<String>, permissionResponse: (response: Map<String, Boolean>) -> Unit) {
@@ -28,9 +32,13 @@ open class BaseActivity : AppCompatActivity() {
         requestPermissionLauncher.launch(permissionNames)
     }
 
-    fun getTheLauncher(permissionResponse: (response: Map<String, Boolean>) -> Unit) : ActivityResultLauncher<Array<String>> {
+    fun registerResponseFunction(permissionResponse: (response: Map<String, Boolean>) -> Unit) : ActivityResultLauncher<Array<String>> {
         permissionResponseFunction=permissionResponse
         return requestPermissionLauncher
+    }
+
+    fun unregisterResponseFunction() {
+        permissionResponseFunction=null
     }
 
 }

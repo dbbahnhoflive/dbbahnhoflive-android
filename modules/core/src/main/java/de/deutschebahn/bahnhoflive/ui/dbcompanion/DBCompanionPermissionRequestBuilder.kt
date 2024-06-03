@@ -18,10 +18,12 @@ class DBCompanionPermissionRequestBuilder {
         PERMISSION_GRANTED,
         REQUEST
     }
+
     sealed class DBPermRequest(private val config: DBPermissionFactory) {
         var cbOnPermissionsGranted: () -> Unit =
             { println("All permissions are accepted. !! No Option set to launch!!") }
-        private val permRequester : ActivityResultLauncher<Array<String>> = (BaseApplication.activityManager.activity as BaseActivity).getTheLauncher { result ->
+        private val permRequester: ActivityResultLauncher<Array<String>> =
+            (BaseApplication.activityManager.activity as BaseActivity).registerResponseFunction { result ->
             val deniedPermissions = result.filterNot { it.value }
             // This condition is met if the user did not accept all relevant permissions
             if (deniedPermissions.isNotEmpty()) {
@@ -34,19 +36,6 @@ class DBCompanionPermissionRequestBuilder {
             }
         }
 
-//        private val permRequester2 =
-//            config.activity.registerForActivityResult(ActivityResultContracts.RequestMultiplePermissions()) { result ->
-//                val deniedPermissions = result.filterNot { it.value }
-//                // This condition is met if the user did not accept all relevant permissions
-//                if (deniedPermissions.isNotEmpty()) {
-//                    val denied = deniedPermissions.map { it.key }
-//                    config.cbPermissionDenied(this, denied)
-//                }
-//                // All needed permissions are granted
-//                else {
-//                    cbOnPermissionsGranted()
-//                }
-//            }
         private fun getPermissionState(permission: String): PermState = run {
             with(config.activity) {
                 val notGranted = ActivityCompat.checkSelfPermission(
@@ -71,6 +60,7 @@ class DBCompanionPermissionRequestBuilder {
 
             }
         }
+
         private fun printPermissionState(stage: String) {
             val mapped = config.permissions.map { it to getPermissionState(it) }
             val granted =
@@ -81,6 +71,7 @@ class DBCompanionPermissionRequestBuilder {
             println("$stage [Denied]: ").also { denied.forEach { println("\t$it") } }
             println("$stage [Not Granted]: ").also { request.forEach { println("\t$it") } }
         }
+
         fun permissionsRequestUser() {
             printPermissionState("REQUEST Perm ")
             val mapped = config.permissions.map { it to getPermissionState(it) }
@@ -107,9 +98,11 @@ class DBCompanionPermissionRequestBuilder {
                 cbOnPermissionsGranted()
             }
         }
+
         private fun openPermissionRequestDialogs(permissions: List<String>) {
             permRequester.launch(permissions.toTypedArray())
         }
+
         fun openAppSystemSettings() {
             with(config.activity) {
                 startActivity(Intent().apply {
@@ -120,10 +113,16 @@ class DBCompanionPermissionRequestBuilder {
                 })
             }
         }
+
+        fun unregisterResponseFunction() {
+            (BaseApplication.activityManager.activity as BaseActivity).unregisterResponseFunction()
+        }
     }
+
     private class PrivatePermissionRequest(config: DBPermissionFactory) : DBPermRequest(config)
     private class PrivatePermissionFactory(activity: ComponentActivity) :
         DBPermissionFactory(activity)
+
     sealed class DBPermissionFactory(var activity: ComponentActivity) {
         var permissions: Set<String> = emptySet()
         var permissionRequestDialogCallback: (accepted: () -> Unit) -> Unit = {}
@@ -132,6 +131,7 @@ class DBCompanionPermissionRequestBuilder {
             cbOnPermissionsGranted = onSuccess
         }
     }
+
     companion object {
         fun from(
             activity: ComponentActivity,

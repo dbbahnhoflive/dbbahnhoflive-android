@@ -16,9 +16,9 @@ class EvItem(
     val evaId:Int=0,
     val stationName : String = ""  // SPNV-Halt = Schienenpersonennahverkehr
 )
-    private const val testIsDbCompanionServiceAvailable=false // todo: false in production
+    private const val testIsDbCompanionServiceAvailable=true // todo: false in production
     private const val testIsInAnnouncementPhase=false // todo: false in production
-    private const val testIsInConstructionPhase=false // todo: false in production
+    private const val testIsInConstructionPhase=true // todo: false in production
 
     // // cal-format: year (2024), month (1..12), day (1..31), hour (0..23), minute (0..59), second (0..59)
     private val startOfAnnouncementPhase = arrayOf(2024, 7, 8, 0, 0, 0) // dummy
