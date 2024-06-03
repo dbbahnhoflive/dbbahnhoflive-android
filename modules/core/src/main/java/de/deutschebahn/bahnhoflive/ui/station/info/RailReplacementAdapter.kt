@@ -20,7 +20,8 @@ class RailReplacementAdapter(
     private val trackingManager: TrackingManager,
     private val dbActionButtonParser: DbActionButtonParser,
     private val stationViewModel: StationViewModel,
-    private val webPageStarter: (intent:CustomTabsIntent, url:String) -> Unit,
+    private val webViewStarter: (intent:CustomTabsIntent, url:String) -> Unit,
+    private val videoCallStarter: (url:String) -> Unit,
     private val companionHintStarter : () -> Unit,
     private val checkIfServiceIsAvailable : () -> Unit
 
@@ -114,7 +115,8 @@ class RailReplacementAdapter(
                     ),
                     singleSelectionManager,
                     trackingManager,
-                    webPageStarter,
+                    webViewStarter,
+                    videoCallStarter,
                     companionHintStarter
                 )
 

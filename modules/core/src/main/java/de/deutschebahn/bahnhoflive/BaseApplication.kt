@@ -6,7 +6,10 @@
 
 package de.deutschebahn.bahnhoflive
 
+import android.app.Activity
+import android.app.Application.ActivityLifecycleCallbacks
 import android.content.Context
+import android.os.Bundle
 import androidx.multidex.MultiDexApplication
 import com.android.volley.Network
 import com.android.volley.RequestQueue
@@ -35,6 +38,39 @@ import java.io.File
 import javax.net.ssl.SSLSocketFactory
 
 
+class ActivityManager(myApplication: BaseApplication) : ActivityLifecycleCallbacks {
+    var activity: Activity? = null
+        private set
+
+
+    init {
+        myApplication.registerActivityLifecycleCallbacks(this)
+    }
+
+    override fun onActivityCreated(activity: Activity, bundle: Bundle?) {
+        this.activity = activity
+    }
+
+    override fun onActivityStarted(activity: Activity) {
+        this.activity = activity
+    }
+
+    override fun onActivityResumed(activity: Activity) {
+        this.activity = activity
+    }
+
+    override fun onActivityPaused(activity: Activity) {
+    }
+
+    override fun onActivityStopped(activity: Activity) {
+    }
+
+    override fun onActivitySaveInstanceState(activity: Activity, bundle: Bundle) {
+    }
+
+    override fun onActivityDestroyed(activity: Activity) {
+    }
+}
 abstract class BaseApplication(
     val versionName: String,
     val versionCode: Int
@@ -59,6 +95,7 @@ abstract class BaseApplication(
     override fun onCreate() {
         super.onCreate()
         INSTANCE = this
+        activityManager =  ActivityManager(this);
 
         FontUtil.init(this)
 
@@ -217,5 +254,8 @@ abstract class BaseApplication(
 
         @JvmStatic
         fun get() = INSTANCE
+
+
+        lateinit var activityManager: ActivityManager
     }
 }

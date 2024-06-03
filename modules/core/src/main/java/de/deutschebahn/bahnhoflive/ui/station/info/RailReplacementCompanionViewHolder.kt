@@ -18,7 +18,8 @@ class RailReplacementCompanionViewHolder(
     private val binding : CardExpandableRailReplacementCompanionBinding,
     private val selectionManager: SingleSelectionManager,
     private val trackingManager: TrackingManager,
-    private val webPageStarter: (intent:CustomTabsIntent, url:String) -> Unit,
+    private val webViewStarter: (intent:CustomTabsIntent, url:String) -> Unit,
+    private val videoCallStarter: (url:String) -> Unit,
     private val companionHintStarter : () -> Unit
 ) : CommonDetailsCardViewHolder<ServiceContent>(
     binding.root,
@@ -72,11 +73,11 @@ class RailReplacementCompanionViewHolder(
 
             val url =
                 itemView.context.getString(R.string.rail_replacement_db_companion_video_call_url)
-            val intent = CustomTabsIntent.Builder()
-                .setShowTitle(false)
-                .setUrlBarHidingEnabled(true)
-                .build()
-            webPageStarter(intent, url)
+//            val intent = CustomTabsIntent.Builder()
+//                .setShowTitle(false)
+//                .setUrlBarHidingEnabled(true)
+//                .build()
+            videoCallStarter(url)
 
         }
 
@@ -100,7 +101,7 @@ class RailReplacementCompanionViewHolder(
                     itemView.context.getString(R.string.rail_replacement_db_companion_imprint_url)
                 val intent = CustomTabsIntent.Builder()
                     .build()
-                webPageStarter(intent, url)
+                webViewStarter(intent, url)
             }
         }
 
@@ -114,7 +115,7 @@ class RailReplacementCompanionViewHolder(
                     itemView.context.getString(R.string.rail_replacement_db_companion_legal_notice_url)
                 val intent = CustomTabsIntent.Builder()
                     .build()
-                webPageStarter(intent, url)
+                webViewStarter(intent, url)
             }
         }
 

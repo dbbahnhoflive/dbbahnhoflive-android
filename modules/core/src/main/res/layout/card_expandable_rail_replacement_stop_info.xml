@@ -27,7 +27,8 @@
                 android:layout_height="wrap_content"
                 android:orientation="vertical"
                 android:importantForAccessibility="no"
-                android:paddingBottom="@dimen/overscroll_height">
+                android:paddingBottom="@dimen/default_space"
+                >
 
 
                 <androidx.constraintlayout.widget.ConstraintLayout

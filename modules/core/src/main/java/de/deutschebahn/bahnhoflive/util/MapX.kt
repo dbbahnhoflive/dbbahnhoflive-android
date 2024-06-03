@@ -1,13 +1,11 @@
 package de.deutschebahn.bahnhoflive.util
 
-import android.Manifest
 import android.app.Activity
 import android.content.Context
 import android.content.DialogInterface
 import android.content.Intent
 import android.content.pm.PackageManager
 import android.util.Log
-import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
@@ -76,55 +74,55 @@ class GoogleLocationPermissions {
         }
 
 
-        private fun askForGoogleLocationPermissionIfNecessary(
-            baseActivity: BaseActivity,
-            permissionResponse: (response: Boolean) -> Unit
-        ) {
-
-            val permissions = arrayOf(
-                Manifest.permission.ACCESS_FINE_LOCATION, // eigener Standort
-                Manifest.permission.ACCESS_COARSE_LOCATION
-            )
-
-            if (!checkSelfPermissions(baseActivity, permissions)) { // ask only from time to time. if atleast 1 permission is granted
-
-                val shouldShowACCESS_FINE_LOCATION =
-                    ActivityCompat.shouldShowRequestPermissionRationale(
-                        baseActivity,
-                        Manifest.permission.ACCESS_FINE_LOCATION
-                    )
-
-                val shouldShowACCESS_COARSE_LOCATION =
-                    ActivityCompat.shouldShowRequestPermissionRationale(
-                        baseActivity,
-                        Manifest.permission.ACCESS_COARSE_LOCATION
-                    )
-
-
-                if (shouldShowACCESS_FINE_LOCATION || shouldShowACCESS_COARSE_LOCATION) {
-
-                    showExplanation(
-                        baseActivity,
-                        {
-                            baseActivity.requestAtleastOneOfThePermissions(permissions, permissionResponse)
-                        },
-                        permissionResponse,
-                        "",
-                        baseActivity.getText(R.string.notice_location_permissions_missing)
-                            .toString()
-
-                    )
-
-                    return
-
-                }
-
-                // guideline google
-                baseActivity.requestAtleastOneOfThePermissions(permissions, permissionResponse)
-            }
-            else
-                permissionResponse(true)
-        }
+//        private fun askForGoogleLocationPermissionIfNecessary(
+//            baseActivity: BaseActivity,
+//            permissionResponse: (response: Boolean) -> Unit
+//        ) {
+//
+//            val permissions = arrayOf(
+//                Manifest.permission.ACCESS_FINE_LOCATION, // eigener Standort
+//                Manifest.permission.ACCESS_COARSE_LOCATION
+//            )
+//
+//            if (!checkSelfPermissions(baseActivity, permissions)) { // ask only from time to time. if atleast 1 permission is granted
+//
+//                val shouldShowACCESS_FINE_LOCATION =
+//                    ActivityCompat.shouldShowRequestPermissionRationale(
+//                        baseActivity,
+//                        Manifest.permission.ACCESS_FINE_LOCATION
+//                    )
+//
+//                val shouldShowACCESS_COARSE_LOCATION =
+//                    ActivityCompat.shouldShowRequestPermissionRationale(
+//                        baseActivity,
+//                        Manifest.permission.ACCESS_COARSE_LOCATION
+//                    )
+//
+//
+//                if (shouldShowACCESS_FINE_LOCATION || shouldShowACCESS_COARSE_LOCATION) {
+//
+//                    showExplanation(
+//                        baseActivity,
+//                        {
+//                            baseActivity.requestAtleastOneOfThePermissions(permissions, permissionResponse)
+//                        },
+//                        permissionResponse,
+//                        "",
+//                        baseActivity.getText(R.string.notice_location_permissions_missing)
+//                            .toString()
+//
+//                    )
+//
+//                    return
+//
+//                }
+//
+//                // guideline google
+//                baseActivity.requestAtleastOneOfThePermissions(permissions, permissionResponse)
+//            }
+//            else
+//                permissionResponse(true)
+//        }
 
 
 
@@ -143,11 +141,11 @@ class GoogleLocationPermissions {
                 }
             }
 
-            @Suppress("UNUSED")
-            fun showMapButAskForLocationPermissionsIfNecessary(baseActivity: BaseActivity) {
-                // consent if ok, but - if needed - ask for Location-Permissions
-                askForGoogleLocationPermissionIfNecessary(baseActivity, ::permissionResponse)
-            }
+//            @Suppress("UNUSED")
+//            fun showMapButAskForLocationPermissionsIfNecessary(baseActivity: BaseActivity) {
+//                // consent if ok, but - if needed - ask for Location-Permissions
+//                askForGoogleLocationPermissionIfNecessary(baseActivity, ::permissionResponse)
+//            }
 
             try {
                 val baseActivity: BaseActivity? = fragment.requireActivity() as? BaseActivity

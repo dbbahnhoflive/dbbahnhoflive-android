@@ -16,6 +16,21 @@ xmlns:tools="http://schemas.android.com/tools"
 
     <uses-permission android:name="com.google.android.gms.permission.AD_ID" tools:node="remove"/>
 
+
+    <uses-feature
+        android:name="android.hardware.camera"
+        android:required="true" />
+    <uses-feature
+        android:name="android.hardware.microphone"
+        android:required="true" />
+    <uses-feature
+        android:name="android.hardware.location.gps"
+        android:required="true" />
+    <uses-permission android:name="android.permission.RECORD_AUDIO" />
+    <uses-permission android:name="android.permission.MODIFY_AUDIO_SETTINGS" />
+    <uses-permission android:name="android.permission.CAMERA" />
+
+
     <uses-feature
         android:glEsVersion="0x00020000"
         android:required="true" />
@@ -95,6 +110,10 @@ xmlns:tools="http://schemas.android.com/tools"
             android:name=".ui.WebViewActivity"
             android:screenOrientation="portrait" />
         <activity android:name=".ui.timetable.localtransport.DeparturesActivity" />
+
+        <activity android:name=".ui.dbcompanion.DbCompanionActivity"
+            android:exported="true">
+        </activity>
 
         <meta-data
             android:name="io.sentry.auto-init"
