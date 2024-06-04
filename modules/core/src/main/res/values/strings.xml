@@ -439,15 +439,15 @@
     <string name="sr_nev_announcement_headline">Ankündigung Ersatzverkehr</string>
     <string name="nev_phase_headline">Ersatzverkehr beachten</string>
     <string name="sr_nev_phase_headline">Beachten Sie den Ersatzverkehr</string>
-    <string name="nev_copy">Ersatzverkehr zwischen Frankfurt (Main) Stadion und Mannheim Hbf.</string>
-    <string name="sr_nev_copy">Vom Fünfzehnten Juli bis zum Einundreissigsten Dezember 2024 ist aufgrund von Baumaßnahmen ein Ersatzverkehr zwischen Frankfurt (Main) Stadion und Mannheim Hbf eingerichtet</string>
+    <string name="nev_copy">Ersatzverkehr an der Riedbahn und deren Nebenstrecken.</string>
+    <string name="sr_nev_copy">Vom Fünfzehnten Juli bis zum Einundreissigsten Dezember 2024 ist aufgrund von Baumaßnahmen ein Ersatzverkehr an der Riedbahn und deren Nebenstrecken eingerichtet</string>
     <string name="nev_text_1">Aufgrund von Bauarbeiten an der Riedbahn kommt es von Juli bis Dezember 2024 zu Einschränkungen im Zugverkehr auf der Strecke zwischen Frankfurt (Main) Hauptbahnhof und Mannheim Hauptbahnhof. Darüber hinaus sind auch die Nebenverbindungen der Riedbahn, der Main-Neckar-Bahn sowie die Linien auf der Strecke Mainz – Mannheim betroffen. Ein Ersatzverkehr mit Bussen ist eingerichtet.</string>
     <string name="nev_text_2">Die Sanierung erfolgt in zwei Abschnitten. Zunächst wird die Strecke zwischen Rottendorf und Neustadt (Aisch) Bahnhof vom 26. Mai bis 05. August 2023 für den Zugverkehr komplett gesperrt. Anschließend erfolgt eine Sperrung der Strecke zwischen Neustadt (Aisch) Bahnhof und Fürth (Bay) Hauptbahnhof vom 06. August bis 11. September 2023. Durch die Sperrung in dem zweiten genannten Zeitraum erfolgt auf der Strecke Markt Erlbach - Siegelsdorf - Fürth (Bay) Hauptbahnhof zudem ebenfalls kein Zugverkehr.\n\nDarüber hinaus entfallen über beide Bauphasen die meisten Züge der Linie RB80 zwischen Würzburg Hauptbahnhof und Marktbreit.\n\nWeiterhin kommt es in den späten Abend- und frühen Morgenstunden zwischen Nürnberg Hauptbahnhof und Würzburg Hauptbahnhof über den gesamten Zeitraum hinweg zu Zugausfällen.\n\nWeiterführende Informationen finden Sie unter bahnhof.de"</string>
 
     <string name="sev_date_range">15.07. - 14.12.2024</string>
     <string name="sr_sev_date_range">vom Fünfzehnten Juli 24 bis Vierzehnten Dezember 24</string>
 
-    <string name="sev_db_companion_service_time_range_help">täglich von 7:00 bis 19:00 Uhr</string>
+    <string name="sev_db_companion_service_time_range_help">von 7:00 bis 19:00 Uhr</string>
     <string name="sev_db_companion_service_time_range">täglich von 7:00 bis 19:00 Uhr</string>
     <string name="sr_sev_db_companion_service_time_range">Montag bis Freitag. Sieben bis Neunzehn Uhr</string>
 
@@ -464,7 +464,7 @@
     <string name="teaser_ar_linkbutton_text">zum playstore</string>
 
     <string name="teaser_db_companion_headline">DB Wegbegleitung</string>
-    <string name="teaser_db_companion_copy">Orientierungshilfe per Videoanruf für sehbeeinträchtigte Reisende</string>
+    <string name="teaser_db_companion_copy">Orientierungshilfe per Videoanruf für sehbeeinträchtigte Reisende.</string>
     <string name="teaser_db_companion_url">https://db.de/wegbegleitung</string>
     <string name="teaser_db_companion_sr_content_description">DB Wegbegleitung\n Dieser Service dient als Orientierungshilfe für blinde und sehbeeinträchtigte Reisende. Sie werden über Video-Telefonie mit einem Mitarbeiter im Kundencenter der Deutschen Bahn verbunden</string>
     <string name="teaser_db_companion_link_to_external_website">Zur externen Website www.db.de/wegbegleitung</string>
@@ -476,7 +476,7 @@
 
 
     <string name="rail_replacement_db_companion_text1">Blinde und stark sehbeeinträchtigte Reisende können sich an Bahnhöfen mit Ersatzverkehr sicher und schnell durch unser geschultes Personal per Videoanruf zur Ersatzhaltestelle und zurück begleiten lassen. Dies ist ein Service der DB Regio AG.</string>
-    <string name="rail_replacement_db_companion_text2">Dieser Service steht Ihnen für die Zeit der Baumaßnahmen ab dem 15. Juli bis 14. Dezember 2024, täglich von 07:00 bis 19:00 Uhr zur Verfügung.</string>
+    <string name="rail_replacement_db_companion_text2">Dieser Service steht Ihnen für die Zeit der Baumaßnahmen ab dem 15. Juli bis 14. Dezember 2024, <b>täglich von 07:00 bis 19:00 Uhr</b> zur Verfügung.</string>
     <string name="sr_rail_replacement_db_companion_text2">Dieser Service steht Ihnen für die Zeit der Baumaßnahmen ab dem fünfzehnten Juli bis vierzehnten Dezember 2024, täglich von sieben bis neunzehn Uhr zur Verfügung.</string>
     <string name="rail_replacement_db_companion_service_times">Der Service ist <b>täglich von 07:00 Uhr bis 19:00 Uhr</b> erreichbar.</string>
     <string name="rail_replacement_db_companion_service_hint">Bitte beachten Sie: Dieser Service richtet sich an sinneseingeschränkte Reisende. Für allgemeine Fragen zu Ihrer Reise wenden Sie sich bitte an das Reisezentrum oder Bahn-Mitarbeitenden vor Ort.</string>

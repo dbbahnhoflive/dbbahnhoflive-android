@@ -67,8 +67,22 @@ class RailReplacementCompanionHelpFragment : Fragment() {
         val mWebClient: WebViewClient = object : WebViewClient() {
 
             override fun shouldOverrideUrlLoading(view: WebView, url: String): Boolean {
+
+                if (url.contains("syssettings")) {
+                    activity?.let {
+                        startActivity(Intent().apply {
+                            flags += android.content.Intent.FLAG_ACTIVITY_NEW_TASK
+                            flags += android.content.Intent.FLAG_ACTIVITY_SINGLE_TOP
+                            flags += android.content.Intent.FLAG_ACTIVITY_EXCLUDE_FROM_RECENTS
+                            action = android.provider.Settings.ACTION_APPLICATION_DETAILS_SETTINGS
+                            data = android.net.Uri.fromParts("package", it.packageName, null)
+                        })
+                    }
+
+                } else {
                 val intent = Intent(Intent.ACTION_VIEW, Uri.parse(url))
                 startActivity(intent)
+                }
                 return true
             }
 
@@ -88,7 +102,7 @@ class RailReplacementCompanionHelpFragment : Fragment() {
 //            <p>Nürnberg</p>
             content = content.replace(
                 "{STATION_LIST}",
-                SEV_Static_Riedbahn.getSEVStationNames().joinToString("</p><p>", "<p>", "</p>")
+                SEV_Static_Riedbahn.getSEVStationNames().joinToString("</li><li>", "<li>", "</li>")
             )
 
              binding.webview.loadDataWithBaseURL(
