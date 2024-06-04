@@ -11,10 +11,12 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.core.view.isVisible
 import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.switchMap
 import de.deutschebahn.bahnhoflive.BaseApplication
+import de.deutschebahn.bahnhoflive.R
 import de.deutschebahn.bahnhoflive.analytics.TrackingManager
 import de.deutschebahn.bahnhoflive.databinding.FragmentNearbyDeparturesBinding
 import de.deutschebahn.bahnhoflive.location.BaseLocationListener
@@ -24,6 +26,8 @@ import de.deutschebahn.bahnhoflive.repository.timetable.CyclicTimetableCollector
 import de.deutschebahn.bahnhoflive.repository.timetable.TimetableCollector
 import de.deutschebahn.bahnhoflive.ui.LoadingContentDecorationViewHolder
 import de.deutschebahn.bahnhoflive.util.Cancellable
+import de.deutschebahn.bahnhoflive.util.MessageBox
+import de.deutschebahn.bahnhoflive.util.MessageBoxAlignment
 import de.deutschebahn.bahnhoflive.util.getParcelableCompatible
 
 class NearbyDeparturesFragment : HubCoreFragment(), Permission.Listener,
@@ -132,14 +136,42 @@ class NearbyDeparturesFragment : HubCoreFragment(), Permission.Listener,
                 )
                 adapter = nearbyDeparturesAdapter
             }
-            locationPermissionCard.setOnClickListener { locationPermission.request(activity) }
+
+            locationPermissionCard.setOnClickListener {
+
+                activity?.let { itActivity ->
+                    locationPermission.showPermissionRationaleOrAskToGoForSystemSettings(
+                        itActivity
+                    ) { acceptor: () -> Unit ->
+                        run {
+
+                            MessageBox(
+                                requireContext(),
+                                getString(R.string.permission_fine_location),
+                                getString(R.string.permission_fine_location_explanation)
+                            )
+                                .addPositiveButton(
+                                getString(R.string.settings), {
+                                        acceptor()
+                                    }, true
+                                )
+                                .addNegativeButton(
+                                    getString(R.string.dlg_cancel), {
+                                })
+                                .setMessageAlignment(MessageBoxAlignment.ALIGN_LEFT)
+                                .setTitleAlignment(MessageBoxAlignment.ALIGN_LEFT)
+                                .show()
+
+                        }
+                    }
+                }
+            }
+
             refreshLayout = refresher.apply {
                 setOnRefreshListener(this@NearbyDeparturesFragment)
             }
 
-
         }.root
-
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
@@ -196,14 +228,13 @@ class NearbyDeparturesFragment : HubCoreFragment(), Permission.Listener,
         if (isVisible && Permission.LOCATION === permission && permission.isGranted) {
             locationFragment?.acquireLocation(false)
         }
-
         updateLocationPermissionViews()
     }
 
     override fun onStart() {
         super.onStart()
 
-        locationPermission.update(activity)
+        locationPermission.update(requireContext())
         updateLocationPermissionViews()
         locationPermission.addListener(this)
 
@@ -234,16 +265,10 @@ class NearbyDeparturesFragment : HubCoreFragment(), Permission.Listener,
     private fun updateLocationPermissionViews() {
         val granted = locationPermission.isGranted
         viewBinding?.locationPermissionCard?.let {
-            setVisibility(it, !granted)
+            it.isVisible=!granted
         }
         nearbyDeparturesContainerHolder?.run {
-            setVisibility(itemView, granted)
-        }
-    }
-
-    private fun setVisibility(view: View?, visible: Boolean) {
-        if (view != null) {
-            view.visibility = if (visible) View.VISIBLE else View.GONE
+            itemView.isVisible = granted
         }
     }
 

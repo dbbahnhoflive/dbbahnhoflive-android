@@ -521,6 +521,6 @@
 
     <string name="security_query">Sicherheitsabfrage</string>
     <string name="permission_fine_location">Standortfreigabe</string>
-
+    <string name="permission_fine_location_explanation">"Zum Anzeigen der Stationen in der Nähe muss der Standort freigegeben werden. Zum Wechseln in die Einstellungen bitte den Einstellungen-Button drücken und dort den (genauen) Standort freigeben."</string>
 </resources>
 

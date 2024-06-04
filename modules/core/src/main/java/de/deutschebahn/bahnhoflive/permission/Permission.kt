@@ -3,87 +3,69 @@
  *
  * SPDX-License-Identifier: Apache-2.0
  */
+package de.deutschebahn.bahnhoflive.permission
 
-package de.deutschebahn.bahnhoflive.permission;
+import android.Manifest
+import android.app.Activity
+import android.content.Context
+import android.content.Intent
+import android.content.pm.PackageManager
+import androidx.core.app.ActivityCompat
+import androidx.core.app.ActivityCompat.OnRequestPermissionsResultCallback
+import androidx.core.content.ContextCompat
 
-import android.Manifest;
-import android.app.Activity;
-import android.content.Context;
-import android.content.pm.PackageManager;
-
-import androidx.annotation.NonNull;
-import androidx.core.app.ActivityCompat;
-import androidx.core.content.ContextCompat;
-
-import java.util.ArrayList;
-import java.util.List;
-
-public class Permission implements ActivityCompat.OnRequestPermissionsResultCallback {
-
-    public final static Permission LOCATION = new Permission(Manifest.permission.ACCESS_FINE_LOCATION, 815);
-
-    public interface Listener {
-        void onPermissionChanged(Permission permission);
+class Permission private constructor(val name: String, val requestCode: Int) :
+    OnRequestPermissionsResultCallback {
+    interface Listener {
+        fun onPermissionChanged(permission: Permission)
     }
 
-    @NonNull
-    public final String name;
+    var isGranted: Boolean = false
+        get() = field
+        private set(granted) {
+            if (field != granted) {
+                field = granted
+                notifyListeners()
+            }
+        }
 
-    public final int requestCode;
-
-    private Boolean granted = null;
-
-    private final List<Listener> listeners = new ArrayList<>();
-
-    private Permission(@NonNull String name, int requestCode) {
-        this.name = name;
-        this.requestCode = requestCode;
-    }
+    private val listeners: MutableList<Listener> = ArrayList()
 
 
-    @Override
-    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+    override fun onRequestPermissionsResult(
+        requestCode: Int,
+        permissions: Array<String>,
+        grantResults: IntArray
+    ) {
         if (requestCode == this.requestCode) {
-            for (int i = 0; i < permissions.length; i++) {
-                if (name.equals(permissions[i])) {
-                    setGranted(grantResults[i] == PackageManager.PERMISSION_GRANTED);
+            for (i in permissions.indices) {
+                if (name == permissions[i]) {
+                    isGranted = grantResults[i] == PackageManager.PERMISSION_GRANTED
                 }
             }
         }
     }
 
-    private void setGranted(boolean granted) {
-        if (this.granted == null || this.granted != granted) {
-            this.granted = granted;
-
-            notifyListeners();
+    private fun notifyListeners() {
+        for (listener in listeners) {
+            listener.onPermissionChanged(this)
         }
     }
 
-    private void notifyListeners() {
-        for (Listener listener : listeners) {
-            listener.onPermissionChanged(this);
-        }
+    fun update(context: Context) {
+        isGranted = isGranted(context)
     }
 
-    public void update(Context context) {
-        setGranted(isGranted(context));
+    private fun isGranted(context: Context): Boolean {
+        return PackageManager.PERMISSION_GRANTED == ContextCompat.checkSelfPermission(context, name)
     }
 
-    private boolean isGranted(Context context) {
-        return PackageManager.PERMISSION_GRANTED == ContextCompat.checkSelfPermission(context, name);
+    fun addListener(listener: Listener) {
+        listeners.add(listener)
     }
 
-    public void addListener(Listener listener) {
-        listeners.add(listener);
-    }
-
-    public void removeListener(Listener listener) {
-        listeners.remove(listener);
-    }
-
-    public boolean isGranted() {
-        return granted != null && granted;
+    fun removeListener(listener: Listener) {
+        listeners.remove(listener)
     }
 
     /**
@@ -92,17 +74,49 @@ public class Permission implements ActivityCompat.OnRequestPermissionsResultCall
      * this also returns true before the very first request of each permission.
      *
      * @param activity the current Activity
-     * @return <code>true</code> if showing the permission request popup might fail
+     * @return `true` if showing the permission request popup might fail
      */
-    public boolean isPermanentlyDeniedOrFreshInstallation(Activity activity) {
+    fun isPermanentlyDeniedOrFreshInstallation(activity: Activity): Boolean {
         return !(ActivityCompat.shouldShowRequestPermissionRationale(activity, name)
-                || isGranted(activity));
+                || isGranted(activity))
     }
 
-    public void request(Activity activity) {
-        ActivityCompat.requestPermissions(activity,
-                new String[]{name},
-                requestCode);
+    fun request(activity: Activity?) {
+        ActivityCompat.requestPermissions(
+            activity!!,
+            arrayOf(name),
+            requestCode
+        )
     }
 
+    fun shouldShowRequestPermissionRationale(activity: Activity?): Boolean {
+        return ActivityCompat.shouldShowRequestPermissionRationale(activity!!, LOCATION.name)
+    }
+
+    fun openAppSystemSettings(activity: Activity ) {
+        with(activity) {
+            startActivity(Intent().apply {
+                flags =
+                    android.content.Intent.FLAG_ACTIVITY_NEW_TASK or android.content.Intent.FLAG_ACTIVITY_SINGLE_TOP or android.content.Intent.FLAG_ACTIVITY_EXCLUDE_FROM_RECENTS
+                action = android.provider.Settings.ACTION_APPLICATION_DETAILS_SETTINGS
+                data = android.net.Uri.fromParts("package", packageName, null)
+            })
+        }
+    }
+
+    fun showPermissionRationaleOrAskToGoForSystemSettings(activity:Activity, showDialog: (acceptor: () -> Unit) -> Unit  ) {
+        if(shouldShowRequestPermissionRationale(activity))
+            request(activity)
+        else {
+            showDialog {
+                openAppSystemSettings(activity)
+            }
+
+        }
+    }
+
+    companion object {
+        @JvmField
+        val LOCATION: Permission = Permission(Manifest.permission.ACCESS_FINE_LOCATION, 815)
+    }
 }
