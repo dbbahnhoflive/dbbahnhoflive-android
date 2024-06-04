@@ -33,6 +33,7 @@ import de.deutschebahn.bahnhoflive.backend.hafas.model.HafasStop
 import de.deutschebahn.bahnhoflive.backend.local.model.EvaIds
 import de.deutschebahn.bahnhoflive.backend.ris.model.TrainEvent
 import de.deutschebahn.bahnhoflive.backend.ris.model.TrainInfo
+import de.deutschebahn.bahnhoflive.backend.ris.model.TrainMovementInfo
 import de.deutschebahn.bahnhoflive.backend.toHafasStation
 import de.deutschebahn.bahnhoflive.backend.wagenstand.WagenstandRequestManager
 import de.deutschebahn.bahnhoflive.databinding.FragmentJourneyRegularContentBinding
@@ -318,7 +319,7 @@ class RegularJourneyContentFragment : Fragment() {
                         super.onFail(reason)
                     }
                 })
-            val trainMovementInfo = trainEvent.movementRetriever.getTrainMovementInfo(trainInfo)
+            val trainMovementInfo : TrainMovementInfo? = trainEvent.movementRetriever.getTrainMovementInfo(trainInfo)
             wagenstandRequestManager.loadWagenstand(
                 station.evaIds,
                 TimetableViewHelper.buildQueryParameters(

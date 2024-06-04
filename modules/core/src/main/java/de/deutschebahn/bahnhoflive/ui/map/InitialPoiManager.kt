@@ -31,8 +31,8 @@ class InitialPoiManager(intent: Intent?, savedInstanceState: Bundle?) {
         outState.putBoolean(STATE_DONE, done)
     }
 
-    fun isInitial(markerBinder: MarkerBinder): Boolean {
-        return markerBinder.markerContent.wraps(initialItem)
+    fun isInitial(markerBinder: MarkerBinder?): Boolean {
+        return markerBinder?.markerContent?.wraps(initialItem)?:false
     }
 
     companion object {

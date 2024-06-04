@@ -271,20 +271,22 @@ public class RISTimetable implements Parcelable {
         for (TrainInfo trainInfo : trainInfos) {
 
             TrainMovementInfo referenceItem = trainEvent.movementRetriever.getTrainMovementInfo(trainInfo);
-            String wingsReference = referenceItem.getWings();
+            if(referenceItem!=null) {
+                String wingsReference = referenceItem.getWings();
 
-            if (wingsReference == null || wingsReference.length() == 0) {
-                // skip if there is now wings information
-                continue;
-            }
-            // search for referenceId
+                if (wingsReference == null || wingsReference.length() == 0) {
+                    // skip if there is now wings information
+                    continue;
+                }
+                // search for referenceId
 
-            for (TrainInfo referenceTrainInfo : trainInfos) {
-                if (referenceTrainInfo.getId().contains(wingsReference)) {
-                    // we found a matching reference item
+                for (TrainInfo referenceTrainInfo : trainInfos) {
+                    if (referenceTrainInfo.getId().contains(wingsReference)) {
+                        // we found a matching reference item
 
-                    applySplitMessages(referenceItem,
-                            trainEvent.movementRetriever.getTrainMovementInfo(referenceTrainInfo));
+                        applySplitMessages(referenceItem,
+                                trainEvent.movementRetriever.getTrainMovementInfo(referenceTrainInfo));
+                    }
                 }
             }
         }
@@ -292,6 +294,9 @@ public class RISTimetable implements Parcelable {
     }
 
     private static void applySplitMessages(TrainMovementInfo trainMovementInfo, TrainMovementInfo referencedTrainMovementInfo) {
+
+        if(referencedTrainMovementInfo==null)
+            return;
 
         final List<String> matchingTrainStations = referencedTrainMovementInfo.getFormattedVia();
 

@@ -21,7 +21,7 @@ class IssuesBinder(
     private val issueIndicatorBinder: IssueIndicatorBinder? = null
 ) {
 
-    fun bindIssues(trainInfo: TrainInfo, trainMovementInfo: TrainMovementInfo) {
+    fun bindIssues(trainInfo: TrainInfo, trainMovementInfo: TrainMovementInfo?) {
         val trainName = TimetableViewHelper.composeName(trainInfo, trainMovementInfo)
 
         val trainMessages = TrainMessages(trainInfo, trainMovementInfo)

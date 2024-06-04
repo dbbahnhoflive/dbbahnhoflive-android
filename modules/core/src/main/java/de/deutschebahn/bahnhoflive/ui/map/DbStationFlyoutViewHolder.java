@@ -29,7 +29,8 @@ class DbStationFlyoutViewHolder extends FlyoutViewHolder {
             @Override
             public void onClick(View v) {
                 final MarkerBinder markerBinder = getItem();
-                markerBinder.getMarkerContent().onFlyoutClick(v.getContext());
+                if(markerBinder!=null)
+                  markerBinder.getMarkerContent().onFlyoutClick(v.getContext());
             }
         };
         itemView.setOnClickListener(onClickListener);
@@ -40,13 +41,15 @@ class DbStationFlyoutViewHolder extends FlyoutViewHolder {
     protected void onBind(MarkerBinder item) {
         super.onBind(item);
 
-        final MarkerContent markerContent = item.getMarkerContent();
+        if(item!=null) {
+            final MarkerContent markerContent = item.getMarkerContent();
 
-        if (markerContent instanceof StationMarkerContent) {
-            final StationMarkerContent stationMarkerContent = (StationMarkerContent) markerContent;
+            if (markerContent instanceof StationMarkerContent) {
+                final StationMarkerContent stationMarkerContent = (StationMarkerContent) markerContent;
 
-            final TimetableCollector timetableCollector = stationMarkerContent.getDepartures();
-            departuresViewHolder.bind(timetableCollector == null ? null : timetableCollector.getTimetableStateFlow().getValue());
+                final TimetableCollector timetableCollector = stationMarkerContent.getDepartures();
+                departuresViewHolder.bind(timetableCollector == null ? null : timetableCollector.getTimetableStateFlow().getValue());
+            }
         }
     }
 

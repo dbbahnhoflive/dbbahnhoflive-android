@@ -424,7 +424,7 @@ public class MapOverlayFragment extends Fragment implements OnMapReadyCallback, 
      * Yes, this implementation is weird. But this way, POI preselection works.
      */
     public void snapToFlyout(final MarkerBinder markerTag) {
-        if (flyoutsAdapter != null) {
+        if (flyoutsAdapter != null && markerTag!=null) {
             final int centralPositionOrNegative = flyoutsAdapter.getCentralPosition(markerTag.getMarkerContent());
             if (centralPositionOrNegative >= 0) {
                 if (flyoutsRecycler.getWidth() > 0) {
@@ -706,8 +706,10 @@ public class MapOverlayFragment extends Fragment implements OnMapReadyCallback, 
     }
 
     private void setIndoorLevel(MarkerBinder markerBinder) {
-        final int level = markerBinder.getMarkerContent().suggestLevel(mapViewModel.getLevel());
-        updateLevel(level);
+        if(markerBinder!=null) {
+            final int level = markerBinder.getMarkerContent().suggestLevel(mapViewModel.getLevel());
+            updateLevel(level);
+        }
     }
 
     private void updateLevel(int level) {
