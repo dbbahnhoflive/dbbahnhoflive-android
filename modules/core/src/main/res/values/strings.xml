@@ -444,7 +444,7 @@
     <string name="nev_text_1">Aufgrund von Bauarbeiten an der Riedbahn kommt es von Juli bis Dezember 2024 zu Einschränkungen im Zugverkehr auf der Strecke zwischen Frankfurt (Main) Hauptbahnhof und Mannheim Hauptbahnhof. Darüber hinaus sind auch die Nebenverbindungen der Riedbahn, der Main-Neckar-Bahn sowie die Linien auf der Strecke Mainz – Mannheim betroffen. Ein Ersatzverkehr mit Bussen ist eingerichtet.</string>
     <string name="nev_text_2">Die Sanierung erfolgt in zwei Abschnitten. Zunächst wird die Strecke zwischen Rottendorf und Neustadt (Aisch) Bahnhof vom 26. Mai bis 05. August 2023 für den Zugverkehr komplett gesperrt. Anschließend erfolgt eine Sperrung der Strecke zwischen Neustadt (Aisch) Bahnhof und Fürth (Bay) Hauptbahnhof vom 06. August bis 11. September 2023. Durch die Sperrung in dem zweiten genannten Zeitraum erfolgt auf der Strecke Markt Erlbach - Siegelsdorf - Fürth (Bay) Hauptbahnhof zudem ebenfalls kein Zugverkehr.\n\nDarüber hinaus entfallen über beide Bauphasen die meisten Züge der Linie RB80 zwischen Würzburg Hauptbahnhof und Marktbreit.\n\nWeiterhin kommt es in den späten Abend- und frühen Morgenstunden zwischen Nürnberg Hauptbahnhof und Würzburg Hauptbahnhof über den gesamten Zeitraum hinweg zu Zugausfällen.\n\nWeiterführende Informationen finden Sie unter bahnhof.de"</string>
 
-    <string name="sev_date_range">15.07. - 14.12.2024</string>
+    <string name="sev_date_range">15.07.24 - 14.12.24</string>
     <string name="sr_sev_date_range">vom Fünfzehnten Juli 24 bis Vierzehnten Dezember 24</string>
 
     <string name="sev_db_companion_service_time_range_help">von 7:00 bis 19:00 Uhr</string>
@@ -475,6 +475,7 @@
     <string name="nev_db_companion_button_text">DB Wegbegleitung öffnen</string>
 
 
+<!--    <string name="rail_replacement_db_companion_text1">Blinde und stark sehbeeinträchtigte Reisende können sich an Bahnhöfen mit Ersatzverkehr sicher und schnell durch unser geschultes Personal per Videoanruf zur Ersatzhaltestelle und zurück begleiten lassen. Dies ist ein Service der DB Regio AG.</string>-->
     <string name="rail_replacement_db_companion_text1">Blinde und stark sehbeeinträchtigte Reisende können sich an Bahnhöfen mit Ersatzverkehr sicher und schnell durch unser geschultes Personal per Videoanruf zur Ersatzhaltestelle und zurück begleiten lassen. Dies ist ein Service der DB Regio AG.</string>
     <string name="rail_replacement_db_companion_text2">Dieser Service steht Ihnen für die Zeit der Baumaßnahmen ab dem 15. Juli bis 14. Dezember 2024, <b>täglich von 07:00 bis 19:00 Uhr</b> zur Verfügung.</string>
     <string name="sr_rail_replacement_db_companion_text2">Dieser Service steht Ihnen für die Zeit der Baumaßnahmen ab dem fünfzehnten Juli bis vierzehnten Dezember 2024, täglich von sieben bis neunzehn Uhr zur Verfügung.</string>

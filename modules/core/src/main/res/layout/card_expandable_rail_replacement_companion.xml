@@ -55,7 +55,11 @@
                 android:importantForAccessibility="yes"
                 android:text="@string/rail_replacement_db_companion_text2"
                 android:contentDescription="@string/sr_rail_replacement_db_companion_text2"
-                android:textSize="@dimen/textsize_28" />
+                android:textSize="@dimen/textsize_28"
+                android:visibility="gone"
+                tools:visibility="visible"
+
+                />
 
             <TextView
                 android:id="@+id/service_active"
@@ -64,6 +68,8 @@
                 android:text="@string/rail_replacement_db_companion_service_times"
                 android:contentDescription="@string/sr_rail_replacement_db_companion_service_times"
                 android:textSize="@dimen/textsize_28"
+                android:visibility="gone"
+                tools:visibility="visible"
                 />
 
             <TextView

@@ -20,7 +20,8 @@ class RailReplacementCompanionViewHolder(
     private val trackingManager: TrackingManager,
     private val webViewStarter: (intent:CustomTabsIntent, url:String) -> Unit,
     private val videoCallStarter: (url:String) -> Unit,
-    private val companionHintStarter : () -> Unit
+    private val companionHintStarter : () -> Unit,
+    private val checkIfServiceIsAvailable : () -> Boolean
 ) : CommonDetailsCardViewHolder<ServiceContent>(
     binding.root,
     selectionManager
@@ -35,6 +36,8 @@ class RailReplacementCompanionViewHolder(
             iconView.setImageResource(IconMapper.contentIconForType(it))
         }
 
+        binding.overview.status.isVisible = SEV_Static_Riedbahn.isInConstructionPhase()
+
         if (SEV_Static_Riedbahn.isInAnnouncementPhase()) {
             binding.serviceAnnouncement.isVisible = true
             binding.serviceActive.isVisible = false
@@ -43,7 +46,6 @@ class RailReplacementCompanionViewHolder(
         } else
             if (SEV_Static_Riedbahn.isInConstructionPhase()) {
                 binding.serviceAnnouncement.isVisible=false
-
                 binding.serviceActive.isVisible=true
 
 //                val htmlText =
@@ -61,6 +63,7 @@ class RailReplacementCompanionViewHolder(
 
         binding.linkVideoCall.setOnClickListener {
 
+
             // on click
             trackingManager.track(
                 TrackingManager.TYPE_ACTION,
@@ -71,6 +74,8 @@ class RailReplacementCompanionViewHolder(
                 TrackingManager.Entity.WEGBEGLEITUNG_VIDEO
             )
 
+            if(checkIfServiceIsAvailable()) {
+
             val url =
                 itemView.context.getString(R.string.rail_replacement_db_companion_video_call_url)
 //            val intent = CustomTabsIntent.Builder()
@@ -78,6 +83,7 @@ class RailReplacementCompanionViewHolder(
 //                .setUrlBarHidingEnabled(true)
 //                .build()
             videoCallStarter(url)
+                }
 
         }
 
@@ -123,7 +129,7 @@ class RailReplacementCompanionViewHolder(
     }
 
     fun setDbCompanionServiceState(isAvailable : Boolean ) {
-        binding.linkVideoCall.isEnabled = isAvailable
+//        binding.linkVideoCall.isEnabled = isAvailable
 
         @StringRes
         val statusText = if(isAvailable) R.string.rail_replacement_db_companion_service_state_available else R.string.rail_replacement_db_companion_service_state_not_available

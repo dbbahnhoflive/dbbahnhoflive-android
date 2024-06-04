@@ -1582,7 +1582,7 @@ class StationViewModel(application: Application) : HafasTimetableViewModel(appli
 
     val showDbCompanionTeaser : LiveData<Boolean> =
         stationResource.data.map {itStation ->
-            SEV_Static_Riedbahn.hasStationDbCompanionByStationId(itStation.id)
+            SEV_Static_Riedbahn.hasStationDbCompanionByStationId(itStation.id) && SEV_Static_Riedbahn.isInConstructionPhase()
     }
 
 

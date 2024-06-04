@@ -23,7 +23,7 @@ class RailReplacementAdapter(
     private val webViewStarter: (intent:CustomTabsIntent, url:String) -> Unit,
     private val videoCallStarter: (url:String) -> Unit,
     private val companionHintStarter : () -> Unit,
-    private val checkIfServiceIsAvailable : () -> Unit
+    private val checkIfServiceIsAvailable : () -> Boolean
 
 ) : androidx.recyclerview.widget.RecyclerView.Adapter<CommonDetailsCardViewHolder<ServiceContent>>() {
 
@@ -32,7 +32,6 @@ class RailReplacementAdapter(
     val listener =
         SingleSelectionManager.Listener { selectionManager ->
             if (selectionManager?.isSelected(VIEW_TYPE_COMPANION) == true) {
-                checkIfServiceIsAvailable()
                 trackingManager.track(
                     TrackingManager.TYPE_ACTION,
                     TrackingManager.Action.TAP,
@@ -117,7 +116,8 @@ class RailReplacementAdapter(
                     trackingManager,
                     webViewStarter,
                     videoCallStarter,
-                    companionHintStarter
+                    companionHintStarter,
+                    checkIfServiceIsAvailable
                 )
 
             stationViewModel.dbCompanionServiceAvailableLiveData.observe(holder.itemView.context as LifecycleOwner) { serviceIsAvailable->

@@ -72,9 +72,12 @@ class InfoCategorySelectionFragment : CategorySelectionFragment(
             parkingsCategory = addParkings()
 
             if (station != null) {
-                if (!railReplacementSummaryLiveData.value.isNullOrEmpty() ||  SEV_Static_Riedbahn.containsStationId(
-                        station.station?.stationID
-                    )) {
+                if (!railReplacementSummaryLiveData.value.isNullOrEmpty() ||
+
+                    (SEV_Static_Riedbahn.containsStationId(station.station?.stationID)
+                            && (SEV_Static_Riedbahn.isInAnnouncementPhase() || SEV_Static_Riedbahn.isInConstructionPhase())
+                            )
+                    ) {
                         railReplacementCategory = addRailReplacement()
                     }
 
@@ -191,7 +194,9 @@ class InfoCategorySelectionFragment : CategorySelectionFragment(
                 )
             )
         )
-        if (SEV_Static_Riedbahn.isStationReplacementStopByStationID(stationViewModel.station?.id))
+        if (SEV_Static_Riedbahn.isStationReplacementStopByStationID(stationViewModel.station?.id) &&
+            SEV_Static_Riedbahn.isInConstructionPhase()
+            )
             railReplacementServicesList.add(
                 ServiceContent(
                     StaticInfo(

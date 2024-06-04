@@ -5,10 +5,12 @@ import android.annotation.SuppressLint
 import android.content.Context
 import android.content.Intent
 import android.content.pm.PackageManager
+import android.net.http.SslError
 import android.os.Build
 import android.os.Bundle
 import android.webkit.GeolocationPermissions
 import android.webkit.PermissionRequest
+import android.webkit.SslErrorHandler
 import android.webkit.WebChromeClient
 import android.webkit.WebView
 import android.webkit.WebViewClient
@@ -34,12 +36,30 @@ class DbCompanionActivity : BaseActivity() {
         settings.setSupportMultipleWindows(false)
         settings.javaScriptCanOpenWindowsAutomatically = true
         settings.domStorageEnabled = true
-//        settings.databaseEnabled = true
+        settings.databaseEnabled = true
 
-        webView.setWebViewClient(CustomClient())
-        webView.setWebChromeClient(WebChromeClient())
+//        webView.setWebViewClient(WebViewClient())
+
+        webView.webViewClient = object : WebViewClient() {
+            override fun shouldOverrideUrlLoading(view: WebView, url: String): Boolean {
+                return false
+            }
+
+            override fun onReceivedSslError(
+                view: WebView?,
+                handler: SslErrorHandler?,
+                error: SslError?
+            ) {
+                handler?.proceed() // todo: remove in release
+//                super.onReceivedSslError(view, handler, error) // todo: insert in release
+            }
+        }
+
+//        webView.setWebChromeClient(WebChromeClient())
 
         val ctx :  Context = this
+
+
         webView.webChromeClient = object : WebChromeClient() {
             override fun onPermissionRequest(request: PermissionRequest?) {
                 val grantedPermissions = mutableListOf<String>()
@@ -85,8 +105,10 @@ class DbCompanionActivity : BaseActivity() {
                 callback?.invoke(origin, true, false)
             }
         }
-        webView.loadUrl("https://de.webcamtests.com/")
+//        webView.loadUrl("https://de.webcamtests.com/")
+//        webView.loadUrl("https://www.google.de/")
 //                webView.loadUrl("https://dev.help-me-iat.comp.db.de/")
+        webView.loadUrl("https://wegbegleitung.deutschebahn.com/")
     }
 
         private fun requestPermissionsWindow() {

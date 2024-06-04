@@ -26,6 +26,7 @@ import de.deutschebahn.bahnhoflive.ui.map.content.rimap.RimapFilter
 import de.deutschebahn.bahnhoflive.ui.station.RailReplacementInfoType
 import de.deutschebahn.bahnhoflive.ui.station.StationActivity
 import de.deutschebahn.bahnhoflive.ui.station.StationViewModel
+import de.deutschebahn.bahnhoflive.ui.station.railreplacement.SEV_Static_Riedbahn
 import de.deutschebahn.bahnhoflive.util.AlertX
 
 class RailReplacementFragment :
@@ -107,7 +108,8 @@ class RailReplacementFragment :
                 (activity as StationActivity).showDbCompanionHelp()
             },
             { // checkIfServiceIsAvailable
-                if (stationViewModel.dbCompanionServiceAvailableLiveData.value==false) {
+                val isAvailable = SEV_Static_Riedbahn.isCompanionServiceAvailable()
+                if (!isAvailable) {
                     context?.let {
                         AlertX.execAlert(
                             it,
@@ -125,8 +127,12 @@ class RailReplacementFragment :
                                 .toString()
 
                         )
+
                     }
                 }
+
+                isAvailable
+
             }
         ))
 
@@ -233,8 +239,10 @@ class RailReplacementFragment :
     private fun showWebView() {
 
         val myIntent: Intent = Intent(context, DbCompanionActivity::class.java)
+        myIntent.flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_SINGLE_TOP
 //        myIntent.putExtra("URL", url) //Optional parameters
         startActivity(myIntent)
+
 
 //        ContextCompat.startActivity(
 //            requireContext(),

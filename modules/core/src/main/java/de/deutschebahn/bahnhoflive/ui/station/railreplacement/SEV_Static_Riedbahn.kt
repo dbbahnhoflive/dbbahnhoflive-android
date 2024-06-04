@@ -28,7 +28,7 @@ class EvItem(
     private val endOfConstructionPhase = arrayOf(2024, 12, 14,  23,59,59)
 
     private val startOfShowAdHocBox = arrayOf(2024, 7, 8, 0, 0, 0)
-    private val endOfShowAdHocBox = arrayOf(2034, 12, 31, 23, 59, 59) // dummy
+    private val endOfShowAdHocBox = arrayOf(2024, 7, 14, 23, 59, 59) // dummy
 
 //         EvItem(2545,  8000152,"Hannover Hbf"), // Test Hannover
 
@@ -120,7 +120,8 @@ class EvItem(
         c.set(Calendar.MINUTE, 0)
         val today19_00h = c.timeInMillis
 
-        return (((day >= Calendar.MONDAY && day <= Calendar.FRIDAY) && (now >= today7_00h && now < today19_00h)) || testIsDbCompanionServiceAvailable)
+//        return (((day >= Calendar.MONDAY && day <= Calendar.FRIDAY) && (now >= today7_00h && now < today19_00h)) || testIsDbCompanionServiceAvailable)
+        return ( (now >= today7_00h && now < today19_00h) || testIsDbCompanionServiceAvailable)
     }
 
     fun containsStationId(stationId: String?): Boolean {
