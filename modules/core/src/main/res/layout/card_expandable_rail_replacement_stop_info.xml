@@ -19,191 +19,196 @@
         android:background="@color/card_background"
         android:orientation="vertical">
 
-        <include layout="@layout/common_detail_overview" />
+        <include
+            android:id="@+id/header"
+            layout="@layout/common_detail_overview" />        <LinearLayout
+        android:id="@+id/details"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:importantForAccessibility="no"
+        android:orientation="vertical">
 
-            <LinearLayout
-                android:id="@+id/details"
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/nev_info_top"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:visibility="gone"
+            tools:visibility="visible">
+
+
+            <View
+                android:id="@+id/divider"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="vertical"
+                android:layout_height="1dp"
+                android:layout_marginTop="@dimen/default_space"
+                android:layout_marginBottom="@dimen/default_space"
+                android:background="@color/filter_header_divider"
                 android:importantForAccessibility="no"
-                android:paddingBottom="@dimen/default_space"
-                >
+                android:visibility="gone"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <ImageView
+                android:id="@+id/icon"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:contentDescription="@null"
+                android:importantForAccessibility="no"
+                android:padding="@dimen/default_space_double"
+                android:src="@drawable/app_nev_icon_round"
+                android:visibility="gone"
+                app:layout_constraintBottom_toBottomOf="parent"
+
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/divider" />
+
+            <TextView
+                android:id="@+id/newsHeadline"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginHorizontal="@dimen/default_space_double"
+                android:layout_marginTop="@dimen/default_space"
+                android:layout_marginBottom="@dimen/default_space_half"
+                android:contentDescription="@string/sr_sev_date_range"
+                android:ellipsize="end"
+                android:gravity="bottom"
+                android:lineSpacingMultiplier="1.2"
+                android:maxLines="2"
+                android:paddingEnd="@dimen/default_space_double"
+                android:text="@string/sev_date_range"
+                android:textSize="@dimen/textsize_h3"
+                android:textStyle="bold"
+                app:layout_constraintBottom_toTopOf="@+id/newsCopy"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toEndOf="@+id/icon"
+                app:layout_constraintTop_toBottomOf="@id/divider"
+                app:layout_constraintVertical_chainStyle="packed"
+                tools:text="@tools:sample/lorem/random" />
+
+            <ImageButton
+                android:id="@+id/btnLink"
+                android:layout_width="@dimen/round_button_size"
+                android:layout_height="@dimen/round_button_size"
+                android:layout_margin="@dimen/default_space"
+                android:background="@drawable/shape_circle_button"
+                android:contentDescription="Zum Anzeigen klicken"
+                android:elevation="@dimen/default_elevation"
+                android:scaleType="center"
+                android:src="@drawable/app_extern_link"
+                android:visibility="gone"
+                app:elevation="@dimen/default_elevation"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/newsHeadline"
+                tools:visibility="visible" />
+
+            <TextView
+                android:id="@+id/newsCopy"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginHorizontal="@dimen/default_space_double"
+                android:layout_marginTop="@dimen/default_space_half"
+                android:layout_marginBottom="@dimen/default_space"
+                android:ellipsize="end"
+                android:importantForAccessibility="yes"
+                android:lineSpacingMultiplier="1.2"
+                android:maxLines="3"
+                android:paddingEnd="@dimen/default_space_double"
+                android:text="@string/nev_copy"
+                android:textSize="@dimen/textsize_h3"
+                app:layout_constrainedHeight="true"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toStartOf="@+id/btnLink"
+                app:layout_constraintStart_toEndOf="@+id/icon"
+                app:layout_constraintTop_toBottomOf="@+id/newsHeadline" />
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
 
 
-                <androidx.constraintlayout.widget.ConstraintLayout
-                    android:id="@+id/nev_info_top"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    tools:visibility="visible"
-                    android:visibility="gone"
-                    >
+        <TextView
+            android:id="@+id/rail_replacement_nev"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginHorizontal="@dimen/default_space_double"
+            android:layout_marginTop="@dimen/default_space"
+            android:importantForAccessibility="yes"
+            android:paddingBottom="@dimen/default_space_half"
+            android:text="@string/nev_text_1"
+            android:textSize="@dimen/textsize_28"
+            android:visibility="gone"
+            tools:visibility="visible" />
+
+        <TextView
+            android:id="@+id/rail_replacement_entry_label"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginHorizontal="@dimen/default_space_double"
+            android:layout_marginVertical="@dimen/default_space_half"
+            android:text="@string/rail_replacement_entry_label_plural"
+            android:textSize="@dimen/textsize_28"
+            android:visibility="gone"
+            tools:visibility="visible" />
+
+        <LinearLayout
+            android:id="@+id/content_list"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:divider="@drawable/shape_divider_occupancy"
+            android:importantForAccessibility="no"
+            android:orientation="vertical"
+            android:showDividers="middle"
+            android:visibility="gone"
+            tools:visibility="visible">
+
+            <include layout="@layout/include_item_rail_replacement" />
+
+            <include layout="@layout/include_item_rail_replacement" />
+
+        </LinearLayout>
+
+        <TextView
+            android:id="@+id/rail_replacement_nev2"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginHorizontal="@dimen/default_space_double"
+            android:layout_marginTop="@dimen/default_space"
+            android:text="@string/nev_text_2"
+            android:textSize="@dimen/textsize_28"
+            android:visibility="gone"
+            tools:text="service hint"
+            tools:visibility="visible" />
+
+        <android.widget.Space
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/default_space_double" />
+
+        <TextView
+            android:id="@+id/riedbahn_info"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginHorizontal="@dimen/default_space_double"
+            android:layout_marginVertical="@dimen/default_space"
+            android:text="@string/sev_stop_info_more_information"
+            android:textSize="@dimen/textsize_28"
+            android:visibility="gone"
+            tools:visibility="visible" />
+
+        <include
+            android:id="@+id/more_info_link"
+            layout="@layout/link_with_text"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginHorizontal="@dimen/default_space_double"
+            android:visibility="gone"
+            tools:visibility="visible" />
+
+        <android.widget.Space
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/default_space_triple" />
+
+    </LinearLayout>
 
 
-                    <View
-                        android:id="@+id/divider"
-                        android:visibility="gone"
-                        android:layout_marginTop="@dimen/default_space"
-                        android:layout_marginBottom="@dimen/default_space"
-                        android:background="@color/filter_header_divider"
-                        app:layout_constraintTop_toTopOf="parent"
-                        android:layout_width="match_parent"
-                        android:layout_height="1dp"
-                        android:importantForAccessibility="no"
-                        />
-
-                    <ImageView
-                        android:id="@+id/icon"
-                        android:padding="@dimen/default_space_double"
-                        android:visibility="gone"
-                        android:src="@drawable/app_nev_icon_round"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        app:layout_constraintBottom_toBottomOf="parent"
-                        app:layout_constraintStart_toStartOf="parent"
-                        app:layout_constraintTop_toBottomOf="@+id/divider"
-
-                        android:contentDescription="@null"
-                        android:importantForAccessibility="no"
-                        />
-
-                    <TextView
-                        android:id="@+id/newsHeadline"
-                        android:layout_width="0dp"
-                        android:layout_height="wrap_content"
-                        android:layout_marginHorizontal="@dimen/default_space_double"
-                        android:layout_marginTop="@dimen/default_space"
-                        android:layout_marginBottom="@dimen/default_space_half"
-                        android:ellipsize="end"
-                        android:gravity="bottom"
-                        android:lineSpacingMultiplier="1.2"
-                        android:maxLines="2"
-                        android:paddingEnd="@dimen/default_space_double"
-                        android:textSize="@dimen/textsize_h3"
-                        android:textStyle="bold"
-                        app:layout_constraintBottom_toTopOf="@+id/newsCopy"
-                        app:layout_constraintEnd_toEndOf="parent"
-                        app:layout_constraintStart_toEndOf="@+id/icon"
-                        app:layout_constraintTop_toBottomOf="@id/divider"
-                        app:layout_constraintVertical_chainStyle="packed"
-                        android:text="@string/sev_date_range"
-                        android:contentDescription="@string/sr_sev_date_range"
-                        tools:text="@tools:sample/lorem/random" />
-
-                    <ImageButton
-                        android:id="@+id/btnLink"
-                        android:visibility="gone"
-                        tools:visibility="visible"
-                        android:layout_margin="@dimen/default_space"
-                        android:layout_width="@dimen/round_button_size"
-                        android:layout_height="@dimen/round_button_size"
-                        android:scaleType="center"
-                        android:elevation="@dimen/default_elevation"
-                        app:elevation="@dimen/default_elevation"
-                        android:background="@drawable/shape_circle_button"
-                        android:src="@drawable/app_extern_link"
-                        app:layout_constraintTop_toBottomOf="@+id/newsHeadline"
-                        app:layout_constraintBottom_toBottomOf="parent"
-                        app:layout_constraintEnd_toEndOf="parent" />
-
-                    <TextView
-                        android:id="@+id/newsCopy"
-                        android:layout_width="0dp"
-                        android:layout_height="wrap_content"
-                        android:layout_marginHorizontal="@dimen/default_space_double"
-                        android:layout_marginTop="@dimen/default_space_half"
-                        android:layout_marginBottom="@dimen/default_space"
-                        android:ellipsize="end"
-                        android:importantForAccessibility="yes"
-                        android:lineSpacingMultiplier="1.2"
-                        android:maxLines="3"
-                        android:paddingEnd="@dimen/default_space_double"
-                        android:textSize="@dimen/textsize_h3"
-                        app:layout_constraintBottom_toBottomOf="parent"
-                        app:layout_constraintEnd_toStartOf="@+id/btnLink"
-                        app:layout_constrainedHeight="true"
-                        app:layout_constraintStart_toEndOf="@+id/icon"
-                        app:layout_constraintTop_toBottomOf="@+id/newsHeadline"
-                        android:text="@string/nev_copy"
-                        />
-
-                </androidx.constraintlayout.widget.ConstraintLayout>
-
-
-                <TextView
-                    android:id="@+id/rail_replacement_nev"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    tools:visibility="visible"
-                    android:visibility="gone"
-                    android:layout_marginTop="@dimen/default_space"
-                    android:layout_marginHorizontal="@dimen/default_space_double"
-                    android:text="@string/nev_text_1"
-                    android:importantForAccessibility="yes"
-                    android:paddingBottom="@dimen/default_space_half"
-                    android:textSize="@dimen/textsize_28" />
-
-                <TextView
-                    android:id="@+id/rail_replacement_entry_label"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginHorizontal="@dimen/default_space_double"
-                    android:layout_marginVertical="@dimen/default_space_half"
-                    tools:visibility="visible"
-                    android:visibility="gone"
-                    android:text="@string/rail_replacement_entry_label_plural"
-                    android:textSize="@dimen/textsize_28" />
-
-                <LinearLayout
-                    android:id="@+id/content_list"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:divider="@drawable/shape_divider_occupancy"
-                    android:orientation="vertical"
-                    android:showDividers="middle"
-                    android:visibility="gone"
-                    tools:visibility="visible"
-                    android:importantForAccessibility="no"
-                    >
-
-                    <include layout="@layout/include_item_rail_replacement" />
-
-                    <include layout="@layout/include_item_rail_replacement" />
-
-                </LinearLayout>
-
-                <TextView
-                    android:id="@+id/rail_replacement_nev2"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="@dimen/default_space"
-                    tools:visibility="visible"
-                    android:visibility="gone"
-                    android:layout_marginHorizontal="@dimen/default_space_double"
-                    android:text="@string/nev_text_2"
-                    tools:text="service hint"
-                    android:textSize="@dimen/textsize_28" />
-
-                <android.widget.Space
-                    android:layout_width="match_parent"
-                    android:layout_height="@dimen/default_space_double"/>
-
-                <TextView
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginVertical="@dimen/default_space"
-                    android:layout_marginHorizontal="@dimen/default_space_double"
-                    android:text="@string/sev_stop_info_more_information"
-                    android:textSize="@dimen/textsize_28" />
-
-                <include
-                    android:id="@+id/more_info_link"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginHorizontal="@dimen/default_space_double"
-                    layout="@layout/link_with_text"/>
-
-            </LinearLayout>
     </LinearLayout>
 
 </de.deutschebahn.bahnhoflive.view.DecoratedCard>

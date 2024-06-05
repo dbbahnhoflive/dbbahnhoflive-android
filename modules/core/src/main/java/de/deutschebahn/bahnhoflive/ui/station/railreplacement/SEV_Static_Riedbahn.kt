@@ -181,7 +181,7 @@ class EvItem(
 
         if(containsStationId(stationId)) {
             val isInAnnouncementPhase = isInAnnouncementPhase()
-            val isInConstructionPhase = isStationInConstructionPhase(stationId)
+            val isInConstructionPhase = isInConstructionPhase()
             val showAdhoc = shouldShowAdhocBox()
 
             if (isInAnnouncementPhase || isInConstructionPhase || showAdhoc) {

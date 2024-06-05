@@ -20,7 +20,8 @@
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="match_parent"
+        >
 
         <androidx.constraintlayout.widget.Guideline
             android:id="@+id/guideline"
@@ -39,12 +40,20 @@
             >
         </android.widget.Space>
 
+        <android.widget.Space
+            android:id="@+id/spaceTop"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/default_space"
+            app:layout_constraintLeft_toLeftOf="@+id/guideline"
+            app:layout_constraintTop_toTopOf="parent"
+            >
+        </android.widget.Space>
+
         <TextView
             android:id="@+id/title"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginEnd="@dimen/default_space"
-            android:layout_marginTop="@dimen/default_space"
             android:ellipsize="end"
             android:lines="1"
             android:textStyle="bold"
@@ -52,7 +61,7 @@
             app:layout_constraintBottom_toTopOf="@+id/status"
             app:layout_constraintLeft_toRightOf="@+id/spaceMargin"
             app:layout_constraintRight_toRightOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/spaceTop"
             tools:text="Bahnhofsmission" />
 
         <TextView
@@ -60,18 +69,27 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginTop="@dimen/default_space_half"
-            android:layout_marginBottom="@dimen/default_space"
             android:layout_marginEnd="@dimen/default_space"
             android:gravity="center_vertical"
             android:textSize="@dimen/textsize_h3"
-            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintBottom_toTopOf="@+id/spaceBottom"
             app:layout_constraintLeft_toRightOf="@+id/spaceMargin"
             app:layout_constraintRight_toRightOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/title"
             tools:drawableLeft="@drawable/app_check"
             android:drawablePadding="@dimen/default_space_half"
             tools:text="Geöffnet"
+            android:visibility="visible"
             tools:textColor="@color/green" />
+
+        <android.widget.Space
+            android:id="@+id/spaceBottom"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/default_space"
+            app:layout_constraintLeft_toLeftOf="@+id/guideline"
+            app:layout_constraintBottom_toBottomOf="parent"
+            >
+        </android.widget.Space>
 
         <ImageView
             android:importantForAccessibility="yes"

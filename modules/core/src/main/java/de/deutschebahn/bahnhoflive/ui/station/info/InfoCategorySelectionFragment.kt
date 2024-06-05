@@ -195,7 +195,7 @@ class InfoCategorySelectionFragment : CategorySelectionFragment(
             )
         )
         if (SEV_Static_Riedbahn.isStationReplacementStopByStationID(stationViewModel.station?.id) &&
-            SEV_Static_Riedbahn.isInConstructionPhase()
+            (SEV_Static_Riedbahn.isInConstructionPhase()|| SEV_Static_Riedbahn.isInAnnouncementPhase())
             )
             railReplacementServicesList.add(
                 ServiceContent(

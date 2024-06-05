@@ -131,5 +131,7 @@
     <dimen name="journey_card_margin">14dp</dimen>
 
     <dimen name="setting_card_height">50dp</dimen>
+    <dimen name="min_touch_height">48dp</dimen>
+
 
 </resources>

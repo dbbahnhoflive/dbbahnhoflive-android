@@ -32,7 +32,8 @@
             android:importantForAccessibility="no"
             android:orientation="vertical"
             android:paddingHorizontal="@dimen/default_space_double"
-            android:paddingBottom="@dimen/overscroll_height">
+            android:paddingBottom="@dimen/default_space_double"
+            >
 
 
             <TextView
@@ -45,7 +46,7 @@
 
             <android.widget.Space
                 android:layout_width="wrap_content"
-                android:layout_height="@dimen/default_space_triple" />
+                android:layout_height="@dimen/default_space_half" />
 
             <TextView
                 android:id="@+id/service_announcement"

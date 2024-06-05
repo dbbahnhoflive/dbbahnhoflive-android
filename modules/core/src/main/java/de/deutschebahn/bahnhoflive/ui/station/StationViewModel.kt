@@ -1374,6 +1374,8 @@ class StationViewModel(application: Application) : HafasTimetableViewModel(appli
             .distinctUntilChanged()
 
 
+    // onSuccess kommt nur, wenn statische Ersatzhaltestellen vorhanden (Riedbahn)
+    // Missbrauch der nicht mehr vorhandenen news...
     val newsLiveData = refreshLiveData.switchMap  { _ ->
         stationIdLiveData.switchMap { stationId ->
             MutableLiveData<List<News>>().apply {
@@ -1385,6 +1387,7 @@ class StationViewModel(application: Application) : HafasTimetableViewModel(appli
                         }
 
                         override fun onFail(reason: VolleyError) {
+
 
                         }
                     })

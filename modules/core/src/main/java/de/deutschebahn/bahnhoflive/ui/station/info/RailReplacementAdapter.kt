@@ -62,7 +62,8 @@ class RailReplacementAdapter(
         VIEW_TYPE_STOP_PLACE_INFORMATION -> {
             val holder = RailReplacementStopInfoViewHolder(
                 CardExpandableRailReplacementStopInfoBinding.inflate(parent.inflater, parent, false),
-                singleSelectionManager
+                singleSelectionManager,
+                stationViewModel
             )
 
             stationViewModel.railReplacementSummaryLiveData.observe(holder.itemView.context as LifecycleOwner) { it ->
@@ -73,7 +74,7 @@ class RailReplacementAdapter(
 
             stationViewModel.newsLiveData.observe(holder.itemView.context as LifecycleOwner) {
                 it?.let {
-                    holder.setNevContent(it)
+                    holder.setStaticSEVContent(it)
                 }
             }
 
@@ -83,23 +84,6 @@ class RailReplacementAdapter(
                         null // just clear for now
                 }
             }
-
-//            stationViewModel.showAugmentedRealityTeaser.observe(viewLifecycleOwner) { itShow ->
-//                arTeaserNev.root.visibility = if(itShow) View.VISIBLE else View.GONE
-//                arTeaserNev.webLinkAr.setOnClickListener {
-//                    stationViewModel.startAugmentedRealityWebSite(requireContext())
-//                }
-//                arTeaserNev.root.setOnClickListener {
-//                    stationViewModel.startAugmentedRealityWebSite(requireContext())
-//                }
-//            }
-//
-//            stationViewModel.showDbCompanionTeaser.observe(viewLifecycleOwner) {itShowDbCompanionTeaser ->
-//                dbCompanionTeaserNev.root.visibility = if(itShowDbCompanionTeaser) View.VISIBLE else View.GONE
-//                dbCompanionTeaserNev.weblinkDbCompanion.setOnClickListener {
-//                    stationViewModel.startDbCompanionWebSite(requireContext())
-//                }
-//            }
 
             holder
         }
