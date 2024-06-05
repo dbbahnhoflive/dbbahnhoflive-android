@@ -50,8 +50,11 @@ class DbCompanionActivity : BaseActivity() {
                 handler: SslErrorHandler?,
                 error: SslError?
             ) {
-                handler?.proceed() // todo: remove in release
-//                super.onReceivedSslError(view, handler, error) // todo: insert in release
+                if(handler!=null && error!=null && error.getPrimaryError()== SslError.SSL_DATE_INVALID) {
+                    handler.proceed() // todo: remove in release ?
+                }
+                else
+                 super.onReceivedSslError(view, handler, error) // todo: insert in release
             }
         }
 
@@ -105,6 +108,7 @@ class DbCompanionActivity : BaseActivity() {
                 callback?.invoke(origin, true, false)
             }
         }
+
 //        webView.loadUrl("https://de.webcamtests.com/")
 //        webView.loadUrl("https://www.google.de/")
 //                webView.loadUrl("https://dev.help-me-iat.comp.db.de/")

@@ -12,7 +12,7 @@ android {
     compileSdk 34
 
     defaultConfig {
-        minSdkVersion 21
+        minSdkVersion 25
         targetSdk 34
         versionCode 86
         versionName "3.26.0"

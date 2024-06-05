@@ -48,7 +48,7 @@ android {
     namespace "de.deutschebahn.bahnhoflive"
     compileSdk 34
     defaultConfig {
-        minSdkVersion 21
+        minSdkVersion 25
         targetSdk 34
         multiDexEnabled true
 
