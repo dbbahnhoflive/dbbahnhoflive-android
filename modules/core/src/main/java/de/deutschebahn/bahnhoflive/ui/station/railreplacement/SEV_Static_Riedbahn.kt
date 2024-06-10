@@ -98,7 +98,10 @@ class EvItem(
         2362 to EvItem(8002430, "Heddesheim/Hirschberg"),
         3490 to EvItem(8003489, "Ladenburg"),
         5272 to EvItem(8005089, "Riedrode"),
-        3786 to EvItem(8003755, "Lorsch")
+        3786 to EvItem(8003755, "Lorsch"),
+        2826 to EvItem(8002934, "Hofheim (Ried)"),
+        7982 to EvItem(8070003, "Frankfurt Flughafen Fernbhf."),
+        1849 to EvItem(8070004, "Frankfurt Flughafen Regionalbhf.")
     )
 
 
