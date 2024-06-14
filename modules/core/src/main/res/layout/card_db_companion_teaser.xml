@@ -9,16 +9,15 @@
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="0dp"
+    android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:layout_weight="1"
     style="@style/App.Widget.CardContainer"
-    android:padding="@dimen/card_margin"
-    tools:layout_height="90dp"
+    tools:layout_height="120dp"
     tools:layout_width="match_parent"
     >
+<!--    tools:showIn="@layout/fragment_station"-->
+<!--    tools:showIn="@layout/dynamic_card_layout"-->
 
-<!--    tools:showIn="@layout/fragment_station">-->
 
     <androidx.cardview.widget.CardView
         style="@style/App.Widget.Card"
@@ -48,28 +47,25 @@
                     android:layout_weight="3"
                     android:paddingStart="@dimen/default_space_double"
                     android:paddingTop="@dimen/default_space"
+                    android:paddingBottom="@dimen/default_space"
                     android:orientation="vertical"
                     tools:ignore="RtlSymmetry">
 
-                    <TextView
-                        android:id="@+id/headline"
+                    <androidx.appcompat.widget.AppCompatTextView
                         android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:contentDescription="@string/teaser_db_companion_sr_content_description"
-                        android:text="@string/teaser_db_companion_headline"
-                        android:textColor="@android:color/white"
-                        android:textSize="@dimen/textsize_h3plus"
-                        android:textStyle="bold" />
+                        android:layout_height="match_parent"
 
-
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginTop="@dimen/default_space_half"
-                        android:importantForAccessibility="no"
+                        android:breakStrategy="balanced"
                         android:text="@string/teaser_db_companion_copy"
+
+                        app:autoSizeMinTextSize="8sp"
+                        app:autoSizeMaxTextSize="@dimen/textsize_h3"
                         android:textColor="@android:color/white"
-                        android:textSize="@dimen/textsize_h3" />
+                        android:textSize="@dimen/textsize_h3"
+                        app:autoSizeTextType="uniform"
+                        >
+
+                    </androidx.appcompat.widget.AppCompatTextView>
 
                 </LinearLayout>
 
@@ -87,10 +83,6 @@
                     android:scaleType="fitCenter"
                     android:src="@drawable/app_nev_icon_round"
                     tools:src="@drawable/app_aufzug_h1" />
-
-                <androidx.legacy.widget.Space
-                    android:layout_width="24dp"
-                    android:layout_height="wrap_content" />
 
             </LinearLayout>
 

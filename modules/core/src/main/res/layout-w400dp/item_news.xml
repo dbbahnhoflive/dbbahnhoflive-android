@@ -13,7 +13,9 @@
     android:layout_marginStart="@dimen/default_space"
     android:layout_marginEnd="@dimen/default_space"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    tools:layout_height="wrap_content"
+    >
 
     <LinearLayout
         android:orientation="vertical"
@@ -94,11 +96,6 @@
 
                     />
 
-                <androidx.legacy.widget.Space
-                    android:layout_width="0dp"
-                    android:layout_weight="0.1"
-                    android:layout_height="match_parent"
-                    />
 
                 <androidx.constraintlayout.widget.ConstraintLayout
                     android:layout_width="0dp"
@@ -133,7 +130,7 @@
                         app:layout_constraintEnd_toStartOf="@+id/btnLink"
                         app:layout_constraintTop_toBottomOf="@+id/newsHeadline"
 
-                        android:paddingEnd="70dp"
+                        android:paddingEnd="6dp"
 
                         android:ellipsize="end"
                         android:maxLines="3"
@@ -142,7 +139,7 @@
                         android:importantForAccessibility="yes"
                         android:text="@string/nev_copy"
 
-                        />
+                        tools:ignore="RtlSymmetry" />
 
                     <ImageButton
                         android:id="@+id/btnLink"

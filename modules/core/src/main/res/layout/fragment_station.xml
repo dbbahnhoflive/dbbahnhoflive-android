@@ -52,7 +52,7 @@
                     tools:visibility="visible"
                     style="@style/App.Widget.CardContainer"
                     android:layout_width="match_parent"
-                    android:layout_height="144sp"
+                    android:layout_height="154dp"
                     tools:listitem="@layout/item_news" />
 
                 <com.google.android.material.tabs.TabLayout
@@ -143,6 +143,34 @@
                         android:layout_height="wrap_content"
                         android:indeterminate="true" />
                 </ViewFlipper>
+
+                <include
+                    android:id="@+id/dbCompanionTeaserNoVO"
+                    android:visibility="gone"
+                    layout="@layout/fragment_station_db_companion">
+                </include>
+
+                <LinearLayout
+                    android:id="@+id/rowChatbot"
+
+                    android:layout_width="match_parent"
+                    android:layout_height="200dp"
+                    android:layout_marginBottom="@dimen/card_divider"
+                    android:layout_marginTop="@dimen/card_divider"
+
+                    android:layout_marginStart="@dimen/card_container_padding"
+                    android:layout_marginEnd="@dimen/card_container_padding"
+
+                    style="@style/App.Widget.CardContainer.Row">
+
+                    <include
+                        layout="@layout/card_chatbot_teaser"
+                        android:id="@+id/chatbotTeaser"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        />
+
+                </LinearLayout>
 
                 <FrameLayout
                     android:id="@+id/ecoTeaser"

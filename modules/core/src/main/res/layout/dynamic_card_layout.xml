@@ -14,12 +14,14 @@
     android:layout_height="wrap_content"
     style="@style/App.Widget.CardContainer"
     android:id="@+id/dynamicCardLayout"
-    android:padding="@dimen/card_container_padding"
+    android:paddingHorizontal="@dimen/card_container_padding"
+    android:paddingTop="@dimen/card_container_padding"
     tools:context=".ui.station.StationFragment">
 
     <LinearLayout
         android:id="@+id/rowFeatures"
 
+        android:baselineAligned="false"
         app:layout_constraintDimensionRatio="2"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
@@ -109,8 +111,8 @@
 
     <LinearLayout
         android:id="@+id/rowArTeaser"
+        android:baselineAligned="false"
         android:visibility="gone"
-        tools:visibility="visible"
         app:layout_constraintDimensionRatio="2"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
@@ -124,52 +126,6 @@
         <include
             layout="@layout/card_ar_teaser"
             android:id="@+id/arTeaser"
-            android:layout_width="0dp"
-            android:layout_height="match_parent"
-            android:layout_weight="@integer/double_cell_weight" />
-
-    </LinearLayout>
-
-    <LinearLayout
-        android:id="@+id/dbCompanionTeaserNoVO"
-        android:visibility="gone"
-
-        app:layout_constraintDimensionRatio="4"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/rowArTeaser"
-        android:layout_width="0dp"
-        android:layout_height="0dp"
-        android:layout_marginTop="@dimen/card_divider"
-
-        style="@style/App.Widget.CardContainer.Row">
-
-        <include
-            layout="@layout/card_db_companion_teaser"
-            android:id="@+id/dbCompanionTeaser"
-            android:layout_width="0dp"
-            android:layout_height="match_parent"
-            android:layout_weight="@integer/double_cell_weight" />
-
-    </LinearLayout>
-
-
-    <LinearLayout
-        android:id="@+id/rowChatbot"
-
-        app:layout_constraintDimensionRatio="2"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/dbCompanionTeaserNoVO"
-        android:layout_width="0dp"
-        android:layout_height="0dp"
-        android:layout_marginTop="@dimen/card_divider"
-
-        style="@style/App.Widget.CardContainer.Row">
-
-        <include
-            layout="@layout/card_chatbot_teaser"
-            android:id="@+id/chatbotTeaser"
             android:layout_width="0dp"
             android:layout_height="match_parent"
             android:layout_weight="@integer/double_cell_weight" />

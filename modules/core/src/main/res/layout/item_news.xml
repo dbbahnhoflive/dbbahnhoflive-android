@@ -14,8 +14,7 @@
     android:layout_marginEnd="@dimen/default_space"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:importantForAccessibility="no"
-
+    tools:layout_height="wrap_content"
     >
 
     <LinearLayout
@@ -29,6 +28,7 @@
             android:id="@+id/animatedHeadlineScroller"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:importantForAccessibility="no"
             android:scrollbars="none">
 
             <LinearLayout
@@ -97,12 +97,6 @@
 
                     />
 
-                <androidx.legacy.widget.Space
-                    android:layout_width="0dp"
-                    android:layout_weight="0.1"
-                    android:layout_height="match_parent"
-                    />
-
                 <androidx.constraintlayout.widget.ConstraintLayout
                     android:layout_width="0dp"
                     android:layout_weight="3"
@@ -135,8 +129,7 @@
                         app:layout_constraintStart_toStartOf="parent"
                         app:layout_constraintEnd_toStartOf="@+id/btnLink"
                         app:layout_constraintTop_toBottomOf="@+id/newsHeadline"
-
-                        android:paddingEnd="30dp"
+                        android:paddingEnd="6dp"
 
                         android:ellipsize="end"
                         android:maxLines="3"
@@ -146,7 +139,7 @@
                         android:contentDescription="@string/sr_nev_copy"
                         android:text="@string/nev_copy"
 
-                        />
+                        tools:ignore="RtlSymmetry" />
 
                     <ImageButton
                         android:id="@+id/btnLink"
