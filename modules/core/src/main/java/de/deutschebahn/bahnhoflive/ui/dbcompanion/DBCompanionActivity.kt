@@ -112,7 +112,9 @@ class DbCompanionActivity : BaseActivity() {
 //        webView.loadUrl("https://de.webcamtests.com/")
 //        webView.loadUrl("https://www.google.de/")
 //                webView.loadUrl("https://dev.help-me-iat.comp.db.de/")
-        webView.loadUrl("https://wegbegleitung.deutschebahn.com/")
+//        webView.loadUrl("https://wegbegleitung.deutschebahn.com/")
+        val url = getString(R.string.rail_replacement_db_companion_video_call_url)
+        webView.loadUrl(url)
     }
 
         private fun requestPermissionsWindow() {

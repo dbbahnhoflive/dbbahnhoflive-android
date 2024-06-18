@@ -487,9 +487,15 @@
     <string name="rail_replacement_db_companion_hint">So funktioniert der Service</string>
     <string name="rail_replacement_db_companion_help_headline">So funktioniert DB-Wegbegleitung</string>
     <string name="rail_replacement_db_companion_imprint">Impressum</string>
-    <string name="rail_replacement_db_companion_video_call_url">https://wegbegleitung.deutschebahn.com/</string>
-    <string name="rail_replacement_db_companion_imprint_url">https://wegbegleitung.deutschebahn.com/bahnhof-live/static/imprint</string>
-    <string name="rail_replacement_db_companion_legal_notice_url">https://wegbegleitung.deutschebahn.com/bahnhof-live/static/legal-notice</string>
+
+<!--    <string name="rail_replacement_db_companion_video_call_url">https://wegbegleitung.deutschebahn.com/</string>-->
+<!--    <string name="rail_replacement_db_companion_imprint_url">https://wegbegleitung.deutschebahn.com/bahnhof-live/static/imprint</string>-->
+<!--    <string name="rail_replacement_db_companion_legal_notice_url">https://wegbegleitung.deutschebahn.com/bahnhof-live/static/legal-notice</string>-->
+
+    <string name="rail_replacement_db_companion_video_call_url">https://wegbegleitung-schulung.deutschebahn.com/</string>
+    <string name="rail_replacement_db_companion_imprint_url">https://wegbegleitung-schulung.deutschebahn.com/bahnhof-live/static/imprint</string>
+    <string name="rail_replacement_db_companion_legal_notice_url">https://wegbegleitung-schulung.deutschebahn.com/bahnhof-live/static/legal-notice</string>
+
     <string name="rail_replacement_db_companion_no_service_headline">Aktuell kein Service</string>
     <string name="rail_replacement_db_companion_no_service_body">Dieser Service ist täglich zwischen 7:00 und 19:00 Uhr verfügbar.</string>
     <string name="rail_replacement_db_companion_service_state_available">Service verfügbar</string>

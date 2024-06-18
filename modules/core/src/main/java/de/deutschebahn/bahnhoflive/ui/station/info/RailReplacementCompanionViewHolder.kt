@@ -74,16 +74,16 @@ class RailReplacementCompanionViewHolder(
                 TrackingManager.Entity.WEGBEGLEITUNG_VIDEO
             )
 
-            if(checkIfServiceIsAvailable()) {
+            if (checkIfServiceIsAvailable()) {
 
-            val url =
-                itemView.context.getString(R.string.rail_replacement_db_companion_video_call_url)
+                val url =
+                    itemView.context.getString(R.string.rail_replacement_db_companion_video_call_url)
 //            val intent = CustomTabsIntent.Builder()
 //                .setShowTitle(false)
 //                .setUrlBarHidingEnabled(true)
 //                .build()
-            videoCallStarter(url)
-                }
+                videoCallStarter(url)
+            }
 
         }
 
