@@ -38,6 +38,7 @@ class DbCompanionActivity : BaseActivity() {
         settings.domStorageEnabled = true
         settings.databaseEnabled = true
 
+        settings.userAgentString += " BahnhofLive/VERSION (BahnhofLive-iOS)"
 //        webView.setWebViewClient(WebViewClient())
 
         webView.webViewClient = object : WebViewClient() {

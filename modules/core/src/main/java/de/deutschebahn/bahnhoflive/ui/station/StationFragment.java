@@ -65,9 +65,9 @@ import de.deutschebahn.bahnhoflive.ui.timetable.localtransport.HafasTimetableVie
 import de.deutschebahn.bahnhoflive.ui.timetable.localtransport.ReducedDbDeparturesViewHolder;
 import de.deutschebahn.bahnhoflive.util.GeneralPurposeMillisecondsTimer;
 import de.deutschebahn.bahnhoflive.util.GoogleLocationPermissions;
-import de.deutschebahn.bahnhoflive.util.accessibility.AccessibilityUtilities;
 import de.deutschebahn.bahnhoflive.view.StatusPreviewButton;
 import kotlin.Unit;
+import de.deutschebahn.bahnhoflive.ui.station.railreplacement.SEV_Static_Riedbahn;
 
 public class StationFragment extends androidx.fragment.app.Fragment implements
         SwipeRefreshLayout.OnRefreshListener {
@@ -551,9 +551,13 @@ public class StationFragment extends androidx.fragment.app.Fragment implements
 //        );
 
 
-        stationViewModel.getShowDbCompanionTeaser().observe(getViewLifecycleOwner(), it -> {
+        stationViewModel.getShowDbCompanionTeaserLiveData().observe(getViewLifecycleOwner(), it -> {
 
             View dbCompanionTeaser;
+
+            final boolean dbCompanionTeaserVisible =
+                    SEV_Static_Riedbahn.hasStationDbCompanionByStationId(station.getId())
+                            && SEV_Static_Riedbahn.isInConstructionPhase();
 
             if (isTalkbackOrSelectToSpeakEnabled(getContext())) {
                 dbCompanionTeaser = view.findViewById(R.id.dbCompanionTeaserVO);
@@ -562,7 +566,7 @@ public class StationFragment extends androidx.fragment.app.Fragment implements
             }
 
             if (dbCompanionTeaser != null) {
-            dbCompanionTeaser.setVisibility(it ? View.VISIBLE : View.GONE);
+                dbCompanionTeaser.setVisibility(dbCompanionTeaserVisible ? View.VISIBLE : View.GONE);
                 dbCompanionTeaser.setOnClickListener(v -> {
                             final StationNavigation stationNavigation = stationViewModel.getStationNavigation();
                             if (stationNavigation != null) {

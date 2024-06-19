@@ -106,7 +106,7 @@ class EvItem(
 
 
 
-    // Mo-Fr 7-22 Uhr
+    // taeglich 7-19 Uhr
     fun isCompanionServiceAvailable() : Boolean   {
         val c = Calendar.getInstance()
 
@@ -137,6 +137,7 @@ class EvItem(
         return isActualDateInRange(startOfAnnouncementPhase, endOfAnnouncementPhase) || testIsInAnnouncementPhase
     }
 
+    @JvmStatic
     fun isInConstructionPhase() : Boolean {
         return isActualDateInRange(startOfConstructionPhase, endOfConstructionPhase) || testIsInConstructionPhase
     }
@@ -159,6 +160,7 @@ class EvItem(
         return isStationInConstructionPhase(station.id)
     }
 
+    @JvmStatic
     fun hasStationDbCompanionByStationId(stationId: String?): Boolean {
         val stationIdAsInt = stationId?.toIntOrNull() ?: 0
         return evMap[stationIdAsInt] !=null
