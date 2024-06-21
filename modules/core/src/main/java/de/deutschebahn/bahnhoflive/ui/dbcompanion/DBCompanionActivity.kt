@@ -2,6 +2,7 @@ package de.deutschebahn.bahnhoflive.ui.dbcompanion
 
 import android.Manifest
 import android.annotation.SuppressLint
+import android.app.Activity
 import android.content.Context
 import android.content.Intent
 import android.content.pm.PackageManager
@@ -9,6 +10,7 @@ import android.net.http.SslError
 import android.os.Build
 import android.os.Bundle
 import android.webkit.GeolocationPermissions
+import android.webkit.JavascriptInterface
 import android.webkit.PermissionRequest
 import android.webkit.SslErrorHandler
 import android.webkit.WebChromeClient
@@ -24,6 +26,18 @@ import de.deutschebahn.bahnhoflive.util.AlertX
 class DbCompanionActivity : BaseActivity() {
 
     private val webView by lazy { findViewById<WebView>(R.id.webview) }
+
+
+    class JsWebInterface(val activity: Activity) {
+        @JavascriptInterface
+        fun postMessage(cmd:String?) {
+           val clean_cmd = cmd?:""
+           if(clean_cmd.contentEquals("close", true))
+            activity.finish()
+//            exitProcess(0)
+        }
+    }
+
 
     @SuppressLint("SetJavaScriptEnabled")
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -59,7 +73,7 @@ class DbCompanionActivity : BaseActivity() {
             }
         }
 
-//        webView.setWebChromeClient(WebChromeClient())
+        webView.addJavascriptInterface(JsWebInterface(this), "BahnhofLive")
 
         val ctx :  Context = this
 
@@ -110,12 +124,12 @@ class DbCompanionActivity : BaseActivity() {
             }
         }
 
-//        webView.loadUrl("https://de.webcamtests.com/")
-//        webView.loadUrl("https://www.google.de/")
-//                webView.loadUrl("https://dev.help-me-iat.comp.db.de/")
-//        webView.loadUrl("https://wegbegleitung.deutschebahn.com/")
         val url = getString(R.string.rail_replacement_db_companion_video_call_url)
         webView.loadUrl(url)
+
+//        webView.loadUrl("file:///android_asset/close_test.html");
+
+
     }
 
         private fun requestPermissionsWindow() {
