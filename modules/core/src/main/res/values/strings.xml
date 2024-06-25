@@ -492,7 +492,7 @@
 <!--    <string name="rail_replacement_db_companion_imprint_url">https://wegbegleitung.deutschebahn.com/bahnhof-live/static/imprint</string>-->
 <!--    <string name="rail_replacement_db_companion_legal_notice_url">https://wegbegleitung.deutschebahn.com/bahnhof-live/static/legal-notice</string>-->
 
-    <string name="rail_replacement_db_companion_video_call_url">https://wegbegleitung-schulung.deutschebahn.com/bahnhof-live/active_call</string>
+<string name="rail_replacement_db_companion_video_call_url">https://wegbegleitung-schulung.deutschebahn.com/bahnhof-live/active_call</string>
     <string name="rail_replacement_db_companion_imprint_url">https://wegbegleitung-schulung.deutschebahn.com/bahnhof-live/static/imprint</string>
     <string name="rail_replacement_db_companion_legal_notice_url">https://wegbegleitung-schulung.deutschebahn.com/bahnhof-live/static/legal-notice</string>
 

@@ -30,7 +30,8 @@ data class RepositoryHolder(
     val parkingRepository: ParkingRepository = ParkingRepository(),
     val occupancyRepository: OccupancyRepository = OccupancyRepository(),
     val fontRepository: FontRepository = FontRepository(),
-    val lockerRepository: LockerRepository = LockerRepository()
+    val lockerRepository: LockerRepository = LockerRepository(),
+    val dbCompanionRepository : DbCompanionRepository = DbCompanionRepository()
 )
 
 val Context.appRepositories get(): RepositoryHolder = (applicationContext as BaseApplication).repositories

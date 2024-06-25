@@ -27,7 +27,6 @@ class DbCompanionActivity : BaseActivity() {
 
     private val webView by lazy { findViewById<WebView>(R.id.webview) }
 
-
     class JsWebInterface(val activity: Activity) {
         @JavascriptInterface
         fun postMessage(cmd:String?) {

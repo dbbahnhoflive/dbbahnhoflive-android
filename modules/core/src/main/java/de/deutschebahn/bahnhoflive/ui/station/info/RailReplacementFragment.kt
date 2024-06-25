@@ -20,7 +20,6 @@ import de.deutschebahn.bahnhoflive.backend.local.model.ServiceContent
 import de.deutschebahn.bahnhoflive.ui.FragmentArgs
 import de.deutschebahn.bahnhoflive.ui.RecyclerFragment
 import de.deutschebahn.bahnhoflive.ui.dbcompanion.DBCompanionPermissionRequestBuilder
-import de.deutschebahn.bahnhoflive.ui.dbcompanion.DbCompanionActivity
 import de.deutschebahn.bahnhoflive.ui.map.MapPresetProvider
 import de.deutschebahn.bahnhoflive.ui.map.content.rimap.RimapFilter
 import de.deutschebahn.bahnhoflive.ui.station.RailReplacementInfoType
@@ -238,10 +237,12 @@ class RailReplacementFragment :
      */
     private fun showWebView() {
 
-        val myIntent: Intent = Intent(context, DbCompanionActivity::class.java)
-        myIntent.flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_SINGLE_TOP
-//        myIntent.putExtra("URL", url) //Optional parameters
-        startActivity(myIntent)
+        BaseApplication.get().repositories.dbCompanionRepository.showWebViewActivity(this.requireContext())
+
+//        val myIntent: Intent = Intent(context, DbCompanionActivity::class.java)
+//        myIntent.flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_SINGLE_TOP
+////        myIntent.putExtra("URL", url) //Optional parameters
+//        startActivity(myIntent)
 
 
 //        ContextCompat.startActivity(
