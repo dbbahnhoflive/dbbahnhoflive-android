@@ -6,18 +6,13 @@
 
 package de.deutschebahn.bahnhoflive.ui.station
 
-import android.animation.ObjectAnimator
-import android.animation.ValueAnimator
 import android.view.View
-import android.view.animation.LinearInterpolator
 import android.widget.ImageView
 import android.widget.TextView
-import androidx.core.view.get
 import de.deutschebahn.bahnhoflive.backend.db.newsapi.model.News
 import de.deutschebahn.bahnhoflive.databinding.ItemNewsBinding
 import de.deutschebahn.bahnhoflive.ui.ViewHolder
 import de.deutschebahn.bahnhoflive.ui.station.news.groupIcon
-import de.deutschebahn.bahnhoflive.util.accessibility.isSpokenFeedbackAccessibilityEnabled
 import de.deutschebahn.bahnhoflive.view.ItemClickListener
 
 data class NewsHeadline(
@@ -49,46 +44,44 @@ class NewsViewHolder(
         itemNewsBinding.line5.headline = newsTopHeadline
         itemNewsBinding.line6.headline = newsTopHeadline
 
-        if (itemView.context.isSpokenFeedbackAccessibilityEnabled) {
+//        if (itemView.context.isSpokenFeedbackAccessibilityEnabled) {
             itemNewsBinding.line2.root.visibility = View.GONE
             itemNewsBinding.line3.root.visibility = View.GONE
             itemNewsBinding.line4.root.visibility = View.GONE
             itemNewsBinding.line5.root.visibility = View.GONE
             itemNewsBinding.line6.root.visibility = View.GONE
 
-
             itemNewsBinding.line1.crosses.visibility=View.GONE
-        }
-        else {
-        itemNewsBinding.animatedHeadlineScroller.also {
-            val container = itemNewsBinding.animatedHeadlineContainer
-
-            var width = 0
-            val animator = ObjectAnimator().also { animator ->
-                animator.target = container
-                animator.setPropertyName("scrollX")
-                animator.duration = 6000
-                animator.repeatMode = ValueAnimator.RESTART
-                animator.repeatCount = ValueAnimator.INFINITE
-                animator.interpolator = LinearInterpolator()
-            }
-
-            if (container.childCount > 0) {
-                container[0].addOnLayoutChangeListener { _, left, _, right, _, _, _, _, _ ->
-                    val newWidth = right - left
-                    if (newWidth != width) {
-                        width = newWidth
-
-                        if (width > 0) {
-                            animator.setIntValues(0, width)
-                            animator.start()
-                        } else {
-                            animator.pause()
-                        }
-                    }
-                }
-            }
-            }
+//        } else {
+//            itemNewsBinding.animatedHeadlineScroller.also {
+//                val container = itemNewsBinding.animatedHeadlineContainer
+//
+//                var width = 0
+//                val animator = ObjectAnimator().also { animator ->
+//                    animator.target = container
+//                    animator.setPropertyName("scrollX")
+//                    animator.duration = 6000
+//                    animator.repeatMode = ValueAnimator.RESTART
+//                    animator.repeatCount = ValueAnimator.INFINITE
+//                    animator.interpolator = LinearInterpolator()
+//                }
+//
+//                if (container.childCount > 0) {
+//                    container[0].addOnLayoutChangeListener { _, left, _, right, _, _, _, _, _ ->
+//                        val newWidth = right - left
+//                        if (newWidth != width) {
+//                            width = newWidth
+//
+//                            if (width > 0) {
+//                                animator.setIntValues(0, width)
+//                                animator.start()
+//                            } else {
+//                                animator.pause()
+//                            }
+//                        }
+//                    }
+//                }
+//            }
 
 //            scroller.addOnLayoutChangeListener { v, left, top, right, bottom, oldLeft, oldTop, oldRight, oldBottom ->
 //                val newWidth = right - left
@@ -121,7 +114,7 @@ class NewsViewHolder(
 //                    }
 //                }
 //            }
-        }
+//        }
     }
 
     override fun onBind(item: News?) {

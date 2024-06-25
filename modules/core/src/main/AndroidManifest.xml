@@ -111,7 +111,7 @@ xmlns:tools="http://schemas.android.com/tools"
             android:screenOrientation="portrait" />
         <activity android:name=".ui.timetable.localtransport.DeparturesActivity" />
 
-        <activity android:name=".ui.dbcompanion.DbCompanionActivity"
+        <activity android:name=".DbCompanionActivity"
             android:exported="true">
         </activity>
 

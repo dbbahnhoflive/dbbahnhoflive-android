@@ -160,7 +160,7 @@ class StationActivity : BaseActivity(), StationProvider, RootProvider, TrackingM
         historyFragments.put(HISTORYFRAGMENT_INDEX_SHOPPING, shoppingFragment)
         viewFlipper = findViewById(R.id.view_flipper)
         navigationButtons.clear()
-        prepareNavigationButton(R.id.tab_overview, 0, TrackingManager.UiElement.UEBERSICHT)
+        prepareNavigationButton(R.id.tab_overview, 0, TrackingManager.UiElement.UEBERSICHT) // Station
         prepareNavigationButton(R.id.tab_timetables, 1, TrackingManager.UiElement.ABFAHRTSTAFEL)
         
         infoTabButton = prepareNavigationButton(R.id.tab_info, 2, TrackingManager.UiElement.INFO)
@@ -358,32 +358,53 @@ class StationActivity : BaseActivity(), StationProvider, RootProvider, TrackingM
         return supportFragmentManager.findFragmentById(id) as F?
     }
 
+    // 0=Station,1=Abfahrtstafel,2=Info,3=shops
+    private fun doNavigateToTab(buttonIndex: Int, trackingTag: String?) {
+        if (trackingTag != null)
+            trackNaviTap(trackingTag)
+        if (currentFragmentIndex == buttonIndex) {
+            val historyFragment = historyFragments[buttonIndex]
+            historyFragment?.popEntireHistory()
+        } else {
+            showTab(buttonIndex, trackingTag==null)
+        }
+    }
+
     private fun prepareNavigationButton(
         id: Int,
         i: Int,
         trackingTag: String
     ): CeCheckableImageButton {
         val view = findViewById<CeCheckableImageButton>(id)
+        view.tag = i
         view.setOnClickListener {
-            trackNaviTap(trackingTag)
-            if (currentFragmentIndex == i) {
-                val historyFragment = historyFragments[i]
-                historyFragment?.popEntireHistory()
-            } else {
-                showTab(i)
-            }
+            val buttonIndex = Integer.valueOf(view.tag.toString())?:0
+            doNavigateToTab(buttonIndex, trackingTag)
+//            trackNaviTap(trackingTag)
+//            if (currentFragmentIndex == buttonIndex) {
+//                val historyFragment = historyFragments[buttonIndex]
+//                historyFragment?.popEntireHistory()
+//            } else {
+//                showTab(buttonIndex)
+//            }
         }
         navigationButtons.add(view)
         return view
     }
 
-    private fun showTab(index: Int) {
+    fun navigateToStationWithoutTracking() {
+        doHandleOnBackPressed() // zurück zu Info
+        doNavigateToTab(0, null) // Station, kein Tracking
+    }
+
+    private fun showTab(index: Int, disableTracking: Boolean=false) {
         removeOverlayFragment()
         viewFlipper?.displayedChild = index
         val tutorialManager = TutorialManager.getInstance()
         tutorialManager.markTutorialAsIgnored(mTutorialView)
         when (index) {
             0 ->  // Bahnhofsübersicht overviewFragment
+                if (!disableTracking)
                 trackingManager.track(
                     TrackingManager.TYPE_STATE,
                     Screen.H1,
@@ -395,10 +416,12 @@ class StationActivity : BaseActivity(), StationProvider, RootProvider, TrackingM
 
             1 -> { // Abfahrten und Ankünfte timetablesFragment
                 tutorialManager.showTutorialIfNecessary(mTutorialView, "h2_departure")
+                if (!disableTracking)
                 trackingManager.track(TrackingManager.TYPE_STATE, Screen.H2)
             }
 
             2 ->  // Bahnhofsinformationen infoFragment
+                if (!disableTracking)
                 trackingManager.track(
                     TrackingManager.TYPE_STATE,
                     Screen.H3,
@@ -406,6 +429,7 @@ class StationActivity : BaseActivity(), StationProvider, RootProvider, TrackingM
                 )
 
             3 ->  // Shoppen und Schlemmen shoppingFragment
+                if (!disableTracking)
                 trackingManager.track(
                     TrackingManager.TYPE_STATE,
                     Screen.H3,
@@ -580,7 +604,8 @@ class StationActivity : BaseActivity(), StationProvider, RootProvider, TrackingM
                 RailReplacementFragment.create(
                 ArrayList(railReplacementServicesList),
                 getText( R.string.rail_replacement),
-                    TrackingManager.Category.SCHIENENERSATZVERKEHR
+                    TrackingManager.Category.SCHIENENERSATZVERKEHR,
+                    true // zurück-Navigation führt zur Stationsübersicht, nicht auf Info
                 )
             )
         }

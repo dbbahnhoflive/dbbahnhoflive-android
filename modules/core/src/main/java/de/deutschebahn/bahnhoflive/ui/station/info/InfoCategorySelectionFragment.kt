@@ -231,7 +231,8 @@ class InfoCategorySelectionFragment : CategorySelectionFragment(
         val railReplacementDetailsFragment = RailReplacementFragment.create(
             ArrayList(serviceContents),
             getText(titleResource),
-            category.trackingTag
+            category.trackingTag,
+            false
         )
         if (serviceContents.size == 1)
             stationViewModel.setRailReplacementInfoSelectedItem(RailReplacementInfoType.STOP_PLACE)

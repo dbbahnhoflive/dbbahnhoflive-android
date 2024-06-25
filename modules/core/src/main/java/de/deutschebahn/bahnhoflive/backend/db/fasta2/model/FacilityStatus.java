@@ -361,9 +361,9 @@ public class FacilityStatus implements Parcelable, Comparable<FacilityStatus>, M
     public int getFlyoutIcon() {
         if (getType().equals(FacilityStatus.ELEVATOR)) {
             if (ACTIVE.equals(getState()))
-                return R.drawable.ic_rimap_aufzug_aktiv; //rimap_aufzug_grau;
+                return R.drawable.ic_rimap_aufzug_aktiv; // grün;
             else
-                return R.drawable.rimap_aufzug_inaktiv; //rimap_aufzug_grau;
+                return R.drawable.rimap_aufzug_inaktiv; // rot;
 
         } else if (getType().equals(FacilityStatus.ESCALATOR)) {
             return R.drawable.rimap_fahrtreppe_grau;

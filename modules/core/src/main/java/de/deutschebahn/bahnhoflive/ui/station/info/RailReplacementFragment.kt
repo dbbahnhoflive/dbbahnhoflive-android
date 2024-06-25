@@ -12,6 +12,7 @@ import android.net.Uri
 import android.os.Build
 import android.os.Bundle
 import androidx.activity.ComponentActivity
+import androidx.activity.OnBackPressedCallback
 import androidx.fragment.app.activityViewModels
 import de.deutschebahn.bahnhoflive.BaseApplication
 import de.deutschebahn.bahnhoflive.R
@@ -40,6 +41,13 @@ class RailReplacementFragment :
 
     private var selectedIndex: Int? = 0
 
+    private val backPressedCallback = object : OnBackPressedCallback(true) {
+        override fun handleOnBackPressed() {
+            val activity = BaseApplication.activityManager.activity as? StationActivity
+            activity?.navigateToStationWithoutTracking()
+        }
+    }
+
     private val dbPermissionRequest = DBCompanionPermissionRequestBuilder
         .from(BaseApplication.activityManager.activity as ComponentActivity) {
             permissions = setOf(
@@ -54,10 +62,10 @@ class RailReplacementFragment :
             showWebView()
         }
 
-
-
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+
+        var overwriteBackPressed = false
 
         serviceContents = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU)
             arguments?.getParcelableArrayList(ARG_SERVICE_CONTENTS, ServiceContent::class.java)
@@ -70,6 +78,8 @@ class RailReplacementFragment :
             it.getCharSequence(FragmentArgs.TITLE)?.let { itTitle ->
                 setTitle(itTitle)
             }
+
+            overwriteBackPressed = it.getBoolean(ARG_OVERWRITE_BACK_PRESSED)
 
         }
 
@@ -135,6 +145,8 @@ class RailReplacementFragment :
             }
         ))
 
+        if(overwriteBackPressed)
+          (BaseApplication.activityManager.activity as? StationActivity)?.onBackPressedDispatcher?.addCallback(this, backPressedCallback)
     }
 
     override fun onDestroy() {
@@ -253,22 +265,26 @@ class RailReplacementFragment :
 //        )
     }
 
+
     companion object {
 
         const val ARG_SERVICE_CONTENTS = "serviceContents"
+        const val ARG_OVERWRITE_BACK_PRESSED = "overwrite_back_pressed"
 
         val TAG: String = RailReplacementFragment::class.java.simpleName
 
         fun create(
             serviceContents: ArrayList<ServiceContent>,
             title: CharSequence,
-            trackingTag: String
+            trackingTag: String,
+            overwriteBackPressed : Boolean
         ): RailReplacementFragment {
             val fragment = RailReplacementFragment()
 
             val args = Bundle()
             args.putParcelableArrayList(ARG_SERVICE_CONTENTS, serviceContents)
             args.putCharSequence(FragmentArgs.TITLE, title)
+            args.putBoolean(ARG_OVERWRITE_BACK_PRESSED, overwriteBackPressed)
 
             TrackingManager.putTrackingTag(args, trackingTag)
 
@@ -284,4 +300,6 @@ class RailReplacementFragment :
 
         return true
     }
+
+
 }

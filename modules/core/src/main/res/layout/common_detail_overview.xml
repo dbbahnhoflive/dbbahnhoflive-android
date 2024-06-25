@@ -80,7 +80,7 @@
             android:drawablePadding="@dimen/default_space_half"
             tools:text="Geöffnet"
             android:visibility="visible"
-            tools:textColor="@color/green" />
+            tools:textColor="@color/db_green" />
 
         <android.widget.Space
             android:id="@+id/spaceBottom"

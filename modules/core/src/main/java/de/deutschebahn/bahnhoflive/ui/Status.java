@@ -15,7 +15,7 @@ import de.deutschebahn.bahnhoflive.backend.db.fasta2.model.FacilityStatus;
 
 public enum Status {
     // if other drawables are taken -> CHECK SIZE !!!!!! (all must have the same)
-    POSITIVE(R.color.green, R.drawable.app_check),
+    POSITIVE(R.color.db_green, R.drawable.app_check),
     NEUTRAL(R.color.gray, R.drawable.app_achtung),
     UNKNOWN(R.color.gray, R.drawable.app_unbekannt),
     NEGATIVE(R.color.red, R.drawable.app_kreuz),
