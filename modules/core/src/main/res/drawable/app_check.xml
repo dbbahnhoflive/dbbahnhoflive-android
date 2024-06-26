@@ -1,18 +1,15 @@
-<?xml version="1.0" encoding="utf-8"?><!--
-  ~ SPDX-FileCopyrightText: 2020 DB Station&Service AG <bahnhoflive-opensource@deutschebahn.com>
-  ~
-  ~ SPDX-License-Identifier: Apache-2.0
-  -->
-
 <vector xmlns:android="http://schemas.android.com/apk/res/android"
     android:width="24dp"
     android:height="24dp"
-    android:viewportWidth="24"
-    android:viewportHeight="24">
-
-
+    android:viewportWidth="32"
+    android:viewportHeight="32">
+  <group>
+    <clip-path
+        android:pathData="M0,0L32,0L32,32L0,32Z"/>
     <path
+        android:pathData="m20.657,11.649 l-6.531,6.531 -2.781,-2.776 -1.925,1.873 4.74,4.635 8.423,-8.364zM16,5.34c5.88,-0 10.667,4.752 10.667,10.653 0,5.888 -4.787,10.68 -10.667,10.68 -5.88,-0 -10.667,-4.792 -10.667,-10.68 0,-5.86 4.787,-10.653 10.667,-10.653"
         android:fillColor="#408335"
-        android:pathData="M12,4 C7.6,4,4,7.6,4,12 S7.6,20,12,20 S20,16.4,20,12 S16.4,4,12,4 Z M10.7,16.2
-L7.8,13.4 L8.6,12.5 L10.6,13.9 L16,8.6 L16.7,9.3 L10.7,16.2 Z" />
+        android:strokeColor="#00000000"
+        android:fillType="evenOdd"/>
+  </group>
 </vector>

@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?><!--
+  ~ SPDX-FileCopyrightText: 2020 DB Station&Service AG <bahnhoflive-opensource@deutschebahn.com>
+  ~
+  ~ SPDX-License-Identifier: Apache-2.0
+  -->
+
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="24dp"
+    android:height="24dp"
+    android:viewportWidth="24"
+    android:viewportHeight="24">
+
+
+    <path
+        android:fillColor="#408335"
+        android:pathData="M12,4 C7.6,4,4,7.6,4,12 S7.6,20,12,20 S20,16.4,20,12 S16.4,4,12,4 Z M10.7,16.2
+L7.8,13.4 L8.6,12.5 L10.6,13.9 L16,8.6 L16.7,9.3 L10.7,16.2 Z" />
+</vector>
