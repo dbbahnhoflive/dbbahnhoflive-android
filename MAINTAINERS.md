@@ -1,7 +1,7 @@
 DB Bahnhof live ist eine Applikation der DB Station&Service AG. 
-Die Weiterentwicklung und den Betrieb der Applikation übernimmt die Scholz & Volkmer GmbH.
+Die Weiterentwicklung und den Betrieb der Applikation uebernimmt die Scholz & Volkmer GmbH.
 
-Folgende Nutzer haben die Maintainer-Rolle für das jeweilige Repository inne: 
+Folgende Nutzer haben die Maintainer-Rolle fuer das jeweilige Repository inne: 
 
 [@mrcodeelements](https://www.github.com/mrcodeelements/) (Android)
 
