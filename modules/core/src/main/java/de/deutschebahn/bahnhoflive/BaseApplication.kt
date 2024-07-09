@@ -99,23 +99,6 @@ abstract class BaseApplication(
 
         FontUtil.init(this)
 
-
-        // SSL-Fix
-//        if (Build.VERSION.SDK_INT in 17..20) {
-//            try {
-//                ProviderInstaller.installIfNeeded(applicationContext)
-//            } catch (e: GooglePlayServicesRepairableException) {
-//                e.printStackTrace()
-//            } catch (e: GooglePlayServicesNotAvailableException) {
-//                e.printStackTrace()
-//            } catch (e: NoSuchAlgorithmException) {
-//                e.printStackTrace()
-//            } catch (e: KeyManagementException) {
-//                e.printStackTrace()
-//            }
-//        }
-
-
         issueTracker = onInitializeIssueTracker()
 
         trackingDelegate = onInitializeTrackingDelegate()
