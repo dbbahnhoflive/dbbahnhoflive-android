@@ -67,13 +67,7 @@ class RisDepartureWagenstand {
         val name: String = ""
     }
 
-    inner class Group { // Zug
-        val name: String = ""
-        val journeyID: String = ""
-        val destination: Station = Station()
-        val journeyRelation: JourneyRelation = JourneyRelation()
-        val vehicles : Array<Vehicle> = arrayOf()
-    }
+
 
     inner class Amenity {
         val amount:Int=0
@@ -96,13 +90,21 @@ class RisDepartureWagenstand {
     }
 
     inner class Vehicle { // Waggon
-        val amenities : Array<Amenity> = arrayOf()
-        val orientation: String = ""
-        val status:String=""
         val vehicleID:String=""
-        val wagonIdentificationNumber:Int=0
         val type : VehicleType = VehicleType()
+        val wagonIdentificationNumber:Int=0
+        val status:String=""
+        val orientation: String = ""
         val platformPosition = PlatformPosition()
+        val amenities : Array<Amenity> = arrayOf()
+    }
+
+    inner class Group { // Zug
+        val name: String = ""
+        val journeyID: String = ""
+        val destination: Station = Station()
+        val journeyRelation: JourneyRelation = JourneyRelation()
+        val vehicles : Array<Vehicle> = arrayOf()
     }
 
     val departureID: String = ""
@@ -193,7 +195,6 @@ class RISTransportsRequest(
                 it.halt.gleisbezeichnung = departureMatches.platform.platform
             }
 
-
             departureMatches.groups.forEach { itGroup ->
 
                 run {
@@ -209,7 +210,7 @@ class RISTransportsRequest(
 
                             wagenstandAllFahrzeugData.let {
                                 it.allFahrzeugausstattung = mutableListOf()
-                                it.status = itVehicle.status  // todo: convert ENGLISH->GERMAN
+                                it.status = itVehicle.status  // todo?: convert ENGLISH->GERMAN
                                 it.kategorie = itVehicle.type.category // todo: convert ENGLISH->GERMAN
                                 it.fahrzeugsektor = itVehicle.platformPosition.sector
                                 it.wagenordnungsnummer = itVehicle.wagonIdentificationNumber.toString()

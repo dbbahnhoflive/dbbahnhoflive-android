@@ -119,6 +119,17 @@ public class WagenstandFragment extends Fragment implements View.OnLayoutChangeL
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
+//        Bundle args = getArguments();
+//
+//        if(args!=null) {
+//            TrainInfo trainInfo = args.getParcelable(ARG_TRAIN_INFO); // todo take date
+//            if(trainInfo!=null && trainInfo.getDeparture()!=null) {
+//             String sTime = trainInfo.getDeparture().getFormattedTime();
+//             Log.d("cr", sTime);
+//            }
+//        }
+
+
         stationViewModel = new ViewModelProvider(getActivity()).get(StationViewModel.class);
         stationLiveData = stationViewModel.getStationResource().getData();
         stationLiveData.observe(this, new Observer<Station>() {
@@ -145,13 +156,14 @@ public class WagenstandFragment extends Fragment implements View.OnLayoutChangeL
         selectedWaggon = args.getString(FragmentArgs.WAGENSTAND_WAGGON);
         timestamp = args.getString(FragmentArgs.WAGENSTAND_TIMESTAMP, "");
 
+        trainInfo = args.getParcelable(ARG_TRAIN_INFO);
+
         final TrainFormation trainFormation = args.getParcelable(FragmentArgs.TRAIN_FORMATION);
         if (trainFormation != null) {
             setTrainFormation(trainFormation);
             setTitle();
         }
 
-        trainInfo = args.getParcelable(ARG_TRAIN_INFO);
     }
 
     private void setTrainFormation(TrainFormation trainFormation) {
@@ -161,8 +173,17 @@ public class WagenstandFragment extends Fragment implements View.OnLayoutChangeL
     }
 
     public void setTitle() {
-        this.title = "Wagenreihung " + String.format("%s | Gl. %s", trainFormation.getTime(), trainFormation.getPlatform());
-        this.titleDescription = "Wagenreihung " + String.format("%s | Gleis %s", trainFormation.getTime(), trainFormation.getPlatform());
+        try {
+            if (trainInfo != null && trainInfo.getDeparture() != null) {
+                this.title = "Wagenreihung " + String.format("%s | Gl. %s", trainInfo.getDeparture().getFormattedTime(), trainFormation.getPlatform());
+                this.titleDescription = "Wagenreihung " + String.format("%s | Gleis %s", trainInfo.getDeparture().getFormattedTime(), trainFormation.getPlatform());
+            } else {
+                this.title = "Wagenreihung " + String.format("Gl. %s", trainFormation.getPlatform());
+                this.titleDescription = "Wagenreihung " + String.format("Gleis %s", trainFormation.getPlatform());
+            }
+        } catch (Exception e) {
+
+        }
     }
 
     public String getActionBarTitle() {

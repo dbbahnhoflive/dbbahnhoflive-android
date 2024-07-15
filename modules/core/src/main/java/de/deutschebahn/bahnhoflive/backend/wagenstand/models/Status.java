@@ -21,7 +21,14 @@ public enum Status implements Parcelable {
     NICHTVERFUEGBAR(false, R.string.status_unavailable), // Ausstattung ist nicht nutzbar.
     RESERVIERT(false, R.string.status_reserved),      // Ausstattung ist reserviert und kann vom "normalen" Fahrgast nicht genutzt werden.
     NICHTBEDIENT(false, R.string.status_noservice),    // Fahrzeug ist offen, aber Bistro oder Restaurant sind unbedient.
-    UNDEFINIERT(true);     // Der Status der Ausstattung konnte nicht bestimmt werden; grundsätzlich ist die Austattung im Fahrzeug aber vorhanden.
+    UNDEFINIERT(true),     // Der Status der Ausstattung konnte nicht bestimmt werden; grundsätzlich ist die Austattung im Fahrzeug aber vorhanden.
+
+    AVAILABLE(true, R.string.status_available),
+    NOT_AVAILABLE(false, R.string.status_unavailable),
+    RESERVED(false, R.string.status_reserved),      // Ausstattung ist reserviert und kann vom "normalen" Fahrgast nicht genutzt werden.
+    UNDEFINED(true),     // Der Status der Ausstattung konnte nicht bestimmt werden; grundsätzlich ist die Austattung im Fahrzeug aber vorhanden.
+    OPEN(true, R.string.status_open),           // Fahrzeug kann genutzt werden. / Ausstattung kann genutzt werden.
+    CLOSED(false, R.string.status_closed);     // Fahrzeug kann nicht von Reisenden genutzt werden (oft auch als "leer und verschlossen" bezeichnet). / Ausstattung geschlossen
 
     @StringRes
     public final int label;

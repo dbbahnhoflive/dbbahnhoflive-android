@@ -11,6 +11,8 @@ import android.util.Log
 import de.deutschebahn.bahnhoflive.BuildConfig
 import de.deutschebahn.bahnhoflive.backend.wagenstand.WagenstandDataMergeFactory
 import de.deutschebahn.bahnhoflive.backend.wagenstand.istwr.model.WagenstandAllFahrzeugData
+import de.deutschebahn.bahnhoflive.backend.wagenstand.istwr.model.WagenstandAllFahrzeugData.Category.DOPPELSTEUERWAGENERSTEKLASSE
+import de.deutschebahn.bahnhoflive.backend.wagenstand.istwr.model.WagenstandAllFahrzeugData.Category.DOPPELSTEUERWAGENZWEITEKLASSE
 import de.deutschebahn.bahnhoflive.backend.wagenstand.istwr.model.WagenstandAllFahrzeugData.Category.DOPPELSTOCKAUTOTRANSPORTWAGENREISEZUGWAGENBAUART
 import de.deutschebahn.bahnhoflive.backend.wagenstand.istwr.model.WagenstandAllFahrzeugData.Category.DOPPELSTOCKSTEUERWAGENERSTEKLASSE
 import de.deutschebahn.bahnhoflive.backend.wagenstand.istwr.model.WagenstandAllFahrzeugData.Category.DOPPELSTOCKSTEUERWAGENERSTEZWEITEKLASSE
@@ -19,8 +21,6 @@ import de.deutschebahn.bahnhoflive.backend.wagenstand.istwr.model.WagenstandAllF
 import de.deutschebahn.bahnhoflive.backend.wagenstand.istwr.model.WagenstandAllFahrzeugData.Category.DOPPELSTOCKWAGENERSTEZWEITEKLASSE
 import de.deutschebahn.bahnhoflive.backend.wagenstand.istwr.model.WagenstandAllFahrzeugData.Category.DOPPELSTOCKWAGENZWEITEKLASSE
 import de.deutschebahn.bahnhoflive.backend.wagenstand.istwr.model.WagenstandAllFahrzeugData.Category.GEPAECKWAGEN
-import de.deutschebahn.bahnhoflive.backend.wagenstand.istwr.model.WagenstandAllFahrzeugData.Category.HALBGEPAECKWAGENERSTEKLASSE
-import de.deutschebahn.bahnhoflive.backend.wagenstand.istwr.model.WagenstandAllFahrzeugData.Category.HALBGEPAECKWAGENZWEITEKLASSE
 import de.deutschebahn.bahnhoflive.backend.wagenstand.istwr.model.WagenstandAllFahrzeugData.Category.HALBSPEISEWAGENERSTEKLASSE
 import de.deutschebahn.bahnhoflive.backend.wagenstand.istwr.model.WagenstandAllFahrzeugData.Category.HALBSPEISEWAGENZWEITEKLASSE
 import de.deutschebahn.bahnhoflive.backend.wagenstand.istwr.model.WagenstandAllFahrzeugData.Category.LIEGEWAGENERSTEKLASSE
@@ -37,7 +37,7 @@ import de.deutschebahn.bahnhoflive.backend.wagenstand.istwr.model.WagenstandAllF
 import de.deutschebahn.bahnhoflive.backend.wagenstand.istwr.model.WagenstandAllFahrzeugData.Category.STEUERWAGENERSTEZWEITEKLASSE
 import de.deutschebahn.bahnhoflive.backend.wagenstand.istwr.model.WagenstandAllFahrzeugData.Category.STEUERWAGENZWEITEKLASSE
 import de.deutschebahn.bahnhoflive.backend.wagenstand.istwr.model.WagenstandAllFahrzeugData.Category.TRIEBKOPF
-import de.deutschebahn.bahnhoflive.backend.wagenstand.istwr.model.WagenstandAllFahrzeugData.Category.TRIEBWAGENBAUREIHE628928
+import de.deutschebahn.bahnhoflive.backend.wagenstand.istwr.model.WagenstandAllFahrzeugData.Category.UNBEKANNT
 import de.deutschebahn.bahnhoflive.backend.wagenstand.istwr.model.WagenstandIstInformationData
 import de.deutschebahn.bahnhoflive.backend.wagenstand.istwr.model.WagenstandIstResponseData
 import de.deutschebahn.bahnhoflive.backend.wagenstand.models.FeatureStatus
@@ -76,21 +76,21 @@ class RepositoryConverter {
         SCHLAFWAGENZWEITEKLASSE,
         LIEGEWAGENERSTEKLASSE,
         LIEGEWAGENZWEITEKLASSE,
-        HALBGEPAECKWAGENERSTEKLASSE,
-        HALBGEPAECKWAGENZWEITEKLASSE,
         GEPAECKWAGEN,
-        TRIEBWAGENBAUREIHE628928
+        DOPPELSTEUERWAGENERSTEKLASSE,
+        DOPPELSTEUERWAGENZWEITEKLASSE,
+        UNBEKANNT
     )
-    private val restaurantCategories = all.filter { it.contains("SPEISE") }.toHashSet()
-    private val multiClassCategories = all.filter { it.contains("ERSTEZWEITE") || it.contains("HALB") }.toHashSet()
-    private val firstClassCategories = all.filter { it.contains("ERSTE") }.toHashSet()
-    private val secondClassCategories = all.filter { it.contains("ZWEITE") }.toHashSet() + DOPPELSTOCKAUTOTRANSPORTWAGENREISEZUGWAGENBAUART
-    private val nonWagonCategories = hashSetOf(LOK, TRIEBKOPF, TRIEBWAGENBAUREIHE628928)
-    private val directionalEngineCategory = hashSetOf(TRIEBKOPF, TRIEBWAGENBAUREIHE628928)
+    private val restaurantCategories = all.filter { it.contains("DININGCAR") }.toHashSet()
+    private val multiClassCategories = all.filter { it.contains("FIRST_ECONOMY") || it.contains("HALF") }.toHashSet()
+    private val firstClassCategories = all.filter { it.contains("FIRST") }.toHashSet()
+    private val secondClassCategories = all.filter { it.contains("ECONOMY") }.toHashSet() + DOPPELSTOCKAUTOTRANSPORTWAGENREISEZUGWAGENBAUART
+    private val nonWagonCategories = hashSetOf(LOK, TRIEBKOPF, UNBEKANNT)
+    private val directionalEngineCategory = hashSetOf(TRIEBKOPF)
     private val undirectionalEngineCategory = hashSetOf(LOK)
-    private val sleepingCategories = all.filter { it.contains("SCHLAF") || it.contains("LIEGE") }.toHashSet()
-    private val luggageCategories = all.filter { it.contains("GEPAECK") }.toHashSet()
-    private val splitWaggonCategories = all.filter { it.contains("STEUERWAGEN") }.toHashSet()
+    private val sleepingCategories = all.filter { it.contains("SLEEPER") || it.contains("COUCHETTE") }.toHashSet()
+    private val luggageCategories = all.filter { it.contains("BAGGAGE") }.toHashSet()
+    private val splitWaggonCategories = all.filter { it.contains("CONTROLCAR") }.toHashSet()
 
     private val COLOR_SECOND_CLASS = Color.rgb(0, 178, 27)
     private val COLOR_FIRST_CLASS = Color.rgb(255, 230, 13)

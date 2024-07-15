@@ -16,37 +16,40 @@ import de.deutschebahn.bahnhoflive.R;
 
 public enum WaggonFeature implements Parcelable {
 
-    PLAETZEFAHRRAD(
+    BIKE_SPACE( // PLAETZEFAHRRAD
             R.string.wagon_feature_bicycle_spaces,
             R.drawable.tag_bicycle
     ),
-    PLAETZEROLLSTUHL(
+    WHEELCHAIR_SPACE( //PLAETZEROLLSTUHL(
             R.string.wagon_feature_wheelchair_spaces,
             R.drawable.tag_accessible
     ),
-    ROLLSTUHLTOILETTE(
+    TOILET_WHEELCHAIR( //ROLLSTUHLTOILETTE(
             R.string.wagon_feature_disabled_toilet,
             R.drawable.tag_accessible_toilet
     ),
-    KLIMA(
+    AIR_CONDITION(// KLIMA
             R.string.wagon_feature_airconditioning,
             (context, waggonFeature, status) -> {
-                if (status == Status.DEFEKT) {
+                if (status == Status.DEFEKT || status==Status.NOT_AVAILABLE) {
                     return context.getText(R.string.defective_airconditioning);
                 }
-
                 return null;
             }
     ),
-    PLAETZEBAHNCOMFORT(
+    SEATS_BAHN_COMFORT( //PLAETZEBAHNCOMFORT(
             R.string.wagon_feature_comfort,
             R.drawable.tag_bahncomfort
     ),
-    PLAETZESCHWERBEH(
+    SEATS_BAHN_BONUS( //PLAETZEBAHNCOMFORT(
+            R.string.wagon_feature_comfort,
+            R.drawable.tag_bahncomfort
+    ),
+    SEATS_SEVERELY_DISABLED( //PLAETZESCHWERBEH(
             R.string.wagon_feature_severely_disabled,
             R.drawable.tag_mobilitaetseingeschraenkt
     ),
-    FAMILIE(
+    ZONE_FAMILY( //FAMILIE(
             R.string.wagon_feature_family,
             R.drawable.tag_familienbereich
     ),

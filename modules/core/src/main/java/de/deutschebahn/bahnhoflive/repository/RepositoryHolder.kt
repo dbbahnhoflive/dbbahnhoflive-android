@@ -18,14 +18,12 @@ import de.deutschebahn.bahnhoflive.repository.parking.ParkingRepository
 import de.deutschebahn.bahnhoflive.repository.station.StationRepository
 import de.deutschebahn.bahnhoflive.repository.timetable.TimetableRepository
 import de.deutschebahn.bahnhoflive.repository.wagonorder.RisTransportRepository
-import de.deutschebahn.bahnhoflive.repository.wagonorder.WagonOrderRepository
 
 data class RepositoryHolder(
     val stationRepository: StationRepository = StationRepository(),
     val localTransportRepository: LocalTransportRepository = LocalTransportRepository(),
     val newsRepository: NewsRepository = NewsRepository(),
     val elevatorStatusRepository: ElevatorStatusRepository = ElevatorStatusRepository(),
-    val wagonOrderRepository: WagonOrderRepository = WagonOrderRepository(),
     val timetableRepository: TimetableRepository = TimetableRepository(),
     val mapRepository: MapRepository = MapRepository(),
     val parkingRepository: ParkingRepository = ParkingRepository(),
@@ -33,7 +31,7 @@ data class RepositoryHolder(
     val fontRepository: FontRepository = FontRepository(),
     val lockerRepository: LockerRepository = LockerRepository(),
     val dbCompanionRepository : DbCompanionRepository = DbCompanionRepository(),
-    val risTransportRepository : RisTransportRepository = RisTransportRepository()
+    val risTransportRepository : RisTransportRepository = RisTransportRepository() // WagonOrder
 )
 
 val Context.appRepositories get(): RepositoryHolder = (applicationContext as BaseApplication).repositories

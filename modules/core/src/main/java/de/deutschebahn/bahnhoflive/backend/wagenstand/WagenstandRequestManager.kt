@@ -5,7 +5,6 @@
  */
 package de.deutschebahn.bahnhoflive.backend.wagenstand
 
-import android.text.TextUtils
 import android.util.Log
 import com.android.volley.VolleyError
 import de.deutschebahn.bahnhoflive.BaseApplication.Companion.get
@@ -16,7 +15,6 @@ import de.deutschebahn.bahnhoflive.backend.wagenstand.istwr.model.WagenstandIstR
 import de.deutschebahn.bahnhoflive.backend.wagenstand.istwr.toTrainFormation
 import de.deutschebahn.bahnhoflive.repository.trainformation.TrainFormation
 import java.text.SimpleDateFormat
-import java.util.Date
 import java.util.concurrent.atomic.AtomicInteger
 
 class WagenstandRequestManager(private val listener: VolleyRestListener<TrainFormation>) {
@@ -37,15 +35,14 @@ class WagenstandRequestManager(private val listener: VolleyRestListener<TrainFor
         time: String?,
         evaIds: List<String>
     ) {
-        var dateTime: String? = ""
-        dateTime = if (!TextUtils.isEmpty(time)) {
-            FORMATTERDATE.format(Date()) + time!!.replace(":", "")
-        } else {
-            FORMATTERDATE_TIME.format(Date())
-        }
+//        var dateTime: String? = ""
+//        dateTime = if (!TextUtils.isEmpty(time)) {
+//            FORMATTERDATE.format(Date()) + time!!.replace(":", "")
+//        } else {
+//            FORMATTERDATE_TIME.format(Date())
+//        }
 
         val baseApplication = get()
-        val wagonOrderRepository = baseApplication.repositories.wagonOrderRepository
         val risTransportRepository = baseApplication.repositories.risTransportRepository
 
         for (evaId in evaIds) {
