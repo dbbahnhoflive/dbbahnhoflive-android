@@ -38,8 +38,8 @@ data class JourneyStopEvent(
 
 fun ArrivalDepartureEvent.toJourneyStopEvent() = eventType?.let { eventType ->
     JourneyStopEvent(
-        station.evaNumber,
-        station.name,
+        stopPlace.evaNumber,
+        stopPlace.name,
         platform,
         platformSchedule,
         timeSchedule,

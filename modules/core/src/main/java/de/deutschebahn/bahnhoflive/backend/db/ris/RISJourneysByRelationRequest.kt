@@ -20,7 +20,7 @@ class RISJourneysByRelationRequest(
     dbAuthorizationTool: DbAuthorizationTool,
     restListener: VolleyRestListener<DepartureMatches>
 ) : RISJourneysRequest<DepartureMatches>(
-    "byrelation?${parameters.toUrlParameters()}",
+    "find?${parameters.toUrlParameters()}",
     dbAuthorizationTool,
     restListener
 ) {
@@ -36,7 +36,7 @@ class RISJourneysByRelationRequest(
         val date: Long?
     ) {
         fun toUrlParameters() = listOfNotNull(
-            number?.let { "number" to number },
+            number?.let { "journeyNumber" to number },
             category?.let { "category" to category },
             line?.let { "line" to it },
             date?.let { "date" to SimpleDateFormat("yyyy-MM-dd", Locale.US).format(it) }
