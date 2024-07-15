@@ -130,7 +130,7 @@ open class RisTimetableRepository(
                                 payload.apply {
                                     events.firstOrNull { arrivalDepartureEvent ->
                                         arrivalDepartureEvent.eventType == trainEvent.correspondingEventType &&
-                                                (arrivalDepartureEvent.station.evaNumber in evaIds.ids)
+                                                (arrivalDepartureEvent.stopPlace.evaNumber in evaIds.ids)
                                     }?.also {
                                         if (it.toJourneyStopEvent()?.parsedScheduledTime != scheduledTime) {
                                             tryYesterdayListener?.invoke() ?: listener.onFail(

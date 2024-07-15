@@ -10,7 +10,8 @@ class Transport(
 
 
 class ArrivalDepartureEvent(
-    val station: StationShort,
+    val stopPlace: StationShort,
+//    val station: StationShort, // v1
     /**
      * Scheduled time [Soll] of stop as fully qualified date (for instance '2019-08-19T12:56:14+02:00' or '2019-08-19T10:56:14Z').
      */
