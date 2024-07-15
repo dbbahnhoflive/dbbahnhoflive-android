@@ -53,6 +53,7 @@ android {
         multiDexEnabled true
 
         buildConfigField "String", "RIS_JOURNEYS_BASE_URL", "\"https://apis.deutschebahn.com/db/apis/ris-journeys/v2/\""
+        buildConfigField "String", "RIS_TRANSPORTS_BASE_URL", "\"https://apis.deutschebahn.com/db/apis/ris-transports/v3/\""
 
         buildConfigField "String", "RIS_STATIONS_API_KEY", "\"ae429e8b34b1366eb37ca466260f92f8\""
         buildConfigField "String", "RIS_STATIONS_CLIENT_ID", "\"be998c9dd20ae7b9440839580644fc47\""

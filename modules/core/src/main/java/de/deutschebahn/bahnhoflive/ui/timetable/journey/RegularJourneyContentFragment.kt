@@ -307,7 +307,7 @@ class RegularJourneyContentFragment : Fragment() {
                 "Bitte warten ...", true, true
             )
             val wagenstandRequestManager =
-                WagenstandRequestManager(object : BaseRestListener<TrainFormation?>() {
+                WagenstandRequestManager(object : BaseRestListener<TrainFormation>() {
                     override fun onSuccess(payload: TrainFormation?) {
                         progressDialog.dismiss()
                         journeyViewModel.trainFormationInputLiveData.value = payload
@@ -320,17 +320,24 @@ class RegularJourneyContentFragment : Fragment() {
                     }
                 })
             val trainMovementInfo : TrainMovementInfo? = trainEvent.movementRetriever.getTrainMovementInfo(trainInfo)
+            (TimetableViewHelper.buildQueryParameters(
+                trainInfo,
+                trainMovementInfo
+            )["trainNumber"] as String?)?.let { itTrainNumber->
             wagenstandRequestManager.loadWagenstand(
-                station.evaIds,
+                    station.evaIds!!,
+                    itTrainNumber,
+                    trainInfo.trainCategory,
                 TimetableViewHelper.buildQueryParameters(
                     trainInfo,
                     trainMovementInfo
-                )["trainNumber"] as String?,
+                    )["date"] as String?,
                 TimetableViewHelper.buildQueryParameters(
                     trainInfo,
                     trainMovementInfo
                 )["time"] as String?
             )
+            }
         } else {
             showNoResultDialog()
         }

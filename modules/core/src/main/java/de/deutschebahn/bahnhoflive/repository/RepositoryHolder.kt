@@ -17,6 +17,7 @@ import de.deutschebahn.bahnhoflive.repository.occupancy.OccupancyRepository
 import de.deutschebahn.bahnhoflive.repository.parking.ParkingRepository
 import de.deutschebahn.bahnhoflive.repository.station.StationRepository
 import de.deutschebahn.bahnhoflive.repository.timetable.TimetableRepository
+import de.deutschebahn.bahnhoflive.repository.wagonorder.RisTransportRepository
 import de.deutschebahn.bahnhoflive.repository.wagonorder.WagonOrderRepository
 
 data class RepositoryHolder(
@@ -31,7 +32,8 @@ data class RepositoryHolder(
     val occupancyRepository: OccupancyRepository = OccupancyRepository(),
     val fontRepository: FontRepository = FontRepository(),
     val lockerRepository: LockerRepository = LockerRepository(),
-    val dbCompanionRepository : DbCompanionRepository = DbCompanionRepository()
+    val dbCompanionRepository : DbCompanionRepository = DbCompanionRepository(),
+    val risTransportRepository : RisTransportRepository = RisTransportRepository()
 )
 
 val Context.appRepositories get(): RepositoryHolder = (applicationContext as BaseApplication).repositories

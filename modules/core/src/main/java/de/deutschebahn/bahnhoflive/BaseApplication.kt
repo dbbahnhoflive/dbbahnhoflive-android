@@ -24,6 +24,7 @@ import de.deutschebahn.bahnhoflive.backend.*
 import de.deutschebahn.bahnhoflive.backend.db.MultiHeaderDbAuthorizationTool
 import de.deutschebahn.bahnhoflive.push.createNotificationChannels
 import de.deutschebahn.bahnhoflive.repository.ApplicationServices
+import de.deutschebahn.bahnhoflive.repository.DbCompanionRepository
 import de.deutschebahn.bahnhoflive.repository.RepositoryHolder
 import de.deutschebahn.bahnhoflive.repository.elevator.Fasta2ElevatorStatusRepository
 import de.deutschebahn.bahnhoflive.repository.locker.LockerInfoLockerRepository
@@ -31,6 +32,7 @@ import de.deutschebahn.bahnhoflive.repository.parking.ParkingInfoParkingReposito
 import de.deutschebahn.bahnhoflive.repository.poisearch.PoiSearchConfigurationProvider
 import de.deutschebahn.bahnhoflive.repository.station.OfficialStationRepository
 import de.deutschebahn.bahnhoflive.repository.timetable.RisTimetableRepository
+import de.deutschebahn.bahnhoflive.repository.wagonorder.RisTransportRepository
 import de.deutschebahn.bahnhoflive.tutorial.TutorialManager
 import de.deutschebahn.bahnhoflive.util.font.FontUtil
 import de.deutschebahn.bahnhoflive.util.volley.TLSSocketFactory
@@ -186,7 +188,9 @@ abstract class BaseApplication(
             parkingRepository = ParkingInfoParkingRepository(
                 restHelper,
                 risAndParkingAuthorizationTool
-            )
+            ),
+            dbCompanionRepository = DbCompanionRepository(),
+            risTransportRepository = RisTransportRepository()
         )
     }
 

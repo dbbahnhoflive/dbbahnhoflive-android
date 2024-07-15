@@ -589,7 +589,7 @@ public class WagenstandFragment extends Fragment implements View.OnLayoutChangeL
 
         WagenstandRequestManager requestManager = new WagenstandRequestManager(this);
         requestManager.loadWagenstand(
-                evaIds, trainFormation.getTrainNumber(), trainFormation.getTime());
+                evaIds, trainFormation.getTrainNumber(), trainFormation.getCategory(), trainFormation.getDate(), trainFormation.getTime());
 
     }
 

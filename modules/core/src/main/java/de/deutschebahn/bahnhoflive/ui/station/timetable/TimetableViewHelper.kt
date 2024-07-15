@@ -41,6 +41,7 @@ object TimetableViewHelper {
                     parameters["trainNumber"] = trainInfo.trainName
                 }
             } else {
+                parameters["date"] = event?.formattedDate?:""
                 parameters["time"] = event?.formattedTime?:""
                 parameters["trainNumber"] = trainInfo.trainName
             }

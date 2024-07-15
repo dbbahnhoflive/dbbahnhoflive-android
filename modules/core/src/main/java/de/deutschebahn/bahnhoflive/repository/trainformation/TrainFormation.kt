@@ -12,6 +12,8 @@ import android.os.Parcelable
 class TrainFormation(
     val waggons: List<Waggon>,
     val trains: List<Train>,
+    val category:String,
+    val date: String,
     val time: String,
     val platform: String,
     val isReversed: Boolean,
@@ -30,6 +32,8 @@ class TrainFormation(
         parcel.createTypedArrayList(Train.CREATOR).orEmpty(),
         parcel.readString()!!,
         parcel.readString()!!,
+        parcel.readString()!!,
+        parcel.readString()!!,
         parcel.readByte() != 0.toByte(),
         parcel.readString()!!,
         parcel.readByte() != 0.toByte())
@@ -37,6 +41,8 @@ class TrainFormation(
     override fun writeToParcel(parcel: Parcel, flags: Int) {
         parcel.writeTypedList(waggons)
         parcel.writeTypedList(trains)
+        parcel.writeString(category)
+        parcel.writeString(date)
         parcel.writeString(time)
         parcel.writeString(platform)
         parcel.writeByte(if (isReversed) 1 else 0)
