@@ -210,8 +210,8 @@ class RISTransportsRequest(
 
                             wagenstandAllFahrzeugData.let {
                                 it.allFahrzeugausstattung = mutableListOf()
-                                it.status = itVehicle.status  // todo?: convert ENGLISH->GERMAN
-                                it.kategorie = itVehicle.type.category // todo: convert ENGLISH->GERMAN
+                                it.status = itVehicle.status
+                                it.kategorie = itVehicle.type.category
                                 it.fahrzeugsektor = itVehicle.platformPosition.sector
                                 it.wagenordnungsnummer = itVehicle.wagonIdentificationNumber.toString()
                             }

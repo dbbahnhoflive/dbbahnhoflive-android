@@ -143,7 +143,7 @@ public class WagenstandAdapter extends BaseAdapter {
             holder.trainHeadDestinationLabel.setText("");
 
             if (firstPosition || lastPosition) {
-                if (train.getDestinationStation().length() > 0 && (waggon.isHead() || waggon.isTrainHeadBothWays())) {
+                if (!train.getDestinationStation().isEmpty() && (waggon.isHead() || waggon.isTrainHeadBothWays())) {
                     holder.trainHeadTypeLabel.setText(String.format("%s %s nach ", train.getType(), train.getNumber()));
                     holder.trainHeadDestinationLabel.setText(train.getDestinationStation());
                 } else {
@@ -181,7 +181,7 @@ public class WagenstandAdapter extends BaseAdapter {
 
             final String differentDestination = waggon.getDifferentDestination();
             holder.additionalInformationLabel.setText(differentDestination);
-            int visibility = differentDestination.length() > 0 ? View.VISIBLE : View.GONE;
+            int visibility = !differentDestination.isEmpty() ? View.VISIBLE : View.GONE;
             holder.additionalInformationLabel.setVisibility(visibility);
 
             holder.symbolContainer.removeAllViews();

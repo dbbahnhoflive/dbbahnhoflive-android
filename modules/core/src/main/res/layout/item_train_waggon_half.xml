@@ -83,7 +83,8 @@
             android:minHeight="140dp"
             android:layout_marginTop="10dp"
             android:orientation="vertical"
-            android:paddingLeft="20dp">
+            android:paddingLeft="@dimen/wagenstand_space"
+            >
 
             <TextView
                 android:id="@+id/waggon_additional_information_label"

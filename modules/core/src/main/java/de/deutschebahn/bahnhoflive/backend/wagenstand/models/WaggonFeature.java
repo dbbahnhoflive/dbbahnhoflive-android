@@ -30,11 +30,12 @@ public enum WaggonFeature implements Parcelable {
     ),
     AIR_CONDITION(// KLIMA
             R.string.wagon_feature_airconditioning,
+            R.drawable.tag_wagenstand_air_condition,
             (context, waggonFeature, status) -> {
                 if (status == Status.DEFEKT || status==Status.NOT_AVAILABLE) {
                     return context.getText(R.string.defective_airconditioning);
                 }
-                return null;
+                return context.getText(R.string.wagon_feature_airconditioning);
             }
     ),
     SEATS_BAHN_COMFORT( //PLAETZEBAHNCOMFORT(
@@ -53,6 +54,37 @@ public enum WaggonFeature implements Parcelable {
             R.string.wagon_feature_family,
             R.drawable.tag_familienbereich
     ),
+    WIFI(
+            R.string.wagon_feature_wifi,
+            R.drawable.tag_wagenstand_wifi
+    ),
+    BISTRO(
+            R.string.wagon_feature_bistro,
+            R.drawable.tag_wagenstand_bistro
+    ),
+    TOILET(
+            R.string.wagon_feature_toilet,
+            R.drawable.tag_accessible_toilet
+    ),
+    CABIN_INFANT(
+            R.string.wagon_feature_cabin_infant,
+            R.drawable.tag_wagenstand_cabin_infant
+    ),
+    ZONE_QUIET(
+            R.string.wagon_feature_zone_quiet,
+            R.drawable.tag_wagenstand_quiet_zone
+    ),
+    BOARDING_AID(
+            R.string.wagon_feature_boarding_aid,
+            R.drawable.tag_wagenstand_boarding_aid
+    ),
+    INFO(
+            R.string.wagon_feature_info,
+            R.drawable.tag_wagenstand_info
+    )
+
+
+
     ;
 
     @StringRes
@@ -66,8 +98,8 @@ public enum WaggonFeature implements Parcelable {
 
     public final WaggonFeatureLabelTemplate labelTemplate;
 
-    WaggonFeature(int label, WaggonFeatureLabelTemplate labelTemplate) {
-        this(label, 0, 0, labelTemplate);
+    WaggonFeature(int label,  @DrawableRes int icon, WaggonFeatureLabelTemplate labelTemplate) {
+        this(label, 0, icon, labelTemplate);
     }
 
     WaggonFeature(@StringRes int label, @DrawableRes int icon) {
