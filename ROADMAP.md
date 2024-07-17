@@ -3,11 +3,8 @@
 ### Aktuelle (Umsetzungs-)Themen
 Diese Inhalte (Funktionen, Anpassungen, Erweiterungen) befinden sich derzeit in der Umsetzung oder sind bereits für die nächsten Release-Zyklen eingeplant.
 
-##### Release 3.24.0 (Inhalte ohne Gewähr)
-•	Erweiterung der Gleisinformationen  <br>
-•	Anpassung von App-Texten hinsichtlich gendergerechter Kommunikation  <br>
-•	Ergänzung der Anzeige von Halte-Ausfällen im Zuglauf von ÖPNV-Verbindungen  <br>
-
+##### Release 3.26.0 (Inhalte ohne Gewähr)
+•	Integration DB Wegbegleitung <br>
 
 ##### Entwicklungsfelder
 Folgenden Themen werden als Entwicklungsfelder betrachtet und befinden sich entweder in der Ideenphase und unterliegen aktuell einer rechtlichen und/oder technischen Evaluation. Eine kurz- bis mittelfristige Umsetzung kann derzeit nicht garantiert werden.
