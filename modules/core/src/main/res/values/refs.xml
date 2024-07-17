@@ -48,6 +48,15 @@
     <drawable name="tag_bicycle">@drawable/missing</drawable>
     <drawable name="tag_accessible">@drawable/missing</drawable>
     <drawable name="tag_accessible_toilet">@drawable/missing</drawable>
+
+    <drawable name="tag_wagenstand_air_condition">@drawable/missing</drawable>
+    <drawable name="tag_wagenstand_bistro">@drawable/missing</drawable>
+    <drawable name="tag_wagenstand_boarding_aid">@drawable/missing</drawable>
+    <drawable name="tag_wagenstand_cabin_infant">@drawable/missing</drawable>
+    <drawable name="tag_wagenstand_info">@drawable/missing</drawable>
+    <drawable name="tag_wagenstand_quiet_zone">@drawable/missing</drawable>
+    <drawable name="tag_wagenstand_wifi">@drawable/missing</drawable>
+
     <drawable name="tag_familienbereich">@drawable/missing</drawable>
     <drawable name="tag_bahncomfort">@drawable/missing</drawable>
     <drawable name="tag_mobilitaetseingeschraenkt">@drawable/missing</drawable>
