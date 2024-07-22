@@ -208,6 +208,28 @@ class StationActivity : BaseActivity(), StationProvider, RootProvider, TrackingM
                aBoolean: Boolean -> mapButton?.isVisible = aBoolean
             }
        
+            itStationViewModel.stationFeatures.observe(this) {
+
+                // hack für SEV_Riedbahn
+                // bei den Stationen fehlen die Positionen (->map crash), Trick: Position
+                // aus dem ersten Ris-Service nehmen (Annahme: irgendwas gibts immer)
+
+                if (station?.getLocation() == null) {
+                    try {
+                        it[0].risServicesAndCategory.localServices?.localServices?.forEach { localService ->
+                            if (localService.location != null) {
+                                station?.setPosition(localService.position)
+                                return@observe
+                            }
+
+                        }
+                    } catch (_: Exception) {
+
+                    }
+                }
+
+            }
+
             hafasTimetableViewModel.initialize(itStationViewModel.stationResource)
 
             itStationViewModel.queryQuality.observe(
@@ -585,7 +607,7 @@ class StationActivity : BaseActivity(), StationProvider, RootProvider, TrackingM
                 )
             )
 
-            if (SEV_Static_Riedbahn.isStationReplacementStopByStationID(station?.id)
+            if (SEV_Static_Riedbahn.hasStationDbCompanionByStationId(station?.id)
                 && (SEV_Static_Riedbahn.isInConstructionPhase() || SEV_Static_Riedbahn.isInAnnouncementPhase())
                 )
                 railReplacementServicesList.add(

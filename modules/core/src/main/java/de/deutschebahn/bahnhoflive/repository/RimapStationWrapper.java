@@ -10,6 +10,7 @@ import androidx.annotation.NonNull;
 
 import com.google.android.gms.maps.model.LatLng;
 
+import de.deutschebahn.bahnhoflive.backend.db.ris.model.Coordinate2D;
 import de.deutschebahn.bahnhoflive.backend.local.model.EvaIds;
 import de.deutschebahn.bahnhoflive.backend.rimap.model.StationFeatureCollection;
 import de.deutschebahn.bahnhoflive.backend.rimap.model.StationProperties;
@@ -70,4 +71,10 @@ public class RimapStationWrapper implements Station {
     {
 
     }
+
+    @Override
+    public void setPosition(Coordinate2D coord) {
+
+    }
+
 }

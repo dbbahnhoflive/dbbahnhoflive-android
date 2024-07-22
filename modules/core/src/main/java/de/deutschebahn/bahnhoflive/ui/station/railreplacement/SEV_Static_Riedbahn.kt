@@ -5,7 +5,8 @@ import de.deutschebahn.bahnhoflive.R
 import de.deutschebahn.bahnhoflive.backend.db.newsapi.GroupId
 import de.deutschebahn.bahnhoflive.backend.db.newsapi.model.Group
 import de.deutschebahn.bahnhoflive.backend.db.newsapi.model.News
-import de.deutschebahn.bahnhoflive.repository.MergedStation
+import de.deutschebahn.bahnhoflive.backend.db.ris.model.StopPlace
+import de.deutschebahn.bahnhoflive.backend.db.ris.model.StopPlaceName
 import de.deutschebahn.bahnhoflive.util.isActualDateInRange
 import java.util.Calendar
 
@@ -14,8 +15,22 @@ object SEV_Static_Riedbahn {
 // Juli-Dezember 2024
 class EvItem(
     val evaId:Int=0,
-    val stationName : String = ""  // SPNV-Halt = Schienenpersonennahverkehr
-)
+    val stationName : String = "",  // SPNV-Halt = Schienenpersonennahverkehr
+    val hasDbCompanion : Boolean=true
+) {
+    fun toStopPlace(stadaID: Int) : StopPlace {
+        val stpName = StopPlaceName()
+        stpName.nameLong = stationName
+
+        val stp = StopPlace()
+        stp.stationID = stadaID.toString()
+        stp.evaNumber = evaId.toString()
+        stp.availableTransports = listOf("BUS")
+        stp.names = mapOf("DE" to stpName)
+
+        return stp
+    }
+}
     private const val testIsDbCompanionServiceAvailable=false // todo: false in production
     private const val testIsInAnnouncementPhase=false // todo: false in production
     private const val testIsInConstructionPhase=false // todo: false in production
@@ -39,7 +54,7 @@ class EvItem(
         1854 to EvItem(8002040, "Frankfurt Stadion"),
         8268 to EvItem(8002060, "Frankfurt-Gateway Gardens"),
         6999 to EvItem(8006648, "NI-Zeppelinheim"),
-//        6503 to EvItem(8006421, "Wiesloch-Walldorf"),
+        6759 to EvItem(8006421, "Wiesloch-Walldorf", false),
         6503 to EvItem(8006421, "Walldorf (Hessen)"),
         4174 to EvItem(8004065, "Mörfelden"),
         2299 to EvItem(8000136, "Groß-Gerau"),
@@ -58,7 +73,7 @@ class EvItem(
         3936 to EvItem(8003848, "Mannheim-Waldhof"),
         3931 to EvItem(8006509, "Mannheim-Luzenberg"),
         3933 to EvItem(8006511, "Mannheim-Neckarstadt"),
-//        3929 to EvItem(8006508, "Mannheim Handelshafen"),
+        3929 to EvItem(8006508, "Mannheim Handelshafen", false),
         3925 to EvItem(8000244, "Mannheim Hbf"),
         3898 to EvItem(8000240, "Mainz Hbf"),
         3900 to EvItem(8003816, "Mainz Röm. Theater"),
@@ -77,7 +92,7 @@ class EvItem(
         1848 to EvItem(8000332, "Frankenthal Hbf"),
         8210 to EvItem(8002025, "Frankenthal Süd"),
         3839 to EvItem(8003766, "Ludwigshafen-Oggersheim"),
-        3836 to EvItem(8000236, "Ludwigshafen (Rhein) Hbf"),
+        3837 to EvItem(8000236, "Ludwigshafen (Rhein) Hbf"),
         7385 to EvItem(8003759, "Ludwigshafen Mitte"),
 //        4351 to EvItem(8004246, "Neu-Isenburg"),
         3524 to EvItem(8003523, "Langen"),
@@ -129,6 +144,9 @@ class EvItem(
     }
 
     fun containsStationId(stationId: String?): Boolean {
+        if(!isInConstructionPhase())
+          return false
+
         val stationIdAsInt = stationId?.toIntOrNull()
         return (stationIdAsInt != null && evMap.containsKey(stationIdAsInt))
     }
@@ -146,37 +164,42 @@ class EvItem(
 
     // "+++ Ersatzverkehr...+++  Box auch anzeigen wenn Bauphase noch nicht begonnen hat !
     // siehe NewsAdapter,  "Ankündigung Ersatzverkehr"
-    fun shouldShowAdhocBox() : Boolean {
+    private fun shouldShowAdhocBox() : Boolean {
         return isActualDateInRange(startOfShowAdHocBox, endOfShowAdHocBox)
     }
 
 
-    fun isStationInConstructionPhase(stationId: String?): Boolean {
-        val stationIdAsInt = stationId?.toIntOrNull() ?: 0
-        val isInConstructionPhase = isInConstructionPhase()
-        return isInConstructionPhase && evMap[stationIdAsInt] !=null
-    }
-
-    fun isStationInConstructionPhase(station: MergedStation): Boolean {
-        return isStationInConstructionPhase(station.id)
-    }
+//    private fun isStationInConstructionPhase(stationId: String?): Boolean {
+//        val stationIdAsInt = stationId?.toIntOrNull() ?: 0
+//        val isInConstructionPhase = isInConstructionPhase()
+//        return isInConstructionPhase && evMap[stationIdAsInt] !=null
+//    }
+//
+//    fun isStationInConstructionPhase(station: MergedStation): Boolean {
+//        return isStationInConstructionPhase(station.id)
+//    }
 
     @JvmStatic
     fun hasStationDbCompanionByStationId(stationId: String?): Boolean {
+        if(!isInConstructionPhase())
+            return false
+
         val stationIdAsInt = stationId?.toIntOrNull() ?: 0
-        return evMap[stationIdAsInt] !=null
+        val stat = evMap[stationIdAsInt]
+
+        return stat!=null && stat.hasDbCompanion
     }
 
-    fun hasStationDbCompanionByEvaId(evaId: String?): Boolean {
-        val evaIdAsInt = evaId?.toIntOrNull() ?: 0
-        return evMap.filter { it.value.evaId==evaIdAsInt }.isNotEmpty()
-    }
+//    fun hasStationDbCompanionByEvaId(evaId: String?): Boolean {
+//        val evaIdAsInt = evaId?.toIntOrNull() ?: 0
+//        return evMap.filter { it.value.evaId==evaIdAsInt }.isNotEmpty()
+//    }
 
 
-    fun isStationReplacementStopByStationID(stationId: String?): Boolean {
-        val stationIdAsInt = stationId?.toIntOrNull() ?: 0
-        return evMap[stationIdAsInt] !=null
-    }
+//    fun isStationReplacementStopByStationID(stationId: String?): Boolean {
+//        val stationIdAsInt = stationId?.toIntOrNull() ?: 0
+//        return evMap[stationIdAsInt] !=null
+//    }
 
     fun isStationReplacementStopByEvaID(evaId: String?): Boolean {
         val evaIdAsInt = evaId?.toIntOrNull() ?: 0
@@ -230,5 +253,15 @@ class EvItem(
 
     fun getSEVStationNames() : List<String> {
         return evMap.map{it.value.stationName}.sortedBy { it }
+    }
+
+    fun findStations(searchTerm : String) : List<Pair<Int, EvItem>> {
+        val lst : MutableList<Pair<Int, EvItem>> = mutableListOf()
+        evMap.forEach {
+            if(it.value.stationName.contains(searchTerm,true)) {
+                lst.add(it.key to it.value)
+            }
+        }
+        return lst
     }
 }

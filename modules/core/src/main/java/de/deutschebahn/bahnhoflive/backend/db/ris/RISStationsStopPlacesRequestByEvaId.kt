@@ -26,7 +26,6 @@ class RISStationsStopPlacesRequestByEvaId(
     evaId: String
 ) : RISStationsRequest<InternalStation?>( //         "https://apis.deutschebahn.com/db/apis/ris-stations/v1/$urlSuffix",
     "stop-places/by-key?keyType=EVA&key=" + URLEncoder.encode(evaId, "UTF-8") ,
-//    "stop-places/" + URLEncoder.encode(evaId, "UTF-8") + "/groups",
     dbAuthorizationTool,
     listener
 ) {

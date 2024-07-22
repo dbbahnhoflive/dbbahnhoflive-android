@@ -1,6 +1,7 @@
 package de.deutschebahn.bahnhoflive.repository
 
 import com.google.android.gms.maps.model.LatLng
+import de.deutschebahn.bahnhoflive.backend.db.ris.model.Coordinate2D
 import de.deutschebahn.bahnhoflive.backend.db.ris.model.RISStation
 import de.deutschebahn.bahnhoflive.backend.local.model.EvaIds
 
@@ -20,6 +21,11 @@ data class MergedStation(
 
     override fun getLocation(): LatLng? =
         fallbackStation.location ?: risStation?.location ?: rimapStationWrapper?.location
+
+    override fun setPosition(position: Coordinate2D) {
+        risStation?.position = position
+        fallbackStation.setPosition(position)
+    }
 
     override fun getEvaIds(): EvaIds? = resolvedEvaIds
 

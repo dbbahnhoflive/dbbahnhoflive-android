@@ -17,6 +17,7 @@ import com.google.android.gms.maps.model.LatLng;
 import java.util.Collections;
 import java.util.Objects;
 
+import de.deutschebahn.bahnhoflive.backend.db.ris.model.Coordinate2D;
 import de.deutschebahn.bahnhoflive.backend.local.model.EvaIds;
 
 /**
@@ -104,6 +105,11 @@ public class InternalStation implements Parcelable, Station {
             location = StationPositions.INSTANCE.getData().get(id);
         }
         return location;
+    }
+
+    public void setPosition(Coordinate2D coord)
+    {
+        this.location = new LatLng(coord.getLatitude(), coord.getLongitude());
     }
 
     @Nullable

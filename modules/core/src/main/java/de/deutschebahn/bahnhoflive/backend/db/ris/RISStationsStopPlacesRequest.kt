@@ -17,6 +17,7 @@ import de.deutschebahn.bahnhoflive.backend.db.DbAuthorizationTool
 import de.deutschebahn.bahnhoflive.backend.db.publictrainstation.DistanceCalculator
 import de.deutschebahn.bahnhoflive.backend.db.ris.model.StopPlace
 import de.deutschebahn.bahnhoflive.backend.db.ris.model.StopPlaces
+import de.deutschebahn.bahnhoflive.ui.station.railreplacement.SEV_Static_Riedbahn
 import java.net.URLEncoder
 import kotlin.math.roundToInt
 
@@ -24,7 +25,7 @@ import kotlin.math.roundToInt
 class RISStationsStopPlacesRequest(
     listener: VolleyRestListener<List<StopPlace>>,
     dbAuthorizationTool: DbAuthorizationTool,
-    query: String? = null,
+    private val query: String? = null,
     private val location: Location? = null,
     force: Boolean = false,
     private val limit: Int = 100,
@@ -45,6 +46,7 @@ class RISStationsStopPlacesRequest(
 
     override fun getCountKey() = "RIS/stations/stop-places"
 
+    // https://apis.deutschebahn.com/db/apis/ris-stations/v1/stop-places/by-name/bre?limit=25
     override fun parseNetworkResponse(response: NetworkResponse): Response<List<StopPlace>> {
         super.parseNetworkResponse(response)
 
@@ -55,7 +57,13 @@ class RISStationsStopPlacesRequest(
             val filteredStopPlaceSequence = stopPlaces.asSequence()
                 .filterNotNull()
                 .filter {
-                    !it.availableTransports.isNullOrEmpty()
+
+                    if(it.availableTransports.isNullOrEmpty()) {
+                        SEV_Static_Riedbahn.containsStationId(it.stationID)
+                    }
+                    else {
+                        true
+                    }
                 }
                 .filter(
                     if (mixedResults) { stopPlace -> stopPlace.isLocalTransportStation || stopPlace.isDbStation }
@@ -111,6 +119,60 @@ class RISStationsStopPlacesRequest(
                     filteredStopPlaceSequence.toCollection(ArrayList(stopPlaces.size))
                 }
 
+            // Ergaenzung Suche in SEV_Reidbahn (Ticket 2569)
+            query?.let {
+                if (it.length > 3) {
+
+                    val sevList = SEV_Static_Riedbahn.findStations(query)
+
+                    if(sevList.isNotEmpty()) {
+
+                        val idxFirstDbStation = filteredStopPlaces.indexOfFirst {
+                            it.stationID!=null
+                        }
+
+                        if(idxFirstDbStation<0) {
+                            // nur Haltestellen
+                            sevList.forEach {
+                              filteredStopPlaces.add(0, it.second.toStopPlace(it.first))
+                            }
+                        }
+                        else {
+                            var idxLastDbStation = filteredStopPlaces.indexOfLast {
+                                it.stationID!=null
+                            }
+
+                            var inserted=false
+
+                            if(idxLastDbStation>=0) {
+                                sevList.forEach { itSevStop->
+                                    if(filteredStopPlaces.indexOfFirst { itStopPlace -> itStopPlace.stationID==itSevStop.first.toString() }<0) {
+                                        idxLastDbStation++
+                                        filteredStopPlaces.add(idxLastDbStation, itSevStop.second.toStopPlace(itSevStop.first))
+                                        inserted=true
+
+                                    }
+                                }
+                            }
+
+                            if(!inserted) {
+                                if(filteredStopPlaces.count {
+                                    it.stationID!=null
+                                    }==1 && idxFirstDbStation==filteredStopPlaces.count()-1) {
+
+                                    // nach oben
+                                    val stopPlace = filteredStopPlaces[idxFirstDbStation]
+                                    filteredStopPlaces.remove(stopPlace)
+                                    filteredStopPlaces.add(0, stopPlace)
+
+                                }
+                            }
+
+
+                        }
+                    }
+                }
+            }
             val forcedCacheEntryFactory =
                 ForcedCacheEntryFactory(ForcedCacheEntryFactory.DAY_IN_MILLISECONDS)
 
@@ -149,6 +211,9 @@ class RISStationsStopPlacesRequest(
                 }.filterNotNull().joinToString("&", "?") {
                     "${it.first}=${it.second}"
                 }
+
+//             ret+= "&onlyActive=false"
+
             }
 
             return ret
