@@ -64,4 +64,10 @@ public class RimapStationWrapper implements Station {
     public EvaIds getEvaIds() {
         return evaIds;
     }
+
+    @Override
+    public void addEvaIds(EvaIds ids)
+    {
+
+    }
 }

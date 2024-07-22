@@ -23,4 +23,6 @@ data class MergedStation(
 
     override fun getEvaIds(): EvaIds? = resolvedEvaIds
 
+    override fun addEvaIds(ids: EvaIds?) {
+    }
 }

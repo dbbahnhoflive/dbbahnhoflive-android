@@ -88,13 +88,25 @@ class JourneyViewModel(app: Application, savedStateHandle: SavedStateHandle) :
                 MutableLiveData<Result<List<JourneyStop>>>().apply {
                     val evaIds = station.evaIds
                     if (evaIds != null) {
+
+                        val line : String? = if(trainInfo.departure!=null) {
+                            trainInfo.departure.lineIdentifier
+                        }
+                        else
+                        if (trainInfo.arrival != null) {
+                          trainInfo.arrival.lineIdentifier
+                        }
+                        else
+                          null
+
                         timetableRepository.queryJourneys(
                             evaIds,
                             plannedDateTime,
                             trainEvent,
                             trainInfo.genuineName,
                             trainInfo.trainCategory,
-                            trainInfo.trainGenericName,
+                            line,
+//                            trainInfo.trainGenericName, // line
                             object : VolleyRestListener<List<JourneyStop>> {
                                 override fun onSuccess(payload: List<JourneyStop>) {
 

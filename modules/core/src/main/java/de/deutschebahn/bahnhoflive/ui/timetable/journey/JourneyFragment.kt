@@ -23,6 +23,7 @@ import de.deutschebahn.bahnhoflive.ui.map.content.rimap.Track
 import de.deutschebahn.bahnhoflive.ui.station.BackNavigationData
 import de.deutschebahn.bahnhoflive.ui.station.HistoryFragment
 import de.deutschebahn.bahnhoflive.ui.station.StationViewModel
+import de.deutschebahn.bahnhoflive.ui.station.railreplacement.SEV_Static_Riedbahn
 import de.deutschebahn.bahnhoflive.ui.station.timetable.TimetableViewHelper
 import de.deutschebahn.bahnhoflive.ui.timetable.WagenstandFragment
 
@@ -90,10 +91,16 @@ class JourneyFragment() : JourneyCoreFragment(), MapPresetProvider {
             if (!_isSEV) {
                 stationViewModel.station?.evaIds?.let { itEvaIds ->
                     _isSEV =
-                        journeyStops?.find { itJourneyStop -> itEvaIds.ids?.contains(itJourneyStop.evaId) == true &&
-                                itJourneyStop.departure?.hasReplacement == true } != null
+                        journeyStops?.find { itJourneyStop ->
+                            itEvaIds.ids?.contains(itJourneyStop.evaId) == true &&
+                                    itJourneyStop.departure?.hasReplacement == true
+                        } != null
                     }
                 }
+
+            if(!_isSEV)
+                _isSEV = SEV_Static_Riedbahn.isStationReplacementStopByEvaID(stationViewModel.station?.evaIds?.main) &&
+                        SEV_Static_Riedbahn.isInConstructionPhase()
 
             isSEV=_isSEV
             journeyViewModel.showSEVLiveData.postValue(isSEV)

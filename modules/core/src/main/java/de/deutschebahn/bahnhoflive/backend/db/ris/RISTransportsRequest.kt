@@ -130,7 +130,7 @@ open class RISTransportsCoreRequest<T>(
     init {
         retryPolicy = DefaultRetryPolicy(30000, 1, 1.0f)
     }
-    override fun getCountKey(): String = "ris-journeys"
+    override fun getCountKey(): String = "ris-transports"
 }
 
 

@@ -31,7 +31,7 @@ public class InternalStation implements Parcelable, Station {
     @Nullable
     private LatLng location;
 
-    private final EvaIds evaIds;
+    private EvaIds evaIds;
 
     protected InternalStation(Parcel in) {
         final ClassLoader classLoader = getClass().getClassLoader();
@@ -130,4 +130,9 @@ public class InternalStation implements Parcelable, Station {
         return station instanceof InternalStation ? (InternalStation) station : new InternalStation(station);
     }
 
+    @Override
+    public void addEvaIds(EvaIds _ids)
+    {
+      evaIds.addEvaIds(_ids);
+    }
 }

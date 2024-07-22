@@ -50,6 +50,7 @@ class OfficialStationRepository(
 
                         try {
                             stopPlace[0].evaIds.ids.let {itIds->
+                                Log.d("cr", "queryStationGroups evaIds")
                                 payload.forEach {
                                     if(!itIds.contains(it))
                                         itIds.add(it)

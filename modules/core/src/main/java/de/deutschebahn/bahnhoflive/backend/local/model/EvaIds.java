@@ -53,6 +53,15 @@ public class EvaIds implements Parcelable {
         ids.add(main);
     }
 
+    public void addEvaIds(EvaIds addids) {
+        List<String> _ids = addids.getIds();
+        for(String item : _ids) {
+          if(!ids.contains(item))
+            ids.add(item);
+
+        }
+    }
+
     public List<String> getIds() {
         return ids;
     }

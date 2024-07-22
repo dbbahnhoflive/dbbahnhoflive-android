@@ -24,4 +24,6 @@ public interface Station {
 
     @Nullable
     EvaIds getEvaIds();
+
+    void addEvaIds(EvaIds ids);
 }

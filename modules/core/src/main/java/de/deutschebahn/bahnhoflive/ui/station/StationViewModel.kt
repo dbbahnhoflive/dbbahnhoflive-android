@@ -378,8 +378,17 @@ class StationViewModel(application: Application) : HafasTimetableViewModel(appli
     }
 
     private val evaIdsProvider: suspend (Station) -> EvaIds? = object : EvaIdsProvider {
-        override suspend fun invoke(station: Station): EvaIds? =
-            getApplication<BaseApplication>().applicationServices.updatedStationRepository.getUpdatedStation(station)?.evaIds ?: station.evaIds
+        override suspend fun invoke(station: Station): EvaIds? {
+            val mergedStation = getApplication<BaseApplication>().applicationServices.updatedStationRepository.getUpdatedStation(
+                station)
+
+         if(mergedStation?.evaIds!=null) {
+             station.addEvaIds(mergedStation?.evaIds)
+         }
+
+//         return  mergedStation?.evaIds ?: station.evaIds
+         return  station.evaIds
+        }
     }
 
     private val refreshLiveData = false.toLiveData()

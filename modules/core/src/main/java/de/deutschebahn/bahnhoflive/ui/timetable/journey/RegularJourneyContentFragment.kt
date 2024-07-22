@@ -100,17 +100,17 @@ class RegularJourneyContentFragment : Fragment() {
         var shouldOfferWagenOrder = false
 
         sev.setOnClickListener {
-            stationViewModel.stationNavigation?.showRailReplacement()
+            stationViewModel.stationNavigation?.showRailReplacementStopPlaceInformation()
         }
 
         sevLinkDbCompanion.setOnClickListener {
             stationViewModel.startDbCompanionWebSite(requireContext())
         }
 
-        journeyViewModel.essentialParametersLiveData.observe(viewLifecycleOwner) { (_, trainInfo, trainEvent) ->
+        journeyViewModel.essentialParametersLiveData.observe(viewLifecycleOwner) { (station, trainInfo, trainEvent) ->
 
             journeyViewModel.showSEVLiveData.observe(viewLifecycleOwner) {itShowSEV->
-                sev.isVisible = itShowSEV && stationViewModel.hasSEV()
+                sev.isVisible = (itShowSEV && stationViewModel.hasSEV() )
             }
 
             try {
