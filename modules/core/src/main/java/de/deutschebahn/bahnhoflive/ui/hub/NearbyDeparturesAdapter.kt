@@ -13,6 +13,7 @@ import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.MutableLiveData
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
+import de.deutschebahn.bahnhoflive.R
 import de.deutschebahn.bahnhoflive.analytics.TrackingManager
 import de.deutschebahn.bahnhoflive.backend.db.ris.model.StopPlace
 import de.deutschebahn.bahnhoflive.backend.hafas.model.HafasStation
@@ -25,6 +26,7 @@ import de.deutschebahn.bahnhoflive.repository.timetable.TimetableRepository
 import de.deutschebahn.bahnhoflive.ui.ViewHolder
 import de.deutschebahn.bahnhoflive.ui.search.HafasStationSearchResult
 import de.deutschebahn.bahnhoflive.ui.search.StopPlaceSearchResult
+import de.deutschebahn.bahnhoflive.util.inflateLayout
 import de.deutschebahn.bahnhoflive.view.BaseItemCallback
 import de.deutschebahn.bahnhoflive.view.SingleSelectionManager
 import kotlinx.coroutines.CoroutineScope
@@ -37,8 +39,8 @@ internal class NearbyDeparturesAdapter(
     private val favoriteStationsStore: FavoriteStationsStore<InternalStation>,
     private val timetableRepository: TimetableRepository,
     private val locationLiveData : MutableLiveData<Location>,
-    val trackingManager: TrackingManager,
-    startOrStopCyclicLoadingOfTimetable: (timetableCollector: TimetableCollector?,
+    private val trackingManager: TrackingManager,
+    private val startOrStopCyclicLoadingOfTimetable: (timetableCollector: TimetableCollector?,
                                           selectedNearbyItem : NearbyHafasStationItem?,
                                           selection: Int) -> Unit
 ) : ListAdapter<NearbyStationItem, RecyclerView.ViewHolder>(
@@ -52,7 +54,7 @@ internal class NearbyDeparturesAdapter(
             oldItem: NearbyStationItem,
             newItem: NearbyStationItem
         ): Boolean {
-            return oldItem.equals(newItem)
+            return oldItem == newItem
         }
     }
 ) {
@@ -71,7 +73,6 @@ internal class NearbyDeparturesAdapter(
 
                 when (val selected = currentList[selection]) {
                     is NearbyDbStationItem -> {
-                        Log.d("dbg", "select")
                         startOrStopCyclicLoadingOfTimetable(selected.dbStationSearchResult.timetable,
                             null,
                             selection) // permanentes laden (wieder) starten
@@ -91,9 +92,8 @@ internal class NearbyDeparturesAdapter(
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder<*> =
         when (viewType) {
-            1 -> NearbyDeparturesViewHolder(parent, owner, singleSelectionManager, trackingManager, locationLiveData)
-            else -> NearbyDbDeparturesViewHolder(parent, owner,singleSelectionManager,trackingManager
-            )
+            1 -> NearbyDeparturesViewHolder( parent.inflateLayout(R.layout.card_nearby_departures), owner, singleSelectionManager, trackingManager, locationLiveData)
+            else -> NearbyDbDeparturesViewHolder( parent.inflateLayout(R.layout.card_departures), owner,singleSelectionManager,trackingManager)
         }
 
     override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
@@ -102,7 +102,11 @@ internal class NearbyDeparturesAdapter(
         item?.bindViewHolder(holder)
     }
 
-    override fun getItemViewType(position: Int) = currentList[position]?.type ?: 0
+    override fun getItemViewType(position: Int) : Int {
+        val searchResult = currentList[position]
+        return searchResult?.type ?: 0
+    }
+
 
     override fun getItemCount() = currentList.size
 
@@ -114,10 +118,14 @@ internal class NearbyDeparturesAdapter(
         clearSelection()
 
 
+        if(stopPlaces!=null)
+            Log.d("cr", "submitList : ${stopPlaces.size}")
+        else
+            Log.d("cr", "submitList : EMPTY")
+
         submitList(stopPlaces?.mapNotNull { stopPlace ->
             when {
                 stopPlace.isDbStation -> {
-
                     NearbyDbStationItem(
                         StopPlaceSearchResult(
                             coroutineScope,
@@ -145,7 +153,7 @@ internal class NearbyDeparturesAdapter(
     }
 
     companion object {
-        val TAG = NearbyDeparturesAdapter::class.java.simpleName
+        val TAG: String = NearbyDeparturesAdapter::class.java.simpleName
     }
 }
 
@@ -157,4 +165,6 @@ interface NearbyStationItem {
     fun bindViewHolder(holder: RecyclerView.ViewHolder)
 
     fun onLoadDetails()
+
+    override fun equals(other: Any?): Boolean
 }

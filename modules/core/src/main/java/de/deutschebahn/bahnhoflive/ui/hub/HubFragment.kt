@@ -14,9 +14,10 @@ import android.view.ViewGroup
 import android.widget.TextView
 import androidx.core.view.isGone
 import androidx.fragment.app.Fragment
-import androidx.fragment.app.FragmentPagerAdapter
 import androidx.fragment.app.activityViewModels
 import androidx.fragment.app.findFragment
+import androidx.viewpager2.adapter.FragmentStateAdapter
+import androidx.viewpager2.widget.ViewPager2
 import de.deutschebahn.bahnhoflive.R
 import de.deutschebahn.bahnhoflive.analytics.TrackingManager
 import de.deutschebahn.bahnhoflive.databinding.FragmentHubBinding
@@ -41,6 +42,10 @@ class HubFragment : androidx.fragment.app.Fragment() {
             ?: 0
 
     private var viewBinding: FragmentHubBinding? = null
+    private var selectedFragment : HubCoreFragment? =  null
+    private var searchStarterFragment : HubCoreFragment? =  null
+    private var nearbyDeparturesFragment : HubCoreFragment? =  null
+    private var favoritsFragment : HubCoreFragment? =  null
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -50,49 +55,105 @@ class HubFragment : androidx.fragment.app.Fragment() {
 
         appTitle.text = getText(R.string.rich_app_title)
 
-        pager.pageMargin = resources.getDimensionPixelSize(R.dimen.default_space)
+//        pager.pageMargin = resources.getDimensionPixelSize(R.dimen.default_space)
         pager.adapter = object :
-            FragmentPagerAdapter(childFragmentManager, BEHAVIOR_RESUME_ONLY_CURRENT_FRAGMENT) {
-            override fun getItem(position: Int): Fragment =
+            FragmentStateAdapter(childFragmentManager, this@HubFragment.lifecycle) {
+//            override fun getItem(position: Int): Fragment =
+//                when (position) {
+//                    0 -> SearchStarterFragment()
+//                    1 -> FavoritesFragment()
+//                    2 -> NearbyDeparturesFragment()
+//
+//                    else -> throw IllegalArgumentException()
+//                }
+
+//            override fun getCount() = 3
+
+//            override fun getPageTitle(position: Int) = getText(
+//                when (position) {
+//                    0 -> R.string.sr_hub_search
+//                    1 -> R.string.sr_hub_favorites
+//                    else -> R.string.sr_hub_nearby
+//                }
+//            )
+
+            override fun getItemCount(): Int {
+               return 3
+            }
+
+            override fun createFragment(position: Int) : Fragment {
                 when (position) {
-                    0 -> SearchStarterFragment()
-                    1 -> FavoritesFragment()
-                    2 -> NearbyDeparturesFragment()
+                    0 -> {
+                        searchStarterFragment = SearchStarterFragment()
+                        selectedFragment = searchStarterFragment
+                    }
+                    1 ->{favoritsFragment = FavoritesFragment()
+                        selectedFragment =  favoritsFragment}
+
+                    2 -> {nearbyDeparturesFragment = NearbyDeparturesFragment()
+                        selectedFragment = nearbyDeparturesFragment }
 
                     else -> throw IllegalArgumentException()
                 }
-
-            override fun getCount() = 3
-
-            override fun getPageTitle(position: Int) = getText(
-                when (position) {
-                    0 -> R.string.sr_hub_search
-                    1 -> R.string.sr_hub_favorites
-                    else -> R.string.sr_hub_nearby
-                }
-            )
+                return selectedFragment as Fragment
+            }
         }
 
-        pager.addOnPageChangeListener(object :
-            androidx.viewpager.widget.ViewPager.OnPageChangeListener {
-            override fun onPageScrollStateChanged(state: Int) {
-            }
-
-            override fun onPageScrolled(
-                position: Int,
-                positionOffset: Float,
-                positionOffsetPixels: Int
-            ) {
-            }
-
+        pager.registerOnPageChangeCallback (object : ViewPager2.OnPageChangeCallback() {
             override fun onPageSelected(position: Int) {
                 tabSearch.isSelected = position == 0
                 tabFavorites.isSelected = position == 1
                 tabNearby.isSelected = position == 2
 
                 latestTabPreferences?.edit()?.putInt(PREF_LATEST_TAB, position)?.apply()
+
+                when {
+
+                    tabSearch.isSelected -> {
+                        favoritsFragment?.setFragmentVisible(false)
+                        nearbyDeparturesFragment?.setFragmentVisible(false)
+                        searchStarterFragment?.setFragmentVisible(true)
+                    }
+                    tabFavorites.isSelected -> {
+                        nearbyDeparturesFragment?.setFragmentVisible(false)
+                        searchStarterFragment?.setFragmentVisible(false)
+                        favoritsFragment?.setFragmentVisible(true)
+                    }
+                    tabNearby.isSelected-> {
+                        searchStarterFragment?.setFragmentVisible(false)
+                        favoritsFragment?.setFragmentVisible(false)
+                        nearbyDeparturesFragment?.setFragmentVisible(true)
+                    }
+
+
+                }
+
+                super.onPageSelected(position)
             }
         })
+
+
+
+//        pager.addOnPageChangeListener(object :
+//            androidx.viewpager.widget.ViewPager.OnPageChangeListener {
+//            override fun onPageScrollStateChanged(state: Int) {
+//            }
+//
+//            override fun onPageScrolled(
+//                position: Int,
+//                positionOffset: Float,
+//                positionOffsetPixels: Int
+//            ) {
+//            }
+//
+//            override fun onPageSelected(position: Int) {
+//                tabSearch.isSelected = position == 0
+//                tabFavorites.isSelected = position == 1
+//                tabNearby.isSelected = position == 2
+//
+//                latestTabPreferences?.edit()?.putInt(PREF_LATEST_TAB, position)?.apply()
+//            }
+//        })
 
         tabSearch.isSelected = true
         tabSearch.setOnClickListener {
@@ -196,7 +257,7 @@ class HubFragment : androidx.fragment.app.Fragment() {
 
     override fun onStop() {
         viewBinding?.run {
-            TutorialManager.getInstance(activity).markTutorialAsIgnored(hubTutorialView)
+            TutorialManager.getInstance().markTutorialAsIgnored(hubTutorialView)
         }
 
         super.onStop()
@@ -204,7 +265,7 @@ class HubFragment : androidx.fragment.app.Fragment() {
 
     companion object {
 
-        val TAG = HubFragment::class.java.simpleName
+        val TAG: String = HubFragment::class.java.simpleName
 
         const val ORIGIN_HUB = "hub"
 
