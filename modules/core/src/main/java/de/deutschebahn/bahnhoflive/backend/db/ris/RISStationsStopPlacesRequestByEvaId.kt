@@ -13,18 +13,19 @@ import com.android.volley.VolleyError
 import de.deutschebahn.bahnhoflive.backend.GsonResponseParser
 import de.deutschebahn.bahnhoflive.backend.VolleyRestListener
 import de.deutschebahn.bahnhoflive.backend.db.DbAuthorizationTool
+import de.deutschebahn.bahnhoflive.backend.db.ris.model.StopPlace
 import de.deutschebahn.bahnhoflive.backend.db.ris.model.StopPlaces
-import de.deutschebahn.bahnhoflive.repository.InternalStation
+import de.deutschebahn.bahnhoflive.backend.toHafasStation
 import java.net.URLEncoder
 
 // doku
 // https://developers.deutschebahn.com/db-api-marketplace/apis/product/ris-stations/api/ris-stations#/RISStations_1150/operation/%2Fstop-places%2F{evaNumber}/get
 
 class RISStationsStopPlacesRequestByEvaId(
-    listener: VolleyRestListener<InternalStation?>,
+    listener: VolleyRestListener<List<StopPlace>?>,
     dbAuthorizationTool: DbAuthorizationTool,
     evaId: String
-) : RISStationsRequest<InternalStation?>( //         "https://apis.deutschebahn.com/db/apis/ris-stations/v1/$urlSuffix",
+) : RISStationsRequest<List<StopPlace>?>( //         "https://apis.deutschebahn.com/db/apis/ris-stations/v1/$urlSuffix",
     "stop-places/by-key?keyType=EVA&key=" + URLEncoder.encode(evaId, "UTF-8") ,
     dbAuthorizationTool,
     listener
@@ -37,7 +38,7 @@ class RISStationsStopPlacesRequestByEvaId(
 
     override fun getCountKey() = "RIS/stations/stop-places"
 
-    override fun parseNetworkResponse(response: NetworkResponse): Response<InternalStation?> {
+    override fun parseNetworkResponse(response: NetworkResponse): Response<List<StopPlace>?> {
         super.parseNetworkResponse(response)
 
         return try {
@@ -45,9 +46,10 @@ class RISStationsStopPlacesRequestByEvaId(
             val parser = GsonResponseParser(StopPlaces::class.java)
             val parserResponse = parser.parseResponse(response)
             val station = parserResponse?.stopPlaces?.get(0)?.asInternalStation
+            val hafasStation = parserResponse?.stopPlaces?.get(0)?.toHafasStation()
 
             // wenn stationID fehlt (z,B.: OEPNV-Bushaltestelle) => station=null
-            Response.success(station, null)
+            Response.success( parserResponse?.stopPlaces, null)
         } catch (e: Exception) {
             Response.error(VolleyError(e))
         }

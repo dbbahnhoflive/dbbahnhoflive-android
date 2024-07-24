@@ -41,7 +41,6 @@ import de.deutschebahn.bahnhoflive.databinding.ItemJourneyFilterRemoveBinding
 import de.deutschebahn.bahnhoflive.repository.Station
 import de.deutschebahn.bahnhoflive.repository.trainformation.TrainFormation
 import de.deutschebahn.bahnhoflive.ui.station.HistoryFragment
-import de.deutschebahn.bahnhoflive.ui.station.StationActivity
 import de.deutschebahn.bahnhoflive.ui.station.StationViewModel
 import de.deutschebahn.bahnhoflive.ui.station.timetable.IssueIndicatorBinder
 import de.deutschebahn.bahnhoflive.ui.station.timetable.IssuesBinder
@@ -394,52 +393,23 @@ class RegularJourneyContentFragment : Fragment() {
                             "Öffnen",
                             DialogInterface.OnClickListener { _, _ ->
 
-                                get().applicationServices.repositories.stationRepository.queryStations(
+                                get().applicationServices.repositories.stationRepository.queryStationByEvaId(
                                     object : VolleyRestListener<List<StopPlace>?> {
                                         override fun onSuccess(payload: List<StopPlace>?) {
-
-                                            TrackingManager.fromActivity(activity).track(
-                                                TrackingManager.TYPE_ACTION,
-                                                TrackingManager.Screen.H2,
-                                                "journey",
-                                                "openstation"
-                                            )
-
-                                            // payload=null, wenn station keine stadaId hat ! (meist ÖPNV)
-                                            // dann die normale Abfahrtstafel öffnen
+                                            Log.d("cr", "succ")
+                                            val station = payload?.get(0)?.asInternalStation
+                                            val hafasStation = payload?.get(0)?.toHafasStation()
 
                                             var intent: Intent? = null
-
-                                            if (!payload.isNullOrEmpty()) {
-
-                                                intent =
-                                                    StationActivity.createIntentForBackNavigation(
-                                                    view.context,
-                                                    payload.firstOrNull()?.asInternalStation,
-                                                    stationViewModel?.station,
-                                                    hafasStop?.toHafasStation(),
-                                                    hafasEvent,
-                                                    trainInfo,
-                                                    false
-                                                )
-
-                                            } else {
-                                                hafasStop?.let {
-
-                                                    val hafasStation = it.toHafasStation()
 
                                                     intent =
                                                         DeparturesActivity.createIntentForBackNavigation(
                                                             view.context,
                                                             stationViewModel?.station,
                                                             hafasStation,
-                                                            hafasActualStation,
+                                                    hafasActualStation, // to return to
                                                             hafasEvent
                                                         )
-
-                                                }
-                                            }
-
 
                                             intent?.let {
                                                 activity.let {
@@ -449,22 +419,88 @@ class RegularJourneyContentFragment : Fragment() {
                                                 }
                                             }
 
-
                                         }
 
                                         @Synchronized
                                         override fun onFail(reason: VolleyError) {
                                             Log.d("cr", reason.toString())
-                                            // todo: Meldung oder wiederholen
                                         }
                                     },
-                                    stopStationName,
-                                    null,
-                                    true,
-                                    mixedResults = false,
-                                    collapseNeighbours = true,
-                                    pullUpFirstDbStation = false,
+                                    stopEvaId
+
                                 )
+
+//                                get().applicationServices.repositories.stationRepository.queryStations(
+//                                    object : VolleyRestListener<List<StopPlace>?> {
+//                                        override fun onSuccess(payload: List<StopPlace>?) {
+//
+//                                            TrackingManager.fromActivity(activity).track(
+//                                                TrackingManager.TYPE_ACTION,
+//                                                TrackingManager.Screen.H2,
+//                                                "journey",
+//                                                "openstation"
+//                                            )
+//
+//                                            // payload=null, wenn station keine stadaId hat ! (meist ÖPNV)
+//                                            // dann die normale Abfahrtstafel öffnen
+//
+//                                            var intent: Intent? = null
+//
+//                                            if (!payload.isNullOrEmpty()) {
+//
+//                                                intent =
+//                                                    StationActivity.createIntentForBackNavigation(
+//                                                    view.context,
+//                                                    payload.firstOrNull()?.asInternalStation,
+//                                                    stationViewModel?.station,
+//                                                    hafasStop?.toHafasStation(),
+//                                                    hafasEvent,
+//                                                    trainInfo,
+//                                                    false
+//                                                )
+//
+//                                            } else {
+//                                                hafasStop?.let {
+//
+//                                                    val hafasStation = it.toHafasStation()
+//
+//                                                    intent =
+//                                                        DeparturesActivity.createIntentForBackNavigation(
+//                                                            view.context,
+//                                                            stationViewModel?.station,
+//                                                            hafasStation,
+//                                                            hafasActualStation,
+//                                                            hafasEvent
+//                                                        )
+//
+//                                                }
+//                                            }
+//
+//
+//                                            intent?.let {
+//                                                activity.let {
+//                                                    ActivityCompat.finishAffinity(activity)
+//                                                    it.finish()
+//                                                    it.startActivity(intent)
+//                                                }
+//                                            }
+//
+//
+//                                        }
+//
+//                                        @Synchronized
+//                                        override fun onFail(reason: VolleyError) {
+//                                            Log.d("cr", reason.toString())
+//                                            // todo: Meldung oder wiederholen
+//                                        }
+//                                    },
+//                                    stopStationName,
+//                                    null,
+//                                    true,
+//                                    mixedResults = true,
+//                                    collapseNeighbours = true,
+//                                    pullUpFirstDbStation = false,
+//                                )
 
 
                             })

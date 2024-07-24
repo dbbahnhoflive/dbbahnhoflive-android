@@ -12,7 +12,6 @@ import de.deutschebahn.bahnhoflive.backend.db.ris.model.LocalServices
 import de.deutschebahn.bahnhoflive.backend.db.ris.model.Platform
 import de.deutschebahn.bahnhoflive.backend.db.ris.model.RISStation
 import de.deutschebahn.bahnhoflive.backend.db.ris.model.StopPlace
-import de.deutschebahn.bahnhoflive.repository.InternalStation
 import de.deutschebahn.bahnhoflive.repository.fail
 import de.deutschebahn.bahnhoflive.util.Cancellable
 import de.deutschebahn.bahnhoflive.util.volley.VolleyRequestCancellable
@@ -62,7 +61,7 @@ open class StationRepository {
         return null
     }
     open fun queryStationByEvaId(
-        listener: VolleyRestListener<InternalStation?>,
+        listener: VolleyRestListener<List<StopPlace>?>,
         evaId: String
         ): Cancellable? {
         listener.fail()
