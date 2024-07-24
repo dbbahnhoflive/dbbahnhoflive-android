@@ -839,6 +839,14 @@ class StationActivity : BaseActivity(), StationProvider, RootProvider, TrackingM
 
 
     fun doHandleOnBackPressed() {
+
+
+        if(stationViewModel.backNavigationLiveData.value?.showChevron==true) {
+            stationViewModel.navigateBack(this)
+            return
+        }
+
+
         if (removeOverlayFragment()) {
             return
         }
