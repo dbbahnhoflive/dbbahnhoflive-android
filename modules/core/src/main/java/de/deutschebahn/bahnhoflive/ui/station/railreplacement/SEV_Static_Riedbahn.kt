@@ -7,6 +7,7 @@ import de.deutschebahn.bahnhoflive.backend.db.newsapi.model.Group
 import de.deutschebahn.bahnhoflive.backend.db.newsapi.model.News
 import de.deutschebahn.bahnhoflive.backend.db.ris.model.StopPlace
 import de.deutschebahn.bahnhoflive.backend.db.ris.model.StopPlaceName
+import de.deutschebahn.bahnhoflive.backend.local.model.EvaIds
 import de.deutschebahn.bahnhoflive.util.isActualDateInRange
 import java.util.Calendar
 
@@ -257,11 +258,43 @@ class EvItem(
 
     fun findStations(searchTerm : String) : List<Pair<Int, EvItem>> {
         val lst : MutableList<Pair<Int, EvItem>> = mutableListOf()
+
+        var sTerm = searchTerm
+        if(searchTerm.contains("ss", true)) {
+            sTerm = searchTerm.replace("ss", "ß", true)
+        }
+        if(searchTerm.contains("ue", true)) {
+            sTerm = searchTerm.replace("ue", "ü", true)
+        }
+        if(searchTerm.contains("oe", true)) {
+            sTerm = searchTerm.replace("oe", "ö", true)
+        }
+        if(searchTerm.contains("ae", true)) {
+            sTerm = searchTerm.replace("ae", "ä", true)
+        }
+
         evMap.forEach {
-            if(it.value.stationName.contains(searchTerm,true)) {
+            if(it.value.stationName.contains(sTerm,true)) {
                 lst.add(it.key to it.value)
             }
         }
+
         return lst
     }
+
+
+    fun findStadaId(evaIds:EvaIds) : String? {
+      var result:String?=null
+      evMap.forEach { stadaId, item ->
+          run {
+              if (evaIds.ids.contains(item.evaId.toString())) {
+                result = stadaId.toString()
+                return@forEach
+              }
+          }
+      }
+
+      return result
+    }
+
 }

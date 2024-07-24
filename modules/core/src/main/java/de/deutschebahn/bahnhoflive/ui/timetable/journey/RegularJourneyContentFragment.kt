@@ -41,7 +41,9 @@ import de.deutschebahn.bahnhoflive.databinding.ItemJourneyFilterRemoveBinding
 import de.deutschebahn.bahnhoflive.repository.Station
 import de.deutschebahn.bahnhoflive.repository.trainformation.TrainFormation
 import de.deutschebahn.bahnhoflive.ui.station.HistoryFragment
+import de.deutschebahn.bahnhoflive.ui.station.StationActivity
 import de.deutschebahn.bahnhoflive.ui.station.StationViewModel
+import de.deutschebahn.bahnhoflive.ui.station.railreplacement.SEV_Static_Riedbahn
 import de.deutschebahn.bahnhoflive.ui.station.timetable.IssueIndicatorBinder
 import de.deutschebahn.bahnhoflive.ui.station.timetable.IssuesBinder
 import de.deutschebahn.bahnhoflive.ui.station.timetable.TimetableViewHelper
@@ -362,6 +364,166 @@ class RegularJourneyContentFragment : Fragment() {
 
         val TAG: String = this::class.java.simpleName
 
+
+        fun queryByEvaId(
+            activity: FragmentActivity,
+            stationViewModel: StationViewModel?,
+            view: View,
+            stationIds: EvaIds?,
+            stopEvaId: String,
+            hafasActualStation: HafasStation? = null,
+            hafasEvent: HafasEvent? = null
+        ) {
+            get().applicationServices.repositories.stationRepository.queryStationByEvaId(
+                object : VolleyRestListener<List<StopPlace>?> {
+                    override fun onSuccess(payload: List<StopPlace>?) {
+                        Log.d("cr", "succ")
+                        val station = payload?.get(0)?.asInternalStation
+                        val hafasStation = payload?.get(0)?.toHafasStation()
+
+                        var intent: Intent? = null
+
+                        intent =
+                            DeparturesActivity.createIntentForBackNavigation(
+                                view.context,
+                                stationViewModel?.station,
+                                hafasStation,
+                                hafasActualStation, // to return to
+                                hafasEvent
+                            )
+
+                        intent?.let {
+                            activity.let {
+                                ActivityCompat.finishAffinity(activity)
+                                it.finish()
+                                it.startActivity(intent)
+                            }
+                        }
+
+                    }
+
+                    @Synchronized
+                    override fun onFail(reason: VolleyError) {
+                        Log.d("cr", reason.toString())
+                    }
+                },
+                stopEvaId
+
+            )
+
+        }
+
+        fun queryByName(
+            activity: FragmentActivity,
+            stationViewModel: StationViewModel?,
+            view: View,
+            stopStationName: String?,
+            hafasStop: HafasStop? = null, // ziel
+            hafasActualStation : HafasStation? = null,
+            hafasEvent: HafasEvent? = null, // quelle
+            trainInfo: TrainInfo? = null
+        ) {
+
+
+            get().applicationServices.repositories.stationRepository.queryStations(
+                object : VolleyRestListener<List<StopPlace>?> {
+                    override fun onSuccess(payload: List<StopPlace>?) {
+
+                        TrackingManager.fromActivity(activity).track(
+                            TrackingManager.TYPE_ACTION,
+                            TrackingManager.Screen.H2,
+                            "journey",
+                            "openstation"
+                        )
+
+                        // payload=null, wenn station keine stadaId hat ! (meist ÖPNV)
+                        // dann die normale Abfahrtstafel öffnen
+
+                        var intent: Intent? = null
+
+                        if (!payload.isNullOrEmpty() ) {
+
+                            var stat = payload.firstOrNull()?.asInternalStation
+
+                            if(stat==null) {
+                                // Bus ?
+                                val stadaId = SEV_Static_Riedbahn.findStadaId(payload[0].evaIds)
+                                stadaId?.let {
+                                   stat = payload.firstOrNull()?.asInternalStationWithStadaId(it)
+                                }
+                            }
+
+                            if(stat!=null) {
+                                intent =
+                                    StationActivity.createIntentForBackNavigation(
+                                        view.context,
+                                        stat,
+                                        stationViewModel?.station,
+                                        hafasStop?.toHafasStation(),
+                                        hafasEvent,
+                                        trainInfo,
+                                        false
+                                    )
+                            } // todo: fix Navigation from db-station ohne stada-id geht nicht
+                            else {
+                                val hs = payload[0].toHafasStation()
+                                intent =
+                                    DeparturesActivity.createIntentForBackNavigation(
+                                        view.context,
+                                        stationViewModel?.station,
+                                        hs,
+                                        hafasActualStation,
+                                        hafasEvent
+                                    )
+                            }
+
+                        } else {
+                            hafasStop?.let {
+
+                                val hafasStation = it.toHafasStation()
+
+                                                    intent =
+                                                        DeparturesActivity.createIntentForBackNavigation(
+                                                            view.context,
+                                                            stationViewModel?.station,
+                                                            hafasStation,
+                                        hafasActualStation,
+                                                            hafasEvent
+                                                        )
+
+                            }
+                        }
+
+
+                                            intent?.let {
+                                                activity.let {
+                                                    ActivityCompat.finishAffinity(activity)
+                                                    it.finish()
+                                                    it.startActivity(intent)
+                                                }
+                                            }
+
+
+                                        }
+
+                                        @Synchronized
+                                        override fun onFail(reason: VolleyError) {
+                                            Log.d("cr", reason.toString())
+                        // todo: Meldung oder wiederholen
+                                        }
+                                    },
+                stopStationName,
+                null,
+                true,
+                mixedResults = true,
+                collapseNeighbours = true,
+                pullUpFirstDbStation = false,
+            )
+
+
+        }
+
+
         fun openJourneyStopStation(
             activity: FragmentActivity,
             stationViewModel: StationViewModel?,
@@ -370,7 +532,7 @@ class RegularJourneyContentFragment : Fragment() {
             stopEvaId: String?,
             stopStationName: String?,
             hafasStop: HafasStop? = null, // ziel
-            hafasActualStation : HafasStation? = null,
+            hafasActualStation: HafasStation? = null,
             hafasEvent: HafasEvent? = null, // quelle
             trainInfo: TrainInfo? = null
         ) {
@@ -393,115 +555,22 @@ class RegularJourneyContentFragment : Fragment() {
                             "Öffnen",
                             DialogInterface.OnClickListener { _, _ ->
 
-                                get().applicationServices.repositories.stationRepository.queryStationByEvaId(
-                                    object : VolleyRestListener<List<StopPlace>?> {
-                                        override fun onSuccess(payload: List<StopPlace>?) {
-                                            Log.d("cr", "succ")
-                                            val station = payload?.get(0)?.asInternalStation
-                                            val hafasStation = payload?.get(0)?.toHafasStation()
-
-                                            var intent: Intent? = null
-
-                                                    intent =
-                                                        DeparturesActivity.createIntentForBackNavigation(
-                                                            view.context,
-                                                            stationViewModel?.station,
-                                                            hafasStation,
-                                                    hafasActualStation, // to return to
-                                                            hafasEvent
-                                                        )
-
-                                            intent?.let {
-                                                activity.let {
-                                                    ActivityCompat.finishAffinity(activity)
-                                                    it.finish()
-                                                    it.startActivity(intent)
-                                                }
-                                            }
-
-                                        }
-
-                                        @Synchronized
-                                        override fun onFail(reason: VolleyError) {
-                                            Log.d("cr", reason.toString())
-                                        }
-                                    },
-                                    stopEvaId
-
-                                )
-
-//                                get().applicationServices.repositories.stationRepository.queryStations(
-//                                    object : VolleyRestListener<List<StopPlace>?> {
-//                                        override fun onSuccess(payload: List<StopPlace>?) {
-//
-//                                            TrackingManager.fromActivity(activity).track(
-//                                                TrackingManager.TYPE_ACTION,
-//                                                TrackingManager.Screen.H2,
-//                                                "journey",
-//                                                "openstation"
-//                                            )
-//
-//                                            // payload=null, wenn station keine stadaId hat ! (meist ÖPNV)
-//                                            // dann die normale Abfahrtstafel öffnen
-//
-//                                            var intent: Intent? = null
-//
-//                                            if (!payload.isNullOrEmpty()) {
-//
-//                                                intent =
-//                                                    StationActivity.createIntentForBackNavigation(
-//                                                    view.context,
-//                                                    payload.firstOrNull()?.asInternalStation,
-//                                                    stationViewModel?.station,
-//                                                    hafasStop?.toHafasStation(),
-//                                                    hafasEvent,
-//                                                    trainInfo,
-//                                                    false
-//                                                )
-//
-//                                            } else {
-//                                                hafasStop?.let {
-//
-//                                                    val hafasStation = it.toHafasStation()
-//
-//                                                    intent =
-//                                                        DeparturesActivity.createIntentForBackNavigation(
-//                                                            view.context,
-//                                                            stationViewModel?.station,
-//                                                            hafasStation,
-//                                                            hafasActualStation,
-//                                                            hafasEvent
-//                                                        )
-//
-//                                                }
-//                                            }
-//
-//
-//                                            intent?.let {
-//                                                activity.let {
-//                                                    ActivityCompat.finishAffinity(activity)
-//                                                    it.finish()
-//                                                    it.startActivity(intent)
-//                                                }
-//                                            }
-//
-//
-//                                        }
-//
-//                                        @Synchronized
-//                                        override fun onFail(reason: VolleyError) {
-//                                            Log.d("cr", reason.toString())
-//                                            // todo: Meldung oder wiederholen
-//                                        }
-//                                    },
-//                                    stopStationName,
-//                                    null,
-//                                    true,
-//                                    mixedResults = true,
-//                                    collapseNeighbours = true,
-//                                    pullUpFirstDbStation = false,
+//                                queryByEvaId(
+//                                    activity,
+//                                    stationViewModel,
+//                                    view,
+//                                    stationIds,
+//                                    stopEvaId
 //                                )
 
+                                queryByName(
+                                    activity, stationViewModel, view,
+                                    stopStationName,
+                                    hafasStop,
+                                    hafasActualStation,
+                                    hafasEvent,
+                                    trainInfo
+                                )
 
                             })
                         .setNeutralButton(

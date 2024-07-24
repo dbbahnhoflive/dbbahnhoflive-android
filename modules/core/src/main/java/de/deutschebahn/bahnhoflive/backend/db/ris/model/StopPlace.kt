@@ -55,6 +55,10 @@ open class StopPlace {
             InternalStation(stadaId, name, position?.toLatLng(), evaIds)
         }
 
+   fun asInternalStationWithStadaId(_stadaId:String) : InternalStation {
+       return InternalStation(_stadaId, name, position?.toLatLng(), evaIds)
+   }
+
     val evaIds by lazy {
         EvaIds(
             listOfNotNull(

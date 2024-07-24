@@ -93,8 +93,8 @@ class OfficialStationRepository(
                     VolleyRestListener<List<StopPlace>> {
                     override fun onSuccess(payload: List<StopPlace>) {
 
-                        if(payload.isNotEmpty() && payload[0].isDbStation) {
-//                            SEV_Static.addEvaIds(payload[0].stationID, payload[0].evaIds.ids)
+//                        if (payload.isNotEmpty() && payload[0].isDbStation) {
+                        if (payload.isNotEmpty() ) {
 
                                payload[0].evaIds.main?.let {
                                 queryStationGroups(

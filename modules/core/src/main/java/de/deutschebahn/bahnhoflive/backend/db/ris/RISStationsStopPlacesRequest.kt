@@ -119,7 +119,7 @@ class RISStationsStopPlacesRequest(
                     filteredStopPlaceSequence.toCollection(ArrayList(stopPlaces.size))
                 }
 
-            // Ergaenzung Suche in SEV_Reidbahn (Ticket 2569)
+            // Ergaenzung Suche in SEV_Riedbahn (Ticket 2569)
             query?.let {
                 if (it.length > 3) {
 
