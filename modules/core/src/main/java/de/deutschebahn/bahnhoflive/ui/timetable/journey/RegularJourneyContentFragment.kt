@@ -252,23 +252,6 @@ class RegularJourneyContentFragment : Fragment() {
 
                     textWagonOrder.isGone = buttonWagonOrder.isGone
 
-                    if (journeyStops.isNotEmpty()) { // empty happens if train is cancelled !!
-                        val lastStation = journeyStops.last()
-
-                        // not working/necessary : put to viewmodel if needed
-//                        sev.isVisible =
-//                            SEV_Static_Riedbahn.isStationReplacementStopByEvaID(lastStation.evaId)
-
-
-                        // nur anzeigen, wenn talkback aktiviert ist
-                        // z.zT (Mai 20244) deaktiviert
-//                        sevLinkDbCompanion.isVisible =
-//                            ((stationViewModel.mapAvailableLiveData.value != true) &&
-//                                SEV_Static_Riedbahn.hasStationDbCompanionByEvaId(lastStation.evaId)
-//                            )
-
-                    }
-
                 }, {
                     Log.d(RegularJourneyContentFragment::class.java.simpleName, "Error: $it")
                 })

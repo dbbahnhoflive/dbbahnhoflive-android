@@ -1638,7 +1638,16 @@ class StationViewModel(application: Application) : HafasTimetableViewModel(appli
 
 
     fun hasElevators() : Boolean = !elevatorsResource.data.value.isNullOrEmpty()
-    fun hasSEV() : Boolean = !railReplacementSummaryLiveData.value.isNullOrEmpty()
+    fun hasSEV() : Boolean {
+
+        if(!railReplacementSummaryLiveData.value.isNullOrEmpty())
+            return true
+
+        if(SEV_Static_Riedbahn.isStationReplacementStopByStationID(station?.id))
+            return true
+
+        return false
+    }
 
     fun startDbCompanionWebSite(context: Context) {
         context.execBrowser(R.string.teaser_db_companion_url)

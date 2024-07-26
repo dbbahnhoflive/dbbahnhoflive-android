@@ -197,12 +197,16 @@ class EvItem(
 //    }
 
 
-//    fun isStationReplacementStopByStationID(stationId: String?): Boolean {
-//        val stationIdAsInt = stationId?.toIntOrNull() ?: 0
-//        return evMap[stationIdAsInt] !=null
-//    }
+    fun isStationReplacementStopByStationID(stationId: String?): Boolean {
+        if(!isInConstructionPhase())
+            return false
+        val stationIdAsInt = stationId?.toIntOrNull() ?: 0
+        return evMap[stationIdAsInt] !=null
+    }
 
     fun isStationReplacementStopByEvaID(evaId: String?): Boolean {
+        if(!isInConstructionPhase())
+            return false
         val evaIdAsInt = evaId?.toIntOrNull() ?: 0
         return evMap.filter { it.value.evaId==evaIdAsInt  }.isNotEmpty()
     }
