@@ -115,7 +115,7 @@ class JourneyItemViewHolder(
                                 additionalSymbolResInt = R.drawable.app_warndreieck
                             }
 
-                            (itJourneyStop.departure?.canceled == true || itJourneyStop.arrival?.canceled == true) -> {
+                            (itJourneyStop.departure?.cancelled == true || itJourneyStop.arrival?.cancelled == true) -> {
                                 additionTextResId = R.string.journey_stop_canceled
                                 additionalSymbolResInt = R.drawable.app_warndreieck
                             }
