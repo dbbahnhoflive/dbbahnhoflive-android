@@ -50,6 +50,7 @@ import de.deutschebahn.bahnhoflive.backend.ris.model.TrainInfo
 import de.deutschebahn.bahnhoflive.persistence.RecentContentQueriesStore
 import de.deutschebahn.bahnhoflive.repository.ElevatorsResource
 import de.deutschebahn.bahnhoflive.repository.EvaIdsProvider
+import de.deutschebahn.bahnhoflive.repository.InternalStation
 import de.deutschebahn.bahnhoflive.repository.LoadingStatus
 import de.deutschebahn.bahnhoflive.repository.PlatformLevelResource
 import de.deutschebahn.bahnhoflive.repository.RimapRRTResource
@@ -379,11 +380,11 @@ class StationViewModel(application: Application) : HafasTimetableViewModel(appli
 
     private val evaIdsProvider: suspend (Station) -> EvaIds? = object : EvaIdsProvider {
         override suspend fun invoke(station: Station): EvaIds? {
-            val mergedStation = getApplication<BaseApplication>().applicationServices.updatedStationRepository.getUpdatedStation(
+            val mergedStation : InternalStation? = getApplication<BaseApplication>().applicationServices.updatedStationRepository.getUpdatedStation(
                 station)
 
          if(mergedStation?.evaIds!=null) {
-             station.addEvaIds(mergedStation?.evaIds)
+             station.addEvaIds(mergedStation.evaIds)
          }
 
 //         return  mergedStation?.evaIds ?: station.evaIds

@@ -22,7 +22,7 @@ import de.deutschebahn.bahnhoflive.util.Collections;
 
 public class EvaIds implements Parcelable {
 
-    private final List<String> ids;
+    private final ArrayList<String> ids;
     @Nullable
     private final String main;
 
@@ -43,7 +43,8 @@ public class EvaIds implements Parcelable {
     }
 
     public EvaIds(List<String> idList) {
-        ids = idList;
+        ids = new ArrayList<>();
+        ids.addAll(idList);
         main = Collections.hasContent(ids) ? ids.get(0) : null;
     }
 
@@ -55,14 +56,17 @@ public class EvaIds implements Parcelable {
 
     public void addEvaIds(EvaIds addids) {
         List<String> _ids = addids.getIds();
+        try {
         for(String item : _ids) {
-          if(!ids.contains(item))
+                if (!ids.contains(item)) {
             ids.add(item);
-
+                }
+            }
+        } catch (Exception ignored) {
         }
     }
 
-    public List<String> getIds() {
+    public ArrayList<String> getIds() {
         return ids;
     }
 
