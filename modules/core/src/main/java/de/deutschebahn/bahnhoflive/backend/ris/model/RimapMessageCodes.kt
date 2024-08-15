@@ -3,7 +3,7 @@ package de.deutschebahn.bahnhoflive.backend.ris.model
 object RimapMessageCodes {
 
     val messages = mapOf(
-        "80" to "Andere Reihenfolge der Wagen",
+//        "80" to "Andere Reihenfolge der Wagen",
         "82" to "Mehrere Wagen fehlen",
         "83" to "Störung fahrzeuggebundene Einstiegshilfe",
         "85" to "Ein Wagen fehlt",
@@ -17,9 +17,10 @@ object RimapMessageCodes {
     )
 
     val revocations = mapOf(
-        "84" to setOf("80", "82", "85"),
+//        "84" to setOf("80", "82", "85"),
+        "84" to setOf( "82", "85"),
         "88" to setOf(
-            "80",
+//            "80",
             "82",
             "83",
             "85",
