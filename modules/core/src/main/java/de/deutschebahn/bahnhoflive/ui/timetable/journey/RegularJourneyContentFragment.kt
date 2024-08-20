@@ -276,6 +276,12 @@ class RegularJourneyContentFragment : Fragment() {
 
     private fun showWaggonOrder(trainInfo: TrainInfo, trainEvent: TrainEvent) {
         val station: Station? = stationViewModel.stationResource.data.value
+
+        if (station == null || station.evaIds == null) {
+            showNoResultDialog()
+            return
+        }
+
         if (station?.evaIds != null) {
             val progressDialog = ProgressDialog.show(
                 activity,
@@ -295,11 +301,19 @@ class RegularJourneyContentFragment : Fragment() {
                         super.onFail(reason)
                     }
                 })
-            val trainMovementInfo : TrainMovementInfo? = trainEvent.movementRetriever.getTrainMovementInfo(trainInfo)
-            (TimetableViewHelper.buildQueryParameters(
+
+            val trainMovementInfo: TrainMovementInfo? =
+                trainEvent.movementRetriever.getTrainMovementInfo(trainInfo)
+
+            val params = TimetableViewHelper.buildQueryParameters(
                 trainInfo,
                 trainMovementInfo
-            )["trainNumber"] as String?)?.let { itTrainNumber->
+            )
+
+            var trainNumber: String? = params["trainNumber"] as? String
+
+            if (trainNumber != null) {
+                trainNumber?.let { itTrainNumber ->
             wagenstandRequestManager.loadWagenstand(
                     station.evaIds!!,
                     itTrainNumber,
@@ -315,7 +329,9 @@ class RegularJourneyContentFragment : Fragment() {
             )
             }
         } else {
+                progressDialog.dismiss()
             showNoResultDialog()
+            }
         }
     }
 

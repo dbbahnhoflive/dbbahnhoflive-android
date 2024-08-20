@@ -32,9 +32,10 @@ object TimetableViewHelper {
     fun buildQueryParameters(trainInfo: TrainInfo, event: TrainMovementInfo?): Map<String, Any?> {
         val parameters: MutableMap<String, Any?> = HashMap()
         try {
-            val trainType = trainInfo.trainCategory
+            val trainCategory = trainInfo.trainCategory
             parameters["platform"] = event?.platform?.replace("\\D+".toRegex(), "")?:""
-            if (trainType == "RE" || trainType == "RB") {
+
+            if (trainCategory == "RE" || trainCategory == "RB" ) {
                 if (trainInfo.trainGenericName != null) {
                     parameters["trainNumber"] = trainInfo.trainGenericName
                 } else {
@@ -45,6 +46,10 @@ object TimetableViewHelper {
                 parameters["time"] = event?.formattedTime?:""
                 parameters["trainNumber"] = trainInfo.trainName
             }
+
+            if(trainCategory == "S" && trainInfo.trainName==null)
+                parameters["trainNumber"] = trainInfo.genuineName
+
             val timeOffset: MutableMap<String, String> = HashMap()
             timeOffset["before"] = "10"
             timeOffset["after"] = "10"
