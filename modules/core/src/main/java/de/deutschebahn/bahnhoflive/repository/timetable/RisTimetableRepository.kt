@@ -85,8 +85,7 @@ open class RisTimetableRepository(
                                         tryYesterdayListener
                                     ).processPendingJourney()
                                 }
-                    }
-                        catch(e: Exception) {
+                        } catch (e: Exception) {
                             Log.d("cr", e.message.toString())
                         }
                     }
@@ -119,15 +118,18 @@ open class RisTimetableRepository(
         private val pendingDeparturesMatches = departureMatches.take(4).toMutableList()
 
         fun processPendingJourney() {
-            pendingDeparturesMatches.removeFirstOrNull()?.let {
+            pendingDeparturesMatches.removeFirstOrNull()?.let { itDeparture->
 
                 restHelper.add(
                     RISJourneysEventbasedRequest(
-                        it.journeyID,
+                        itDeparture.journeyID,
                         dbAuthorizationTool,
                         object : VolleyRestListener<JourneyEventBased> {
                             override fun onSuccess(payload: JourneyEventBased) {
                                 payload.apply {
+                                    this.journeyID = itDeparture.journeyID
+                                    this.administrationID = itDeparture.info.transportAtStart.administration.administrationID
+
                                     events.firstOrNull { arrivalDepartureEvent ->
                                         arrivalDepartureEvent.eventType == trainEvent.correspondingEventType &&
                                                 (arrivalDepartureEvent.stopPlace.evaNumber in evaIds.ids)
@@ -164,6 +166,10 @@ open class RisTimetableRepository(
                                                 }.also { journeyStops ->
                                                     journeyStops.firstOrNull()?.first = true
                                                     journeyStops.lastOrNull()?.last = true
+
+                                                    journeyStops.forEach {
+                                                        it.transportAtStartAdministrationID = itDeparture.info.transportAtStart.administration.administrationID
+                                                    }
 
                                                     calculateProgress(journeyStops)
 

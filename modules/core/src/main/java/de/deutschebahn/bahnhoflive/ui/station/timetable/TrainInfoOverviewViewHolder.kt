@@ -72,8 +72,8 @@ open class TrainInfoOverviewViewHolder(view: View, protected val provider: Train
                 issueIndicator?.isVisible = true // icon wird per issuesBinder gesetzt oder gelöscht !
 
                 issuesBinder.bindIssues(it, trainMovementInfo)
-                wagonOrderIndicator?.visibility =
-                    if (it.shouldOfferWagenOrder() && it.departure!=null) View.VISIBLE else View.GONE
+                wagonOrderIndicator?.isVisible = false // ticket 2579  Anpassung Abfrage Wagenreihungsinformationen
+//                    if (it.shouldOfferWagenOrder() && it.departure!=null) View.VISIBLE else View.GONE
 
                 return
             }

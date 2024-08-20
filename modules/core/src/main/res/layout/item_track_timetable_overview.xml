@@ -30,6 +30,8 @@
             android:src="@drawable/app_wagenreihung_grau"
             app:backgroundTint="@color/white"
             app:fabSize="mini"
+            android:visibility="gone"
+            tools:visibility="visible"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintRight_toRightOf="parent"
             app:layout_constraintTop_toTopOf="parent"

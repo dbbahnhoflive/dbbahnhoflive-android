@@ -7,6 +7,7 @@
 package de.deutschebahn.bahnhoflive.ui.station.timetable
 
 import android.view.View
+import androidx.core.view.isVisible
 import com.google.android.material.floatingactionbutton.FloatingActionButton
 import de.deutschebahn.bahnhoflive.backend.ris.model.TrainEvent
 import de.deutschebahn.bahnhoflive.backend.ris.model.TrainInfo
@@ -32,7 +33,8 @@ class TrackDepartureSummaryViewHolder(
         super.onBind(item)
 
         item?.let {
-          waggonOrderButton.visibility = if(it.supportsWagonOrder()) View.VISIBLE else View.GONE
+//          waggonOrderButton.visibility = if(it.supportsWagonOrder()) View.VISIBLE else View.GONE
+          waggonOrderButton.isVisible = false // ticket 2579  Anpassung Abfrage Wagenreihungsinformationen
         }
 
         itemView.visibility = if (item == null) View.GONE else View.VISIBLE
