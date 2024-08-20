@@ -213,6 +213,8 @@ class RISTransportsRequest(
                                 it.status = itVehicle.status
                                 it.kategorie = itVehicle.type.category
                                 it.fahrzeugsektor = itVehicle.platformPosition.sector
+                                if(it.fahrzeugsektor==null)
+                                    it.fahrzeugsektor=" "
                                 it.wagenordnungsnummer = itVehicle.wagonIdentificationNumber.toString()
                             }
 
