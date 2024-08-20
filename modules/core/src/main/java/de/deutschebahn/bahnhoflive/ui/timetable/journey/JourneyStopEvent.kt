@@ -15,7 +15,7 @@ data class JourneyStopEvent(
     val estimatedTime: String?,
     val eventType: EventType,
     val additional: Boolean,
-    val canceled : Boolean,
+    val cancelled : Boolean,
     val hasReplacement : Boolean
 ) {
 
@@ -46,7 +46,7 @@ fun ArrivalDepartureEvent.toJourneyStopEvent() = eventType?.let { eventType ->
         time.takeUnless { timeType == TimeType.SCHEDULE },
         eventType,
         additional,
-        canceled,
+        cancelled,
         hasReplacement
     )
 }

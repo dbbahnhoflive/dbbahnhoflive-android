@@ -36,7 +36,7 @@ class ArrivalDepartureEvent(
     /**
      * Indicates whether this event has been canceled.
      */
-    val canceled: Boolean,
+    val cancelled: Boolean,
     /**
      * Indicates whether this event is additional, meaning not be part of the regular schedule.
      */
