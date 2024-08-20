@@ -12,6 +12,7 @@ import de.deutschebahn.bahnhoflive.backend.db.ris.model.LocalServices
 import de.deutschebahn.bahnhoflive.backend.db.ris.model.Platform
 import de.deutschebahn.bahnhoflive.backend.db.ris.model.RISStation
 import de.deutschebahn.bahnhoflive.backend.db.ris.model.StopPlace
+import de.deutschebahn.bahnhoflive.backend.wagenstand.istwr.model.RisAdminWagonOrders
 import de.deutschebahn.bahnhoflive.repository.fail
 import de.deutschebahn.bahnhoflive.util.Cancellable
 import de.deutschebahn.bahnhoflive.util.volley.VolleyRequestCancellable
@@ -67,5 +68,10 @@ open class StationRepository {
         listener.fail()
         return null
     }
-
+    open fun queryAdminWagonOrder(
+        listener: VolleyRestListener<RisAdminWagonOrders>
+    ): Cancellable? {
+        listener.fail()
+        return null
+    }
 }

@@ -20,6 +20,7 @@ import androidx.recyclerview.widget.ConcatAdapter
 import androidx.recyclerview.widget.RecyclerView
 import androidx.recyclerview.widget.RecyclerView.AdapterDataObserver
 import com.android.volley.VolleyError
+import de.deutschebahn.bahnhoflive.BaseApplication
 import de.deutschebahn.bahnhoflive.BaseApplication.Companion.get
 import de.deutschebahn.bahnhoflive.R
 import de.deutschebahn.bahnhoflive.analytics.TrackingManager
@@ -98,8 +99,6 @@ class RegularJourneyContentFragment : Fragment() {
         val issueBinder =
             IssuesBinder(journeyIssue.issueContainer, journeyIssue.issueText, IssueIndicatorBinder(journeyIssue.issueIcon))
 
-        var shouldOfferWagenOrder = false
-
         sev.setOnClickListener {
             stationViewModel.stationNavigation?.showRailReplacementStopPlaceInformation()
         }
@@ -123,10 +122,7 @@ class RegularJourneyContentFragment : Fragment() {
 
             }
 
-            with(buttonWagonOrder) {
-                shouldOfferWagenOrder = trainInfo.shouldOfferWagenOrder()
-                if (shouldOfferWagenOrder) {
-                    setOnClickListener {
+            buttonWagonOrder.setOnClickListener {
                         activity?.also {
                             TrackingManager.fromActivity(it).track(
                                 TrackingManager.TYPE_ACTION,
@@ -137,11 +133,6 @@ class RegularJourneyContentFragment : Fragment() {
                         }
                         showWaggonOrder(trainInfo, trainEvent)
                     }
-//                    isGone = false
-                } else {
-//                    isGone = trued
-                }
-            }
 
             if(journeyViewModel.showWagonOrderLiveData.value==true) {
                 journeyViewModel.showWagonOrderLiveData.value=false
@@ -247,7 +238,8 @@ class RegularJourneyContentFragment : Fragment() {
                     if (journeyStops.firstOrNull() { it.current && it.last } != null) {
                         buttonWagonOrder.isGone = true
                     } else {
-                        buttonWagonOrder.isGone = !shouldOfferWagenOrder
+                        val id = journeyStops.firstOrNull()?.transportAtStartAdministrationID
+                        buttonWagonOrder.isGone = !BaseApplication.get().adminWagonOrders.containsAdministrationID(id)
                     }
 
                     textWagonOrder.isGone = buttonWagonOrder.isGone

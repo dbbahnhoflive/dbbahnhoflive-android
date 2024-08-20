@@ -8,6 +8,7 @@ class JourneyStop(
     var current: Boolean = false,
     var last: Boolean = false,
 ) {
+    var transportAtStartAdministrationID : String = ""
     var progress: Float = -1f
 
     val highlight get() = current || first || last

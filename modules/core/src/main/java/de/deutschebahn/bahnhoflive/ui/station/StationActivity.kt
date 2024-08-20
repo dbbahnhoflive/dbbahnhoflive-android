@@ -24,7 +24,9 @@ import androidx.fragment.app.FragmentTransaction
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
+import com.android.volley.VolleyError
 import de.deutschebahn.bahnhoflive.BaseActivity
+import de.deutschebahn.bahnhoflive.BaseApplication.Companion.get
 import de.deutschebahn.bahnhoflive.BuildConfig
 import de.deutschebahn.bahnhoflive.R
 import de.deutschebahn.bahnhoflive.analytics.IssueTracker.Companion.instance
@@ -32,6 +34,7 @@ import de.deutschebahn.bahnhoflive.analytics.StationTrackingManager
 import de.deutschebahn.bahnhoflive.analytics.TrackingManager
 import de.deutschebahn.bahnhoflive.analytics.TrackingManager.Screen
 import de.deutschebahn.bahnhoflive.analytics.toContextMap
+import de.deutschebahn.bahnhoflive.backend.VolleyRestListener
 import de.deutschebahn.bahnhoflive.backend.db.fasta2.model.FacilityStatus
 import de.deutschebahn.bahnhoflive.backend.hafas.model.HafasEvent
 import de.deutschebahn.bahnhoflive.backend.hafas.model.HafasStation
@@ -39,6 +42,7 @@ import de.deutschebahn.bahnhoflive.backend.local.model.RrtPoint
 import de.deutschebahn.bahnhoflive.backend.local.model.ServiceContent
 import de.deutschebahn.bahnhoflive.backend.local.model.ServiceContentType
 import de.deutschebahn.bahnhoflive.backend.ris.model.TrainInfo
+import de.deutschebahn.bahnhoflive.backend.wagenstand.istwr.model.RisAdminWagonOrders
 import de.deutschebahn.bahnhoflive.repository.InternalStation
 import de.deutschebahn.bahnhoflive.repository.Station
 import de.deutschebahn.bahnhoflive.tutorial.TutorialManager
@@ -302,6 +306,16 @@ class StationActivity : BaseActivity(), StationProvider, RootProvider, TrackingM
             backPressedCallback
         )
  
+        // if wagonOrders age<24h, they come from cache
+        get().repositories.risTransportsAdminRepository.queryAdminWagonOrders(
+            object : VolleyRestListener<RisAdminWagonOrders> {
+                override fun onSuccess(payload: RisAdminWagonOrders) {
+                    get().adminWagonOrders.replace(payload)
+                }
+
+                override fun onFail(reason: VolleyError) {
+                }
+            })
     }
 
     override fun onDestroy() {

@@ -31,12 +31,17 @@ import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
 import androidx.lifecycle.ViewModelProvider;
 
+import com.android.volley.VolleyError;
+
 import de.deutschebahn.bahnhoflive.BaseActivity;
+import de.deutschebahn.bahnhoflive.BaseApplication;
 import de.deutschebahn.bahnhoflive.BuildConfig;
 import de.deutschebahn.bahnhoflive.R;
 import de.deutschebahn.bahnhoflive.analytics.IssueTracker;
 import de.deutschebahn.bahnhoflive.analytics.TrackingManager;
+import de.deutschebahn.bahnhoflive.backend.VolleyRestListener;
 import de.deutschebahn.bahnhoflive.backend.ris.model.TrainInfo;
+import de.deutschebahn.bahnhoflive.backend.wagenstand.istwr.model.RisAdminWagonOrders;
 import de.deutschebahn.bahnhoflive.debug.BhfLiveUtilHandler;
 import de.deutschebahn.bahnhoflive.permission.Permission;
 import de.deutschebahn.bahnhoflive.push.FacilityFirebaseService;
@@ -121,8 +126,7 @@ public class HubActivity extends BaseActivity implements TutorialFragment.Host {
         return false;
     }
 
-    private Boolean checkElevatorNotificationBundle(Intent appIntent)
-    {
+    private Boolean checkElevatorNotificationBundle(Intent appIntent) {
             // starts from notification -> search Station and start StationActivity -> showElevators()
             // station needs to be found, because FCM-notification does not contain the position-data, needed for map
             Bundle bundle = appIntent.getBundleExtra(FacilityFirebaseService.BUNDLE_NAME_FACILITY_MESSAGE);
@@ -244,6 +248,18 @@ public class HubActivity extends BaseActivity implements TutorialFragment.Host {
         super.onStart();
 
         trackingManager.track(TrackingManager.TYPE_STATE, TrackingManager.Screen.H0);
+
+        BaseApplication.get().getRepositories().getRisTransportsAdminRepository().queryAdminWagonOrders(
+                new VolleyRestListener<RisAdminWagonOrders>() {
+                    @Override
+                    public void onSuccess(RisAdminWagonOrders payload) {
+                        BaseApplication.get().getAdminWagonOrders().replace(payload);
+                    }
+
+                    @Override
+                    public void onFail(VolleyError reason) {
+                    }
+                });
     }
 
     @Override

@@ -78,7 +78,6 @@
         android:id="@+id/wagon_order_indicator"
         android:layout_width="16dp"
         android:layout_height="16dp"
-        android:layout_marginLeft="@dimen/default_space_half"
         android:layout_marginStart="@dimen/default_space_half"
         android:src="@drawable/app_wagenreihung_grau"
         app:tint="?android:attr/textColor"

@@ -55,27 +55,21 @@ class HubFragment : androidx.fragment.app.Fragment() {
 
         appTitle.text = getText(R.string.rich_app_title)
 
-//        pager.pageMargin = resources.getDimensionPixelSize(R.dimen.default_space)
+//        viewBinding?.pinIcon?.setOnClickListener {
+//
+//            get().repositories.risTransportsAdminRepository.queryAdminWagonOrders(
+//                object : VolleyRestListener<RisAdminWagonOrders> {
+//                    override fun onSuccess(payload: RisAdminWagonOrders) {
+//                        Log.d("cr", "wagonorder table loaded")
+//                    }
+//
+//                    override fun onFail(reason: VolleyError) {
+//                }
+//                })
+//        }
+
         pager.adapter = object :
             FragmentStateAdapter(childFragmentManager, this@HubFragment.lifecycle) {
-//            override fun getItem(position: Int): Fragment =
-//                when (position) {
-//                    0 -> SearchStarterFragment()
-//                    1 -> FavoritesFragment()
-//                    2 -> NearbyDeparturesFragment()
-//
-//                    else -> throw IllegalArgumentException()
-//                }
-
-//            override fun getCount() = 3
-
-//            override fun getPageTitle(position: Int) = getText(
-//                when (position) {
-//                    0 -> R.string.sr_hub_search
-//                    1 -> R.string.sr_hub_favorites
-//                    else -> R.string.sr_hub_nearby
-//                }
-//            )
 
             override fun getItemCount(): Int {
                return 3

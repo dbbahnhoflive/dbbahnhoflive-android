@@ -19,10 +19,12 @@ import de.deutschebahn.bahnhoflive.backend.db.ris.RISStationsStationRequest
 import de.deutschebahn.bahnhoflive.backend.db.ris.RISStationsStopPlacesGroupRequest
 import de.deutschebahn.bahnhoflive.backend.db.ris.RISStationsStopPlacesRequest
 import de.deutschebahn.bahnhoflive.backend.db.ris.RISStationsStopPlacesRequestByEvaId
+import de.deutschebahn.bahnhoflive.backend.db.ris.RISTransportsAdminWagonOrderRequest
 import de.deutschebahn.bahnhoflive.backend.db.ris.model.LocalServices
 import de.deutschebahn.bahnhoflive.backend.db.ris.model.Platform
 import de.deutschebahn.bahnhoflive.backend.db.ris.model.RISStation
 import de.deutschebahn.bahnhoflive.backend.db.ris.model.StopPlace
+import de.deutschebahn.bahnhoflive.backend.wagenstand.istwr.model.RisAdminWagonOrders
 import de.deutschebahn.bahnhoflive.util.Cancellable
 import de.deutschebahn.bahnhoflive.util.volley.VolleyRequestCancellable
 import de.deutschebahn.bahnhoflive.util.volley.cancellable
@@ -165,6 +167,15 @@ class OfficialStationRepository(
         restHelper.add(
             RISStationsStationRequest(
                 stadaId, listener, dbAuthorizationTool
+            )
+        ).cancellable()
+
+    override fun queryAdminWagonOrder(
+        listener: VolleyRestListener<RisAdminWagonOrders>
+    ) =
+        restHelper.add(
+            RISTransportsAdminWagonOrderRequest(
+                listener, dbAuthorizationTool
             )
         ).cancellable()
 
