@@ -705,6 +705,13 @@ public class TrainMovementInfo implements Parcelable {
         return formatTime(getPlannedDateTime());
     }
 
+    public String getFormattedCorrectedTime() {
+        if(getCorrectedDateTime()!=0)
+          return formatTime(getCorrectedDateTime());
+        else
+          return getFormattedTime();
+    }
+
     private String formatTime(long time) {
         Date dateTime = new Date(time);
         SimpleDateFormat sdf = new SimpleDateFormat("HH:mm");

@@ -83,8 +83,13 @@ public class WagenstandAlarmManager {
             Log.d(TAG, formatTime.format(calendar.getTime()));
 
 
+        final long nowTime = new Date().getTime();
+  //      final long nowSystem = System.currentTimeMillis();
+        final long calTime = calendar.getTimeInMillis();
+
+
         // Check if the date if in the future
-        if (calendar.getTimeInMillis() < new Date().getTime()) {
+        if (calTime < nowTime) {
             if (BuildConfig.DEBUG)
                 Log.d(TAG, "time is before current date.");
             return false;
