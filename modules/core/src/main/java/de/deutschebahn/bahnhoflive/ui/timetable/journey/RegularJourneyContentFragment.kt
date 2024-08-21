@@ -60,6 +60,9 @@ class RegularJourneyContentFragment : Fragment() {
 
     var currentRecyclerPosition = 0
 
+    var modalVisible=false
+    var currentStop : JourneyStop? = null
+
     private fun scrollRecyclerToStation(recycler: RecyclerView, stops:List<JourneyStop>) {
 
         val destStation = stationViewModel.backNavigationLiveData.value?.stationToNavigateTo
@@ -131,6 +134,7 @@ class RegularJourneyContentFragment : Fragment() {
                                 TrackingManager.UiElement.WAGENREIHUNG
                             )
                         }
+                modalVisible=false
                         showWaggonOrder(trainInfo, trainEvent)
                     }
 
@@ -182,9 +186,6 @@ class RegularJourneyContentFragment : Fragment() {
 
             )
 
-
-
-
             val filterAdapter = SimpleViewHolderAdapter { parent, _ ->
                 ItemJourneyFilterRemoveBinding.inflate(
                     inflater,
@@ -197,7 +198,6 @@ class RegularJourneyContentFragment : Fragment() {
                 }.root.toViewHolder()
             }
 
-
             val journeyConcatAdapter = ConcatAdapter(journeyAdapter, filterAdapter)
 
             journeyViewModel.eventuallyFilteredJourneysLiveData.observe(viewLifecycleOwner) { pairResult ->
@@ -206,6 +206,8 @@ class RegularJourneyContentFragment : Fragment() {
                     if (recycler.adapter != journeyConcatAdapter) {
                         recycler.adapter = journeyConcatAdapter
                     }
+
+                    currentStop = journeyStops.firstOrNull { it.current==true }
 
                     recycler.adapter?.let {
                         if(recycler.childCount>0)
@@ -336,17 +338,27 @@ class RegularJourneyContentFragment : Fragment() {
     }
 
     private fun showNoResultDialog() {
+
+        if(modalVisible)
+            return
+
+        modalVisible=true
+
         val activity = activity
         if (activity != null) {
-            AlertDialog.Builder(activity)
+
+            val builder = AlertDialog.Builder(activity)
                 .setTitle(activity.getString(R.string.wagenstand_no_result_headline))
                 .setMessage(activity.getString(R.string.wagenstand_no_result_copy))
                 .setPositiveButton(
-                    "Okay"
+                    " Ok "
                 ) { dialog, _ -> dialog.dismiss() }
-                .setCancelable(true)
-                .create()
-                .show()
+                .setCancelable(false)
+
+            val dialog = builder.create()
+            dialog.show()
+            dialog.getButton(AlertDialog.BUTTON_POSITIVE).isAllCaps = false
+
         }
     }
 

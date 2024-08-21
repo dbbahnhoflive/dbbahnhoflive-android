@@ -353,11 +353,12 @@ public class WagenstandFragment extends Fragment implements View.OnLayoutChangeL
         waggonListview.removeOnLayoutChangeListener(this);
     }
 
-    public static WagenstandFragment create(String actionBarTitle, TrainFormation trainFormation, String waggon, String timestamp, TrainInfo trainInfo, TrainEvent trainEvent) {
+    public static WagenstandFragment create(String actionBarTitle, TrainFormation trainFormation,
+                                            String waggon, String timestamp, TrainInfo trainInfo, TrainEvent trainEvent) {
         final Bundle args = new Bundle();
 
         args.putString(FragmentArgs.TITLE, actionBarTitle);
-        // convert an array of Wagentand objects back to JSON
+        // convert an array of Wagenstand objects back to JSON
         args.putParcelable(FragmentArgs.TRAIN_FORMATION, trainFormation);
         if (waggon != null) {
             args.putString(FragmentArgs.WAGENSTAND_WAGGON, waggon);
@@ -482,8 +483,7 @@ public class WagenstandFragment extends Fragment implements View.OnLayoutChangeL
                                     ""
                             );
                         }
-                    }
-                    else if (validationState == WagenstandAlarmManager.ValidationState.NO_PERMISSION) {
+                    } else if (validationState == WagenstandAlarmManager.ValidationState.NO_PERMISSION) {
 
                         AlertX.Companion.execAlert(ctx, getString(R.string.wagenstand_no_result_headline),
                                 getString(R.string.notification_advice_systemsettings),
@@ -502,15 +502,16 @@ public class WagenstandFragment extends Fragment implements View.OnLayoutChangeL
                                 ""
                         );
 
-
                     }
-
-
 
                 } else {
 
                     final @NonNull String trainNumber = trainFormation.getTrainNumber();
-                    String time = trainFormation.getTime();
+//                    String time = trainFormation.getTime(); // fmt: hh:mm
+                    if (trainInfo == null || trainInfo.getDeparture() == null)
+                        return;
+
+                    String time = trainInfo.getDeparture().getFormattedCorrectedTime();
 
                     StringBuilder trainLabel = new StringBuilder();
                     List<Train> trains = trainFormation.getTrains();
@@ -539,10 +540,8 @@ public class WagenstandFragment extends Fragment implements View.OnLayoutChangeL
                                     ""
                             );
 
-                        }
-                        else
-                            if(!wagenstandAlarmManager.addWagenstandAlarm(wagenStandAlarm)) {
-
+                        } else if (!wagenstandAlarmManager.addWagenstandAlarm(wagenStandAlarm)) {
+                            Log.d("cr", "addWagenstandAlarm failed");
                     }
                 } else {
                     wagenstandAlarmManager
