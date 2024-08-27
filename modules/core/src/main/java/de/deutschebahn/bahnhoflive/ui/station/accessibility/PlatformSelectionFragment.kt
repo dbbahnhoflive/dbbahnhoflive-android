@@ -4,6 +4,8 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.fragment.app.activityViewModels
+import de.deutschebahn.bahnhoflive.backend.db.ris.model.Platform
+import de.deutschebahn.bahnhoflive.backend.db.ris.model.findPlatform
 import de.deutschebahn.bahnhoflive.databinding.FragmentPlatformSelectionBinding
 import de.deutschebahn.bahnhoflive.ui.station.StationViewModel
 import de.deutschebahn.bahnhoflive.view.FullBottomSheetDialogFragment
@@ -18,16 +20,38 @@ class PlatformSelectionFragment : FullBottomSheetDialogFragment() {
         savedInstanceState: Bundle?
     ) = FragmentPlatformSelectionBinding.inflate(inflater, container, false).apply {
         viewModel.accessibilityPlatformsAndSelectedLiveData.observe(viewLifecycleOwner) { platformsAndSelection ->
+
             platformsAndSelection.first?.also { platforms ->
 
                 if (platforms.isNotEmpty()) {
                     with(picker) {
 
+                        val platformsUnique : MutableList<Platform> =  mutableListOf()
+
+                        // Gleise ohne accessibilty herausfilter
+
+                        platforms.filter {
+                            it.hasAccessibilty()
+                        }.forEach {
+
+                            val isInList : Platform? = platformsUnique.findPlatform(it.name)
+                            if(isInList!=null) {
+                                if (isInList.accessibility != it.accessibility)
+                                    platformsUnique.add(it)
+                            }
+                            else
+                                platformsUnique.add(it)
+                        }
+
+                        if(platformsUnique.isNotEmpty()) {
+                            displayedValues = platformsUnique.map { it.name }.toTypedArray()
+
                         minValue = 0
-                        maxValue = platforms.size - 1
+                            maxValue = platformsUnique.size - 1
 
                         setFormatter { index ->
-                            platforms[index].name
+                                platformsUnique[index].name
+                            }d
                         }
 
                         displayedValues = platforms.map { it.name }.toTypedArray()
