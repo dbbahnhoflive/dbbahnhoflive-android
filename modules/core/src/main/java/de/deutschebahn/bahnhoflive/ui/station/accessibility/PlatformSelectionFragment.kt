@@ -51,19 +51,16 @@ class PlatformSelectionFragment : FullBottomSheetDialogFragment() {
 
                         setFormatter { index ->
                                 platformsUnique[index].name
-                            }d
+                        }
                         }
 
-                        displayedValues = platforms.map { it.name }.toTypedArray()
-
                         buttonApply.setOnClickListener {
-                            viewModel.setSelectedAccessibilityPlatform(platforms[value])
-
+                            viewModel.setSelectedAccessibilityPlatform(platformsUnique[value])
                             dismiss()
                         }
 
                         platformsAndSelection.second?.also { selectedPlatform ->
-                            platforms.indexOfFirst { matchingPlatform ->
+                            platformsUnique.indexOfFirst { matchingPlatform ->
                                 matchingPlatform.name == selectedPlatform.name
                             }.takeIf { it >= 0 }?.also { selectedIndex ->
                                 value = selectedIndex
