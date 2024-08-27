@@ -180,6 +180,7 @@ class Platform(
 
     override fun hashCode(): Int = name.hashCode()
 
+    fun hasAccessibilty() = accessibility.filter { it.value!=AccessibilityStatus.UNKNOWN }.isNotEmpty()
 }
 
 fun List<Platform>.findPlatform(platformName:String) : Platform? {
