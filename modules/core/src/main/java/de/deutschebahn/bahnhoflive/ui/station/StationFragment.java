@@ -607,10 +607,10 @@ public class StationFragment extends androidx.fragment.app.Fragment implements
 
             final Group group = news.group;
             if (group != null) {
-                if(GroupId.BHFLIVE_NEXT.appliesTo(news))
-                 trackingManager.track(TrackingManager.TYPE_ACTION, TrackingManager.Screen.H1, TrackingManager.Action.TAP, TrackingManager.UiElement.BHFLIVE_NEXT);
+                if (GroupId.BHFLIVE_NEXT.appliesTo(news))
+                    trackingManager.track(TrackingManager.TYPE_ACTION, TrackingManager.Screen.H1, TrackingManager.Action.TAP, TrackingManager.UiElement.BHFLIVE_NEXT);
                 else
-                trackingManager.track(TrackingManager.TYPE_ACTION, TrackingManager.Screen.H1, TrackingManager.Action.TAP, TrackingManager.UiElement.ERSATZVERKEHRTEASER);
+                    trackingManager.track(TrackingManager.TYPE_ACTION, TrackingManager.Screen.H1, TrackingManager.Action.TAP, TrackingManager.UiElement.ERSATZVERKEHRTEASER);
             }
 
             return Unit.INSTANCE;
