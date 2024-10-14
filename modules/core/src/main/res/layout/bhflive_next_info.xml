@@ -1,0 +1,90 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+
+<!--
+  ~ SPDX-FileCopyrightText: 2020 DB Station&Service AG <bahnhoflive-opensource@deutschebahn.com>
+  ~
+  ~ SPDX-License-Identifier: Apache-2.0
+  -->
+<de.deutschebahn.bahnhoflive.view.DecoratedCard
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+
+        android:background="@color/card_background"
+        android:orientation="vertical"
+
+        >
+
+        <include
+            android:id="@+id/title_bar"
+            layout="@layout/titlebar_common" />
+
+        <FrameLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@drawable/shape_gradient_background"
+            android:padding="@dimen/default_space_double">
+
+            <ImageView
+                android:importantForAccessibility="no"
+                android:id="@+id/service_icon"
+                android:layout_width="@dimen/icon_size"
+                android:layout_height="@dimen/icon_size"
+                android:layout_gravity="center"
+                android:contentDescription="@null"
+                android:src="@drawable/app_icon_bahnhof_live_next" />
+
+        </FrameLayout>
+        <LinearLayout
+            android:id="@+id/details"
+            android:layout_width="match_parent"
+
+            android:layout_height="wrap_content"
+            android:importantForAccessibility="no"
+            android:orientation="vertical"
+            android:paddingHorizontal="@dimen/default_space_double"
+            android:paddingBottom="@dimen/default_space_double"
+            >
+
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/default_space"
+                android:importantForAccessibility="yes"
+                android:text="@string/bhflive_next_copy"
+                android:textSize="@dimen/textsize_28" />
+
+            <android.widget.Space
+                android:layout_width="wrap_content"
+                android:layout_height="@dimen/default_space_half" />
+
+            <TextView
+                android:id="@+id/playstoreLink"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginVertical="@dimen/default_space_double"
+                android:background="@drawable/shape_round_button_grey"
+                android:gravity="center"
+                android:importantForAccessibility="yes"
+                android:minHeight="64dp"
+                android:text="@string/playstore"
+                android:textColor="@color/white"
+                android:textStyle="bold" />
+
+            <android.widget.Space
+                android:layout_width="wrap_content"
+                android:layout_height="@dimen/default_space" />
+
+
+        </LinearLayout>
+    </LinearLayout>
+
+</de.deutschebahn.bahnhoflive.view.DecoratedCard>

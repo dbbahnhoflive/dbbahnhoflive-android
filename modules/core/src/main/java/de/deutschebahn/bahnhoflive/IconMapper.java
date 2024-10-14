@@ -96,6 +96,8 @@ public class IconMapper {
                 return R.drawable.app_news_nev;
             case ServiceContentType.Local.STOP_PLACE:
                 return R.drawable.app_rail_replacement;
+            case ServiceContentType.BHFLIVE_NEXT:
+                return R.drawable.app_icon_bahnhof_live_next;
             default:
                 return defaultResource;
         }

@@ -86,13 +86,13 @@
                     android:id="@+id/icon"
                     android:layout_width="0dp"
                     android:layout_weight="0.8"
-                    android:importantForAccessibility="no"
                     android:layout_height="match_parent"
+                    android:importantForAccessibility="no"
                     android:src="@drawable/teaser_db_companion_card"
                     android:paddingHorizontal="12dp"
-                    android:layout_marginBottom="@dimen/default_space"
-                    android:scaleX="1.0"
-                    android:scaleY="1.0"
+                    android:layout_marginBottom="@dimen/default_space_double"
+                    android:paddingBottom="@dimen/default_space"
+                    tools:src="@drawable/app_bus"
                     android:layout_gravity="top|center_horizontal"
 
                     />

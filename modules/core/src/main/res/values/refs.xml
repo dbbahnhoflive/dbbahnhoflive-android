@@ -32,6 +32,7 @@
     <drawable name="app_news_survey">@drawable/missing</drawable>
     <drawable name="app_news_neuambahnhof">@drawable/missing</drawable>
     <drawable name="app_news_nev">@drawable/missing</drawable>
+    <drawable name="app_icon_bahnhof_live_next">@drawable/missing</drawable>
     <drawable name="app_nev_icon_round">@drawable/missing</drawable>
     <drawable name="rimap_parkplatz">@drawable/missing</drawable>
     <drawable name="app_parkplatz">@drawable/missing</drawable>

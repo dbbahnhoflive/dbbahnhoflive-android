@@ -56,6 +56,7 @@ import de.deutschebahn.bahnhoflive.ui.station.NewsDetailsFragment.Companion.crea
 import de.deutschebahn.bahnhoflive.ui.station.accessibility.AccessibilityFragment
 import de.deutschebahn.bahnhoflive.ui.station.elevators.ElevatorStatusListsFragment
 import de.deutschebahn.bahnhoflive.ui.station.features.StationFeaturesFragment
+import de.deutschebahn.bahnhoflive.ui.station.info.BahnhofLiveNextInfoFragment
 import de.deutschebahn.bahnhoflive.ui.station.info.InfoCategorySelectionFragment
 import de.deutschebahn.bahnhoflive.ui.station.info.RailReplacementCompanionHelpFragment
 import de.deutschebahn.bahnhoflive.ui.station.info.RailReplacementFragment
@@ -590,6 +591,14 @@ class StationActivity : BaseActivity(), StationProvider, RootProvider, TrackingM
         showInfoFragment(false)
         if (AccessibilityFragment.TAG != stationViewModel.topInfoFragmentTag) {
             infoFragment?.push(AccessibilityFragment())
+        }
+    }
+
+
+    override fun showBhfLiveNext() {
+        showInfoFragment(false)
+        if (BahnhofLiveNextInfoFragment.TAG != stationViewModel.topInfoFragmentTag) {
+            infoFragment?.push(BahnhofLiveNextInfoFragment.create("Hx", true))
         }
     }
 

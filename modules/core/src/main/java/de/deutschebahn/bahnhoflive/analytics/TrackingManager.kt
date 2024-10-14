@@ -172,6 +172,7 @@ open class TrackingManager(activity: ComponentActivity? = null) {
             const val SHOPS = Entity.SHOPS
             const val COUPONS = "rabatt_coupons"
             const val SCHLIESSFAECHER = "locker"
+            const val BHFLIVE_NEXT = "nextapp"
 
         }
     }

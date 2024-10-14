@@ -89,9 +89,11 @@
                     android:layout_height="match_parent"
                     android:src="@drawable/teaser_db_companion_card"
                     android:paddingHorizontal="12dp"
-                    android:layout_marginBottom="@dimen/default_space"
+                    android:layout_marginBottom="@dimen/default_space_double"
+                    android:paddingBottom="@dimen/default_space"
                     android:scaleX="0.9"
                     android:scaleY="0.9"
+                    tools:src="@drawable/app_bus"
                     android:layout_gravity="top|center_horizontal"
 
                     />

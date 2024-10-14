@@ -59,6 +59,7 @@ class InfoCategorySelectionFragment : CategorySelectionFragment(
     private var elevatorsCategory: Category? = null
     private var railReplacementCategory: Category? = null
     private var lockerCategory: Category? = null
+    private var bhfLiveNextCategory: Category? = null
 
     private fun updateCategories() {
         if (isAdded) {
@@ -68,6 +69,7 @@ class InfoCategorySelectionFragment : CategorySelectionFragment(
             infoAndServicesCategory = addInfoAndServices(infoAndServicesLiveData.value)
             serviceNumbersCategory = addServiceNumbers(serviceNumbersLiveData.value)
             wifiCategory = addWifi(station, staticInfoCollection)
+            bhfLiveNextCategory = addBhfLiveNext()
             accessibilityCategory = addAccessibility()
             parkingsCategory = addParkings()
 
@@ -97,7 +99,8 @@ class InfoCategorySelectionFragment : CategorySelectionFragment(
                     parkingsCategory,
                     elevatorsCategory,
                     railReplacementCategory,
-                    lockerCategory
+                    lockerCategory,
+                    bhfLiveNextCategory
                 )
             )
         }
@@ -242,6 +245,20 @@ class InfoCategorySelectionFragment : CategorySelectionFragment(
         startFragment(railReplacementDetailsFragment)
     }
 
+
+    private fun startBhfLiveNextFragment(
+        category: Category
+    ) {
+        val bhfliveNextFragment = BahnhofLiveNextInfoFragment.create(
+            category.trackingTag,
+            false
+        )
+
+        startFragment(bhfliveNextFragment)
+    }
+
+
+
     private fun addWifi(
         station: RISServicesAndCategory?,
         staticInfoCollection: StaticInfoCollection
@@ -264,6 +281,34 @@ class InfoCategorySelectionFragment : CategorySelectionFragment(
             null
         }
     }
+
+
+    private fun addBhfLiveNext(): SimpleDynamicCategory {
+
+        val railReplacementServicesList: MutableList<ServiceContent> = mutableListOf()
+
+        railReplacementServicesList.add(
+            ServiceContent(
+                StaticInfo(
+                    ServiceContentType.BHFLIVE_NEXT,
+                    getString(R.string.bhflive_next_h0_title),
+                    getString(R.string.bhflive_next_copy)
+                )
+            )
+        )
+
+        return SimpleDynamicCategory(
+            getText(R.string.bhflive_next_h0_title),
+            R.drawable.app_icon_bahnhof_live_next,
+            TrackingManager.Category.BHFLIVE_NEXT
+        ) { category ->
+            trackCategoryTap(category)
+            startBhfLiveNextFragment(
+                category
+            )
+        }
+    }
+
 
     private fun addLockers() =
         lockersResource.data.value?.takeUnless { it.isEmpty() }?.let {
