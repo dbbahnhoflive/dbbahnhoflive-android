@@ -25,6 +25,7 @@ import de.deutschebahn.bahnhoflive.repository.AssetDocumentBroker
 import de.deutschebahn.bahnhoflive.tutorial.TutorialManager
 import de.deutschebahn.bahnhoflive.ui.accessibility.SpokenFeedbackAccessibilityLiveData
 import de.deutschebahn.bahnhoflive.ui.map.MapActivity
+import de.deutschebahn.bahnhoflive.ui.station.BhfliveNextFragment
 import de.deutschebahn.bahnhoflive.util.GoogleLocationPermissions
 
 class HubFragment : androidx.fragment.app.Fragment() {
@@ -54,19 +55,6 @@ class HubFragment : androidx.fragment.app.Fragment() {
         viewBinding = this
 
         appTitle.text = getText(R.string.rich_app_title)
-
-//        viewBinding?.pinIcon?.setOnClickListener {
-//
-//            get().repositories.risTransportsAdminRepository.queryAdminWagonOrders(
-//                object : VolleyRestListener<RisAdminWagonOrders> {
-//                    override fun onSuccess(payload: RisAdminWagonOrders) {
-//                        Log.d("cr", "wagonorder table loaded")
-//                    }
-//
-//                    override fun onFail(reason: VolleyError) {
-//                }
-//                })
-//        }
 
         pager.adapter = object :
             FragmentStateAdapter(childFragmentManager, this@HubFragment.lifecycle) {
@@ -124,7 +112,10 @@ class HubFragment : androidx.fragment.app.Fragment() {
 
                 super.onPageSelected(position)
             }
+
+
         })
+
 
 
 
@@ -220,6 +211,18 @@ class HubFragment : androidx.fragment.app.Fragment() {
         root.setOnClickListener {
             unhandledClickListener?.onClick(it)
         }
+
+        this.layout.setOnClickListener {
+            trackingManager.track(
+                    TrackingManager.TYPE_ACTION,
+                    TrackingManager.Screen.H0,
+                    TrackingManager.Action.TAP,
+                    TrackingManager.UiElement.BHFLIVE_NEXT
+                )
+
+            BhfliveNextFragment.create().show(childFragmentManager, "bhflive_next")
+        }
+
     }.root
 
     private fun TextView.prepareLegalButton(

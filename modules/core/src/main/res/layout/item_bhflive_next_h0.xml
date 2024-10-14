@@ -1,0 +1,91 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<!--
+  ~ SPDX-FileCopyrightText: 2020 DB Station&Service AG <bahnhoflive-opensource@deutschebahn.com>
+  ~
+  ~ SPDX-License-Identifier: Apache-2.0
+  -->
+
+<androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/layout"
+    style="@style/App.Widget.Card"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:layout_marginStart="@dimen/default_space"
+    android:layout_marginEnd="@dimen/default_space"
+    tools:layout_height="wrap_content">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        >
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_margin="@dimen/default_space"
+            android:contentDescription="@string/bhflive_next_h0_title"
+            android:importantForAccessibility="no"
+            android:maxLines="1"
+            android:text="@string/bhflive_next_h0_title"
+            android:textSize="@dimen/textsize_h2"
+            android:textStyle="bold" />
+
+        <View
+            android:id="@+id/divider"
+            android:layout_width="match_parent"
+            android:layout_height="2dp"
+            android:background="@color/red"
+            android:importantForAccessibility="no"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_marginVertical="@dimen/default_space"
+            android:orientation="horizontal"
+            android:paddingHorizontal="@dimen/default_space"
+            >
+
+
+            <TextView
+                android:id="@+id/newsCopy"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+
+                android:layout_marginEnd="60dp"
+                android:contentDescription="@string/bhflive_next_h0_copy"
+                android:ellipsize="end"
+                android:importantForAccessibility="yes"
+
+                android:maxLines="3"
+                android:text="@string/bhflive_next_h0_copy"
+
+                android:textSize="14sp"
+
+                tools:ignore="RtlSymmetry" />
+
+            <ImageButton
+                android:id="@+id/btnLink"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+
+                android:layout_alignParentEnd="true"
+
+                android:layout_centerVertical="true"
+                android:contentDescription="TODO"
+                android:elevation="@dimen/default_elevation"
+                android:scaleType="center"
+                android:src="@drawable/app_links_pfeil"
+                app:elevation="@dimen/default_elevation"
+                />
+
+
+        </RelativeLayout>
+
+
+    </LinearLayout>
+</androidx.cardview.widget.CardView>

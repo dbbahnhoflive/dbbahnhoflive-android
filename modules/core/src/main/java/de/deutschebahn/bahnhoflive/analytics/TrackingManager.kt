@@ -101,6 +101,8 @@ open class TrackingManager(activity: ComponentActivity? = null) {
             const val CHATBOT = "chatbot"
             const val ERSATZVERKEHRTEASER = "ersatzverkehrteaser"
             const val DBWEGBEGLEITUNGSTEASER = "wegbegleitungsteaser"
+            const val BHFLIVE_NEXT = "nextapp"
+            const val PLAYSTORE = "playstore"
         }
     }
 

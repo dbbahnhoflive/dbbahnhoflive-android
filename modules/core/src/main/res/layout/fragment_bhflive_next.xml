@@ -22,7 +22,7 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:text="@string/title_news_details"
+            android:text="@string/bhflive_next_h0_title"
             android:textStyle="bold" />
 
         <ImageView
@@ -50,25 +50,29 @@
                 tools:text="@tools:sample/lorem"
                 android:lineSpacingMultiplier="1.2"
                 android:textStyle="bold"
+                android:visibility="gone"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content" />
 
             <TextView
                 android:id="@+id/subtitle"
                 tools:text="@tools:sample/lorem"
+                android:visibility="gone"
                 android:lineSpacingMultiplier="1.2"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content" />
 
             <TextView
                 android:id="@+id/copy"
-                tools:text="@tools:sample/lorem"
                 android:lineSpacingMultiplier="1.2"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content" />
+                android:layout_height="wrap_content"
+                android:text="@string/bhflive_next_copy"
+                />
 
             <ImageView
                 android:id="@+id/image"
+                android:visibility="gone"
                 tools:src="@tools:sample/backgrounds/scenic"
                 android:adjustViewBounds="true"
                 android:layout_width="match_parent"
@@ -79,12 +83,13 @@
                 android:id="@+id/btnExternalLink"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:layout_marginBottom="@dimen/default_space"
                 android:background="@drawable/shape_round_button_grey"
                 android:gravity="center"
                 android:minHeight="64dp"
                 android:textColor="@color/white"
                 android:textStyle="bold"
-                android:text="@string/button_news_external_link" />
+                android:text="@string/playstore" />
 
         </LinearLayout>
     </androidx.core.widget.NestedScrollView>

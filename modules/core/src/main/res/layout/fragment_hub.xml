@@ -7,7 +7,7 @@
 <androidx.coordinatorlayout.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-
+    android:id="@+id/layout"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@drawable/blurred_hintergrund"
@@ -19,6 +19,16 @@
         android:layout_height="match_parent"
         android:gravity="center"
         android:orientation="vertical">
+
+        <include layout="@layout/item_bhflive_next_h0"
+            android:id="@+id/bhflive_next"
+            android:layout_height="wrap_content"
+            android:layout_width="match_parent"
+            android:layout_marginTop="@dimen/default_space"
+            android:layout_marginHorizontal="@dimen/default_space"
+            >
+
+        </include>
 
 
         <ImageView
