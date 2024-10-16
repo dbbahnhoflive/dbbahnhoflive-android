@@ -49,7 +49,7 @@
             android:layout_height="wrap_content"
             android:importantForAccessibility="no"
             android:orientation="vertical"
-            android:paddingHorizontal="@dimen/default_space_double"
+            android:paddingHorizontal="@dimen/default_space"
             android:paddingBottom="@dimen/default_space_double"
             >
 
@@ -62,15 +62,12 @@
                 android:text="@string/bhflive_next_copy"
                 android:textSize="@dimen/textsize_28" />
 
-            <android.widget.Space
-                android:layout_width="wrap_content"
-                android:layout_height="@dimen/default_space_half" />
-
             <TextView
                 android:id="@+id/playstoreLink"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginVertical="@dimen/default_space_double"
+                android:layout_marginTop="@dimen/default_space_double"
+                android:layout_marginBottom="@dimen/default_space_half"
                 android:background="@drawable/shape_round_button_grey"
                 android:gravity="center"
                 android:importantForAccessibility="yes"
@@ -78,10 +75,6 @@
                 android:text="@string/playstore"
                 android:textColor="@color/white"
                 android:textStyle="bold" />
-
-            <android.widget.Space
-                android:layout_width="wrap_content"
-                android:layout_height="@dimen/default_space" />
 
 
         </LinearLayout>
