@@ -33,15 +33,20 @@
             android:padding="@dimen/default_space_double">
 
             <ImageView
-                android:importantForAccessibility="no"
                 android:id="@+id/service_icon"
                 android:layout_width="@dimen/icon_size"
                 android:layout_height="@dimen/icon_size"
                 android:layout_gravity="center"
                 android:contentDescription="@null"
+                android:importantForAccessibility="no"
                 android:src="@drawable/app_icon_bahnhof_live_next" />
 
         </FrameLayout>
+
+        <ScrollView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
         <LinearLayout
             android:id="@+id/details"
             android:layout_width="match_parent"
@@ -50,9 +55,7 @@
             android:importantForAccessibility="no"
             android:orientation="vertical"
             android:paddingHorizontal="@dimen/default_space"
-            android:paddingBottom="@dimen/default_space_double"
-            >
-
+                android:paddingBottom="@dimen/default_space_double">
 
             <TextView
                 android:layout_width="match_parent"
@@ -67,7 +70,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="@dimen/default_space_double"
-                android:layout_marginBottom="@dimen/default_space_half"
+                    android:layout_marginBottom="70dp"
                 android:background="@drawable/shape_round_button_grey"
                 android:gravity="center"
                 android:importantForAccessibility="yes"
@@ -76,8 +79,12 @@
                 android:textColor="@color/white"
                 android:textStyle="bold" />
 
+            </LinearLayout>
 
-        </LinearLayout>
+
+
+        </ScrollView>
+
     </LinearLayout>
 
 </de.deutschebahn.bahnhoflive.view.DecoratedCard>

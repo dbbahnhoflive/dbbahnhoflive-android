@@ -7,9 +7,9 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    android:orientation="vertical"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content">
+    android:layout_height="wrap_content"
+    android:orientation="vertical">
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -29,55 +29,58 @@
             android:id="@+id/btnClose"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:src="@drawable/app_schliessen"
-            android:contentDescription="@string/sr_close" />
+            android:contentDescription="@string/sr_close"
+            android:src="@drawable/app_schliessen" />
     </LinearLayout>
 
     <androidx.core.widget.NestedScrollView
-        app:layout_behavior="@string/appbar_scrolling_view_behavior"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        app:layout_behavior="@string/appbar_scrolling_view_behavior">
+
+        <ScrollView
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
         <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
             android:padding="@dimen/default_space"
-            android:orientation="vertical"
-            android:showDividers="middle"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content">
+                android:showDividers="middle">
 
             <TextView
                 android:id="@+id/headline"
-                tools:text="@tools:sample/lorem"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
                 android:lineSpacingMultiplier="1.2"
                 android:textStyle="bold"
                 android:visibility="gone"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content" />
+                    tools:text="@tools:sample/lorem" />
 
             <TextView
                 android:id="@+id/subtitle"
-                tools:text="@tools:sample/lorem"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:lineSpacingMultiplier="1.2"
                 android:visibility="gone"
-                android:lineSpacingMultiplier="1.2"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content" />
+                    tools:text="@tools:sample/lorem" />
 
             <TextView
                 android:id="@+id/copy"
-                android:lineSpacingMultiplier="1.2"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="@string/bhflive_next_copy"
-                />
+                    android:lineSpacingMultiplier="1.2"
+                    android:text="@string/bhflive_next_copy" />
 
             <ImageView
                 android:id="@+id/image"
-                android:visibility="gone"
-                tools:src="@tools:sample/backgrounds/scenic"
-                android:adjustViewBounds="true"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:contentDescription="@string/news_detail_image" />
+                    android:adjustViewBounds="true"
+                    android:contentDescription="@string/news_detail_image"
+                    android:visibility="gone"
+                    tools:src="@tools:sample/backgrounds/scenic" />
 
             <TextView
                 android:id="@+id/btnExternalLink"
@@ -87,11 +90,14 @@
                 android:background="@drawable/shape_round_button_grey"
                 android:gravity="center"
                 android:minHeight="64dp"
+                    android:text="@string/playstore"
                 android:textColor="@color/white"
-                android:textStyle="bold"
-                android:text="@string/playstore" />
+                    android:textStyle="bold" />
 
         </LinearLayout>
+
+        </ScrollView>
+
     </androidx.core.widget.NestedScrollView>
 
 

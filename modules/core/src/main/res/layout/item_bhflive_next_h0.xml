@@ -28,7 +28,7 @@
             android:layout_height="wrap_content"
             android:layout_margin="@dimen/default_space"
             android:contentDescription="@string/bhflive_next_h0_title"
-            android:importantForAccessibility="no"
+            android:importantForAccessibility="yes"
             android:maxLines="1"
             android:text="@string/bhflive_next_h0_title"
             android:textSize="@dimen/textsize_h2"
