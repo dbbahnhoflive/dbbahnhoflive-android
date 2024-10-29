@@ -25,7 +25,6 @@ import de.deutschebahn.bahnhoflive.repository.AssetDocumentBroker
 import de.deutschebahn.bahnhoflive.tutorial.TutorialManager
 import de.deutschebahn.bahnhoflive.ui.accessibility.SpokenFeedbackAccessibilityLiveData
 import de.deutschebahn.bahnhoflive.ui.map.MapActivity
-import de.deutschebahn.bahnhoflive.ui.station.BhfliveNextFragment
 import de.deutschebahn.bahnhoflive.util.GoogleLocationPermissions
 
 class HubFragment : androidx.fragment.app.Fragment() {
@@ -211,18 +210,6 @@ class HubFragment : androidx.fragment.app.Fragment() {
         root.setOnClickListener {
             unhandledClickListener?.onClick(it)
         }
-
-        this.layout.setOnClickListener {
-            trackingManager.track(
-                    TrackingManager.TYPE_ACTION,
-                    TrackingManager.Screen.H0,
-                    TrackingManager.Action.TAP,
-                    TrackingManager.UiElement.BHFLIVE_NEXT
-                )
-
-            BhfliveNextFragment.create().show(childFragmentManager, "bhflive_next")
-        }
-
     }.root
 
     private fun TextView.prepareLegalButton(

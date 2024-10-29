@@ -594,8 +594,8 @@ public class StationFragment extends androidx.fragment.app.Fragment implements
                 } else {
                     if (GroupId.REPLACEMENT_ANNOUNCEMENT.appliesTo(news) || GroupId.REPLACEMENT.appliesTo(news)) {
                         stationNavigation.showRailReplacementStopPlaceInformation();
-                    } else if (GroupId.BHFLIVE_NEXT.appliesTo(news)) {
-                        stationNavigation.showBhfLiveNext();
+//                    } else if (GroupId.BHFLIVE_NEXT.appliesTo(news)) {
+//                        stationNavigation.showBhfLiveNext();
                     } else
                         stationNavigation.showNewsDetails(index);
                 }
@@ -607,9 +607,9 @@ public class StationFragment extends androidx.fragment.app.Fragment implements
 
             final Group group = news.group;
             if (group != null) {
-                if (GroupId.BHFLIVE_NEXT.appliesTo(news))
-                    trackingManager.track(TrackingManager.TYPE_ACTION, TrackingManager.Screen.H1, TrackingManager.Action.TAP, TrackingManager.UiElement.BHFLIVE_NEXT);
-                else
+ //               if (GroupId.BHFLIVE_NEXT.appliesTo(news))
+ //                   trackingManager.track(TrackingManager.TYPE_ACTION, TrackingManager.Screen.H1, TrackingManager.Action.TAP, TrackingManager.UiElement.BHFLIVE_NEXT);
+ //               else
                     trackingManager.track(TrackingManager.TYPE_ACTION, TrackingManager.Screen.H1, TrackingManager.Action.TAP, TrackingManager.UiElement.ERSATZVERKEHRTEASER);
             }
 

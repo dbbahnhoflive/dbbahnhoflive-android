@@ -59,7 +59,7 @@ class InfoCategorySelectionFragment : CategorySelectionFragment(
     private var elevatorsCategory: Category? = null
     private var railReplacementCategory: Category? = null
     private var lockerCategory: Category? = null
-    private var bhfLiveNextCategory: Category? = null
+//    private var bhfLiveNextCategory: Category? = null
 
     private fun updateCategories() {
         if (isAdded) {
@@ -69,7 +69,7 @@ class InfoCategorySelectionFragment : CategorySelectionFragment(
             infoAndServicesCategory = addInfoAndServices(infoAndServicesLiveData.value)
             serviceNumbersCategory = addServiceNumbers(serviceNumbersLiveData.value)
             wifiCategory = addWifi(station, staticInfoCollection)
-            bhfLiveNextCategory = addBhfLiveNext()
+ //           bhfLiveNextCategory = addBhfLiveNext()
             accessibilityCategory = addAccessibility()
             parkingsCategory = addParkings()
 
@@ -99,8 +99,8 @@ class InfoCategorySelectionFragment : CategorySelectionFragment(
                     parkingsCategory,
                     elevatorsCategory,
                     railReplacementCategory,
-                    lockerCategory,
-                    bhfLiveNextCategory
+                    lockerCategory//,
+               //     bhfLiveNextCategory
                 )
             )
         }
@@ -245,7 +245,7 @@ class InfoCategorySelectionFragment : CategorySelectionFragment(
         startFragment(railReplacementDetailsFragment)
     }
 
-
+/*
     private fun startBhfLiveNextFragment(
         category: Category
     ) {
@@ -256,7 +256,7 @@ class InfoCategorySelectionFragment : CategorySelectionFragment(
 
         startFragment(bhfliveNextFragment)
     }
-
+*/
 
 
     private fun addWifi(
@@ -282,7 +282,7 @@ class InfoCategorySelectionFragment : CategorySelectionFragment(
         }
     }
 
-
+/*
     private fun addBhfLiveNext(): SimpleDynamicCategory {
 
         val railReplacementServicesList: MutableList<ServiceContent> = mutableListOf()
@@ -308,7 +308,7 @@ class InfoCategorySelectionFragment : CategorySelectionFragment(
             )
         }
     }
-
+*/
 
     private fun addLockers() =
         lockersResource.data.value?.takeUnless { it.isEmpty() }?.let {

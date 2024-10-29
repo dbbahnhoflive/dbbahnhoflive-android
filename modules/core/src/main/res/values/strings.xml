@@ -538,12 +538,12 @@
     <string name="permission_fine_location">Standortfreigabe</string>
     <string name="permission_fine_location_explanation">"Zum Anzeigen der Stationen in der Nähe muss der Standort freigegeben werden. Zum Wechseln in die Einstellungen bitte den Einstellungen-Button drücken und dort den (genauen) Standort freigeben."</string>
 
-    <string name="bhflive_next_h0_title">DB Bahnhof live Next</string>
-    <string name="bhflive_next_h0_copy">Einfach App herunterladen, ausprobieren und Feedback geben.</string>
-    <string name="bhflive_next_copy">Ihre praktische Begleitung für die Reise und den Aufenthalt am Bahnhof.\n\nFreuen Sie sich auf die App DB Bahnhof live Next, die Nachfolge-App von DB Bahnhof live. Es erwartet Sie eine technologisch neu aufgesetzte Anwendung im neuen, an die Gestaltung unserer Bahnhöfe angelehntem Design. Darüber hinaus bietet Ihnen DB Bahnhof live Next umfassende Informationen zu Bahnhöfen, praktische Serviceangebote sowie Daten in Echtzeit. Mit der App haben Sie stets die relevanten Angaben für Ihre Reise und Ihren Aufenthalt am Bahnhof zur Hand – direkt auf Ihrem Smartphone.\n\nProbieren Sie es aus. Einfach die App DB Bahnhof live Next aus dem Google Play Store oder dem Apple App Store herunterladen und testen. Wir freuen uns auf Ihr Feedback, um die App weiter zu optimieren.</string>
-    <string name="bhflive_next_playstore_url">https://www.bahnhof.de/app-android</string>
-    <string name="playstore">Play Store</string>
-    <string name="bhflive_next_h1_title">Jetzt testen</string>
+ //   <string name="bhflive_next_h0_title">DB Bahnhof live Next</string>
+ //   <string name="bhflive_next_h0_copy">Einfach App herunterladen, ausprobieren und Feedback geben.</string>
+ //   <string name="bhflive_next_copy">Ihre praktische Begleitung für die Reise und den Aufenthalt am Bahnhof.\n\nFreuen Sie sich auf die App DB Bahnhof live Next, die Nachfolge-App von DB Bahnhof live. Es erwartet Sie eine technologisch neu aufgesetzte Anwendung im neuen, an die Gestaltung unserer Bahnhöfe angelehntem Design. Darüber hinaus bietet Ihnen DB Bahnhof live Next umfassende Informationen zu Bahnhöfen, praktische Serviceangebote sowie Daten in Echtzeit. Mit der App haben Sie stets die relevanten Angaben für Ihre Reise und Ihren Aufenthalt am Bahnhof zur Hand – direkt auf Ihrem Smartphone.\n\nProbieren Sie es aus. Einfach die App DB Bahnhof live Next aus dem Google Play Store oder dem Apple App Store herunterladen und testen. Wir freuen uns auf Ihr Feedback, um die App weiter zu optimieren.</string>
+ //   <string name="bhflive_next_playstore_url">https://www.bahnhof.de/app-android</string>
+ //   <string name="playstore">Play Store</string>
+ //   <string name="bhflive_next_h1_title">Jetzt testen</string>
 
 </resources>
 
