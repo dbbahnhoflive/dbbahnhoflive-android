@@ -59,3 +59,15 @@ fun isActualDateInRange(startDate:DateArray, endDate:DateArray) : Boolean {
 
     return isInRange
 }
+
+// dead from 1.1.2025
+fun isAppDead() : Boolean {
+    val startOfDeadDate = arrayOf(2025, 1, 1, 0, 0, 0)
+
+    val cal = GregorianCalendar.getInstance()
+    val now = cal.timeInMillis
+    val start = cal.getMillisFromDatesArray(startOfDeadDate)
+
+    return now >= start
+
+}

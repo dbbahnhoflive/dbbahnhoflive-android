@@ -9,6 +9,7 @@ package de.deutschebahn.bahnhoflive.ui.hub;
 import static android.content.Intent.FLAG_ACTIVITY_CLEAR_TASK;
 import static android.content.Intent.FLAG_ACTIVITY_TASK_ON_HOME;
 import static de.deutschebahn.bahnhoflive.BaseApplication.get;
+import static de.deutschebahn.bahnhoflive.util.TimeXKt.isAppDead;
 import static de.deutschebahn.bahnhoflive.util.accessibility.AccessibilityUtilitiesKt.isTalkbackOrSelectToSpeakEnabled;
 
 import android.annotation.TargetApi;
