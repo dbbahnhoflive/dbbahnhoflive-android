@@ -6,6 +6,8 @@
 
 package de.deutschebahn.bahnhoflive.ui;
 
+import static de.deutschebahn.bahnhoflive.util.TimeXKt.isAppDead;
+
 import android.app.AlertDialog;
 import android.content.ActivityNotFoundException;
 import android.content.DialogInterface;
@@ -106,6 +108,7 @@ public class ImprintFragment extends Fragment {
                         startActivity(i);
                     } else if (url.contains("analytics")) {
 
+                        if (!isAppDead()) {
                         final ConsentState consentState = trackingManager.getConsentState();
                         int alertMessage = R.string.settings_tracking_active_msg;
                         if (!consentState.getTrackingAllowed()) {
@@ -132,23 +135,10 @@ public class ImprintFragment extends Fragment {
                                         dialog.dismiss();
                                     }
                                 })
-//                                .setNegativeButton(R.string.dlg_cancel, new DialogInterface.OnClickListener() {
-//                                    @Override
-//                                    public void onClick(DialogInterface dialog, int which) {
-//                                        trackingManager.setConsented(false);
-//                                        dialog.dismiss();
-//                                    }
-//                                })
-//                                .setOnCancelListener(new DialogInterface.OnCancelListener() {
-//                                    @Override
-//                                    public void onCancel(DialogInterface dialog) {
-//                                        trackingManager.setConsented(false);
-//                                        dialog.dismiss();
-//                                    }
-//                                })
                                 .create();
 
                         analyticsDialog.show();
+                        }
                     }
 
                     return true;

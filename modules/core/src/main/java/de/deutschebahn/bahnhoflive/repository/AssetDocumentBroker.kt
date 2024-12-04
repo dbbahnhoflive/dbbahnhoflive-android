@@ -21,7 +21,7 @@ class AssetDocumentBroker(
         const val FILE_NAME_LEGAL_NOTICE_EXPIRING = "impressum.html"
         const val FILE_NAME_LEGAL_NOTICE_2024_01_01 = "impressum_2024-01-01.html"
         const val FILE_NAME_PRIVACY_POLICY_2024_07_01 = "datenschutz_2024-07-01.html"
-        const val FILE_NAME_PRIVACY_POLICY_2024_01_01 = "datenschutz_2024-01-01.html"
+        const val FILE_NAME_PRIVACY_POLICY_2025_01_01 = "datenschutz_2025-01-01.html"
     }
 
     val assets = context.applicationContext.assets
@@ -44,10 +44,10 @@ class AssetDocumentBroker(
             FILE_NAME_LEGAL_NOTICE_2024_01_01, TrackingManager.Entity.IMPRESSUM, "Impressum"
         ),
         PRIVACY_POLICY_EXPIRING(
-            FILE_NAME_PRIVACY_POLICY_2024_01_01, TrackingManager.Entity.DATENSCHUTZ, "Datenschutz"
+            FILE_NAME_PRIVACY_POLICY_2024_07_01, TrackingManager.Entity.DATENSCHUTZ, "Datenschutz"
         ),
         PRIVACY_POLICY_UPCOMING(
-            FILE_NAME_PRIVACY_POLICY_2024_07_01, TrackingManager.Entity.DATENSCHUTZ, "Datenschutz"
+            FILE_NAME_PRIVACY_POLICY_2025_01_01, TrackingManager.Entity.DATENSCHUTZ, "Datenschutz"
         )
     }
 
@@ -64,9 +64,7 @@ class AssetDocumentBroker(
 
     fun getCurrentPrivacyPolicy() =
         Calendar.getInstance(Locale.GERMANY).let { calendar ->
-            if (calendar.get(Calendar.YEAR) <= 2024 &&
-                calendar.get(Calendar.MONTH) < Calendar.JULY
-            )
+            if (calendar.get(Calendar.YEAR) < 2025)
                 Document.PRIVACY_POLICY_EXPIRING
             else Document.PRIVACY_POLICY_UPCOMING
         }
