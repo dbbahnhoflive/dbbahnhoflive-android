@@ -538,12 +538,25 @@
     <string name="permission_fine_location">Standortfreigabe</string>
     <string name="permission_fine_location_explanation">"Zum Anzeigen der Stationen in der Nähe muss der Standort freigegeben werden. Zum Wechseln in die Einstellungen bitte den Einstellungen-Button drücken und dort den (genauen) Standort freigeben."</string>
 
- //   <string name="bhflive_next_h0_title">DB Bahnhof live Next</string>
- //   <string name="bhflive_next_h0_copy">Einfach App herunterladen, ausprobieren und Feedback geben.</string>
- //   <string name="bhflive_next_copy">Ihre praktische Begleitung für die Reise und den Aufenthalt am Bahnhof.\n\nFreuen Sie sich auf die App DB Bahnhof live Next, die Nachfolge-App von DB Bahnhof live. Es erwartet Sie eine technologisch neu aufgesetzte Anwendung im neuen, an die Gestaltung unserer Bahnhöfe angelehntem Design. Darüber hinaus bietet Ihnen DB Bahnhof live Next umfassende Informationen zu Bahnhöfen, praktische Serviceangebote sowie Daten in Echtzeit. Mit der App haben Sie stets die relevanten Angaben für Ihre Reise und Ihren Aufenthalt am Bahnhof zur Hand – direkt auf Ihrem Smartphone.\n\nProbieren Sie es aus. Einfach die App DB Bahnhof live Next aus dem Google Play Store oder dem Apple App Store herunterladen und testen. Wir freuen uns auf Ihr Feedback, um die App weiter zu optimieren.</string>
- //   <string name="bhflive_next_playstore_url">https://www.bahnhof.de/app-android</string>
- //   <string name="playstore">Play Store</string>
- //   <string name="bhflive_next_h1_title">Jetzt testen</string>
+    <string name="bhflive_next_h0_title_2025">DB Bahnhof live wird nicht mehr unterstützt</string>
+    <string name="bhflive_next_h0_copy_full_2025">Für Informationen zu den Bahnhöfen nutzen Sie bitte die Webseite bahnhof.de</string>
+
+
+    <string name="bhflive_next_h0_title">DB Bahnhof live wird eingestellt</string>
+    <string name="bhflive_next_h0_copy">Bahnhof.de übernimmt die Funktion von DB Bahnhof live.</string>
+    <string name="bhflive_next_h0_copy_full">Stichtag: 31.12.2024:\nBahnhof.de übernimmt die Funktion von DB Bahnhof live.</string>
+    <string name="bhflive_next_copy"><b>Stichtag: 31.12.2024</b>\n\n<b>Bahnhof.de übernimmt die Funktion von DB Bahnhof live.</b>\n\nBahnhof.de als Ihre praktische Begleitung für die Reise und den Aufenthalt am Bahnhof.\n\nDie App DB Bahnhof live wird zum Ende des Jahres eingestellt. In Zukunft erwarten Sie die Informationen zu den Bahnhöfen, deren Ausstattung und Serviceangebote, die Echtzeitdaten zu den haltenden Zügen sowie vieles mehr auf bahnhof.de.Die Webseite übernimmt die Funktion der App.</string>
+   <string name="bhflive_next_copy0">\nWeiterführende Informationen zu der Abschaltung der App DB Bahnhof live sowie der Alternative bahnhof\u200A.de finden Sie unter <a href="http://www.bahnhof.de">bahnhof.de</a></string>
+    <string name="bhflive_next_copy_1">\nWir danken Ihnen herzlich für die Nutzung der DB Bahnhof live App und wünschen Ihnen auch in Zukunft einen angenehmen Aufenthalt an den Bahnhöfen sowie eine gute Reise.\n</string>
+
+    <string name="bhflive_next_playstore_url">https://www.bahnhof.de/app-android</string>
+
+    <string name="bhflive_next_copy_test">blabla <a href="http://www.google.com">http://www.google.com</a></string>
+
+    <string name="bahnhof_de_url">https://www.bahnhof.de/</string>
+    <string name="playstore">Play Store</string>
+    <string name="bhflive_next_h1_title">Stichtag: 31.12.2024</string>
+    <string name="txt_bahnhof_de">bahnhof.de</string>
 
 </resources>
 

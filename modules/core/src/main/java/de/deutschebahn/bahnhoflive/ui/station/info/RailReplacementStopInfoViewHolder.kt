@@ -12,7 +12,6 @@ import de.deutschebahn.bahnhoflive.databinding.CardExpandableRailReplacementStop
 import de.deutschebahn.bahnhoflive.databinding.IncludeItemRailReplacementBinding
 import de.deutschebahn.bahnhoflive.ui.station.CommonDetailsCardViewHolder
 import de.deutschebahn.bahnhoflive.ui.station.StationViewModel
-import de.deutschebahn.bahnhoflive.ui.station.railreplacement.SEV_Static_Riedbahn
 import de.deutschebahn.bahnhoflive.util.startSafely
 import de.deutschebahn.bahnhoflive.view.SingleSelectionManager
 import de.deutschebahn.bahnhoflive.view.inflater
@@ -27,9 +26,6 @@ class RailReplacementStopInfoViewHolder(
     selectionManager
 ) {
 
-    val isRiedbahnReplacement : Boolean =  SEV_Static_Riedbahn.isStationReplacementStopByStationID(stationViewModel.station?.id) &&
-            SEV_Static_Riedbahn.isInConstructionPhase() || SEV_Static_Riedbahn.isInAnnouncementPhase()
-
     var railReplacementText : String = ""
 
     override fun onBind(item: ServiceContent?) {
@@ -41,7 +37,6 @@ class RailReplacementStopInfoViewHolder(
         }
 
         binding.header.status.isVisible=false
-
 
         binding.moreInfoLink.linkText.text =
             itemView.context.getString(R.string.sev_stop_info_more_information_url_link_text)
@@ -85,14 +80,14 @@ class RailReplacementStopInfoViewHolder(
         binding.apply {
             nevInfoTop.isVisible = true
             icon.isVisible = true
-            newsHeadline.isVisible = isRiedbahnReplacement
+            newsHeadline.isVisible = true
             newsCopy.isVisible = false
 
-            railReplacementNev.isVisible = isRiedbahnReplacement
+            railReplacementNev.isVisible = true
             railReplacementNev2.isVisible = false
 
-            binding.riedbahnInfo.isVisible = isRiedbahnReplacement
-            binding.moreInfoLink.layout.isVisible = isRiedbahnReplacement
+            binding.riedbahnInfo.isVisible = true
+            binding.moreInfoLink.layout.isVisible = true
             setScreenReaderText()
         }
     }

@@ -22,8 +22,8 @@ enum class NewsGroupPresentation(
     PRODUCTS_AND_SERVICES(R.drawable.app_news_neuambahnhof),
     MAJOR_DISRUPTION(R.drawable.app_news_malfunction),
     REPLACEMENT_ANNOUNCEMENT(R.drawable.app_nev_icon_round),
-    REPLACEMENT(R.drawable.app_nev_icon_round)//,
-//    BHFLIVE_NEXT(R.drawable.app_icon_bahnhof_live_next)
+    REPLACEMENT(R.drawable.app_nev_icon_round),
+    BHFLIVE_NEXT(R.drawable.app_warndreieck_dunkelgrau)
     ;
 
     companion object {

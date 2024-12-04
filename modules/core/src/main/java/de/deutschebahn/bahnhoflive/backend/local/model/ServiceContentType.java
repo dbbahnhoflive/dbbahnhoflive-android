@@ -23,7 +23,7 @@ public interface ServiceContentType {
     String TAXI = "taxi";
     String WC = "wc";
     String WIFI = "wlan";
-//    String BHFLIVE_NEXT = "bhflive_next";
+    String BHFLIVE_NEXT = "bhflive_next";
     String INFO_SERVICES = "infoservices";
     String BICYCLE = "fahrrad";
     String CONNECTED_MOBILITY = "anschlussmobilitaet";

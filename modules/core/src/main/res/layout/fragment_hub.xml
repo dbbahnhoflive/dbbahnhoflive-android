@@ -15,11 +15,30 @@
     tools:context="de.deutschebahn.bahnhoflive.ui.hub.HubFragment">
 
     <LinearLayout
+        android:id="@+id/layoutContent"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:gravity="center"
         android:orientation="vertical">
 
+        <include layout="@layout/item_bhflive_next_h0"
+            android:id="@+id/bhflive_next_2024"
+            android:layout_height="wrap_content"
+            android:layout_width="match_parent"
+            android:layout_marginTop="@dimen/default_space"
+            android:layout_marginHorizontal="@dimen/default_space"
+            android:visibility="gone"
+            >
+        </include>
+
+        <include layout="@layout/item_bhflive_next_h0_2025"
+            android:id="@+id/bhflive_next_2025"
+            android:layout_height="wrap_content"
+            android:layout_width="match_parent"
+            android:layout_marginTop="@dimen/default_space"
+            android:layout_marginHorizontal="@dimen/default_space"
+            >
+        </include>
 
         <ImageView
             android:id="@+id/pin_icon"
@@ -53,6 +72,7 @@
         </ImageView>
 
         <FrameLayout
+            android:id="@+id/navigator"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:clipChildren="false">
