@@ -14,8 +14,8 @@ android {
     defaultConfig {
         minSdkVersion 25
         targetSdk 34
-        versionCode 86
-        versionName "3.26.0"
+        versionCode 87
+        versionName "3.26.3"
         applicationId "de.deutschebahn.bahnhoflive.community"
         multiDexEnabled true
 
