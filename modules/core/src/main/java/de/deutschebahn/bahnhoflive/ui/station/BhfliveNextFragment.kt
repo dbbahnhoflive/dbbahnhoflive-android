@@ -7,6 +7,7 @@
 package de.deutschebahn.bahnhoflive.ui.station
 
 import android.content.Intent
+import android.graphics.Color
 import android.net.Uri
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -14,6 +15,7 @@ import android.view.ViewGroup
 import de.deutschebahn.bahnhoflive.R
 import de.deutschebahn.bahnhoflive.analytics.TrackingManager
 import de.deutschebahn.bahnhoflive.databinding.FragmentBhfliveNextBinding
+import de.deutschebahn.bahnhoflive.util.handleUrlClicks
 import de.deutschebahn.bahnhoflive.view.FullBottomSheetDialogFragment
 
 class BhfliveNextFragment : FullBottomSheetDialogFragment() {
@@ -48,6 +50,14 @@ class BhfliveNextFragment : FullBottomSheetDialogFragment() {
                 val intent = Intent(Intent.ACTION_VIEW, Uri.parse(url))
                 startActivity(intent)
             }
+
+            textWithUrl.setLinkTextColor(Color.BLUE)
+
+            textWithUrl.handleUrlClicks { url ->
+                val intent = Intent(Intent.ACTION_VIEW, Uri.parse(url))
+                startActivity(intent)
+            }
+
         }.root
 
     companion object {

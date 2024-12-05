@@ -133,5 +133,6 @@
 
     <drawable name="teaser_ar_card">@drawable/missing</drawable>
     <drawable name="teaser_db_companion_card">@drawable/missing</drawable>
+    <drawable name="db_malfunction">@drawable/missing</drawable>
 
 </resources>

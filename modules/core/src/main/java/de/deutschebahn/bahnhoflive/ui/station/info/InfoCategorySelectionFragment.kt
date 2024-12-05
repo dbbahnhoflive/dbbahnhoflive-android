@@ -299,7 +299,7 @@ class InfoCategorySelectionFragment : CategorySelectionFragment(
 
         return SimpleDynamicCategory(
             getText(R.string.bhflive_next_h0_title),
-            R.drawable.app_warndreieck_dunkelgrau_40,
+            R.drawable.db_malfunction,
             TrackingManager.Category.BHFLIVE_NEXT
         ) { category ->
             trackCategoryTap(category)

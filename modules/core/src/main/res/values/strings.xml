@@ -546,14 +546,12 @@
     <string name="bhflive_next_h0_copy">Bahnhof.de übernimmt die Funktion von DB Bahnhof live.</string>
     <string name="bhflive_next_h0_copy_full">Stichtag: 31.12.2024:\nBahnhof.de übernimmt die Funktion von DB Bahnhof live.</string>
     <string name="bhflive_next_copy"><b>Stichtag: 31.12.2024</b>\n\n<b>Bahnhof.de übernimmt die Funktion von DB Bahnhof live.</b>\n\nBahnhof.de als Ihre praktische Begleitung für die Reise und den Aufenthalt am Bahnhof.\n\nDie App DB Bahnhof live wird zum Ende des Jahres eingestellt. In Zukunft erwarten Sie die Informationen zu den Bahnhöfen, deren Ausstattung und Serviceangebote, die Echtzeitdaten zu den haltenden Zügen sowie vieles mehr auf bahnhof.de.Die Webseite übernimmt die Funktion der App.</string>
-   <string name="bhflive_next_copy0">\nWeiterführende Informationen zu der Abschaltung der App DB Bahnhof live sowie der Alternative bahnhof\u200A.de finden Sie unter <a href="http://www.bahnhof.de">bahnhof.de</a></string>
+   <string name="bhflive_next_copy0">\nWeiterführende Informationen zu der Abschaltung der App DB Bahnhof live sowie der Alternative bahnhof\u200A.de finden Sie unter <a href="https://www.bahnhof.de/entdecken/db-bahnhof-live">bahnhof.de</a></string>
     <string name="bhflive_next_copy_1">\nWir danken Ihnen herzlich für die Nutzung der DB Bahnhof live App und wünschen Ihnen auch in Zukunft einen angenehmen Aufenthalt an den Bahnhöfen sowie eine gute Reise.\n</string>
 
     <string name="bhflive_next_playstore_url">https://www.bahnhof.de/app-android</string>
 
-    <string name="bhflive_next_copy_test">blabla <a href="http://www.google.com">http://www.google.com</a></string>
-
-    <string name="bahnhof_de_url">https://www.bahnhof.de/</string>
+    <string name="bahnhof_de_url">https://www.bahnhof.de/entdecken/db-bahnhof-live</string>
     <string name="playstore">Play Store</string>
     <string name="bhflive_next_h1_title">Stichtag: 31.12.2024</string>
     <string name="txt_bahnhof_de">bahnhof.de</string>

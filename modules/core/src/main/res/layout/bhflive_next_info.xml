@@ -39,7 +39,7 @@
                 android:layout_gravity="center"
                 android:contentDescription="@null"
                 android:importantForAccessibility="no"
-                android:src="@drawable/app_warndreieck_dunkelgrau_40" />
+                android:src="@drawable/db_malfunction" />
 
         </FrameLayout>
 
@@ -70,11 +70,10 @@
                     />
 
                 <TextView
+                    android:id="@+id/text_with_url"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:lineSpacingMultiplier="1.2"
-                    android:autoLink="web"
-                    android:linksClickable="true"
                     android:text="@string/bhflive_next_copy0" />
 
                 <TextView

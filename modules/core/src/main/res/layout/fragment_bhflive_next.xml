@@ -78,11 +78,10 @@
                     />
 
                 <TextView
+                    android:id="@+id/textWithUrl"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:lineSpacingMultiplier="1.2"
-                    android:autoLink="web"
-                    android:linksClickable="true"
                     android:text="@string/bhflive_next_copy0" />
 
                 <TextView

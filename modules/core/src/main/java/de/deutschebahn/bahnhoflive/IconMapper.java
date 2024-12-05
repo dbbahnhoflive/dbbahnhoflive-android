@@ -97,7 +97,7 @@ public class IconMapper {
             case ServiceContentType.Local.STOP_PLACE:
                 return R.drawable.app_rail_replacement;
             case ServiceContentType.BHFLIVE_NEXT:
-                return R.drawable.app_warndreieck_dunkelgrau;
+                return R.drawable.db_malfunction;
             default:
                 return defaultResource;
         }
