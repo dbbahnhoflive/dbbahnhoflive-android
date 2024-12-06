@@ -539,7 +539,7 @@
     <string name="permission_fine_location_explanation">"Zum Anzeigen der Stationen in der Nähe muss der Standort freigegeben werden. Zum Wechseln in die Einstellungen bitte den Einstellungen-Button drücken und dort den (genauen) Standort freigeben."</string>
 
     <string name="bhflive_next_h0_title_2025">DB Bahnhof live wird nicht mehr unterstützt</string>
-    <string name="bhflive_next_h0_copy_full_2025">Für Informationen zu den Bahnhöfen nutzen Sie bitte die Webseite bahnhof.de</string>
+    <string name="bhflive_next_h0_copy_full_2025">Für Informationen zu den Bahnhöfen nutzen Sie bitte die Webseite bahnhof.de.</string>
 
 
     <string name="bhflive_next_h0_title">DB Bahnhof live wird eingestellt</string>
