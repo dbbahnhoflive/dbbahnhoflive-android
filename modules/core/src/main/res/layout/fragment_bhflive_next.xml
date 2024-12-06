@@ -77,12 +77,15 @@
                     app:layout_constraintTop_toTopOf="parent"
                     />
 
-                <TextView
-                    android:id="@+id/textWithUrl"
+                <include
+                    android:id="@+id/more_info_link"
+                    layout="@layout/link_with_text"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:lineSpacingMultiplier="1.2"
-                    android:text="@string/bhflive_next_copy0" />
+                    android:visibility="visible"
+                    tools:visibility="visible"
+                    android:layout_marginBottom="@dimen/default_space_double"
+                    />
 
                 <TextView
                     android:layout_width="match_parent"
@@ -107,9 +110,13 @@
                     android:background="@drawable/shape_round_button_grey"
                     android:gravity="center"
                     android:minHeight="64dp"
+                    android:visibility="gone"
                     android:text="@string/txt_bahnhof_de"
                     android:textColor="@color/white"
                     android:textStyle="bold" />
+
+
+
 
             </LinearLayout>
 

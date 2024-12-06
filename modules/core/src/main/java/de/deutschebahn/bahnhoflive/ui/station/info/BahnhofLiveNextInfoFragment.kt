@@ -7,7 +7,6 @@
 package de.deutschebahn.bahnhoflive.ui.station.info
 
 import android.content.Intent
-import android.graphics.Color
 import android.net.Uri
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -24,8 +23,6 @@ import de.deutschebahn.bahnhoflive.ui.map.MapPresetProvider
 import de.deutschebahn.bahnhoflive.ui.map.content.rimap.RimapFilter
 import de.deutschebahn.bahnhoflive.ui.station.StationActivity
 import de.deutschebahn.bahnhoflive.ui.station.StationViewModel
-import de.deutschebahn.bahnhoflive.util.handleUrlClicks
-
 
 
 class BahnhofLiveNextInfoFragment : Fragment(), MapPresetProvider {
@@ -51,25 +48,31 @@ class BahnhofLiveNextInfoFragment : Fragment(), MapPresetProvider {
 
         binding.titleBar.staticTitleBar.screenTitle.text = getString(R.string.bhflive_next_h0_title)
 
-        binding.textWithUrl.setLinkTextColor(Color.BLUE);
+        binding.moreInfoLink.linkText.text = getString(R.string.bahnhof_de_url_text)
 
-        binding.textWithUrl.handleUrlClicks { url ->
+        binding.moreInfoLink.layout.setOnClickListener {
+            val url = getString(R.string.bahnhof_de_url)
             val intent = Intent(Intent.ACTION_VIEW, Uri.parse(url))
             startActivity(intent)
         }
 
-        binding.bahnhofDeLink.setOnClickListener {
-            trackingManager.track(
-                    TrackingManager.TYPE_ACTION,
-                    TrackingManager.Screen.D1,
-                    TrackingManager.UiElement.BHFLIVE_NEXT,
-                    TrackingManager.UiElement.PLAYSTORE
-                )
-
-                val url = getString(R.string.bahnhof_de_url)
-                val intent = Intent(Intent.ACTION_VIEW, Uri.parse(url))
-                startActivity(intent)
-        }
+//        binding.textWithUrl.handleUrlClicks { url ->
+//            val intent = Intent(Intent.ACTION_VIEW, Uri.parse(url))
+//            startActivity(intent)
+//        }
+//
+//        binding.bahnhofDeLink.setOnClickListener {
+//            trackingManager.track(
+//                    TrackingManager.TYPE_ACTION,
+//                    TrackingManager.Screen.D1,
+//                    TrackingManager.UiElement.BHFLIVE_NEXT,
+//                    TrackingManager.UiElement.PLAYSTORE
+//                )
+//
+//                val url = getString(R.string.bahnhof_de_url)
+//                val intent = Intent(Intent.ACTION_VIEW, Uri.parse(url))
+//                startActivity(intent)
+//        }
 
         trackingManager.track(
             TrackingManager.TYPE_STATE,
