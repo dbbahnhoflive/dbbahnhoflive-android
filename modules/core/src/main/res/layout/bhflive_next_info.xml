@@ -99,6 +99,8 @@
                     android:importantForAccessibility="yes"
                     android:minHeight="64dp"
                     android:text="@string/txt_bahnhof_de"
+                    android:visibility="gone"
+                    tools:visibility="visible"
                     android:textColor="@color/white"
                     android:textStyle="bold" />
 
